@@ -8,19 +8,19 @@
 
 ### Peer
 
-实时通信服务中的每一个终端称为 Peer。Peer 拥有一个在应用内唯一标识自己的ID。系统中的每一条消息都来自与一个 Peer，发送到一个或多个 Peer。
+实时通信服务中的每一个终端称为 Peer。Peer 拥有一个在应用内唯一标识自己的ID。系统中的每一条消息都来自于一个 Peer，发送到一个或多个 Peer。
 
 AVOS Cloud 的通信服务允许一个 Peer ID 在多个不同的设备上登录，也允许一个设备上有多个 Peer ID 同时登录。开发者可以根据自己的应用场景选择ID。
 
 ### Session
 
-Peer 通过开启(open)一个 Session 加入实时通信服务，Peer 可以在 Session 中关注(watch)的一组 Peer ID，当被关注者上下线时，会收到通知。Peer 在开启 Session 后会收到其他 Peer 的消息，关注(watch)其他 Peer 后也可以向其发送消息。Peer 只能向自己关注的其他 Peers 发送消息，但可以接收到其他peers的消息。
+Peer 通过开启(open)一个 Session 加入实时通信服务，Peer 可以在 Session 中关注(watch)一组 Peer ID，当被关注者上下线时，会收到通知。Peer 在开启 Session 后会收到其他 Peer 的消息，关注(watch)其他 Peer 后也可以向其发送消息。Peer 只能向自己关注的其他 Peers 发送消息，但可以接收到其他peers的消息。
 
 Session 的几种状态：
 
 * **opened** Session 被打开
-* **pause** 网络异常，Session 进入暂停状态，当网络恢复是 Session 会自动重开
-* **closed** Session 结束，仅在显示调用 `Session.close` 方法时发生，用户注销实时通信服务，不再能够接收到消息
+* **pause** 网络异常，Session 进入暂停状态，当网络恢复时 Session 会自动重开
+* **closed** Session 结束，仅在显示调用 `Session.close` 方法时发生，用户注销实时通信服务，不再能够接收到消息或推送通知
 
 Session 中的几个动词：
 
@@ -52,11 +52,11 @@ Session 中的几个动词：
 
 如果你对实时通信服务启用签名认证（推荐），除了退出群其他操作都需要签名，签名见下文。
 
-应用所有的群组数据存储在 `AVOSRealtimeGroups` 表中。
+应用所有的群组数据存储在 `AVOSRealtimeGroups` 表中，成员数据以数组形式存储在 `m` 列，应用可以通过 API 调用获得某个群组的所有成员，和某个用户加入的所有群组。
 
 ## 权限和认证
 
-为了满足开发者对权限和认证的需求，我们设计签名的概念。你可以在 AVOS Cloud 应用控制台、设置、应用选项中强制启用签名。启用后，所有的 Session open 和 watch 行为都需要包含签名，这样你可以对用户的登录以及他可以关注哪些用户进行充分的控制。
+为了满足开发者对权限和认证的需求，我们设计了签名的概念。你可以在 AVOS Cloud 应用控制台、设置、应用选项中强制启用签名。启用后，所有的 Session open 和 watch 行为都需要包含签名，这样你可以对用户的登录以及他可以关注哪些用户进行充分的控制。
 
 签名采用**Hmac-sha1**算法，签名的消息各式如下
 
