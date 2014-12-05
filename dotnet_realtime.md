@@ -1,4 +1,4 @@
-# Windows Phone 8.0 SDK
+# Windows Phone 8.0 实时通信
 
 ## 简介
 
@@ -10,7 +10,8 @@
 
 为了更方便开发者阅读和理解 SDK 里面的各种抽象概念，我们先从一个应用场景来简单地剖析实时聊天组件在 Windows Phone 8.0 SDK 中如何使用。
 
-## 场景设定
+## 单聊
+### 场景设定
 * 应用场景：参考微信单聊，微博私信
 * 实现需求：用户A（UserA）想与用户B（UserB）进行单独聊天
 * 实现步骤：
@@ -23,7 +24,7 @@
   Step5.UserB 告诉 LeanCloud 服务端我也要关注（Watch）UserA
   Step6.UserB 就能收到第3步，由 UserA 发来的消息了。
 ```
-
+### 场景实现
 以上逻辑是一个最基本的聊天系统应该有的逻辑交互，在 LeanCloud 中，实现以上步骤需要如下代码：
 
 ```javascript
@@ -90,6 +91,177 @@
 
 **注意：在任何时候创建了 `AVSession` 之后一定要主动并且显式的调用一下 `AVSession.SetListener` 方法，将代理设置成开发者自己定义的代理类，这一点是*必须*做的**。
 
+### 开发建议
+因为基于 WebSocket 是长连接通信，长连接占用系统资源较多，Windows Phone 上一旦锁屏就会造成连接中断，所以我们建议在 App.xaml 下定义个全局的 AVSession 进行全局的管理以及调用。
+
+```
+ public static AVSession session { get; set; }
+```
+
+## 基于事件的回调
+实时通信是架构在长连接上的一种 Client——Server——Client 的模式，所以我们提供了一套 C# 程序员比较熟悉的基于事件的回调方式来处理实时通信里面的相关操作，如果配合 Lambda 表达式，代码会显得优雅一点。
+
+如发送消息可以有如下写法：
+
+```
+App.session.SendMessage("亲爱的，周末我们去哪里吃？", "Wife", false, (s, message) => 
+            {
+                //s 就是 接受到这个消息的 AVSession 实例。
+                Console.WriteLine(message);
+            });
+```
+以上方法实际上调用的是 SDK 中
+
+
+```
+public void SendMessage(string msg, string toPeer, bool transient, 
+            EventHandler<AVMessageReceivedEventArgs> onMessage);
+```
+这个方法。与此类似的还有其他事件：
+
+```
+public event EventHandler<EventArgs> OnSessionOpen;
+public event EventHandler<EventArgs> OnSessionPaused;
+public event EventHandler<EventArgs> OnSessionResumed;
+public event EventHandler<EventArgs> OnSessionClosed;
+public event EventHandler<AVMessageSentEventArgs> OnMessageSent;
+public event EventHandler<AVMessageReceivedEventArgs> OnMessage;
+public event EventHandler<AVMessageSentFailedEventArgs> OnMessageFailed;
+
+```
+
+## 群组聊天
+群组聊天区别于单聊，群组聊天的消息发往的是一个群组（AVGroup），所有在这个组里面的人都会接收到这个消息，并且在逻辑上群组有一些逻辑操作，比如加入群组，离开群组，拉人加入群组，移除某个组员，也就是说基于 LeanCloud Message 组件开发者即可以做类似QQ群的功能，也可以做类似微信的群聊的功能，这个全由开发者自己决定自己的群聊模式。
+
+### 创建群组
+
+```
+string selfId = "Peter";
+IList<string> peerIds = new List<string>() { "Mary" };
+AVGroup group = new AVSession(selfId).GetGroup();
+group.Join((sj, ej) =>
+{
+    Dispatcher.BeginInvoke(() =>
+    {
+        MessageBox.Show("you Joined!");//OnJoined 事件激发
+    });
+    group.AddMembers(peerIds, (sa, ea) =>
+    {
+        Dispatcher.BeginInvoke(() =>
+        {
+            if (ea.JoinedPeerIds[0] == "Mary")//OnMembersJoined 事件会响应两次，第一次为响应当前的 Peer （此时就是这个Peter） 加入，然后再响应 Mary 加入，因为对于一个 AVGroup，创建者在创建之后是自动加入该组。
+            {
+                MessageBox.Show("Mary joined!");
+                group.SendMessage("Hello, Mary!", (ss, es) =>//当 Mary 加入之后就发送消息给她。
+                {
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        MessageBox.Show("Message sent!");//这是响应消息发送（OnMessageSent ）完毕之后的事件。
+                    });
+                }, null);
+            }
+        });
+
+    });
+});
+```
+
+创建成功的群组会被存放在 `AVOSRealtimeGroups` 这张表里，开发者可以登录到控制台进行查看。
+
+### 加入群组
+
+```
+AVGroup avGroup = App.session.GetGroup("54753e1ee4b0b41b21e0e76e");//这个 54753e1ee4b0b41b21e0e76e 可以是查询出来的结果，这里只为做演示，具体的值应该是开发者创建成功的 AVGroup 的 objectId
+avGroup.SendMessage("Hi,I'am Perter!",
+    (ss, es) =>
+    {
+        Dispatcher.BeginInvoke(() =>
+            {
+                MessageBox.Show("sent！");//这是响应消息发送（OnMessageSent ）完毕之后的事件。
+            });
+    }, (sr,er)=>
+    {
+        Dispatcher.BeginInvoke(() =>
+        {
+            MessageBox.Show(er.Message.Message + " received！");//收到了消息就会触发 OnGroupMessageRecevied 事件。
+        });
+    });
+```
+
+### 发送消息
+发送消息调用下面2个方法即可实现发消息：
+
+```
+public void SendMessage(AVMessage message, 
+            EventHandler<AVGroupMessageSentEventArgs> onGroupMessageSent,
+            EventHandler<AVGroupMessageReceivedEventArgs> onGroupMessageRecevied);
+
+public void SendMessage(string msg,
+            EventHandler<AVGroupMessageSentEventArgs> onGroupMessageSent,
+             EventHandler<AVGroupMessageReceivedEventArgs> onGroupMessageRecevied);
+```
+
+### 接受消息
+接受消息只要订阅的事件：
+
+```
+public event EventHandler<AVGroupMessageReceivedEventArgs> OnMessage;
+```
+就可以监听发送到该组的消息。
+
+### 群成员管理
+群组聊天目前的权限管理是开放给开发者自己去掌控和维护的，服务端只认证签名，假如开发者的应用开启了签名服务，如果没有开启签名认证，所有关于群成员的管理操作都被认为是有效的。
+
+#### 加入成员
+
+```
+IList<string> peerIds = new List<string>() { "Mary","Alex" };
+avGroup.AddMembers(peerIds, (sm, em) => 
+{
+    Dispatcher.BeginInvoke(() =>
+    {
+        MessageBox.Show(em.JoinedPeerIds[0]+" joined this group!");//有组员加入时的事件响应。
+    });
+});
+```
+#### 删除组员
+也就是俗称的“踢人”，如下：
+
+```
+IList<string> peerIds = new List<string>() { "Neal" };
+group.RemoveMembers(peerIds, (sr, er) => 
+{
+    Dispatcher.BeginInvoke(() =>
+    {
+        MessageBox.Show("Neal has been kicked by");
+    });
+});
+```
+相应的，如果 Neal 在某一个地方登陆，他将会收到一个事件响应：
+
+```
+ public event EventHandler<EventArgs> OnLeft;
+```
+所以某一个 Peer 被别人剔除出组，产生的影响如下：
+其他组员会收到 `OnMembersLeft` 的事件响应，而被剔除的 Peer 本身会收到 `OnLeft` 事件的响应。
+
+### 退出群组
+主动退出群组代码如下：
+
+```
+App.session = new AVSession("Neal");
+AVGroup nealGroup = App.session.GetGroup("54753e1ee4b0b41b21e0e76e");
+nealGroup.Quit((sq, eq) => 
+{
+    Dispatcher.BeginInvoke(() => 
+    {
+        MessageBox.Show("you have left from group:" + ((AVGroup)sq).GroupId);
+    });
+});
+```
+以上是简写，实际上真正实现回调的事件 `OnLeft`。
+
+
 ## 实现签名（可选）
 
 签名作为安全认证的一部分，阅读下面的内容之前请确保您已经阅读过本文之前所介绍[权限和认证](https://cn.avoscloud.com/docs/realtime.html#权限和认证)。
@@ -133,7 +305,24 @@ public class SampleSignatureFactory : ISignatureFactory
 
         public Task<Signature> CreateGroupSignature(string groupId, string peerId, IList<string> targetPeerIds, string action)
         {
-            throw new NotImplementedException();//群组聊天 WP8 暂时不支持，无需实现。
+            var data = new Dictionary<string, object>();
+            data.Add("self_id", peerId);
+            data.Add("group_id", groupId);
+            data.Add("group_peer_ids", targetPeerIds);
+            data.Add("action", action);
+
+            return AVCloud.CallFunctionAsync<IDictionary<string, object>>("sign", data).ContinueWith<Signature>(t =>
+            {
+                var result = t.Result;
+                Signature signature = new Signature();
+                signature.Nonce = result["nonce"].ToString();
+                signature.SignatureContent = result["signature"].ToString();
+                signature.SignedPeerIds = ((List<object>)result["group_peer_ids"]).Select(s => (string)s).ToList();
+                signature.Timestamp = (long)result["timestamp"];
+                signature.GroupId = result["groupId"] == null ? "" : result["groupId"].ToString();
+                signature.GroupAction = result["action"].ToString();
+                return signature;
+            });
         }
     }
 ```
@@ -148,6 +337,19 @@ public class SampleSignatureFactory : ISignatureFactory
 
 签名是认证的一种方式，这种方式有助于开发者去自由掌控自己的系统又不会付出过多的代码做一些跟业务逻辑本身无关的事情，LeanCloud 一直致力于减少应用开发者在服务端的工作量，并且希望开发者能够对应用开发的整体流程有着自己独到的把控，这样的应用才是高质量的。
 
-## 目前 Windows Phone 8 SDK 所支持的
+## 目前 Windows Phone 8 SDK 所支持的实时通信的功能组件
 
-目前尚在公测版，仅支持单聊和签名的操作，群组聊天以及聊天记录等都会尽快推出，欢迎开发者一起参与。
+目前尚在公测版，已经支持的功能组件是：
+
+```
+* 单聊
+* 群组聊天
+* 签名
+```
+
+尚未支持的是：
+
+```
+* 聊天记录的获取
+```
+不过聊天记录我们是提供了
