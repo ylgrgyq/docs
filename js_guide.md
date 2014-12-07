@@ -425,6 +425,14 @@ query.find({
 });
 ```
 
+`relation` 返回的 `AV.Relation` 如果没有做过任何保存或者移除的操作，那么可能没有设置`targetClassName`，在查询之前最好需要明确设置下：
+
+```javascript
+relation.targetClassName = 'Post';
+var query = relation.query();
+...使用 query 查询 Post...
+```
+
 你可以在接下来关于AV.Query的章节中看到更详细的内容.一个
 AV.Relation的行为很像一个AV.Object数组,所以任何
 在数组可做的查询操作,也都可以作用在AV.Relation上.
