@@ -120,6 +120,7 @@
         <h2>消息推送和实时通信</h2>
         <ul>
           <li><a href="push_guide.html">消息推送开发指南</a></li>
+          <li><a href="ios_push_cert.html">iOS 推送推送证书配置</a></li>
           <li><a href="realtime.html">实时通信开发指南</a></li>
         </ul>
       </div>
