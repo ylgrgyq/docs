@@ -109,7 +109,43 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
 
 您可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的jar包加入您工程的libs目录。如果您还不知道如何安装SDK，请查看[快速入门指南](/start.html)。
 
-### 添加代码，使用 SSO 登录
+### WebView 授权
+首先你需要在[管理界面](https://leancloud.cn/app.html?appid=%appid%#/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`。
+
+之后你需要在AndroidManifest.xml中间添加相应的Activity:
+
+```
+        <activity
+            android:name="com.avos.sns.SNSWebActivity" >
+        </activity>        
+```
+
+之后在你需要授权的地方，你就可以通过WebView进行相应的授权：
+
+```
+          SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo,
+              "登录URL", "回调URL");
+          SNS.loginWithCallback(getActivity(), SNSType.AVOSCloudSNSSinaWeibo, new SNSCallback() {
+
+            @Override
+            public void done(SNSBase base, SNSException e) {
+              if(e==null){
+               SNS.loginWithAuthData(base.userInfo(), new LogInCallback<AVUser>() {
+
+                  @Override
+                  public void done(final AVUser user, AVException e) {
+                  }
+              });
+              }
+            }
+          }
+
+```
+
+这样就完成了新浪微博从授权到创建用户（登录）的一整套流程。
+**注:由于微信的Web授权页面为扫描二维玛，现阶段仅仅支持新浪微博和QQ授权。**
+
+### SSO 登录
 
 利用SSO, 用户可以使用单点登录功能，避免反复输入用户名和密码等，您可以使用以下代码轻松实现:
 
@@ -177,7 +213,6 @@ public class MyActivity extends Activity {
 </manifest>
 
 ```
-
 
 ### 绑定 LeanCloud User
 
