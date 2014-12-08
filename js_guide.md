@@ -1952,7 +1952,20 @@ AV.Push.send({
 
 `AV.Push` 的更多使用信息参考 API 文档[AV.Push](https://leancloud.cn/docs/api/javascript/symbols/AV.Push.html)。
 
-更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息
+更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息。
+
+iOS 设备可以通过 `prod` 属性指定使用测试环境还是生产环境证书：
+
+```javascript
+AV.Push.send({
+  prod: "dev",  
+  data: {
+    alert: "Public message"
+  }
+});
+```
+
+`dev` 表示测试证书，`prod`表示生产证书，默认生产证书。
 
 ##地理位置
 
