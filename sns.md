@@ -123,6 +123,10 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
 之后在你需要授权的地方，你就可以通过WebView进行相应的授权：
 
 ```
+   public class AuthActivity extends Activity{
+   
+   public void onCreate(){   
+
           SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo,
               "登录URL", "回调URL");
           SNS.loginWithCallback(getActivity(), SNSType.AVOSCloudSNSSinaWeibo, new SNSCallback() {
@@ -138,7 +142,15 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
               });
               }
             }
-          }
+          });
+   }
+   
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        SNS.onActivityResult(requestCode, resultCode, data, type);
+    }
+}
 
 ```
 
