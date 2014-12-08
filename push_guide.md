@@ -920,6 +920,7 @@ curl -X PUT \
 * expiration_time 消息过期的绝对日期时间
 * expiration_interval 消息过期的相对时间
 * push_time 定期推送时间
+* prod 设置使用测试证书(dev)还是生产证书(prod)，只对 iOS 有效。
 
 
 #### 消息内容 Data
@@ -1017,7 +1018,20 @@ WindowsPhone 设备类似，也支持`title`和`alert`，同时支持`wp-param`�
 }
 ```
 
+#### iOS 测试和生产证书区分
 
+我们现在支持上传两个环境的 iOS 推送证书：测试和生产环境，您可以通过设定 `prod` 属性来指定使用哪个环境证书
+
+```
+{
+  "prod": "dev",
+  "data": {
+    "alert": "test"
+  }
+}
+```
+
+如果是 `dev` 值就表示使用测试证书，`prod` 值表示使用生产证书。默认使用生产证书。
 
 #### 推送查询条件
 
