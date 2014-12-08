@@ -25,10 +25,14 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 
 对应 `_Notification` 表，表示一条推送消息，它包括下列属性：
 
-* subscribers 本条消息成功推送到的设备数
+* subscribers 本条消息推送到的设备数量（不表示一定到达）
 * status 状态，可能是"in queue","done"或者错误信息
+* data 推送的内容数据，JSON 对象。
+* where 推送的查询 `_Installation` 表的查询条件 
 
 如何发送消息也请看下面的详细指南。
+
+推送本质上是根据一个 query 条件来查询 `_Installation` 表里符合条件的设备，然后将消息推送给设备。因为 `_Installation` 是一个可以完全自定义属性的 Key-Value Object，因此可以实现各种复杂条件推送，例如频道订阅、地理位置信息推送、特定用户推送等。
 
 ## iOS消息推送
 
@@ -518,7 +522,22 @@ Android 消息推送有专门的Demo，请见[AVOSCloud-Push](https://github.com
 
 ```java
 AVInstallation.getCurrentInstallation().saveInBackground();
+```
 
+**这段代码应该在应用启动的时候调用一次，保证设备注册到 LeanCloud 平台，您可以监听调用回调，获取 installationId 做数据关联**
+
+```
+AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
+    public void done(AVException e) {
+        if (e == null) {
+            // 保存成功
+            String installationId = AVInstallation.getCurrentInstallation().getInstallationId();
+            // 关联  installationId 到用户表等操作……
+        } else {
+            // 保存失败，输出错误信息
+        }
+    }
+}); 
 ```
 
 ### 订阅频道
@@ -619,6 +638,8 @@ push.sendInBackground(new SendCallback() {
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();
+// 假设 THE_INSTALLATION_ID 是保存在用户表里的 installationId，
+// 可以在应用启动的时候获取并保存到用户表
 pushQuery.whereEqualTo("installationId", THE_INSTALLATION_ID);
 AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCallback() {
     @Override
@@ -629,6 +650,7 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 ```
 
 在2.6.7以后，我们加入了通过CQL来筛选推送目标的功能，主要代码如下：
+
 ```java
     AVPush push = new AVPush();
     JSONObject data =
@@ -646,7 +668,8 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
       }
     });
 ```
-*注：CQL与AVQuery同时只能设置一个，并且在设置CQL时，请通过CQL来设置目标机器的类型(ios,android,wp)*
+*注：CQL与AVQuery同时只能设置一个，并且在设置CQL时，必须通过CQL来设置目标机器的类型(ios,android,wp)*
+
 #### 自定义 Receiver
 
 如果您想推送消息，但不显示在Andoid系统的通知栏中，而是执行应用程序预定义的逻辑，则可以发送类似下列这样的请求
@@ -666,7 +689,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且其值在receiver配置的<intent-filter>列表里存在，比如这里的'com.avos.UPDATE_STATUS'**
+请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且其值在自定义的 receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'**
 
 您需要在您的Android项目中添加如下功能
 
@@ -685,7 +708,7 @@ AndroidManifest.xml中声明您的receiver
 
 其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是您的android的receiver类。
 
-而<action android:name="com.avos.UPDATE_STATUS" /> 需要与push的data中指定的action相对应。
+而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与push的data中指定的action相对应。
 
 
 您的receiver可以按照如下方式实现
@@ -701,6 +724,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
         try {
             String action = intent.getAction();
             String channel = intent.getExtras().getString("com.avos.avoscloud.Channel");
+            //获取消息内容
             JSONObject json = new JSONObject(intent.getExtras().getString("com.avos.avoscloud.Data"));
 
             Log.d(TAG, "got action " + action + " on channel " + channel + " with:");
@@ -716,6 +740,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 }
 ```
 #### 跟踪 Android 推送和 app 的打开情况
+
 您可以在订阅频道对应的 activity 中添加跟踪 app 打开情况的统计代码，您的 activity 可以按照如下方式实现 `onStart` 方法：
 
 ```java
@@ -816,9 +841,9 @@ curl -X POST \
   https://leancloud.cn/1.1/installations
 ```
 
-##### 保存 Android 设备的 installId
+##### 保存 Android 设备的 installaitonId
 
-对于Android设备，AVOS SDK会自动生成uuid作为installId保存到LeanCloud. 您可以使用以下REST API保存Android设备的installation ID.
+对于Android设备，AVOS SDK会自动生成uuid作为 installaitonId 保存到LeanCloud. 您可以使用以下REST API 保存Android设备的installaiton ID.
 
 ```sh
 curl -X POST \
@@ -835,7 +860,11 @@ curl -X POST \
   https://leancloud.cn/1.1/installations
 ```
 
-##### 订阅频道
+`installaitonId` 必须在应用内唯一。
+
+##### 订阅和退订频道
+
+通过设置 `channels` 属性来订阅某个推送频道：
 
 ```sh
 curl -X PUT \
@@ -850,7 +879,189 @@ curl -X PUT \
   https://leancloud.cn/1.1/installations/mrmBZvsErB
 ```
 
+退订一个频道：
+
+```
+curl -X PUT \
+  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "Content-Type: application/json" \
+  -d '{
+        "channels": {
+           "__op":"Remove",
+           "objects":["Giants"]
+        }
+       }' \
+  https://leancloud.cn/1.1/installations/mrmBZvsErB
+```
+
+`channels` 本质上是数组属性，因此可以使用标准 [REST API](./rest_api.html#数组) 操作。
+
+#### 自定义属性
+
+```sh
+curl -X PUT \
+  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "Content-Type: application/json" \
+  -d '{
+        "userObjectId": "user objectId"
+      }' \
+  https://leancloud.cn/1.1/installations/mrmBZvsErB
+```
+
 ### 推送消息
+
+通过 `POST /1.1/push` 来推送消息给设备，`push`接口支持下列属性：
+
+* data 一个 JSON 对象，表示推送的内容数据，下文详解
+* where 一个查询 `_Installation` 表的查询条件 JSON 对象
+* channels 推送给哪些频道，将作为条件加入 `where` 对象。
+* expiration_time 消息过期的绝对日期时间
+* expiration_interval 消息过期的相对时间
+* push_time 定期推送时间
+
+
+#### 消息内容 Data
+
+对于 iOS 设备，`data` 属性可以是：
+
+```
+{
+  "data": {
+   "alert": "消息内容",
+   "badge": "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为Increment字符串",
+   "sound": "声音文件名，前提在应用里存在",
+   "content-available":"如果你在使用Newsstand, 设置为1来开始一次后台下载"
+  }
+}  
+```
+
+并且 iOS 设备支持 `alert` 本地化消息推送：
+
+```
+{
+  "data":{
+    "alert": {
+      "body":"消息内容",
+      "action-loc-key": "",
+      "loc-key":"",
+      "loc-args":"",
+      "launch-image":""
+     }
+   } 
+}
+```
+
+详情参考 [Apple 文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/ApplePushService.html)。
+
+如果是 Android 设备，默认的消息栏通知 data 支持下列属性：
+
+```
+{
+  "data":{
+    "alert":"消息内容",
+    "title":"显示在通知栏的标题"
+  }
+}
+```
+
+如果自定义 Receiver，需要设置 action，当然也可以自己加属性了:
+
+```
+{
+  "data":{
+    "alert":"消息内容",
+    "title":"显示在通知栏的标题",
+    "action":"com.your_company.push",
+    "fromUserId":"自定义属性"
+  }
+}
+```
+
+WindowsPhone 设备类似，也支持`title`和`alert`，同时支持`wp-param`用于定义打开通知的时候打开的是哪个 Page:
+
+```
+{
+  "data":{
+    "alert":"消息内容",
+    "title":"显示在通知栏的标题",
+    "wp-param":"/chat.xaml?NavigatedFrom=Toast Notification"
+  }
+}
+```
+
+但是如果想一次 push 调用**推送不同的数据给不同类型的设备**， `data`属性同时支持设定设备特定消息，例如：
+
+```
+{
+  "data":{
+    "ios": {
+      "alert": "消息内容",
+      "badge": "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为Increment字符串",
+      "sound": "声音文件名，前提在应用里存在",
+      "content-available":"如果你在使用Newsstand, 设置为1来开始一次后台下载"
+    },
+    "android": {
+      "alert":"消息内容",
+      "title":"显示在通知栏的标题",
+      "action":"com.your_company.push",
+      "fromUserId":"自定义属性"
+    },
+    "wp":{
+      "alert":"消息内容",
+      "title":"显示在通知栏的标题",
+      "wp-param":"/chat.xaml?NavigatedFrom=Toast Notification"
+    }
+  }
+}
+```
+
+
+
+#### 推送查询条件
+
+where 是用来查询 `_Installation` 表的，`_Installation`表有的属性（无论是内置还是自定义的）都可以作为查询条件，并且支持 [REST API](./rest_api.html#查询) 定义的各种复杂查询。
+
+后文会举一些例子，更多例子参考 REST API 查询文档。
+
+#### expiration_time、expiration_interval 和 push_time
+
+`expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 的格式是形如 `YYYY-MM-DDTHH:MM:SS.MMMMZ` 的 UTC 时间字符串。
+
+```
+{
+      "expiration_time": "2013-12-04T00:51:13Z",
+      "data": {
+        "alert": "北京时间 12 月 4 号 8:51 过期。"
+      }
+}
+```
+
+`expiration_interval` 也可以用于指定过期时间，不过他是一个相对时间，以*秒为单位*，从 API 调用时间点开始计算起：
+
+```
+{
+      "expiration_interval": "86400",
+      "data": {
+        "alert": "收到 push API 调用的一天内过期"
+      }
+}
+```
+
+`push_time`用来指定定期推送的时间，他也是形如`YYYY-MM-DDTHH:MM:SS.MMMMZ`的 UTC 时间，也可以结合`expiration_interval`设定过期时间：
+
+```
+{
+      "push_time": "2013-12-04T00:51:13Z",
+      "expiration_interval": "86400",
+      "data": {
+        "alert": "北京时间 12 月 4 号 8:51 发送这条推送,24小时后过期"
+      }
+}
+```
+
+下面是一些推送的例子
 
 #### 推送给所有的设备
 ```sh
