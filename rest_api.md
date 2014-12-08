@@ -2303,7 +2303,6 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
-         "app_sign": "app id和 app key 连接的字符串做md5签名",
          "status"  : "open",
          "content" : "反馈的文字内容",
          "contact" : "联系方式，QQ或者邮箱手机等"
