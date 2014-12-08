@@ -1647,7 +1647,7 @@ Hi {{username}},
 ### 验证短信验证码
 你可以通过以下代码来验证短信验证码：
 ```
-    AVOSCloud.verifySMSCodeInBackground("123456", new AVMobilePhoneVerifyCallback() {
+    AVOSCloud.verifySMSCodeInBackground("123456","12312312312", new AVMobilePhoneVerifyCallback() {
 
       @Override
       public void done(AVException e) {
