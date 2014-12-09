@@ -1652,8 +1652,9 @@ Hi {{username}},
 
 ### 验证短信验证码
 你可以通过以下代码来验证短信验证码：
+
 ```java
-    AVOSCloud.verifySMSCodeInBackground("123456", new AVMobilePhoneVerifyCallback() {
+    AVOSCloud.verifySMSCodeInBackground("123456","12312312312", new AVMobilePhoneVerifyCallback() {
 
       @Override
       public void done(AVException e) {
@@ -1670,11 +1671,14 @@ Hi {{username}},
 ```
 # proguard.cfg
 
+-keepattributes Signature
 -dontwarn com.jcraft.jzlib.**
 -keep class com.jcraft.jzlib.**  { *;}
 
 -dontwarn sun.misc.**
 -keep class sun.misc.** { *;}
+
+-keep class com.alibaba.fastjson.** { *;}
 
 -dontwarn sun.security.**
 -keep class sun.security.** { *; }
@@ -1685,7 +1689,14 @@ Hi {{username}},
 -dontwarn com.avos.**
 -keep class com.avos.** { *;}
 
+-keep public class android.net.http.SslError
+-keep public class android.webkit.WebViewClient
 
+-dontwarn android.webkit.WebView
+-dontwarn android.net.http.SslError
+-dontwarn android.webkit.WebViewClient
+
+-dontwarn android.support.**
 
 -dontwarn org.apache.**
 -keep class org.apache.** { *;}
