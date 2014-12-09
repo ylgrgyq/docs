@@ -15,3 +15,7 @@ LeanCloud 开发者文档
 ## 协议
 
 [GNU LGPL](https://www.gnu.org/licenses/lgpl.html)
+
+## 书写注意事项
+
+由于文档会采用 Angular 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 Angular 渲染。
