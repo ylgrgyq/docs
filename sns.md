@@ -109,7 +109,7 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
 您可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的jar包加入您工程的libs目录。如果您还不知道如何安装SDK，请查看[快速入门指南](/start.html)。
 
 ### WebView 授权
-首先你需要在[管理界面](https://leancloud.cn/app.html?appid=%appid%#/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`。
+首先你需要在[管理界面](https://leancloud.cn/app.html?appid=%appid%#/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`，你将在代码里用到`登陆 URL`。
 
 之后你需要在AndroidManifest.xml中间添加相应的Activity:
 
@@ -127,7 +127,7 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
    public void onCreate(){   
 
           SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo,
-              "登录URL", "回调URL");
+              "登录URL");
           SNS.loginWithCallback(getActivity(), SNSType.AVOSCloudSNSSinaWeibo, new SNSCallback() {
 
             @Override

@@ -1654,7 +1654,7 @@ Hi {{username}},
 你可以通过以下代码来验证短信验证码：
 
 ```java
-    AVOSCloud.verifySMSCodeInBackground("123456","12312312312", new AVMobilePhoneVerifyCallback() {
+    AVOSCloud.verifySMSCodeInBackground("短信里的6位验证码","11位手机号码", new AVMobilePhoneVerifyCallback() {
 
       @Override
       public void done(AVException e) {
