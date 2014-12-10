@@ -13,7 +13,6 @@
 LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
 * Hive 查询语法，包括：
-
 	* SELECT 
 	* GROUP BY
 	* ORDER BY
