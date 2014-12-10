@@ -75,5 +75,9 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 	
 	select * from _User where name in (select name form OtherUser)
 	
+	select sum(score) from GameScore
+	
+	select * from GameScore group by name
+	
 	```
 
