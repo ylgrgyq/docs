@@ -230,6 +230,12 @@
 * 信息 - `Mobile phone number isn't verified.`
 * 含义 - 未验证的手机号码
 
+## 216
+
+* 信息 - `"Email address isn't verified.`
+* 含义 - 未验证的邮箱地址
+
+
 ## 250
 
 * 信息 - `Linked id missing from request`

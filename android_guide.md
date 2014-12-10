@@ -228,7 +228,7 @@ player.saveInBackground();
 
 ### 更新后获取最新值
 
-为了减少网络传输，在更新对象操作后，对象本地的 `updatedAt` 字段（最后更新时间）会被刷新，但其他字段不会从云端重新获取。如果你想在更新后从云端获取全部字段的最新数值，可以通过设置 `fetchWhenSave` 属性为 `true` 来实现，例如：
+为了减少网络传输，在更新对象操作后，对象本地的 `updatedAt` 字段（最后更新时间）会被刷新，但其他字段不会从云端重新获取。通过设置 `fetchWhenSave` 属性为 `true` 来获取更新字段在服务器上的最新值，例如：
 
 ```java
 player.setFetchWhenSave(true);
@@ -1654,7 +1654,7 @@ Hi {{username}},
 你可以通过以下代码来验证短信验证码：
 
 ```java
-    AVOSCloud.verifySMSCodeInBackground("123456","12312312312", new AVMobilePhoneVerifyCallback() {
+    AVOSCloud.verifySMSCodeInBackground("短信里的6位验证码","11位手机号码", new AVMobilePhoneVerifyCallback() {
 
       @Override
       public void done(AVException e) {
