@@ -55,7 +55,6 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
 
 * 一些 SQL-like 数据分析例子
-
 	* 简单的 SELECT 查询
 	
 	```
@@ -81,4 +80,4 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 	select * from GameScore group by name
 	
 	```
-
+	
