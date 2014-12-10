@@ -13,6 +13,7 @@
 LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
 * Hive 查询语法，包括：
+
 	* SELECT 
 	* GROUP BY
 	* ORDER BY
@@ -20,6 +21,7 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 	* SORT BY	
 
 * 所有 Hive 运算符，包括：
+
 	* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
 	* 算术运算符（+, -, *, /, %, etc）
 	* 逻辑运算符（AND, &&, OR, ||, etc）
@@ -27,15 +29,18 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 	* 字符串函数（STRING, SUBSTRING, etc）
 
 * 多表 Join：
+
 	* JOIN
 	* {LEFT|RIGHT|FULL} OUTER JOIN
 	* LEFT SEMI JOIN
 	* CROSS JOIN
 
 * 子查询
+
 	* SELECT col FROM ( SELECT a + b AS col from t1) t2
 
 * 大多数 Hive 数据类型，包括：
+
 	* TINYINT
 	* SMALLINT
 	* INT
@@ -55,6 +60,7 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
 
 * 一些 SQL-like 数据分析例子
+
 	* 简单的 SELECT 查询
 	
 	```
