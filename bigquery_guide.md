@@ -12,67 +12,67 @@
 
 LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
-* Hive 查询语法，包括：
+### Hive 查询语法，包括：
 
-	* SELECT 
-	* GROUP BY
-	* ORDER BY
-	* CLUSTER BY
-	* SORT BY	
+* SELECT 
+* GROUP BY
+* ORDER BY
+* CLUSTER BY
+* SORT BY	
 
-* 所有 Hive 运算符，包括：
+### 所有 Hive 运算符，包括：
 
-	* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
-	* 算术运算符（+, -, *, /, %, etc）
-	* 逻辑运算符（AND, &&, OR, ||, etc）
-	* 数学函数（COUNT, SUM, AVG, etc） 
-	* 字符串函数（STRING, SUBSTRING, etc）
+* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
+* 算术运算符（+, -, *, /, %, etc）
+* 逻辑运算符（AND, &&, OR, ||, etc）
+* 数学函数（COUNT, SUM, AVG, etc） 
+* 字符串函数（STRING, SUBSTRING, etc）
 
-* 多表 Join：
+### 多表 Join：
 
-	* JOIN
-	* {LEFT|RIGHT|FULL} OUTER JOIN
-	* LEFT SEMI JOIN
-	* CROSS JOIN
+* JOIN
+* {LEFT|RIGHT|FULL} OUTER JOIN
+* LEFT SEMI JOIN
+* CROSS JOIN
 
-* 子查询
+### 子查询
 
-	* SELECT col FROM ( SELECT a + b AS col from t1) t2
+* SELECT col FROM ( SELECT a + b AS col from t1) t2
 
-* 大多数 Hive 数据类型，包括：
+### 大多数 Hive 数据类型，包括：
 
-	* TINYINT
-	* SMALLINT
-	* INT
-	* BIGINT
-	* BOOLEAN
-	* FLOAT
-	* DOUBLE
-	* STRING
-	* BINARY
-	* TIMESTAMP
-	* ARRAY<>
-	* MAP<>
-	* STRUCT<>
+* TINYINT
+* SMALLINT
+* INT
+* BIGINT
+* BOOLEAN
+* FLOAT
+* DOUBLE
+* STRING
+* BINARY
+* TIMESTAMP
+* ARRAY<>
+* MAP<>
+* STRUCT<>
 	
 详细信息请参考 [Spark SQL Supported Hive Features](http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features)
 
 不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
 
-* 一些 SQL-like 数据分析例子
+### 一些 SQL-like 数据分析例子
 
-	* 简单的 SELECT 查询
+* 简单的 SELECT 查询
 	
-	```
+```
 	select * from GameScore
 	
 	select count(*) from _User
 	
-	```
+```
 
-	* 复杂的 SELECT 查询
+* 复杂的 SELECT 查询
 	
-	```
+```
 	select * from GameScore where createdAt > '2014-12-10'
 	
 	select avg(age) from _User
@@ -85,5 +85,5 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 	
 	select * from GameScore group by name
 	
-	```
+```
 	
