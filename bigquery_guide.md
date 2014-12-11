@@ -25,8 +25,8 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 * 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
 * 算术运算符（+, -, *, /, %, etc）
 * 逻辑运算符（AND, &&, OR, ||, etc）
-* 数学函数（COUNT, SUM, AVG, etc） 
-* 字符串函数（STRING, SUBSTRING, etc）
+* 数学函数（COUNT, SUM, AVG, MAX, MIN, etc） 
+* 字符串函数（STRING, SUBSTRING, SUBSTR, etc）
 
 ### 多表 Join：
 
