@@ -20,13 +20,12 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "express": "3.x",
         "async": "0.9.x"
     }
 }
 ```
 
-需要注意的是，某些必需类库目前还是以 cloud-code 运行环境版本优先，具体版本信息：
+需要注意的是，cloud-code 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
 
 ```
 nodejs: "0.10.29"
@@ -34,7 +33,6 @@ qiniu: "6.1.3"
 underscore: "1.6.0"
 underscore.string: "2.3.3"
 moment: "2.7.0"
-express: "3.4.0"
 express-ejs-layouts: "0.3.1"
 weibo: "0.6.9"
 node-qiniu: "6.1.6"
@@ -45,6 +43,7 @@ sendgrid: "1.0.5"
 xml2js: "0.4.4"
 ```
 
+**注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
 
 在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多5分钟，平台将自动迁移完成，在5分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
 
@@ -1016,13 +1015,19 @@ app.use(express.cookieParser('Your Cookie Secure'));
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
 ```
 
-使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过AV.User.current()获取当前登录用户。
+使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `avos-express-cookie-session`支持的选项包括：
 
 * cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问AV.User.current()当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
 * key -- session在cookie中存储的key名称，默认为avos.sess。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
 
 登录很简单：
 
