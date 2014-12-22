@@ -20,13 +20,12 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "express": "3.x",
         "async": "0.9.x"
     }
 }
 ```
 
-需要注意的是，某些必需类库目前还是以 cloud-code 运行环境版本优先，具体版本信息：
+需要注意的是，cloud-code 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
 
 ```
 nodejs: "0.10.29"
@@ -34,7 +33,6 @@ qiniu: "6.1.3"
 underscore: "1.6.0"
 underscore.string: "2.3.3"
 moment: "2.7.0"
-express: "3.4.0"
 express-ejs-layouts: "0.3.1"
 weibo: "0.6.9"
 node-qiniu: "6.1.6"
@@ -45,6 +43,7 @@ sendgrid: "1.0.5"
 xml2js: "0.4.4"
 ```
 
+**注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
 
 在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多5分钟，平台将自动迁移完成，在5分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
 
@@ -755,7 +754,7 @@ AV.Cloud.define("Logger", function(request, response) {
 很多时候，除了运行在移动设备的App之外，您通常也会为App架设一个网站，可能只是简单地展现App的信息并提供AppStore或者Play商店下载链接，或者展示当前热门的用户等等。您也可能建设一个后台管理系统，用来管理用户或者业务数据。
 这一切都需要您去创建一个web应用，并且从VPS厂商那里购买一个虚拟主机来运行web应用，您可能还需要去购买一个域名。
 
-不过现在，Cloud code为您提供了web hosting功能，可以让你设置一个App的二级域名`xxx.avosapps.com`，并部署您的web应用到该域名之下运行。同时支持静态资源和动态请求服务。
+不过现在，Cloud code为您提供了web hosting功能，可以让你设置一个App的二级域名`xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署您的web应用到该域名之下运行。同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
@@ -763,7 +762,7 @@ AV.Cloud.define("Logger", function(request, response) {
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为`myapp`，设置之后，您应该可以马上访问`http://myapp.avosapps.com`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将App的二级域名设置为`myapp`，设置之后，您应该可以马上访问`http://myapp.avosapps.com`或`http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
 
 ### 绑定独立域名
 
@@ -773,11 +772,11 @@ AV.Cloud.define("Logger", function(request, response) {
 
 如果你想为您的App绑定一个独立域名，需要您用注册的邮箱发送下列信息到我们的支持邮箱`support@avoscloud.com`提出申请或者从`帮助菜单`里的技术支持系统提出 Ticket：
 
-* 您已经绑定的avosapps.com二级子域名（请参考设置域名）
-* 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com）
+* 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
+* 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com(国内)或avosapps.us(美国)）
 * 您的注册邮箱（必须与发送者的邮箱一致）
 * 您想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 您的域名的备案信息 （必须可以在工信部查询到）
+* 您的域名的备案信息 （***国内必须可以在工信部查询到，美国区不需要***）
 
 我们将在3个工作日内审核，如果审核通过将为您绑定域名。
 
@@ -795,10 +794,10 @@ AV.Cloud.define("Logger", function(request, response) {
 
 请提交以下资料，我们来帮您录入到系统：
 
-1. 单位名称、单位通信地址、营业执照号码
-2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
-3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
-4. 网站名称（4个汉字以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项
+1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件
+2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
+3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、联系地址 （可以为单位通信地址）、QQ号码
+4. 网站名称（4个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项
    * 综合门户
    * 搜索引擎
    * 单位门户网站
@@ -1016,13 +1015,19 @@ app.use(express.cookieParser('Your Cookie Secure'));
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
 ```
 
-使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过AV.User.current()获取当前登录用户。
+使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `avos-express-cookie-session`支持的选项包括：
 
 * cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问AV.User.current()当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
 * key -- session在cookie中存储的key名称，默认为avos.sess。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
 
 登录很简单：
 
@@ -1036,7 +1041,7 @@ app.post('/login', function(req, res) {
     AV.User.logIn(req.body.username, req.body.password).then(function() {
       //登录成功，avosExpressCookieSession会自动将登录用户信息存储到cookie
       //跳转到profile页面。
-      console.log('signin successfully: %j', AV.User.current());
+      console.log('signin successfully: %j', req.AV.user);
       res.redirect('/profile');
     },function(error) {
       //登录失败，跳转到登录页面
@@ -1046,9 +1051,9 @@ app.post('/login', function(req, res) {
 //查看用户profile信息
 app.get('/profile', function(req, res) {
     // 判断用户是否已经登录
-    if (AV.User.current()) {
+    if (req.AV.user) {
       // 如果已经登录，发送当前登录用户信息。
-      res.send(AV.User.current());
+      res.send(req.AV.user);
     } else {
       // 没有登录，跳转到登录页面。
       res.redirect('/login');

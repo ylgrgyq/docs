@@ -682,7 +682,7 @@ curl -X POST \
   -d '{
         "channels":[ "public"],
         "data": {
-          "action": "com.avos.UPDATE_STATUS"
+          "action": "com.avos.UPDATE_STATUS",
           "name": "LeanCloud."
         }
       }' \
@@ -931,6 +931,7 @@ curl -X PUT \
 {
   "data": {
    "alert": "消息内容",
+   "category":"通知分类名称",
    "badge": "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为Increment字符串",
    "sound": "声音文件名，前提在应用里存在",
    "content-available":"如果你在使用Newsstand, 设置为1来开始一次后台下载"

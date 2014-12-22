@@ -110,7 +110,7 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
 
 ### WebView 授权
 
-首先你需要在[管理界面](https://leancloud.cn/app.html?appid=%appid%#/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`。你将在代码里用到`登陆 URL`,同时请将`回调URL`填写到对应平台的App管理中心（比如新浪开放平台）
+首先你需要在[管理界面](https://leancloud.cn/app.html?appid={{appid}}#/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`。你将在代码里用到`登陆 URL`,同时请将`回调URL`填写到对应平台的App管理中心（比如新浪开放平台）
 
 之后你需要在AndroidManifest.xml中间添加相应的Activity:
 
