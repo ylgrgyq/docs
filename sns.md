@@ -120,6 +120,8 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
         </activity>        
 ```
 
+同时你需要拷贝我们准备的res/avoscloud_sns_web_activity.xml到你的项目中去。
+
 之后在你需要授权的地方，你就可以通过WebView进行相应的授权：
 
 ```
