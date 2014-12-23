@@ -358,7 +358,8 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
 
 用户验证是通过HTTP header来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个App程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定endpoint.在下面的例子中,您的app的key被包含在命令中,您可以使用下拉框来显示其他app的示例代码.
 
-对于Javascript使用,LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用.
+对于Javascript使用,LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用。
+
 
 #### 更安全的鉴权方式
 
@@ -2261,7 +2262,7 @@ curl -X POST \
   "https://leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
 
-其中 `code` 是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码。
+其中 `code` 是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码
 
 如果您创建了短信模板，可以指定 `template` 参数指定模板名称来使用您的模板，并且可以传入变量渲染模板：
 
@@ -2420,6 +2421,24 @@ metrics参数可选项解释：
   <tr><td>push_ack</td><td>推送到达数</td></tr>
   <tr><td>push_session</td><td>聊天用户数</td></tr>
   <tr><td>push_direct</td><td>聊天消息数</td></tr>
+  <tr><td>active_user_locations</td><td>活跃用户所在地</td></tr>
+  <tr><td>new_user_locations</td><td>新用户所在地</td></tr>
+  <tr><td>device_os</td><td>设备系统版本</td></tr>
+  <tr><td>device_model</td><td>设备型号</td></tr>
+  <tr><td>device_network_access</td><td>设备网络接入方式</td></tr>
+  <tr><td>device_network_carrier</td><td>设备网络运营商</td></tr>
+  <tr><td>device_resolution</td><td>设备分辨率</td></tr>
+  <tr><td>page_visit</td><td>页面访问量</td></tr>
+  <tr><td>page_duration</td><td>页面停留时间</td></tr>
+  <tr><td>active_user_freq_histo</td><td>活跃用户使用次数分布</td></tr>
+  <tr><td>new_user_freq_histo</td><td>新用户使用次数分布</td></tr>
+  <tr><td>active_user_time_histo</td><td>活跃用户使用时长分布</td></tr>
+  <tr><td>new_user_time_histo</td><td>新用户使用时长分布</td></tr>
+  <tr><td>session_time_histo</td><td>单次启动时长分布</td></tr>
+  <tr><td>event_count</td><td>自定义事件次数，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_user</td><td>自定义事件用户数，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_duration</td><td>自定义事件时长，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_label_count</td><td>自定义事件标签分布，请求参数需增加 event, event_label 参数</td></tr>
 </table>
 
 返回的json数据

@@ -682,7 +682,7 @@ curl -X POST \
   -d '{
         "channels":[ "public"],
         "data": {
-          "action": "com.avos.UPDATE_STATUS"
+          "action": "com.avos.UPDATE_STATUS",
           "name": "LeanCloud."
         }
       }' \
