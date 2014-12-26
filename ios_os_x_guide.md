@@ -10,6 +10,10 @@ LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位�
 
 如果你熟悉像 Ruby on Rails 这样的 Web 框架，LeanCloud 将会十分容易上手。我们在设计 LeanCloud 时应用了许多与之相同的原则。如果你之前使用过 Parse 或类似的后端服务，会发现我们在设计 API 时尽可能与之保持兼容，让应用非常容易从其他服务迁移到 LeanCloud，开发者在使用我们的 SDK 时也会得心应手。
 
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+
 ## 使用 Cocopods 安装SDK
 
 在[快速入门](https://leancloud.cn/start.html)里可以看到怎么在你的项目里安装SDK。
@@ -49,8 +53,6 @@ pod 'AVOSCloudSNS'
 * 执行命令`pod install`安装SDK。
 
 您还可以参考这篇文章 [《CocoaPods安装和使用教程》](http://code4app.com/article/cocoapods-install-usage)
-
-
 
 ## 应用
 
