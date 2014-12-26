@@ -489,12 +489,15 @@ Application opens and push-related open rates will be available in your applicat
 
 ```objc
 - (void)applicationDidBecomeActive:(UIApplication *)application {
-  AVInstallation *currentInstallation = [AVInstallation currentInstallation];
-  if (currentInstallation.badge != 0) {
-    currentInstallation.badge = 0;
-    [currentInstallation saveEventually];
-  }
-  // ...
+    int num=application.applicationIconBadgeNumber;
+    if(num!=0){
+        AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+        [currentInstallation setBadge:0];
+        [currentInstallation saveEventually];
+        application.applicationIconBadgeNumber=0;
+    }
+    [application cancelAllLocalNotifications];
+    //...
 }
 ```
 
