@@ -4,6 +4,10 @@
 
 如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/avoscloud/Android-SDK-demos) 。
 
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+
 ## 版本变迁
 
 从 2.0.0 开始，我们把以 `Parse` 开头的所有类名修改为以 `AV` 开头。我们为 1.x 版本的老用户[提供了自动升级脚本](https://raw.github.com/avos/avoscloud-sdk/master/android/migrate.rb)，请在项目的根目录运行 [migrate.rb](https://raw.github.com/avos/avoscloud-sdk/master/android/migrate.rb)，它会自动替换所有旧的 SDK 类名。
