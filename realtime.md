@@ -9,6 +9,9 @@
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
 * 一个完整的社交应用 [LeanChat](https://github.com/leancloud/leanchat-android)，类似微信。
 
+同时提供了便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+
+
 ## 功能和特性
 
 在进入开发之前，请允许我们先介绍一下实时通信服务的功能和特性，加粗的条目是最新添加的：
