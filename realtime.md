@@ -4,8 +4,8 @@
 
 我们也提供了一些 Demo 帮助您快速入门，
 
-* [Android Chat Demo](https://github.com/avoscloud/Android-SDK-demos/tree/master/keepalive)
-* [iOS Chat Demo](https://github.com/avoscloud/iOS-SDK-demos/tree/master/KeepAlive)
+* [Android Chat Demo](https://github.com/leancloud/Android-SDK-demos/tree/master/keepalive)
+* [iOS Chat Demo](https://github.com/leancloud/iOS-SDK-demos/tree/master/KeepAlive)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
 * 一个完整的社交应用 [LeanChat](https://github.com/leancloud/leanchat-android)，类似微信。
 
@@ -195,7 +195,7 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
 
 我们已经开源 JS Messaging SDK 了， 见 [leancloud/realtime-messaging-jssdk](https://github.com/leancloud/realtime-messaging-jssdk) 。
 
-## LeanChat Demo 
+## LeanChat Demo
 
 为了帮助大家更容易上手实时通信组件，我们开发了多平台应用 LeanChat，像一个简易版的微信，可点击[这里](http://fir.im/Lean)下载。项目代码放在了 Github上，[LeanChat-Android](https://github.com/leancloud/leanchat-android) 和 [LeanChat-iOS](https://github.com/leancloud/leanchat-ios)。先上图，
 

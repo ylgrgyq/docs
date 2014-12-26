@@ -28,7 +28,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 * subscribers 本条消息推送到的设备数量（不表示一定到达）
 * status 状态，可能是"in queue","done"或者错误信息
 * data 推送的内容数据，JSON 对象。
-* where 推送的查询 `_Installation` 表的查询条件 
+* where 推送的查询 `_Installation` 表的查询条件
 
 如何发送消息也请看下面的详细指南。
 
@@ -509,7 +509,7 @@ Application opens and push-related open rates will be available in your applicat
 
 Android 推送功能除了需要必须的avoscloud.jar以外，还需要额外的avospush.jar。
 
-Android 消息推送有专门的Demo，请见[AVOSCloud-Push](https://github.com/avoscloud/Android-SDK-demos/tree/master/AVOSCloud-Push)项目。
+Android 消息推送有专门的Demo，请见[AVOSCloud-Push](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Push)项目。
 
 ### Installation
 
@@ -537,7 +537,7 @@ AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
             // 保存失败，输出错误信息
         }
     }
-}); 
+});
 ```
 
 ### 订阅频道
@@ -936,7 +936,7 @@ curl -X PUT \
    "sound": "声音文件名，前提在应用里存在",
    "content-available":"如果你在使用Newsstand, 设置为1来开始一次后台下载"
   }
-}  
+}
 ```
 
 并且 iOS 设备支持 `alert` 本地化消息推送：
@@ -951,7 +951,7 @@ curl -X PUT \
       "loc-args":"",
       "launch-image":""
      }
-   } 
+   }
 }
 ```
 

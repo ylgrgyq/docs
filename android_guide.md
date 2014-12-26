@@ -2,7 +2,7 @@
 
 如果你还没有安装 LeanCloud SDK ，请前往[快速入门指南](/start.html)。
 
-如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/avoscloud/Android-SDK-demos) 。
+如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/leancloud/Android-SDK-demos) 。
 
 ## 快速入门
 
@@ -860,7 +860,7 @@ public class App extends Application {
 }
 ```
 
-还可以参考这个 [Todo.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/Todo.java) 以及 [AVService.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)中的`AVInit`函数。
+还可以参考这个 [Todo.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/Todo.java) 以及 [AVService.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)中的`AVInit`函数。
 
 ### 访问器，修改器和方法
 
@@ -924,7 +924,7 @@ query.findInBackground(new FindCallback<Armor>() {
   }
 });
 ```
-还可以参考[AVService.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)的`findTodos`函数。
+还可以参考[AVService.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)的`findTodos`函数。
 
 ### AVUser 的子类化
 
@@ -1604,7 +1604,7 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 除了用户相关的包括注册，登录等操作以外，LeanCloud还支持额外的短信验证码服务。
 在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用手机号码短信认证`选项的前提下，使用LeanCloud提供的短信验证码服务。
 
-下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/avoscloud/sms-demo) 项目。
+下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/leancloud/sms-demo) 项目。
 
 ### 请求短信验证码
 以下操作为给绑定这个手机号码的用户发送验证短信

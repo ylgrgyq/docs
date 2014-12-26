@@ -136,7 +136,7 @@ thread.sync(syncCallback);
 
 更多的信息您可以参考我们的实现的Activity：
 
-https://github.com/avoscloud/avoscloud-sdk/blob/master/android/avoscloudfeedback/src/com/avos/avoscloud/feedback/ThreadActivity.java
+https://github.com/leancloud/avoscloud-sdk/blob/master/android/avoscloudfeedback/src/com/avos/avoscloud/feedback/ThreadActivity.java
 
 *注：ThreadActivity使用了ActionBar(API 11),EditText的 textCursorDrawable属性(API 12)。*
 
