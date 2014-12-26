@@ -235,10 +235,14 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 
 iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的推送。因为APNS
 有消息长度限制，且你们的消息正文可能还包含上层协议，所以 我们现在APNS
-的推送内容是让应用在控制台设置一个静态的APNS json，如“你有新的未读消
-息” 。
+的推送内容是让应用在控制台设置一个静态的APNS json，如“您有新的消息” 。
+
+![image](images/realtime_ios_push.png)
 
 ![image](images/rtm-push.png)
+
+桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
+
 
 ### 为什么我的 iPhone 收不到离线消息推送？
 
