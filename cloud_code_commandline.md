@@ -46,7 +46,7 @@ sudo cnpm install -g avoscloud-code
 如果从 npm 安装失败，也可以直接从 Github 源码安装：
 
 ```sh
-sudo npm install -g  git+https://github.com/avoscloud/avoscloud-code-command
+sudo npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 安装成功之后，直接在 terminal（终端）运行 `avoscloud -h`，输出帮助信息：

@@ -2,11 +2,15 @@
 
 如果你还没有安装 LeanCloud SDK ，请前往[快速入门指南](/start.html)。
 
-如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/avoscloud/Android-SDK-demos) 。
+如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/leancloud/Android-SDK-demos) 。
+
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 版本变迁
 
-从 2.0.0 开始，我们把以 `Parse` 开头的所有类名修改为以 `AV` 开头。我们为 1.x 版本的老用户[提供了自动升级脚本](https://raw.github.com/avos/avoscloud-sdk/master/android/migrate.rb)，请在项目的根目录运行 [migrate.rb](https://raw.github.com/avos/avoscloud-sdk/master/android/migrate.rb)，它会自动替换所有旧的 SDK 类名。
+从 2.0.0 开始，我们把以 `Parse` 开头的所有类名修改为以 `AV` 开头。我们为 1.x 版本的老用户[提供了自动升级脚本](https://raw.github.com/leancloud/avoscloud-sdk/master/android/migrate.rb)，请在项目的根目录运行 [migrate.rb](https://raw.github.com/leancloud/avoscloud-sdk/master/android/migrate.rb)，它会自动替换所有旧的 SDK 类名。
 从 2.4.0 开始, 我们重新设计了 sdk 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包 --- 除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar, avosstatistics.jar 等都可以在用到该组件时才导入。
 
 ## 模块与 SDK 包
@@ -856,7 +860,7 @@ public class App extends Application {
 }
 ```
 
-还可以参考这个 [Todo.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/Todo.java) 以及 [AVService.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)中的`AVInit`函数。
+还可以参考这个 [Todo.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/Todo.java) 以及 [AVService.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)中的`AVInit`函数。
 
 ### 访问器，修改器和方法
 
@@ -920,7 +924,7 @@ query.findInBackground(new FindCallback<Armor>() {
   }
 });
 ```
-还可以参考[AVService.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)的`findTodos`函数。
+还可以参考[AVService.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)的`findTodos`函数。
 
 ### AVUser 的子类化
 
@@ -1601,7 +1605,7 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 除了用户相关的包括注册，登录等操作以外，LeanCloud还支持额外的短信验证码服务。
 在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用手机号码短信认证`选项的前提下，使用LeanCloud提供的短信验证码服务。
 
-下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/avoscloud/sms-demo) 项目。
+下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/leancloud/sms-demo) 项目。
 
 ### 请求短信验证码
 以下操作为给绑定这个手机号码的用户发送验证短信

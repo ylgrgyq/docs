@@ -1,6 +1,8 @@
 # JavaScript 指南
 
-如果你还没有设置你的项目,请查看我们的QuickStart.
+如果你还没有设置你的项目，请查看我们的QuickStart。
+
+如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/javascript-sdk-demos)。
 
 ## 简介
 
@@ -12,6 +14,10 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)。本指南并没有完全覆盖所有的 API 调用。
+
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ### Apps
 

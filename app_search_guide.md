@@ -14,8 +14,8 @@
 
 在你的应用内使用这个功能很简单，只要三步，请紧跟我们的脚步！ Let's do it.
 
-**我们这里是以[TodoDemo](https://github.com/avoscloud/Android-SDK-demos/tree/master/AVOSCloud-Todo)为例子。**
-关于应用内搜索的部分可见[searchQuery函数](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)、[CreateTodo.java](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/CreateTodo.java)、[AndroidManifest.xml](https://github.com/avoscloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/AndroidManifest.xml)
+**我们这里是以[TodoDemo](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Todo)为例子。**
+关于应用内搜索的部分可见[searchQuery函数](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)、[CreateTodo.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/CreateTodo.java)、[AndroidManifest.xml](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/AndroidManifest.xml)
 
 效果图，点击`打开应用`即可跳转到具体界面
 
@@ -344,7 +344,7 @@ searchQuery.setSortBuilder(builder);
 		}
 	  });
 ```
-您也可以参考我们的SearchActivity来更好的指定您自己的搜索结果页面。`https://github.com/avoscloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java`
+您也可以参考我们的SearchActivity来更好的指定您自己的搜索结果页面。`https://github.com/leancloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java`
 
 ##### 分页查询
 

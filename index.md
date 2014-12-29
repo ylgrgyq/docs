@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-sm-3">
       <div class="doc-hero-links">
-        <a href="/start.html" class="doc-quick-start-btn">
+        <a href="/quick-start-guide.html" class="doc-quick-start-btn">
           <i class="icon icon-bulb"></i>
           快速上手
         </a>
@@ -109,7 +109,7 @@
           <li><a href="unity_statistics.html">Unity3D 统计 SDK 指南</a></li>
           <li><a href="dotnet_guide.html">.NET指南</a></li>
           <li><a href="dotnet_realtime.html">Windows Phone 8.0 实时通信指南</a></li>
-          <li><a href="api/wp/Help/index.html">.NET SDK API</a> 
+          <li><a href="api/wp/Help/index.html">.NET SDK API</a>
         </ul>
       </div>
     </div>
