@@ -953,6 +953,7 @@ public class MyUser extends AVUser {
 MyUser cloudUser = AVUser.logIn(username, password,
         MyUser.class);
 ```
+**注：由于fastjson内部的bug，请在定义AVUser时不要定义跟AVRelation相关的get方法，如果一定要定义的话，请通过在Class上添加`@JSONType(ignores = {"属性名"})`的方式，将其注释为非序列化字段。**
 
 ## ACL权限控制
 ACL(Access Control List)是最灵活和简单的应用数据安全管理方法。通俗的解释就是为每一个数据创建一个访问的白名单列表，只有在名单上的用户(AVUser)或者具有某种角色(AVRole)的用户才能被允许访问。为了更好地保证用户数据安全性，LeanCloud表中每一张都有一个ACL列。当然，LeanCloud还提供了进一步的读写权限控制。一个 User 必须拥有读权限（或者属于一个拥有读权限的 Role）才可以获取一个对象的数据，同时，一个 User 需要写权限（或者属于一个拥有写权限的 Role）才可以更改或者删除一个对象。
