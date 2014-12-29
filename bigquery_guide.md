@@ -27,6 +27,7 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 * 逻辑运算符（AND, &&, OR, ||, etc）
 * 数学函数（COUNT, SUM, AVG, MAX, MIN, etc） 
 * 字符串函数（STRING, SUBSTRING, SUBSTR, UPPER, LOWER, etc）
+* 时间函数 (unix_timestamp, from_unixtime)，其中 unix_timestamp 所使用的时间格式为 `yyyy-MM-ddTHH:mm:ss.SSSZ`
 
 ### 多表 Join：
 
