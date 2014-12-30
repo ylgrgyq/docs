@@ -1112,6 +1112,9 @@ app.use(avosExpressHttpsRedirect());
 
 注意：**dev.xxx.avosapps.com的view会同时渲染到生产环境，app.js的逻辑代码会自动隔离。因此建议测试环境和生产环境的views目录区分开，并通过全局变量__production来判断当前环境是生产环境还是测试环境，分别设置views目录**
 
+**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
+
+
 ```javascript
 if(__production)
   app.set('views', 'cloud/views');

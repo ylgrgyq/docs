@@ -152,6 +152,8 @@ avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监
 
 更多关于云代码开发，请参考 [云代码开发指南](https://leancloud.cn/docs/cloud_code_guide.html) 。
 
+**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
+
 
 ## 部署
 
