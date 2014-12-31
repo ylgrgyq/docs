@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-sm-3">
       <div class="doc-hero-links">
-        <a href="/quick-start-guide.html" class="doc-quick-start-btn">
+        <a href="quick-start-guide.html" class="doc-quick-start-btn">
           <i class="icon icon-bulb"></i>
           快速上手
         </a>
