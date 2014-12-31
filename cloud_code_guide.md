@@ -1115,6 +1115,7 @@ app.use(avosExpressHttpsRedirect());
 
 ### 测试环境和开发环境
 
+**提示**：云代码 2.0 及以上版本可以跳过本节
 
 前面已经谈到Cloud Code的测试和生产环境之间的区别，可以通过HTTP头部`X-AVOSCloud-Application-Production`来区分。但是对于Web Hosting就没有办法通过这个HTTP头来方便的区分。
 
@@ -1295,6 +1296,19 @@ AV.Cloud.httpRequest({
 });
 ```
 
+## 运行环境区分
+
+有些时候你可能需要根据不同的运行环境（开发环境、测试环境或生产环境）做不同的处理，可以使用下面的代码：
+
+```javascript
+if (__local) {
+  // 当前环境为「开发环境」，是由命令行工具启动的
+} else if(__production) {
+  // 当前环境为「生产环境」，是线上正式运行的环境
+} else {
+  // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-AVOSCloud-Application-Production:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
+}
+```
 
 ## 模块
 
