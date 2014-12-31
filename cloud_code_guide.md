@@ -1009,19 +1009,19 @@ app.set('views','cloud/views');   //设置模板目录
 app.set('view engine', 'ejs');    // 设置template引擎
 app.use(express.bodyParser());    // 读取请求body的中间件
 
-//启用cookie
+// 启用 cookieParser
 app.use(express.cookieParser('Your Cookie Secure'));
-//使用avos-express-cookie-session记录登录信息到cookie。
+// 使用 avos-express-cookie-session 记录登录信息到 cookie
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
 ```
 
-使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `avos-express-cookie-session`支持的选项包括：
 
 * cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
 * fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* key -- session在cookie中存储的key名称，默认为avos.sess。
+* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
 
 **注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
 
@@ -1086,6 +1086,17 @@ app.get('/logout', function(req, res) {
 ```
 
 注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+
+### 自定义 session
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookieSession` 组件：
+
+```javascript
+// 使用 cookieSession 记录自定义信息到 cookie
+app.use(express.cookieSession());
+```
+
+该组件和 `avos-express-cookie-session` 组件可以并存。
+
 
 ### 启用HTTPS
 
