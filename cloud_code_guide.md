@@ -1289,12 +1289,13 @@ AV.Cloud.httpRequest({
 有些时候你可能需要根据不同的运行环境（开发环境、测试环境或生产环境）做不同的处理，可以使用下面的代码：
 
 ```javascript
-if (__local)
+if (__local) {
   // 当前环境为「开发环境」，是由命令行工具启动的
-else if(__production)
+} else if(__production) {
   // 当前环境为「生产环境」，是线上正式运行的环境
-else
+} else {
   // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-AVOSCloud-Application-Production:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
+}
 ```
 
 ## 模块
