@@ -1313,7 +1313,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且值为'com.avos.UPDATE_STATUS'**
+请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且值不能为'com.avos.UPDATE_STATUS'**
 
 您需要在您的Android项目中添加如下功能
 
