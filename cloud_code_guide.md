@@ -1088,6 +1088,7 @@ app.get('/logout', function(req, res) {
 注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
 
 ### 自定义 session
+
 有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookieSession` 组件：
 
 ```javascript
