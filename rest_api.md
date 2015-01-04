@@ -349,6 +349,12 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
       <td>/1.1/rtm/messages/logs/</td>
       <td>GET</td>
       <td>获得应用聊天记录</td>
+    </tr>
+    <tr>
+      <td>/1.1/rtm/messages/</td>
+      <td>POST</td>
+      <td>通过 API 向用户发消息</td>
+    </tr>
   </tbody>
 </table>
 
@@ -2354,6 +2360,41 @@ curl -X GET \
 {"count": 4}
 ```
 
+### 通过 REST API 向用户发消息
+
+我们目前提供 REST API 允许向指定用户发送消息。您可以一次向至多 20 个用
+户发送消息。目前这种消息是 transient 消息，仅对在线用户有效，暂不支持离线消息、推送通知、消息记录等。
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"]}'
+  https://leancloud.cn/1.1/rtm/messages
+```
+
+参数说明：
+
+<table>
+  <tr>
+    <td>参数名</td>
+    <td>含义</td>
+  </tr>
+  <tr>
+    <td>from_peer</td>
+    <td>消息的发件人 id</td>
+  </tr>
+  <tr>
+    <td>to_peers</td>
+    <td>消息的收件人 id 列表，数组，一次至多发送20个</td>
+  </tr>
+  <tr>
+    <td>message</td>
+    <td>消息内容</td>
+  </tr>
+</table>
+
 ##统计数据API
 
 统计API可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计API必须使用master key的签名方式鉴权，请参考 更安全的鉴权方式 一节。
@@ -2635,7 +2676,7 @@ curl -i -X POST \
     "_ApplicationKey":"{{appkey}}",
     "score":9999}' \
   https://leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
-``` 
+```
 对应的输出：
 
 ```
