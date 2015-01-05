@@ -2370,7 +2370,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"]}'
+  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"]}' \
   https://leancloud.cn/1.1/rtm/messages
 ```
 
