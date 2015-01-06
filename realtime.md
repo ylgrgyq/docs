@@ -4,8 +4,8 @@
 
 我们也提供了一些 Demo 帮助您快速入门，
 
-* 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios) 
-* [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo) 
+* 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
+* [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
 * 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
 
 
@@ -291,3 +291,8 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 我们的群组信息实际上是 LeanCloud 的一个标准的数据表 `AVOSRealtimeGroups`。对于群组的元信息，你可以在关联的表里设置，也可以在这个表里添加新的列。请对这个表设置合理的 ACL 来保证内容不会被恶意篡改。
 
 **注意请不要通过修改 `m` 列来改变群组成员**，这样目标用户无法收到通知，会造成数据不一致的情况。
+
+### 敏感词过滤怎么做
+
+我们在服务器端已经通过一份敏感词的列表对目前消息进行过滤，这部分功能无
+需用户参与，是内置默认支持的。
