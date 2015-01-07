@@ -46,7 +46,7 @@ sudo cnpm install -g avoscloud-code
 如果从 npm 安装失败，也可以直接从 Github 源码安装：
 
 ```sh
-sudo npm install -g  git+https://github.com/avoscloud/avoscloud-code-command
+sudo npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 安装成功之后，直接在 terminal（终端）运行 `avoscloud -h`，输出帮助信息：
@@ -69,6 +69,7 @@ Usage: avoscloud [选项] <命令>
     checkout <app>: 切换到一个应用，deploy、status 等命令将运行在该应用上。
     add <app>: 添加一个应用。
     rm <app>: 移除一个应用。
+    cql: 进入 CQL 查询交互。
 
   Options:
 
@@ -82,6 +83,7 @@ Usage: avoscloud [选项] <命令>
     -n, --lines <lines>        查看多少行最新的云代码日志，默认 10 行。
     -t, --tailf                自动刷新云代码日志，结合 logs 命令使用。
     -r, --revision <revision>  git 的版本号，仅对从 git 仓库部署有效。
+    -P, --port <port>          指定本地调试的端口，默认 3000。
 ```
 
 可以通过 `-V` 选项查看版本：
@@ -89,7 +91,7 @@ Usage: avoscloud [选项] <命令>
 
 ```sh
 $ avoscloud -V
-0.5.0
+0.6.1
 ```
 
 后面我们都假定 `$ avoscloud` 开始的都表示在终端里执行这个命令。
@@ -146,9 +148,11 @@ Project created!
 * 通过浏览器打开 [http://localhost:3000/avos](http://localhost:3000/avos)，进入云代码函数和 Class Hook 函数调试界面。
 * 通过浏览器打开 [http://localhost:3000](http://localhost:3000)，可以看到 public 目录的 index.html 页面的内容。
 
-avoscloud 命令还支持代码的热加载，修改代码后无需重新启动，就可以看到代码的最新结果（包括 web 功能）。
+avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
 
 更多关于云代码开发，请参考 [云代码开发指南](https://leancloud.cn/docs/cloud_code_guide.html) 。
+
+**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
 
 
 ## 部署
@@ -398,6 +402,18 @@ Uploads /Users/dennis/programming/avos/new_app/public/index.html successfully at
 ```sh
 avoscloud upload images/
 ```
+
+## CQL 交互查询
+
+0.6.1 版本开始，我们支持 cql 命令来进入交互查询界面：
+
+```sh
+avoscloud cql
+```
+
+使用 [CQL](./cql_guide.html) 语言做查询，结果如图：
+
+![image](images/cql_command.png)
 
 ## 其他命令
 

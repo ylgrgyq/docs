@@ -20,13 +20,12 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
-        "express": "3.x",
         "async": "0.9.x"
     }
 }
 ```
 
-需要注意的是，某些必需类库目前还是以 cloud-code 运行环境版本优先，具体版本信息：
+需要注意的是，cloud-code 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
 
 ```
 nodejs: "0.10.29"
@@ -34,7 +33,6 @@ qiniu: "6.1.3"
 underscore: "1.6.0"
 underscore.string: "2.3.3"
 moment: "2.7.0"
-express: "3.4.0"
 express-ejs-layouts: "0.3.1"
 weibo: "0.6.9"
 node-qiniu: "6.1.6"
@@ -45,6 +43,7 @@ sendgrid: "1.0.5"
 xml2js: "0.4.4"
 ```
 
+**注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
 
 在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多5分钟，平台将自动迁移完成，在5分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
 
@@ -356,7 +355,7 @@ sudo npm install -g avoscloud-code
 如果从npm安装失败，可以从Github安装：
 
 ```sh
-sudo npm install -g  git+https://github.com/avos/CloudCodeMockSDK
+sudo npm install -g  git+https://github.com/leancloud/CloudCodeMockSDK
 ```
 
 
@@ -461,10 +460,10 @@ AV.Cloud.define("averageStars", function(request, response) {
 Cloud函数可以被各种客户端SDK调用，也可以通过REST API调用，例如，使用一部电影的名称去调用`averageStars`函数：
 
 ```sh
-curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+curl -X POST -H "Content-Type: application/json; charset=utf-8" \
+       -H "X-AVOSCloud-Application-Id: {{appid}}" \
+       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+       -H "X-AVOSCloud-Application-Production: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
@@ -473,7 +472,7 @@ https://leancloud.cn/1.1/functions/averageStars
 
 * request - 包装了请求信息的请求对象，下列这些字段将被设置到request对象内:
  * params - 客户端发送的参数对象
- * user - `AV.User`对象，发起调用的用户，如果没有登录，则不会设置此对象。
+ * user - `AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
 * response - 应答对象，包含两个函数：
  * success - 这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的JSON对象或数组，并且可以包含`AV.Object`对象。
  * error - 如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
@@ -617,6 +616,24 @@ AV.Cloud.onVerified('sms', function(request, response) {
 ```
 函数的第一个参数是验证类型：短信验证为`sms`，邮箱验证为`email`。另外，数据库中相关的验证字段，如`emailVerified`不需要修改，我们已经为你更新完成。
 
+### 在用户注册成功之后
+在用户注册成功之后如果你想做一些事情可以定义以下函数：
+
+```javascript
+AV.Cloud.afterSave("_User", function(request) {
+  console.log(request.object);
+  request.object.set("from","LeanCloud");
+  request.object.save(null,{success:function(user)
+    {
+      console.log("ok!");
+    },error:function(user,error)
+    {
+      console.log("error",error);
+    }
+    });
+});
+```
+
 ## 定时任务
 
 很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
@@ -737,7 +754,7 @@ AV.Cloud.define("Logger", function(request, response) {
 很多时候，除了运行在移动设备的App之外，您通常也会为App架设一个网站，可能只是简单地展现App的信息并提供AppStore或者Play商店下载链接，或者展示当前热门的用户等等。您也可能建设一个后台管理系统，用来管理用户或者业务数据。
 这一切都需要您去创建一个web应用，并且从VPS厂商那里购买一个虚拟主机来运行web应用，您可能还需要去购买一个域名。
 
-不过现在，Cloud code为您提供了web hosting功能，可以让你设置一个App的二级域名`xxx.avosapps.com`，并部署您的web应用到该域名之下运行。同时支持静态资源和动态请求服务。
+不过现在，Cloud code为您提供了web hosting功能，可以让你设置一个App的二级域名`xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署您的web应用到该域名之下运行。同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
@@ -745,7 +762,7 @@ AV.Cloud.define("Logger", function(request, response) {
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为`myapp`，设置之后，您应该可以马上访问`http://myapp.avosapps.com`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将App的二级域名设置为`myapp`，设置之后，您应该可以马上访问`http://myapp.avosapps.com`或`http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
 
 ### 绑定独立域名
 
@@ -755,11 +772,11 @@ AV.Cloud.define("Logger", function(request, response) {
 
 如果你想为您的App绑定一个独立域名，需要您用注册的邮箱发送下列信息到我们的支持邮箱`support@avoscloud.com`提出申请或者从`帮助菜单`里的技术支持系统提出 Ticket：
 
-* 您已经绑定的avosapps.com二级子域名（请参考设置域名）
-* 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com）
+* 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
+* 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com(国内)或avosapps.us(美国)）
 * 您的注册邮箱（必须与发送者的邮箱一致）
 * 您想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 您的域名的备案信息 （必须可以在工信部查询到）
+* 您的域名的备案信息 （***国内必须可以在工信部查询到，美国区不需要***）
 
 我们将在3个工作日内审核，如果审核通过将为您绑定域名。
 
@@ -777,10 +794,10 @@ AV.Cloud.define("Logger", function(request, response) {
 
 请提交以下资料，我们来帮您录入到系统：
 
-1. 单位名称、单位通信地址、营业执照号码
-2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
-3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
-4. 网站名称（4个汉字以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项
+1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件
+2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
+3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、联系地址 （可以为单位通信地址）、QQ号码
+4. 网站名称（4个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项
    * 综合门户
    * 搜索引擎
    * 单位门户网站
@@ -992,19 +1009,25 @@ app.set('views','cloud/views');   //设置模板目录
 app.set('view engine', 'ejs');    // 设置template引擎
 app.use(express.bodyParser());    // 读取请求body的中间件
 
-//启用cookie
+// 启用 cookieParser
 app.use(express.cookieParser('Your Cookie Secure'));
-//使用avos-express-cookie-session记录登录信息到cookie。
+// 使用 avos-express-cookie-session 记录登录信息到 cookie
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
 ```
 
-使用`express.cookieParser`中间件启用cookie，注意传入一个secret用于cookie加密（必须）。然后使用`require('avos-express-cookie-session')`导入的avosExpressCookieSession创建一个session存储，它会自动将AV.User的登录信息记录到cookie里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过AV.User.current()获取当前登录用户。
+使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `avos-express-cookie-session`支持的选项包括：
 
 * cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问AV.User.current()当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* key -- session在cookie中存储的key名称，默认为avos.sess。
+* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
 
 登录很简单：
 
@@ -1018,7 +1041,7 @@ app.post('/login', function(req, res) {
     AV.User.logIn(req.body.username, req.body.password).then(function() {
       //登录成功，avosExpressCookieSession会自动将登录用户信息存储到cookie
       //跳转到profile页面。
-      console.log('signin successfully: %j', AV.User.current());
+      console.log('signin successfully: %j', req.AV.user);
       res.redirect('/profile');
     },function(error) {
       //登录失败，跳转到登录页面
@@ -1028,9 +1051,9 @@ app.post('/login', function(req, res) {
 //查看用户profile信息
 app.get('/profile', function(req, res) {
     // 判断用户是否已经登录
-    if (AV.User.current()) {
+    if (req.AV.user) {
       // 如果已经登录，发送当前登录用户信息。
-      res.send(AV.User.current());
+      res.send(req.AV.user);
     } else {
       // 没有登录，跳转到登录页面。
       res.redirect('/login');
@@ -1064,6 +1087,18 @@ app.get('/logout', function(req, res) {
 
 注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
 
+### 自定义 session
+
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookieSession` 组件：
+
+```javascript
+// 使用 cookieSession 记录自定义信息到 cookie
+app.use(express.cookieSession());
+```
+
+该组件和 `avos-express-cookie-session` 组件可以并存。
+
+
 ### 启用HTTPS
 
 为了安全性，我们可能会为网站加上HTTPS加密传输。我们的云代码支持网站托管，同样会有这样的需求。
@@ -1080,6 +1115,7 @@ app.use(avosExpressHttpsRedirect());
 
 ### 测试环境和开发环境
 
+**提示**：云代码 2.0 及以上版本可以跳过本节
 
 前面已经谈到Cloud Code的测试和生产环境之间的区别，可以通过HTTP头部`X-AVOSCloud-Application-Production`来区分。但是对于Web Hosting就没有办法通过这个HTTP头来方便的区分。
 
@@ -1088,6 +1124,9 @@ app.use(avosExpressHttpsRedirect());
 部署的测试代码将运行在这个域名之上，在测试通过之后，通过`部署`菜单里的`部署到生产环境`按钮切换之后，可以在`xxx.avosapps.com`看到最新的运行结果。
 
 注意：**dev.xxx.avosapps.com的view会同时渲染到生产环境，app.js的逻辑代码会自动隔离。因此建议测试环境和生产环境的views目录区分开，并通过全局变量__production来判断当前环境是生产环境还是测试环境，分别设置views目录**
+
+**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
+
 
 ```javascript
 if(__production)
@@ -1257,6 +1296,19 @@ AV.Cloud.httpRequest({
 });
 ```
 
+## 运行环境区分
+
+有些时候你可能需要根据不同的运行环境（开发环境、测试环境或生产环境）做不同的处理，可以使用下面的代码：
+
+```javascript
+if (__local) {
+  // 当前环境为「开发环境」，是由命令行工具启动的
+} else if(__production) {
+  // 当前环境为「生产环境」，是线上正式运行的环境
+} else {
+  // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-AVOSCloud-Application-Production:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
+}
+```
 
 ## 模块
 

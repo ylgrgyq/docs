@@ -10,7 +10,7 @@ LeanCloud 开发者文档
 
 ## 贡献
 
-我们欢迎所有用户为我们贡献或者修正错误。您只要 [fork](https://github.com/leancloud/avoscloud-doc/fork) 这个项目，并提交 [Pull Request](https://github.com/leancloud/avoscloud-doc/pulls) 即可。
+我们欢迎所有用户为我们贡献或者修正错误。您只要 [fork](https://github.com/leancloud/docs/fork) 这个项目，并提交 [Pull Request](https://github.com/leancloud/docs/pulls) 即可。
 
 ## 协议
 

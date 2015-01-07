@@ -4,10 +4,10 @@
 
 我们也提供了一些 Demo 帮助您快速入门，
 
-* [Android Chat Demo](https://github.com/avoscloud/Android-SDK-demos/tree/master/keepalive)
-* [iOS Chat Demo](https://github.com/avoscloud/iOS-SDK-demos/tree/master/KeepAlive)
+* 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 一个完整的社交应用 [LeanChat](https://github.com/leancloud/leanchat-android)，类似微信。
+* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+
 
 ## 功能和特性
 
@@ -192,6 +192,25 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
 
 我们已经开源 JS Messaging SDK 了， 见 [leancloud/realtime-messaging-jssdk](https://github.com/leancloud/realtime-messaging-jssdk) 。
 
+## LeanChat Demo
+
+为了帮助大家更容易上手实时通信组件，我们开发了多平台应用 LeanChat，像一个简易版的微信，可点击[这里](http://fir.im/Lean)下载。项目代码放在了 Github上，[LeanChat-Android](https://github.com/leancloud/leanchat-android) 和 [LeanChat-iOS](https://github.com/leancloud/leanchat-ios)。先上图，
+
+![image](images/leanchat.png)
+
+LeanChat 用到了大多数实时通信组件的提供的接口与功能，通过阅读它的源码，相信您可以很快学会使用通信组件。当然，首要的是能编译运行 LeanChat，项目Readme 上都有说明，仍然遇到问题的话请[联系我们](https://ticket.avosapps.com)。
+
+代码实现上有三点比较重要，
+
+* `Msg` 对象，它代表一个具体的消息对象，`Msg`对象可转换成 `Json`文本，发送给对方，对方接收到后可转换成 `Msg` 对象。可参考 [Msg.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/entity/Msg.java)。
+* `messages` 表，用来保存消息，字段基本和 `Msg`对象的成员一一对应。可参考 [DBMsg.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/db/DBMsg.java)。
+* 音频、图片消息的发送，用到了[AVFile](./android_guide.html#文件)，通过相应的函数创建、上传`AVFile`，得到 `url`之后作为 `Msg` 对象的一部分发送给对方。
+
+除了上述代码，Android 项目中，推荐阅读 [MsgReceiver.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/service/receiver/MsgReceiver.java)与 [ChatService.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/service/ChatService.java)。iOS 项目中，推荐阅读 [CDSessionManager.m](https://github.com/leancloud/leanchat-ios/blob/master/AVOSChatDemo/service/CDSessionManager.m)与 [CDDatabaseService.m](https://github.com/leancloud/leanchat-ios/blob/master/AVOSChatDemo/service/CDDatabaseService.m)。
+
+
+至于其它技术细节，请参考 [项目wiki](https://github.com/leancloud/leanchat-android/wiki) 。
+
 
 ## FAQ
 
@@ -213,10 +232,33 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
 
 iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的推送。因为APNS
 有消息长度限制，且你们的消息正文可能还包含上层协议，所以 我们现在APNS
-的推送内容是让应用在控制台设置一个静态的APNS json，如“你有新的未读消
-息” 。
+的推送内容是让应用在控制台设置一个静态的APNS json，如“您有新的消息” 。
+
+![image](images/realtime_ios_push.png)
 
 ![image](images/rtm-push.png)
+
+桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
+
+
+### 为什么我的 iPhone 收不到离线消息推送？
+
+请先看上一个 FAQ。在控制台的设置页面，填写“您有新的未读消息”后，当对方不在线的时候，便会触发一个 APNS 的推送。首先，请确保控制台能向 iOS 推送消息，也即如下图所示的推送能顺利到达 iOS 系统，请参考[消息推送指南](push_guide.html#ios消息推送)。
+
+![image](images/realtime_faq_push.png)
+
+之后，还要确保对方确实是离线，如果对方程序在前台并且网络良好，则不会触发推送。如果对方网络未连接，则下次联网的时候收到回调，也不触发推送。也可以利用控制台实时消息页的用户状态查询来确保对方是在离线状态，如下图。
+
+![image](images/realtime_faq_console.png)
+
+离线消息推送用的是生产环境编辑框里上传的证书，即无论下图中上传的是您应用的开发证书还是生产证书，都将用来作为 iOS 离线消息推送使用的证书。所以，调试时可能要上传开发证书，如果应用已发布不方便更改这里的证书，您可以创建另外一个应用来调试。 [LeanChat](https://github.com/leancloud/leanchat-ios) 应用在调试期间所用的证书，如下图。
+
+![image](images/realtime_faq_cert.png)
+
+检查方法总结如下：
+
+* 检查普通的 iOS 推送是否到达
+* 在控制台检查接收方是否在离线状态
 
 ### 聊天记录
 
@@ -249,3 +291,8 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 我们的群组信息实际上是 LeanCloud 的一个标准的数据表 `AVOSRealtimeGroups`。对于群组的元信息，你可以在关联的表里设置，也可以在这个表里添加新的列。请对这个表设置合理的 ACL 来保证内容不会被恶意篡改。
 
 **注意请不要通过修改 `m` 列来改变群组成员**，这样目标用户无法收到通知，会造成数据不一致的情况。
+
+### 敏感词过滤怎么做
+
+我们在服务器端已经通过一份敏感词的列表对目前消息进行过滤，这部分功能无
+需用户参与，是内置默认支持的。

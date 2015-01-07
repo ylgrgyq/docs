@@ -259,6 +259,20 @@ iOS SDK从v2.6.1开始提供聊天室功能。客户端对一个聊天室对象�
 
 而被邀请的人或者被踢的人的客户端中，相应的`-[group:didReceiveEvent:peerIds:]`会被调用。
 
+其中，`event`的定义如下：
+
+```objc
+typedef enum : NSUInteger {
+    AVGroupEventSelfJoined = 1,
+    AVGroupEventSelfLeft,        // 2
+    AVGroupEventSelfRejected,    // 3
+    AVGroupEventMemberJoined,    // 4
+    AVGroupEventMemberLeft,      // 5
+    AVGroupEventMemberInvited,   // 6
+    AVGroupEventMemberKicked     // 7
+} AVGroupEvent;
+```
+
 ### 发送消息
 
 通过如下代码您就可以向对应的聊天室发送代码:
@@ -360,3 +374,8 @@ conversationId的含义参考 [构建对话 ID](./rest_api.html#构建对话-id)
         }
     }];
 ```
+
+## 离线消息推送
+
+请参考 FAQ 中的 [为什么我的 iPhone 收不到离线消息推送？](realtime.html#为什么我的-iphone-收不到离线消息推送？) 
+ 

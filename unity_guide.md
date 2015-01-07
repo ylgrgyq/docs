@@ -5,6 +5,11 @@
 Unity本身支持Mono跨平台的.NET语言的解决方案，所以LeanCloud采用了C#来实现客户端的SDK。如果您有.NET方面的编程经验，您会很容易就掌握LeanCloud Unity SDK接口的风格以及用法。
 
 LeanCloud Unity SDK在很多重要的功能点上采用了微软提供的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式，所以您最好有.NET Framework 4.5的编程经验，或者对.NET Framework 4.5的新API有所了解。
+
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+
 ## 应用
 在 LeanCloud 的每个应用有自己的 ID 和客户端密钥，在客户端代码中应该用他们来初始化 SDK。
 

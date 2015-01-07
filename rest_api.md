@@ -349,6 +349,12 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
       <td>/1.1/rtm/messages/logs/</td>
       <td>GET</td>
       <td>获得应用聊天记录</td>
+    </tr>
+    <tr>
+      <td>/1.1/rtm/messages/</td>
+      <td>POST</td>
+      <td>通过 API 向用户发消息</td>
+    </tr>
   </tbody>
 </table>
 
@@ -358,7 +364,8 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
 
 用户验证是通过HTTP header来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个App程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定endpoint.在下面的例子中,您的app的key被包含在命令中,您可以使用下拉框来显示其他app的示例代码.
 
-对于Javascript使用,AVOS Cloud支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用.
+对于Javascript使用,LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用。
+
 
 #### 更安全的鉴权方式
 
@@ -1313,7 +1320,7 @@ curl -X POST \
 用户收到验证码后，调用`PUT /1.1/resetPasswordBySmsCode/:code`来设置新的密码：
 
 ```sh
-curl -X POST \
+curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
@@ -2225,7 +2232,6 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
-         "app_sign": "app id和 app key 连接的字符串做md5签名",
          "status"  : "open",
          "content" : "反馈的文字内容",
          "contact" : "联系方式，QQ或者邮箱手机等"
@@ -2259,10 +2265,10 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  https://leancloud.cn/1.1/verifySmsCode/6位数字验证码
+  "https://leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
 
-其中 `code` 是手机收到的 6 位数字验证码。
+其中 `code` 是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码
 
 如果您创建了短信模板，可以指定 `template` 参数指定模板名称来使用您的模板，并且可以传入变量渲染模板：
 
@@ -2354,6 +2360,41 @@ curl -X GET \
 {"count": 4}
 ```
 
+### 通过 REST API 向用户发消息
+
+我们目前提供 REST API 允许向指定用户发送消息。您可以一次向至多 20 个用
+户发送消息。目前这种消息是 transient 消息，仅对在线用户有效，暂不支持离线消息、推送通知、消息记录等。
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"]}' \
+  https://leancloud.cn/1.1/rtm/messages
+```
+
+参数说明：
+
+<table>
+  <tr>
+    <td>参数名</td>
+    <td>含义</td>
+  </tr>
+  <tr>
+    <td>from_peer</td>
+    <td>消息的发件人 id</td>
+  </tr>
+  <tr>
+    <td>to_peers</td>
+    <td>消息的收件人 id 列表，数组，一次至多发送20个</td>
+  </tr>
+  <tr>
+    <td>message</td>
+    <td>消息内容</td>
+  </tr>
+</table>
+
 ##统计数据API
 
 统计API可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计API必须使用master key的签名方式鉴权，请参考 更安全的鉴权方式 一节。
@@ -2421,6 +2462,24 @@ metrics参数可选项解释：
   <tr><td>push_ack</td><td>推送到达数</td></tr>
   <tr><td>push_session</td><td>聊天用户数</td></tr>
   <tr><td>push_direct</td><td>聊天消息数</td></tr>
+  <tr><td>active_user_locations</td><td>活跃用户所在地</td></tr>
+  <tr><td>new_user_locations</td><td>新用户所在地</td></tr>
+  <tr><td>device_os</td><td>设备系统版本</td></tr>
+  <tr><td>device_model</td><td>设备型号</td></tr>
+  <tr><td>device_network_access</td><td>设备网络接入方式</td></tr>
+  <tr><td>device_network_carrier</td><td>设备网络运营商</td></tr>
+  <tr><td>device_resolution</td><td>设备分辨率</td></tr>
+  <tr><td>page_visit</td><td>页面访问量</td></tr>
+  <tr><td>page_duration</td><td>页面停留时间</td></tr>
+  <tr><td>active_user_freq_histo</td><td>活跃用户使用次数分布</td></tr>
+  <tr><td>new_user_freq_histo</td><td>新用户使用次数分布</td></tr>
+  <tr><td>active_user_time_histo</td><td>活跃用户使用时长分布</td></tr>
+  <tr><td>new_user_time_histo</td><td>新用户使用时长分布</td></tr>
+  <tr><td>session_time_histo</td><td>单次启动时长分布</td></tr>
+  <tr><td>event_count</td><td>自定义事件次数，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_user</td><td>自定义事件用户数，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_duration</td><td>自定义事件时长，请求参数需增加 event 参数</td></tr>
+  <tr><td>event_label_count</td><td>自定义事件标签分布，请求参数需增加 event, event_label 参数</td></tr>
 </table>
 
 返回的json数据
@@ -2567,3 +2626,99 @@ curl -X GET \
 ## 应用内搜索 API
 
 参考 [搜索 API](./app_search_guide.html#搜索-api)。
+
+## 浏览器跨域和特殊方法解决方案
+
+对于跨域操作，我们定义了如下的 `text/plain` 数据格式来支持用 `POST` 的方法实现 `GET`，`PUT`，`DELETE`的操作。
+
+### GET
+
+```
+  curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":"GET",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}"}' \
+  https://leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+```
+对应的输出：
+
+```
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 04 Dec 2014 06:34:34 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 174
+Connection: keep-alive
+Last-Modified: Thu, 04 Dec 2014 06:34:08.498 GMT
+Cache-Control: no-cache,no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000
+{
+ "objectId":"5480017de4b0e7ccfacfebbe",
+ "updatedAt":"2014-12-04T06:34:08.498Z",
+ "createdAt":"2014-12-04T06:34:08.498Z",
+ "cheatMode":false,
+ "playerName":"Sean Plott",
+ "score":1337
+}
+```
+
+### PUT
+
+```
+curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":"PUT",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}",
+    "score":9999}' \
+  https://leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+```
+对应的输出：
+
+```
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 04 Dec 2014 06:40:38 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 78
+Connection: keep-alive
+Cache-Control: no-cache,no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000
+
+{"updatedAt":"2014-12-04T06:40:38.310Z","objectId":"5480017de4b0e7ccfacfebbe"}
+```
+
+### DELETE
+
+```
+curl -i -X POST \
+  -H "Content-Type: text/plain" \
+  -d \
+  '{"_method":  "DELETE",
+    "_ApplicationId":"{{appid}}",
+    "_ApplicationKey":"{{appkey}}"}' \
+  https://leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+```
+
+对应的输出是：
+
+```
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 04 Dec 2014 06:15:10 GMT
+Content-Type: application/json;charset=utf-8
+Content-Length: 2
+Connection: keep-alive
+Cache-Control: no-cache,no-store
+Pragma: no-cache
+Strict-Transport-Security: max-age=31536000
+
+{}
+```
+
+总之，就是利用POST传递的参数，把 `_method` ，`_ApplicationId` 以及 `_ApplicationKey` 传递给服务端，服务端会自动把这些请求翻译成指定的方法，这样可以使得 Unity3D 以及 Javascript 等平台（或者语言）可以绕开浏览器跨域或者方法限制。

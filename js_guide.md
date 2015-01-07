@@ -1,6 +1,8 @@
 # JavaScript 指南
 
-如果你还没有设置你的项目,请查看我们的QuickStart.
+如果你还没有设置你的项目，请查看我们的QuickStart。
+
+如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/javascript-sdk-demos)。
 
 ## 简介
 
@@ -12,6 +14,10 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)。本指南并没有完全覆盖所有的 API 调用。
+
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ### Apps
 
@@ -423,6 +429,14 @@ query.find({
     // list contains post liked by the current user which have the title "I'm Hungry".
   }
 });
+```
+
+`relation` 返回的 `AV.Relation` 如果没有做过任何保存或者移除的操作，那么可能没有设置`targetClassName`，在查询之前最好需要明确设置下：
+
+```javascript
+relation.targetClassName = 'Post';
+var query = relation.query();
+...使用 query 查询 Post...
 ```
 
 你可以在接下来关于AV.Query的章节中看到更详细的内容.一个
@@ -1944,7 +1958,20 @@ AV.Push.send({
 
 `AV.Push` 的更多使用信息参考 API 文档[AV.Push](https://leancloud.cn/docs/api/javascript/symbols/AV.Push.html)。
 
-更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息
+更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息。
+
+iOS 设备可以通过 `prod` 属性指定使用测试环境还是生产环境证书：
+
+```javascript
+AV.Push.send({
+  prod: "dev",  
+  data: {
+    alert: "Public message"
+  }
+});
+```
+
+`dev` 表示测试证书，`prod`表示生产证书，默认生产证书。
 
 ##地理位置
 

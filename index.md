@@ -16,7 +16,7 @@
   <div class="row">
     <div class="col-sm-3">
       <div class="doc-hero-links">
-        <a href="/start.html" class="doc-quick-start-btn">
+        <a href="quick-start-guide.html" class="doc-quick-start-btn">
           <i class="icon icon-bulb"></i>
           快速上手
         </a>
@@ -109,6 +109,7 @@
           <li><a href="unity_statistics.html">Unity3D 统计 SDK 指南</a></li>
           <li><a href="dotnet_guide.html">.NET指南</a></li>
           <li><a href="dotnet_realtime.html">Windows Phone 8.0 实时通信指南</a></li>
+          <li><a href="api/wp/Help/index.html">.NET SDK API</a>
         </ul>
       </div>
     </div>
@@ -119,6 +120,7 @@
         <h2>消息推送和实时通信</h2>
         <ul>
           <li><a href="push_guide.html">消息推送开发指南</a></li>
+          <li><a href="ios_push_cert.html">iOS 推送推送证书配置</a></li>
           <li><a href="realtime.html">实时通信开发指南</a></li>
         </ul>
       </div>
@@ -163,6 +165,7 @@
           <li><a href="app_search_guide.html">应用内搜索和 DeepLink 开发指南</a></li>
           <li><a href="app_data_share.html">应用之间数据共享(Class 绑定)</a>
           <li><a href="user_groups.html">用户群分析指南</a></li>
+          <li><a href="bigquery_guide.html">离线数据分析使用指南</li>
         </ul>
       </div>
     </div>

@@ -4,8 +4,8 @@
 
 我们也提供了一些 Demo 帮助您快速入门，
 
-* [Android Chat Demo](https://github.com/avoscloud/Android-SDK-demos/tree/master/keepalive)
-* [iOS Chat Demo](https://github.com/avoscloud/iOS-SDK-demos/tree/master/KeepAlive)
+* [Android Chat Demo](https://github.com/leancloud/Android-SDK-demos/tree/master/keepalive)
+* [iOS Chat Demo](https://github.com/leancloud/iOS-SDK-demos/tree/master/KeepAlive)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
 * 一个完整的社交应用 [LeanChat](https://github.com/leancloud/leanchat-android)，类似微信。
 
@@ -185,8 +185,8 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
 
 ```
  public class MyApplication extends Application{
- 
-     public void onCreate(){ 
+
+     public void onCreate(){
          AVOSCloud.initialize(this,"{{appId}}","{{appKey}}");
      }
 }
@@ -215,11 +215,11 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
       @Override
       public void done(AVUser user, AVException e){
             //此处的peerId就是之前提到的用户的唯一标识符,
-            //应该替换成你现有用户系统中的唯一标识符，这里以我们提供的的用户系统为例            
+            //应该替换成你现有用户系统中的唯一标识符，这里以我们提供的的用户系统为例
             String peerId = user.getObjectId();
             Session session = SessionManager.getInstance(peerId);
             List<String> yourFriends = new List<String>();
-            .... //add your friends' peerIds 
+            .... //add your friends' peerIds
             session.open(yourFriends);
       }
    });
@@ -296,7 +296,7 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
    AVMessage msg = new AVMessage();
    msg.setMessage("这是一个普通的消息");
    //friendId是指目标用户的 peer id，也就是想接收这条消息的用户。
-   msg.setToPeerIds(Arrays.asList(friendId));   
+   msg.setToPeerIds(Arrays.asList(friendId));
    session.sendMessage(msg);
 ```
 
@@ -308,7 +308,7 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
   @Override
   public void onMessageSent(Context context, Session session, AVMessage msg) {
     //这个时间是来自服务器端的时间，这样即便是多台设备中间也不会出现时间的混乱
-     System.out.println("消息发送成功了，发送成功时间是"+msg.getTimestamp());  
+     System.out.println("消息发送成功了，发送成功时间是"+msg.getTimestamp());
   }
 
   @Override
@@ -362,7 +362,7 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
   public void onMessageDelivered(Context context, Session session, AVMessage msg) {
     //消息真正到达用户了
     System.out.println(msg.getMessage() + "delivered at " + msg.getReceiptTimestamp());
-  } 
+  }
 }
 ```
 
@@ -377,7 +377,7 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
     HashMap<String, Object> params = new HashMap<String, Object>();
     params.put("type", "file");
     params.put("content", "https://cn.avoscloud.com/images/static/partner-iw.png");
-    AVMessage msg = new AVMessage(JSON.toJSONString(params));    
+    AVMessage msg = new AVMessage(JSON.toJSONString(params));
 ```
 
 您也可以采用其他序列化方案，只要中间格式是文本即可。
@@ -571,7 +571,7 @@ public class DemoGroupMessageReceiver extends AVGroupMessageReceiver{
 ```
     Session session = Session.getInstance(selfId);
     Group group = session.getGroup(groupId);
-    group.quit(); 
+    group.quit();
 ```
 
 如果你想要监听是否真正成功退组，你可以在Receiver中进行检测：
@@ -606,12 +606,12 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
    Map<String,Object> params = new HashMap<String,Object>();
    params.put("self_id",peerId);
    params.put("watch_ids",watchIds);
-   
+
    try{
      Object result =  AVCloud.callFunction("sign",params);
      if(result instanceof Map){
        Map<String,Object> serverSignature = (Map<String,Object>) result;
-       Signature signature = new Signature();     
+       Signature signature = new Signature();
        signature.setSignature((String)serverSignature.get("signature"));
        signature.setTimestamp((Long)serverSignature.get("timestamp"));
        signature.setNonce((String)serverSignature.get("nonce"));
@@ -630,12 +630,12 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
    params.put("group_id",groupId);
    params.put("group_peer_ids",targetPeerIds);
    params.put("action",action);
-   
+
    try{
      Object result = AVCloud.callFunction("group_sign",params);
      if(result instanceof Map){
         Map<String,Object> serverSignature = (Map<String,Object>) result;
-        Signature signature = new Signature();     
+        Signature signature = new Signature();
         signature.setSignature((String)serverSignature.get("signature"));
         signature.setTimestamp((Long)serverSignature.get("timestamp"));
         signature.setNonce((String)serverSignature.get("nonce"));
@@ -675,7 +675,7 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
            //messages 即是历史消息记录
     }
   });
-  
+
   //查询群组里的聊天记录
   Group group = sm.getGroup("140a534fd092809500e6d651e73400c7");
   //获取AVHistoryMessageQuery对象来查询聊天室的聊天记录
@@ -1146,10 +1146,10 @@ public class SampleSignatureFactory : ISignatureFactory
         public Task<Signature> CreateSignature(string peerId, IList<string> watchIds)
         {
             var data = new Dictionary<string, object>();
-            
+
             data.Add("self_id", peerId);//当前用户的 PeerId 作为self id 作为签名的参数。
             data.Add("watch_ids", watchIds);//关注的 Peer 作为签名的参数。
-            
+
             //调用云代码进行签名。
             return AVCloud.CallFunctionAsync<IDictionary<string, object>>("sign", data).ContinueWith<Signature>(t =>
             {
@@ -1161,7 +1161,7 @@ public class SampleSignatureFactory : ISignatureFactory
                 signature.Timestamp = (long)result["timestamp"];
                 return signature;//拼装成一个 Signature 对象
             });
-            
+
             //以上这段代码，开发者无需手动调用，只要开发者对一个 AVSession 设置了 SignatureFactory，SDK 会在Open Session 的时候主动调用这个方法进行签名。
         }
 

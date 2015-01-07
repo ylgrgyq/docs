@@ -2,13 +2,17 @@
 
 如果您还没有安装 LeanCloud iOS SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，并在 Xcode 中熟悉和允许示例代码。我们的 SDK 支持 iOS 4.3 及更高版本。
 
-如果您希望从项目中学习，请前往 [iOS-SDK-Demos](https://github.com/avoscloud/iOS-SDK-demos) 。
+如果您希望从项目中学习，请前往 [iOS-SDK-Demos](https://github.com/leancloud/iOS-SDK-demos) 。
 
 ## 介绍
 
 LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位的后端服务。我们的目标是让你不需要进行后端开发及服务器运维等工作就可以开发和发布成熟的应用。
 
 如果你熟悉像 Ruby on Rails 这样的 Web 框架，LeanCloud 将会十分容易上手。我们在设计 LeanCloud 时应用了许多与之相同的原则。如果你之前使用过 Parse 或类似的后端服务，会发现我们在设计 API 时尽可能与之保持兼容，让应用非常容易从其他服务迁移到 LeanCloud，开发者在使用我们的 SDK 时也会得心应手。
+
+## 快速入门
+
+建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 使用 Cocopods 安装SDK
 
@@ -49,8 +53,6 @@ pod 'AVOSCloudSNS'
 * 执行命令`pod install`安装SDK。
 
 您还可以参考这篇文章 [《CocoaPods安装和使用教程》](http://code4app.com/article/cocoapods-install-usage)
-
-
 
 ## 应用
 
