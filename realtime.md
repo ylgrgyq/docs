@@ -239,7 +239,6 @@ conversation 对话消息，我们会解析出所有消息收件人。
 --- | ---
 fromPeer | 消息发送者的 Peer ID
 toPeers | 消息的目标用户 ID 数组，包含解析出的用户 ID
-conversationId | 对话消息的 Conversation ID，没有关联则为空
 groupId | 群组消息的 Group ID，没有关联则为空
 transient | 是否是 transient 消息
 content | 消息踢字符串
@@ -266,7 +265,6 @@ toPeers | 可选，数组，修改后的收件人，如果不提供则保留原�
 参数 | 说明
 --- | ---
 fromPeer | 消息发送者 Peer ID
-conversationId | 对话消息的 Conversation ID，没有关联则为空
 groupId | 群组消息的 Group ID，没有关联则为空
 offlinePeers | 数组，离线的收件人列表
 content | 消息内容
