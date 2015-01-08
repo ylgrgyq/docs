@@ -230,7 +230,7 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 这个 hook 发生在消息到达实时通信服务，如果是群组消息，我们会解析出所有消息收件人。
 
 你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消
-息内容。
+息内容。返回空对象则会执行系统默认的流程。
 
 #### 参数
 
@@ -240,7 +240,7 @@ fromPeer | 消息发送者的 Peer ID
 toPeers | 消息的目标用户 ID 数组，包含解析出的用户 ID
 groupId | 群组消息的 Group ID，没有关联则为空
 transient | 是否是 transient 消息
-content | 消息踢字符串
+content | 消息体字符串
 receipt | 是否要求回执
 timestamp | 服务器收到消息的时间戳，毫秒
 sourceIP | 消息发送者的 IP
@@ -250,7 +250,7 @@ sourceIP | 消息发送者的 IP
 参数 | 说明
 --- | ---
 drop | 可选，如果返回 truthy 值消息将被丢弃
-content | 可选，修改后的content，如果不提供则保留原消息
+content | 可选，修改后的 content，如果不提供则保留原消息
 toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
 
 ### _receiversOffline
