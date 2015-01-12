@@ -192,16 +192,16 @@ if (name) {
 
 * cloud 目录下有一个 `main.js`，这就是你的业务逻辑代码存放的地方，初始内容定义了一个函数，代码如下：
 
-  ```javascript
-  // Use AV.Cloud.define to define as many cloud functions as you want.
-  // For example:
-  AV.Cloud.define("hello", function(request, response) {
-    response.success("Hello world!");
-  });
-  ```
+```javascript
+// Use AV.Cloud.define to define as many cloud functions as you want.
+// For example:
+AV.Cloud.define("hello", function(request, response) {
+  response.success("Hello world!");
+});
+```
   
   这段代码定义了一个名为`hello`的函数，它简单的返回应答`Hello world!`。
-  
+
 * config 目录下是项目的配置文件 `global.json`，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
 * public 目录，用于存放 [Web Hosting](#web-hosting) 功能的静态资源文件，具体请看后面的介绍。
 
