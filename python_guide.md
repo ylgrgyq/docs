@@ -66,9 +66,19 @@ leancloud.init('APP_ID', 'APP_KEY/MASTER_KEY')
 from leancloud import Object
 
 class GameScore(Object):
-    def get_score(self):
+    def is_cheeted(self):
         # 可以像正常 Python 类一样定义方法
         return self.get('score')
+
+    @property
+    def score(self):
+        # 可以使用property装饰器，方便获取属性
+        return self.get('score')
+
+    @score.setter
+    def score(self, value):
+        # 同样的，可以给对象的score增加setter
+        return self.set('score', value)
 
 # or: GameScore = Object.extend('GameScore')
 ```
@@ -79,7 +89,7 @@ class GameScore(Object):
 
 ```python
 game_score = GameScore()
-game_score.set('score', 42)
+game_score.set('score', 42)  # or game_score.score = 42
 game_score.set('cheetMode', False)
 game_score.set('playerName', 'Marvin')
 game.save()
