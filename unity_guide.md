@@ -1133,3 +1133,8 @@ var task = push.SendAsync();
  push.Query = new AVQuery<AVInstallation>().WhereEqualTo("channels", "public");
  var task = push.SendAsync();
 ```
+
+### Unity SDK 注意事项
+
+1. 基于 Unity 自身的 WWW 类发送 Http 请求的限制，单个请求的大小不能超过 2MB，所以在使用 Unity SDK 时，开发者需要注意存储数据，构建查询等操作时，需要做到简洁高效。
+2. Unity 中请将 `Optimization` 中的 `Stripping Level` 设置为 `Disabled`。
