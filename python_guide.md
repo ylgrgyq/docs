@@ -83,7 +83,7 @@ class GameScore(Object):
 # or: GameScore = Object.extend('GameScore')
 ```
 
-# 保存对象
+#### 保存对象
 
 调用实例对象的save方法，即可保存对象。
 
@@ -93,4 +93,30 @@ game_score.set('score', 42)  # or game_score.score = 42
 game_score.set('cheetMode', False)
 game_score.set('playerName', 'Marvin')
 game.save()
+
+# 还可以通过关键字参数，在创建对象的同时进行赋值
+game_score = GameScore(score=42, playerName='Marvin')
+```
+
+这时候登陆 LeanCloud 控制台查看，可以看到 GameScore 中新增一条数据。
+
+另外所有 Object 子类对象，都有三个特殊字段，保存之后服务器会自动填充其中的数据。
+
+```python
+game_score.id            # => 此对象的id，类型为 unicode ，对应控制台的 objectId
+game_score.created_at    # => 此对象创建的时间，类型为 datetime.datetime ，对应控制台的 createdAt
+game_score.updated_at    # => 此对象最后更新的时间，类型为 datetime.datetime，对应控制台的 updatedAt
+```
+
+#### 检索对象
+
+检索对象可以使用 leancloud.Query 类来进行。
+
+如果事先知道一个对象的 objectId ，可以这样做:
+
+```python
+from leancloud import Query
+query = Query(GameScore)
+game_score = query.get('520ca0bbe4b07e8e0e847e31')
+print game_score.get('playerName')
 ```
