@@ -10,7 +10,6 @@
 
 ## 版本变迁
 
-从 2.0.0 开始，我们把以 `Parse` 开头的所有类名修改为以 `AV` 开头。我们为 1.x 版本的老用户[提供了自动升级脚本](https://raw.github.com/leancloud/avoscloud-sdk/master/android/migrate.rb)，请在项目的根目录运行 [migrate.rb](https://raw.github.com/leancloud/avoscloud-sdk/master/android/migrate.rb)，它会自动替换所有旧的 SDK 类名。
 从 2.4.0 开始, 我们重新设计了 sdk 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包 --- 除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar, avosstatistics.jar 等都可以在用到该组件时才导入。
 
 ## 模块与 SDK 包

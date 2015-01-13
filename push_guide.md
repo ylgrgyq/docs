@@ -1,8 +1,8 @@
 # 消息推送开发指南
 
-消息推送，使得开发者可以即时地向其应用程序的用户推送通知或者消息，与用户保持互动，从而有效地提高留存率，提升用户体验。平台提供整合了 Android推送、iOS推送的统一推送服务。
+消息推送，使得开发者可以即时地向其应用程序的用户推送通知或者消息，与用户保持互动，从而有效地提高留存率，提升用户体验。平台提供整合了 Android 推送、iOS 推送的统一推送服务。
 
-除了iOS,Android SDK做推送服务之外，你还可以通过我们的REST API来发送推送请求。
+除了 iOS、Android SDK 做推送服务之外，你还可以通过我们的 REST API 来发送推送请求。
 
 ## 基本概念
 
@@ -12,8 +12,8 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 
 * deviceType  设备类型，目前只支持"ios"和"android"
 * deviceToken iOS设备才有的用于 APNS 推送的唯一标识符，只对 iOS 有效。
-* installationId LeanCloud 为每个Android设备产生的唯一标识符，只对android有效。
-* badge iOS设备呈现在应用程序图标右上角的红色圆形数字提示,用于提示一些无需即时处置的音讯,比方程序更新数、未读数等。
+* installationId LeanCloud 为每个 Android 设备产生的唯一标识符，只对 android 有效。
+* badge iOS 设备呈现在应用程序图标右上角的红色圆形数字提示,用于提示一些无需即时处置的音讯,比方程序更新数、未读数等。
 * timeZone 设备设定的时区
 * channels 设备订阅的频道
 * subscriptionUri Windows Phone 设备才有的 MPNS（微软推送服务）推送的通道 ID，只针对微软平台的设备（微软的平板以及手机）有效，目前仅支持 Windows Phone。
@@ -34,20 +34,20 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 
 推送本质上是根据一个 query 条件来查询 `_Installation` 表里符合条件的设备，然后将消息推送给设备。因为 `_Installation` 是一个可以完全自定义属性的 Key-Value Object，因此可以实现各种复杂条件推送，例如频道订阅、地理位置信息推送、特定用户推送等。
 
-## iOS消息推送
+## iOS 消息推送
 
 ### 如何使用 LeanCloud 的 Push 功能
 
-本节将向您简单介绍如何在iOS设备中使用LeanCloud的推送功能。
+本节将向您简单介绍如何在 iOS 设备中使用 LeanCloud 的推送功能。
 
 ### 配置 iOS 推送证书
 
-配置iOS证书相对麻烦，但是却是必须的步骤，请仔细看[iOS推送证书设置指南](./ios_push_cert.html)。
+配置 iOS 证书相对麻烦，但是却是必须的步骤，请仔细看[iOS推送证书设置指南](./ios_push_cert.html)。
 
 
 ### 保存 Installation
 
-在保存installation前，要先通过下列代码获取用户推送权限：
+在保存 installation 前，要先通过下列代码获取用户推送权限：
 
 ```objc
 // Before iOS 8:
@@ -77,7 +77,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 ```
 
-在iOS设备中，Installation的类是AVInstallation，并且是AVObject的子类，使用同样的API存储和查询。如果要访问当前应用的Installation对象，可以通过`[AVInstallation currentInstallation]`方法。当你第一次保存AVInstallation的时候，它会插入`_Installation`表，你可以在[数据管理](/data.html?appid={{appid}})平台看到和查询。当deviceToken一被保存，你就可以向这台设备推送消息了。
+在 iOS 设备中，Installation 的类是 AVInstallation，并且是 AVObject 的子类，使用同样的 API 存储和查询。如果要访问当前应用的 Installation 对象，可以通过`[AVInstallation currentInstallation]`方法。当你第一次保存 AVInstallation 的时候，它会插入`_Installation`表，你可以在[数据管理](/data.html?appid={{appid}})平台看到和查询。当 deviceToken 一被保存，你就可以向这台设备推送消息了。
 
 ```objc
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -87,16 +87,16 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 ```
 
-可以像修改AVObject那样去修改AVInstallation，但是有一些特殊字段可以帮你管理目标设备：
+可以像修改 AVObject 那样去修改 AVInstallation，但是有一些特殊字段可以帮你管理目标设备：
 
-* badge 应用icon旁边的红色数字，修改AVInstallation的这个值将修改应用的badge。修改应该保存到服务器，以便为以后做badge增量式的推送做准备。
+* badge 应用 icon 旁边的红色数字，修改 AVInstallation 的这个值将修改应用的 badge。修改应该保存到服务器，以便为以后做 badge 增量式的推送做准备。
 * channels 当前设备订阅的频道数组。
 * appName 应用名称，只读
-* appVersion 应版本，只读
+* appVersion 应用版本，只读
 
 ### 发送推送消息
 
-发送iOS推送消息，可以通过REST API，或者我们的消息推送web平台，请进入你的应用管理界面查看。
+发送 iOS 推送消息，可以通过 REST API，或者我们的消息推送 web 平台，请进入你的应用管理界面查看。
 
 ### 使用频道
 
@@ -142,7 +142,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-如果你想发送到多个频道，可以指定channels数组:
+如果你想发送到多个频道，可以指定 channels 数组:
 
 ```objc
 NSArray *channels = [NSArray arrayWithObjects:@"Giants", @"Mets", nil];
@@ -156,13 +156,13 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 高级定向发送
 
-频道对于大多数应用来说可能就足够了。但是某些情况下，你可能需要更高精度的定向推送。LeanCloud 允许你通过AVQuery API查询Installation列表，并向指定条件的query推送消息。
+频道对于大多数应用来说可能就足够了。但是某些情况下，你可能需要更高精度的定向推送。LeanCloud 允许你通过 AVQuery API 查询 Installation 列表，并向指定条件的 query 推送消息。
 
-因为AVInstallation同时是AVObject的子类，因此你可以保存任何数据类型到AVInstallation，并将它和你的其他应用数据对象关联起来，这样以来，你可以非常灵活地向你用户群做定制化、动态的推送。
+因为 AVInstallation 同时是 AVObject 的子类，因此你可以保存任何数据类型到 AVInstallation，并将它和你的其他应用数据对象关联起来，这样以来，你可以非常灵活地向你用户群做定制化、动态的推送。
 
 #### 保存 Installation 数据
 
-为AVInstallation添加三个新字段：
+为 AVInstallation 添加三个新字段：
 
 ```objc
 // Store app language and version
@@ -175,7 +175,7 @@ AVInstallation *installation = [AVInstallation currentInstallation];
 
 表示比赛的分数，比赛结果和受伤报告。
 
-设置，你可以给Installation添加owner属性，比如当前的登陆用户：
+设置，你可以给 Installation 添加 owner 属性，比如当前的登陆用户：
 
 ```objc
 // Saving the device's owner
@@ -186,7 +186,7 @@ AVInstallation *installation = [AVInstallation currentInstallation];
 
 #### 根据查询来推送消息
 
-一旦Installation保存了你的应用数据，你可以使用`AVQuery`来查询出设备的一个子集做推送。Installation的查询跟其他对象的查询没有什么不同，只是使用特殊的静态方法
+一旦 Installation保存了你的应用数据，你可以使用`AVQuery`来查询出设备的一个子集做推送。Installation 的查询跟其他对象的查询没有什么不同，只是使用特殊的静态方法
 `[AVInstallation query]`创建查询对象：
 
 ```objc
@@ -201,7 +201,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-你也可以在查询中添加channels的条件：
+你也可以在查询中添加 channels 的条件：
 
 ```objc
 // Create our Installation query
@@ -216,7 +216,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-如果你在Installation还保存了其他对象的关系，我们同样可以在查询条件中使用这些数据，例如，向靠近北京大学的设备推送消息：
+如果你在 Installation 还保存了其他对象的关系，我们同样可以在查询条件中使用这些数据，例如，向靠近北京大学的设备推送消息：
 
 ```objc
 // Find users near a given location
@@ -238,21 +238,21 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 发送选项
 
-除了发送一个文本信息之外，你还可以播放一个声音，设置badge数字或者其他想自定义的数据。你还可以设置一个消息的过期时间，如果对消息的时效性特别敏感的话。
+除了发送一个文本信息之外，你还可以播放一个声音，设置 badge 数字或者其他想自定义的数据。你还可以设置一个消息的过期时间，如果对消息的时效性特别敏感的话。
 
 #### 定制通知
 
-如果你不仅想发送一条文本消息，你需要一个NSDictionary来打包想发送的数据。这里有一些保留字段有特殊含义需要说明下：
+如果你不仅想发送一条文本消息，你需要一个 NSDictionary 来打包想发送的数据。这里有一些保留字段有特殊含义需要说明下：
 
 * alert: 推送消息的文本内容
-* badge: (iOS only) app icon右上角的数字。可以设置一个值或者递增当前值。
-* sound: (iOS only) 应用bundle里的声音文件名称。
-* content-available: (iOS only) 如果你在使用Newsstand, 设置为1来开始一次后台下载。
-* action: (Android only) 当消息收到的时候，触发的Intent名称。如果没有设置title或者alert，Intent将触发，但是不会显示通知给用户。
+* badge: (iOS only) app icon 右上角的数字。可以设置一个值或者递增当前值。
+* sound: (iOS only) 应用 bundle 里的声音文件名称。
+* content-available: (iOS only) 如果你在使用 Newsstand, 设置为 1 来开始一次后台下载。
+* action: (Android only) 当消息收到的时候，触发的 Intent 名称。如果没有设置 title 或者 alert，Intent 将触发，但是不会显示通知给用户。
 * title: (Android only) 显示在系统通知栏的标题。
 
 
-例如，递增badge数字，并播放声音可以这样做:
+例如，递增 badge 数字，并播放声音可以这样做:
 
 ```objc
 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -266,7 +266,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-当然，你还可以添加其他自定义的数据。你会在接收推送一节看到，当应用通过推送打开你的App的时候，你就可以访问这些数据。当你要在用户打开通知的时候显示一个不同的view controller的时候，这特别有用。
+当然，你还可以添加其他自定义的数据。你会在接收推送一节看到，当应用通过推送打开你的应用的时候，你就可以访问这些数据。当你要在用户打开通知的时候显示一个不同的 view controller 的时候，这特别有用。
 
 ```objc
 NSDictionary *data = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -286,7 +286,7 @@ AVPush *push = [[AVPush alloc] init];
 
 当设备关闭或者无法连接到网络的时候，推送通知就无法被送达。如果你有一条时间敏感的推送通知，不希望在太长时间后被用户读到，那么可以设置一个过期时间来避免打扰用户。
 
-AVPush提供了两个方法来设置通知的过期日期，首先是expireAtDate：接收NSDate来告诉LeanCloud 不要再去发送通知。
+AVPush 提供了两个方法来设置通知的过期日期，首先是 expireAtDate：接收 NSDate 来告诉 LeanCloud 不要再去发送通知。
 
 ```objc
 NSDateComponents *comps = [[NSDateComponents alloc] init];
@@ -305,7 +305,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-这个方法有个隐患，因为设备的时钟是无法保证精确的，你可能得到错误的结果。因此，AVPush还提供了expireAfterTimeInterval方法，接收NSTimeInterval对象。通知将在指定间隔时间后失效：
+这个方法有个隐患，因为设备的时钟是无法保证精确的，你可能得到错误的结果。因此，AVPush 还提供了 expireAfterTimeInterval 方法，接收 NSTimeInterval 对象。通知将在指定间隔时间后失效：
 
 ```objc
 // Create time interval
@@ -323,7 +323,7 @@ AVPush *push = [[AVPush alloc] init];
 
 #### 指定设备平台
 
-跨平台的应用，可能想指定发送的平台，比如ios或者android:
+跨平台的应用，可能想指定发送的平台，比如 iOS 或者 Android:
 
 ```objc
 AVQuery *query = [AVInstallation query];
@@ -347,14 +347,14 @@ AVPush *iOSPush = [[AVPush alloc] init];
 
 ### 定时推送
 
-请进入消息推送的web管理平台，可以做到定时推送（延迟或者指定时间）。
+请进入消息推送的 web 管理平台，可以做到定时推送（延迟或者指定时间）。
 
 
 ### 接收推送通知
 
 正如前面定制通知一节提到，你可以随通知发送任意的数据。我们使用这些数据修改应用的行为，当应用是通过通知打开的时候。例如，当打开一条通知告诉你有一个新朋友的时候，这时候如果显示一张图片会非常好。
 
-由于Apple的对消息大小的限制，请尽量缩小要发送的数据大小，否则可能被截断：
+由于 Apple 的对消息大小的限制，请尽量缩小要发送的数据大小，否则可能被截断：
 
 ```objc
 NSDictionary *data = @{
@@ -369,7 +369,7 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 响应通知数据
 
-当应用是被通知打开的时候，, 你可以通过`application:didFinishLaunchingWithOptions: `方法的launchOptions dictionary访问到数据：
+当应用是被通知打开的时候，, 你可以通过`application:didFinishLaunchingWithOptions: `方法的 launchOptions dictionary 访问到数据：
 
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -393,7 +393,7 @@ AVPush *push = [[AVPush alloc] init];
 }
 ```
 
-如果当通知到达的时候，你的应用已经在运行，那么你可以通过`application:didReceiveRemoteNotification:fetchCompletionHandler:`方法的userInfo dictionary访问到数据：
+如果当通知到达的时候，你的应用已经在运行，那么你可以通过`application:didReceiveRemoteNotification:fetchCompletionHandler:`方法的 userInfo dictionary 访问到数据：
 
 ```objc
 - (void)application:(UIApplication *)application
@@ -422,9 +422,9 @@ AVPush *push = [[AVPush alloc] init];
 
 你可以阅读[Apple本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1)来更多地了解推送通知。
 
-### 跟踪推送和 app 的打开情况
+### 跟踪推送和应用的打开情况
 
-通过AVAnalytics你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的`application:didFinishLaunchingWithOptions: `方法来收集打开信息：
+通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的`application:didFinishLaunchingWithOptions: `方法来收集打开信息：
 
 ```objc
 if (application.applicationState != UIApplicationStateBackground) {
@@ -442,16 +442,16 @@ if (application.applicationState != UIApplicationStateBackground) {
 ```
 
 
-传递nil或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
+传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
 
-你可以在[请求分析](/apistat.html?appid={{appid}}#/_apiRequest)菜单里看到通知和App的打开情况。
+你可以在[请求分析](/apistat.html?appid={{appid}}#/_apiRequest)菜单里看到通知和 app 的打开情况。
 
 
 Application opens and push-related open rates will be available in your application's dashboard.
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
-***如果您的app处于运行状态，iOS系统将不会在系统的通知中心显示推送消息，您可以使用`UILocalNotification`展示一个通知给用户。***
+***如果您的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，您可以使用`UILocalNotification`展示一个通知给用户。***
 
 如果应用在后台，并且用户点击了通知，那么应用将被带到前台可视，为了跟踪这种通过通知打开应用的情况，你需要在跟踪代码里多作一个检查：
 
@@ -466,7 +466,7 @@ Application opens and push-related open rates will be available in your applicat
   }
 }
 ```
-如果使用iOS7 push的新特性（包括新的"content-available" 功能），你需要实现iOS7新加的方法：
+如果使用 iOS 7 push 的新特性（包括新的"content-available" 功能），你需要实现 iOS 7 新加的方法：
 ```objc
 - (void)application:(UIApplication *)application
         didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -485,7 +485,7 @@ Application opens and push-related open rates will be available in your applicat
 
 #### 清除 Badge
 
-清除Badge数字的最好时机是打开App的时候。 设置当前installation的badge属性并保存到服务器:
+清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器:
 
 ```objc
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -498,26 +498,26 @@ Application opens and push-related open rates will be available in your applicat
 }
 ```
 
-清除Badge数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
+清除 Badge 数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
 
 
 ### Installation 自动过期和清理
 
-我们根据Apple推送服务的反馈，将Installation设置为失效，失效后推送到该设备的消息就被忽略。当失效时间超过60天，并且用户没有再次使用这个installation，我们会删除该installation；在60天内，用户如果再次使用这个Installation，将自动启用Installation并设置为有效状态，并继续推送消息给该设备。
+我们根据 Apple 推送服务的反馈，将 Installation 设置为失效，失效后推送到该设备的消息就被忽略。当失效时间超过 60 天，并且用户没有再次使用这个 Installation，我们会删除该 Installation；在 60 天内，用户如果再次使用这个 Installation，将自动启用 Installation 并设置为有效状态，并继续推送消息给该设备。
 
 ## Android 消息推送
 
-Android 推送功能除了需要必须的avoscloud.jar以外，还需要额外的avospush.jar。
+Android 推送功能除了需要必须的 avoscloud.jar 以外，还需要额外的 avospush.jar。
 
-Android 消息推送有专门的Demo，请见[AVOSCloud-Push](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Push)项目。
+Android 消息推送有专门的 Demo，请见[AVOSCloud-Push](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Push)项目。
 
 ### Installation
 
-当您的app安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK会自动生成一个Installation对象。Installation对象包含了推送所需要的所有信息。您可以使用Android SDK，通过installation对象进行消息推送。Installation对象本质上代表了设备安装您的App的一个安装信息。
+当您的应用安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。Installation 对象包含了推送所需要的所有信息。您可以使用 Android SDK，通过 Installation 对象进行消息推送。Installation 对象本质上代表了设备安装您的应用的一个安装信息。
 
-#### 保存 installation
+#### 保存 Installation
 
-您可以通过以下代码保存您的installation id。如果您的系统之前还没有installation id, 系统会为您自动生成一个。如果您的app卸载后，installation id也将会被删除。
+您可以通过以下代码保存您的 Installation id。如果您的系统之前还没有 Installation id, 系统会为您自动生成一个。如果您的应用卸载后，Installation id也将会被删除。
 
 
 ```java
@@ -542,7 +542,7 @@ AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
 
 ### 订阅频道
 
-你的App可以订阅某个频道的消息，只要在保存Installation之前调用`PushService.subscribe`方法：
+你的应用可以订阅某个频道的消息，只要在保存 Installation 之前调用`PushService.subscribe`方法：
 
 ```java
 // set a default callback. It's necessary for current SDK.
@@ -553,13 +553,13 @@ PushService.subscribe(this, "private", Callback1.class);
 PushService.subscribe(this, "protected", Callback2.class);
 ```
 
-第一个参数是当前的context，第二个参数是频道名称，第三个参数是回调对象的类，回调对象是指用户点击通知栏的通知进入的Activity页面。
+第一个参数是当前的 context，第二个参数是频道名称，第三个参数是回调对象的类，回调对象是指用户点击通知栏的通知进入的 Activity 页面。
 
 退订频道也很简单：
 
 ```java
 PushService.unsubscribe(context, "protected");
-//退订之后需要重新保存Installation
+//退订之后需要重新保存 Installation
 AVInstallation.getCurrentInstallation().saveInBackground();
 ```
 
@@ -568,7 +568,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 
 #### 配置
 
-请确保您的AndroidManifest.xml 包含如下内容
+请确保您的 AndroidManifest.xml 包含如下内容
 ```xml
 <service android:name="com.avos.avoscloud.PushService"/>
 ```
@@ -580,7 +580,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 ```
 
-为了让App能在关闭的情况下也可以收到push，你需要在`<application>`中加入：
+为了让应用能在关闭的情况下也可以收到推送，你需要在`<application>`中加入：
 
 ```xml
 <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
@@ -612,7 +612,7 @@ push.sendInBackground(new SendCallback() {
 
 #### 发送给特定的用户
 
-* 发送给public频道的用户
+* 发送给 public 频道的用户
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();
@@ -634,7 +634,7 @@ push.sendInBackground(new SendCallback() {
 ```
 
 
-* 发送给某个installation id的用户，通常来说，你会将AVInstallation关联到设备的登陆用户AVUser上作为一个属性，然后就可以通过下列代码查询installationId的方式来发送消息给特定用户，实现类似私信的功能：
+* 发送给某个 Installation id的用户，通常来说，你会将 AVInstallation 关联到设备的登陆用户 AVUser 上作为一个属性，然后就可以通过下列代码查询 InstallationId 的方式来发送消息给特定用户，实现类似私信的功能：
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();
@@ -649,7 +649,7 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 });
 ```
 
-在2.6.7以后，我们加入了通过CQL来筛选推送目标的功能，主要代码如下：
+在 2.6.7 以后，我们加入了通过 CQL 来筛选推送目标的功能，主要代码如下：
 
 ```java
     AVPush push = new AVPush();
@@ -668,11 +668,11 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
       }
     });
 ```
-*注：CQL与AVQuery同时只能设置一个，并且在设置CQL时，必须通过CQL来设置目标机器的类型(ios,android,wp)*
+*注：CQL 与 AVQuery 同时只能设置一个，并且在设置 CQL 时，必须通过 CQL 来设置目标机器的类型(ios,android,wp)*
 
 #### 自定义 Receiver
 
-如果您想推送消息，但不显示在Andoid系统的通知栏中，而是执行应用程序预定义的逻辑，则可以发送类似下列这样的请求
+如果您想推送消息，但不显示在 Andoid 系统的通知栏中，而是执行应用程序预定义的逻辑，则可以发送类似下列这样的请求
 
 ```sh
 curl -X POST \
@@ -689,11 +689,11 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且其值在自定义的 receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义**
+请注意：**如果您使用自定义的 Receiver，发送的消息必须带 action，并且其值在自定义的 Receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义**
 
-您需要在您的Android项目中添加如下功能
+您需要在您的 Android 项目中添加如下功能
 
-AndroidManifest.xml中声明您的receiver
+AndroidManifest.xml 中声明您的 Receiver
 
 ```xml
 <receiver android:name="com.avos.avoscloud.PushDemo.MyCustomReceiver">
@@ -706,12 +706,12 @@ AndroidManifest.xml中声明您的receiver
 </receiver>
 ```
 
-其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是您的android的receiver类。
+其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是您的 Android 的 Receiver 类。
 
-而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与push的data中指定的action相对应。
+而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与 push 的 data 中指定的 action 相对应。
 
 
-您的receiver可以按照如下方式实现
+您的 Receiver 可以按照如下方式实现
 
 
 ```java
@@ -739,9 +739,9 @@ public class MyCustomReceiver extends BroadcastReceiver {
     }
 }
 ```
-#### 跟踪 Android 推送和 app 的打开情况
+#### 跟踪 Android 推送和应用的打开情况
 
-您可以在订阅频道对应的 activity 中添加跟踪 app 打开情况的统计代码，您的 activity 可以按照如下方式实现 `onStart` 方法：
+您可以在订阅频道对应的 Activity 中添加跟踪应用打开情况的统计代码，您的 Activity 可以按照如下方式实现 `onStart` 方法：
 
 ```java
 public class MyActivity extends Activity {
@@ -755,18 +755,18 @@ public class MyActivity extends Activity {
 }
 ```
 
-您可以在 [请求分析](/apistat.html?appid={{appid}}#/_appOpenWithPush) 菜单里看到通知和App的打开情况。
+您可以在 [请求分析](/apistat.html?appid={{appid}}#/_appOpenWithPush) 菜单里看到通知和应用的打开情况。
 
 
 #### Installation自动过期和清理
 
-每当用户打开App，我们都会更新该设备的Installation的updatedAt时间戳。当用户长期没有更新Installation的updatedAt时间戳，换句话说，就是用户长期没有打开App（默认是超过60天没有打开），这个Installation的valid将被设置为false，往这个Installation发送的消息将被忽略，直到用户以后某天打开App更新了updatedAt，valid将再次设置为true。
+每当用户打开应用，我们都会更新该设备的 Installation 的 updatedAt 时间戳。当用户长期没有更新 Installation 的 updatedAt 时间戳，换句话说，就是用户长期没有打开应用（默认是超过 60 天没有打开），这个 Installation 的 valid 将被设置为 false，往这个 Installation 发送的消息将被忽略，直到用户以后某天打开应用更新了 updatedAt，valid 将再次设置为 true。
 
-如果超过120天，用户仍然没有打开过应用，那么该Installation将被删除。不过您不需要担心，当用户再次打开App的时候，仍然会自动创建一个新的Installation用于推送。
+如果超过 120 天，用户仍然没有打开过应用，那么该 Installation 将被删除。不过您不需要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
 
 ## Windows Phone 8 消息推送
 
-Windows Phone 8 的推送较为特殊，因为微软在设计的时候把推送消息定义为一个包含跳转页面信息的载体，比如微信推送：你单击微信发送的 Windows Phone 的 Toast 推送消息，单击进去之后，它不是打开微信的默认首页（假如叫做Main.xaml），而是进入某一个聊天的具体的页面（假如叫做chat.xaml）。这种场景微软是通过在推送消息里面包含了代码逻辑来实现的，比如要实现刚才这一套流程，微信服务端必须向微软的 MPNS 发送一个如下类似的消息（Http或者Https Post 请求）：
+Windows Phone 8 的推送较为特殊，因为微软在设计的时候把推送消息定义为一个包含跳转页面信息的载体，比如微信推送：你单击微信发送的 Windows Phone 的 Toast 推送消息，单击进去之后，它不是打开微信的默认首页（假如叫做 Main.xaml），而是进入某一个聊天的具体的页面（假如叫做 chat.xaml）。这种场景微软是通过在推送消息里面包含了代码逻辑来实现的，比如要实现刚才这一套流程，微信服务端必须向微软的 MPNS 发送一个如下类似的消息（Http 或者 Https Post 请求）：
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -799,10 +799,10 @@ push.Alert = "message to all devices.";
 var task = push.SendAsync();
 await task;
 ```
-以上这段代码就可以实现向所有安装了当前App的设备推送消息。
+以上这段代码就可以实现向所有安装了当前应用的设备推送消息。
 
 ### 发送给特定的用户
-发送给public频道的用户：
+发送给 public 频道的用户：
 
 ```javascript
 AVPush push = new AVPush();
@@ -813,18 +813,18 @@ await task;
 ```
 
 
-## 使用REST API 推送消息
+## 使用 REST API 推送消息
 
 
 ### Installation
 
-当您的app安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK会自动生成一个installation对象。installation对象包含了推送所需要的所有信息。您可以使用REST API，通过installation对象进行消息推送。
+当您的app安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。Installation 对象包含了推送所需要的所有信息。您可以使用 REST API，通过 Installation 对象进行消息推送。
 
-#### 保存 installation
+#### 保存 Installation
 
 ##### 保存 iOS 设备的 device token
 
-iOS设备通常使用DeviceToken来惟一标识一台设备。
+iOS 设备通常使用 DeviceToken 来惟一标识一台设备。
 
 ```sh
 curl -X POST \
@@ -843,7 +843,7 @@ curl -X POST \
 
 ##### 保存 Android 设备的 installaitonId
 
-对于Android设备，AVOS SDK会自动生成uuid作为 installaitonId 保存到LeanCloud. 您可以使用以下REST API 保存Android设备的installaiton ID.
+对于 Android 设备，AVOS SDK 会自动生成 uuid 作为 installaitonId 保存到 LeanCloud. 您可以使用以下 REST API 保存 Android 设备的 installaiton ID.
 
 ```sh
 curl -X POST \
@@ -1130,7 +1130,7 @@ curl -X POST \
 
 ```
 
-* 发送给某个installation id的用户
+* 发送给某个 installation id 的用户
 
 ```sh
 curl -X POST \
@@ -1186,7 +1186,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-**请注意，where条件查询的都是installations表。这里是假设installations表存储了injuryReports的布尔属性**
+**请注意，where 条件查询的都是 installations 表。这里是假设 installations 表存储了 injuryReports 的布尔属性**
 
 * 根据地理信息位置做推送：
 
@@ -1217,7 +1217,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-上面的例子假设installation有个owner属性指向_User表的记录，并且用户有个location属性是GeoPoint类型，我们就可以根据地理信息位置做推送。
+上面的例子假设 installation 有个 owner 属性指向 _User 表的记录，并且用户有个 location 属性是 GeoPoint 类型，我们就可以根据地理信息位置做推送。
 
 #### 使用 CQL 查询推送
 
@@ -1256,7 +1256,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-也可以是相对时间（从推送API调用开始算起，结合push_time做定期推送）:
+也可以是相对时间（从推送 API 调用开始算起，结合 push_time 做定期推送）:
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}"          \
@@ -1294,9 +1294,9 @@ curl -X POST \
 ```
 
 
-#### Android 自定义 receiver
+#### Android 自定义 Receiver
 
-* 推送消息，但不显示在Andoid系统的通知栏中，而是执行应用程序预定义的逻辑
+* 推送消息，但不显示在 Andoid 系统的通知栏中，而是执行应用程序预定义的逻辑
 
 ```sh
 curl -X POST \
@@ -1313,7 +1313,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果您使用自定义的Receiver，发送的消息必须带action，并且值不能为'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆**
+请注意：**如果您使用自定义的 Receiver，发送的消息必须带 action，并且值不能为'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆**
 
 您需要在您的Android项目中添加如下功能
 
@@ -1330,11 +1330,11 @@ AndroidManifest.xml中声明您的receiver
 </receiver>
 ```
 
-其中 `com.avos.avoscloud.PushDemo.MyCustomReceiver` 是您的android的receiver类。
+其中 `com.avos.avoscloud.PushDemo.MyCustomReceiver` 是您的 Android 的 Receiver 类。
 
-而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与push的data中指定的action相对应。
+而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与 push 的 data 中指定的 action 相对应。
 
-您的receiver可以按照如下方式实现
+您的 Receiver 可以按照如下方式实现
 
 ```java
 public class MyCustomReceiver extends BroadcastReceiver {
