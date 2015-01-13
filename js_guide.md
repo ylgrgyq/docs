@@ -2165,3 +2165,30 @@ query.get("thisObjectIdDoesntExist", {
 来说,error函数的第一个参数是object本身,第二个是一个AV.Error对象,这
 是为了与其他的Backbone类型的框架兼容而设计的.请查看JavaScript API来得
 到所有的AV.Error的返回码.
+
+##WebView 中使用
+
+JS SDK 当然也可以使用在各种 WebView 中，
+
+### Android 中使用
+
+如果是 Android WebView，在 Native 代码创建 WebView 的时候你需要打开几个选项，
+这些选项生成 Webview 的时候默认并不会被打开，需要配置：
+
+1、因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 Webview 的 localStorage（最大为 4MB）；
+设置方式： 
+
+```java
+yourWebView.getSettings().setDomStorageEnabled(true);
+```
+
+2、如果你希望直接调试手机中的 WebView，也同样需要在生成 WebView 的时候设置远程调试，
+具体使用方式请参考 [Google 官方文档](https://developer.chrome.com/devtools/docs/remote-debugging)。
+注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
+
+3、如果你是通过 WebView 来开发界面，Native 暴露本地特性的 Hybrid 方式开发您的 APP。
+比较推荐的开发方式是：
+通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 在来做数据连调，
+这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。
+这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
+
