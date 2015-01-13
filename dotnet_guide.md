@@ -30,32 +30,22 @@ LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以�
 ## 对象
 ### AVObject
 在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含了与 JSON 兼容的 key-value 对应的数据。数据是 schema-free 的，你不需要在每个 AVObject 上提前指定存在哪些键，只要直接设定对应的 key-value 即可。
-
-例如，您需要检测一个游戏中的分数对象。建立一个独立的 `AVObject` 即可 ：
-
-```
-score: 1337, playerName: "Steve", cheatMode: false
-```
 key 必须是字母数字或下划线组成的字符串。值可以是字符串，数字，布尔值，甚至数组和字典。
-每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的分数称为 GameScore。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
+每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的电视剧角色称为 `Sport`。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
 ### 保存对象
-接下来，你需要将上文中的 `GameScore` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有调用 `SaveAsync` 方法时才会实际保存到服务器：
+接下来，你需要将上文中的 `Sport` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有调用 `SaveAsync` 方法时才会实际保存到服务器：
 
 ```
-AVObject gameScore =new AVObject("GameScore");
-gameScore["score"] = 1337;
-gameScore["playerName"] = "Neal Caffrey";
-Task saveTask = gameScore.SaveAsync();
+AVObject football =new AVObject("Sport");
+football["totalTime"] = 90;
+football["name"] = "Football";
+Task saveTask = football.SaveAsync();
 await saveTask;
 ```
 在运行此代码后，您应当了解保存动作是否已经生效 。为了确保数据被保存，您可以在 LeanCloud 上的[数据管理](/data.html?appid={{appid}})中查看您应用的数据。
 
-```
-objectId: "53706cd1e4b0d4bef5eb32ab", score: 1337, playerName: "Neal Caffrey",
-createdAt:"2014-05-12T14:40:17.706Z", updatedAt:"2014-05-12T14:40:17.706Z"
-```
 此处有两件事情需要特别注明。
-首先，在运行此代码之前，您不必配置或设置一个称为「GameScore」的新类。LeanCloud 会自动创建这个类。
+首先，在运行此代码之前，您不必配置或设置一个称为 「Sport」 的新类。LeanCloud 会自动创建这个类。
 
 此外，为了更方便的使用 LeanCloud，还有其它几个字段您不需要事先指定。`objectId` 是为每个对象自动生成的唯一的标识符；`createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间并会被自动填充。
 在您执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
@@ -67,22 +57,29 @@ LeanCloud .NET SDK 都采用了TAP的方式去实现把所有跟LeanCloud服务�
 更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用`SaveAsync`之后会发送到服务端生效。
 
 ```
-var gameScore = new AVObject("GameScore")
+var peter = new AVObject("Character")
 {
-	{ "score", 1338 },
-	{ "playerName", "Peter Burke" },
-	{ "cheatMode", false },
+	{ "age", 37 },
+	{ "name", "Peter Burke" },
+    { "from", "White Collar" },
 	{ "skills", new List<string> { "FBI", "Agent Leader" } },
 };
-await gameScore.SaveAsync().ContinueWith(t =>
+await peter.SaveAsync().ContinueWith(t =>
 {
-	// 保存成功之后，修改一个已经在服务端生效的数据，这里我们修改cheatMode和score
-	// LeanCloud 只会针对指定的属性进行覆盖操作，本例中的playerName不会被修改
-	gameScore["cheatMode"] = true;
-	gameScore["score"] = 9999;
-	gameScore.SaveAsync();
+	// 保存成功之后，修改一个已经在服务端生效的数据，这里我们修改age
+	// LeanCloud 只会针对指定的属性进行覆盖操作，本例中的name不会被修改
+	peter["age"] = 40;
+	peter.SaveAsync();
 });
 ```
+### 获取对象
+如果确定了一个 `AVObject` 的 `objectId` 可以通过如下代码构造一个 `AVObject` 然后通过 `FetchAsync` 从服务端把数据加载到本地：
+
+```
+AVObject character = AVObject.CreateWithoutData("Character", "549818e0e4b096e3561a6abd");
+await character.FetchAsync();
+```
+
 ### 删除对象
 如果想删除某个对象可以直接调用`AVObject`的`DeleteAsync`方法。
 
@@ -92,8 +89,8 @@ await myObject.DeleteAsync();
 如果仅仅想删除某个对象的某一个属性，可以调用`Remove`方法。
 
 ```
-//执行下面的语句会将playerName字段置为空
-myObject.Remove("playerName");
+//执行下面的语句会将age字段置为空
+myObject.Remove("age");
 // 将删除操作发往服务器生效。
 await myObject.SaveAsync();
 ```
@@ -122,26 +119,34 @@ AVObject focusType = beckham.Get<AVObject>("focusType");
 await focusType.FetchIfNeededAsync();
 ```
 ## 查询
+### AVQuery.GetAsync
+此方法对应的理解是根据 `objectId` 查询指定的一条数据，`GetAsync` 方法的参数为一个`objectId`：
+
+```
+ AVQuery<AVObject> query = AVObject.GetQuery("Character");
+            AVObject character = await query.GetAsync("549818e0e4b096e3561a6abd");
+```
+### 构建 AVQuery 的注意事项
 根据`objectId`查询，显然无法满足正常的需求，所以SDK提供了许多简化了操作的查询。
 首先需要明确最核心的一点，在.NET SDK中，`AVQuery`对象的所有带有`Where`开头方法，以及查询范围限定类的方法(`Skip||Limit||ThenBy||Include`等)都会返回一个全新的对象，它并不是在原始的`AVQuery`对象上修改内部属性。比如:
 
 ```
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore")
-query.WhereEqualTo ("score", 999);//注意：这是错误的！！！
+AVQuery<AVObject> query=new AVQuery<AVObject>("Character")
+query.WhereEqualTo ("age", 37);//注意：这是错误的！！！
 await query.FindAsync ();
 ```
 ** 以上这一小段代码是用户经常会犯的错误案例，请勿拷贝到您的项目 **
 
-以上这段代码将返回`GameScore`中所有的数据，并不会返回所设想的那样`score`等于999数据。
+以上这段代码将返回`Character`中所有的数据，并不会返回所设想的那样 `age` 等于37数据。
 正确地写法应该是：
 
 ```
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore").WhereEqualTo ("score", 999);
+AVQuery<AVObject> query=new AVQuery<AVObject>("Character").WhereEqualTo ("age", "37");
 ```
-以此类推，所有复合条件查询的构造都应该遵循用`.`这个符号进行链式创建出来的`AVQuery<T>`，比如，查找所有`score`等于999，并且`name`包含`neal`的`GameScore`：
+以此类推，所有复合条件查询的构造都应该遵循用`.`这个符号进行链式创建出来的`AVQuery<T>`，比如，查找所有`age`等于37，并且`name`包含`peter`的`Character`：
 
 ```
-AVQuery<AVObject> query = new AVQuery<AVObject> ("GameScore").WhereEqualTo ("score", 999).WhereContains("playerName","neal");
+AVQuery<AVObject> query = new AVQuery<AVObject> ("Character").WhereEqualTo ("age", 37).WhereContains("name","peter");
 ```
 ### 基本查询
 `AVQuery<T>.WhereEqualTo`基本查询逻辑上可以理解为类似于sql语句中的
@@ -152,22 +157,22 @@ SELECT * FROM Persons WHERE FirstName='Bush'
 的`=`操作，如下：
 
 ```
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore").WhereEqualTo ("score", 999);
+AVQuery<AVObject> query=new AVQuery<AVObject>("Persons").WhereEqualTo ("FirstName", "Bush");
 await query.FindAsync ().ContinueWith (t => {
-	IEnumerable<AVObject> avObjects=t.Result;
-	int sum=avObjects.Count();
+	IEnumerable<AVObject> persons=t.Result;
+	int sum=persons.Count();
 });
 ```
 ### 查询条件
-如果要过滤掉特定键的值时可以使用 whereNotEqualTo 方法。比如需要查询 playerName 不等于“steve”的数据时可以这样写：
+如果要过滤掉特定键的值时可以使用 whereNotEqualTo 方法。比如需要查询 `name`不等于 `Peter Burke` 的数据时可以这样写：
 
 ```
-query = query.WhereNotEqualTo ("playerName", "steve");
+query = query.WhereNotEqualTo ("name", "Peter Burke");
 ```
 同时包含多个约束条件的查询，可以这样写：
 
 ```
-query = query.WhereNotEqualTo ("playerName", "steve");
+query = query.WhereNotEqualTo ("name", "Peter Burke");
 query = query.WhereGreaterThan("age", 18);//这样书写是为了文档阅读方便，但是我们还是比较推荐上一节介绍的链式表达式去创建AVQuery
 ```
 以此类推，可以添加多个约束条件，他们彼此是`AND`的关系。
@@ -185,47 +190,47 @@ query = query.Skip (10);
 对应数据的排序，如数字或字符串，你可以使用升序或降序的方式来控制查询数据的结果顺序：
 
 ```
-// 根据score字段升序显示数据
-query = query.OrderBy("score");
-// 根据score字段降序显示数据
-query = query.OrderByDescending("score");
+// 根据 age 字段升序显示数据
+query = query.OrderBy("age");
+// 根据 age 字段降序显示数据
+query = query.OrderByDescending("age");
 //各种不同的比较查询：
-// 分数 < 50
-query = query.WhereLessThan("score", 50);
-//分数 <= 50
-query = query.WhereLessThanOrEqualTo("score", 50);
-//分数 > 50
-query.WhereGreaterThan("score", 50);
-//分数 >= 50
-query = query.WhereGreaterThanOrEqualTo("score", 50);
+// 年龄 < 37
+query = query.WhereLessThan("age", 37);
+// 年龄 <= 37
+query = query.WhereLessThanOrEqualTo("age", 37);
+// 年龄 > 37
+query.WhereGreaterThan("age", 37);
+// 年龄 >= 37
+query = query.WhereGreaterThanOrEqualTo("age", 37);
 ```
-如果你想查询匹配几个不同值的数据，如：要查询“steve”，“chard”，“vj”三个人的成绩时，你可以使用 WhereContainedIn（类似 SQL 中的 in 查询）方法来实现。
+如果你想查询匹配几个不同值的数据，如：要查询 “peter”，“neal”，“alex” 三个人的详细数据，你可以使用 WhereContainedIn（类似 SQL 中的 in 查询）方法来实现。
 
 ```
-var names = new[] { "steve", "chard", "vj" };
-query = query.WhereContainedIn("playerName", names);
+var names = new[] { "peter", "neal", "alex" };
+query = query.WhereContainedIn("name", names);
 ```
-相反，你想查询排除“steve”，“chard”，“vj”这三个人的其他同学的信息（类似 SQL 中的 not in 查询），你可以使用 WhereNotContainedIn 方法来实现。
+相反，你想查询排除 “peter”，“neal”，“alex” 这三个人的其他同学的信息（类似 SQL 中的 not in 查询），你可以使用 WhereNotContainedIn 方法来实现。
 
 ```
-query = query.WhereNotContainedIn ("playerName", names);
+query = query.WhereNotContainedIn ("name", names);
 ```
 对字符串值的查询 查询包含字符串的值，有几种方法。你可以使用任何正确的正则表达式来检索相匹配的值，使用 WhereMatches 方法：
 
 ```
-query = query.WhereMatches("playerName", "^[A-Z]\\d");
+query = query.WhereMatches("name", "^[A-Z]\\d");
 ```
 查询字符串中包含“XX“内容，可用如下方法：
 
 ```
-// 查询playerName字段的值中包含“ste“字的数据
-query = query.WhereContains("playerName", "ste");
+// 查询 name 字段的值中包含 “pet” 字的数据
+query = query.WhereContains("name", "pet");
 
-// 查询playerName字段的值是以“cha“字开头的数据
-query = query.WhereStartsWith("playerName", "cha");
+// 查询 name 字段的值是以 “al” 字开头的数据
+query = query.WhereStartsWith("name", "al");
 
-// 查询playerName字段的值是以“vj“字结尾的数据
-query = query.WhereEndsWith("playerName", "vj");
+// 查询 name 字段的值是以 “oz” 字结尾的数据
+query = query.WhereEndsWith("name", "oz");
 ```
 ### 数组值的查询
 如果一个 Key 对应的值是一个数组，你可以查询 key 的数组包含了数字 2 的所有对象:
@@ -245,10 +250,10 @@ numbers.Add(4);
 query = query.WhereContainsAll("arrayKey", numbers);
 ```
 ### 查询对象个数
-如果你只是想统计有多少个对象满足查询，你并不需要获取所有匹配的对象，可以直接使用 `CountAsync` 替代 `FindAsync`。例如，查询一个特定玩家玩了多少场游戏：
+如果你只是想统计有多少个对象满足查询，你并不需要获取所有匹配的对象，可以直接使用 `CountAsync` 替代 `FindAsync`。例如，查询一部电视剧里面一共有多个角色：
 
 ```
-query = query.WhereNotEqualTo ("playerName", "steve");
+query = query.WhereNotEqualTo ("from", "White Collar");
 await query.CountAsync().ContinueWith(t =>
 {
     int count = t.Result;
@@ -310,7 +315,7 @@ Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套
 在 .NET 中调用 CQL 查询很便捷，在 `AVQuery` 中有一个 `DoCloudQuery` 的静态方法，可以直接传入 sql 语句即可实现查询，如下：
 
 ```
-await AVQuery<AVObject>.DoCloudQuery("select * from GameScore where score=100");
+await AVQuery<AVObject>.DoCloudQuery("select * from Character where age=37");
 ```
 如此做即可，其后续的操作与以前习惯的 `AVQuery` 其他查询一样，只是我们提供了另一种方式便于长期累积关系型数据库知识的开发者可以迅速迁移到 LeanCloud 上，CQL 的语法和详细用法可以参照：[CQL 详细指南](https://leancloud.cn/docs/cql_guide.html)
 
@@ -499,9 +504,9 @@ public void RequestSMSCodeWithCustomParameters()
 以上是调用发送，下一步就是验证。
 
 ```
-public void VerifySMSCode(string code)
+public void VerifySMSCode(string mobileNumber,string code)
 {
-	var task=AVCloud.VerifySmsCode (code).ContinueWith(t=>
+	var task=AVCloud.VerifySmsCode (mobileNumber,code).ContinueWith(t=>
 	{
 		if(t.Result)
 		{
@@ -893,6 +898,12 @@ await callTask;
 ```
 只需要传入云代码中函数的名字和这个函数需要参数即可，如果是无参的函数，直接传入`null`即可。
 
+## 自定义参数
+在控制台的[自定义参数设置](/devcomponent.html?appid={{appid}}#/component/custom_param)页面可以设置一些静态的全局共享的参数，他们都是键值对的格式，在 SDK 中提供了获取这些在线参数的方法：
+
+```
+IDictionary<string, object> cp=await AVCloud.GetCustomParameters();
+```
 ## 消息推送
 ### 推送给所有的设备
 
