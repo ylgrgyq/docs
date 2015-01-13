@@ -14,22 +14,8 @@ LeanCloud Unity SDK在很多重要的功能点上采用了微软提供的[基于
 在 LeanCloud 的每个应用有自己的 ID 和客户端密钥，在客户端代码中应该用他们来初始化 SDK。
 
 ### 初始化
-在 LeanCloud 中，几乎所有平台下的接口我们都尽量保持一致，目的就是为了降低开发者的开发成本，所以在初始化的时候我们几乎都是遵循在`AVClient`这个类下有一个叫做`Initialize`（不同平台的编程规范可能不一样，但是在 C# 语言风格中一般方法名的首字母都是大写）的方法，这个方法目前有2个重载：
+目前 Unity 的初始化只推荐用 `GameObject` 绑定 `AVOSCloudInitializeBehaviour` 脚本的方法。显式的调用 `AVClient.Initialize` 的方法不是推荐的方法。
 
-传入您的 `App ID` 以及 `App Key`，默认访问的是 LeanCloud 的中国节点。
-
-```javascript
-  AVClient.Initialize(string applicationId, string appKey);
-```
-
-除了传入您的 `App ID` 以及 `App Key`之外，指定 LeanCloud 的服务节点，现在 AVRegion 仅支持 CN 以及 US 节点。
-
-```javascript
-  AVClient.Initialize(string applicationId, string appKey, AVRegion region);
-```
-注意，目前 LeanCloud 的节点上的数据是相互隔离的，换言之，您在中国节点上注册的应用无法访问美国节点，反之亦然。
-
-LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以分别在测试环境和生产环境部署不同的版本。
 ## 对象
 ### AVObject
 在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含了与 JSON 兼容的 key-value 对应的数据。数据是 schema-free 的，你不需要在每个 AVObject 上提前指定存在哪些键，只要直接设定对应的 key-value 即可。
