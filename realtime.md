@@ -33,7 +33,11 @@
 * 未读消息数 REST API
 * 敏感词过滤
 * 异常数据报警
-* **消息到达回执**
+* 消息到达回执
+* **发送消息 REST API**
+* **实时消息云代码 Hook**
+  * 消息到达服务器
+  * 收件人离线
 
 ## 核心概念
 
@@ -211,6 +215,67 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 
 至于其它技术细节，请参考 [项目wiki](https://github.com/leancloud/leanchat-android/wiki) 。
 
+## 云代码 Hook
+
+云代码 hook 允许你通过自定义的云代码函数处理实时通信中的某些事件，修改
+默认的流程等等。目前我们开放了两个需求比较强烈的 hook 云函数：
+
+* _messageReceived 消息达到服务器，群组成员已解析完成之后
+* _receiversOffline 消息发送完成，存在离线的收件人
+
+关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+
+### _messageReceived
+
+这个 hook 发生在消息到达实时通信服务，如果是群组消息，我们会解析出所有消息收件人。
+
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消
+息内容。返回空对象则会执行系统默认的流程。
+
+#### 参数
+
+参数 | 说明
+--- | ---
+fromPeer | 消息发送者的 Peer ID
+toPeers | 消息的目标用户 ID 数组，包含解析出的用户 ID
+groupId | 群组消息的 Group ID，没有关联则为空
+transient | 是否是 transient 消息
+content | 消息体字符串
+receipt | 是否要求回执
+timestamp | 服务器收到消息的时间戳，毫秒
+sourceIP | 消息发送者的 IP
+
+#### 返回
+
+参数 | 说明
+--- | ---
+drop | 可选，如果返回 truthy 值消息将被丢弃
+content | 可选，修改后的 content，如果不提供则保留原消息
+toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
+
+### _receiversOffline
+
+这个 hook 发生在有收件人离线的情况下，你可以通过这个 hook 自定义离线推
+送行为，包括推送内容、被推送用户或略过推送。你也可以直接在 hook 中触发
+自定义的推送。
+
+#### 参数
+
+参数 | 说明
+--- | ---
+fromPeer | 消息发送者 Peer ID
+groupId | 群组消息的 Group ID，没有关联则为空
+offlinePeers | 数组，离线的收件人列表
+content | 消息内容
+timestamp | 服务器收到消息的时间戳，毫秒
+
+#### 返回
+
+参数 | 说明
+--- | ---
+skip | 可选，如果是 truthy 值将跳过推送（比如已经在云代码里触发了推送或者其他通知）
+offlinePeers | 可选，数组，筛选过的推送收件人
+pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
 ## FAQ
 
@@ -296,3 +361,7 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 
 我们在服务器端已经通过一份敏感词的列表对目前消息进行过滤，这部分功能无
 需用户参与，是内置默认支持的。
+
+### 能否通过 API 给用户发消息
+
+对于不方便使用 Node.js 客户端的用户，我们最近提供了一个 [REST API](https://leancloud.cn/docs/rest_api.html#%E9%80%9A%E8%BF%87-rest-api-%E5%90%91%E7%94%A8%E6%88%B7%E5%8F%91%E6%B6%88%E6%81%AF) 用于给特定用户发消息。
