@@ -29,7 +29,7 @@ easy_install leancloud
 
 另外，我们推荐您使用 `virtualenv` 来隔离 Python 环境。
 
-## gevent
+## 配合 gevent 使用
 
 Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果您的代码需要应对高并发场景，可以使用 gevent 来提高性能。
 
