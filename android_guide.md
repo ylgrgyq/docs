@@ -1667,7 +1667,30 @@ Hi {{username}},
       }
     });
 ```
+### 短信验证码注册用户
 
+在很多应用场景中间，开发者希望能够实现短信验证码注册用户的功能。LeanCloud可以通过发送验证码和验证码创建用户的组合来完成这样的功能。
+首先，你需要通过`AVOSCloud.requestSMSCodeInBackgroud`来发送验证码。
+
+```
+AVOSCloud.requestSMSCodeInBackground("12312312312",new RequestMobileCodeCallback(){
+    public void done(AVException e){
+       if(e==null){
+       //你可以在这里选择上文提到的自定义短信模板等功能来发送验证码
+       }
+    }                                                   
+});
+```
+
+之后就可以通过`AVUser.signUpOrLoginByMobilePhoneInBackground`来创建用户，如果这个用户已经创建过，则是完成登录。
+
+```
+AVUser.signUpOrLoginByMobilePhoneInBackground("12312312312","smsCode",new LogInCallback<AVUser>(){
+   public void done(AVUser user,AVException e){
+   //至此就完成了注册或登录的功能。用户的用户名即为手机号码
+   }
+});
+```
 
 
 ## 代码混淆
