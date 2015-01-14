@@ -60,7 +60,7 @@ AVObject *bunnyRabbit = ...
 NSArray *weapons = @[scimitar, plasmaRifle, grenade, bunnyRabbit];
  
 // store the weapons for the user
-[[AVUser currentUser] setObject:weapons forKey:@weaponsList"];
+[[AVUser currentUser] setObject:weapons forKey:@"weaponsList"];
 ```
 
 然后，如果我们需要获取这些`Weapon`对象，仅仅需要一行代码：
