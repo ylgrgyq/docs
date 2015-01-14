@@ -81,6 +81,11 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
       <td>用户注册<br/>用户连接</td>
     </tr>
     <tr>
+      <td>/1.1/usersByMobilePhone</td>
+      <td>POST</td>
+      <td>使用手机号码注册或登陆</td>
+    </tr>
+    <tr>
       <td>/1.1/login</td>
       <td>GET</td>
       <td>用户登录</td>
@@ -1176,6 +1181,37 @@ curl -X GET \
   "sessionToken": "pnktnjyb996sj4p156gjtp4im"
 }
 ```
+
+###使用手机号码一键注册或登陆
+
+现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登陆，我们也提供了一个新 API `POST /usersByMobilePhone` 来处理:
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -G \
+  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
+  https://leancloud.cn/1.1/usersByMobilePhone
+```
+
+其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode`是使用[短信验证 API](#短信验证-api-1)发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
+
+注册或者登陆成功后，返回的应答跟登陆接口类似：
+
+```json
+{
+  "username": "186xxxxxxxx",
+  "mobilePhone": "186xxxxxxxx",
+  "createdAt": "2011-11-07T20:58:34.448Z",
+  "updatedAt": "2011-11-07T20:58:34.448Z",
+  "objectId": "51c3ba66e4b0f0e851c1621b",
+  "sessionToken": "pnktnjyb996sj4p156gjtp4im"
+  ……其他属性
+}
+```
+
+如果是第一次注册，将默认设置 `mobilePhoneVerified` 属性为 `true`。
 
 ###验证 Email
 
