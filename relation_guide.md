@@ -135,7 +135,7 @@ AVRelation *relation = [book relationforKey:@"authors"];
 [book saveInBackground];
 ```
 
-**_ 注意： _** 这里 authorOne, authorTwo, authorThree 必需已经保存到云端之后才能添加到 relation，否则 [book saveInBackground] 会报错。
+** 注意： ** 这里 authorOne, authorTwo, authorThree 必需已经保存到云端之后才能添加到 relation，否则 [book saveInBackground] 会报错。
 
 要获取某本书的所有作者，使用如下查询：
 
