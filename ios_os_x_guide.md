@@ -18,7 +18,7 @@ LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位�
 
 在[快速入门](https://leancloud.cn/start.html)里可以看到怎么在你的项目里安装SDK。
 
-[Cocopods](http://beta.cocoapods.org/)是一个很好的依赖管理工具，下面我们大概介绍下怎么安装：
+[Cocopods](http://www.cocoapods.org/)是一个很好的依赖管理工具，下面我们大概介绍下怎么安装：
 
 * 首先确保您的机器安装了Ruby，一般来说，如果安装了XCode，都会自动安装了Ruby
 * 我们建议使用淘宝提供的[Gem源](http://ruby.taobao.org/)，在终端执行下列命令：
@@ -74,7 +74,7 @@ score: 1337, playerName: "Steve", cheatMode: false
 
 key 必须是字母数字或下划线组成的字符串，自定义的键不能以`__`开头。值可以是字符串，数字，布尔值，甚至数组和字典。
 
-**注意: 在iOS SDK中, `uuid`也是保留字段, 不能作为key来使用.**
+**注意: 在iOS SDK中, `code`、 `uuid`、 `className`、 `keyValues`、 `fetchWhenSave`、 `running`、 `acl`、 `ACL`、 `isDataReady`、 `pendingKeys`、 `createdAt`、 `updatedAt`、 `objectId`、 `description` 也是保留字段, 不能作为key来使用.**
 
 每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的分数称为 GameScore。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
 
@@ -420,7 +420,7 @@ AVQuery * query = [AVRelation revreseQuery:user.className relationKey:@"myLikes"
 
 ### 数据类型
 
-到目前为止，我们已经用过数据类型有 `NSString`，`NSNumber`， 以及 `AVObject`。LeanCloud 还支持  `NSDate`，`NSData`，和 `NSNull`。
+到目前为止，我们已经用过数据类型有 `NSString`，`NSNumber`， 以及 `AVObject`。LeanCloud 还支持  `NSDate` 和 `NSData`。
 你可以嵌套 `NSDictionary` 和 `NSArray` 这两类对象，这样就可在一个单独的 `AVObject` 中储存更多的结构化数据。
 
 以下是一些例子：
@@ -434,7 +434,6 @@ NSArray *array = [NSArray arrayWithObjects:string, number, nil];
 NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",
                                                                       string, @"string",
                                                                       nil];
-NSNull *null = [NSNull null];
 
 AVObject *bigObject = [AVObject objectWithClassName:@"BigObject"];
 [bigObject setObject:number     forKey:@"myNumber"];
@@ -443,7 +442,6 @@ AVObject *bigObject = [AVObject objectWithClassName:@"BigObject"];
 [bigObject setObject:data       forKey:@"myData"];
 [bigObject setObject:array      forKey:@"myArray"];
 [bigObject setObject:dictionary forKey:@"myDictionary"];
-[bigObject setObject:null       forKey:@"myNull"];
 [bigObject saveInBackground];
 ```
 
@@ -459,7 +457,7 @@ AVObject *bigObject = [AVObject objectWithClassName:@"BigObject"];
 
 在许多情况下，`getObjectInBackgroundWithId: block:` 并不足以找到目标对象。AVQuery 不仅仅可以检索单一对象，还允许以不同的方式来检索得到一个对象的列表。
 
-一般的方式是创建一个 `AVQuery` 并设定相应的条件。然后可以用 `findObjectsInBackgroundWithBlock:` 或者 `findObjectsInBackgroundWithTarget: selector:` 来检索一个和响应 `AVObject` 匹配的 `NSArray`。
+一般的方式是创建一个 `AVQuery` 并设定相应的条件。然后可以用 `findObjectsInBackgroundWithBlock:` 来检索一个和响应 `AVObject` 匹配的 `NSArray`。
 
 例如，如果你想要检索分数和特定的 `playername`，那么你可以使用方法 `whereKey: equalTo:` 来锁定一个键与其对应的值。
 
@@ -477,28 +475,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 }];
 ```
 
-也可以写成回调的方式
-
-
-```objc
-// First set up a callback.
-- (void)findCallback:(NSArray *)results error:(NSError *)error {
-  if (!error) {
-    // The find succeeded.
-    NSLog(@"Successfully retrieved %d scores.", results.count);
-  } else {
-    // Log details of the failure
-    NSLog(@"Error: %@ %@", error, [error userInfo]);
-  }
-}
-
-// Then, elsewhere in your code...
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playerName" equalTo:@"Smith"];
-[query findObjectsInBackgroundWithTarget:self
-                                selector:@selector(findCallback:error:)];
-```
-`findObjectsInBackgroundWithBlock:` 和 `findObjectsInBackgroundWithTarget: selector:` 都可以保证在完成网络请求的同时不阻塞主线程中的 Block 和回调。
+`findObjectsInBackgroundWithBlock:` 可以保证在完成网络请求的同时不阻塞主线程中的 Block 和回调。
 
 如果你已经在后台线程中，有一个相应的方法 `findObjects` 会阻塞调用进程：
 
@@ -546,27 +523,6 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
     NSLog(@"Successfully retrieved the object.");
   }
 }];
-```
-
-也可以写成回调的方式
-
-```objc
-// First set up a callback.
-- (void)getCallback:(AVObject *)object error:(NSError *)error {
-  if (!object) {
-    NSLog(@"The getFirstObject request failed.");
-  } else {
-    // The find succeeded.
-    NSLog(@"Successfully retrieved the object.");
-  }
-}
-
-// Then, elsewhere in your code...
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playerEmail" equalTo:@"dstemkoski@example.com"];
-[query getFirstObjectInBackgroundWithTarget:self
-                                   selector:@selector(getCallback:error:)];
-
 ```
 
 你可以使用 `skip` 来跳过初始结果，这对于分页十分有用：
@@ -812,12 +768,6 @@ query.maxCacheAge = 24*3600;
   }
 }];
 
-
-// Then, elsewhere in your code...
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-query.cachePolicy = kPFCachePolicyNetworkElseCache;
-[query findObjectsInBackgroundWithTarget:self
-                                selector:@selector(findCallback:error:)];
 ```
 LeanCloud 提供了几个不同的缓存策略：
 
@@ -1500,7 +1450,9 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ```objc
 [AVUser logInWithUsername:@"username" password:@"111111"]; //请确保用户当前的有效登录状态
-[[AVUser currentUser] updatePassword:@"111111" newPassword:@"123456" withTarget:self selector:@selector(passwordUpdated:error:)];
+[[AVUser currentUser] updatePassword:@"111111" newPassword:@"123456" block:^(id object, NSError *error) {
+    //doSomething
+}];
 ```
 如果要求更改密码的用户不再登录状态、原密码错误和用户不存在等情况都会通过callback返回。
 
@@ -1516,7 +1468,8 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 	user.password =  @"f32@ds*@&dsa";
 	user.email = @"steve@company.com";
 	user.mobilePhoneNumber = @"13613613613";
-	[user signUp];
+	NSError *error = nil;
+	[user signUp:&error];
 ```
 
 调用以下代码即可验证验证码:
