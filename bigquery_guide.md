@@ -14,11 +14,11 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 ### Hive 查询语法，包括：
 
-* SELECT 
+* SELECT
 * GROUP BY
 * ORDER BY
 * CLUSTER BY
-* SORT BY	
+* SORT BY
 
 **针对 `GROUP BY` 的特别说明**：
 
@@ -26,13 +26,13 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 * SELECT * FROM table GROUP BY columnA;
 
-	* MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
-	* Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
+	** MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
+	** Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
 
 * SELECT columnB FROM table GROUP BY columnA;
-	* MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
-	* Spark SQL：一定会报错。
-	
+	** MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
+	** Spark SQL：一定会报错。
+
 当且仅当 SELECT 后面的表达式（expressions）为聚合函数（aggregation function）或包含 GROUP BY 中的字段，Spark SQL 的查询才会合法。列举几个常见的合法查询：
 
 * SELECT columnA, count(columnB) as `count` FROM table GROUP BY columnA
@@ -44,7 +44,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
 * 算术运算符（+, -, *, /, %, etc）
 * 逻辑运算符（AND, &&, OR, ||, etc）
-* 数学函数（COUNT, SUM, AVG, MAX, MIN, etc） 
+* 数学函数（COUNT, SUM, AVG, MAX, MIN, etc）
 * 字符串函数（STRING, SUBSTRING, SUBSTR, UPPER, LOWER, etc）
 * 时间函数（unix_timestamp, from_unixtime），其中 unix_timestamp 所使用的时间格式为 `yyyy-MM-ddTHH:mm:ss.SSSZ`
 
@@ -74,7 +74,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * ARRAY<>
 * MAP<>
 * STRUCT<>
-	
+
 详细信息请参考 [Spark SQL Supported Hive Features](http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features)
 
 不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
@@ -82,28 +82,28 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 ### 一些 SQL-like 数据分析例子
 
 * 简单的 SELECT 查询
-	
+
 ```
 	select * from GameScore
-	
+
 	select count(*) from _User
-	
+
 ```
 
 * 复杂的 SELECT 查询
-	
+
 ```
 	select * from GameScore where createdAt > '2014-12-10'
-	
+
 	select avg(age) from _User
 
 	select GameScore.objectId from GameScore left join _User where _User.name=GameScore.name limit 10
-	
+
 	select * from _User where name in (select name form OtherUser)
-	
+
 	select sum(score) from GameScore
-	
+
 	select * from GameScore group by name
-	
+
 ```
-	
+
