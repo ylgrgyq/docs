@@ -1140,6 +1140,17 @@ else
 
 这样，测试代码将使用`cloud/dev_views`目录作为views模板目录。
 
+## 第三方平台接入
+
+因为 Cloud Code 提供了 webHosting 功能，这相当于为你在 internet 上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
+
+### 接入支付宝
+
+通过 [这个](https://github.com/leancloud/cloud-code-alipay) 示例，你可以了解到如何接入支付宝，实现「即时到账收款」的功能。
+
+### 接入微信
+
+通过 [这个](https://github.com/leancloud/cloud-code-weixin) 示例，你可以了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
 
 ## HTTP 客户端
 
