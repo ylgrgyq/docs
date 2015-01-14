@@ -1581,6 +1581,30 @@ var user = AV.User.logIn("my_username", "my_password", {
 如果你需要查看一个AV.User是否已经认证过了,你可以调用authenticated方
 法.你不需要查看一个认证方法中返回的AV.User对象是否已经通过验证了.
 
+### 绑定第三方平台账户
+
+通过 `AV.User._logInWith(platform, options)` 来将微博、微信等账号绑定到 AV.User 上，例如：
+
+```javascript
+AV.User._logInWith("weibo", {
+   "authData": {
+      "uid": "123456789",
+       "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
+       "expiration_in": "36000"
+    },
+    success: function(user){
+        //返回绑定后的用户
+        console.dir(user);
+    },
+    error: function(err){
+       console.dir(err);
+    }
+})
+```
+
+其中 `authData` 是微博返回的用户信息 JSON 对象，更详细的内容请参考 [REST API 用户账户连接](./rest_api.html#用户账户连接)。
+
+
 ###其他对象的安全
 
 和AV.User相同的安全模型也使用于其他对象.对于任何对象来说,你可以指定
