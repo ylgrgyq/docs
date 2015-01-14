@@ -10,7 +10,7 @@
 
 ## SQL-like 查询分析
 
-LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
+LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
 ### Hive 查询语法，包括：
 
@@ -19,6 +19,25 @@ LeanCloud 目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正
 * ORDER BY
 * CLUSTER BY
 * SORT BY	
+
+**针对 `GROUP BY` 的特别说明**：
+
+有不少用户都有过 MySQL 的使用经验，这里主要是列举几种在 MySQL 中可用而在我们的服务（基于 Spark SQL）中却会报错的 `GROUP BY` 用法。
+
+* SELECT * FROM table GROUP BY columnA;
+
+	* MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
+	* Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
+
+* SELECT columnB FROM table GROUP BY columnA;
+	* MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
+	* Spark SQL：一定会报错。
+	
+当且仅当 SELECT 后面的表达式（expressions）为聚合函数（aggregation function）或包含 GROUP BY 中的字段，Spark SQL 的查询才会合法。列举几个常见的合法查询：
+
+* SELECT columnA, count(columnB) as `count` FROM table GROUP BY columnA
+* SELECT columnA, count(*) as `count` FROM table GROUP BY columnA
+* SELECT columnA, columnB FROM table GROUP BY columnA, columnB
 
 ### 所有 Hive 运算符，包括：
 
