@@ -2302,11 +2302,11 @@ curl -X GET \
   </tr>
   <tr>
     <td>convid</td>
-    <td>对话 id ，可选，默认表示全部对话</td>
+    <td>对话 id</td>
   </tr>
   <tr>
     <td>timestamp</td>
-    <td>查询起始的时间戳，返回比这个时间早的记录，可选，默认是当前时间</td>
+    <td>查询起始的时间戳，返回小于等于这个时间的记录。可选，默认是当前时间</td>
   </tr>
   <tr>
     <td>limit</td>
