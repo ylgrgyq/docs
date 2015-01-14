@@ -1602,8 +1602,28 @@ AV.User._logInWith("weibo", {
 })
 ```
 
-其中 `authData` 是微博返回的用户信息 JSON 对象，更详细的内容请参考 [REST API 用户账户连接](./rest_api.html#用户账户连接)。
+其中 `authData` 是微博返回的用户信息 JSON 对象，更多平台支持和格式信息请参考 [REST API 用户账户连接](./rest_api.html#用户账户连接)。
 
+
+绑定到一个已经存在的 `AV.User` 上，可以通过  `_linkWith` 方法：
+
+```javascript
+var user = ...已存在的处于登陆状态的 AV.User 对象 ...
+user._linkWith("weibo", {
+   "authData": {
+      "uid": "123456789",
+       "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
+       "expiration_in": "36000"
+    },
+    success: function(user){
+        //返回绑定后的用户
+        console.dir(user);
+    },
+    error: function(err){
+       console.dir(err);
+    }
+})
+```
 
 ###其他对象的安全
 
