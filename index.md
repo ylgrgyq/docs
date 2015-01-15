@@ -177,7 +177,7 @@
           <li><a href="sdk_down.html">SDK 下载</a></li>
           <li><a href="demo.html">Demo</a></li>
           <li><a href="data_security.html">数据和安全</a></li>
-          <li><a href="FAQ.html">常见问题</a></li>
+          <li><a href="faq.html">常见问题</a></li>
           <li><a href="tool_tips.html">常见功能提示</a></li>
         </ul>
       </div>
