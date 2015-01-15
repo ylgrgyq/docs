@@ -9,7 +9,7 @@
 LeanCloud平台提供了一个移动App的完整后端解决方案,我们的目标是完全消除写
 后端代码和维护服务器的必要性.
 
-我们的JavaScript SDK基于流行的Backbone.js框架.它与已经存在的
+我们的 JavaScript SDK 基于流行的 Backbone.js 框架.它与已经存在的
 Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我们的最小化
 配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
 
@@ -2168,14 +2168,14 @@ query.get("thisObjectIdDoesntExist", {
 
 ##WebView 中使用
 
-JS SDK 当然也可以使用在各种 WebView 中，
+JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 LeanCloud 的「云代码」中。
 
-### Android 中使用
+###Android 中使用
 
 如果是 Android WebView，在 Native 代码创建 WebView 的时候你需要打开几个选项，
-这些选项生成 Webview 的时候默认并不会被打开，需要配置：
+这些选项生成 WebView 的时候默认并不会被打开，需要配置：
 
-1、因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 Webview 的 localStorage（最大为 4MB）；
+1、因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 WebView 的 localStorage；
 设置方式： 
 
 ```java
@@ -2184,6 +2184,13 @@ yourWebView.getSettings().setDomStorageEnabled(true);
 
 2、如果你希望直接调试手机中的 WebView，也同样需要在生成 WebView 的时候设置远程调试，
 具体使用方式请参考 [Google 官方文档](https://developer.chrome.com/devtools/docs/remote-debugging)。
+
+```java
+if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+    yourWebView.setWebContentsDebuggingEnabled(true);
+}
+```
+
 注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
 
 3、如果你是通过 WebView 来开发界面，Native 暴露本地特性的 Hybrid 方式开发您的 APP。
