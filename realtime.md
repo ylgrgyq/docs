@@ -277,6 +277,8 @@ skip | 可选，如果是 truthy 值将跳过推送（比如已经在云代码�
 offlinePeers | 可选，数组，筛选过的推送收件人
 pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云代码 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+
 ## FAQ
 
 ### 我有自己的用户系统
@@ -304,6 +306,8 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 ![image](images/rtm-push.png)
 
 桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
+
+云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime.html#云代码-hook) 章节。
 
 
 ### 为什么我的 iPhone 收不到离线消息推送？
