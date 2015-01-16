@@ -418,6 +418,8 @@ AVQuery * query = [AVRelation revreseQuery:user.className relationKey:@"myLikes"
 
 对于更多 `AVQuery` 的细节，请看看本指南的「查询部分」。`AVRelation` 的行为接近于一个 `AVObject` 中的 `Array`，所以在对象数组上的任何操作都同样适用于 `AVRelation`。
 
+**更多关于关系类型，请阅读[《关系建模指南》](./relation_guide.html)**
+
 ### 数据类型
 
 到目前为止，我们已经用过数据类型有 `NSString`，`NSNumber`， 以及 `AVObject`。LeanCloud 还支持  `NSDate` 和 `NSData`。
