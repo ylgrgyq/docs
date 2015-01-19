@@ -36,11 +36,11 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 
 设置 JavaScript SDK 安全域名后，仅可在该域名下通过 JavaScript SDK 调用服务器资源，域名配置策略与浏览器域安全策略一致，要求域名协议、域和端口号都需严格一致，不支持子域和通配符。所以如果你要配置一个域名，要写清楚协议、域和端口，缺少一个都可能导致访问被禁止。域名的区别，如：
 
-  http://www.a.com:8080 和 http://www.a.com     跨域
-  http://www.a.com:8080 和 http://www.a.com:80  跨域
-  http://a.com 和 http://www.a.com              跨域
-  http://xxx.a.com 和 http://www.a.com          跨域
-  http 和 https 不同协议                         跨域
+- www.a.com:8080 和 www.a.com     跨域
+- www.a.com:8080 和 www.a.com:80  跨域
+- a.com 和 www.a.com              跨域
+- xxx.a.com 和 www.a.com          跨域
+- http 和 https 不同协议            跨域
 
 这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
 
