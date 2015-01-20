@@ -68,7 +68,7 @@ from leancloud import Object
 class GameScore(Object):
     def is_cheeted(self):
         # 可以像正常 Python 类一样定义方法
-        return self.get('score')
+        return self.get('cheatMode')
 
     @property
     def score(self):
@@ -120,3 +120,62 @@ query = Query(GameScore)
 game_score = query.get('520ca0bbe4b07e8e0e847e31')
 print game_score.get('playerName')
 ```
+
+#### 更新对象
+
+更新对象的时候，直接修改对象上对应字段的值，然后再调用`save`方法即可。
+
+```python
+from leancloud import Object
+GameScore = Object.extend('GameScore')
+
+game_score.set('score', 42)
+game_score.set('cheetMode', False)
+game_score.set('playerName', 'Marvin')
+game.save()
+
+game_score.set('score', 43)
+game_score.save()
+```
+
+##### 计数操作
+
+很多应用场景都需要进行一些计数操作，比如记录游戏分数，论坛帖子回帖数等等。如果直接从服务器获取这些字段的值，然后简单的加减值再进行保存，这个时候很有可能服务器上的数据已经有了更新，会将服务器的数据覆盖掉。这往往不是我们想要的结果。因此可以使用`increment`方法来进行计数操作，我们只需要将需要增减的值传递给服务器就可以了。
+
+```python
+from leancloud import Object
+GameScore = Object.extend('GameScore')
+
+game_score.set('score', 42)
+game_score.set('cheetMode', False)
+game_score.set('playerName', 'Marvin')
+game_score.save()
+
+game_score.increment('score', 1)
+game_score.save()
+```
+
+##### 删除字段
+
+有时候需要将对象上的一个字段设置为空，可以使用`unset`方法。
+
+```python
+game_score.unset('score')
+game_score.save()
+```
+
+#### 删除对象
+
+如果你想要删除服务器上的一个对象，可以使用`destroy`方法。
+
+```python
+game_score.destroy()
+```
+
+#### 关系数据
+
+leancloud 后端存储支持一对一，一对多，多对多数据建模。
+
+##### 一对一关系和一对多关系
+
+一对一关系和一对多关系都可以通过在一个`Object`对象内保存另一个对象来实现。
