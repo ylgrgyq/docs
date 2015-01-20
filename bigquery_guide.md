@@ -102,7 +102,8 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 	select sum(score) from GameScore
 
-	select * from GameScore group by name
+	select count(*) as `count` from GameScore group by name
 
 ```
 
+更多例子可以参考这篇[博客](https://blog.leancloud.cn/2559/)
