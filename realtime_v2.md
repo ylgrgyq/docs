@@ -149,7 +149,7 @@ appid:clientid:convid:sorted_conversation_member_ids:timestamp:nonce:su
 
 ##  JavaScript 开发指南（v2）
 
-我们已经开源 JS Messaging SDK 了， 见 [leancloud/realtime-messaging-jssdk](https://github.com/leancloud/realtime-messaging-jssdk) 。
+我们已经开源 JS Messaging SDK 了， 见 [leancloud/realtime-messaging-jssdk](https://github.com/leancloud/js-realtime-sdk) 。
 
 
 ## 云代码 Hook
