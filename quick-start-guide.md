@@ -91,5 +91,5 @@
 
 ## 常见问题
 
-* [FAQ](./FAQ.html)
+* [FAQ](./faq.html)
 * [常用功能提示](./tool_tips.html)
