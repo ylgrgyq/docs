@@ -1553,7 +1553,7 @@ AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').
 
 ### 手机号码一键登录
 
-很多情况下，我们希望用户直接输入手机号码，获取短信然后注册或者登录，如果没有注册过就注册，否则就直接登录，我们提供了一个新 API `signUpOrlogInWithMobilePhone(mobilePhoneNumber, smsCode, attributes)` 来实现。
+很多情况下，我们希望用户直接输入手机号码，获取短信然后注册或者登录，如果没有注册过就注册，否则就直接登录，我们提供了一个新 API `signUpOrlogInWithMobilePhone` 来实现。
 
 ```javascript
 //获取短信
