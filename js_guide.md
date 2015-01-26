@@ -1575,7 +1575,7 @@ user.signUpOrlogInWithMobilePhone({
   ……其他属性，比如 username 等。
 }, 
 {
-  function(user){
+  success:function(user){
     //注册或者登录成功
   },
   error: function(err){
@@ -1584,6 +1584,8 @@ user.signUpOrlogInWithMobilePhone({
   }
 });
 ```
+
+如果是注册，属性里其他属性将作为新用户的属性保存，如果是登录，这些属性将覆盖服务端的属性。如果不提供 `username`，默认为手机号码。
 
 
 ###当前用户
