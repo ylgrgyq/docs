@@ -1602,7 +1602,7 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 
 ## 短信验证码服务
 除了用户相关的包括注册，登录等操作以外，LeanCloud 还支持额外的短信验证码服务。
-在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用手机号码短信认证`选项的前提下，使用 LeanCloud 提供的短信验证码服务。
+在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）`选项的前提下，使用 LeanCloud 提供的短信验证码服务。
 
 下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/leancloud/sms-demo) 项目。
 
@@ -1668,7 +1668,8 @@ Hi {{username}},
 ```
 ### 短信验证码注册用户
 
-在很多应用场景中间，开发者希望能够实现短信验证码注册用户的功能。LeanCloud 可以通过发送验证码和验证码创建用户的组合来完成这样的功能。
+在很多应用场景中间，开发者希望能够实现短信验证码一键登录功能，注册和登录二合一。LeanCloud 也提供了 `AVUser.signUpOrLoginByMobilePhoneInBackground` 来支持这个功能。
+
 首先，你需要通过 `AVOSCloud.requestSMSCodeInBackgroud` 来发送验证码。
 
 ```
@@ -1690,6 +1691,8 @@ AVUser.signUpOrLoginByMobilePhoneInBackground("12312312312","smsCode",new LogInC
    }
 });
 ```
+
+默认的用户名将是手机号码。
 
 
 ## 代码混淆
