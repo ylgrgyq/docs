@@ -1446,6 +1446,31 @@ AV.User的email被设定或者修改后,emailVerfied会被设定为false.LeanClo
 
 用户邮箱验证后，会调用`AV.Cloud.onVerified('email',function)`的云代码回调函数，方便您做一些后处理。
 
+### 修改密码
+
+用户修改密码，跟修改其他属性没有什么区别，前提是要求登录状态：
+
+```javascript
+var user = AV.User.current();
+user.setPassword('new password');
+user.save().then(……)
+```
+
+有时候，你希望验证用户的老密码之后才允许更新密码，可以用 `updatePassword`方法：
+
+```javascript
+var user = AV.User.current();
+user.updatePassword('旧密码', '新密码',{
+  success: function(){
+    //更新成功
+  },
+  error: function(err){
+    //更新失败
+    console.dir(err);
+  }
+});
+```
+
 ### 短信验证手机号码
 
 如果用户注册提供了 `mobilePhoneNumber`属性，并且你希望验证用户手机号码的真实性，你可能希望发送一条短信，并且让用户输入短信中的验证码来确认手机号码的真实性：
@@ -1510,6 +1535,40 @@ AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').
   //登录成功
 }, function(err){
   //登录失败
+});
+```
+
+### 手机号码一键登录
+
+很多情况下，我们希望用户直接输入手机号码，获取短信然后注册或者登录，如果没有注册过就注册，否则就直接登录，我们提供了一个新 API `signUpOrlogInWithMobilePhone(mobilePhoneNumber, smsCode, attributes)` 来实现。
+
+```javascript
+//获取短信
+//在应用选项开启 "启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）"
+AV.Cloud.requestSmsCode('186xxxxxxxx').then(function(){
+  //发送成功
+}, function(err){
+  //发送失败
+});
+```
+
+用户拿到短信后，使用下列代码注册或者登录
+
+```javascript
+var user = new AV.User();
+user.signUpOrlogInWithMobilePhone({
+  mobilePhoneNumber: '186xxxxxxxx',
+  smsCode: '手机收到的 6 位验证码字符串',
+  ……其他属性，比如 username 等。
+}, 
+{
+  function(user){
+    //注册或者登录成功
+  },
+  error: function(err){
+    //失败
+    console.dir(err);
+  }
 });
 ```
 
