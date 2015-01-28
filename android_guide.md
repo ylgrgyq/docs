@@ -14,34 +14,75 @@
 
 ## 模块与 SDK 包
 
-从 2.4.0 开始, 我们重新设计了 SDK 的结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。以下列举每个模块需要的包：
+从 2.6.10.3 开始, LeanCloud Android SDK可以使用gradle来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
 
-### LeanCloud 基本存储模块
+在Android Studio的配置中间，您首先需要在项目下的build.gradle中配置成类似：
 
-* avoscloud-<版本号>.jar
-* android-async-http-1.4.6.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
+```
+buildscript {
+    repositories {
+        jcenter()
+	//这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
 
-### LeanCloud 推送模块和实时聊天模块
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
 
-* LeanCloud 基础存储模块
-* avospush-版本号.jar
+allprojects {
+    repositories {
+        jcenter()
+	//这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
+    }
+}
+```
 
-### LeanCloud 统计模块
+之后需要在app目录下的build.gradle中根据需要进行相应的配置：
 
-* LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
+```
+android {
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
 
-### LeanCloud SNS 模块
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
 
-* LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
+    //avoscloud-sdk 为 LeanCloud基础包
+    compile 'cn.leancloud.android:avoscloud-sdk:2.6.10.3'
 
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
+    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
+    compile 'cn.leancloud.android:avoscloud-push:2.6.10.3@aar'
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    
+    //avoscloud-statistics 为 LeanCloud 统计包
+    compile 'cn.leancloud.android:avoscloud-statistics:2.6.10.3@aar'
 
-**注：如果您需要使用美国站点，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+    //avoscloud-feedback 为 LeanCloud 用户反馈包
+    compile 'cn.leancloud.android:avoscloud-feedback:2.6.10.3@aar'
+
+    //avoscloud-sns 为 LeanCloud 第三方登陆包
+    compile 'cn.leancloud.android:avoscloud-sns:2.6.10.3@aar'
+
+    //avoscloud-search 为 LeanCloud 应用内搜索包
+    compile 'cn.leancloud.android:avoscloud-search:2.6.10.3@aar'    
+}
+```
+
+Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html)进行下载
 
 ## 简介
 
