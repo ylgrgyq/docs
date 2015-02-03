@@ -14,7 +14,10 @@
 
 ## 模块与 SDK 包
 
-## Android Studio 用户
+我们已经提供了官方的 maven 仓库：[http://mvn.leancloud.cn/nexus/](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
+
+### Android Studio 用户
+
 从 2.6.10.3 开始, LeanCloud Android SDK可以使用gradle来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
 
 在Android Studio的配置中间，您首先需要在项目下的build.gradle中配置成类似：
@@ -85,27 +88,28 @@ dependencies {
 }
 ```
 
-## Eclipse 用户
+### Eclipse 用户
+
 Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html)进行下载
 
-### LeanCloud 基本存储模块
+#### LeanCloud 基本存储模块
 
 * avoscloud-<版本号>.jar
 * android-async-http-1.4.6.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
-### LeanCloud 推送模块和实时聊天模块
+#### LeanCloud 推送模块和实时聊天模块
 
 * LeanCloud 基础存储模块
 * avospush-版本号.jar
 
-### LeanCloud 统计模块
+#### LeanCloud 统计模块
 
 * LeanCloud 基础存储模块
 * avosstatistics-版本号.jar
 
-### LeanCloud SNS 模块
+#### LeanCloud SNS 模块
 
 * LeanCloud 基础存储模块
 * weibo.sdk.android.sso.jar
