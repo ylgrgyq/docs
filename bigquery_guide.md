@@ -43,9 +43,11 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
 * 算术运算符（+, -, *, /, %, etc）
 * 逻辑运算符（AND, &&, OR, ||, etc）
-* 数学函数（COUNT, SUM, AVG, MAX, MIN, etc）
-* 字符串函数（STRING, SUBSTRING, SUBSTR, UPPER, LOWER, etc）
-* 时间函数（unix_timestamp, from_unixtime），其中 unix_timestamp 所使用的时间格式为 `yyyy-MM-ddTHH:mm:ss.SSSZ`
+* 数学函数（sign, ln, cos, round, floor, ceil, exp, rand, sqrt, etc）
+* 字符串函数（instr, length, printf, etc）
+
+更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
+
 
 ### 多表 Join：
 
