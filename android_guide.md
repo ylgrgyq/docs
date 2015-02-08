@@ -1538,7 +1538,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 如果用户使用手机号码注册或者验证过手机号码，你也可以通过手机短信来实现`忘记密码`功能：
 ```java
-   AVUser.requestPasswordResetBySmsCodeInBackground("12312312312",new  new RequestMobileCodeCallback() {
+   AVUser.requestPasswordResetBySmsCodeInBackground("12312312312", new RequestMobileCodeCallback() {
           @Override
           public void done(AVException e) {
            if(e==null){
