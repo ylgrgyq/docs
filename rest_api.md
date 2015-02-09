@@ -1,13 +1,13 @@
 # REST API 详解
 
-REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进行交互,您可以使用REST API做很多事情,比如:
+REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进行交互,您可以使用REST API做很多事情,比如:
 
-* 一个移动网站可以通过Javascript来获取AVOS Cloud上的数据.
-* 一个网站可以展示来自AVOS Cloud的数据。
+* 一个移动网站可以通过Javascript来获取 LeanCloud 上的数据.
+* 一个网站可以展示来自 LeanCloud 的数据。
 * 您可以上传大量的数据,之后可以被一个移动app读取。
 * 您可以下载最近的数据来进行您自定义的分析统计。
-* 使用任何语言写的程序都可以操作AVOS Cloud上的数据。
-* 如果您不再需要使用AVOS Cloud，您可以导出您所有的数据。
+* 使用任何语言写的程序都可以操作 LeanCloud 上的数据。
+* 如果您不再需要使用 LeanCloud ，您可以导出您所有的数据。
 
 ## API 版本
 
@@ -423,7 +423,7 @@ REST API可以让您用任何可以发送HTTP请求的设备来与AVOS Cloud进�
 ```
 Key必须是字母和数字组成的String,Value可以是任何可以JSON编码的东西.
 每个对象都有一个类名,您可以通过类名来区分不同的数据.例如,我们可以把游戏高分对象称之为GameScore.我们推荐您使用 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的格式为您的Key-Value命名,可以使您的代码看起来很漂亮.
-当你从AVOS Cloud中获取对象时,一些字段会被自动加上: `createdAt`, `updatedAt` 和 `objectID`. 这些字段的名字是保留的,您不能自行设置它们.我们上面设置的对象在获取时应该是下面的样子.
+当你从 LeanCloud 中获取对象时,一些字段会被自动加上: `createdAt`, `updatedAt` 和 `objectID`. 这些字段的名字是保留的,您不能自行设置它们.我们上面设置的对象在获取时应该是下面的样子.
 ```json
 {
   "score": 1337,
@@ -448,7 +448,7 @@ https://leancloud.cn/1.1/users
 https://leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
 ```
 ###创建对象
-为了在AVOS Cloud上创建一个新的对象,应该向class的URL发送一个POST请求,其中应该包含对象本身.例如,要创建如上说的对象:
+为了在 LeanCloud 上创建一个新的对象,应该向class的URL发送一个POST请求,其中应该包含对象本身.例如,要创建如上说的对象:
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
@@ -525,7 +525,7 @@ curl -X PUT \
 
 ####计数器
 
-为了存储一个计数器类型的数据,AVOS Cloud提供对任何数字字段进行原子增加(或者减少)的功能,所以我们可以让score像下面一样增加:
+为了存储一个计数器类型的数据, LeanCloud 提供对任何数字字段进行原子增加(或者减少)的功能,所以我们可以让score像下面一样增加:
 
 ```sh
 curl -X PUT \
@@ -538,7 +538,7 @@ curl -X PUT \
 
 ####数组
 
-为了存储数组型数据,AVOS Cloud提供3种操作来原子性地更改一个数组字段:
+为了存储数组型数据, LeanCloud 提供3种操作来原子性地更改一个数组字段:
 
 * Add 在一个数组字段的后面添加一些指定的对象(包装在一个数组内)
 * AddUnique 只会在数组内原本没有这个对象的情形下才会添加入数组,插入的位置不定.
@@ -557,7 +557,7 @@ curl -X PUT \
 
 ####关系
 
-为了更新Relation的类型,AVOS Cloud提供特殊的操作来原子化地添加和删除一个关系,所以我们可以像这样添加一个关系:
+为了更新Relation的类型, LeanCloud 提供特殊的操作来原子化地添加和删除一个关系,所以我们可以像这样添加一个关系:
 
 ```sh
 curl -X PUT \
@@ -581,7 +581,7 @@ curl -X PUT \
 
 ###删除对象
 
-为了在AVOS Cloud上删除一个对象,可以发送一个DELETE请求到指定的对象的URL,比如:
+为了在 LeanCloud 上删除一个对象,可以发送一个DELETE请求到指定的对象的URL,比如:
 
 ```sh
 curl -X DELETE \
@@ -1117,15 +1117,15 @@ curl -X GET \
 
 ##用户
 
-不仅在mobile app上,还在其他系统中,很多应用都有一个统一的登陆流程.通过REST API访问用户的账户让您可以通过AVOS Cloud使用这项功能.
+不仅在mobile app上,还在其他系统中,很多应用都有一个统一的登陆流程.通过REST API访问用户的账户让您可以通过 LeanCloud 使用这项功能.
 
-通常来说,用户这个类的功能与其他的对象是相同的,比如都没有限制模式(Schema free).User对象和其他对象不同的是一个用户必须有用户名(username)和密码(password),密码会被自动地加密和存储.AVOS Cloud强制您username和email这两个字段必须是没有重复的.
+通常来说,用户这个类的功能与其他的对象是相同的,比如都没有限制模式(Schema free).User对象和其他对象不同的是一个用户必须有用户名(username)和密码(password),密码会被自动地加密和存储. LeanCloud 强制您username和email这两个字段必须是没有重复的.
 
 ###注册
 
 注册一个新用户与创建一个新的普通对象之间的不同点在于username和password字段都是必要的.Password字段会以和其他的字段不一样的方式处理,它在储存时会被加密而且永远不会被返回给任何来自客户端的请求.
 
-在您的app的设定菜单 ,您可以向AVOS Cloud来请求认证邮件地址.这项设置启用了的话,所有有email的用户的注册都会产生一个email验证地址.您可以在emailVerified字段上查看用户的email是否已经通过认证.
+在您的app的设定菜单 ,您可以向 LeanCloud 来请求认证邮件地址.这项设置启用了的话,所有有email的用户的注册都会产生一个email验证地址.您可以在emailVerified字段上查看用户的email是否已经通过认证.
 
 为了注册一个新的用户,需要向user路径发送一个POST请求,您可以加入一个新的字段,例如,创建一个新的用户有一个电话字段:
 
@@ -1219,7 +1219,7 @@ curl -X POST \
 
 emailVerified字段有3种状态可以考虑
 
-1. true : 用户可以点击email中的地址来连接AVOS Cloud来验证地址.一个用户永远不会在新创建这个值的时候emailVerified为true
+1. true : 用户可以点击email中的地址来连接 LeanCloud 来验证地址.一个用户永远不会在新创建这个值的时候emailVerified为true
 2. false : User对象最后一次被刷新的时候,用户并没有确认过他的email地址,如果您看到emailVerified为false的话,您可以考虑刷新User对象
 3. null : User对象在email验证没有打开的时候就已经创建了,或者User没有email
 
@@ -1257,7 +1257,7 @@ curl -X POST \
 
 ### 手机号码验证
 
-在应用设置的应用选项里你还可以选择开启注册手机码号验证，当注册的时候用户填写`mobilePhoneNumber`字段， AVOS Cloud 将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用 AVOS Cloud 的 API 验证通过后，用户的`mobilePhoneNumberVerified`属性将设置为`true`。
+在应用设置的应用选项里你还可以选择开启注册手机码号验证，当注册的时候用户填写`mobilePhoneNumber`字段，  LeanCloud  将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的`mobilePhoneNumberVerified`属性将设置为`true`。
 
 **请注意，每个账户只有100条免费的短信额度，超过部分每一条短信都将实时扣费，请保证账户余额充足**
 
@@ -1273,7 +1273,7 @@ curl -X POST \
   https://leancloud.cn/1.1/users
 ```
 
-那么在注册成功后，AVOS Cloud 将向`186xxxxxxxx`发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
+那么在注册成功后， LeanCloud  将向`186xxxxxxxx`发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
 
 ```sh
 curl -X POST \
@@ -1475,7 +1475,7 @@ curl -X GET \
 
 ###删除用户
 
-为了在AVOS Cloud上删除一个用户,可以向它的URL上发送一个DELETE请求.您必须提供一个`X-AVOSCloud-Session-Token`在header上以便认证.例子:
+为了在 LeanCloud 上删除一个用户,可以向它的URL上发送一个DELETE请求.您必须提供一个`X-AVOSCloud-Session-Token`在header上以便认证.例子:
 
 ```sh
 curl -X DELETE \
@@ -1653,7 +1653,7 @@ curl -X POST \
 
 ###安全
 
-当您用REST API key 来访问AVOS Cloud时,访问可能被ACL所限制,就像iOS和Android SDK上所做的一样.您仍然可以通过REST API来读和修改,只需要通过`ACL`的key来访问一个对象.
+当您用REST API key 来访问 LeanCloud 时,访问可能被ACL所限制,就像iOS和Android SDK上所做的一样.您仍然可以通过REST API来读和修改,只需要通过`ACL`的key来访问一个对象.
 
 ACL按JSON对象格式来表示,JSON对象的key是objectId 或者一个特别的key——`*`(表示公共访问权限).ACL的值是"权限对象",这个JSON对象的key总是权限名,而这些key的值总是true.
 
@@ -1840,7 +1840,7 @@ curl -X PUT \
 
 ###删除对象
 
-为了从AVOS Cloud上删除一个角色,只需要发送DELETE请求到它的URL就可以了.
+为了从 LeanCloud 上删除一个角色,只需要发送DELETE请求到它的URL就可以了.
 
 我们需要传入 X-AVOSCloud-Session-Token 来通过一个有权限的用户账号来访问这个角色对象.例如:
 
@@ -1915,7 +1915,7 @@ curl -X PUT \
 
 ### 上传文件
 
-上传文件到 AVOS Cloud 通过 POST 请求，注意必须指定文件的 `content-type`，例如上传一个文本文件 `hello.txt` 包含一行字符串:
+上传文件到  LeanCloud  通过 POST 请求，注意必须指定文件的 `content-type`，例如上传一个文本文件 `hello.txt` 包含一行字符串:
 
 ```sh
 curl -X POST \
@@ -2281,7 +2281,7 @@ curl -X POST \
 
 在一些场景下，你可能希望用户验证手机号码后才能进行一些操作，例如充值等。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
 
-短信 API 每个 AVOS Cloud帐户有 100 个免费额度，超过就即时收费。使用这些 API 需要开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）` 选项。
+短信 API 每个  LeanCloud 帐户有 100 个免费额度，超过就即时收费。使用这些 API 需要开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）` 选项。
 
 给某个手机号码发送验证短信通过：
 

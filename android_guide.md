@@ -14,26 +14,102 @@
 
 ## 模块与 SDK 包
 
-从 2.4.0 开始, 我们重新设计了 SDK 的结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。以下列举每个模块需要的包：
+我们已经提供了官方的 maven 仓库：[http://mvn.leancloud.cn/nexus/](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
 
-### LeanCloud 基本存储模块
+### Android Studio 用户
+
+从 2.6.10.3 开始, LeanCloud Android SDK可以使用gradle来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
+
+在Android Studio的配置中间，您首先需要在项目下的build.gradle中配置成类似：
+
+```
+buildscript {
+    repositories {
+        jcenter()
+	//这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
+
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+	//这里是 LeanCloud 的包仓库
+        maven {
+            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+        }
+    }
+}
+```
+
+之后需要在app目录下的build.gradle中根据需要进行相应的配置：
+
+```
+android {
+    //为了解决部分第三方库重复打包了META-INF的问题
+    packagingOptions{
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
+
+    //avoscloud-sdk 为 LeanCloud基础包
+    compile 'cn.leancloud.android:avoscloud-sdk:2.6.+'
+
+    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
+    compile 'cn.leancloud.android:avoscloud-push:2.6.+@aar'
+    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    
+    //avoscloud-statistics 为 LeanCloud 统计包
+    compile 'cn.leancloud.android:avoscloud-statistics:2.6.+@aar'
+
+    //avoscloud-feedback 为 LeanCloud 用户反馈包
+    compile 'cn.leancloud.android:avoscloud-feedback:2.6.+@aar'
+
+    //avoscloud-sns 为 LeanCloud 第三方登陆包
+    compile 'cn.leancloud.android:avoscloud-sns:2.6.+@aar'
+    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    compile 'cn.leancloud.android:weibo-sdk-android-sso:1.0.0-leancloud'
+
+    //avoscloud-search 为 LeanCloud 应用内搜索包
+    compile 'cn.leancloud.android:avoscloud-search:2.6.+@aar'    
+}
+```
+
+### Eclipse 用户
+
+Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html)进行下载
+
+#### LeanCloud 基本存储模块
 
 * avoscloud-<版本号>.jar
 * android-async-http-1.4.6.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
-### LeanCloud 推送模块和实时聊天模块
+#### LeanCloud 推送模块和实时聊天模块
 
 * LeanCloud 基础存储模块
 * avospush-版本号.jar
 
-### LeanCloud 统计模块
+#### LeanCloud 统计模块
 
 * LeanCloud 基础存储模块
 * avosstatistics-版本号.jar
 
-### LeanCloud SNS 模块
+#### LeanCloud SNS 模块
 
 * LeanCloud 基础存储模块
 * weibo.sdk.android.sso.jar
@@ -1462,7 +1538,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 如果用户使用手机号码注册或者验证过手机号码，你也可以通过手机短信来实现`忘记密码`功能：
 ```java
-   AVUser.requestPasswordResetBySmsCodeInBackground("12312312312",new  new RequestMobileCodeCallback() {
+   AVUser.requestPasswordResetBySmsCodeInBackground("12312312312", new RequestMobileCodeCallback() {
           @Override
           public void done(AVException e) {
            if(e==null){
@@ -1602,7 +1678,7 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 
 ## 短信验证码服务
 除了用户相关的包括注册，登录等操作以外，LeanCloud 还支持额外的短信验证码服务。
-在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用手机号码短信认证`选项的前提下，使用 LeanCloud 提供的短信验证码服务。
+在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）`选项的前提下，使用 LeanCloud 提供的短信验证码服务。
 
 下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/leancloud/sms-demo) 项目。
 
@@ -1668,7 +1744,8 @@ Hi {{username}},
 ```
 ### 短信验证码注册用户
 
-在很多应用场景中间，开发者希望能够实现短信验证码注册用户的功能。LeanCloud 可以通过发送验证码和验证码创建用户的组合来完成这样的功能。
+在很多应用场景中间，开发者希望能够实现短信验证码一键登录功能，注册和登录二合一。LeanCloud 也提供了 `AVUser.signUpOrLoginByMobilePhoneInBackground` 来支持这个功能。
+
 首先，你需要通过 `AVOSCloud.requestSMSCodeInBackgroud` 来发送验证码。
 
 ```
@@ -1690,6 +1767,8 @@ AVUser.signUpOrLoginByMobilePhoneInBackground("12312312312","smsCode",new LogInC
    }
 });
 ```
+
+默认的用户名将是手机号码。
 
 
 ## 代码混淆

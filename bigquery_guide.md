@@ -6,7 +6,7 @@
 
 ## 启用离线数据分析
 
-为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `控制台 -> 应用 -> 数据 -> 选择某个 Class -> 其他 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.avosapps.com) 联系我们的工程师。
+为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.avosapps.com) 联系我们的工程师。
 
 ## SQL-like 查询分析
 
@@ -43,9 +43,12 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
 * 算术运算符（+, -, *, /, %, etc）
 * 逻辑运算符（AND, &&, OR, ||, etc）
-* 数学函数（COUNT, SUM, AVG, MAX, MIN, etc）
-* 字符串函数（STRING, SUBSTRING, SUBSTR, UPPER, LOWER, etc）
-* 时间函数（unix_timestamp, from_unixtime），其中 unix_timestamp 所使用的时间格式为 `yyyy-MM-ddTHH:mm:ss.SSSZ`
+* 数学函数（sign, ln, cos, round, floor, ceil, exp, rand, sqrt, etc）
+* 字符串函数（instr, length, printf, etc）
+* 日期函数（unix_timestamp, from_unixtime, to_date, weekofyear, year, month, day, current_timestamp, etc）
+
+更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
+
 
 ### 多表 Join：
 
@@ -102,7 +105,8 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 	select sum(score) from GameScore
 
-	select * from GameScore group by name
+	select count(*) as `count` from GameScore group by name
 
 ```
 
+更多例子可以参考这篇[博客](https://blog.leancloud.cn/2559/)

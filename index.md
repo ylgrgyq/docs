@@ -62,6 +62,7 @@
         <h2>iOS / OS X SDK</h2>
         <ul>
           <li><a href="ios_os_x_guide.html">iOS / OS X 指南</a></li>
+          <li><a href="relation_guide.html">关系建模指南</a></li>
           <li><a href="ios_realtime.html">iOS 实时通信指南</a></li>
           <li><a href="ios_statistics.html">iOS 统计 SDK 开发指南</a></li>
           <li><a href="ios_push_cert.html">iOS 推送证书设置指南</a></li>

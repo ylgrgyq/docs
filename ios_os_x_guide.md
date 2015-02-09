@@ -418,6 +418,8 @@ AVQuery * query = [AVRelation revreseQuery:user.className relationKey:@"myLikes"
 
 对于更多 `AVQuery` 的细节，请看看本指南的「查询部分」。`AVRelation` 的行为接近于一个 `AVObject` 中的 `Array`，所以在对象数组上的任何操作都同样适用于 `AVRelation`。
 
+**更多关于关系类型，请阅读[《关系建模指南》](./relation_guide.html)**
+
 ### 数据类型
 
 到目前为止，我们已经用过数据类型有 `NSString`，`NSNumber`， 以及 `AVObject`。LeanCloud 还支持  `NSDate` 和 `NSData`。
@@ -1644,7 +1646,7 @@ NSArray<AVObject *> * pizzaPlacesInSF = [query findObjects];
 
 ## 短信验证码服务
 除了用户相关的包括注册，登录等操作以外，LeanCloud还支持额外的短信验证码服务。
-在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，您希望能够通过短信验证的方式来与用户进行确认，您就可以在用户验证过手机号码，应用管理平台打开了`启用手机号码短信认证`选项的前提下，使用LeanCloud提供的短信验证码服务。
+在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，您希望能够通过短信验证的方式来与用户进行确认，您就可以在用户验证过手机号码，应用管理平台打开了`启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）`选项的前提下，使用LeanCloud提供的短信验证码服务。
 
 ### 请求短信验证码
 以下操作为给某个操作发送验证短信
