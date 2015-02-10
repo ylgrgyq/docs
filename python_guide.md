@@ -178,4 +178,241 @@ leancloud 后端存储支持一对一，一对多，多对多数据建模。
 
 ##### 一对一关系和一对多关系
 
-一对一关系和一对多关系都可以通过在一个`Object`对象内保存另一个对象来实现。
+一对一关系和一对多关系都可以通过在一个`Object`对象内保存另一个对象来实现。比如一个`Post`下可以允许多个`Comment`对象，一个`Comment`只能属于一个`Post`对象，可以这样实现：
+
+```python
+Post = Object.extend('Post')
+Comment = Object.extend('Comment')
+
+post = Post()
+post.set('title', 'I am Hungry')
+post.set('content', 'Where should we go for lunch?')
+
+comment = Comment()
+comment.set('content', 'Let us do Sushirrito.')
+
+comment.set('parent', post)
+
+comment.save()
+```
+
+在父对象上调用`save`方法，SDK 会同时保存两个对象。
+
+如果想将一个已经保存在了服务器上的对象关联到新对象上，可以只通过现有对象的 `objectId` 来进行关联。
+
+```python
+post = Post()
+post.id = '520c7e1ae4b0a3ac9ebe326a'
+# or: post = Post.createWithouData('520c7e1ae4b0a3ac9ebe326a')
+comment.set('parent', post)
+```
+
+默认情况下，从服务器上获取一个对象时并不会获取与它关联对象的值。可以这样显式获取：
+
+```python
+post = comment.get('parent')
+post.fetch()
+```
+
+#### 多对多关系
+
+多对多关系可以使用 `leancloud.Relation` 来建立。比如 `User` 可以将 `Post` 添加进自己 `like` 的列表中，可以这样实现：
+
+```python
+relation = user.relation('likes')
+relation.add(post)
+user.save()
+```
+
+可以在 `likes` 中删除一个 `post`:
+
+```python
+relation = user.relation('likes')
+relation.remove(post)
+user.save()
+```
+
+`relation` 中关联的对象并不会下载到本地。可以用 `query` 方法来返回一个 `leancloud.Query` 对象，来获取 `relation` 中的对象列表，比如：
+
+```python
+relation = user.relation('likes')
+query = relation.query()
+posts = query.find()
+```
+
+此时 `query` 对象即是 `leancloud.Query` 的实例，可以增加一些查询条件，比如：
+
+```python
+relation = user.relation('likes')
+query = relation.query().equal_to('title', 'I am Hungry')
+posts = query.find()
+```
+
+如果想查询所有 like 了某个 Post 的用户，可以使用 `reverse_query` 方法来进行返乡查询：
+
+```python
+from leancloud import Relation
+
+query = Relation.reverse_query('User', 'likes', post)
+users = query.find()
+```
+
+#### 数据类型
+
+LeanCloud Python SDK 支持大部分 Python 内置类型。
+
+```python
+from datetime import datetime
+from leancloud import Object
+
+obj = Object.extend('myObject')()
+obj.set('myNumber', 2.718)
+obj.set('myString', 'foobar')
+obj.set('myDate', datetime.now())
+obj.set('myArray', [1, 2, 3, 4])
+obj.set('myDict', {'string': 'some string', 'number': 1})
+obj.set('myNone', None)
+obj.save()
+```
+
+需要注意的是，Object 对象序列化之后的大小不应该超过 128KB。
+
+### 查询
+
+#### 基础查询
+
+我们可以通过构造 `leancloud.Query` 对象，来进行复杂查询。
+
+```python
+from leancloud import Object
+from leancloud import Query
+
+GameScore = Object.extend('GameScore')
+query = Query(GameScore)  # 这里也可以直接传递一个 Class 名字的字符串作为构造参数
+query.equal_to('playerName', 'Dan Stemkoski')
+gameScores = query.find()
+```
+
+#### 查询条件
+
+有几种方式来设置查询条件。 你可以用 notEqual 方法和一个特定的值来过滤不符合要求的对象:
+
+```python
+query.not_equal_to("playerName", "Michael Yabuti")
+```
+
+你可以给定更多的条件, 只有满足所有条件的对象才会作为结果返回。
+
+```python
+query.not_equal_to("playerName", "Michael Yabuti")
+query.greater_than("playerAge", 18)
+```
+
+你可以用设定 limit 的方法来限定返回的结果数, 默认的返回结果数是 100, 但是任何 1 到 1000 之间的数值都是合法的，在 0 到 1000 范围之外的都强制转成默认的 100。
+
+```python
+query.limit(10) # limit to at most 10 results
+```
+
+如果你只想要一个结果, 一个更加方便的方法可能是使用 first, 而不是 find 方法。
+
+```python
+GameScore = Object.extend('GameScore')
+query = Query(GameScore)
+query.equal_to('playerEmail', 'dstemkoski@example.com')
+gameScore = query.first()
+```
+
+你可以用 skip 跳过前面的结果, 这可能对于分页很有用。
+
+```python
+query.skip(10)  # skip the first 10 results
+```
+
+对于可以排序的类型, 比如 int 和 str, 你可以控制返回结果的顺序:
+
+```python
+# Sorts the results in ascending order by the score field
+query.ascending("score")
+
+# Sorts the results in descending order by the score field
+query.descending("score")
+```
+
+对于可以排序的类型, 你同样可以在查询中进行比较。
+
+```python
+# Restricts to wins < 50
+query.less_than("wins", 50)
+
+# Restricts to wins <= 50
+query.less_than_or_equalTo("wins", 50)
+
+# Restricts to wins > 50
+query.greater_than("wins", 50)
+
+# Restricts to wins >= 50
+query.greater_than_or_equal_to("wins", 50)
+```
+
+如果想让返回的对象的某个属性匹配多个值, 你可以使用 contained_in, 提供一个数组就可以了。这样通常可以用单个的查询来获取多个结果。比如你想获取某几个玩家的分数:
+
+```python
+# Finds scores from any of Jonathan, Dario, or Shawn
+query.contained_in("playerName", ["Jonathan Walsh", "Dario Wunsch", "Shawn Simon"])
+```
+
+相反地，你可以使用 notContainedIn 方法来查询在集合之外的目标对象。
+
+如果你想要查询含有某一特定属性的对象, 你可以使用 exists。相对地, 如果你想获取没有这一特定属性的对象, 你可以使用 `does_not_exist`。
+
+```python
+# Finds objects that have the score set
+query.exists("score")
+
+# Finds objects that don't have the score set
+query.does_not_exist("score")
+
+你可以使用 `matches_key_in_query` 方法来进行嵌套的子查询。举例说, 如果你有一个类包含了运动队, 而你在用户的类中存储了用户的家乡信息, 你可以构造一个查询来查找某地的运动队有赢的记录的用户。查询应该看起来像下面这样:
+
+```python
+from leancloud import Object
+from leancloud import Query
+from leancloud import User
+
+Team = Object.extend("Team")
+team_query = Query(Team)
+team_query.greater_than("winPct", 0.5)
+user_query = Query(User)
+user_query.matches_key_in_query("hometown", "city", team_query)
+
+# results has the list of users with a hometown team with a winning record
+results = user_query.find()
+```
+
+相对地, 可以使用 `does_not_match_key_in_query` 来获取属性不在子查询结果中的对象。比如为了获得用户的家乡队输了的情况:
+
+```python
+losing_user_query = Query(User)
+losing_user_query.does_not_match_key_in_query("hometown", "city", teamQuery)
+
+# results has the list of users with a hometown team with a losing record
+results = losingUserQuery.find()
+```
+
+你可以用 select 和一个 keys 的列表来限定返回的字段。为了获得只包含 score 和 playername 字段的文档 ( 包括 build-in 的字段,objectId,createdAt, updatedAt):
+
+```python
+GameScore = Object.extend("GameScore")
+query = Query(GameScore)
+query.select("score", "playerName")
+
+# each of results will only have the selected fields available.
+results = query.find()
+```
+
+剩下的字段可以之后用返回的对象的 fetch 方法来获取:
+
+```python
+result = query.first().fetch()
+```
