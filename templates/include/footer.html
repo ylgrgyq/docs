@@ -1,0 +1,185 @@
+<footer class="footer" role="contentinfo">
+  <div class="container-fluid">
+    <a href="http://leancloud.cn/" class="logo font-logo pull-right">
+      LeanCloud
+    </a>
+
+    <ul class="footer-links" >
+      <li><a href="/about.html">关于<span class="mobile-hide">我们</span></a></li>
+      <li class="muted">·</li>
+      <li><a href="/pricing.html">价格</a></li>
+      <li class="muted">·</li>
+      <li><a href="/docs/">文档</a></li>
+      <li class="muted">·</li>
+      <li><a href="/docs/sdk_down.html">下载</a></li>
+      <li class="muted">·</li>
+      <li><a href="//status.leancloud.cn/"><span class="mobile-hide">健康</span>状态</a></li>
+      <li class="muted">·</li>
+      <li><a href="http://ticket.avosapps.com/" target="_self"><span class="mobile-hide">技术</span>支持</a></li>
+      <li class="muted">·</li>
+      <li><a href="http://forum.leancloud.cn/">社区</a></li>
+      <li class="muted">·</li>
+      <li><a href="/jobs.html">工作<span class="mobile-hide">机会</span></a></li>
+      <li class="muted">·</li>
+      <li><a href="http://blog.leancloud.cn">Blog</a></li>
+      <li class="muted">·</li>
+      <li><a href="/logo.html">Logo</a></li>
+      <li class="muted">·</li>
+      <li><a href="/terms.html"><span class="mobile-hide">使用</span>协议</a></li>
+      <li class="muted">·</li>
+      <li><a href="https://github.com/leancloud/avoscloud-doc">文档源码</a></li>
+    </ul>
+  </div>
+</footer>
+<script src="jquery.min.js"></script>
+<script src="bootstrap.min.js"></script>
+<script src="bootstrap-hover-dropdown.js"></script>
+<script src="jquery.scrollTo.min.js"></script>
+<script src="pangu.js"></script>
+<script src="contents.js"></script>
+<script>
+$("h2,h3,h4,h5,a").removeAttr("id");
+gajus.contents.formatId = function(str){
+  return str.replace(/ /g,'_').replace(/[^a-zA-Z_0-9\u4e00-\u9fa5]/g,'_');
+};
+var tocContents =gajus.contents({
+    contents: document.querySelector('#toc-wrapper')
+});
+$('#toc-wrapper ol').first().attr('id','toc');
+$('#toc').addClass('nav');
+tocContents.eventProxy.on('ready', function () {
+  console.log('readuy')
+  doSideBar();
+});
+
+// $('#toc-wrapper ol').attr('class','nav');
+</script>
+<script>
+pangu.page_spacing();
+
+// Sidebar affix
+function doSideBar(){
+  $('.sidebar-wrapper').affix({
+    offset: {
+      top: 60
+    , bottom: function () {
+        return (this.bottom = $('.footer').outerHeight(true))
+      }
+    }
+  })
+  .on('affix.bs.affix', function (e) {
+    var tocWidth = $('#toc').outerWidth(true);
+    $('#toc').width(tocWidth);
+    $('.sidebar-affix-shadow').removeClass('bottom').addClass('on').attr('data-width', tocWidth);
+    $('head').append('<style>.sidebar-affix-shadow:before, .sidebar-affix-shadow:after {width: ' + tocWidth + 'px;}</style>');
+    $(window).scroll(function() {
+      if($(window).scrollTop() + $(window).height() > $(document).height() - $('.footer').outerHeight(true)) {
+        // If window reaches bottom
+        $('.sidebar-affix-shadow').addClass('bottom').removeClass('on');
+      } else {
+        // If user scrolls back
+        $('.sidebar-affix-shadow').removeClass('bottom').addClass('on');
+      }
+    });
+  }).on('affix-top.bs.affix', function (e) {
+    // If scrolls back to top
+    $('#toc').removeAttr('style');
+    $('.sidebar-affix-shadow').removeClass('bottom on');
+  }).on('affix-bottom.bs.affix', function (e) {
+    // If window reaches bottom (Affix style)
+    $('.sidebar-affix-shadow').addClass('bottom').removeClass('on');
+  });
+}
+
+// Sidebar ScrollSpy
+$.fn.scrollStopped = function(callback) {
+  $(this).scroll(function() {
+    var self = this, $this = $(self);
+    if ($this.data('scrollTimeout')) {
+      clearTimeout($this.data('scrollTimeout'));
+    }
+    $this.data('scrollTimeout', setTimeout(callback, 250, self));
+  });
+};
+
+$(window).scrollStopped(function() {
+  setTimeout(function() {
+    $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
+    // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
+  }, 250);
+});
+
+$(".sidebar-affix-shadow").hover(
+  function() {
+    $(this).removeClass("sidebar-hover-off");
+  }, function() {
+    $(this).addClass("sidebar-hover-off");
+  }
+);
+
+$(function() {
+  prettyPrint();
+
+  $("pre.prettyprint code").each(function(index, ele) {
+    $(this).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
+    if ($(this).text().indexOf("{{appid}}") != -1 || $(this).text().indexOf("{{appkey}}") != -1) {
+      // After debuging, re-apply ng-show='currentApp' for .doc-example-selector
+      $(this).after("<div class='doc-example-selector' ng-show='currentApp'><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>");
+    }
+  });
+  var clip = new ZeroClipboard();
+  clip.glue($(".copybtn"));
+  clip.on("mousedown", function(client, args) {
+    $(this).parents("pre.prettyprint").removeClass("active")
+    clip.setText($(this).parents("pre").find("code").text());
+  });
+  clip.on("complete", function() {
+    $(this).parents("pre.prettyprint").addClass("active");
+  });
+  clip.on('noflash', function() {
+    $(".copybtn").hide();
+  });
+});
+</script>
+<script src="custom.js">
+</script>
+
+
+<script src="angular/angular.min.js">
+</script>
+
+
+<script type="text/javascript">
+angular.module("app", []);
+angular.module("app").controller("AppCtrl", ['$scope', '$http',
+    function($scope, $http) {
+
+        $scope.appid = "{{your_app_id}}";
+        $scope.appkey = "{{your_app_key}}";
+        $http.get("/1/clients/self/apps").success(
+            function(data) {
+                if (data.length > 0) {
+
+                    $scope.currentApp = data[0];
+                    $scope.$watch('currentApp', function() {
+                        $scope.appid = $scope.currentApp.app_id;
+                        $scope.appkey = $scope.currentApp.app_key;
+                    });
+                    $scope.apps = data;
+                }
+
+            }).error(function(data) {
+
+        });
+    }
+]);
+</script>
+<script>
+
+$(function(){
+
+  angular.element("body").scope().sdkversion = $sdk_versions;
+
+})
+
+</script>
