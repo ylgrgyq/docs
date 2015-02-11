@@ -79,6 +79,7 @@ Backbone.Model的话,你已经明白如何使用AV.Object了.它本身就是设�
 
 ```javascript
 // 创建AV.Object子类.
+// 该语句应该只声明一次
 var GameScore = AV.Object.extend("GameScore");
 
 // 创建该类的一个实例
@@ -132,7 +133,6 @@ var monster = Monster.new({strength: 20});
 save就可以了.
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var gameScore = new GameScore();
 gameScore.set("score", 1337);
 gameScore.set("playerName", "Sean Plott");
@@ -169,7 +169,6 @@ AV.Object中都不会有这些字段.
 如果愿意,你也可以在调用save时直接设定属性.
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var gameScore = new GameScore();
 
 gameScore.save({
@@ -195,7 +194,6 @@ gameScore.save({
 objectId的话,你可以用一个AV.Query提取出整个AV.Object:
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var query = new AV.Query(GameScore);
 query.get("520ca0bbe4b07e8e0e847e31", {
   success: function(gameScore) {
@@ -222,7 +220,6 @@ var cheatMode = gameScore.get("cheatMode");
 
 ```javascript
 // Create the object.
-var GameScore = AV.Object.extend("GameScore");
 var gameScore = new GameScore();
 
 gameScore.set("score", 1337);
@@ -335,6 +332,7 @@ AV.Object.destroyAll(objects);
 
 ```javascript
 // Declare the types.
+// 该语句应该只声明一次
 var Post = AV.Object.extend("Post");
 var Comment = AV.Object.extend("Comment");
 
@@ -478,13 +476,15 @@ JavaScript的Date和null类型.
 一些例子:
 
 ```javascript
+// 该语句应该只声明一次
+var BigObject = AV.Object.extend("BigObject");
+
 var number = 42;
 var string = "the number is " + number;
 var date = new Date();
 var array = [string, number];
 var object = { number: number, string: string };
 
-var BigObject = AV.Object.extend("BigObject");
 var bigObject = new BigObject();
 bigObject.set("myNumber", number);
 bigObject.set("myString", string);
@@ -511,7 +511,6 @@ AV.Objects的大小不应该超过128KB.
 以使用equalTo方法来添加查询条件：
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var query = new AV.Query(GameScore);
 query.equalTo("playerName", "Dan Stemkoski");
 query.find({
@@ -557,7 +556,6 @@ query.limit(10); // limit to at most 10 results
 如果你只想要一个结果,一个更加方便的方法可能是使用first,而不是find方法.
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var query = new AV.Query(GameScore);
 query.equalTo("playerEmail", "dstemkoski@example.com");
 query.first({
@@ -631,7 +629,9 @@ query.doesNotExist("score");
 起来像下面这样:
 
 ```javascript
+// 该语句应该只声明一次
 var Team = AV.Object.extend("Team");
+
 var teamQuery = new AV.Query(Team);
 teamQuery.greaterThan("winPct", 0.5);
 var userQuery = new AV.Query(AV.User);
@@ -660,7 +660,6 @@ playername字段的文档(包括build-in的字段,objectId,createdAt,
 updatedAt):
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var query = new AV.Query(GameScore);
 query.select("score", "playerName");
 query.find().then(function(results) {
@@ -730,8 +729,6 @@ matchesQuery操作.注意默认的结果条数限制100和最大limit 1000也同
 况。例如，为了找到post中有图片的comment,你可以:
 
 ```javascript
-var Post = AV.Object.extend("Post");
-var Comment = AV.Object.extend("Comment");
 var innerQuery = new AV.Query(Post);
 innerQuery.exists("image");
 var query = new AV.Query(Comment);
@@ -747,8 +744,6 @@ query.find({
 doesNotMatchQuery.例如，为了找到针对不含图片的post的comment,你可以这样:
 
 ```javascript
-var Post = AV.Object.extend("Post");
-var Comment = AV.Object.extend("Comment");
 var innerQuery = new AV.Query(Post);
 innerQuery.exists("image");
 var query = new AV.Query(Comment);
@@ -811,7 +806,6 @@ AV.Query的helper函数例如first和get.
 可以使用count来取代find. 比如,为了获得某个玩家到底玩过多少局游戏:
 
 ```javascript
-var GameScore = AV.Object.extend("GameScore");
 var query = new AV.Query(GameScore);
 query.equalTo("playerName", "Sean Plott");
 query.count({
@@ -1712,6 +1706,7 @@ AV.ACL(user)生成一个AV.ACL来限定user的访问.一个对象的ACL会在对
 的一个note:
 
 ```javascript
+// 该语句应该只声明一次
 var Note = AV.Object.extend("Note");
 var privateNote = new Note();
 privateNote.set("content", "This note is private!");
@@ -1728,6 +1723,7 @@ privateNote.save();
 的多个用户,他们中的每一个都有读和写的权限:
 
 ```javascript
+// 该语句应该只声明一次
 var Message = AV.Object.extend("Message");
 var groupMessage = new Message();
 var groupACL = new AV.ACL();
@@ -1817,7 +1813,6 @@ query.find({
 var user = AV.User.current();
 
 // Make a new post
-var Post = AV.Object.extend("Post");
 var post = new Post();
 post.set("title", "My New Post");
 post.set("body", "This is some great content.");

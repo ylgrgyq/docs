@@ -22,6 +22,7 @@ LeanCloud 开发者文档
 * 由于文档会采用 Angular 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 Angular 渲染。
 * 标题等级要保持连续性，比如 `# 一级标题   ### 三级标题` 这样是不对的。
 * 如果变动比较大，需要本地先预览下看下效果，可以 [运行这个项目](https://github.com/leancloud/avoscloud-docs)。
+* 图片资源可以放在当前 Repo 的 `images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
 
 ## LeanCloud 内部员工发布新文档
 * 自己修改的文档，自己负责检查和发布。
