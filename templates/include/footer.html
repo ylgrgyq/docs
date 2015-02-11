@@ -38,7 +38,7 @@
 <script src="pangu.js"></script>
 <script src="contents.js"></script>
 <script>
-$("h2,h3,h4,h5,a").removeAttr("id");
+$("h1,h2,h3,h4,h5,a").removeAttr("id");
 gajus.contents.formatId = function(str){
   return str.replace(/ /g,'_').replace(/[^a-zA-Z_0-9\u4e00-\u9fa5]/g,'_');
 };
@@ -48,15 +48,12 @@ var tocContents =gajus.contents({
 $('#toc-wrapper ol').first().attr('id','toc');
 $('#toc').addClass('nav');
 tocContents.eventProxy.on('ready', function () {
-  console.log('readuy')
   doSideBar();
 });
 
-// $('#toc-wrapper ol').attr('class','nav');
 </script>
 <script>
 pangu.page_spacing();
-
 // Sidebar affix
 function doSideBar(){
   $('.sidebar-wrapper').affix({
