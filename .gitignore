@@ -2,5 +2,5 @@
 **/.DS_Store
 dist
 node_modules
-
+custom/app.css
 /.DS_Store
