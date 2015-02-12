@@ -195,8 +195,8 @@ if (name) {
 ```javascript
 // Use AV.Cloud.define to define as many cloud functions as you want.
 // For example:
-AV.Cloud.define("hello", function(request, response) {
-  response.success("Hello world!");
+AV.Cloud.define('hello', function(request, response) {
+  response.success('Hello world!');
 });
 ```
   
@@ -433,19 +433,19 @@ https://leancloud.cn/1.1/functions/hello
 Cloud函数接收JSON格式的请求对象，我们可以用它来传入电影名称。整个AVCloud JavaScript SDK都在Cloud Code运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现`averageStars`函数的代码如下:
 
 ```javascript
-AV.Cloud.define("averageStars", function(request, response) {
-  var query = new AV.Query("Review");
-  query.equalTo("movie", request.params.movie);
+AV.Cloud.define('averageStars', function(request, response) {
+  var query = new AV.Query('Review');
+  query.equalTo('movie', request.params.movie);
   query.find({
     success: function(results) {
       var sum = 0;
       for (var i = 0; i < results.length; ++i) {
-        sum += results[i].get("stars");
+        sum += results[i].get('stars');
       }
       response.success(sum / results.length);
     },
     error: function() {
-      response.error("movie lookup failed");
+      response.error('movie lookup failed');
     }
   });
 });
@@ -499,7 +499,7 @@ https://leancloud.cn/1.1/functions/averageStars
 使用`AV.Cloud.run`可以在云代码中调用`AV.Cloud.define`定义的云代码函数：
 
 ```javascript
-AV.Cloud.run("hello", {name: 'dennis'}, {
+AV.Cloud.run('hello', {name: 'dennis'}, {
   success: function(data){
       //调用成功，得到成功的应答data
   },
@@ -518,13 +518,19 @@ API参数详解参见[AV.Cloud.run](https://leancloud.cn/docs/api/javascript/sym
 在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用`beforeSave`来截断评论到140个字符：
 
 ```javascript
-AV.Cloud.beforeSave("Review", function(request, response) {
-  var comment = request.object.get("comment");
-  if (comment.length > 140) {
-    // 截断并添加...
-    request.object.set("comment", comment.substring(0, 137) + "...");
+AV.Cloud.beforeSave('Review', function(request, response) {
+  var comment = request.object.get('comment');
+  if (comment) {
+    if (comment.length > 140) {
+      // 截断并添加...
+      request.object.set('comment', comment.substring(0, 137) + '...');
+    }
+    // 保存到数据库中
+    response.success();
+  } else {
+    // 不保存数据，并返回错误
+    response.error('No comment!');    
   }
-  response.success();
 });
 ```
 
@@ -533,15 +539,15 @@ AV.Cloud.beforeSave("Review", function(request, response) {
 在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过`afterSave`函数做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
 
 ```javascript
-AV.Cloud.afterSave("Comment", function(request) {
-  query = new AV.Query("Post");
-  query.get(request.object.get("post").id, {
+AV.Cloud.afterSave('Comment', function(request) {
+  query = new AV.Query('Post');
+  query.get(request.object.get('post').id, {
     success: function(post) {
-      post.increment("comments");
+      post.increment('comments');
       post.save();
     },
     error: function(error) {
-      throw "Got an error " + error.code + " : " + error.message;
+      throw 'Got an error ' + error.code + ' : ' + error.message;
     }
   });
 });
@@ -553,8 +559,8 @@ AV.Cloud.afterSave("Comment", function(request) {
 同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过`afterUpdate`函数做到。比如每次修改文章后简单地记录日志：
 
 ```javascript
-AV.Cloud.afterUpdate("Article", function(request) {
-   console.log("Updated article,the id is :" + request.object.id);
+AV.Cloud.afterUpdate('Article', function(request) {
+   console.log('Updated article,the id is :' + request.object.id);
 });
 ```
 
@@ -563,23 +569,23 @@ AV.Cloud.afterUpdate("Article", function(request) {
 很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过`beforeDelete`函数来定义一个钩子（callback）函数来做这些检查，示例代码：
 
 ```javascript
-AV.Cloud.beforeDelete("Album", function(request, response) {
+AV.Cloud.beforeDelete('Album', function(request, response) {
   //查询Photo中还有没有属于这个相册的照片
-  query = new AV.Query("Photo");
+  query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
-  query.equalTo("album", album);
+  query.equalTo('album', album);
   query.count({
     success: function(count) {
       if (count > 0) {
         //还有照片，不能删除，调用error方法
-        response.error("Can't delete album if it still has photos.");
+        response.error('Can\'t delete album if it still has photos.');
       } else {
         //没有照片，可以删除，调用success方法
         response.success();
       }
     },
     error: function(error) {
-      response.error("Error " + error.code + " : " + error.message + " when getting photo count.");
+      response.error('Error ' + error.code + ' : ' + error.message + ' when getting photo count.');
     }
   });
 });
@@ -590,17 +596,17 @@ AV.Cloud.beforeDelete("Album", function(request, response) {
 另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`afterDelete`函数来实现：
 
 ```javascript
-AV.Cloud.afterDelete("Album", function(request) {
-  query = new AV.Query("Photo");
+AV.Cloud.afterDelete('Album', function(request) {
+  query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
-  query.equalTo("album", album);
+  query.equalTo('album', album);
   query.find({
     success: function(posts) {
     //查询本相册的照片，遍历删除
     AV.Object.destroyAll(posts);
     },
     error: function(error) {
-      console.error("Error finding related comments " + error.code + ": " + error.message);
+      console.error('Error finding related comments ' + error.code + ': ' + error.message);
     }
   });
 });
@@ -611,7 +617,7 @@ AV.Cloud.afterDelete("Album", function(request) {
 很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加`AV.Cloud.onVerified`函数：
 ```javascript
 AV.Cloud.onVerified('sms', function(request, response) {
-    console.log("onVerified: sms, user: " + request.object);
+    console.log('onVerified: sms, user: ' + request.object);
     response.success();
 ```
 函数的第一个参数是验证类型：短信验证为`sms`，邮箱验证为`email`。另外，数据库中相关的验证字段，如`emailVerified`不需要修改，我们已经为你更新完成。
@@ -620,15 +626,15 @@ AV.Cloud.onVerified('sms', function(request, response) {
 在用户注册成功之后如果你想做一些事情可以定义以下函数：
 
 ```javascript
-AV.Cloud.afterSave("_User", function(request) {
+AV.Cloud.afterSave('_User', function(request) {
   console.log(request.object);
-  request.object.set("from","LeanCloud");
+  request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
     {
-      console.log("ok!");
+      console.log('ok!');
     },error:function(user,error)
     {
-      console.log("error",error);
+      console.log('error',error);
     }
     });
 });
@@ -645,8 +651,8 @@ AV.Cloud.afterSave("_User", function(request) {
 定时任务也是普通的`AV.Cloud.define`定义的云代码函数，比如我们定义一个打印循环打印日志的任务`log_timer`：
 
 ```javascript
-AV.Cloud.define("log_timer", function(req, res){
-    console.log("Log in timer.");
+AV.Cloud.define('log_timer', function(req, res){
+    console.log('Log in timer.');
     return res.success();
 });
 ```
@@ -675,11 +681,11 @@ AV.Cloud.define("log_timer", function(req, res){
 我们再尝试定义一个复杂一点的任务，比如每周一早上8点准时发送推送消息给用户：
 
 ```javascript
-AV.Cloud.define("push_timer", function(req, res){
+AV.Cloud.define('push_timer', function(req, res){
   AV.Push.send({
-        channels: [ "Public" ],
+        channels: [ 'Public' ],
         data: {
-            alert: "Public message"
+            alert: 'Public message'
         }
     });
    return res.success();
@@ -712,7 +718,7 @@ crontab的基本语法是
 如果在你的 node.js 环境里也想做到超级权限，请调用下列代码初始化 SDK:
 
 ```javascript
-AV._initialize("app id", "app key", "master key");
+AV._initialize('app id', 'app key', 'master key');
 AV.Cloud.useMasterKey();
 ```
 
@@ -743,7 +749,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 如果你想打印日志到里面查看，可以使用`console.log`,`console.error`或者`console.warn`函数。`console.error`和`console.warn`都将写入error级别的日志。
 
 ```javascript
-AV.Cloud.define("Logger", function(request, response) {
+AV.Cloud.define('Logger', function(request, response) {
   console.log(request.params);
   response.success();
 });
@@ -876,7 +882,7 @@ require('cloud/app.js');
 
 ```javascript
 //设置7天不过期
-app.listen({"static": {maxAge: 604800000}});
+app.listen({'static': {maxAge: 604800000}});
 ```
 
 请注意`maxAge`的单位是毫秒，这样cache-control头会变成`max-age=604800`。更多static选项参考[static middleware](http://www.senchalabs.org/connect/static.html)。
@@ -939,7 +945,7 @@ Congrats, you just set up your app!
 ```javascript
 // 在app.listen();之后。
 app.use(function(req, res, next){
-  res.status(404).render('404', {title: "Sorry, page not found"});
+  res.status(404).render('404', {title: 'Sorry, page not found'});
 });
 ```
 
@@ -983,15 +989,15 @@ app.post('/upload', function(req, res){
   if(iconFile){
     fs.readFile(iconFile.path, function(err, data){
       if(err)
-        return res.send("读取文件失败");
+        return res.send('读取文件失败');
       var base64Data = data.toString('base64');
       var theFile = new AV.File(iconFile.name, {base64: base64Data});
       theFile.save().then(function(theFile){
-        res.send("上传成功！");
+        res.send('上传成功！');
       });
     });
   }else
-    res.send("请选择一个文件。");
+    res.send('请选择一个文件。');
 });
 ```
 
