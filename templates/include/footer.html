@@ -55,10 +55,15 @@ ZeroClipboard.setDefaults({
 
 <script src="custom/js/common.js"></script>
 <script src="custom/js/demo.js"></script>
-<script src="custom/js/download.js"></script>
-{% if basename!='index' %}
+
+{% if basename!='index' and basename!='sdk_down' and basename !='demo' %}
 <script src="custom/js/lib/contents.js"></script>
 <script src="custom/js/md.js"></script>
+{% endif %}
+
+{% if basename=='sdk_down' %}
+<script type="text/javascript" src="custom/js/download.js">
+</script>
 {% endif %}
 <!-- end toc & sidebar -->
 
