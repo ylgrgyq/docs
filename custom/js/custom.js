@@ -1,19 +1,7 @@
-var pres = document.getElementsByTagName("pre");
-for (var i = 0; i < pres.length; i++) {
-    pres[i].className = "prettyprint";
-
-}
 
 
 
-
-$(function() {
-    $("#ios_version").text($sdk_versions.ios);
-    $("#osx_version").text($sdk_versions.osx);
-    $("#android_version").text($sdk_versions.android);
-    $("#js_version").text($sdk_versions.javascript);
-});
-
+// doc search
 $(function() {
     $(".search-form input").keyup(function(event) {
         if ($(event).keyCode == 13) {
@@ -54,14 +42,7 @@ $(function() {
     }
 })();
 
-$(function(){
-  $("#ios_version").text($sdk_versions.ios);
-  $("#osx_version").text($sdk_versions.osx);
-  $("#android_version").text($sdk_versions.android);
-  $("#js_version").text($sdk_versions.javascript);
-  $("#unity3d_version").text($sdk_versions.unity3d);
-  $("#wp_version").text($sdk_versions.wp);
-});
+
 
 $(function() {
   var arr = $('#toc ul').parents('li');
@@ -73,8 +54,4 @@ $(function() {
   $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
 });
 
-// $('body').scrollspy({ target: '.sidebar-wrapper' });
-// $('body').scrollspy({ target: '.bs-docs-sidebar' });
-// $('[data-spy="scroll"]').each(function () {
-//   var $spy = $(this).scrollspy('refresh')
-// })
+
