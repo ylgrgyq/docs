@@ -36,11 +36,11 @@ module.exports = function(grunt) {
     },
     watch: {
       options: {
-        livereload: 1337,
+        livereload: true
       },
       md: {
         files: ["md/*.md"],
-        tasks: ['copy:md', 'shell:doctoc', 'markdown', 'assemble:md', 'dom_munger']
+        tasks: ['copy:md', 'markdown', 'assemble']
       },
       asset: {
         files: ["custom/**", "images/**"],
