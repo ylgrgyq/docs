@@ -36,7 +36,9 @@
 <script src="bootstrap-hover-dropdown.js"></script>
 <script src="jquery.scrollTo.min.js"></script>
 <script src="pangu.js"></script>
+{% if basename!='index' %}
 <script src="contents.js"></script>
+
 <script>
 $("h1,h2,h3,h4,h5,a").removeAttr("id");
 gajus.contents.formatId = function(str){
@@ -52,6 +54,7 @@ tocContents.eventProxy.on('ready', function () {
 });
 
 </script>
+{% endif %}
 <script>
 pangu.page_spacing();
 // Sidebar affix
