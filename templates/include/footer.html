@@ -53,10 +53,6 @@ tocContents.eventProxy.on('ready', function () {
   doSideBar();
 });
 
-</script>
-{% endif %}
-<script>
-pangu.page_spacing();
 // Sidebar affix
 function doSideBar(){
   $('.sidebar-wrapper').affix({
@@ -92,22 +88,22 @@ function doSideBar(){
 }
 
 // Sidebar ScrollSpy
-$.fn.scrollStopped = function(callback) {
-  $(this).scroll(function() {
-    var self = this, $this = $(self);
-    if ($this.data('scrollTimeout')) {
-      clearTimeout($this.data('scrollTimeout'));
-    }
-    $this.data('scrollTimeout', setTimeout(callback, 250, self));
-  });
-};
+// $.fn.scrollStopped = function(callback) {
+//   $(this).scroll(function() {
+//     var self = this, $this = $(self);
+//     if ($this.data('scrollTimeout')) {
+//       clearTimeout($this.data('scrollTimeout'));
+//     }
+//     $this.data('scrollTimeout', setTimeout(callback, 250, self));
+//   });
+// };
 
-$(window).scrollStopped(function() {
-  setTimeout(function() {
-    $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
-    // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
-  }, 250);
-});
+// $(window).scrollStopped(function() {
+//   setTimeout(function() {
+//     $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
+//     // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
+//   }, 250);
+// });
 
 $(".sidebar-affix-shadow").hover(
   function() {
@@ -116,6 +112,13 @@ $(".sidebar-affix-shadow").hover(
     $(this).addClass("sidebar-hover-off");
   }
 );
+
+
+</script>
+{% endif %}
+<script>
+pangu.page_spacing();
+
 
 $(function() {
   prettyPrint();
