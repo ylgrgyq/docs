@@ -2357,11 +2357,11 @@ curl -X GET \
     <td>签名随机字符串（签名参数）</td>
   </tr>
   <tr>
-    <td>sign_ts</td>
+    <td>signature_ts</td>
     <td>签名时间戳（签名参数）</td>
   </tr>
   <tr>
-    <td>sign</td>
+    <td>signature</td>
     <td>签名（签名参数）</td>
   </tr>
 </table>
@@ -2370,7 +2370,7 @@ curl -X GET \
 
 签名采用 Hmac-sha1 算法，输出字节流的十六进制字符串 (hex dump)，签名的 key 必须是应用的 master key ,签名的消息格式如下：
 
-`appid:peerid:convid:nonce:sign_ts`
+`appid:peerid:convid:nonce:signature_ts`
 
 返回数据格式，json 数组，按消息记录从新到旧排序。
 
