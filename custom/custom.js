@@ -4,25 +4,6 @@ for (var i = 0; i < pres.length; i++) {
 
 }
 
-var toplinks = $("#toc >li >a");
-for (var i = 0; i < toplinks.length; i++) {
-    var endindex = window.location.href.length;
-    if (window.location.href.indexOf("#") > -1) {
-        endindex = window.location.href.indexOf("#");
-    }
-
-    if ($(toplinks[i]).attr("href") == window.location.href.substring(window.location.href.lastIndexOf("/") + 1, endindex)) {
-        $(toplinks[i]).parent("li").addClass("current");
-    }
-}
-
-// $("ul#toc li ul li a").click(function() {
-
-//     $("#toc a ").removeClass("selected");
-//     $(this).addClass("selected");
-
-//     $(this).next("ul").toggle();
-// });
 
 
 
