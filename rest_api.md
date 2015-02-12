@@ -469,6 +469,9 @@ Location: https://leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
   "objectId": "51e3a334e4b0b3eb44adbe1a"
 }
 ```
+
+** 我们对单个 class 的记录数目没有做限制，但是单个应用的总 class 数目限定为 500 个以内**
+
 ###获取对象
 当你创建了一个对象时,你可以通过发送一个GET请求到返回的header的Location以获取它的内容.例如,为了得到我们上面创建的对象:
 ```sh

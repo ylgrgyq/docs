@@ -125,6 +125,45 @@ mQtjuMF5xk,xPVrHL0W4n
 
 导出还可以限定日期，我们将导出在限定时间内有过更新或者新增加的数据。
 
+
+#### 导出用户数据的加密算法
+
+我们通过一个 Ruby 脚本来描述这个用户密码加密算法：
+
+1. 创建 SHA-512 加密算法 hasher
+2. 使用 salt 和 password（原始密码） 调用 hasher.update
+3. 获取加密后的值 `hv`
+3. 重复 512 次调用 `hasher.update(hv)`，每次hv都更新为最新的 `hasher.digest` 加密值
+4. 最终的 hv 值做 base64 编码，保存为 password
+
+假设 salt 为 `h60d8x797d3oa0naxybxxv9bn7xpt2yiowz68mpiwou7gwr2`, 原始密码为 `password`，经过加密后为 `tA7BLW+NK0UeARng0693gCaVnljkglCB9snqlpCSUKjx2RgYp8VZZOQt0S5iUtlDrkJXfT3gknS4rRqjYsd/Ug==`
+
+参考下列代码
+
+
+```ruby
+require 'digest/sha2'
+require "base64"
+
+hasher = Digest::SHA512.new
+hasher.reset
+hasher.update "h60d8x797d3oa0naxybxxv9bn7xpt2yiowz68mpiwou7gwr2"
+hasher.update "password"
+
+hv = hasher.digest
+
+def hashme(hasher, hv)
+  512.times do
+    hasher.reset
+    hv = hasher.digest hv
+  end
+  hv
+end
+
+result = Base64.encode64(hashme(hasher,hv))
+puts result.gsub(/\n/,'')
+```
+
 ## 安全性
 
 对于任何移动应用来说。因为客户端代码运行在一台移动设备上，因此可能会有不受信任的客户强行修改代码并发起恶意的请求。选择正确的方式来保护你的应用非常重要，但是正确的方式取决于你的应用，以及应用存储的数据。
