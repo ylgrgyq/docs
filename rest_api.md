@@ -2393,7 +2393,7 @@ curl -X GET \
 ```sh
 curl -X DELETE \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{masterkey}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593&msgid=PESlY&timestamp=1408008498571
 ```
 
