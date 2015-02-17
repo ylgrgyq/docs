@@ -1363,3 +1363,45 @@ public class MyCustomReceiver extends BroadcastReceiver {
     }
 }
 ```
+
+## 推送问题排查
+
+推送因为环节较多，跟设备和网络都相关，并且调用都是异步化，因此问题比较难以查找，这里是一些 Tip ，帮助您排查消息推送遇到的问题。
+
+### 推送结果查询
+
+所有经过 `/push` 接口发出的消息的都可以在控制台的存储里的 `_Notification` 表看到。每次调用 `/push` 都将产生一条新的 `_Notification` 对象表示一次推送。这张表除了 objectId 等内置属性之外还包含下列属性：
+
+* where 本次推送的查询条件，查询 `_Installation` 表的查询条件，符合这些查询条件的设备将接收本条推送消息。
+* data 本次推送的消息内容。
+* subscribers 本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server的总设备数。
+* invalidTokens 仅 iOS 消息推送有效，表示本次推送遇到多少次 APNs 返回 [INVALID TOKEN](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW12) 错误，如果这个数字过大，请留意证书是否正常。
+* status 表示本次推送的状态，`in queue` 表示仍然在队列，`done`表示完成，`schedule`表示定时推送任务等待触发中。
+* prod 仅对 iOS 有效，表示使用什么环境证书，`dev` 表示测试证书，`prod` 表示生产证书。
+
+
+`/push` 接口会返回新建的 `_Notification` 对象的 objectId，您就可以在这张表里查找消息推送的结果。
+
+
+### iOS 推送排查建议
+
+一些建议和提示：
+
+* 请确保在项目 `Info.plist` 文件中使用了正确的 `Bundle Identifier`。
+* 请确保在 `Project > Build Settings` 设置了正确的 `provisioning profile`
+* 尝试 clean 项目并重启 Xcode
+* 尝试到 [Apple Developer](https://developer.apple.com/account/overview.action)重新生成 `provisioning profile`，修改 Apple ID，再改回来，然后重新生成。你需要重新安装 `provisioning profile` 并在 `Project > Build Settings` 里重新设置。
+* 打开 XCode Organizer，从电脑和 iOS 设备里删除所有过期和不用的 `provisioning profile`。
+* 如果编译和运行都没有问题，但是你仍然收不到推送，请确保你的应用打开了接收推送权限，在 iOS 设备的 `设置 -> 通知 -> 你的应用 ` 里确认。
+* 如果权限也没有问题，请确保使用了正确的 `provisioning profile` 打包你的应用。如果你上传了测试证书并使用测试证书推送，那么必须使用 `Development Provisioning Profile` 构建你的应用。如果你上传了生产证书，并且使用生产证书推送，请确保你的应用使用 `Distribution Provisioning Profile` 签名打包。`Ad Hoc` 和 `App Store Distribution Provisioning Profile` 都可以接收使用生产证书发送的消息。
+* 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 `provisioning profile`，并到 XCode Organizer 更新。
+* 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
+* 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。
+* 检查 `_Notifcation` 表的 `subscribers` 和 `status`，确保推送状态和接收设备数目是否正常。
+
+
+### Android 排查建议
+
+* 请确保设备正确调用了 `AVInstallation` 保存了设备信息到 `_Installation` 表。
+* 可以在控制台的 `消息 -> 推送 -> 帮助` 根据 `installationId` 查询设备是否在线。
+* 如果使用自定义 Receiver，请确保在 AndroidManifest.xml 中声明您的 Receiver，并且保证 data 里的 action 一致。
