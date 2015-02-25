@@ -149,6 +149,20 @@ module.exports = function(grunt) {
         }
       }
     },
+    usemin: {
+      html:['dist/*.html'],
+      options: {
+        dest: "dist/",
+        root: "dist/"
+      }
+    },
+    useminPrepare: {
+      html:['dist/*.html'],
+      options: {
+        dest: "dist/",
+        root: "dist"
+      }
+    },
     connect: {
       options: {
         port: 3000,
@@ -182,8 +196,15 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('assemble');
 
+  grunt.loadNpmTasks('grunt-usemin');
+  grunt.loadNpmTasks('grunt-contrib-concat');
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  // grunt.loadNpmTasks('grunt-useminPrepare');
 
-  grunt.registerTask("build", ["clean", "copy:md", "markdown", "assemble", "less:dist", "autoprefixer", "cssmin", "copy:asset"]);
+  grunt.registerTask("build", ["clean", "copy:md", "markdown", "assemble",
+   "less:dist", "autoprefixer", "cssmin", "copy:asset",
+    "useminPrepare",'concat:generated',
+    'uglify:generated',"usemin"]);
   grunt.registerTask("server", ["build", "less:server", "connect", "watch"])
 
 };
