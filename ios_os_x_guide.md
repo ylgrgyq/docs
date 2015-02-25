@@ -1,86 +1,87 @@
 # iOS / OS X 指南
 
-如果您还没有安装 LeanCloud iOS SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，并在 Xcode 中熟悉和允许示例代码。我们的 SDK 支持 iOS 4.3 及更高版本。
+如果还没有安装 LeanCloud iOS SDK，请阅读 [快速入门](/start.html) 来获得该 SDK，并在 Xcode 中运行和熟悉示例代码。我们的 SDK 支持 iOS 4.3 及更高版本。
 
-如果您希望从项目中学习，请前往 [iOS-SDK-Demos](https://github.com/leancloud/iOS-SDK-demos) 。
+如果想从项目中学习，请到我们的 GitHub 资源库中获取 [iOS SDK 示例代码](https://github.com/leancloud/iOS-SDK-demos) 。
 
 ## 介绍
 
-LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位的后端服务。我们的目标是让你不需要进行后端开发及服务器运维等工作就可以开发和发布成熟的应用。
+LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全方位的后端服务。我们的目标是让开发者不需要进行后端开发及服务器运维等工作，就可以开发和发布成熟的应用。
 
-如果你熟悉像 Ruby on Rails 这样的 Web 框架，LeanCloud 将会十分容易上手。我们在设计 LeanCloud 时应用了许多与之相同的原则。如果你之前使用过 Parse 或类似的后端服务，会发现我们在设计 API 时尽可能与之保持兼容，让应用非常容易从其他服务迁移到 LeanCloud，开发者在使用我们的 SDK 时也会得心应手。
+如果熟悉像 Ruby on Rails 这样的 Web 框架，你会发现 LeanCloud 很容易上手。我们在设计 LeanCloud 时应用了许多与之相同的原则。如果你之前使用过 Parse 或类似的后端服务，那么还会发现我们的 API 尽可能与其保持兼容。我们这样设计，是为了让开发者可以轻而易举地将应用从其他服务迁移至 LeanCloud，并且能得心应手地使用我们的 SDK 进行开发。
 
 ## 快速入门
 
-建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
-## 使用 Cocopods 安装SDK
+## 使用 CocoaPods 安装 SDK
 
-在[快速入门](https://leancloud.cn/start.html)里可以看到怎么在你的项目里安装SDK。
+[快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
 
-[Cocopods](http://www.cocoapods.org/)是一个很好的依赖管理工具，下面我们大概介绍下怎么安装：
+[CocoaPods](http://www.cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
 
-* 首先确保您的机器安装了Ruby，一般来说，如果安装了XCode，都会自动安装了Ruby
-* 我们建议使用淘宝提供的[Gem源](http://ruby.taobao.org/)，在终端执行下列命令：
+* 首先确保开发环境中已经安装了 Ruby（一般安装了 XCode，Ruby 会被自动安装上）
+* 我们建议使用淘宝提供的 [Gem源](http://ruby.taobao.org/)，在终端执行下列命令：
 
-```sh
-$ gem sources --remove https://rubygems.org/
-$ gem sources -a http://ruby.taobao.org/
-$ gem sources -l
-*** CURRENT SOURCES ***
-http://ruby.taobao.org
-#请确保下列命令的输出只有ruby.taobao.org
-$ gem install rails
-```
+  ```sh
+  $ gem sources --remove https://rubygems.org/
+  $ gem sources -a http://ruby.taobao.org/
+  $ gem sources -l
+  *** CURRENT SOURCES ***
+  http://ruby.taobao.org
+  #请确保下列命令的输出只有ruby.taobao.org
+  $ gem install rails
+  ```
 
-* 通过下列命令，安装(或者更新)cocopods（可能需要输入登录密码）：
+* 通过下列命令，安装（或更新）CocoaPods（可能需要输入登录密码）：
 
-```sh
-sudo gem install cocoapods
-```
+  ```sh
+  sudo gem install cocoapods
+  ```
 
-* 在你的项目根目录创建一个`Podfile`文件，添加下列内容：
+* 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
-```sh
-pod 'AVOSCloud'
-```
-如果 SNS 组件的相关功能，可以添加：
+  ```sh
+  pod 'AVOSCloud'
+  ```
+* 如果使用 SNS 组件（社交平台服务）的相关功能，则添加：
 
-```sh
-pod 'AVOSCloudSNS'
-```
+  ```sh
+  pod 'AVOSCloudSNS'
+  ```
 
-* 执行命令`pod install`安装SDK。
+* 执行命令 `pod install` 安装 SDK。
 
-您还可以参考这篇文章 [《CocoaPods安装和使用教程》](http://code4app.com/article/cocoapods-install-usage)
-
+相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
 ## 应用
 
-在 LeanCloud 的每个应用有自己的 ID 和客户端密钥，在客户端代码中应该用他们来初始化 SDK。
+部署在 LeanCloud 上的每个应用都有自己的 ID 和客户端密钥，客户端代码应该使用它们来初始化 SDK。
 
-LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以分别在测试环境和生产环境部署不同的版本。
+LeanCloud 的每一个帐户都可以创建多个应用。同一个应用可分别在测试环境和生产环境部署不同的版本。
 
 ## 对象
 
 ### AVObject
 
-在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含了与 JSON 兼容的 key-value 对应的数据。数据是 schema-free 的，你不需要在每个 AVObject 上提前指定存在哪些键，只要直接设定对应的 key-value 即可。
+在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含与 JSON 相兼容的键值对（key-value）数据。该数据不需要定义模式（schema），因此不用提前指定 `AVObject` 都有哪些键，只要直接设定键值对即可。
 
-例如，您需要检测一个游戏中的分数对象。建立一个独立的 `AVObject` 即可 ：
+例如，记录游戏玩家的分数，直接创建一个独立的 `AVObject` 即可 ：
 
 ```objc
 score: 1337, playerName: "Steve", cheatMode: false
 ```
 
-key 必须是字母数字或下划线组成的字符串，自定义的键不能以`__`开头。值可以是字符串，数字，布尔值，甚至数组和字典。
+键，必须是由字母、数字或下划线组成的字符串；自定义的键，不能以 `__`（双下划线）开头。值，可以是字符串、数字、布尔值，或是数组和字典。
 
-**注意: 在iOS SDK中, `code`、 `uuid`、 `className`、 `keyValues`、 `fetchWhenSave`、 `running`、 `acl`、 `ACL`、 `isDataReady`、 `pendingKeys`、 `createdAt`、 `updatedAt`、 `objectId`、 `description` 也是保留字段, 不能作为key来使用.**
+**注意：在 iOS SDK 中，`code`、 `uuid`、 `className`、  `keyValues`、 `fetchWhenSave`、 `running`、 `acl`、 `ACL`、 `isDataReady`、 `pendingKeys`、 `createdAt`、 `updatedAt`、 `objectId`、 `description` 都是保留字段，不能作为键来使用。**
 
-每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的分数称为 GameScore。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
+每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，游戏分数这个对象可取名为 `GameScore`。
+
+我们建议将类和键分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
 ### 保存对象
 
-接下来，你需要将上文中的 `GameScore` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `NSMutableDictionary` 类似，但只有调用 `save` 方法时才会实际保存到服务器：
+接下来，需要将上文中的 `GameScore` 存储到 LeanCloud 上。LeanCloud 的相关接口和 `NSMutableDictionary` 类似，但只有在调用 `save` 方法时，数据才会被真正保存下来。
 
 ```objc
 AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
@@ -90,32 +91,35 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [gameScore save];
 ```
 
-在运行此代码后，您应当了解保存动作是否已经生效 。为了确保数据被保存，您可以在 LeanCloud 上的[数据管理](/data.html?appid={{appid}})中查看您应用的数据。
+运行此代码后，要想确认保存动作是否已经生效，可以到 LeanCloud 应用管理平台的 [数据管理](/data.html?appid={{appid}}) 页面来查看数据的存储情况。
 
-您应该可以在 `GameScore` 数据列表中看到下面的对象：
+如果保存成功，`GameScore` 的数据列表应该显示出以下记录：
 
 ```objc
 objectId: "51a90302e4b0d034f61623b5", score: 1337, playerName: "Steve", cheatMode: false,
 createdAt:"2013-06-01T04:07:30.32Z", updatedAt:"2013-06-01T04:07:30.32Z"
 ```
 
-此处有两件事情需要特别注明。
-首先，在运行此代码之前，您不必配置或设置一个称为「GameScore」的新类。LeanCloud 会自动创建这个类。
+在此要特别说明两点：
 
-此外，为了更方便的使用 LeanCloud，还有其它几个字段您不需要事先指定。`objectId` 是为每个对象自动生成的唯一的标识符；`createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间并会被自动填充。
-在您执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
+1. 运行此代码前，不用配置或设置 `GameScore` 类，LeanCloud 会自动创建这个类。
 
+2. 为更方便地使用 LeanCloud，以下字段不需要提前指定：
+  * `objectId` 是为每个对象自动生成的唯一的标识符
+  * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
+
+  在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
 
 ### 检索对象
 
-如果你觉得将数据保存到 LeanCloud 是简洁而优雅的，获取数据更是如此。如果已知 `objectId`，就可以使用 `AVQuery` 得到对应的 `AVObject`：
+将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以得到对应的 `AVObject` ：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 AVObject *gameScore = [query getObjectWithId:@"51a90302e4b0d034f61623b5"];
 ```
 
-使用 `objectForKey` 来得到属性的值，方法如下：
+用 `objectForKey` 获取属性值：
 
 ```objc
 int score = [[gameScore objectForKey:@"score"] intValue];
@@ -123,7 +127,7 @@ NSString *playerName = [gameScore objectForKey:@"playerName"];
 BOOL cheatMode = [[gameScore objectForKey:@"cheatMode"] boolValue];
 ```
 
-其中有三个特殊属性可以这样得到：
+获取三个特殊属性：
 
 ```objc
 NSString *objectId = gameScore.objectId;
@@ -131,7 +135,7 @@ NSDate *updatedAt = gameScore.updatedAt;
 NSDate *createdAt = gameScore.createdAt;
 ```
 
-如果需要刷新特定对象的最新数据，可以调用refresh方法，如下 ：
+如果需要刷新特定对象的最新数据，可调用 `refresh` 方法 ：
 
 ```objc
 [myObject refresh];
@@ -139,80 +143,82 @@ NSDate *createdAt = gameScore.createdAt;
 
 ### 后台运行
 
-在 iOS 或 OS X 中，大部分代码是在主线程中运行的。不过，在主线程中访问网络时，您的应用程序可能会常常遇到卡顿或者崩溃的现象。
+在 iOS 或 OS X 中，大部分代码是在主线程中运行的。不过，当应用在主线程中访问网络时，可能常会发生卡顿或崩溃现象。
 
-由于 save 和 getObjectWithId 这两个方法会访问网络，所以不应当在主线程上运行。处理这种情况是件十分麻烦的事情。为此，LeanCloud 提供了辅助功能，能够覆盖绝大多数应用场景。
+由于 `save` 和 `getObjectWithId` 这两个方法会访问网络，所以不应当在主线程上运行。这种情况一般处理起来比较麻烦，因此，LeanCloud 提供了辅助功能，能够覆盖绝大多数应用场景。
 
-例如， 只需使用 saveInBackground，即可在后台线程中保存我们以前的 `AVObject`：
+例如，方法 `saveInBackground` 可在后台线程中保存之前的 `AVObject`：
 
 ```objc
 [gameScore saveInBackground];
 ```
 
-这样，saveInBackground 的调用将立即返回，所以主线程不会被阻塞，应用会保持在响应状态。
+这样，`saveInBackground` 的调用会立即返回，而主线程不会被阻塞，应用会保持在响应状态。
 
-通常情况下，我们都希望在操作完成后立即运行代码。这时您可以使用块（仅支持 iOS 4.0+ 或 OS X 10.6+）或回调方法。例如，如果您想在保存完成后运行一些代码：
+通常情况下，要在某操作完成后立即运行后面的代码，可以使用块（`...WithBlock` ：仅支持 iOS 4.0+ 或 OS X 10.6+）或回调（`...CallBack`）方法。
+
+例如，在保存完成后运行一些代码：
 
 ```objc
 [gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
   if (!error) {
-    // The gameScore saved successfully.
+    // gameScore 保存成功
   } else {
-    // There was an error saving the gameScore.
+    // 保存 gameScore 时出错
   }
 }];
 ```
 
-或者您可以写成回调的方式
+或者写成回调方式：
 
 ```objc
-// First set up a callback.
+// 先创建一个回调
 - (void)saveCallback:(NSNumber *)result error:(NSError *)error {
   if (!error) {
-    // The gameScore saved successfully.
+    // gameScore 保存成功
   } else {
-    // There was an error saving the gameScore.
+    // 保存 gameScore 时出错
   }
 }
 
-// Then, elsewhere in your code...
+// 然后在后续代码中执行其他操作
 [gameScore saveInBackgroundWithTarget:self
                              selector:@selector(saveCallback:error:)];
 ```
 
-LeanCloud 在网络接入时将不会阻塞调用线程，同时在主线程上块或回调将维持正常。这意味着，网络访问不会对 UI 产生不良影响，并且您仍然可以在回调中对 UI 进行操作。
+LeanCloud 在接入网络时不会阻塞调用线程，同时在主线程上，块或回调仍会正常执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中仍然可对 UI 进行操作。
 
-AVQuery也遵循相同的模式。如果您想要从 GameScoreobject 获取并记录得分，同时确保不阻塞主线程：
+`AVQuery` 也遵循相同的模式。如果需要从对象 `GameScore` 获取并保存得分，同时又确保主线程不会被阻塞，则可以：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query getObjectInBackgroundWithId:@"51a90302e4b0d034f61623b5"
                              block:^(AVObject *gameScore, NSError *error) {
   if (!error) {
-    // The get request succeeded. Log the score
+    // get 请求成功完成，输出分数
     NSLog(@"The score was: %d", [[gameScore objectForKey:@"score"] intValue]);
   } else {
-    // Log details of our failure
+    // 请求失败，输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
   }
 }];
 ```
 
-或者您可以写成回调的方式
+或用回调方式：
 
 ```objc
-// First set up a callback.
+// 先创建一个回调
 - (void)getCallback:(AVObject *)gameScore error:(NSError *)error {
   if (!error) {
-    // The get request succeeded. Log the score
+    // get 请求成功完成，输出分数
     NSLog(@"The score was: %d", [[gameScore objectForKey:@"score"] intValue]);
   } else {
-    // Log details of our failure
+    // 请求失败，输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
   }
 }
 
-// Then, elsewhere in your code...
+// 然后在后续代码中执行其他操作
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query getObjectInBackgroundWithId:@"51a90302e4b0d034f61623b5"
                             target:self
@@ -221,12 +227,14 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 
 ###离线存储对象
 
-大多数保存功能可以立刻执行，并告知您的应用程序「保存完毕」。不过假设您不需要知道保存完成的时间，可以使用 saveEventually 作为替代品。
+大多数保存功能可以立刻执行，并通知应用「保存完毕」。不过若不需要知道保存完成的时间，则可使用 `saveEventually` 来代替。
 
-它的优点在于，如果用户目前尚未接入网络，saveEventually 将存储设备中的数据，并将在网络连接恢复后上传。如果您的应用在网络恢复之前就被关闭了，下一次打开应用程序 LeanCloud 会再次尝试连接。所有 saveEventually（deleteEventually）的相关调用将按照调用的顺序依次执行。因此，调用 saveEventually 的对象多次是安全的。
+它的优点在于：如果用户目前尚未接入网络，`saveEventually` 会保存设备中的数据，并在网络连接恢复后上传。如果应用在网络恢复之前就被关闭了，那么当它下一次打开时，LeanCloud 会再次尝试连接。
+
+所有 `saveEventually`（或 `deleteEventually`）的相关调用，将按照调用的顺序依次执行。因此，多次对某一对象使用 `saveEventually` 是安全的。
 
 ```objc
-// Create the object.
+// 创建对象
 AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [gameScore setObject:[NSNumber numberWithInt:1337] forKey:@"score"];
 [gameScore setObject:@"Sean Plott" forKey:@"playerName"];
@@ -240,14 +248,12 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 }];
 ```
 
-
-
 ### 更新对象
 
-更新一个对象很简单。仅仅需要更新一些属性并调用一个保存方法。例如：
+更新对象非常简单，仅需要更新其属性，再调用保存方法即可。例如：
 
 ```objc
-// Create the object.
+// 创建对象
 AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [gameScore setObject:[NSNumber numberWithInt:1337] forKey:@"score"];
 [gameScore setObject:@"Steve" forKey:@"playerName"];
@@ -255,40 +261,45 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [gameScore setObject:[NSArray arrayWithObjects:@"pwnage", @"flying", nil] forKey:@"skills"];
 [gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 
-    // Now let's update it with some new data. In this case, only cheatMode and score
-    // will get sent to the cloud. playerName hasn't changed.
+    // 增加些新数据，这次只更新 cheatMode 和 score
+    // playerName 不变，然后保存到云端
     [gameScore setObject:[NSNumber numberWithBool:YES] forKey:@"cheatMode"];
     [gameScore setObject:[NSNumber numberWithInt:1338] forKey:@"score"];
     [gameScore saveInBackground];
 }];
 ```
 
-客户端会自动计算出哪些数据已经改变，并且将修改过的的字段发送到 LeanCloud。您不必担心未更新的数据产生变动。
+客户端会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud。未更新的数据不会产生变动，这一点请不用担心。
 
 ### 计数器
 
-上面是一个常见的使用案例。在这个例子中 `score` 字段是一个计数器，我们需要不断更新玩家的最新得分。使用上述方法之后，这个计数器运行良好，但如果有多个客户端试图更新同一个计数器，上面的方法就十分繁琐并且容易出现问题。
-为了帮助计数器类的数据存储，LeanCloud 在任何数字字段中提供原子递增（或递减）的方法。故相同的更新可以改写为：
+上面是一个常见的使用案例。在下面例子中，`score` 字段是一个计数器，我们需要不断更新玩家的最新得分。使用上述方法后，这个计数器运行良好，但如果有多个客户端试图更新同一个计数器，上面的方法就十分繁琐并且容易出现问题。
+
+为了优化计数器类的数据存储，LeanCloud 为所有的数字型字段都提供了「原子递增（或递减）」方法，故相同的更新可以改写为：
 
 ```objc
 [gameScore incrementKey:@"score"];
 [gameScore saveInBackground];
 ```
 
-您也可以使用 incrementKey: byAmount 来增加字段中的数字。
+也可以使用 `incrementKey:byAmount:` 来累加字段的数值。
 
-对于计数器，在某些时候，您可能希望马上知道目前后端最新的数据，而不再使用一次fetch操作，LeanCloud为您提供了一个fetchWhenSave属性，您可以设置此属性为true，当您进行保存操作时，LeanCloud会自动返回目前最新的数值。
+那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了 
+`fetchWhenSave` 属性，当设置为 `true` 时，LeanCloud 会在保存操作发生时，自动返回当前计数器的最新数值。
 
 
 ### 数组
 
-为了更好的存储数组数据，LeanCloud 提供了三种不同的操作来自动变更一个数组字段：
+为了更好地存储数组数据，LeanCloud 提供了三种不同的操作来自动更新数组字段：
 
-* addObject：forKey： 和 addObjectsFromArray：forKey 将指定的对象附加到数组的末尾。
-* addUniqueObject：forKey 和 addUniqueObjectsFromArray：forKey：如果您不确定某个对象是否已经包含在一个数组字段中，您可以使用此操作将对象添加到对应字段。插入的位置是随机的。
-* removeObject：forKey：和 removeObjectsInArray：forKey：从一个数组字段中，将删除每个给定对象的所有实例。
+* `addObject:forKey:` 和 `addObjectsFromArray:forKey:`
+  将指定对象附加到数组末尾。
+* `addUniqueObject:forKey:` 和 `addUniqueObjectsFromArray:forKey:`
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。
+* `removeObject:forKey:` 和 `removeObjectsInArray:forKey:`
+  从数组字段中删除指定对象的所有实例。
 
-例如，我们可以将对象添加到“技能”字段，像这样：
+例如，将对象添加到 `skills` 字段：
 
 ```objc
 [gameScore addUniqueObjectsFromArray:[NSArray arrayWithObjects:@"flying", @"kungfu", nil] forKey:@"skills"];
@@ -303,15 +314,15 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [myObject deleteInBackground];
 ```
 
-如果您想通过一个回调来确认删除操作，您可以使用方法 `deleteInBackgroundWithBlock:` 或：`deleteInBackgroundWithTarget: selector:`。如果您想强制在当前线程执行，您可以使用方法 `delete`。
+如果想通过回调来确认删除操作，可以使用方法 `deleteInBackgroundWithBlock:` 或 `deleteInBackgroundWithTarget:selector:`。如果想强制在当前线程执行，使用 `delete`。
 
-您可以使用方法 removeObjectForKey：从一个对象中删除单个属性。
+`removeObjectForKey:` 方法会删除对象的单个属性。
 
 ```objc
-// After this, the playerName field will be empty
+// After this, playerName field will be empty
 [myObject removeObjectForKey:@"playerName"];
 
-// Saves the field deletion to LeanCloud
+// 字段删除后结果保存到云端
 [myObject saveInBackground];
 ```
 
