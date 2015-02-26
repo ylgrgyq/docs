@@ -26,11 +26,10 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
   ```sh
   $ gem sources --remove https://rubygems.org/
   $ gem sources -a http://ruby.taobao.org/
+  # 请确保下列命令的输出只有 ruby.taobao.org
   $ gem sources -l
   *** CURRENT SOURCES ***
   http://ruby.taobao.org
-  #请确保下列命令的输出只有ruby.taobao.org
-  $ gem install rails
   ```
 
 * 通过下列命令，安装（或更新）CocoaPods（可能需要输入登录密码）：
@@ -53,6 +52,7 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 * 执行命令 `pod install` 安装 SDK。
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
+
 ## 应用
 
 部署在 LeanCloud 上的每个应用都有自己的 ID 和客户端密钥，客户端代码应该使用它们来初始化 SDK。
@@ -103,7 +103,6 @@ createdAt:"2013-06-01T04:07:30.32Z", updatedAt:"2013-06-01T04:07:30.32Z"
 在此要特别说明两点：
 
 1. 运行此代码前，不用配置或设置 `GameScore` 类，LeanCloud 会自动创建这个类。
-
 2. 为更方便地使用 LeanCloud，以下字段不需要提前指定：
   * `objectId` 是为每个对象自动生成的唯一的标识符
   * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
@@ -145,7 +144,7 @@ NSDate *createdAt = gameScore.createdAt;
 
 在 iOS 或 OS X 中，大部分代码是在主线程中运行的。不过，当应用在主线程中访问网络时，可能常会发生卡顿或崩溃现象。
 
-由于 `save` 和 `getObjectWithId` 这两个方法会访问网络，所以不应当在主线程上运行。这种情况一般处理起来比较麻烦，因此，LeanCloud 提供了辅助功能，能够覆盖绝大多数应用场景。
+由于 `save` 和 `getObjectWithId` 这两个方法会访问网络，所以不应当在主线程上运行。这种情况一般处理起来比较麻烦，因此，LeanCloud 提供了辅助方法，能够覆盖绝大多数应用场景。
 
 例如，方法 `saveInBackground` 可在后台线程中保存之前的 `AVObject`：
 
@@ -186,7 +185,7 @@ NSDate *createdAt = gameScore.createdAt;
                              selector:@selector(saveCallback:error:)];
 ```
 
-LeanCloud 在接入网络时不会阻塞调用线程，同时在主线程上，块或回调仍会正常执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中仍然可对 UI 进行操作。
+LeanCloud 在进行网络通讯时不会阻塞调用线程，块或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
 
 `AVQuery` 也遵循相同的模式。如果需要从对象 `GameScore` 获取并保存得分，同时又确保主线程不会被阻塞，则可以：
 
