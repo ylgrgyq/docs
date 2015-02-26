@@ -1404,5 +1404,5 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
 * 请确保设备正确调用了 `AVInstallation` 保存了设备信息到 `_Installation` 表。
 * 可以在控制台的 `消息 -> 推送 -> 帮助` 根据 `installationId` 查询设备是否在线。
-* 请确保 `com.avos.avoscloud.PushServic` 添加到 AndroidManifest.xml 文件中。
+* 请确保 `com.avos.avoscloud.PushService` 添加到 AndroidManifest.xml 文件中。
 * 如果使用自定义 Receiver，请确保在 AndroidManifest.xml 中声明您的 Receiver，并且保证 data 里的 action 一致。
