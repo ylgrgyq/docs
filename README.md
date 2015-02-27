@@ -16,12 +16,13 @@ LeanCloud 开发者文档
 
 [GNU LGPL](https://www.gnu.org/licenses/lgpl.html)
 
-## 本地预览
-
-更改一个 `md` 文档可以实时查看更新后的文档效果。（需要手动刷新页面）
+## 安装
 
 * npm instal  安装 npm 依赖
-* grunt server 本地启动一个 HTTP Server，然后打开浏览器访问即可
+
+## 预览
+
+* grunt server 本地启动一个 HTTP Server (localhost:3000)，然后打开浏览器访问即可，（更改文档后无需刷新页面）
 
 ## 注意事项
 * 所有 `md` 格式文档需要更新到 `md` 目录下。
