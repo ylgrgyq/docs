@@ -495,10 +495,10 @@ curl -X GET \
 假设你要排序的字段是一个数组，比如分数数组`scores`，你想根据平均分来倒序排序，并且没有分数的排最后，那么可以传入：
 
 ```sh
- --data-urlencode 'sort={"scores":{"order":"desc","mode":"avg","missing":"_last"}}'
+ --data-urlencode 'sort=[{"scores":{"order":"desc","mode":"avg","missing":"_last"}}]'
 ```
 
-也就是 `sort` 可以是一个 JSON 数据结构：
+也就是 `sort` 可以是一个 JSON 数组，其中每个数组元素是一个  JSON 对象：
 
 ```json
 {"scores":{"order":"desc","mode":"avg","missing":"_last"}}
@@ -512,10 +512,14 @@ curl -X GET \
 多个字段排序就类似：
 
 ```json
-{
- "scores":{"order":"desc","mode":"avg","missing":"_last"},
- "updatedAt": {"order":"asc"}
- }
+[
+  {
+    "scores":{"order":"desc","mode":"avg","missing":"_last"}
+  },
+  {
+    "updatedAt": {"order":"asc"}
+  }
+]
 ```
 
 
