@@ -1020,7 +1020,7 @@ app.use(express.bodyParser());    // 读取请求body的中间件
 // 启用 cookieParser
 app.use(express.cookieParser('Your Cookie Secure'));
 // 使用 avos-express-cookie-session 记录登录信息到 cookie
-app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
+app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}));
 ```
 
 使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
@@ -1028,7 +1028,7 @@ app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }}));
 `avos-express-cookie-session`支持的选项包括：
 
 * cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- 是否自动fetch当前登录的AV.User对象。默认为false。如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
 * key -- session在cookie中存储的key名称，默认为 `avos.sess`。
 
 **注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
