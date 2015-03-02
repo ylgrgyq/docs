@@ -32,6 +32,6 @@ task :deploy, [:type] => [] do |t, args|
 end
 
 task :install do |t|
-  exec "gem list | grep -E 'hpricot.*0\.8\.6' > /dev/null || sudo gem install hpricot"
-  exec "npm list -g | grep -E 'doctoc@0\.4\.4' > /dev/null || sudo npm install -g doctoc@0.4.4"
+  # exec "gem list | grep -E 'hpricot.*0\.8\.6' > /dev/null || sudo gem install hpricot"
+  # exec "npm list -g | grep -E 'doctoc@0\.4\.4' > /dev/null || sudo npm install -g doctoc@0.4.4"
 end
