@@ -935,22 +935,60 @@ Promise.使用Promise，你的代码可以比原来的嵌套callback的方法看
 
 ###then 方法
 
-每一个Promise都有一个叫then的方法,这个方法接受一对callback.第一个
-callback在promise被解决的时候调用,第二个会在promise被拒绝的时候调用.
+每一个Promise都有一个叫then的方法,这个方法接受一对callback。第一个
+callback在promise被解决(resolved，也就是正常运行)的时候调用,第二个会在promise被拒绝(rejected，也就是遇到错误)的时候调用。
 
 ```javascript
 obj.save().then(function(obj) {
-  // the object was saved successfully.
+  //对象保存成功
 }, function(error) {
-  // the save failed.
+  //对象保存失败，处理 error
 });
 ```
 
+其中第二个参数是可选的。
+
+### try、catch 和 finally 方法
+
+您还可以使用 `try,catch,finally` 三个方法，将逻辑写成：
+
+```javascript
+obj.save().try(function(obj) {
+  //对象保存成功
+}).catch(function(error) {
+  //对象保存失败，处理 error
+}).finally(function(){
+  //无论成功还是失败，都调用到这里
+});
+```
+
+类似语言里的 `try ... catch ... finally` 的调用方式来简化代码。
+
+为了兼容其他 Promise 库，我们提供了下列别名：
+
+* `AV.Promise#done` 等价于 `try` 方法
+* `AV.Promise#fail` 等价于 `catch` 方法
+* `AV.Promise#always` 等价于 `finally` 方法
+
+因此上面例子也可以写成：
+
+```javascript
+obj.save().done(function(obj) {
+  //对象保存成功
+}).fail(function(error) {
+  //对象保存失败，处理 error
+}).always(function(){
+  //无论成功还是失败，都调用到这里
+});
+```
+
+### 
+
 ###将 Promise 组织在一起
 
-Promise比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。
-如果一个Promise的回调会返回一个Promise，那么第二个then里的callback在第一个then
-的callback没有解决前是不会解决的。
+Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。
+如果一个 Promise的 回调会返回一个 Promise，那么第二个 then 里的 callback 在第一个 then
+的c allback 没有解决前是不会解决的，也就是所谓 Promise Chain。
 
 ```javascript
 var query = new AV.Query("Student");
@@ -975,9 +1013,10 @@ query.find().then(function(students) {
 ###错误处理
 
 如果任意一个在链中的Promise返回一个错误的话,所有的成功的callback在接下
-来都会被跳过直到遇到一个处理错误的callback.处理error的callback可以转换
-eroor或者可以通过返回一个新的Promise的方式来处理它.你可以想象成拒绝的
-promise有点像异常,而error callback则像是一个catch来处理这个异常或者抛
+来都会被跳过直到遇到一个处理错误的callback。
+
+处理error的callback可以转换error或者可以通过返回一个新的Promise的方式来处理它。你可以想象成拒绝的
+promise有点像抛出异常,而 error callback 函数则像是一个 catch 来处理这个异常或者重新抛
 出异常.
 
 ```javascript
@@ -985,37 +1024,67 @@ var query = new AV.Query("Student");
 query.descending("gpa");
 query.find().then(function(students) {
   students[0].set("valedictorian", true);
-  // Force this callback to fail.
+  // 强制失败
   return AV.Promise.error("There was an error.");
 
 }).then(function(valedictorian) {
-  // Now this will be skipped.
+  // 这里的代码将被忽略
   return query.find();
 
 }).then(function(students) {
-  // This will also be skipped.
+  // 这里的代码也将被忽略
   students[1].set("salutatorian", true);
   return students[1].save();
 }, function(error) {
-  // This error handler WILL be called. error will be "There was an error.".
-  // Let's handle the error by returning a new promise.
+  // 这个错误处理函数将被调用，并且错误信息是 "There was an error.".
+  // 让我们处理这个错误，并返回一个“正确”的新 Promise
   return AV.Promise.as("Hello!");
 
 }).then(function(hello) {
-  // Everything is done!
+  // 最终处理结果
 }, function(error) {
-  // This isn't called because the error was already handled.
+  // 这里不会调用，因为前面已经处理了错误
 });
 ```
 
-通常来说，在正常情况的回调函数链的末尾，加一个错误处理的回调函数，会是很
-方便的做法.
+通常来说，在正常情况的回调函数链的末尾，加一个错误处理的回调函数，是一种很
+常见的做法。
+
+利用 `try,catch` 方法可以将上述代码改写为：
+
+```javascript
+var query = new AV.Query("Student");
+query.descending("gpa");
+query.find().try(function(students) {
+  students[0].set("valedictorian", true);
+  // 强制失败
+  return AV.Promise.error("There was an error.");
+
+}).try(function(valedictorian) {
+  // 这里的代码将被忽略
+  return query.find();
+
+}).try(function(students) {
+  // 这里的代码也将被忽略
+  students[1].set("salutatorian", true);
+  return students[1].save();
+  
+}).catch(function(error) {
+  // 这个错误处理函数将被调用，并且错误信息是 "There was an error.".
+  // 让我们处理这个错误，并返回一个“正确”的新 Promise
+  return AV.Promise.as("Hello!");
+}).try(function(hello) {
+  // 最终处理结果
+}).catch(function(error) {
+  // 这里不会调用，因为前面已经处理了错误
+});
+```
 
 ###创建 Promise
 
 在开始阶段,你可以只用系统（譬如find和save方法等）返回的promise.但是,在更高级
 的场景下,你可能需要创建自己的promise.
-在创建了Promise之后,你需要调用resolve或者reject来触发它的callback.
+在创建了Promise之后,你需要调用 `resolve` 或者 `reject` 来触发它的callback.
 
 ```javascript
 var successful = new AV.Promise();
@@ -1031,6 +1100,18 @@ failed.reject("An error message.");
 var successful = AV.Promise.as("The good result.");
 
 var failed = AV.Promise.error("An error message.");
+```
+
+除此之外，你还可以为 `AV.Promise` 提供一个函数，这个函数接收 `resolve` 和 `reject` 方法，运行实际的业务逻辑。例如：
+
+```javascript
+var promise = new AV.Promise(function(resolve, reject){
+  resolve(42);
+});
+
+promise.then(functon(ret){
+  console.log(ret); //print 42.
+});
 ```
 
 ###顺序的 Promise
@@ -1062,10 +1143,38 @@ query.find().then(function(results) {
 ###并行的 Promise
 
 你也可以用Promise来并行的进行多个任务,这时需要使用when方法.你可以一次同
-时开始几个操作.使用AV.Promise.when来创建一个新的promise，它会在所有输入
-的Promise被解决之后才被解决.即便一些输入的promise失败了，新的Promise也会被
-成功执行.你可以在callback的参数部分检查每一个promise的结果.并
-行地进行操作会比顺序进行更快,但是也会消耗更多的系统资源和带宽.
+时开始几个操作.使用 `AV.Promise.when` 来创建一个新的promise，它会在所有输入
+的 `Promise` 被 resolve 之后才被 resolve。即便一些输入的promise失败了，其他的 Promise 也会被
+成功执行。你可以在 callback 的参数部分检查每一个promise的结果。并
+行地进行操作会比顺序进行更快,但是也会消耗更多的系统资源和带宽。
+
+简单例子：
+
+```javascript
+  function timerPromisefy(delay) {
+    return new AV.Promise(function (resolve) {
+      //延迟 delay 毫秒，然后调用 resolve
+      setTimeout(function () {
+        resolve(delay);
+      }, delay);
+     });
+  };
+  
+   var startDate = Date.now();
+
+   AV.Promise.when(
+     timerPromisefy(1),
+     timerPromisefy(32),
+     timerPromisefy(64),
+     timerPromisefy(128)
+   ).then(function (r1, r2, r3, r4) {
+        //r1,r2,r3,r4 分别为1,32,64,128
+        //大概耗时在 128 毫秒
+        console.log(new Date() - startDate);
+   });
+```
+
+下面例子执行一次批量删除某个 Post 的评论：
 
 ```javascript
 var query = new AV.Query("Comments");
@@ -1086,6 +1195,36 @@ query.find().then(function(results) {
 });
 ```
 
+`when` 会在错误处理器中返回所有遇到的错误信息，以数组的形式提供。
+
+
+除了 `when` 之外，还有一个类似的方法是 `AV.Promise.all`，这个方法和 `when` 的区别在于**它只接受数组形式的 promise 输入，并且如果有任何一个 promise 失败，它就会直接调用错误处理器，而不是等待所有 promise 完成，其次是它的 resolve 结果返回的是数组**，一个例子：
+
+```javscript
+     AV.Promise.all([
+       timerPromisefy(1),
+       timerPromisefy(32),
+       timerPromisefy(64),
+       timerPromisefy(128)
+     ]).then(function (values) {
+       //values 数组为 [1, 32, 64, 128]
+     })  
+```
+
+### race 方法
+
+`AV.Promise.race` 方法接收一个 promise 数组输入，当这组 promise 中的任何一个 promise 对象如果变为 resolve 或者 reject 的话， 该函数就会返回，并使用这个promise对象的值进行resolve或者reject。`race`，顾名思义就是在这些 promise “赛跑”，谁先执行完成，谁就先 resolve。
+
+```javascript
+var p1 = AV.Promise.as(1),
+    p2 = AV.Promise.as(2),
+    p3 = AV.Promise.as(3);
+Promise.race([p1, p2, p3]).then(function (value) {
+    console.log(value);  // 打印 1
+});
+```
+
+
 ###创建异步方法
 
 有了上面这些工具以后,就很容易创建你自己的异步方法来返回promise了,举例
@@ -1104,6 +1243,10 @@ delay(100).then(function() {
   // This ran after 100ms!
 });
 ```
+
+### JavaScript Promise 迷你书
+
+如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
 
 ##Collection
 
