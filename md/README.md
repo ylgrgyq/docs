@@ -16,20 +16,13 @@ LeanCloud 开发者文档
 
 [GNU LGPL](https://www.gnu.org/licenses/lgpl.html)
 
-## 安装
-
-* npm install  安装 npm 依赖
-
-## 预览
-
-* grunt server 本地启动一个 HTTP Server (localhost:3000)，然后打开浏览器访问即可，（更改文档后无需刷新页面）
-
 ## 注意事项
-* 所有 `md` 格式文档需要更新到 `md` 目录下。
 * 更新文档只需要修改或创建相应的 `MD` 文件，然后提 PullRequest 即可。
+* 如果新建一个文件，需要从 # 一级标题开始 ,如果两个标题间没有任何文字，需要用两个以上空行来间隔。
 * 由于文档会采用 Angular 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 Angular 渲染。
-* 图片资源放在当前 Repo 的 `images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
-
+* 标题等级要保持连续性，比如 `# 一级标题   ### 三级标题` 这样是不对的。
+* 如果变动比较大，需要本地先预览下看下效果，可以 [运行这个项目](https://github.com/leancloud/avoscloud-docs)。
+* 图片资源可以放在当前 Repo 的 `images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
 
 ## LeanCloud 内部员工发布新文档
 * 自己修改的文档，自己负责检查和发布。

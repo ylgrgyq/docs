@@ -1,0 +1,71 @@
+<footer class="footer" role="contentinfo">
+  <div class="container-fluid">
+    <a href="http://leancloud.cn/" class="logo font-logo pull-right">
+      LeanCloud
+    </a>
+
+    <ul class="footer-links" >
+      <li><a href="/about.html">关于<span class="mobile-hide">我们</span></a></li>
+      <li class="muted">·</li>
+      <li><a href="/pricing.html">价格</a></li>
+      <li class="muted">·</li>
+      <li><a href="/docs/">文档</a></li>
+      <li class="muted">·</li>
+      <li><a href="/docs/sdk_down.html">下载</a></li>
+      <li class="muted">·</li>
+      <li><a href="//status.leancloud.cn/"><span class="mobile-hide">健康</span>状态</a></li>
+      <li class="muted">·</li>
+      <li><a href="http://ticket.avosapps.com/" target="_self"><span class="mobile-hide">技术</span>支持</a></li>
+      <li class="muted">·</li>
+      <li><a href="http://forum.leancloud.cn/">社区</a></li>
+      <li class="muted">·</li>
+      <li><a href="/jobs.html">工作<span class="mobile-hide">机会</span></a></li>
+      <li class="muted">·</li>
+      <li><a href="http://blog.leancloud.cn">Blog</a></li>
+      <li class="muted">·</li>
+      <li><a href="/logo.html">Logo</a></li>
+      <li class="muted">·</li>
+      <li><a href="/terms.html"><span class="mobile-hide">使用</span>协议</a></li>
+      <li class="muted">·</li>
+      <li><a href="https://github.com/leancloud/avoscloud-doc">文档源码</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="https://download.leancloud.cn/sdk/latest.js"></script>
+
+<!-- build:js custom/js/all.js -->
+<script src="custom/js/lib/jquery.min.js"></script>
+<script src="custom/js/lib/bootstrap.min.js"></script>
+<script src="custom/js/lib/bootstrap-hover-dropdown.js"></script>
+<script src="custom/js/lib/pretty/prettify.js" type="text/javascript"></script>
+<script src="custom/js/lib/pangu.js"></script>
+<script src="custom/js/lib/angular/angular.min.js"></script>
+<script src="custom/js/lib/zeroclipboard/zeroclipboard.js"></script>
+<script src="custom/js/lib/markdown.min.js"></script>
+<script src="custom/js/common.js"></script>
+<script src="custom/js/demo.js"></script>
+<!-- endbuild -->
+
+{% if basename!='index' and basename!='sdk_down' and basename !='demo' %}
+<script src="custom/js/lib/contents.js"></script>
+<script src="custom/js/md.js"></script>
+{% endif %}
+
+{% if basename=='sdk_down' %}
+<script type="text/javascript" src="custom/js/download.js">
+</script>
+{% endif %}
+
+<script>
+  pangu.page_spacing();
+</script>
+<script type="text/javascript">
+ZeroClipboard.setDefaults({
+    moviePath: 'custom/js/lib/zeroclipboard/zeroclipboard.swf'
+});
+</script>
+
+
+
+
