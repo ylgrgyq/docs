@@ -469,6 +469,9 @@ Location: https://leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
   "objectId": "51e3a334e4b0b3eb44adbe1a"
 }
 ```
+
+** 我们对单个 class 的记录数目没有做限制，但是单个应用的总 class 数目限定为 500 个以内**
+
 ###获取对象
 当你创建了一个对象时,你可以通过发送一个GET请求到返回的header的Location以获取它的内容.例如,为了得到我们上面创建的对象:
 ```sh
@@ -2348,7 +2351,29 @@ curl -X GET \
     <td>limit</td>
     <td>返回条数限制，可选，默认100条，最大1000条</td>
   </tr>
+  <tr>
+    <td>peerid</td>
+    <td>查看者id（签名参数）</td>
+  </tr>
+  <tr>
+    <td>nonce</td>
+    <td>签名随机字符串（签名参数）</td>
+  </tr>
+  <tr>
+    <td>signature_ts</td>
+    <td>签名时间戳（签名参数）</td>
+  </tr>
+  <tr>
+    <td>signature</td>
+    <td>签名（签名参数）</td>
+  </tr>
 </table>
+
+为了保证获取聊天记录的安全性，可以开启签名认证（应用选项：聊天记录签名认证）。了解更详细的签名规则请参考[聊天签名方法](realtime.html#签名方法)。签名参数仅在开启应用选项后有效，如果没有开启选项，就不需要传签名参数。
+
+签名采用 Hmac-sha1 算法，输出字节流的十六进制字符串 (hex dump)，签名的 key 必须是应用的 master key ,签名的消息格式如下：
+
+`appid:peerid:convid:nonce:signature_ts`
 
 返回数据格式，json 数组，按消息记录从新到旧排序。
 
@@ -2364,6 +2389,35 @@ curl -X GET \
   ...
 ]
 ```
+
+### 删除聊天记录
+删除一条指定的聊天历史记录，必须采用 master key 授权，所以不建议在客户端使用此接口
+
+```sh
+curl -X DELETE \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593&msgid=PESlY&timestamp=1408008498571
+```
+
+<table>
+  <tr>
+    <td>参数名</td>
+    <td>含义</td>
+  </tr>
+  <tr>
+    <td>convid</td>
+    <td>对话 id</td>
+  </tr>
+  <tr>
+    <td>msgid</td>
+    <td>消息 id</td>
+  </tr>
+  <tr>
+    <td>timestamp</td>
+    <td>消息时间戳</td>
+  </tr>
+</table>
 
 #### 构建对话 ID
 
@@ -2482,6 +2536,9 @@ metrics参数可选项解释：
   <tr><td>new_user</td><td>新增用户数</td></tr>
   <tr><td>active_user</td><td>活跃用户数</td></tr>
   <tr><td>session</td><td>启动次数</td></tr>
+  <tr><td>new_user_hour</td><td>新增用户数（按小时查看）</td></tr>
+  <tr><td>active_user_hour</td><td>活跃用户数（按小时查看）</td></tr>
+  <tr><td>session_hour</td><td>启动次数（按小时查看）</td></tr>
   <tr><td>wau</td><td>周活跃用户数</td></tr>
   <tr><td>mau</td><td>月活跃用户数</td></tr>
   <tr><td>avg_user_time</td><td>日平均用户使用时长</td></tr>

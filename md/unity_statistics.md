@@ -6,14 +6,9 @@ LeanCloud Unity SDK 提供一套接口方便开发者可以对了解游戏在客
 您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载LeanCloud Unity SDK。
 
 ## 使用统计功能
-在使用统计SDK之前需要初始化应用的参数，参数包括App ID以及App Key ，您可以在[设置](app.html?appid={{appid}}#/key)查询到这2个参数，如果在应用的其他地方已经进行初始化了，无需重复。
-```javascript
-AVClient.Initialize("{{appid}}", "{{appkey}}");
-```
+在使用统计SDK之前需要初始化 SDK，参数包括App ID以及App Key ，您可以在[设置](/app.html?appid={{appid}}#/key)查询到这2个参数，如果在应用的其他地方已经进行初始化了，无需重复。Unity 的初始化方法请参照：[Unity 指南](/docs/unity_guide.html)
 
 **统计功能为默认打开, 并且可以在线配置.** 您可以进入应用的 [统计分析 -> 统计设置 -> 数据发送策略](/stat.html?appid={{appid}}#/statconfig/trans_strategoy) 在线更改SDK端的数据报告发送策略.
-
-* 建议使用AV_BATCH形式，减少App与网络的交互，为用户节约流量。
 
 默认是`启动时发送`策略: 应用程序每次会在启动时会向服务器发送一次消息，在应用程序过程中产生的所有统计信息(包括自定义事件和本次使用时长)都会在下次启动时候发送。 如果应用程序启动时处在不联网状态，那么消息将会缓存在本地，下次再尝试发送。
 
@@ -73,9 +68,10 @@ GUI.Label (new Rect (100, 400, 200, 50), words);
 
 ### 多标签事件
 ```javascript
-public static void TrackEvent(string name, IDictionary<string, object> dimensions);
+public static void TrackEvent(string name, IDictionary<string, string> dimensions);
 ```
 实际上在很多游戏中简单的进入商店，或者与某NPC对话这些简单的事件未必能满足数据分析的需求，假如需要统计玩家进入商店购买了那些东西，花了多少时间，这些如果能跟一个事件关联一起来，在做数据分析的时候就有足够采样价值。
+**在V1.1.7之后，我们为了规范格式，方便开发者阅读，所有自定义事件的自定义标签都必须为IDictionary<string,string>，原版本的IDictionary<string,object>中键值对的值会被强制调用Object.ToString()再发送给服务端**
 
 ```javascript
 bool stepedInshop=false;
@@ -101,8 +97,8 @@ void OnGUI()
 			var baughtTime = DateTime.Now;
 			var dimensions = new Dictionary<string, object>
 			{
-				{ "baughtTime", DateTime.Now},
-				{ "duration",  baughtTime-stepedInShopTime},
+				{ "baughtTime", DateTime.Now.ToString()},
+				{ "duration",  (baughtTime-stepedInShopTime).Seconds.ToString()},
 				{ "location", "HomeScene" }
 			};
 			AVAnalytics.TrackEvent ("购买雷神之锤", dimensions);
@@ -112,7 +108,7 @@ void OnGUI()
 ```
 ## 设置数据发送策略
 
-您可以进入应用的 [统计分析 -> Android统计 -> 统计设置 -> 数据发送策略](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改SDK端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略.
+您可以进入应用的 [统计分析 -> 统计设置 -> 数据发送策略](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改SDK端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略.
 
 以下均为在线配置中的可选策略
 
