@@ -2536,6 +2536,9 @@ metrics参数可选项解释：
   <tr><td>new_user</td><td>新增用户数</td></tr>
   <tr><td>active_user</td><td>活跃用户数</td></tr>
   <tr><td>session</td><td>启动次数</td></tr>
+  <tr><td>new_user_hour</td><td>新增用户数（按小时查看）</td></tr>
+  <tr><td>active_user_hour</td><td>活跃用户数（按小时查看）</td></tr>
+  <tr><td>session_hour</td><td>启动次数（按小时查看）</td></tr>
   <tr><td>wau</td><td>周活跃用户数</td></tr>
   <tr><td>mau</td><td>月活跃用户数</td></tr>
   <tr><td>avg_user_time</td><td>日平均用户使用时长</td></tr>
