@@ -154,7 +154,7 @@ NSDate *createdAt = gameScore.createdAt;
 
 这样，`saveInBackground` 的调用会立即返回，而主线程不会被阻塞，应用会保持在响应状态。
 
-通常情况下，要在某操作完成后立即运行后面的代码，可以使用块（`...WithBlock` ：仅支持 iOS 4.0+ 或 OS X 10.6+）或回调（`...CallBack`）方法。
+通常情况下，要在某操作完成后立即运行后面的代码，可以使用 Block（`...WithBlock` ：仅支持 iOS 4.0+ 或 OS X 10.6+）或回调（`...CallBack`）方法。
 
 例如，在保存完成后运行一些代码：
 
@@ -185,7 +185,7 @@ NSDate *createdAt = gameScore.createdAt;
                              selector:@selector(saveCallback:error:)];
 ```
 
-LeanCloud 在进行网络通讯时不会阻塞调用线程，块或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
+LeanCloud 在进行网络通讯时不会阻塞调用线程，Block 或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
 
 `AVQuery` 也遵循相同的模式。如果需要从对象 `GameScore` 获取并保存得分，同时又确保主线程不会被阻塞，则可以：
 
@@ -487,7 +487,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 }];
 ```
 
-`findObjectsInBackgroundWithBlock:` 可以保证在完成网络请求的同时，不阻塞主线程中的块和回调。
+`findObjectsInBackgroundWithBlock:` 可以保证在完成网络请求的同时，不阻塞主线程中的 Block 和回调。
 
 如果已运行在后台线程中，用 `findObjects` 方法可阻塞调用进程：
 
