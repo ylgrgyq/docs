@@ -42,7 +42,8 @@ def _prepare_local_docs(target):
     if target == 'us':
       local("npm install -d");
     else:
-      local("cnpm install -d");
+      local("npm install -d");
+      # local("cnpm install -d");
     local("grunt build")
     local("mkdir dist/api")
     local("cp -rfv api/* dist/api/");
