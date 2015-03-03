@@ -306,7 +306,7 @@ ul.inheritsList
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/AV.Promise.html#constructor">AV.Promise</a></b>()
+								<b><a href="../symbols/AV.Promise.html#constructor">AV.Promise</a></b>(fn)
 							</div>
 							<div class="description">A Promise is returned by async methods as a hook to provide callbacks to be
 called when the async task is fulfilled.</div>
@@ -336,9 +336,39 @@ called when the async task is fulfilled.</div>
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">AV.Promise.<b><a href="../symbols/AV.Promise.html#.all">all</a></b>(promises)
+								</div>
+								<div class="description">Just like AV.Promise.when, but it calls resolveCallbck function
+with one results array and calls rejectCallback function as soon as any one
+of the input promises rejects.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.Promise.html#always">always</a></b>(callback)
+								</div>
+								<div class="description">Add handlers to be called when the promise
+is either resolved or rejected</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">AV.Promise.<b><a href="../symbols/AV.Promise.html#.as">as</a></b>()
 								</div>
 								<div class="description">Returns a new promise that is resolved with a given value.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.Promise.html#done">done</a></b>(callback)
+								</div>
+								<div class="description">Add handlers to be called when the Promise object is resolved</div>
 							</td>
 						</tr>
 					
@@ -352,11 +382,41 @@ called when the async task is fulfilled.</div>
 						</tr>
 					
 						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.Promise.html#fail">fail</a></b>(callback)
+								</div>
+								<div class="description">Add handlers to be called when the Promise object is rejected</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.Promise.html#finally">finally</a></b>()
+								</div>
+								<div class="description">Alias of AV.Promise.prototype.always</div>
+							</td>
+						</tr>
+					
+						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">AV.Promise.<b><a href="../symbols/AV.Promise.html#.is">is</a></b>(promise)
 								</div>
 								<div class="description">Returns true iff the given object fulfils the Promise interface.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">AV.Promise.<b><a href="../symbols/AV.Promise.html#.race">race</a></b>(promises)
+								</div>
+								<div class="description">Returns a promise that resolves or rejects as soon as one
+of the promises in the iterable resolves or rejects, with
+the value or reason from that promise.Returns a new promise
+that is fulfilled when one of the input promises.</div>
 							</td>
 						</tr>
 					
@@ -388,6 +448,15 @@ called when the async task is fulfilled.</div>
 						</tr>
 					
 						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.Promise.html#try">try</a></b>()
+								</div>
+								<div class="description">Alias of AV.Promise.prototype.done</div>
+							</td>
+						</tr>
+					
+						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">AV.Promise.<b><a href="../symbols/AV.Promise.html#.when">when</a></b>(promises)
@@ -414,7 +483,7 @@ are resolved.</div>
 				</div>
 				
 				<div class="fixedFont">
-						<b>AV.Promise</b>()
+						<b>AV.Promise</b>(fn)
 				</div>
 				
 				<div class="description">
@@ -422,11 +491,21 @@ are resolved.</div>
 called when the async task is fulfilled.
 
 <p>Typical usage would be like:<pre>
-   query.findAsync().then(function(results) {
+   query.find().then(function(results) {
      results[0].set("foo", "bar");
      return results[0].saveAsync();
    }).then(function(result) {
      console.log("Updated " + result.id);
+   });
+</pre></p>
+<p>Another example:<pre>
+   var promise = new AV.Promise(function(resolve, reject) {
+     resolve(42);
+   });
+   promise.then(function(value){
+     console.log(value);
+   }).catch(function(error){
+     console.error(error);
    });
 </pre></p>
 					
@@ -435,6 +514,20 @@ called when the async task is fulfilled.
 				
 				
 				
+					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{Function}</span>  <b>fn</b>
+								
+							</dt>
+								<dd>An optional function with two arguments resolve
+                  and reject.The first argument fulfills the promise,
+                  the second argument rejects it. We can call these
+                 functions, once our operation is completed.</dd>
+						
+						</dl>
 					
 					
 					
@@ -445,7 +538,7 @@ called when the async task is fulfilled.
 						<dl class="detailList">
 						<dt class="heading">See:</dt>
 						
-							<dd>AV.Promise.prototype.next</dd>
+							<dd>AV.Promise.prototype.then</dd>
 						
 						</dl>
 					
@@ -461,6 +554,88 @@ called when the async task is fulfilled.
 				<div class="sectionTitle">
 					Method Detail
 				</div>
+				
+					<a name=".all"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					
+					<span class="light">AV.Promise.</span><b>all</b>(promises)
+					
+					</div>
+					<div class="description">
+						Just like AV.Promise.when, but it calls resolveCallbck function
+with one results array and calls rejectCallback function as soon as any one
+of the input promises rejects.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>promises</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.Promise.html#.when">AV.Promise.when</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="always"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>always</b>(callback)
+					
+					</div>
+					<div class="description">
+						Add handlers to be called when the promise
+is either resolved or rejected
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
 				
 					<a name=".as"> </a>
 					<div class="fixedFont">&lt;static&gt; 
@@ -488,6 +663,42 @@ called when the async task is fulfilled.
 								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> the new promise.</dd>
 							
 							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="done"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>done</b>(callback)
+					
+					</div>
+					<div class="description">
+						Add handlers to be called when the Promise object is resolved
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
 						
 						
 						
@@ -522,6 +733,74 @@ called when the async task is fulfilled.
 							</dl>
 						
 						
+						
+
+					<hr />
+				
+					<a name="fail"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>fail</b>(callback)
+					
+					</div>
+					<div class="description">
+						Add handlers to be called when the Promise object is rejected
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<b>callback</b>
+									
+								</dt>
+								<dd></dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+						
+						
+
+					<hr />
+				
+					<a name="finally"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>finally</b>()
+					
+					</div>
+					<div class="description">
+						Alias of AV.Promise.prototype.always
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.Promise.html#always">AV.Promise#always</a></dd>
+							
+							</dl>
 						
 
 					<hr />
@@ -561,6 +840,67 @@ called when the async task is fulfilled.
 							<dt class="heading">Returns:</dt>
 							
 								<dd><span class="light fixedFont">{Boolean}</span> </dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".race"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">AV.Promise.</span><b>race</b>(promises)
+					
+					</div>
+					<div class="description">
+						Returns a promise that resolves or rejects as soon as one
+of the promises in the iterable resolves or rejects, with
+the value or reason from that promise.Returns a new promise
+that is fulfilled when one of the input promises.
+For example: <pre>
+  var p1 = AV.Promise.as(1);
+  var p2 = AV.Promise.as(2);
+  var p3 = AV.Promise.as(3);
+
+  AV.Promise.race(p1, p2, p3).then(function(result) {
+    console.log(result);  // prints 1
+  });</pre>
+
+The input promises can also be specified as an array: <pre>
+  var promises = [p1, p2, p3];
+  AV.Promise.when(promises).then(function(result) {
+    console.log(result);  // prints 1
+  });
+</pre>
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Array}</span> <b>promises</b>
+									
+								</dt>
+								<dd>a list of promises to wait for.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> the new promise.</dd>
 							
 							</dl>
 						
@@ -703,6 +1043,38 @@ one is.</dd>
 
 					<hr />
 				
+					<a name="try"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>try</b>()
+					
+					</div>
+					<div class="description">
+						Alias of AV.Promise.prototype.done
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.Promise.html#done">AV.Promise#done</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
 					<a name=".when"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -714,8 +1086,26 @@ one is.</dd>
 						Returns a new promise that is fulfilled when all of the input promises
 are resolved. If any promise in the list fails, then the returned promise
 will fail with the last error. If they all succeed, then the returned
-promise will succeed, with the result being an array with the results of
-all the input promises.
+promise will succeed, with the results being the results of all the input
+promises. For example: <pre>
+  var p1 = AV.Promise.as(1);
+  var p2 = AV.Promise.as(2);
+  var p3 = AV.Promise.as(3);
+
+  AV.Promise.when(p1, p2, p3).then(function(r1, r2, r3) {
+    console.log(r1);  // prints 1
+    console.log(r2);  // prints 2
+    console.log(r3);  // prints 3
+  });</pre>
+
+The input promises can also be specified as an array: <pre>
+  var promises = [p1, p2, p3];
+  AV.Promise.when(promises).then(function(r1, r2, r3) {
+    console.log(r1);  // prints 1
+    console.log(r2);  // prints 2
+    console.log(r3);  // prints 3
+  });
+</pre>
 						
 						
 					</div>
@@ -762,7 +1152,7 @@ all the input promises.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Sat Feb 28 2015 14:03:48 GMT+0800 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Tue Mar 03 2015 11:08:01 GMT+0800 (CST)
 		</div>
 	</body>
 </html>
