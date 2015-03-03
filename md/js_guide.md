@@ -988,7 +988,7 @@ obj.save().done(function(obj) {
 
 Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。
 如果一个 Promise的 回调会返回一个 Promise，那么第二个 then 里的 callback 在第一个 then
-的c allback 没有解决前是不会解决的，也就是所谓 Promise Chain。
+的 callback 没有解决前是不会解决的，也就是所谓 Promise Chain。
 
 ```javascript
 var query = new AV.Query("Student");
@@ -1114,6 +1114,26 @@ promise.then(functon(ret){
 });
 ```
 
+尝试下两个一起用：
+
+```javascript
+var promise = new AV.Promise(function(resolve, reject) {
+      setTimeout(function() {
+          if (Date.now() % 2) {
+               resolve('奇数时间');
+          } else {
+               reject('偶数时间');
+          }
+      }, 2000);
+});
+
+promise.then(function(value) {
+    console.log(value);  // 奇数时间
+}, function(value) {
+    console.log(value);  // 偶数时间
+});
+```
+
 ###顺序的 Promise
 
 在你想要某一行数据做一系列的任务的时候，Promise链是很方便的,每一个任务都等着前
@@ -1172,6 +1192,21 @@ query.find().then(function(results) {
         //大概耗时在 128 毫秒
         console.log(new Date() - startDate);
    });
+   
+   //尝试下其中一个失败的例子
+   var startDate = Date.now();
+   AV.Promise.when(
+     timerPromisefy(1),
+     timerPromisefy(32),
+     AV.Promise.error('test error'),
+     timerPromisefy(128)
+   ).then(function () {
+        //不会执行
+   }, function(errors){
+       //大概耗时在 128 毫秒
+        console.log(new Date() - startDate);
+        console.dir(errors);  //print [ , , 'test error',  ]
+   });
 ```
 
 下面例子执行一次批量删除某个 Post 的评论：
@@ -1208,7 +1243,18 @@ query.find().then(function(results) {
        timerPromisefy(128)
      ]).then(function (values) {
        //values 数组为 [1, 32, 64, 128]
-     })  
+     }) 
+     //测试下失败的例子
+     AV.Promise.when(
+       timerPromisefy(1),
+       timerPromisefy(32),
+       AV.Promise.error('test error'),
+       timerPromisefy(128)
+     ).then(function () {
+        //不会执行
+     }, function(error){
+       console.dir(error);  //print 'test error'
+     }); 
 ```
 
 ### race 方法
