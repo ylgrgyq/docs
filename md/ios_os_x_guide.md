@@ -154,7 +154,7 @@ NSDate *createdAt = gameScore.createdAt;
 
 这样，`saveInBackground` 的调用会立即返回，而主线程不会被阻塞，应用会保持在响应状态。
 
-通常情况下，要在某操作完成后立即运行后面的代码，可以使用块（`...WithBlock` ：仅支持 iOS 4.0+ 或 OS X 10.6+）或回调（`...CallBack`）方法。
+通常情况下，要在某操作完成后立即运行后面的代码，可以使用 Block（`...WithBlock` ：仅支持 iOS 4.0+ 或 OS X 10.6+）或回调（`...CallBack`）方法。
 
 例如，在保存完成后运行一些代码：
 
@@ -185,7 +185,7 @@ NSDate *createdAt = gameScore.createdAt;
                              selector:@selector(saveCallback:error:)];
 ```
 
-LeanCloud 在进行网络通讯时不会阻塞调用线程，块或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
+LeanCloud 在进行网络通讯时不会阻塞调用线程，Block 或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
 
 `AVQuery` 也遵循相同的模式。如果需要从对象 `GameScore` 获取并保存得分，同时又确保主线程不会被阻塞，则可以：
 
@@ -329,51 +329,52 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 
 ### 关系型数据
 
-对象可以与其他对象的产生关系。为了模拟这种行为，任何 AVObject 均可以作为另一个 `AVObject` 的属性，在其他AVObjects中使用。在内部，LeanCloud 框架会将引用到的对象储存到同一个地方，以保持一致性。
+对象可以与其他对象建立「关系」。为了模拟这种行为，任何 `AVObject` 均可作为另一个 `AVObject` 的属性，在其他 `AVObjects` 中使用。在内部，LeanCloud 框架会将引用到的对象储存到同一个地方，以保持一致性。
 
-关系最主要的特性在于它可以非常容易动态扩展（对于数组而言），同时它具备很好的查询能力，数组在查询上的功能比较有限，而且使用起来不容易。数组和关系都可以用来存储一对多的映射。
+「关系」最主要的特性在于它能很容易地进行动态扩展（相对于数组而言），同时又具备很好的查询能力。数组在查询上的功能比较有限，而且使用起来并不容易。数组和关系都可以用来存储「一对多」的映射。
 
-例如在一个博客应用中，每个评论可能对应一个文章。
-
-要创建一篇有一个评论的文章，您可以使用如下代码：
+例如，在一个博客应用中，一条评论（comment）对应一篇文章（post）。下面的代码将创建一篇有一条评论的文章：
 
 ```objc
-// Create the post
+// 创建文章、标题和内容
 AVObject *myPost = [AVObject objectWithClassName:@"Post"];
 [myPost setObject:@"I'm Smith" forKey:@"title"];
 [myPost setObject:@"Where should we go for lunch?" forKey:@"content"];
 
-// Create the comment
+// 创建评论和内容
 AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
 [myComment setObject:@"Let's do Sushirrito." forKey:@"content"];
 
-// Add a one-one relation between the Post and Comment
+// 为文章和评论建立一对一关系
 [myComment setObject:myPost forKey:@"parent"];
 
-// This will save both myPost and myComment
+// 同时保存 myPost、myComment
 [myComment saveInBackground];
 ```
 
-您还可以只使用 `ObjectID` 来关联对象，如下：
+还可以只用 `objectID` 来关联对象：
 
 ```objc
-// Add a relation between the Post with objectId "51a902d3e4b0d034f6162367" and the comment
+// 把评论跟 objectId 为 "51a902d3e4b0d034f6162367" 的文章关联起来
 [myComment setObject:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51a902d3e4b0d034f6162367"]
               forKey:@"parent"];
 ```
 
-默认情况下，获取对象时，相关的 `AVObject` 并没有一起获取。在被获取之前，这些对象的属性不能被访问，像这样：
+默认情况下，在获取一个对象时，与其相关联的 `AVObject` 不会被一同获取。因此，这些关联对象的属性只有在重新获取之后才能使用。例如：
 
 ```objc
+// 取回父级文章对象
 AVObject *post = [fetchedComment objectForKey:@"parent"];
+// 获取 post 的相关属性
 [post fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+  // 取回文章标题
   NSString *title = [post objectForKey:@"title"];
 }];
 ```
 
-您也可以使用 `AVRelation` 对象来模拟多对多的关系。这里的工作原理类似于 `AVObject` 中的 `Array`。二者不同之处在于，您不需要即时下载所有关系中的对象。这意味着， 使用 `AVRelation` 可以比 `AVObject` 中的 `Array` 扩展更多的对象 。
+`AVRelation` 对象可以用来模拟「多对多」的关系，它的工作原理类似于 `AVObject` 中的 `NSArray`。二者的不同之处在于，你不需要即时下载关系中的所有对象。这意味着，使用 `AVRelation` 可以扩展出比 `AVObject` 中的 `NSArray` 更多的对象。
 
-例如，一个用户可能有很多喜欢的文章。在这个场景中，您可以使用 relationforKey 为一个用户的喜欢行为存储一组文章。按顺序添加一篇文章到列表中后，代码应当类似于：
+例如，一个用户喜欢多篇文章，就可以用 `relationforKey:` 来保存这些文章。将一篇文章按顺序添加到列表，可这样做：
 
 ```objc
 AVUser *user = [AVUser currentUser];
@@ -382,60 +383,59 @@ AVRelation *relation = [user relationforKey:@"likes"];
 [user saveInBackground];
 ```
 
-您可以从 `AVRelation` 中移除一篇喜欢的「文章」：
+从 `AVRelation` 中移除一篇喜欢的文章：
 
 ```objc
 [relation removeObject:post];
 ```
 
-默认情况下，这个关系中的对象列表不会被下载。你可以调用查询返回的 `AVQuery` 的 `findObjectsInBackgroundWithBlock` 来获得文章列表，代码看起来像这样：
+默认情况下，这个关系中的对象列表不会被下载，需要从 `query` 查询返回的 `AVQuery` 中调用 `findObjectsInBackgroundWithBlock:` 方法来获得文章列表，如：
 
 ```objc
 [[relation query] findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (error) {
-     // There was an error
+     // 呃，报错了
   } else {
-    // objects has all the Posts the current user liked.
+    // objects 包含了当前用户喜欢的所有文章
   }
 }];
 ```
 
-如果您只想要文章中的一个子集，您可以对 AVQuery 添加额外的限制，像这样：
+如果只想要文章对象的子集，则要对 `AVQuery` 添加额外的限制，如：
 
 ```objc
 AVQuery *query = [relation query];
-// Add other query constraints.
+// 增加其他查询限制条件
 ```
 
-在某些时候，您可能会希望进行反向查询，比如，您想查询您的文章被哪些用户喜欢过，我们为您提供了反向查询的功能，如
+如果想反向查询，比如，一篇文章被哪些用户喜欢过，可使用 `reverseQuery:`，例如：
 
 ```objc
-AVUser * user = [AVUser currentUser];
-AVRelation * relation = [user relationforKey:@"myLikes"];
-AVObject * post = [AVObject objectWithClassName:@"post"];
+AVUser *user = [AVUser currentUser];
+AVRelation *relation = [user relationforKey:@"myLikes"];
+AVObject *post = [AVObject objectWithClassName:@"post"];
 [post setObject:@"article content" forKey:@"content"];
 [post save];
 [relation addObject:post];
 [user save];
 
 
-AVQuery * query = [AVRelation revreseQuery:user.className relationKey:@"myLikes" childObject:post];
+AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"myLikes" childObject:post];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-   // get user list
+   // 得到用户列表
 }];
 
 ```
 
-对于更多 `AVQuery` 的细节，请看看本指南的「查询部分」。`AVRelation` 的行为接近于一个 `AVObject` 中的 `Array`，所以在对象数组上的任何操作都同样适用于 `AVRelation`。
+要了解 `AVQuery` 更多的用法，请阅读本文 [查询](#查询) 部分。`AVRelation` 的行为接近于 `AVObject` 中的 `NSArray`，所以在对象数组上的任何操作也同样适用于 `AVRelation`。
 
-**更多关于关系类型，请阅读[《关系建模指南》](./relation_guide.html)**
+**请阅读《[关系建模指南](./relation_guide.html)》来进一步了解关系类型。**
 
 ### 数据类型
 
-到目前为止，我们已经用过数据类型有 `NSString`，`NSNumber`， 以及 `AVObject`。LeanCloud 还支持  `NSDate` 和 `NSData`。
-你可以嵌套 `NSDictionary` 和 `NSArray` 这两类对象，这样就可在一个单独的 `AVObject` 中储存更多的结构化数据。
+到目前为止，我们使用过的数据类型有 `NSString`、 `NSNumber`、 `AVObject`，LeanCloud 还支持 `NSDate` 和 `NSData`。
 
-以下是一些例子：
+此外，`NSDictionary` 和 `NSArray` 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。例如：
 
 ```objc
 NSNumber *number = [NSNumber numberWithInt:42];
@@ -457,130 +457,128 @@ AVObject *bigObject = [AVObject objectWithClassName:@"BigObject"];
 [bigObject saveInBackground];
 ```
 
-我们不推荐在 `AVObject` 中使用 `NSData` 字段来储存大块的二进制数据，比如图片或者整个文件。每个 `AVObject` 的大小都不应超过128KB。如果你需要储存更多的数据，我们建议你使用 `AVFile`。更多细节可以查看相关指南。
+我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。每个 `AVObject` 的大小都不应超过 128 KB。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
 
-如果你希望了解更多 LeanCloud 如何解析处理数据的信息，请查看我们的文档「数据与安全」一节。
+若想了解更多有关 LeanCloud 如何解析处理数据的信息，请查看专题文档《[数据与安全](../data_security.html)》。
 
 ## 查询
 
-我们已经看到了，一个 `AVQuery` 如何通过 `getObjectWithId:` 从 LeanCloud 中检索单个 `AVObject`。 此外，还有许多种检索 `AVQuery` 数据的方法 —— 你可以一次检索许多对象，在你希望检索的对象上设定条件，自动缓存查询结果来避免你亲自写这部分的代码。当然除此之外，还有更多方法。
+我们已经看到，`AVQuery` 的 `getObjectWithId:` 方法可以从 LeanCloud 中检索出单个 `AVObject`。此外，`AVQuery` 还提供更多的检索方法，来实现诸如一次检索许多对象、设定检索对象的条件、自动缓存查询结果等操作，免去了开发者需自行撰写代码的麻烦。
 
 ### 基本查询
 
-在许多情况下，`getObjectInBackgroundWithId: block:` 并不足以找到目标对象。AVQuery 不仅仅可以检索单一对象，还允许以不同的方式来检索得到一个对象的列表。
+在许多情况下，`getObjectInBackgroundWithId:block:` 并不足以找到目标对象。除了检索单一对象，`AVQuery` 还允许以不同的检索方式来获取包含多个对象的列表。
 
-一般的方式是创建一个 `AVQuery` 并设定相应的条件。然后可以用 `findObjectsInBackgroundWithBlock:` 来检索一个和响应 `AVObject` 匹配的 `NSArray`。
+一般的方式是创建一个 `AVQuery` 并设定相应的条件，然后用 `findObjectsInBackgroundWithBlock:` 检索得到一个与 `AVObject` 匹配的 `NSArray`。
 
-例如，如果你想要检索分数和特定的 `playername`，那么你可以使用方法 `whereKey: equalTo:` 来锁定一个键与其对应的值。
+例如，要检索指定 `playerName` 的分数，可以使用 `whereKey:equalTo:` 方法来限定一个键和对应的值。
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query whereKey:@"playerName" equalTo:@"Smith"];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (!error) {
-    // The find succeeded.
+    // 检索成功
     NSLog(@"Successfully retrieved %d scores.", objects.count);
   } else {
-    // Log details of the failure
+    // 输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
   }
 }];
 ```
 
-`findObjectsInBackgroundWithBlock:` 可以保证在完成网络请求的同时不阻塞主线程中的 Block 和回调。
+`findObjectsInBackgroundWithBlock:` 可以保证在完成网络请求的同时，不阻塞主线程中的 Block 和回调。
 
-如果你已经在后台线程中，有一个相应的方法 `findObjects` 会阻塞调用进程：
+如果已运行在后台线程中，用 `findObjects` 方法可阻塞调用进程：
 
 ```objc
-// Only use this code if you are already running it in a background
-// thread, or for testing purposes!
+// 以下代码仅可用于测试目的，或在后台线程之中运行
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query whereKey:@"playerName" equalTo:@"Smith"];
-NSArray* scoreArray = [query findObjects];
+NSArray *scoreArray = [query findObjects];
 ```
-
 
 ### 查询约束
 
-有几种方法可以为由 `AVQuery` 找到的对象添加约束。你可以通过 `whereKey: notEqualTo:` 来使用特定的键-值配对过滤对象。
+给 `AVQuery` 的检索添加约束条件有多种方法。
+
+用 `whereKey:notEqualTo:` 搭配对应的键和值来过滤对象：
 
 ```objc
 [query whereKey:@"playerName" notEqualTo:@"Smith"];
 ```
 
-
-你可以给出多个约束，这所有这些约束所匹配的对象会在结果中给出。
-换句话说，它们就像是一个 AND 约束。
+一次查询可以设置多个约束条件，只有满足所有条件的对象才被返回，这相当于使用 AND 类型的查询条件。
 
 ```objc
 [query whereKey:@"playerName" notEqualTo:@"Smith"];
 [query whereKey:@"playerAge" greaterThan:[NSNumber numberWithInt:18]];
 ```
 
-你可以通过设置一个限制来控制获取结果的数量。默认情况下这个数值是100。从1到1000的限制都是被允许的。
+用 `limit` 属性来控制返回结果的数量，默认值 100，允许取值范围从 1 到 1000。
 
 ```objc
-query.limit = 10; // limit to at most 10 results
+query.limit = 10; // 最多返回 10 条结果
 ```
-如果你想要获取一个的结果，更方便的选择是使用 `getFirstObject` 或者 `getFirstObjectInBackground`
+
+如果只需获取一个结果，直接使用 `getFirstObject` 或 `getFirstObjectInBackground`。
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query whereKey:@"playerEmail" equalTo:@"dstemkoski@example.com"];
 [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   if (!object) {
-    NSLog(@"The getFirstObject request failed.");
+    NSLog(@"getFirstObject 请求失败。");
   } else {
-    // The find succeeded.
-    NSLog(@"Successfully retrieved the object.");
+    // 查询成功
+    NSLog(@"对象成功返回。");
   }
 }];
 ```
 
-你可以使用 `skip` 来跳过初始结果，这对于分页十分有用：
+`skip` 用来跳过初始结果，这对分页非常有用：
 
 ```objc
-query.skip = 10; // skip the first 10 results
+query.skip = 10; // 跳过前 10 条结果
 ```
-对于合适的类型,如数字和字符串,可以控制顺序返回结果:
+对于适用的数据类型，如数字、字符串，可对返回结果进行排序：
 
 ```objc
-// Sorts the results in ascending order by the score field
+// 升序排列分数
 [query orderByAscending:@"score"];
 
-// Sorts the results in descending order by the score field
+// 降序
 [query orderByDescending:@"score"];
 ```
-你可以添加更多关于排序键的查询,如下:
+一个查询可以使用多个排序键：
 
 ```objc
-// Sorts the results in ascending order by the score field if the previous sort keys are equal.
+// 若上一个排序键相等，分数按升序排列
 [query addAscendingOrder:@"score"];
 
-// Sorts the results in descending order by the score field if the previous sort keys are equal.
+// 如果上一个排序键相等，降序排列分数
 [query addDescendingOrder:@"score"];
 ```
-对于合适的类型,你也可以在查询中使用比较:
+对于适用的数据类型，检索中可以使用「比较」方法：
 
 ```objc
-AVQuery
-// Restricts to wins < 50
+// wins < 50
 [query whereKey:@"wins" lessThan:[NSNumber numberWithInt:50]];
 
-// Restricts to wins <= 50
+// wins <= 50
 [query whereKey:@"wins" lessThanOrEqualTo:[NSNumber numberWithInt:50]];
 
-// Restricts to wins > 50
+// wins > 50
 [query whereKey:@"wins" greaterThan:[NSNumber numberWithInt:50]];
 
-// Restricts to wins >= 50
+// wins >= 50
 [query whereKey:@"wins" greaterThanOrEqualTo:[NSNumber numberWithInt:50]];
 ```
 
-如果你想检索对象匹配几个不同的值，你可以使用 `whereKey:containedIn:` ，这将会提供包含可接受值的数组。这在使用单一查询来替代多个查询中通常十分有用。例如，如果你需要检索在一个指定列表中由任何球员创造的分数：
+`whereKey:containedIn:` 可查询包含不同值的对象。它接受数组，可实现用单一查询来代替多个查询。
 
 ```objc
-// Finds scores from any of Jonathan, Dario, or Shawn
+// 找出 Jonathan、Dario 或 Shawn的分数
 NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
                                            @"Dario Wunsch",
                                            @"Shawn Simon",
@@ -588,10 +586,10 @@ NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
 [query whereKey:@"playerName" containedIn:names];
 ```
 
-如果你想检索一组不匹配任何几个值的对象，你可以使用 `whereKey:notContainedIn:` 来提供可接受值的数组。例如，如果你想检索一个列表之外球员的成绩。
+相反，要让查询不包含某些值的对象，则用 `whereKey:notContainedIn:` ：
 
 ```objc
-// Finds scores from anyone who is neither Jonathan, Dario, nor Shawn
+// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数 
 NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
                                            @"Dario Wunsch",
                                            @"Shawn Simon",
@@ -599,74 +597,79 @@ NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
 [query whereKey:@"playerName" notContainedIn:names];
 ```
 
-如果你想检索对象有一个特殊的键集，您可以使用 `whereKeyExists`。相反，如果你想检索对象没有一个特定的键集，您可以使用 `whereKeyDoesNotExist`。
+`whereKeyExists` 用来查询具备某一键集条件的对象，`whereKeyDoesNotExist` 正好相反。
 
 ```objc
-// Finds objects that have the score set
+// 找到有分数的对象
 [query whereKeyExists:@"score"];
 
-// Finds objects that don't have the score set
+// 没有分数的对象
 [query whereKeyDoesNotExist:@"score"];
 ```
 
-您可以使用方法 `whereKey:matchesKey:inQuery:` 来获取对象，这个对象包含一个键，匹配另一个查询获取的一组对象中一个键的值，例如，如果你有一个类包含着运动员队伍和你在用户类中存储的用户出生地，你可以使用一个查询来找到用户的列表和其家乡球队的获胜记录。就像这样：
+如果要用一个对象中某一键值，去匹配另一个查询结果对象中一个键值，来得到最终结果，可以使用 `whereKey:matchesKey:inQuery:` 。
+
+例如，一个类有球队的信息（所在地），另一个类有用户的信息（家乡），要找出自己家乡球队总赢球的那些用户，则：
 
 ```objc
 AVQuery *teamQuery = [AVQuery queryWithClassName:@"Team"];
+// 获胜比率高于 50%
 [teamQuery whereKey:@"winPct" greaterThan:[NSNumber withDouble:0.5]];
 AVQuery *userQuery = [AVQuery queryForUser];
+// 球队所有地 = 自己家乡
 [userQuery whereKey:@"hometown" matchesKey:@"city" inQuery:teamQuery];
 [userQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-    // results will contain users with a hometown team with a winning record
+    // 得到家乡球队总赢球的所有用户
 }];
 ```
-相反，获取一个对象包含一个键，这个键和另一个查询获取的一组对象中一个键的值不匹配，可以使用 `whereKey:doesNotMatchKey:inQuery:` 例如找到用户家乡球队的失败记录：
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `whereKey:doesNotMatchKey:inQuery:` 。例如，找出家乡球队表现不佳的那些用户记录：
 
 ```objc
 AVQuery *losingUserQuery = [AVQuery queryForUser];
 [losingUserQuery whereKey:@"hometown" doesNotMatchKey:@"city" inQuery:teamQuery];
 [losingUserQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-    // results will contain users with a hometown team with a losing record
+    // 得到家乡球队表现不佳的所有用户
 }];
 ```
-你可以通过调用 `selectKeys:` 与一个 `NSArray` 键来限制返回的字段，检索只包含 `score` 和 `playerName` 的文档（也可以是内置字段，如 `objectId`, `createdAt`, 和 `updatedAt`）：
+将 `selectKeys:` 搭配 `NSArray` 类型的键值来使用可以限定查询返回的字段。
+
+例如，让查询结果只包含 `playerName` 和 `score` 字段（也可以是内置字段，如 `objectId`、 `createdAt` 或 `updatedAt`）：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query selectKeys:@[@"playerName", @"score"]];
 NSArray *results = [query findObjects];
 ```
-其余字段可以稍后对返回的对象调用一个 `fetchIfNeeded` 的变体来获取：
+其余字段可以稍后对返回的对象调用 `fetchIfNeeded` 的变体来获取：
 
 ```objc
-AVObject *object = (AVObject*)[results objectAtIndex:0];
+AVObject *object = (AVObject *)[results objectAtIndex:0];
 [object fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-  // all fields of the object will now be available here.
+  // 返回该对象的所有字段
 }];
 ```
 ### 查询数组值
 
-当 key 是数组时，你可以这样找到 key 数组中包含 2 的对象:
+当键值为数组类型时，`equalTo:` 可以从数组中找出包含单个值的对象：
 
 ```objc
-// Find objects where the array in arrayKey contains 2.
+// 找出 arrayKey 中包含 2 的对象
 [query whereKey:@"arrayKey" equalTo:[NSNumber numberWithInt:2]];
 ```
 
-你也可以像下面的例子一样找到 key 数组中包含 2、3、4 的对象:
+`containsAllObjectsInArray:` 可以找到包含多个值的对象:
 
 ```objc
-// Find objects where the array in arrayKey contains each of the
-// elements 2, 3, and 4.
+// 找出 arrayKey 中包含 2、3、4 的对象
 [query whereKey:@"arrayKey" containsAllObjectsInArray:@[@2, @3, @4]];
 ```
 
 ### 查询字符串值
 
-使用 `whereKey: hasPrefix:` 来限定起始于一个特定字符串的值。这有点像 MySQL 的 `LIKE` 条件，索引使得这个操作即使对于大的数据集也是高效的。
+使用 `whereKey:hasPrefix:` 可以过滤出以特定字符串开头的结果，这有点像 MySQL 的 `LIKE` 条件。因为支持索引，所以该操作对于大数据集也很高效。
 
 ```objc
-// Finds barbecue sauces that start with "Big Daddy's".
+// 找出名字以 "Big Daddy's" 开头的烤肉调料
 AVQuery *query = [AVQuery queryWithClassName:@"BarbecueSauce"];
 [query whereKey:@"name" hasPrefix:@"Big Daddy's"];
 ```
