@@ -21,7 +21,7 @@ task :deploy, [:type] => [] do |t, args|
   when "cn"
     exec "fab -H ubuntu@np1.avoscloud.com,ubuntu@np2.avoscloud.com,ubuntu@np3.avoscloud.com,ubuntu@np4.avoscloud.com deploy_docs"
   when "ucloud"
-    exec "fab -H ubuntu@web1.avoscloud.com,ubuntu@web2.avoscloud.com,ubuntu@web3.avoscloud.com,ubuntu@web4.avoscloud.com,ubuntu@web5.avoscloud.com,ubuntu@web6.avoscloud.com deploy_docs"
+    exec "fab -H ubuntu@web1.avoscloud.com,ubuntu@web2.avoscloud.com,ubuntu@web3.avoscloud.com,ubuntu@web4.avoscloud.com,ubuntu@web5.avoscloud.com,ubuntu@web6.avoscloud.com,ubuntu@web7.avoscloud.com,ubuntu@web8.avoscloud.com deploy_docs"
   when "beta"
     exec "fab -H ubuntu@tsdb2.avoscloud.com deploy_docs"
   when "cn_stg"
