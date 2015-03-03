@@ -2,6 +2,9 @@
 
 $("h1,h2,h3,h4,h5,a").removeAttr("id");
 gajus.contents.formatId = function(str){
+  if(/^[0-9]/.test(str)){
+    str = "_"+str;
+  }
   return str.replace(/ /g,'_').replace(/[^a-zA-Z_0-9\u4e00-\u9fa5]/g,'_');
 };
 var tocContents =gajus.contents({
