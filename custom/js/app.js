@@ -8,8 +8,8 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         //     // $compile(angular.element('body'),$scope);
         //     $scope.$apply(refactDom)
         // },3000);
-        $scope.appid = "your_app_id";
-        $scope.appkey = "your_app_key";
+        $scope.appid = "{{appid}}";
+        $scope.appkey = "{{appkey}}";
         $(function(){
             pretty();
             refactDom($timeout,$scope,$compile);
