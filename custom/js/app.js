@@ -14,10 +14,8 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             pretty();
             refactDom();
             // $(body).html($com)
-            $timeout(function(){
-                $('#content').html($compile($('#content').html())($scope));
-                glueCopy();
-            },20);
+            $compile($('#content').html())($scope);
+            glueCopy();
         });
 
         $http.get("/1/clients/self/apps").success(
@@ -30,13 +28,9 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                             $scope.appid = $scope.currentApp.app_id;
                             $scope.appkey = $scope.currentApp.app_key;
                         }
-
                     });
                     $scope.apps = data;
-
                 }
-
-
             }).error(function(data) {
 
         });
