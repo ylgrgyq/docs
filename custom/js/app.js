@@ -3,11 +3,6 @@ angular.module("app", []);
 angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile',
     function($scope, $http, $timeout, $compile) {
 
-        // $timeout(function(){
-
-        //     // $compile(angular.element('body'),$scope);
-        //     $scope.$apply(refactDom)
-        // },3000);
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
 
