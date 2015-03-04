@@ -8,18 +8,27 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         //     // $compile(angular.element('body'),$scope);
         //     $scope.$apply(refactDom)
         // },3000);
-        pretty();
-        refactDom($timeout,$scope,$compile);
-        // $(body).html($com)
-        $('#content').html($compile($('#content').html())($scope));
-        $scope.appid = "{{your_app_id}}";
-        $scope.appkey = "{{your_app_key}}";
+        $scope.appid = "your_app_id";
+        $scope.appkey = "your_app_key";
+        $(function(){
+            pretty();
+            refactDom($timeout,$scope,$compile);
+            // $(body).html($com)
+            $timeout(function(){
+                $('#content').html($compile($('#content').html())($scope));
+            },20);
+        })
+
+
+
+
         $http.get("/1/clients/self/apps").success(
             function(data) {
                 if (data.length > 0) {
 
                     $scope.currentApp = data[0];
                     $scope.$watch('currentApp', function() {
+                        if($scope.currentApp&&$scope.currentApp.app_id)
                         $scope.appid = $scope.currentApp.app_id;
                         $scope.appkey = $scope.currentApp.app_key;
                     });
@@ -37,7 +46,10 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             $("pre.prettyprint code").each(function(index, ele) {
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
-              $(ele).after(appsStr);
+              if($(ele).text().indexOf('your_app_id')>-1){
+                $(ele).after(appsStr);
+              }
+
               glueCopy();
             });
             // code pretty
