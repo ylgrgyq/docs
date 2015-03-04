@@ -48,7 +48,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             $("pre.prettyprint code").each(function(index, ele) {
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
-              if($(ele).text().indexOf('your_app_id')>-1){
+              if($(ele).text().indexOf('{{appid}}')>-1){
                 $(ele).after(appsStr);
               }
 
