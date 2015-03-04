@@ -15,8 +15,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             refactDom();
             // $(body).html($com)
             $timeout(function(){
-                // $('#content').html($compile($('#content').html())($scope));
-                $compile($('#content').html())($scope);
+                $('#content').html($compile($('#content').html())($scope));
                 glueCopy();
             },20);
         });
@@ -48,7 +47,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
               if($(ele).text().indexOf('{{appid}}')>-1){
-                $(ele).after($compile(appsStr)($scope));
+                $(ele).after(appsStr);
               }
             });
             // code pretty
