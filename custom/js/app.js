@@ -10,6 +10,8 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         // },3000);
         pretty();
         refactDom($timeout,$scope,$compile);
+        // $(body).html($com)
+        $('#content').html($compile($('#content').html())($scope));
         $scope.appid = "{{your_app_id}}";
         $scope.appkey = "{{your_app_key}}";
         $http.get("/1/clients/self/apps").success(
@@ -35,7 +37,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             $("pre.prettyprint code").each(function(index, ele) {
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
-              $(ele).after($compile(appsStr)($scope));
+              $(ele).after(appsStr);
               glueCopy();
             });
             // code pretty
