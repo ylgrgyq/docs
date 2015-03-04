@@ -12,15 +12,13 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.appkey = "{{appkey}}";
         $(function(){
             pretty();
-            refactDom($timeout,$scope,$compile);
+            refactDom();
             // $(body).html($com)
             $timeout(function(){
                 $('#content').html($compile($('#content').html())($scope));
+                glueCopy();
             },20);
-        })
-
-
-
+        });
 
         $http.get("/1/clients/self/apps").success(
             function(data) {
@@ -44,15 +42,13 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         });
 
 
-        function refactDom($timeout,$scope,$compile){
+        function refactDom(){
             $("pre.prettyprint code").each(function(index, ele) {
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
               if($(ele).text().indexOf('{{appid}}')>-1){
                 $(ele).after(appsStr);
               }
-
-              glueCopy();
             });
             // code pretty
         }
