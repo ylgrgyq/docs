@@ -7,7 +7,7 @@
 {% include 'templates/include/head.html' %}
 </head>
 
-<body ng-app="app" class="dashboard-init" ng-cloak>
+<body  class="dashboard-init" ng-cloak>
 
 {% include 'templates/include/header.html' %}
 

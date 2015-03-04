@@ -8,7 +8,7 @@
 </head>
 
 
-<body ng-app="app" class="dashboard-init" data-spy="scroll" data-target=".sidebar-wrapper" data-offset="30" ng-cloak>
+<body  class="dashboard-init" data-spy="scroll" data-target=".sidebar-wrapper" data-offset="30" ng-cloak>
 
 {% include 'templates/include/header.html' %}
 

@@ -46,11 +46,3 @@ $(function() {
 
 
 
-// sdk version
-$(function(){
-  var sdkversion = 'unknown';
-  if(typeof $sdk_versions != 'undefined'){
-    sdkversion = $sdk_versions;
-  }
-  angular.element("body").scope().sdkversion = sdkversion;
-})
