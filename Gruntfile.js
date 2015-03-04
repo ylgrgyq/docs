@@ -205,6 +205,8 @@ module.exports = function(grunt) {
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
     'uglify:generated',"usemin"]);
-  grunt.registerTask("server", ["build", "less:server", "connect", "watch"])
+  grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble",
+   "less:dist", "autoprefixer", "copy:asset"]);
+  grunt.registerTask("server", ["localBuild", "less:server", "connect", "watch"]);
 
 };
