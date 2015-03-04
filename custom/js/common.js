@@ -43,10 +43,7 @@ $(function() {
 
   $("pre.prettyprint code").each(function(index, ele) {
     $(this).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
-    if ($(this).text().indexOf("{{appid}}") != -1 || $(this).text().indexOf("{{appkey}}") != -1) {
-      // After debuging, re-apply ng-show='currentApp' for .doc-example-selector
-      $(this).after("<div class='doc-example-selector' ng-show='currentApp'><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>");
-    }
+
   });
   var clip = new ZeroClipboard();
   clip.glue($(".copybtn"));
@@ -73,8 +70,8 @@ $(function() {
 
 //apps data
 angular.module("app", []);
-angular.module("app").controller("AppCtrl", ['$scope', '$http',
-    function($scope, $http) {
+angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout',
+    function($scope, $http, $timeout) {
 
         $scope.appid = "{{your_app_id}}";
         $scope.appkey = "{{your_app_key}}";
@@ -88,6 +85,16 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http',
                         $scope.appkey = $scope.currentApp.app_key;
                     });
                     $scope.apps = data;
+                    $("pre.prettyprint code").each(function(index, ele) {
+                      $(this).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
+                      if ($scope.apps && $scope.apps.length>0) {
+                        // After debuging, re-apply ng-show='currentApp' for .doc-example-selector
+                        $timeout(function(){
+                          $(this).after("<div class='doc-example-selector' ng-show='currentApp'><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>");
+                        });
+
+                      }
+                    });
                 }
 
             }).error(function(data) {
