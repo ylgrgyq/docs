@@ -1,6 +1,7 @@
 # Unity 指南
 如果您还没有安装 LeanCloud Unity SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，我们的 SDK 支持 Unity 4.2 及更高版本。我们的 SDK 支持用Unity开发的iOS，Andorid，Windows Phone 8，Windows Store，Windows Desktop，以及网页游戏。
 
+
 ## 介绍
 Unity本身支持Mono跨平台的.NET语言的解决方案，所以LeanCloud采用了C#来实现客户端的SDK。如果您有.NET方面的编程经验，您会很容易就掌握LeanCloud Unity SDK接口的风格以及用法。
 
@@ -503,7 +504,7 @@ query.FindAsync().ContinueWith(t =>
 
 ```javascript
 var userName = "demoUser";
-var pwd = "avoscloud";
+var pwd = "leancloud";
 var email = "xxx@xxx.com";
 var user = new AVUser();
 user.Username = userName;
@@ -532,7 +533,7 @@ user.SignUpAsync().ContinueWith(t =>
 //第一步先注册
 var user = new AVUser();
 user.Username = "UnityUser";
-user.Password = "avoscloud";
+user.Password = "leancloud";
 user.MobilePhoneNumber = "18688888888";
 var task= user.SignUpAsync ();
 //如此做，短信就会发送到指定的手机号
@@ -556,7 +557,7 @@ task.ContinueWith(t =>
 
 ```javascript
 var userName = "demoUser";
-var pwd = "avoscloud";
+var pwd = "leancloud";
 AVUser.LogInAsync(userName, pwd).ContinueWith(t =>
 {
     if (t.IsFaulted || t.IsCanceled)
@@ -808,10 +809,10 @@ defaultACL.PublicReadAccess = true;
 
 
 ```javascript
-byte[] data = System.Text.Encoding.UTF8.GetBytes("AVOSCloud is a great cloud service!");
+byte[] data = System.Text.Encoding.UTF8.GetBytes("LeanCloud is a great cloud service!");
 AVFile file = new AVFile("mytxtFile.txt", data, new Dictionary<string, object>()
     {
-        {"author","AVOSCloud"}
+        {"author","LeanCloud"}
     });
 AVObject book = new AVObject("book");
 book["content"] = file;
@@ -994,10 +995,10 @@ void OnGUI()
     GUI.Label(new Rect(260, 50, 160, 50), fildId);
     if (GUI.Button(new Rect(50, 50, 200, 50), "Create a txt file"))
     {
-       byte[] data = System.Text.Encoding.UTF8.GetBytes("AVOSCloud is a great cloud service!");
+       byte[] data = System.Text.Encoding.UTF8.GetBytes("LeanCloud is a great cloud service!");
        AVFile file = new AVFile("mytxtFile.txt", data, new Dictionary<string, object>()
        {
-          {"author","AVOSCloud"}
+          {"author","LeanCloud"}
        });
        file.SaveAsync().ContinueWith(t =>
        {
@@ -1050,7 +1051,7 @@ AVFile默认会存储文件大小和文件上传者objectId作为元信息。同
 ```javascript
  AVFile file = new AVFile("mytxtFile.txt", data, new Dictionary<string, object>()
  {
-     {"author","AVOSCloud"}
+     {"author","LeanCloud"}
  });
 ```
 这个就是简单的用法，在创建文件的时候，可以指定一组字典去保留文件的自定义元数据。
@@ -1078,8 +1079,18 @@ if (GUI.Button(new Rect(50, 50, 200, 50), "Download file"))
        });
    });
 }
-
 ```
+
+#### 更推荐的下载方式
+对 Unity 有经验的开发者，我们更推荐用  Unity 自带的 WWW 类解决文件下载的问题，如下：
+
+```javascript
+var req = new WWW(file.Url.AbsoluteUri);
+yield return req;
+string text = req.text;
+```
+以上是针对纯文件文件的操作。
+其他文件的下载，还是建议开发者自行使用
 
 ### 删除文件
 
@@ -1134,7 +1145,8 @@ var task = push.SendAsync();
  var task = push.SendAsync();
 ```
 
-### Unity SDK 注意事项
+## Unity SDK 注意事项
 
 1. 基于 Unity 自身的 WWW 类发送 Http 请求的限制，单个请求的大小不能超过 2MB，所以在使用 Unity SDK 时，开发者需要注意存储数据，构建查询等操作时，需要做到简洁高效。
 2. Unity 中请将 `Optimization` 中的 `Stripping Level` 设置为 `Disabled`。
+3. 从官网上下载的 SDK ，在 Unity 4.3 以后的版本都需要重命名，把版本号去掉，例如下载的文件叫做 `AVOSCloud.Unity-v1.1.5.dll`，请重命名为 `AVOSCloud.Unity.dll`，否则会出现引入脚本失败的错误。
