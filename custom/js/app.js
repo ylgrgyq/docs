@@ -15,9 +15,10 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             refactDom();
             // $(body).html($com)
             $timeout(function(){
-                $('#content').html($compile($('#content').html())($scope));
+                // $('#content').html($compile($('#content').html())($scope));
+                $compile($('#content').html())($scope);
                 glueCopy();
-            },20);
+            },200);
         });
 
         $http.get("/1/clients/self/apps").success(
