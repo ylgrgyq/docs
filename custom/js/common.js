@@ -89,9 +89,9 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout',
                       // $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
                       if ($scope.apps && $scope.apps.length>0) {
                         // After debuging, re-apply ng-show='currentApp' for .doc-example-selector
-                        $timeout(function(){
-                          $(ele).after("<div class='doc-example-selector' ng-show='currentApp'><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>");
-                        });
+                        // $timeout(function(){
+                        //   $(ele).after("<div class='doc-example-selector' ng-show='currentApp'><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>");
+                        // });
 
                       }
                     });
