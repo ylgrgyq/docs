@@ -28,9 +28,11 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
 
                     $scope.currentApp = data[0];
                     $scope.$watch('currentApp', function() {
-                        if($scope.currentApp&&$scope.currentApp.app_id)
-                        $scope.appid = $scope.currentApp.app_id;
-                        $scope.appkey = $scope.currentApp.app_key;
+                        if($scope.currentApp&&$scope.currentApp.app_id){
+                            $scope.appid = $scope.currentApp.app_id;
+                            $scope.appkey = $scope.currentApp.app_key;
+                        }
+
                     });
                     $scope.apps = data;
 
