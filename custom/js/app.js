@@ -14,8 +14,11 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             pretty();
             refactDom();
             // $(body).html($com)
-            $compile($('#content').html())($scope);
-            glueCopy();
+            $timeout(function(){
+                // $('#content').html($compile($('#content').html())($scope));
+                $compile($('#content').html())($scope);
+                glueCopy();
+            },20);
         });
 
         $http.get("/1/clients/self/apps").success(
@@ -28,9 +31,13 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                             $scope.appid = $scope.currentApp.app_id;
                             $scope.appkey = $scope.currentApp.app_key;
                         }
+
                     });
                     $scope.apps = data;
+
                 }
+
+
             }).error(function(data) {
 
         });
@@ -41,7 +48,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
               $(ele).after("<div class='doc-example-action'><button class='copybtn'>Copy</button></div>");
               var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='currentApp' ng-options='app.app_name for app in apps'></select></span>";
               if($(ele).text().indexOf('{{appid}}')>-1){
-                $(ele).after(appsStr);
+                $(ele).after($compile(appsStr)($scope));
               }
             });
             // code pretty
