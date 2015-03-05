@@ -948,10 +948,12 @@ curl -X PUT \
 {
   "data":{
     "alert": {
+      "title": "标题",
+      "title-loc-key":"",
       "body":"消息内容",
       "action-loc-key": "",
       "loc-key":"",
-      "loc-args":"",
+      "loc-args":[""],
       "launch-image":""
      }
    }
