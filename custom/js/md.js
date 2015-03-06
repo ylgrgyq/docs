@@ -27,8 +27,8 @@ function doSideBar(){
     }
   })
   .on('affix.bs.affix', function (e) {
-    var tocWidth = $('#toc').outerWidth(true);
-    $('#toc').width(tocWidth);
+    var tocWidth = $('#left-nav').width();
+    $('#toc-wrapper').width(tocWidth);
     $('.sidebar-affix-shadow').removeClass('bottom').addClass('on').attr('data-width', tocWidth);
     $('head').append('<style>.sidebar-affix-shadow:before, .sidebar-affix-shadow:after {width: ' + tocWidth + 'px;}</style>');
     $(window).scroll(function() {
@@ -42,14 +42,16 @@ function doSideBar(){
     });
   }).on('affix-top.bs.affix', function (e) {
     // If scrolls back to top
-    $('#toc').removeAttr('style');
+    $('#toc-wrapper').removeAttr('style');
     $('.sidebar-affix-shadow').removeClass('bottom on');
   }).on('affix-bottom.bs.affix', function (e) {
     // If window reaches bottom (Affix style)
     $('.sidebar-affix-shadow').addClass('bottom').removeClass('on');
   });
 }
-
+$(window).on('resize',function(){
+  $('#toc-wrapper').width($('#left-nav').width());
+});
 // Sidebar ScrollSpy
 // $.fn.scrollStopped = function(callback) {
 //   $(this).scroll(function() {

@@ -16,7 +16,7 @@
 
   <div class="row">
 
-    <div class="col-sm-3 sidebar-gruntfile-trigger">
+    <div class="col-sm-3 sidebar-gruntfile-trigger" id="left-nav">
 
       <div class="sidebar-affix-shadow sidebar-hover-off">
 
