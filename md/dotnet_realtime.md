@@ -6,7 +6,7 @@
 
 
 ## 安装
-为了支持实时聊天，我们依赖了一个开源的第三方的 WebSocket 的库，所以推荐开发者从[Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.2.3.1-beta)上下载我们的 SDK。
+为了支持实时聊天，我们依赖了一个开源的第三方的 WebSocket 的库，所以推荐开发者从[Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.2.3.4-beta)上下载我们的 SDK。
 
 为了更方便开发者阅读和理解 SDK 里面的各种抽象概念，我们先从一个应用场景来简单地剖析实时聊天组件在 Windows Phone 8.0 SDK 中如何使用。
 
@@ -27,14 +27,17 @@
 ### 场景实现
 以上逻辑是一个最基本的聊天系统应该有的逻辑交互，在 LeanCloud 中，实现以上步骤需要如下代码：
 
-```javascript
-  AVSession session = new AVSession("UserA");//Step1
-  session.Open("UserB");//Step2
-  session.SendMessage("Hello,B!", "UserB", true);//Step3
+```c#
+AVSession session = new AVSession("UserA");//Step1
+session.Open("UserB");//Step2
+session.OnSessionOpen += (s_open, e_open) =>
+{
+session.SendMessage("Hello,B!", "UserB", true);//Step3
+};
 ```
 这是UserA需要做的事情，UserB 想要实现接受的话需要如下几步：
 
-```javascript
+```c#
   AVSession session = new AVSession("UserB");Step4
   session.Open("UserA");//Step5
   session.SetListener(new SampleAVSessionListener()
@@ -49,13 +52,13 @@
   ///SampleAVSessionListener 是一个实现了接口 IAVSessionListener 简单的类，它实现了 IAVSessionListener 代理，
   ///这些代理的主要作用就是用来监听 SDK 所发出的具体的事件的响应。
 ```
-附上`SampleAVSessionListener`的代码，开发者可以讲如下代码拷贝到 Visual Studio 中：
+附上 `SampleAVSessionListener` 的代码，开发者可以讲如下代码拷贝到 Visual Studio 中：
 
-```javascript
- public class SampleAVSessionListener : IAVSessionListener
- {
+```c#
+public class SampleAVSessionListener : IAVSessionListener
+{
         public SessionOpen OnSessionOpen { get; set; }//AVSession打开时执行的代理。
-
+        
         public SessionPaused OnSessionPaused { get; set; }//AVSession 与服务端断开连接时执行的代理，一般都是因为 WP 手机锁屏或者应用被切换至后台了，所执行的代理。
 
         public SessionResumed OnSessionResumed { get; set; }//AVSession 重连成功之后执行的代理。
@@ -77,8 +80,7 @@
         public PeersUnwatched OnPeersUnwatched { get; set; }//取消关注之后所执行的代理。
 
         public Error OnError { get; set; }//发生错误时所执行的代理，例如抛出一些异常。
-
-  }
+}
 ```
 这样只要2边同时运行，就可以 UserB 就可以收到来自 UserA 发来的信息。
 
@@ -99,25 +101,43 @@
 ```
 
 ## 基于事件的回调
+基于事件的回调（EAP） 是 .NET 程序员长久以来比较熟悉的一种处理异步以及被动响应操作的常用方式，为此我们在聊天组件里面添加了一些被动响应的事件类型给开发者去响应消息接受，群组人员变动等操作。
+
 实时通信是架构在长连接上的一种 Client——Server——Client 的模式，所以我们提供了一套 C# 程序员比较熟悉的基于事件的回调方式来处理实时通信里面的相关操作，如果配合 Lambda 表达式，代码会显得优雅一点。
 
 如发送消息可以有如下写法：
 
-```
+```c#
 App.session.SendMessage("亲爱的，周末我们去哪里吃？", "Wife", false, (s, message) => 
             {
                 //s 就是 接受到这个消息的 AVSession 实例。
                 Console.WriteLine(message);
             });
 ```
+
 以上方法实际上调用的是 SDK 中
 
 
-```
+```c#
 public void SendMessage(string msg, string toPeer, bool transient, 
             EventHandler<AVMessageReceivedEventArgs> onMessage);
 ```
-这个方法。与此类似的还有其他事件：
+如接受消息可以有如下写法：
+
+```c#
+AVSession session = new AVSession("UserB");//UserB 打开 Session
+session.Open("UserA");//UserB 
+session.OnMessage += (s, msg) =>
+{
+   var content = msg.Message;
+   Dispatcher.BeginInvoke(() => 
+   {
+      MessageBox.Show(content.Message);
+   });
+};
+```
+
+与此类似的还有其他事件：
 
 ```
 public event EventHandler<EventArgs> OnSessionOpen;
@@ -332,8 +352,8 @@ public class SampleSignatureFactory : ISignatureFactory
 另外，关于签名的重要细节有以下几点：
 
 * 服务端进行签名是为了避免一些恶意的操作
-* 签名也有控制好友关系的作用。假如应用本身有好友系统，不是好友不能相互之间通信，比如A想 Watch B，但是 B 并不是 A 的好友（类似QQ，微信），此时在业务需求的情况下，只要服务端返回一个错误的签名，LeanCloud 的服务端就不会在服务端为A和B建立聊天的长连接，A 发送的信息就不会送到给 B，这样也是为了帮助开发者实现轻量的垃圾消息规避，当然我们本身的服务是没有这种好友系统的，因为这是应用本身的业务需求。
-* 签名方法所存放的服务端最好要做好访问认证，比如我们云代码在访问的时候必须在 Https 请求头包含AppId 以及AppKey，这样才能避免一旦服务器地址被暴露，恶意的被其他人利用去做签名，对应用本身的聊天系统产生脏数据以及恶意广告的散发。
+* 签名也有控制好友关系的作用。假如应用本身有好友系统，不是好友不能相互之间通信，比如 A 想 Watch B，但是 B 并不是 A 的好友（类似QQ，微信），此时在业务需求的情况下，只要服务端返回一个错误的签名，LeanCloud 的服务端就不会在服务端为A和B建立聊天的长连接，A 发送的信息就不会送到给 B，这样也是为了帮助开发者实现轻量的垃圾消息规避，当然我们本身的服务是没有这种好友系统的，因为这是应用本身的业务需求。
+* 签名方法所存放的服务端最好要做好访问认证，比如我们云代码在访问的时候必须在 Https 请求头包含AppId 以及 AppKey，这样才能避免一旦服务器地址被暴露，恶意的被其他人利用去做签名，对应用本身的聊天系统产生脏数据以及恶意广告的散发。
 
 签名是认证的一种方式，这种方式有助于开发者去自由掌控自己的系统又不会付出过多的代码做一些跟业务逻辑本身无关的事情，LeanCloud 一直致力于减少应用开发者在服务端的工作量，并且希望开发者能够对应用开发的整体流程有着自己独到的把控，这样的应用才是高质量的。
 
@@ -352,4 +372,3 @@ public class SampleSignatureFactory : ISignatureFactory
 ```
 * 聊天记录的获取
 ```
-不过聊天记录我们是提供了
