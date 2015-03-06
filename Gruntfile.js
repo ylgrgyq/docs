@@ -55,7 +55,7 @@ module.exports = function(grunt) {
         tasks: ["markdown", "dom_munger"]
       },
       html: {
-        files: ["templates/**/*.*"],
+        files: ["templates/**"],
         tasks: ["clean:html", "markdown", "assemble"]
       }
     },
