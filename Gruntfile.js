@@ -36,7 +36,7 @@ module.exports = function(grunt) {
     },
     watch: {
       options: {
-        livereload: true
+        livereload: 35738
       },
       md: {
         files: ["md/*.md"],
