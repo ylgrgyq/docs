@@ -319,7 +319,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-
+**我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
 
 #### 指定设备平台
 
@@ -921,10 +921,11 @@ curl -X PUT \
 * where 一个查询 `_Installation` 表的查询条件 JSON 对象
 * channels 推送给哪些频道，将作为条件加入 `where` 对象。
 * expiration_time 消息过期的绝对日期时间
-* expiration_interval 消息过期的相对时间
+* expiration_interval 消息过期的相对时间，从调用 API 的时间开始算起，单位是秒。
 * push_time 定期推送时间
 * prod 设置使用测试证书(dev)还是生产证书(prod)，只对 iOS 有效。
 
+**我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
 
 #### 消息内容 Data
 
