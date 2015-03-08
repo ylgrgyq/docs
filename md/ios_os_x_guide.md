@@ -675,27 +675,31 @@ AVQuery *query = [AVQuery queryWithClassName:@"BarbecueSauce"];
 ```
 
 ### 关系查询
-有几种方法可以查询关系数据。如果你想在以某个属性匹配一个已知的 `AVObject` 的对象，您可以使用 `whereKey:equalTo:`，就像和其他数据类型一样。例如，如果每个 `Comment` 在 `Post` 字段都有一个 `Post` 对象,您可以获取特定帖子的评论:
+检索关系数据有几种方法。如果用某个属性去匹配一个已知的 `AVObject` 对象，仍然可以使用 `whereKey:equalTo:`，就像使用其他数据类型一样。
+
+例如，如果每条评论 `Comment` 的 `post` 字段都有一个 `Post` 文章对象，那么找出指定文章下的评论：
 
 ```objc
-// Assume AVObject *myPost was previously created.
+// 假设前面已建好了 myPost 这个 AVObject 对象
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 [query whereKey:@"post" equalTo:myPost];
 
 [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-    // comments now contains the comments for myPost
+    // comments 包含了 myPost 下的所有评论
 }];
 ```
 
-你也可以通过 `ObjectId` 做关系查询:
+或通过 `ObjectId` 做关系查询：
 
 ```objc
 [query whereKey:@"post"
         equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51c912bee4b012f89e344ae9"];
 ```
-如果你想查找的对象的某个属性是符合另一个查询的对象，可以使用 `whereKey:matchesQuery`。
+如果要匹配一个查询类型的对象，请使用 `whereKey:matchesQuery`。
 
-值得注意的是，对结果数的默认100和最大1000的限制也适用与内嵌查询，所以在大型数据集中，您可能需要仔细构造查询来得到想要的行为。你可以这样找到带有图片的文章的评论：
+注意：结果返回数量（默认 100 最多 1000）的限制也适用于内嵌查询，所以在处理大型数据集时，你可能需要仔细设置查询条件来获得想要的结果。
+
+例如，找出所有带图片的文章的评论：
 
 ```objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
@@ -707,7 +711,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 }];
 ```
 
-如果你想查找的对象的某个属性是不匹配另一个查询的对象，可以使用 `whereKey:doesNotMatchQuery`。你可以这样找到不带图片的文章的评论：
+相反，`whereKey:doesNotMatchQuery:` 可以找出一个对象的某个属性与另一个查询对象不匹配的结果。例如，找出所有 不带图片的文章的评论：
 
 ```objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
@@ -715,56 +719,55 @@ AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 [query whereKey:@"post" doesNotMatchQuery:innerQuery];
 [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-    // comments now contains the comments for posts without images
+    // comments 包含了所有没有图片的文章的评论
 }];
 ```
 
-在一些场景中，你需要在一个查询中返回多个类型的相关对象。这时可以使用方法 `includeKey`。例如，搜索最近的十条评论，并同时获得与之对应的文章：
+在一些场景中，如果需要在一个查询中返回多个类型的相关对象，可以使用方法 `includeKey:`。例如，搜索最近的十条评论，并同时找出与之对应的文章：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
-// Retrieve the most recent ones
+// 找出最近刚创建的记录
 [query orderByDescending:@"createdAt"];
 
-// Only retrieve the last ten
+// 只取前十条
 query.limit = [NSNumber numberWithInt:10];
 
-// Include the post data with each comment
+// 找出每条评论所对应的文章
 [query includeKey:@"post"];
 
 [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-    // Comments now contains the last ten comments, and the "post" field
-    // has been populated. For example:
+    // comments 是最近的十条评论, 其 post 字段也有相应数据
     for (AVObject *comment in comments) {
-         // This does not require a network access.
+         // 并不需要网络访问
          AVObject *post = [comment objectForKey:@"post"];
          NSLog(@"retrieved related post: %@", post);
     }
 }];
 ```
 
-**你还可以用点（`.`）操作来查询多层的包含关系**，如果你想要的结果中包含评论所对应的文章以及该文章的作者，可以这样做：
+**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的文章，以及该文章的作者：
 
 ```objc
 [query includeKey:@"post.author"];
 ```
-你可以多次使用 `includeKey:` 来在查询中包含多个属性。这个功能对 `AVQuery` 的 `getFirstObject` 和 `getObjectInBackground` 等辅助方法。
+`includeKey:` 既可在一次查询中多次使用来返回多个属性，也可与 `AVQuery` 的 `getFirstObject` 和 `getObjectInBackground` 等辅助方法配合使用。
 
-某些时候你可能不需要返回全部数据，而只希望返回特定 key 对应的数据，比如某些对象包括多个 key，某些 key 对应的 value 数据量比较大而你并不需要，可以使用类似下面代码
+还有一种情况，当某些对象包括多个键，而某些键的值包含的数据量又比较大，你并不希望返回所有的数据，只想要特定键所对应的数据，这时可以用 `selectKeys:`：
 
 ```objc
-AVQuery * query = [AVQuery queryWithClassName:@"someClass"];
+AVQuery *query = [AVQuery queryWithClassName:@"someClass"];
 [query selectKeys:@[@"key"]];
-AVObject * result = [query getFirstObject];
+AVObject *result = [query getFirstObject];
 ```
 
-它将只返回指定 key 对应的 value，而不会返回所有数据，这样有助于节省网络带宽和计算资源。
+只返回指定键对应的有限数据，而非所有数据，有助于节省网络带宽和计算资源。
 
 ### 缓存查询
-在磁盘上缓存请求结果通常是很有用的，这允许你在设备离线时、应用刚刚开始时、网络请求尚未完成时显示数据。当它占用太多空间时，LeanCloud会自动刷新缓存。
+通常，将请求结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。当缓存占用太多空间时，LeanCloud 会自动对其清理。
 
-默认的查询行为不使用缓存,但是您可以通过设置 `query.cachePolicy` 启用缓存。例如，当网络不可用时，尝试网络连接并同时取回缓存的数据:
+默认的查询行为不使用缓存，需要通过 `query.cachePolicy` 来启用。例如，当网络不可用时，尝试网络连接并同时取回已缓存的数据:
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
@@ -775,78 +778,78 @@ query.maxCacheAge = 24*3600;
 
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (!error) {
-    // Results were successfully found, looking first on the
-    // network and then on disk.
+    // 成功找到结果，先找网络再访问磁盘
   } else {
-    // The network was inaccessible and we have no cached data for
-    // this query.
+    // 无法访问网络，本次查询结果未做缓存
   }
 }];
 
 ```
-LeanCloud 提供了几个不同的缓存策略：
+LeanCloud 提供了几种不同的缓存策略：
 
 * `kPFCachePolicyIgnoreCache`
-
-查询行为不从缓存中加载，也不会将结果保存到缓存中。`kPFCachePolicyIgnoreCache` 是默认的缓存策略。
-
+  **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
 * `kPFCachePolicyCacheOnly`
+  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。
+* `kPFCachePolicyCacheElseNetwork`
+  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
+* `kPFCachePolicyNetworkElseCache`
+  查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
+* `kPFCachePolicyCacheThenNetwork`
+  查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
 
-查询行为会忽略网络状况，只从缓存中加载。如果没有缓存的结果，这个策略会导致一个 `AVError`。
+要控制缓存行为，可以使用 `AVQuery` 提供的相应方法：
 
-* kPFCachePolicyCacheElseNetwork   --   查询行为首先尝试从缓存中加载，如果加载失败,它会通过网络加载结果。如果缓存和网络中获取的行为都失败了，会有一个 `AVError`。
-* kPFCachePolicyNetworkElseCache   --   查询行为首先尝试从网络中加载，如果加载失败,它会从缓存中加载结果。如果缓存和网络中获取的行为都失败了，会有一个 `AVError`。
-* kPFCachePolicyCacheThenNetwork   --   查询首先从缓存中加载，然后从网络加载。在这种情况下,回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它在不同的时间返回两个结果，这个缓存策略不能和 `findObjects` 同时使用。
+* 检查是否存在缓存查询结果：
 
-如果你需要控制缓存的行为，可以使用 `AVQuery` 提供的一些这方面的方法。比如:
+  ```objc
+  BOOL isInCache = [query hasCachedResult];
+  ```
+* 删除某一查询的任何缓存结果：
 
-* 检查是否存在缓存查询结果:
+  ```objc
+  [query clearCachedResult];
+  ```
+* 删除查询的所有缓存结果：
 
-```objc
-BOOL isInCache = [query hasCachedResult];
-```
+  ```objc
+  [AVQuery clearAllCachedResults];
+  ```
+* 设定缓存结果的最长时限：
 
+  ```objc
+  query.maxCacheAge = 60 * 60 * 24; // 一天的总秒数
+  ```
 
-* 删除任何缓存查询结果:
-
-```objc
-[query clearCachedResult];
-```
-
-* 删除缓存查询结果:
-
-```objc
-[AVQuery clearAllCachedResults];
-```
-* 设定缓存结果最长时限:
-
-```objc
-query.maxCacheAge = 60 * 60 * 24;  // One day, in seconds.
-```
 查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirstObject` 和 `getObjectInBackground`。
 
 ### 对象计数
-如果你只需要知道匹配查询的对象数量，但不需要检索匹配的对象时，您可以使用 `countObjects` 代替 `findObjects`。例如，数数一个特定的球员参加了多少场比赛:
+
+如果只需要得到查询出来的对象数量，不需要检索匹配的对象，可以用 `countObjects` 来代替 `findObjects`。
+
+例如，计算一下某位球员参加了多少场比赛：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 [query whereKey:@"playername" equalTo:@"Sean Plott"];
 [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
   if (!error) {
-    // The count request succeeded. Log the count
-    NSLog(@"Sean has played %d games", count);
+    // 查询成功，输出计数
+    NSLog(@"Sean 参加了 %d 场比赛", count);
   } else {
-    // The request failed
+    // 查询失败
   }
 }];
 ```
 
-如果你想阻止调用线程，也可以使用同步方法 `countObjects`。
+`countObjects` 是一种同步式的方法，因此使用它可以阻止线程调用。
 
-对于类，以及超过1000个的对象,计数操作很可能会导致响应超时。他们会经常产生响应超时，或者返回的结果只是一个大概值。因此，最好在构建程序时就尽量避免这样的操作。
+对含有超过 1000 个对象的类，使用计数操作很可能会导致响应超时，或返回数值近似精确，所以在构建程序时，应该尽量避免这样的操作。
 
 ### 复合查询
-如果你想找和特定对象相匹配的几个查询,您可以使用方法 `orQueryWithSubqueries:`。例如,如果您想找赢得很多场比赛或者只赢得几场比赛的球员：
+如果想从多个查询中找出与其中一个相匹配的对象，可以使用方法 `orQueryWithSubqueries:`。
+
+例如，找出赢了很多场比赛或者只赢了几场比赛的球员：
 
 ```objc
 AVQuery *lotsOfWins = [AVQuery queryWithClassName:@"Player"];
@@ -856,16 +859,16 @@ AVQuery *fewWins = [AVQuery queryWithClassName:@"Player"];
 [fewWins whereKey:@"wins" lessThan:[NSNumber numberWithInt:5]];
 AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWins,lotsOfWins,nil]];
 [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-  // results contains players with lots of wins or only a few wins.
+  // 返回赢球次数大于 150 场或小于 5 场的球员
   }];
 ```
 
-您可以在新创建的AVQuery中添加额外的约束，以此作为一个 and 操作符。
+你可以对新创建的 `AVQuery` 添加额外的约束，多个约束将以 AND 运算符来联接。
 
-值得注意的是，我们在复合查询的子查询中，不支持非过滤的约束（如：e.g. limit, skip, orderBy...:, includeKey:）
+注意：在复合查询的子查询中，不能使用非过滤性的约束（如 `limit`、 `skip`、`orderBy...:`、 `includeKey:`）。
 
 ### Cloud Query Language（CQL）查询
-我们同时也提供类似 SQL 语言的查询语言 CQL，如果你熟悉 SQL，你会觉得很相似。使用下面的方式使用 CQL：
+我们还提供类似于 SQL 语言的查询语言 CQL，使用方法如下：
 
 ```objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@", @"ATestClass"];
@@ -876,50 +879,51 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
     result = [AVQuery doCloudQueryWithCQL:cql];
     NSLog(@"count:%lu", (unsigned long)result.count);
 ```
-在更多的时候，一个查询语句中间会有很多的值是可变值，为此，我们也提供了类似 Java JDBC 里的 PreparedStatement 使用占位符查询的语法结构。
+通常，查询语句会使用变量参数。为此，我们提供了与 Java JDBC 所使用的 `PreparedStatement` 占位符查询相类似的语法结构。
 
 ```objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@ where durability = ? and name = ?", @"ATestClass"];
     NSArray *pvalues =  @[@100,@"祈福"];
     [AVQuery doCloudQueryInBackgroundWithCQL:cql pvalues:pvalues callback:^(AVCloudQueryResult *result, NSError *error) {
         if (!error) {
-            //do something
+            // 操作成功
         } else {
             NSLog(@"%@", error);
         }
     }];
 ```
-可变参数`100` 和 `"祈福"` 会自动替换查询语句中的问号位置（按照问号的先后出现顺序）。我们更推荐使用占位符语法，理论上会降低 CQL 转换的性能开销。
-关于 CQL 的详细介绍，参考 [Cloud Query Language 详细指南](cql_guide.html)。
+可变参数 `100` 和 `"祈福"` 会被自动替换到查询语句中的问号位置（按问号出现的先后顺序）。我们更推荐使用占位符语法，理论上这样会降低 CQL 转换的性能开销。
+
+关于 CQL 的详细介绍，请参考 [Cloud Query Language 详细指南](cql_guide.html)。
 
 ## 子类化
 
-LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通过`AVObject`访问到所有的数据还可以通过`objectForKey:`来获取任意字段. 在成熟的代码中,子类化有很多优势,包括减少代码,扩展性和支持自动补全. 子类化是可选的, 可以参照下面的例子:
+LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AVObject` 访问到所有的数据，用 `objectForKey:` 获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
 
-    AVObject *student=[AVObject objectWithClassName:@"Student"];
+子类化是可选的，请对照下面的例子来加深理解：
+
+    AVObject *student = [AVObject objectWithClassName:@"Student"];
     [student setObject:@"小明" forKey:@"name"];
     [student saveInBackground];
 
-可以改成这样:
+可改写成:
 
-    Student *student=[Student object];
-    student.name=@"小明";
+    Student *student = [Student object];
+    student.name = @"小明";
     [student saveInBackground];
 
-这样代码看起来是不是更优雅一些了?
+这样代码看起来是不是更简洁呢？
 
 ### 子类化的实现
 
-要实现子类化,需要下面几个步骤:
+要实现子类化，需要下面几个步骤：
 
-1. 导入 `AVObject+Subclass.h`
-2. 继承 `AVObject` 并实现 `AVSubclassing` 协议
-3. 实现类方法 `parseClassName`. 返回的字符串是原本要传给 `initWithClassName:` 的,并且以后就不需要再进行跟对象名称有关的配置了. 如果不实现,默认返回的是类的名字. **请注意: `AVUser`的子类化中 必须返回 `_User`**
-4. 在实例化子类之前调用 `[YourClass registerSubclass]`, **在app当前生命周期中,只需要调用一次**,所以
-建议在你的 `ApplicationDelegate` 中, 在 `[AVOSCloud setApplicationId:clientKey:]` 前后调用即可.
+1. 导入 `AVObject+Subclass.h`；
+2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
+3. 实现类方法 `parseClassName`（就是原先要传给 `initWithClassName:` 的字符串，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**）；
+4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 前后调用即可）。
 
 下面是实现 `Student` 子类化的例子:
-
 
 ```objc
   //Student.h
@@ -957,15 +961,13 @@ LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通�
   }
 ```
 
-
 ### 属性
 
-添加自定义的属性和方法到 `AVObject` 的子类可以更好的包含这个类的逻辑. 通过 `AVSubclassing`,你可以把所有的相关逻辑放到一个地方而不是用不同的用分开的类来表示业务逻辑和存储转换逻辑.
+为 `AVObject` 的子类添加自定义的属性和方法，可以更好地将这个类的逻辑封装起来。用 `AVSubclassing` 可以把所有的相关逻辑放在一起，这样不必再使用不同的类来区分业务逻辑和存储转换逻辑了。
 
-`AVObject` 支持动态 `synthesizer`, 就像 `NSManagedObject` 一样. 先正常的声明一个属性, 只是在 `.m` 文件中把 `@synthesize` 变成 `@dynamic`.
+`AVObject` 支持动态 synthesizer，就像 `NSManagedObject` 一样。先正常声明一个属性，只是在 .m 文件中把 `@synthesize` 变成 `@dynamic`。
 
-请看下面的例子 怎么添加一个年龄的属性
-
+请看下面的例子是怎么添加一个「年龄」属性：
 
 ```objc
   //Student.h
@@ -988,27 +990,30 @@ LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通�
   ......
 ```
 
+这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成： 
+```objc
+[student setAge:19]
+```
 
-这样就可以通过 `student.age=19` 这样的方式来读写age这个字段了, 当然也可以这样 `[student setAge:19]`.
+**注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
 
-**注意: 属性名字保持首字母小写!** 比如, 不要写成 `student.Age`，而是 `student.age`
+`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `BOOL` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。下面这个属性也是同样的情况：
 
-`NSNumber` 类型的属性可以被实现为 `NSNumber` 或者是它的原始数据类型(`int`,`BOOL` 等),在这个例子中, `[student objectForKey:@"age"]` 返回的是一个 `NSNumber` 类型,而直接取属性是 `int` 类型. 下面的这个属性同样适用:
+```objc
+@property BOOL isTeamMember;
+```
 
-    @property BOOL isTeamMember;
+你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
 
-
-你可以根据自己的需求来选择用哪种类型. 原始类型更易用而 `NSNumber` 支持 `nil` 值可以让结果更清晰易懂.
-
-值得一提的是，`AVRelation` 同样可以作为子类化的一个属性来使用,比如:
+注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
 
 ```objc
 @interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation * friends
+@property(retain) AVRelation *friends
   ......
 ```
 
-如果你需要更复杂的逻辑而不是简单的属性访问,也可以自己来这样实现:
+如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
 
 ```objc
   @dynamic iconFile;
@@ -1023,8 +1028,7 @@ LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通�
 
 ### 针对 AVUser 子类化的特别说明
 
-假如您现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
-
+假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
 
 ```objc
 @interface Student : AVUser<AVSubclassing>
@@ -1044,20 +1048,20 @@ LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通�
 
 ```objc
 [Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
-        Student * student = [AVUser currentUser];
+        Student *student = [AVUser currentUser];
         studen.displayName = @"YOUR_DISPLAY_NAME";
     }];
 ```
 
-
-
 ### 初始化子类
 
-创建一个子类实例,要使用 `object` 类方法. 要创建并关联到已有的对象请使用 `objectWithoutDataWithObjectId:` 类方法.
+创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithoutDataWithObjectId:` 类方法。
 
 ### 子类查询
 
-可以通过类方法 `query` 来得到这个子类的查询对象. 下面的例子查询年龄小于21岁的学生:
+使用类方法 `query` 可以得到这个子类的查询对象。
+
+例如，查询年龄小于 21 岁的学生：
 
 ```objc
   AVQuery *query = [Student query];
@@ -1071,36 +1075,41 @@ LeanCloud 设计的目标是让你的应用尽快的运行起来. 你可以通�
 ```
 
 ## ACL权限控制
-ACL(Access Control List)是最灵活和简单的应用数据安全管理方法。通俗的解释就是为每一个数据创建一个访问的白名单列表，只有在名单上的用户(AVUser)或者具有某种角色(AVRole)的用户才能被允许访问。为了更好地保证用户数据安全性，LeanCloud表中每一张都有一个ACL列。当然，LeanCloud还提供了进一步的读写权限控制。一个 User 必须拥有读权限（或者属于一个拥有读权限的 Role）才可以获取一个对象的数据，同时，一个 User 需要写权限（或者属于一个拥有写权限的 Role）才可以更改或者删除一个对象。
-以下列举了几种在LeanCloud常见的ACL使用范例：
+
+ACL（Access Control List）是一种最灵活而且简单的应用数据安全管理方法。通俗的解释就是为每一个数据创建一个访问的白名单列表，只有在名单上的用户（ `AVUser`）或者具有某种角色（`AVRole`）的用户才能被允许访问。为了更好地保证用户数据安全性，LeanCloud 的每一张表中都有一个 ACL 列。
+
+当然，LeanCloud 还提供了进一步的读写权限控制。一个 User 必须拥有读权限（或者属于一个拥有读权限的 Role）才可以获取一个对象的数据；同时，一个 User 需要写权限（或者属于一个拥有写权限的 Role）才可以更改或者删除一个对象。
+
+以下列举了几种在 LeanCloud 常见的 ACL 使用范例。
 
 ### 默认访问权限
-在没有显式指定的情况下，LeanCloud中的每一个对象都会有一个默认的ACL值。这个值代表了，所有的用户，对这个对象都是可读可写的。此时你可以在数据管理的表中ACL属性中看到这样的值:
+在没有显式指定的情况下，LeanCloud 中的每一个对象都会有一个默认的 ACL 值。这个值代表了所有的用户，对这个对象都是可读可写的。此时在 LeanCloud 账户的「数据管理」列表中的 ACL 属性列，会看到这样的值：
 
-```objc
+```json
     {"*":{"read":true,"write":true}}
 ```
 
-而在iOS代码中，这样的值对应的代码是：
+对应的 Objective-C 代码是：
 
 ```objc
-
     AVACL *acl = [AVACL ACL];
     [acl setPublicReadAccess:YES];
     [acl setPublicWriteAccess:YES];
-
 ```
-当然正如上文提到的，默认的ACL并不需要显式的指定。
+当然正如上文提到的，默认的 ACL 并不需要进行显式指定。
 
 ### 指定用户访问权限
-当一个用户在实现一个网盘类应用时，征对不同文件的私密性，用户就需要不同的文件访问权限。
-譬如公开的文件，每一个其他用户都有读的权限，然后仅仅只有创建者才拥有更改和删除的权限。
+当一个用户在实现一个网盘类应用时，针对不同文件的私密性，用户就需要不同的文件访问权限。譬如公开的文件，每一个其他用户都有读的权限，然后仅仅只有创建者才拥有更改和删除的权限。
 
 ```objc
 
     AVACL *acl = [AVACL ACL];
-    [acl setPublicReadAccess:YES]; //此处设置的是所有人的可读权限
-    [acl setWriteAccess:YES forUser:[AVUser currentUser]]; //而这里设置了文件创建者的写权限
+    
+    //此处设置的是所有人的可读权限
+    [acl setPublicReadAccess:YES]; 
+    
+    //而这里设置了文件创建者的写权限
+    [acl setWriteAccess:YES forUser:[AVUser currentUser]]; 
 
     AVObject * object = [AVObject objectWithClassName:@"iOSAclTest"];
 
@@ -1109,18 +1118,20 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 
 ```
 
-当然用户也会上传一些隐私文件,只有这些文件的创建者才对这些文件拥有读写权限
+当然用户也会上传一些隐私文件，只有这些文件的创建者才对这些文件拥有读写权限：
 
 ```objc
     [acl setWriteAccess:YES forUser:[AVUser currentUser]];
 ```
-注：一旦显式设置ACL，默认的ACL就会被覆盖
+注：一旦显式设置了 ACL，默认的 ACL 就会被覆盖。
 
 ### 指定角色访问权限
 
-#### AVUser与AVRole的从属关系
+#### AVUser 与 AVRole 的从属关系
+
 指定用户访问权限虽然很方便，但是依然会有局限性。
-以工资系统为例，一家公司的工资系统，工资最终的归属者和公司的出纳们只拥有工资的读权限，而公司的人事和老板才拥有全部的读写权限。当然你可以通过多次设置指定用户的访问权限来实现这一功能（多个用户的ACL设置是追加的而非覆盖）。
+
+以工资系统为例，一家公司的工资系统，工资最终的归属者和公司的出纳们只对工资有读的权限，而公司的人事和老板才拥有全部的读写权限。当然你可以通过多次设置指定用户的访问权限来实现这一功能（多个用户的 ACL 设置是追加的而非覆盖）。
 
 ```objc
     AVObect *salary = [AVObject objectWithClassName:@"Salary"];
@@ -1135,13 +1146,13 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 
     AVACL *acl = [AVACL ACL];
 
-    //4个人都有可读权限
+    //4 个人都有可读权限
     [acl setReadAccess:YES forUser:boss];
     [acl setReadAccess:YES forUser:hrWang];
     [acl setReadAccess:YES forUser:cashierZhou];
     [acl setReadAccess:YES forUser:me];
 
-    //只有2个人可写
+    //只有 2 个人可写
     [acl setWriteAccess:YES forUser:boss];
     [acl setWriteAccess:YES forUser:hrWang];
 
@@ -1151,9 +1162,9 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 
 ```
 
-但是这些涉及其中的人可能不止一个，也有离职换岗新员工的问题存在。这样的代码既不优雅，也太啰嗦,同样会很难维护。
-这个时候我们就引入了AVRole来解决这个问题。
-公司的员工可以成百上千，然而一个公司组织里的角色却能够在很长一段时间时间内相对稳定。
+但是要涉及其中的人可能不止一个，也有离职换岗新员工的问题存在。这样的代码既不优雅，也太啰嗦，同样会很难维护。这个时候我们就引入了 `AVRole` 来解决这个问题。
+
+公司的员工可以成百上千，然而一个公司组织里的角色却能够在很长一段时间内保持相对稳定。
 
 ```objc
     AVObect *salary = [AVObject objectWithClassName:@"Salary"];
@@ -1172,13 +1183,14 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 
     [[hr users] addObject:hrWang];
     [hr save];
-
-    [[cashier users] addObject:cashierZhou];//此处对应的是AVRole里面有一个叫做users的Relation字段
+    //此处对应的是 AVRole 里面有一个叫做 users 的 Relation 字段
+    [[cashier users] addObject:cashierZhou];
     [[cashier users] addObject:cashierGe];
     [cashier save];
 
     AVACL *acl = [AVACL ACL];
-    [acl setReadAccess:YES forUser:boss];//老板假设只有一个
+    //老板假设只有一个
+    [acl setReadAccess:YES forUser:boss];
     [acl setReadAccess:YES forUser:me];
 
     [acl setReadAccess:YES forRole:hr];
@@ -1191,13 +1203,13 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
     [salary save];
 ```
 
-当然如果考虑到一个角色(`AVRole`)里面有多少员工(`AVUser`)，编辑这些员工可需要做权限控制，`AVRole`同样也有`setACL`方法可以使用。
+当然如果考虑到一个角色（`AVRole`）里面有多少员工（`AVUser`），编辑这些员工所需要的权限控制，`AVRole` 同样也有 `setACL` 方法可以使用。
 
-#### AVRole之间的从属关系
+#### AVRole 之间的从属关系
 
-在讲清楚了用户与角色的关系后，我们还有一层角色与角色之间的关系。用下面的例子来理解可能会对我们有所帮助：
+在讲清楚了用户与角色的关系后，我们还有一层角色与角色之间的关系，下面的例子或许可以帮助你理解这个概念。
 
-一家创业公司有移动部门，部门下面有不同的小组，Android和iOS。而每个小组只拥有自己组的代码的读写权限。但是他们同时拥有核心库代码的读取权限。
+一家创业公司设有移动部门，该部门下面有不同的小组（Android 和 iOS），每个小组只对自己组的代码拥有「读写」权限，但他们同时对核心库代码拥有「读取」权限。
 
 ```objc
     AVRole *androidTeam = [AVRole roleWithName:@"AndroidTeam"];
