@@ -514,3 +514,37 @@ query.include(["post.author"])
 ```
 
 你可以多次使用 include 来构建一个有多个字段的查询, 这项功能同样适用于 leancloud.Query 的 helper 函数例如 first 和 get。
+
+#### 对象计数
+``
+如果你只是想查询满足一个 query 的结果集到底有多少对象, 但是你不需要得到它们, 你可以使用 count 来取代 find. 比如, 为了获得某个玩家到底玩过多少局游戏:
+
+```python
+query = leancloud.Query(GameScore)
+query.equal_to("playerName", "Sean Plott")
+count = query.count(){
+# The count request succeeded. Show the count
+print "Sean has played %d games" % count
+```
+
+对于超过 1000 个对象的类来说，count 操作会被时间限制所约束。它们可能会一直 返回超时错误，或者只是返回一个近似正确的值. 这样的话你应该更合理地规划你程序的结构来避免这种情况。
+
+#### 组合查询
+
+如果你想要查找满足一系列查询的对象, 你可以使用 leancloud.Query.or 方法来构建查询, 这样得到的结果是所有查询的并集。比如你想要找的玩家或者是有很多或者很少的胜利的时候, 你可以这样:
+
+```python
+lots_of_wins = leancloud.Query("Player")
+lots_of_wins.greater_than("wins", 150)
+
+few_wins = leancloud.Query("Player")
+few_wins.less_than("wins", 5)
+
+main_query = leancloud.Query.or(lots_of_wins, few_wins)
+results = mainQuery.find({
+# results contains a list of players that either have won a lot of games or won only a few games.
+```
+
+你也可以对 AV.Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
+
+请注意我们不会在组合查询的子查询中支持非过滤型的条件 (比如:limit,skip,ascending/descending,include)。
