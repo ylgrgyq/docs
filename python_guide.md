@@ -416,3 +416,101 @@ results = query.find()
 ```python
 result = query.first().fetch()
 ```
+
+#### 对数组值做查询
+
+对于 value 是数组的情况, 你可以这样查询数组中的值有 2 的情况的对象:
+
+```python
+# Find objects where the array in arrayKey contains 2.
+query.equal_to("arrayKey", 2)
+```
+
+你同样可以用下面的方式找到同时包含元素 2,3,4 的数组:
+
+```python
+# Find objects where the array in arrayKey contains all of the elements 2, 3, and 4.
+query.contains_all("arrayKey", [2, 3, 4])
+```
+
+#### 对字符串类型做查询
+
+使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像, 因为有索引所以对于大的数据集这个操作也是很高效的.
+
+```python
+# Finds barbecue sauces that start with "Big Daddy's".
+query = leancloud.Query(BarbecueSauce);
+query.starts_with("name", "Big Daddy's");
+```
+
+#### 关系查询
+
+对于查询关系型数据来说有几种不同的方式, 如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object, 你可以使用 equal_to, 就像对于别的数据类型一样. 举个例子, 如果每一个 Comment 在它的 post 字段都有一个 Post 对象, 你可以通过 如下的方式来获取一个 Post 的 comment:
+
+```python
+# Assume leancloud.Object my_post was previously created.
+query = leancloud.Query(Comment)
+query.equal_to("post", my_post)
+comments = query.find()
+# comments now contains the comments for my_post
+```
+
+如果你想得到其字段中包含的子对象满足另一个查询的结果, 你可以使用 matches_query 操作. 注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询, 所以对于大的数据集你可能需要小心构建你的查询, 否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment, 你可以:
+
+```python
+inner_query = leancloud.Query(Post)
+inner_query.exists("image")
+query = leancloud.Query(Comment)
+query.matches_query("post", inner_query)
+comments = query.find()
+# comments now contains the comments for posts with images.
+```
+
+如果你想要获取某字段中包含的子对象不满足指定查询的结果, 你可以使用 does_not_match_query. 例如，为了找到针对不含图片的 post 的 comment, 你可以这样:
+
+```python
+inner_query = leancloud.Query(Post)
+inner_query.exists("image")
+query = leancloud.Query(Comment)
+query.does_not_match_query("post", inner_query)
+query.find()
+# comments now contains the comments for posts without images.
+```
+
+你可以同样用 objectId 来做关系查询
+
+```python
+post = Post()
+post.id = "520c7e1ae4b0a3ac9ebe326a"
+query.equal_to("post", post)
+```
+
+在某些情况下, 你可能希望查询结果中包含多个相关联的其他数据类型。你可以使用 include 方法. 比如: 假设你想获得最新的 10 个 comment, 你可能想同时获取它们相关的 post 数据:
+
+```python
+query = leancloud.Query(Comment)
+
+# Retrieve the most recent ones
+query.descending("createdAt")
+
+# Only retrieve the last ten
+query.limit(10)
+
+# Include the post data with each comment
+query.include("post")
+
+comments = query.find()
+# Comments now contains the last ten comments, and the "post" field
+# has been populated. For example:
+for comment in comments:
+    # This does not require a network access.
+    post = comment.get("post")
+```
+
+你同样可以用点操作符来做多级查询, 如果你想同时找到 comment 的 post 和相应 post 的 author, 你可以这样做:
+
+```python
+query.include(["post.author"])
+```
+
+你可以多次使用 include 来构建一个有多个字段的查询, 这项功能同样适用于 leancloud.Query 的 helper 函数例如 first 和 get。
