@@ -18,10 +18,10 @@
 
 ```
   Step1.UserA 创建 AVSession 与 LeanCloud 服务端建立长连接
-  Step2.UserA 告诉 LeanCloud 服务端我要关注（Watch）UserB
+  Step2.UserA 告诉 LeanCloud 服务端我要关注（Watch）UserB （可选，仅当应用开启了[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)）
   Step3.UserA 发送消息给 LeanCloud 服务端，因为在第二步的时候，已经关注了 UserB，LeanCloud 服务端就会把这条信息发送给 UserB
   Step4.UserB 想接受到别人发的消息，也需要创建 AVSession 与 LeanCloud 服务端建立长连接
-  Step5.UserB 告诉 LeanCloud 服务端我也要关注（Watch）UserA
+  Step5.UserB 告诉 LeanCloud 服务端我也要关注（Watch）UserA （可选，仅当应用开启了[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)）
   Step6.UserB 就能收到第3步，由 UserA 发来的消息了。
 ```
 ### 场景实现
