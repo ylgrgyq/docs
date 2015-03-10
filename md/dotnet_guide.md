@@ -2,6 +2,9 @@
 
 如果您还没有安装 LeanCloud .NET SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，我们的 SDK 支持 .NET 4.5及更高版本。我们的 SDK 支持用.NET开发的 Windows Phone 8（已发布[正式版](https://www.nuget.org/packages/AVOSCloud.Phone/)），Windows Store（SDK开发中），Windows Desktop（已经在Nuget上发布了[公测版](https://www.nuget.org/packages/AVOSCloud.NetFx45/)）应用。
 
+如果你希望从项目中学习，请前往 [Windows Phone Demos](https://github.com/leancloud/leancloud-demos#windows-phone) 。
+
+
 ## 快速入门
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。

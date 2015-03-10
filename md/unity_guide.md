@@ -1,6 +1,8 @@
 # Unity 指南
 如果您还没有安装 LeanCloud Unity SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，我们的 SDK 支持 Unity 4.2 及更高版本。我们的 SDK 支持用Unity开发的iOS，Andorid，Windows Phone 8，Windows Store，Windows Desktop，以及网页游戏。
 
+如果你希望从项目中学习，请前往 [Unity SDK Demos](https://github.com/leancloud/leancloud-demos#unity) 。
+
 
 ## 介绍
 Unity本身支持Mono跨平台的.NET语言的解决方案，所以LeanCloud采用了C#来实现客户端的SDK。如果您有.NET方面的编程经验，您会很容易就掌握LeanCloud Unity SDK接口的风格以及用法。
