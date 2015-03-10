@@ -619,3 +619,63 @@ thumbnail_url = file.get_thumbnail_url(width='100', height='100')
 ### 删除文件
 
 获取了一个 File 对象之后，只要调用 destory 方法即可在服务器上删除此 File 对象。
+
+## 用户
+
+绝大部分应用都有「用户」这个一概念。我们提供了 leancloud.User 类，可以用来处理用户相关的逻辑。
+
+与 File 类不同，User 类是 Object 的子类，您可以像 Object 一样使用 User 类。不过 User 类有一些用户系统相关的功能。
+
+### 属性
+
+User 类有一些与 Object 类不一样的属性：
+
+- username : 用户的用户名 (必须提供)
+- password : 用户的密码 (在注册的时候必须提供)
+- email : 用户的 email(可选)
+- mobilePhoneNumber: 用户的手机号码（可选）
+- 我们会在下面的用例中详细介绍细节
+
+### 创建用户
+
+创建用户就是常见应用提供的注册功能。
+
+```python
+from leancloud import User
+
+user = User();
+user.set("username", "my name");
+user.set("password", "my pass");
+user.set("email", "email@example.com");
+
+# other fields can be set just like with leancloud.Object
+user.set("phone", "415-392-0202");
+
+user.sign_up()
+# Hooray! Let them use the app now.
+```
+
+这个调用会在在你的应用中创建一个新的用户。在这样做之前，同样会确认用户名和 email 在应用内都是唯一的。为了安全我们会将密码散列过后存储在 LeanCloud 中。我们从不会将用户密码以明文存储，我们也不会用明文向任何客户端发送密码。
+
+注意我们使用了 sign_up 方法而不是 save 方法。新的 User 永远应该使用 sign_up 方法来新建。而随后的用户的信息更新可以调用 save 来做。
+
+如果一个 sign_up 没有成功的话，方法调用会抛出异常。最常见的问题是 username 或者 email 已经被其他用户所使用了。你应该清楚地反馈给你的用户，让他们再次用一个不同的用户名来注册。
+
+你也可以使用 email 来作为用户名，只要求你的用户输入他们的 email 但是同时自动填充好 username 属性就可以了，User 会跟原来一样工作。我们会在下面的重设密码环节再次说明这个细节。
+
+### 登陆
+
+在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登陆。
+
+```python
+User.login("myname", "mypass")
+```
+
+### 修改密码
+
+用户修改密码，跟修改其他属性没有什么区别，前提是要求登录状态：
+
+```python
+user.set('password', 'new password');
+user.save()
+```
