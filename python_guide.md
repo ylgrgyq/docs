@@ -55,9 +55,7 @@ import leancloud
 leancloud.init('APP_ID', 'APP_KEY/MASTER_KEY')
 ```
 
-## 数据存储
-
-### 对象
+## 对象
 
 您可以通过子类化 `leancloud.Object` 来创建自己的类，使用此类生成对象再保存，将会将数据保存到 LeanCloud 数据服务上，类名对应的表中。
 
@@ -83,7 +81,7 @@ class GameScore(Object):
 # or: GameScore = Object.extend('GameScore')
 ```
 
-#### 保存对象
+### 保存对象
 
 调用实例对象的save方法，即可保存对象。
 
@@ -108,7 +106,7 @@ game_score.created_at    # => 此对象创建的时间，类型为 datetime.date
 game_score.updated_at    # => 此对象最后更新的时间，类型为 datetime.datetime，对应控制台的 updatedAt
 ```
 
-#### 检索对象
+### 检索对象
 
 检索对象可以使用 leancloud.Query 类来进行。
 
@@ -121,7 +119,7 @@ game_score = query.get('520ca0bbe4b07e8e0e847e31')
 print game_score.get('playerName')
 ```
 
-#### 更新对象
+### 更新对象
 
 更新对象的时候，直接修改对象上对应字段的值，然后再调用`save`方法即可。
 
@@ -138,7 +136,7 @@ game_score.set('score', 43)
 game_score.save()
 ```
 
-##### 计数操作
+### 计数操作
 
 很多应用场景都需要进行一些计数操作，比如记录游戏分数，论坛帖子回帖数等等。如果直接从服务器获取这些字段的值，然后简单的加减值再进行保存，这个时候很有可能服务器上的数据已经有了更新，会将服务器的数据覆盖掉。这往往不是我们想要的结果。因此可以使用`increment`方法来进行计数操作，我们只需要将需要增减的值传递给服务器就可以了。
 
@@ -155,7 +153,7 @@ game_score.increment('score', 1)
 game_score.save()
 ```
 
-##### 删除字段
+### 删除字段
 
 有时候需要将对象上的一个字段设置为空，可以使用`unset`方法。
 
@@ -164,7 +162,7 @@ game_score.unset('score')
 game_score.save()
 ```
 
-#### 删除对象
+### 删除对象
 
 如果你想要删除服务器上的一个对象，可以使用`destroy`方法。
 
@@ -172,11 +170,11 @@ game_score.save()
 game_score.destroy()
 ```
 
-#### 关系数据
+### 关系数据
 
 leancloud 后端存储支持一对一，一对多，多对多数据建模。
 
-##### 一对一关系和一对多关系
+#### 一对一关系和一对多关系
 
 一对一关系和一对多关系都可以通过在一个`Object`对象内保存另一个对象来实现。比如一个`Post`下可以允许多个`Comment`对象，一个`Comment`只能属于一个`Post`对象，可以这样实现：
 
@@ -257,7 +255,7 @@ query = Relation.reverse_query('User', 'likes', post)
 users = query.find()
 ```
 
-#### 数据类型
+### 数据类型
 
 LeanCloud Python SDK 支持大部分 Python 内置类型。
 
@@ -277,9 +275,9 @@ obj.save()
 
 需要注意的是，Object 对象序列化之后的大小不应该超过 128KB。
 
-### 查询
+## 查询
 
-#### 基础查询
+### 基础查询
 
 我们可以通过构造 `leancloud.Query` 对象，来进行复杂查询。
 
@@ -293,7 +291,7 @@ query.equal_to('playerName', 'Dan Stemkoski')
 gameScores = query.find()
 ```
 
-#### 查询条件
+### 查询条件
 
 有几种方式来设置查询条件。 你可以用 notEqual 方法和一个特定的值来过滤不符合要求的对象:
 
@@ -417,7 +415,7 @@ results = query.find()
 result = query.first().fetch()
 ```
 
-#### 对数组值做查询
+### 对数组值做查询
 
 对于 value 是数组的情况, 你可以这样查询数组中的值有 2 的情况的对象:
 
@@ -433,7 +431,7 @@ query.equal_to("arrayKey", 2)
 query.contains_all("arrayKey", [2, 3, 4])
 ```
 
-#### 对字符串类型做查询
+### 对字符串类型做查询
 
 使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像, 因为有索引所以对于大的数据集这个操作也是很高效的.
 
@@ -443,7 +441,7 @@ query = leancloud.Query(BarbecueSauce);
 query.starts_with("name", "Big Daddy's");
 ```
 
-#### 关系查询
+### 关系查询
 
 对于查询关系型数据来说有几种不同的方式, 如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object, 你可以使用 equal_to, 就像对于别的数据类型一样. 举个例子, 如果每一个 Comment 在它的 post 字段都有一个 Post 对象, 你可以通过 如下的方式来获取一个 Post 的 comment:
 
@@ -515,7 +513,7 @@ query.include(["post.author"])
 
 你可以多次使用 include 来构建一个有多个字段的查询, 这项功能同样适用于 leancloud.Query 的 helper 函数例如 first 和 get。
 
-#### 对象计数
+### 对象计数
 ``
 如果你只是想查询满足一个 query 的结果集到底有多少对象, 但是你不需要得到它们, 你可以使用 count 来取代 find. 比如, 为了获得某个玩家到底玩过多少局游戏:
 
@@ -548,3 +546,18 @@ results = mainQuery.find({
 你也可以对 AV.Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
 
 请注意我们不会在组合查询的子查询中支持非过滤型的条件 (比如:limit,skip,ascending/descending,include)。
+
+#### 删除查询结果
+
+如果你想将查询出来的对象都删除，或者删除符合查询条件的所有对象，可以调用 destroyAll 方法：
+
+```python
+query.destroy_all()
+# delete all objects by this query successfully.
+```
+
+## 文件
+
+leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题. 最常见的用例就是存储图片, 但是你可 以随意用来存储文档, 视频, 音乐或者任何二进制数据。
+
+### 创建
