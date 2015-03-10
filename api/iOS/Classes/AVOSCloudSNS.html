@@ -1,0 +1,1224 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
+		<title>AVOSCloudSNS Class Reference</title>
+		<meta id="xcode-display" name="xcode-display" content="render"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
+		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
+		<meta name="generator" content="appledoc 2.2 (build 963)" />
+	</head>
+	<body>
+		<header id="top_header">
+			<div id="library" class="hideInXcode">
+				<h1><a id="libraryTitle" href="../index.html">AVOS Cloud SDK </a></h1>
+				<a id="developerHome" href="../index.html">AVOS Systems, Inc</a>
+			</div>
+			
+			<div id="title" role="banner">
+				<h1 class="hideInXcode">AVOSCloudSNS Class Reference</h1>
+			</div>
+			<ul id="headerButtons" role="toolbar">
+				<li id="toc_button">
+					<button aria-label="Show Table of Contents" role="checkbox" class="open" id="table_of_contents"><span class="disclosure"></span>Table of Contents</button>
+				</li>
+				<li id="jumpto_button" role="navigation">
+					<select id="jumpTo">
+	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
+	
+	
+	
+	
+	<option value="tasks">Tasks</option>
+	
+	
+	
+	
+	
+	
+	
+	<option value="class_methods">Class Methods</option>
+	
+	<option value="//api/name/doesUserExpireOfPlatform:">&nbsp;&nbsp;&nbsp;&nbsp;+ doesUserExpireOfPlatform:</option>
+	
+	<option value="//api/name/handleOpenURL:">&nbsp;&nbsp;&nbsp;&nbsp;+ handleOpenURL:</option>
+	
+	<option value="//api/name/loginManualyWithCallback:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginManualyWithCallback:</option>
+	
+	<option value="//api/name/loginManualyWithCallback:toPlatform:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginManualyWithCallback:toPlatform:</option>
+	
+	<option value="//api/name/loginManualyWithURL:callback:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginManualyWithURL:callback:</option>
+	
+	<option value="//api/name/loginWithCallback:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginWithCallback:</option>
+	
+	<option value="//api/name/loginWithCallback:toPlatform:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginWithCallback:toPlatform:</option>
+	
+	<option value="//api/name/loginWithURL:callback:">&nbsp;&nbsp;&nbsp;&nbsp;+ loginWithURL:callback:</option>
+	
+	<option value="//api/name/logout:">&nbsp;&nbsp;&nbsp;&nbsp;+ logout:</option>
+	
+	<option value="//api/name/refreshToken:withCallback:">&nbsp;&nbsp;&nbsp;&nbsp;+ refreshToken:withCallback:</option>
+	
+	<option value="//api/name/setupPlatform:withAppKey:andAppSecret:andRedirectURI:">&nbsp;&nbsp;&nbsp;&nbsp;+ setupPlatform:withAppKey:andAppSecret:andRedirectURI:</option>
+	
+	<option value="//api/name/shareText:andLink:andImage:toPlatform:withCallback:andProgress:">&nbsp;&nbsp;&nbsp;&nbsp;+ shareText:andLink:andImage:toPlatform:withCallback:andProgress:</option>
+	
+	<option value="//api/name/shareText:andLink:toPlatform:withCallback:andProgress:">&nbsp;&nbsp;&nbsp;&nbsp;+ shareText:andLink:toPlatform:withCallback:andProgress:</option>
+	
+	<option value="//api/name/userInfo:">&nbsp;&nbsp;&nbsp;&nbsp;+ userInfo:</option>
+	
+	
+	
+	
+	
+</select>
+				</li>
+			</ul>
+		</header>
+		<nav id="tocContainer" class="isShowingTOC">
+			<ul id="toc" role="tree">
+				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
+
+
+
+<li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+</ul></li>
+
+
+
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/doesUserExpireOfPlatform:">doesUserExpireOfPlatform:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/handleOpenURL:">handleOpenURL:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginManualyWithCallback:">loginManualyWithCallback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginManualyWithCallback:toPlatform:">loginManualyWithCallback:toPlatform:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginManualyWithURL:callback:">loginManualyWithURL:callback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginWithCallback:">loginWithCallback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginWithCallback:toPlatform:">loginWithCallback:toPlatform:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/loginWithURL:callback:">loginWithURL:callback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/logout:">logout:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/refreshToken:withCallback:">refreshToken:withCallback:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setupPlatform:withAppKey:andAppSecret:andRedirectURI:">setupPlatform:withAppKey:andAppSecret:andRedirectURI:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/shareText:andLink:andImage:toPlatform:withCallback:andProgress:">shareText:andLink:andImage:toPlatform:withCallback:andProgress:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/shareText:andLink:toPlatform:withCallback:andProgress:">shareText:andLink:toPlatform:withCallback:andProgress:</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/userInfo:">userInfo:</a></span></li>
+	
+</ul></li>
+
+
+
+
+			</ul>
+		</nav>
+		<article>
+			<div id="contents" class="isShowingTOC" role="main">
+				<a title="AVOSCloudSNS Class Reference" name="top"></a>
+				<div class="main-navigation navigation-top">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="header">
+					<div class="section-header">
+						<h1 class="title title-header">AVOSCloudSNS Class Reference</h1>
+					</div>		
+				</div>
+				<div id="container">	
+					
+					<div class="section section-specification"><table cellspacing="0"><tbody>
+						<tr>
+	<td class="specification-title">Inherits from</td>
+	<td class="specification-value">NSObject</td>
+</tr><tr>
+	<td class="specification-title">Declared in</td>
+	<td class="specification-value">AVOSCloudSNS.h</td>
+</tr>
+						</tbody></table></div>
+					
+                    
+                    
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>AVOSCloudSNS 是一个轻量级的社交平台助手
+几行代码就可以实现登录和发布内容</p>
+					</div>
+					
+					
+					
+					
+					
+					<div class="section section-tasks">
+						<a title="Tasks" name="tasks"></a>
+						<h2 class="subtitle subtitle-tasks">Tasks</h2>
+						
+						
+						
+						
+
+						<ul class="task-list">
+							<li>
+	<span class="tooltip">
+		<code><a href="#//api/name/setupPlatform:withAppKey:andAppSecret:andRedirectURI:">+&nbsp;setupPlatform:withAppKey:andAppSecret:andRedirectURI:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginManualyWithCallback:">+&nbsp;loginManualyWithCallback:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginManualyWithCallback:toPlatform:">+&nbsp;loginManualyWithCallback:toPlatform:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginWithCallback:">+&nbsp;loginWithCallback:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginWithCallback:toPlatform:">+&nbsp;loginWithCallback:toPlatform:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginManualyWithURL:callback:">+&nbsp;loginManualyWithURL:callback:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/loginWithURL:callback:">+&nbsp;loginWithURL:callback:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/shareText:andLink:toPlatform:withCallback:andProgress:">+&nbsp;shareText:andLink:toPlatform:withCallback:andProgress:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/shareText:andLink:andImage:toPlatform:withCallback:andProgress:">+&nbsp;shareText:andLink:andImage:toPlatform:withCallback:andProgress:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/logout:">+&nbsp;logout:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/handleOpenURL:">+&nbsp;handleOpenURL:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/userInfo:">+&nbsp;userInfo:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/doesUserExpireOfPlatform:">+&nbsp;doesUserExpireOfPlatform:</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/refreshToken:withCallback:">+&nbsp;refreshToken:withCallback:</a></code>
+	</span>
+	
+	
+</li>
+						</ul>
+						
+					</div>
+					
+					
+					
+					
+					
+					
+					
+					<div class="section section-methods">
+						<a title="Class Methods" name="class_methods"></a>
+						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						
+						<div class="section-method">
+	<a name="//api/name/doesUserExpireOfPlatform:" title="doesUserExpireOfPlatform:"></a>
+	<h3 class="subsubtitle method-title">doesUserExpireOfPlatform:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>判断指定的社交平台已经缓存的用户信息是否过期</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)doesUserExpireOfPlatform:(AVOSCloudSNSType)<em>type</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>是否过期</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>判断指定的社交平台已经缓存的用户信息是否过期</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/handleOpenURL:" title="handleOpenURL:"></a>
+	<h3 class="subsubtitle method-title">handleOpenURL:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>捕获SSO登录后返回数据</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)handleOpenURL:(NSURL *)<em>url</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>url</em></dt>
+			<dd><p>回调本app的URL</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>捕获SSO登录后返回数据</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginManualyWithCallback:" title="loginManualyWithCallback:"></a>
+	<h3 class="subsubtitle method-title">loginManualyWithCallback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用社交平台登录, 并获取手动显示登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (UIViewController *)loginManualyWithCallback:(AVSNSResultBlock)<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>用于显示登录界面的UIViewController,如果可以SSO登录 则返回nil.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>用社交平台登录, 并获取手动显示登录界面</p><div class="warning"><p><strong>Warning:</strong> 需要在回调后手动关闭此UIViewController.</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginManualyWithCallback:toPlatform:" title="loginManualyWithCallback:toPlatform:"></a>
+	<h3 class="subsubtitle method-title">loginManualyWithCallback:toPlatform:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用指定的社交平台登录, 并获取手动显示登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (UIViewController *)loginManualyWithCallback:(AVSNSResultBlock)<em>callback</em> toPlatform:(AVOSCloudSNSType)<em>type</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>用于显示登录界面的UIViewController,如果可以SSO登录 则返回nil.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>用指定的社交平台登录, 并获取手动显示登录界面</p><div class="warning"><p><strong>Warning:</strong> 需要在回调后手动关闭此UIViewController.</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginManualyWithURL:callback:" title="loginManualyWithURL:callback:"></a>
+	<h3 class="subsubtitle method-title">loginManualyWithURL:callback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>通过后台生成的登录url显示登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (UIViewController *)loginManualyWithURL:(NSURL *)<em>url</em> callback:(AVSNSResultBlock)<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>url</em></dt>
+			<dd><p>后台生成的登录url</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>用于显示登录界面的UIViewController.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>通过后台生成的登录url显示登录界面</p><div class="warning"><p><strong>Warning:</strong> 需要在回调后手动关闭此UIViewController.</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginWithCallback:" title="loginWithCallback:"></a>
+	<h3 class="subsubtitle method-title">loginWithCallback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用社会化平台登录,并自动弹出登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)loginWithCallback:(AVSNSResultBlock)<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>用社会化平台登录,并自动弹出登录界面</p><p>如果配置了SSO的相关数据会自动尝试用SSO来打开官方应用登录,如果不成功则用传统的方式在本App界面中完成登录过程</p><div class="warning"><p><strong>Warning:</strong> 如果主窗口有<code>rootViewController</code>,则会自动通过presentModalViewController打开. <strong>注意:</strong> presentModalViewController与正在进行的其它系统动画同时出现时会在Log里出现<code>Warning: ... while a presentation or dismiss is in progress!</code>类似的警告,但是不会影响使用</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginWithCallback:toPlatform:" title="loginWithCallback:toPlatform:"></a>
+	<h3 class="subsubtitle method-title">loginWithCallback:toPlatform:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>用指定的社交平台登录,并自动弹出登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)loginWithCallback:(AVSNSResultBlock)<em>callback</em> toPlatform:(AVOSCloudSNSType)<em>type</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>用指定的社交平台登录,并自动弹出登录界面</p><div class="warning"><p><strong>Warning:</strong> 如果主窗口有<code>rootViewController</code>,则会自动通过presentModalViewController打开. <strong>注意:</strong> presentModalViewController与正在进行的其它系统动画同时出现时会在Log里出现<code>Warning: ... while a presentation or dismiss is in progress!</code>类似的警告,但是不会影响使用</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/loginWithURL:callback:" title="loginWithURL:callback:"></a>
+	<h3 class="subsubtitle method-title">loginWithURL:callback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>通过后台生成的登录url显示登录界面</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)loginWithURL:(NSURL *)<em>url</em> callback:(AVSNSResultBlock)<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>url</em></dt>
+			<dd><p>后台生成的登录url</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>通过后台生成的登录url显示登录界面</p><div class="warning"><p><strong>Warning:</strong> 如果主窗口有<code>rootViewController</code>,则会自动通过presentModalViewController打开. <strong>注意:</strong> presentModalViewController与正在进行的其它系统动画同时出现时会在Log里出现<code>Warning: ... while a presentation or dismiss is in progress!</code>类似的警告,但是不会影响使用</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/logout:" title="logout:"></a>
+	<h3 class="subsubtitle method-title">logout:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>注销指定的社交平台绑定的账号</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)logout:(AVOSCloudSNSType)<em>type</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>注销指定的社交平台绑定的账号</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/refreshToken:withCallback:" title="refreshToken:withCallback:"></a>
+	<h3 class="subsubtitle method-title">refreshToken:withCallback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>刷新用户授权时间</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)refreshToken:(AVOSCloudSNSType)<em>type</em> withCallback:(AVSNSResultBlock)<em>callback</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>登录结果回调</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>刷新用户授权时间</p><p>如果当前用户授权没有过期,则无需用户操作, 登录过程一闪而过. 如果授权过期,则需要用户重新授权</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/setupPlatform:withAppKey:andAppSecret:andRedirectURI:" title="setupPlatform:withAppKey:andAppSecret:andRedirectURI:"></a>
+	<h3 class="subsubtitle method-title">setupPlatform:withAppKey:andAppSecret:andRedirectURI:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>设置平台所需要的参数</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)setupPlatform:(AVOSCloudSNSType)<em>type</em> withAppKey:(NSString *)<em>appkey</em> andAppSecret:(NSString *)<em>appsec</em> andRedirectURI:(NSString *)<em>redirect_uri</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>平台类型</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>appkey</em></dt>
+			<dd><p>该平台分配的AppKey</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>appsec</em></dt>
+			<dd><p>该平台分配的AppSecret</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>redirect_uri</em></dt>
+			<dd><p>该平台上设置的回调地址 (QQ可以nil, 因为QQ没有这个设置选项. 新浪微博必填!)</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>设置平台所需要的参数</p><div class="warning"><p><strong>Warning:</strong> 如果不进行设置, 则用<a href="../Classes/AVOSCloud.html"><code>AVOSCloud</code></a>进行登录认证.</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/shareText:andLink:andImage:toPlatform:withCallback:andProgress:" title="shareText:andLink:andImage:toPlatform:withCallback:andProgress:"></a>
+	<h3 class="subsubtitle method-title">shareText:andLink:andImage:toPlatform:withCallback:andProgress:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>分享文字和图片到指定社交平台</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)shareText:(NSString *)<em>text</em> andLink:(NSString *)<em>linkUrl</em> andImage:(UIImage *)<em>image</em> toPlatform:(AVOSCloudSNSType)<em>type</em> withCallback:(AVSNSResultBlock)<em>callback</em> andProgress:(AVSNSProgressBlock)<em>progressBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>text</em></dt>
+			<dd><p>文字内容</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>linkUrl</em></dt>
+			<dd><p>链接地址(可选)</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>image</em></dt>
+			<dd><p>图片 (将会被JPEG压缩0.8)</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>结果回调</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progressBlock</em></dt>
+			<dd><p>进度回调(可选)</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>分享文字和图片到指定社交平台</p><div class="warning"><p><strong>Warning:</strong> 目前只支持新浪微博</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/shareText:andLink:toPlatform:withCallback:andProgress:" title="shareText:andLink:toPlatform:withCallback:andProgress:"></a>
+	<h3 class="subsubtitle method-title">shareText:andLink:toPlatform:withCallback:andProgress:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>分享文字到指定社交平台</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (void)shareText:(NSString *)<em>text</em> andLink:(NSString *)<em>linkUrl</em> toPlatform:(AVOSCloudSNSType)<em>type</em> withCallback:(AVSNSResultBlock)<em>callback</em> andProgress:(AVSNSProgressBlock)<em>progressBlock</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>text</em></dt>
+			<dd><p>文字内容</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>linkUrl</em></dt>
+			<dd><p>链接地址(可选)</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>结果回调</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>progressBlock</em></dt>
+			<dd><p>进度回调(可选)</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>分享文字到指定社交平台</p><div class="warning"><p><strong>Warning:</strong> 目前只支持新浪微博</p></div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/userInfo:" title="userInfo:"></a>
+	<h3 class="subsubtitle method-title">userInfo:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>获取指定的社交平台已经缓存的用户信息</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (NSDictionary *)userInfo:(AVOSCloudSNSType)<em>type</em></code></div>
+
+    
+	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>type</em></dt>
+			<dd><p>指定平台类型</p></dd>
+		</dl>
+		
+	</div>
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>包含用户信息的字典, 如果返回nil则没有绑定的用户. 包括常用字段, 用户ID:<code>id</code>, 用户名:<code>username</code>, 平台类型:<code>type</code>, 头像:<code>avatar</code>, 过期时间:<code>expires_at</code>, token:<code>access_token</code>, 用户原始信息:<code>raw-user</code></p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>获取指定的社交平台已经缓存的用户信息</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudSNS.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+					</div>
+					
+					
+					
+					
+                    
+                    
+				</div>
+				<div class="main-navigation navigation-bottom">
+					<ul>
+	<li><a href="../index.html">Index</a></li>
+	<li><a href="../hierarchy.html">Hierarchy</a></li>
+</ul>
+				</div>
+				<div id="footer">
+					<hr />
+					<div class="footer-copyright">
+						<p><span class="copyright">&copy; 2015 AVOS Systems, Inc. All rights reserved. (Last updated: 2015-01-14)</span><br />
+						
+						<span class="generator">Generated by <a href="http://appledoc.gentlebytes.com">appledoc 2.2 (build 963)</a>.</span></p>
+						
+					</div>
+				</div>
+			</div>
+		</article>
+		<script type="text/javascript">
+			function jumpToChange()
+			{
+				window.location.hash = this.options[this.selectedIndex].value;
+			}
+			
+			function toggleTOC()
+			{
+				var contents = document.getElementById('contents');
+				var tocContainer = document.getElementById('tocContainer');
+				
+				if (this.getAttribute('class') == 'open')
+				{
+					this.setAttribute('class', '');
+					contents.setAttribute('class', '');
+					tocContainer.setAttribute('class', '');
+					
+					window.name = "hideTOC";
+				}
+				else
+				{
+					this.setAttribute('class', 'open');
+					contents.setAttribute('class', 'isShowingTOC');
+					tocContainer.setAttribute('class', 'isShowingTOC');
+					
+					window.name = "";
+				}
+				return false;
+			}
+			
+			function toggleTOCEntryChildren(e)
+			{
+				e.stopPropagation();
+				var currentClass = this.getAttribute('class');
+				if (currentClass == 'children') {
+					this.setAttribute('class', 'children open');
+				}
+				else if (currentClass == 'children open') {
+					this.setAttribute('class', 'children');
+				}
+				return false;
+			}
+			
+			function tocEntryClick(e)
+			{
+				e.stopPropagation();
+				return true;
+			}
+			
+			function init()
+			{
+				var selectElement = document.getElementById('jumpTo');
+				selectElement.addEventListener('change', jumpToChange, false);
+				
+				var tocButton = document.getElementById('table_of_contents');
+				tocButton.addEventListener('click', toggleTOC, false);
+				
+				var taskTreeItem = document.getElementById('task_treeitem');
+				if (taskTreeItem.getElementsByTagName('li').length > 0)
+				{
+					taskTreeItem.setAttribute('class', 'children');
+					taskTreeItem.firstChild.setAttribute('class', 'disclosure');
+				}
+				
+				var tocList = document.getElementById('toc');
+				
+				var tocEntries = tocList.getElementsByTagName('li');
+				for (var i = 0; i < tocEntries.length; i++) {
+					tocEntries[i].addEventListener('click', toggleTOCEntryChildren, false);
+				}
+				
+				var tocLinks = tocList.getElementsByTagName('a');
+				for (var i = 0; i < tocLinks.length; i++) {
+					tocLinks[i].addEventListener('click', tocEntryClick, false);
+				}
+				
+				if (window.name == "hideTOC") {
+					toggleTOC.call(tocButton);
+				}
+			}
+			
+			window.onload = init;
+			
+			// If showing in Xcode, hide the TOC and Header
+			if (navigator.userAgent.match(/xcode/i)) {
+				document.getElementById("contents").className = "hideInXcode"
+				document.getElementById("tocContainer").className = "hideInXcode"
+				document.getElementById("top_header").className = "hideInXcode"
+			}
+			
+		</script>
+	</body>
+</html>

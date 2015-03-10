@@ -1,0 +1,37 @@
+--- layout: download.swig ---
+<div ng-controller="DemoCtrl">
+  <div class="row">
+    <div class="col-md-12">
+      <h1 style="margin-top: 0;">
+        Demo <span class="small"> <a href="https://download.leancloud.cn/demo/" class="text-warning small">GitHub 太慢 ？直接在 LeanCloud 下载</a></span>
+      </h1>
+      <div class="btn-group">
+        <a class="btn btn-default " ng-click="setCurrentType('all')" ng-class="{'active':currentSDKType == 'all'}" href="#/all">
+          所有平台
+        </a>
+        <a class="btn btn-default " ng-repeat="k in keys(plats)"  ng-click="setCurrentType(k)" ng-class="{'active':currentSDKType == k}" href="#/{{k}}">
+          {{plats[k]}}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-4" ng-repeat ="demo in displayDemos">
+      <div class="demo-card">
+        <h1>
+          {{demo.name}}
+          <span class="pull-right label label-primary" ng-show="demo.type=='ios'">iOS</span>
+          <span class="pull-right label label-success" ng-show="demo.type=='android'">Android</span>
+          <span class="pull-right label label-warning" ng-show="demo.type=='unity'">Unity</span>
+          <span class="pull-right label label-danger" ng-show="demo.type=='winphone'">Windows Phone</span>
+        </h1>
+        <p class="demo-desc">{{demo.desc}}</p>
+        <!-- <a href="{{demo.downlink}}" class="btn btn-default">下载</a>
+        <a href="{{demo.mdPath}}" target="_blank" class="btn btn-default">README.md</a> -->
+        <a href="{{demo.mdPath}}" target="_blank" class="btn btn-default">详细</a>
+      </div>
+      <!-- .demo-card -->
+    </div>
+  </div>
+</div>
