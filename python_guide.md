@@ -561,3 +561,61 @@ query.destroy_all()
 leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题. 最常见的用例就是存储图片, 但是你可 以随意用来存储文档, 视频, 音乐或者任何二进制数据。
 
 ### 创建
+
+我们可以通过一个 Python 内置的 StringIO 、 cStringIO 、 buffer 或者 file 类型对象来创建 leancloud.File。
+
+```python
+from leancloud import File
+from StringIO import StringIO
+
+file1 = File('fileFromStringIO', StringIO('data'))
+file2 = File('fileFromLocalFile', open('~/lena.png'))  # 生产环境代码请务必记得 close 打开的文件
+file3 = File('fileFromBuffer', buffer('\x42\x43\x44'))
+
+# 还可以指定文件的mime type，如果不指定的话会根据文件名后缀来猜测
+file4 = File('truth', '{"truth": 42}', 'application/json')
+```
+
+需要注意的有两点：
+
+- 你不需要担心文件名重复的问题，每一次上传都会有一个独一无二的标识符，所以上传多个文件都叫 photo.jpg 是没有问题的。
+- 你应该给你的文件一个扩展名，或者明确指定 mime_type ，这样会让 LeanCloud 明白文件的类型，并且会按文件类型来进行处理。
+
+另外还可以直接创建一个只有 URL 没有数据的 leancloud.File 对象，用来引用现有网络上的文件。
+
+```python
+file = File.create_with_url('lena.jpg', 'http://www.cs.cmu.edu/~chuck/lennapg/len_top.jpg')
+```
+
+在一个 File 实例上调用 save 方法，可以将文件上传至服务器。我们还可以将一个 File 对象和 一个 Object 对象关联起来，作为其中的一个字段。
+
+```python
+avatar_image = File('avatar.png', open(path))
+avatar_image.save()
+
+user.set('avatar', avatar_image)
+user.save()
+```
+
+对象需要注意的一点是，leancloud.File 不是 leancloud.Object 的子类，虽然它们之间有很多类似的方法。
+
+
+### 获取文件内容
+
+现阶段拿到一个 File 对象，可以通过它的 URL 自行下载数据。
+
+```
+url = file.url
+```
+
+### 缩略图
+
+如果 File 保存的是图片文件，可以使用 get_thumbnail_url 方法很方便的获取图片的缩略图。
+
+```python
+thumbnail_url = file.get_thumbnail_url(width='100', height='100')
+```
+
+### 删除文件
+
+获取了一个 File 对象之后，只要调用 destory 方法即可在服务器上删除此 File 对象。
