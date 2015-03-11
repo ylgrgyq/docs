@@ -126,26 +126,26 @@ module.exports = function(grunt) {
           dumpLineNumbers: "comments"
         },
         files: {
-          "custom/app-docs.css": ["custom/less/app-docs.less"]
+          "custom/css/app-docs.css": ["custom/less/app-docs.less"]
         }
       },
       dist: {
         files: {
-          "custom/app-docs.css": ["custom/less/app-docs.less"]
+          "custom/css/app-docs.css": ["custom/less/app-docs.less"]
         }
       }
     },
     autoprefixer: {
       server: {
         files: {
-          "custom/app-docs.css": ["custom/app-docs.css"]
+          "custom/css/app-docs.css": ["custom/css/app-docs.css"]
         }
       }
     },
     cssmin: {
       dist: {
         files: {
-          "custom/app-docs.css": ["custom/app-docs.css"]
+          "custom/css/app-docs.css": ["custom/css/app-docs.css"]
         }
       }
     },

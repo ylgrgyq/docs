@@ -1,11 +1,7 @@
-dist
-node_modules
-custom/app.css
 .DS_Store
+node_modules
+dist
 
-/custom/app.css
-/custom/app-docs.css
-
-/md/.DS_Store
-
-/.tmp/
+custom/css/app.css
+custom/css/app-docs.css
+.tmp/
