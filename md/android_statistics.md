@@ -236,7 +236,7 @@ AVAnalytics.updateOnlineConfig(getContext());
 
 * 由于统计参数在客户端会有定时更新的策略，所以AVOnlineConfigureListener在客户端会发生多次调用的情况，请在OnDataReceived方法中不要放入太多函数副作用。
 
-##　开发选项
+## 开发选项
 
 如果您不准备区分开发AppKey与生产环境AppKey,但是又不想开发时期的统计数据会影响产品上线后的统计数据，您可以使用
 
