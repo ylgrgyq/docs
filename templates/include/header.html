@@ -45,31 +45,16 @@
             </div>
 
             <ul class="nav navbar-nav navbar-user-actions navbar-right" ng-cloak>
-              {% if layout!="board-nologin.swig" %}
-                <li ng-show="user.session_token" class="dropdown">
-                    <a id="news-notification" role="button" ng-click="readNotification()" title="消息中心" class="bstooltip" data-placement="bottom">
-                      <i class="icon icon-dashbd-icon icon-inbox-empty" ng-show="!hasnewnotify"></i>
-                      <i class="icon icon-dashbd-icon icon-inbox-files-bold has-news" ng-show="hasnewnotify"></i>
-                      <i class="dashboard-subnav-text">消息</i>
-                    </a>
-                </li>
-              {% endif %}
+
 
                 <li class="dropdown" ng-show="user.username">
-                    <a role="button" class="dropdown-toggle user-name" data-toggle="dropdown">
+                    <a role="button" class=" user-name">
                         <span class="user-gravatar">
                             <img gravatar-src="user.email" gravatar-size="64">
                         </span>
                         <span class="user-name-text">{{user.username}}</span>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/settings.html">帐号设置</a></li>
-                        <li><a href="/applist.html">控制台</a></li>
-                        <li><a href="/settings.html#/setting/team">团队管理</a></li>
-                        <li><a href="/bill.html#/bill/general">财务</a></li>
-                        <!-- <li><a href="settings.html#/setting/invite">邀请好友</a></li> -->
-                        <li ng-show="user.username" style=""><a ng-click="signout()">登出</a></li>
-                    </ul>
+
                 </li>
                 <li ng-hide="user.username">
                     <a href="/login.html#/signin">登录</a>
