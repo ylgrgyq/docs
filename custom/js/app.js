@@ -1,5 +1,5 @@
 //apps data
-angular.module("app", []);
+angular.module("app", ['ui.gravatar']);
 angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile',
     function($scope, $http, $timeout, $compile) {
 
@@ -31,6 +31,18 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             });
         }
     ]);
+
+angular.module('ui.gravatar').config([
+    'gravatarServiceProvider', function(gravatarServiceProvider) {
+        gravatarServiceProvider.defaults = {
+            size         : 100,
+            "default": 'https://leancloud.cn/images/static/default-avatar.png' // Mystery man as default for missing avatars
+        };
+
+        // Use https endpoint
+        gravatarServiceProvider.secure = true;
+    }
+]);
 
 $(function(){
     angular.element(document).ready(function() {
