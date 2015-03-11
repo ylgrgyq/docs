@@ -37,7 +37,7 @@ function doSideBar(){
         $('.sidebar-affix-shadow').addClass('bottom').removeClass('on');
       } else {
         // If user scrolls back
-        $('.sidebar-affix-shadow').removeClass('bottom').addClass('on');
+        $('.sidebar-affix-shadow').removeClass('bottom');
       }
     });
   }).on('affix-top.bs.affix', function (e) {

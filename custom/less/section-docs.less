@@ -5,7 +5,8 @@ body {
 
 .doc-content {
 
-  p {
+  p,
+  li {
     line-height: 1.6;
 
     img {
@@ -341,6 +342,8 @@ body {
     position: fixed;
     width: 100%;
     z-index: 100;
+    // scrollbar width + border-right with
+    margin-left: -6px;
     pointer-events: none;
     opacity: 0;
     transition: opacity .2s ease;
