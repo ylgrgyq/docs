@@ -8,7 +8,7 @@
 </head>
 
 
-<body  class="dashboard-init" data-spy="scroll" data-target=".sidebar-wrapper" data-offset="30" ng-cloak>
+<body  class="dashboard-init" data-spy="scroll" data-target=".sidebar-wrapper" data-offset="30" ng-cloak ng-controller="AppCtrl">
 
 {% include 'templates/include/header.html' %}
 
@@ -32,7 +32,7 @@
     <!-- .col-md-3 -->
 
     <div class="col-sm-9 sidebar-gruntfile-trigger">
-      <div class="doc-content" ng-controller="AppCtrl" id="content">
+      <div class="doc-content"  id="content">
         {{body}}
       </div>
     </div>
