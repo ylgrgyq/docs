@@ -6,6 +6,9 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
 
+        $http.get('/1/clients/self').success(function(data){
+            $scope.user=data;
+        });
 
         $http.get("/1/clients/self/apps").success(
             function(data) {
