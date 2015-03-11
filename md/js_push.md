@@ -30,6 +30,44 @@ Release 地址: [https://github.com/leancloud/js-push-sdk/releases](https://gith
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的 [Demo 代码](https://github.com/leancloud/js-push-sdk/tree/master/demo)，并且下载自己运行一下试试看。
 
+```js
+// 最简的示例代码，请换成自己的 appId 和 appKey
+var appId = '9p6hyhh60av3ukkni3i9z53qsie3cewft18vm';
+var appKey = 'nhqqc1x7r7r89kp8pggrmyd0ukr2z3ayojpvf4';
+var push = AV.push({
+    appId: appId,
+    appKey: appKey
+});
+
+// 发送一条推送，如果不传 channels 则是给所有 channel 发送消息
+push.send({
+    // channels: ['aaa'],
+    data: {LeanCloud: 123}
+}, function(result) {
+    if (result) {
+        showLog('推送成功发送');
+    } else {
+        showLog('error');
+    }
+});
+
+// 如果想接收推送，需要调用 open 方法，开启和服务器的连接
+push.open(function() {
+    console.log('连接服务器成功，可以接收推送');
+});
+
+// 监听推送消息
+push.on('message', function(data) {
+    console.log('message');
+    console.log(JSON.stringify(data));
+});
+
+// 监听网络异常，SDK 会在底层自动重新连接服务器
+push.on('reuse', function() {
+    console.log('网络中断正在重试。。。');
+});
+
+```
 
 ### 全局命名空间 AV
 
