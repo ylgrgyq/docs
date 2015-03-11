@@ -29,13 +29,12 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             }).error(function(data) {
 
             });
-        }
         $scope.signout = function(){
             $http.post('/1/signout').success(function(data) {
                 location.reload();
             });
         }
-    ]);
+    }]);
 
 angular.module('ui.gravatar').config([
     'gravatarServiceProvider', function(gravatarServiceProvider) {
