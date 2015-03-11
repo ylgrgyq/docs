@@ -10,7 +10,7 @@
             <div class="navbar-app-actions-wrap">
                 <ul class="nav navbar-nav navbar-app-actions" >
                   <li class="dropdown dropdown-toggle-app-name">
-                    <a href="applist.html">
+                    <a href="/applist.html">
                       <i class="icon icon-dashbd-icon icon-blank-app"></i>
                       <div class="name">返回控制台</div>
                     </a>
@@ -71,11 +71,7 @@
                           <!-- <li><a href="#" data-toggle="modal" data-target="#modal-shortcuts">快捷键</a></li> -->
                       </ul>
                   </li>
-                  <li ng-show="currentHtmlPage=='applist.html'">
-                    <div class="app-search">
-                      <input type="text" class="form-control" placeholder="搜索应用" ng-model="appSearch">
-                    </div>
-                  </li>
+
                 </ul>
             </div>
 
@@ -107,10 +103,10 @@
                     </ul>
                 </li>
                 <li ng-hide="user.username">
-                    <a href="login.html#/signin">登录</a>
+                    <a href="/login.html#/signin">登录</a>
                 </li>
                 <li ng-hide="user.username">
-                    <a href="login.html#/signup">注册</a>
+                    <a href="/login.html#/signup">注册</a>
                 </li>
             </ul>
         </div><!-- /.navbar-collapse -->
