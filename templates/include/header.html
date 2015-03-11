@@ -16,38 +16,7 @@
                     </a>
                   </li>
 
-                  {% if basename=='messaging' or basename=='data' or basename=='apistat' or basename=='stat' or basename=='devcomponent' or basename=='app' or basename=='cloud' or basename=='dataquery'%}
-                    <li ng-class="{active:currentHtmlPage=='stat.html',disabled:!hasPermission('stat.html',app.app_id)}" >
-                        <a class="nav-key-1 " ng-click="gotoPageWithId('stat.html')" >
-                                <i class="icon icon-dashbd-icon icon-chart-alt"></i>
-                                <i class="dashboard-subnav-text">分析</i>
-                        </a>
-                    </li>
-                    <li ng-class="{active:['data.html','cloud.html','apistat.html'].indexOf(currentHtmlPage)!=-1,disabled:!hasPermission('data.html',app.app_id)}">
-                        <a class="nav-key-2" ng-click="gotoPageWithId('data.html')" >
-                                <i class="icon icon-dashbd-icon icon-cabinet"></i>
-                                <i class="dashboard-subnav-text">存储</i>
-                        </a>
-                    </li>
-                    <li ng-class="{active:['messaging.html'].indexOf(currentHtmlPage)>-1,disabled:!hasPermission('messaging.html',app.app_id)}" >
-                        <a class="nav-key-3" ng-click="gotoPageWithId('messaging.html')">
-                                <i class="icon icon-dashbd-icon icon-push"></i>
-                                <i class="dashboard-subnav-text">消息</i>
-                        </a>
-                    </li>
-                    <li ng-class="{active:currentHtmlPage=='devcomponent.html',disabled:!hasPermission('devcomponent.html',app.app_id)}" >
-                        <a class="nav-key-4" ng-click="gotoPageWithId('devcomponent.html')" >
-                                <i class="icon icon-dashbd-icon icon-slider"></i>
-                                <i class="dashboard-subnav-text">组件</i>
-                        </a>
-                    </li>
-                    <li ng-class="{active:currentHtmlPage=='app.html',disabled:!hasPermission('app.html',app.app_id)}" >
-                        <a class="nav-key-5" ng-click="gotoPageWithId('app.html')">
-                                <i class="icon icon-dashbd-icon icon-gear"></i>
-                                <i class="dashboard-subnav-text">设置</i>
-                        </a>
-                    </li>
-                  {% endif %}
+
                   <li ng-class="{active:currentHtmlPage=='help.html'}">
                       <a class="nav-key-6 dropdown-toggle" title="帮助" data-toggle="dropdown">
                           <i class="icon icon-dashbd-icon icon-question"></i>
@@ -94,10 +63,10 @@
                         <span class="user-name-text">{{user.username}}</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="settings.html">帐号设置</a></li>
+                        <li><a href="/settings.html">帐号设置</a></li>
                         <li><a href="/applist.html">控制台</a></li>
-                        <li><a href="settings.html#/setting/team">团队管理</a></li>
-                        <li><a href="bill.html#/bill/general">财务</a></li>
+                        <li><a href="/settings.html#/setting/team">团队管理</a></li>
+                        <li><a href="/bill.html#/bill/general">财务</a></li>
                         <!-- <li><a href="settings.html#/setting/invite">邀请好友</a></li> -->
                         <li ng-show="user.username" style=""><a ng-click="signout()">登出</a></li>
                     </ul>
