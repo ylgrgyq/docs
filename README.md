@@ -10,11 +10,11 @@ LeanCloud 开发者文档
 
 ## 安装
 
-* `npm install` 安装依赖
+`npm install` 安装依赖。
 
 ## 预览
 
-* `grunt server` 本地启动一个 HTTP Server（localhost:3000），然后打开浏览器访问即可，（更改文档后无需刷新页面）
+`grunt server` 本地启动一个 HTTP Server（localhost:3000），然后打开浏览器访问即可，（更改文档后无需刷新页面）。
 
 ## 贡献
 
