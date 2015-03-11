@@ -45,9 +45,9 @@ push.send({
     data: {LeanCloud: 123}
 }, function(result) {
     if (result) {
-        showLog('推送成功发送');
+        console.log('推送成功发送');
     } else {
-        showLog('error');
+        console.log('error');
     }
 });
 
