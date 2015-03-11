@@ -1,5 +1,3 @@
-
-
 $("h1,h2,h3,h4,h5,a").removeAttr("id");
 gajus.contents.formatId = function(str){
   if(/^[0-9]/.test(str)){
@@ -49,9 +47,11 @@ function doSideBar(){
     $('.sidebar-affix-shadow').addClass('bottom').removeClass('on');
   });
 }
+
 $(window).on('resize',function(){
   $('#toc-wrapper').width($('#left-nav').width());
 });
+
 // Sidebar ScrollSpy
 $.fn.scrollStopped = function(callback) {
   $(this).scroll(function() {
@@ -78,9 +78,6 @@ $(".sidebar-affix-shadow").hover(
   }
 );
 
-
-
-
 $(function() {
   var arr = $('#toc ul').parents('li');
   angular.forEach(arr, function(v, k) {
@@ -88,7 +85,17 @@ $(function() {
     a.addClass('has-subdoc-nav');
   });
 
+  var currentPath = window.location.pathname.match(/\/(.+).html/i)[1];
+  $("#content").prepend("<div class=docs-meta>\
+      <span class='icon icon-github'></span>\
+      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>查看文件</a>\
+      |\
+      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑文件</a>\
+    </div>");
   $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
 });
 
+$(window).load(function() {
+  $('#toc-wrapper').width($('#left-nav').width());
+})
 

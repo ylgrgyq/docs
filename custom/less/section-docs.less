@@ -53,6 +53,10 @@ body {
     font-weight: 300;
     padding-top: 20px;
     margin-top: 0px;
+
+    a {
+      color: #000;
+    }
   }
 
   h2 {
@@ -247,7 +251,7 @@ body {
   }
 }
 
-// Table of Contents
+// Sidebar (Table of Contents)
 .sidebar-wrapper {
   max-height: 100%;
   overflow-y: scroll;
@@ -512,6 +516,34 @@ ul#toc,#toc li {
 
 #toc > li >ul{
   margin-left: 0;
+}
+
+.docs-meta {
+  float: right;
+  overflow: auto;
+  padding-left: 15px;
+  margin-top: 20px;
+  color: @gray-lighter;
+
+  @media (max-width: @screen-sm) {
+    display: none;
+  }
+
+  .icon {
+    color: #000;
+    font-size: 24px;
+    vertical-align: -5px;
+  }
+
+  a {
+    color: @gray-light;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: #000;
+    }
+  }
 }
 
 // Main content
