@@ -30,6 +30,11 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
 
             });
         }
+        $scope.signout = function(){
+            $http.post('/1/signout').success(function(data) {
+                location.reload();
+            });
+        }
     ]);
 
 angular.module('ui.gravatar').config([
@@ -43,6 +48,8 @@ angular.module('ui.gravatar').config([
         gravatarServiceProvider.secure = true;
     }
 ]);
+
+
 
 $(function(){
     angular.element(document).ready(function() {
