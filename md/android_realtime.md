@@ -80,11 +80,11 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
 
 ##单聊
 
-单聊的情景相对也是比较简单的，用户可也选择向已经watch过的人发送相应的消息
+单聊的情景相对也是比较简单的，用户可以选择向任何人发送相应的消息。如果应用开启[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)，单聊前需要首先调用 watch。
 
 ###添加好友
 
-正如上文提到了，实时聊天系统在发送消息前需要保证发送的对象是被watch过的。对于已有的好友列表，你可以如上文提到的方法，在登录实时通信系统的时候放在参数中间；对于新的好友，你可以通过如下代码进行添加：
+正如上文提到了，开启了签名认证的实时聊天系统在发送消息前需要保证发送的对象是被 watch 过的。对于已有的好友列表，你可以如上文提到的方法，在登录实时通信系统的时候放在参数中间；对于新的好友，你可以通过如下代码进行添加：
 
 ```java
 Session session = SessionManager.getInstance(selfId);

@@ -199,6 +199,18 @@ AV.Status.countUnreadStatuses(AV.User.current()).then(function(result){
 });
 ```
 
+同样的，您可以这样查询当前登录用户未读私信的未读数目和总数目：
+
+```javascript
+AV.Status.countUnreadStatuses(AV.User.current(),'private').then(function(result){
+  console.dir(result);
+  var total = result.total;
+  var unread  = result.unread;
+}, function(err){
+    //查询失败
+});
+```
+
 #### 查询发件箱
 
 查询我发出去的状态信息，可以通过`statusQuery`方法：

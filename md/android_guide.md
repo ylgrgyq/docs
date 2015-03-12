@@ -2,7 +2,7 @@
 
 如果你还没有安装 LeanCloud SDK ，请前往[快速入门指南](/start.html)。
 
-如果你希望从项目里学习，请前往 [Android-SDK-Demos](https://github.com/leancloud/Android-SDK-demos) 。
+如果你希望从项目里学习，请前往 [Android SDK Demos](https://github.com/leancloud/leancloud-demos#android) 。
 
 ## 快速入门
 
@@ -66,25 +66,25 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v2.6.+'
+    compile 'cn.leancloud.android:avoscloud-sdk:v2.7+'
 
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v2.6.+@aar'
+    compile 'cn.leancloud.android:avoscloud-push:v2.7+@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v2.6.+@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v2.7+@aar'
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v2.6.+@aar'
+    compile 'cn.leancloud.android:avoscloud-feedback:v2.7+@aar'
 
     //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v2.6.+@aar'
+    compile 'cn.leancloud.android:avoscloud-sns:v2.7+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
     compile 'cn.leancloud.android:weibo-sdk-android-sso:1.0.0-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v2.6.+@aar'    
+    compile 'cn.leancloud.android:avoscloud-search:v2.7+@aar'    
 }
 ```
 

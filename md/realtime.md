@@ -51,13 +51,13 @@
 
 LeanCloud 的通信服务允许一个 Peer ID 在多个不同的设备上登录，也允许一个设备上有多个 Peer ID 同时登录。开发者可以根据自己的应用场景选择ID。
 
-为了做到细粒度的权限控制，Peer 需要先 watch 对方方可给对方发送消息，你可以在 watch 动作上增加签名认证来控制权限，防止骚扰。
+为了做到细粒度的权限控制，在开启[签名认证](#权限和认证)的应用中，Peer 需要先 watch 对方方可给对方发送消息。你可以在 watch 动作上增加签名认证来控制权限，防止骚扰。
 
 Super Peer（超级用户）可以在不 watch 的状态下给任意 Peer 发送消息，不过 Super Peer 的登录需要服务器端签名控制，目前仅服务器端的 NodeJS SDK 支持 Super Peer。通常作为管理员角色来使用。
 
 ### Session
 
-Peer 通过开启(open)一个 Session 加入实时通信服务，Peer 可以在 Session 中关注(watch)一组 Peer ID，当被关注者上下线时，会收到通知。Peer 在开启 Session 后会收到其他 Peer 的消息，关注(watch)其他 Peer 后也可以向其发送消息。Peer 只能向自己关注的其他 Peers 发送消息，但可以接收到其他 Peer 的消息。
+Peer 通过开启(open)一个 Session 加入实时通信服务，Peer 可以在 Session 中关注(watch)一组 Peer ID，当被关注者上下线时，会收到通知。Peer 在开启 Session 后会收到其他 Peer 的消息，也可以向其他 Peer 发送消息（当应用启用[签名认证](#权限和认证)的情况下，需要首先关注(watch)其他 Peer 后才可以向其发送消息，关注(watch)步骤要求签名认证）。
 
 Session 的几种状态：
 
@@ -68,7 +68,7 @@ Session 的几种状态：
 Session 中的几个动词：
 
 * **open** 以一个 Peer ID 打开 Session
-* **watch** 关注一组 Peer ID，关注后可以收到这个 Peer 的上下线通知，发送消息
+* **watch** 关注一组 Peer ID，关注后可以收到这个 Peer 的上下线通知
 * **unwatch** 取消对一组 Peer ID 的关注
 * **sendMessage** 给一组 Peer ID 发送消息
 * **close** 注销服务，关闭 Session
@@ -81,7 +81,7 @@ Session 中的几个动词：
 
 消息分为暂态(transient)和持久消息。LeanCloud 为后者提供 7 天内最多 50 条的离线消息。暂态消息并不保存离线，适合开发者的控制协议。
 
-我们现在还为通信消息提供存储和获取功能，你可以通过 [REST API](rest_api.html#实时通信-api) 或 SDK 获取整个应用或特定对话的消息记录。
+我们现在还为通信消息提供存储、获取和删除功能，你可以通过 [REST API](rest_api.html#实时通信-api) 或 SDK 获取整个应用或特定对话的消息记录。
 
 ### Group
 

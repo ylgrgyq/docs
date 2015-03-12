@@ -2,7 +2,7 @@
 
 如果你还没有设置你的项目，请查看我们的QuickStart。
 
-如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/javascript-sdk-demos)。
+如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/leancloud-demos#javascript)。
 
 ## 简介
 
