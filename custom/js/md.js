@@ -85,7 +85,7 @@ $(function() {
     a.addClass('has-subdoc-nav');
   });
 
-  var currentPath = window.location.pathname.match(/\/(.+).html/i)[1];
+  var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
   $("#content").prepend("<div class=docs-meta>\
       <span class='icon icon-github'></span>\
       <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>查看文件</a>\
