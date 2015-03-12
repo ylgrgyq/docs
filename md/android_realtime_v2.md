@@ -37,7 +37,7 @@ public class MyApplication extends Application{
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="com.avoscloud.chat.RETRY_CONNECT" />
+                <action android:name="com.avoscloud.session.action" />
             </intent-filter>
         </receiver>
 
@@ -94,7 +94,7 @@ conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
     } else {
       // 不曾和 Bob 聊过，新建一个对话
       Map<String, Object> attr = new HashMap<String, Object>();
-      attr["type"] = ConversationType_OneOne;
+      attr.put("type", ConversationType_OneOne);
       imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
         @Override
         public void done(AVIMConversation conversation, AVException e) {
@@ -278,15 +278,15 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 所有富媒体消息的基类，其声明为
 
 ```
-typedef int8_t AVIMMessageMediaType;
 //SDK定义的消息类型，LeanCloud SDK 自身使用的类型是负数，所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
-enum : AVIMMessageMediaType {
-    AVIMMessageMediaTypeNone = 0,
-    AVIMMessageMediaTypeText = -1,
-    AVIMMessageMediaTypeImage = -2,
-    AVIMMessageMediaTypeAudio = -3,
-    AVIMMessageMediaTypeVideo = -4,
-    AVIMMessageMediaTypeLocation = -5
+enum AVIMReservedMessageType {
+  UnsupportedMessageType(0),
+  TextMessageType(-1),
+  ImageMessageType(-2),
+  AudioMessageType(-3),
+  VideoMessageType(-4),
+  LocationMessageType(-5),
+  FileMessageType(-6);
 };
 
 public abstract class AVIMTypedMessage extends AVIMMessage {
@@ -494,7 +494,7 @@ AVIMMessageManager.registerMessageHandler(AVIMLocationMessage.class, msgHandler)
 
 ```
 Map<String, Object> attr = new HashMap<String, Object>();
-attr["type"] = ConversationType_Group;
+attr.put("type", ConversationType_Group);
 imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
   @Override
   public void done(AVIMConversation conversation, AVException e) {
