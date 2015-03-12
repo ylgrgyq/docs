@@ -695,7 +695,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 [query whereKey:@"post"
         equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51c912bee4b012f89e344ae9"];
 ```
-如果要匹配一个查询类型的对象，请使用 `whereKey:matchesQuery`。
+如果要做嵌套查询，请使用 `whereKey:matchesQuery`。
 
 注意：结果返回数量（默认 100 最多 1000）的限制也适用于内嵌查询，所以在处理大型数据集时，你可能需要仔细设置查询条件来获得想要的结果。
 
@@ -711,7 +711,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 }];
 ```
 
-相反，`whereKey:doesNotMatchQuery:` 可以找出一个对象的某个属性与另一个查询对象不匹配的结果。例如，找出所有 不带图片的文章的评论：
+相反，`whereKey:doesNotMatchQuery:` 可以找出一个对象的某个属性与另一个查询不匹配的结果。例如，找出所有 不带图片的文章的评论：
 
 ```objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
@@ -723,7 +723,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 }];
 ```
 
-在一些场景中，如果需要在一个查询中返回多个类型的相关对象，可以使用方法 `includeKey:`。例如，搜索最近的十条评论，并同时找出与之对应的文章：
+在一些场景中，如果需要在一个查询中返回多个类型的关联属性，可以使用方法 `includeKey:`。例如，搜索最近的十条评论，并同时找出与之对应的文章：
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
@@ -842,12 +842,12 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 }];
 ```
 
-`countObjects` 是一种同步式的方法，因此使用它可以阻止线程调用。
+`countObjects` 是一种同步式的方法，因此使用它可以阻塞调用线程。
 
 对含有超过 1000 个对象的类，使用计数操作很可能会导致响应超时，或返回数值近似精确，所以在构建程序时，应该尽量避免这样的操作。
 
 ### 复合查询
-如果想从多个查询中找出与其中一个相匹配的对象，可以使用方法 `orQueryWithSubqueries:`。
+如果想从多个查询中，找出与其中任意一个相匹配的对象，可以使用方法 `orQueryWithSubqueries:`。
 
 例如，找出赢了很多场比赛或者只赢了几场比赛的球员：
 
@@ -920,8 +920,8 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 1. 导入 `AVObject+Subclass.h`；
 2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
-3. 实现类方法 `parseClassName`（就是原先要传给 `initWithClassName:` 的字符串，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**）；
-4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 前后调用即可）。
+3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
+4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 之前调用即可）。
 
 下面是实现 `Student` 子类化的例子:
 
@@ -1076,14 +1076,14 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 ## ACL权限控制
 
-ACL（Access Control List）是一种最灵活而且简单的应用数据安全管理方法。通俗的解释就是为每一个数据创建一个访问的白名单列表，只有在名单上的用户（ `AVUser`）或者具有某种角色（`AVRole`）的用户才能被允许访问。为了更好地保证用户数据安全性，LeanCloud 的每一张表中都有一个 ACL 列。
+ACL（Access Control List）是最灵活而且简单的应用数据安全管理方法。通俗的解释就是为每一个数据创建一个访问的白名单列表，只有在名单上的用户（ `AVUser`）或者具有某种角色（`AVRole`）的用户才能被允许访问。为了更好地保证用户数据安全性，LeanCloud 的每一张表中都有一个 ACL 列。
 
 当然，LeanCloud 还提供了进一步的读写权限控制。一个 User 必须拥有读权限（或者属于一个拥有读权限的 Role）才可以获取一个对象的数据；同时，一个 User 需要写权限（或者属于一个拥有写权限的 Role）才可以更改或者删除一个对象。
 
 以下列举了几种在 LeanCloud 常见的 ACL 使用范例。
 
 ### 默认访问权限
-在没有显式指定的情况下，LeanCloud 中的每一个对象都会有一个默认的 ACL 值。这个值代表了所有的用户，对这个对象都是可读可写的。此时在 LeanCloud 账户的「数据管理」列表中的 ACL 属性列，会看到这样的值：
+在没有显式指定的情况下，LeanCloud 中的每一个对象都会有一个默认的 ACL 值。这个值表示，所有的用户对这个对象都是可读可写的。此时在 LeanCloud 账户的「数据管理」列表中的 ACL 属性列，会看到这样的值：
 
 ```json
     {"*":{"read":true,"write":true}}
@@ -1104,12 +1104,8 @@ ACL（Access Control List）是一种最灵活而且简单的应用数据安全�
 ```objc
 
     AVACL *acl = [AVACL ACL];
-    
-    //此处设置的是所有人的可读权限
-    [acl setPublicReadAccess:YES]; 
-    
-    //而这里设置了文件创建者的写权限
-    [acl setWriteAccess:YES forUser:[AVUser currentUser]]; 
+    [acl setPublicReadAccess:YES]; //此处设置的是所有人的可读权限
+    [acl setWriteAccess:YES forUser:[AVUser currentUser]]; //而这里设置了文件创建者的写权限
 
     AVObject * object = [AVObject objectWithClassName:@"iOSAclTest"];
 
@@ -1162,7 +1158,7 @@ ACL（Access Control List）是一种最灵活而且简单的应用数据安全�
 
 ```
 
-但是要涉及其中的人可能不止一个，也有离职换岗新员工的问题存在。这样的代码既不优雅，也太啰嗦，同样会很难维护。这个时候我们就引入了 `AVRole` 来解决这个问题。
+但是涉及的人可能不止一个，也有离职、换岗、新员工的问题存在。这样的代码既不优雅，也太啰嗦，同样会很难维护。这个时候我们就引入了 `AVRole` 来解决这个问题。
 
 公司的员工可以成百上千，然而一个公司组织里的角色却能够在很长一段时间内保持相对稳定。
 
