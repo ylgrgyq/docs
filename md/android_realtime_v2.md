@@ -37,7 +37,6 @@ public class MyApplication extends Application{
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
-                <action android:name="com.avoscloud.session.action" />
             </intent-filter>
         </receiver>
 
