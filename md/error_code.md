@@ -78,7 +78,7 @@
 ## 119
 
 * 信息 - `That operation isn't allowed for clients.`
-* 含义 - 该操作无法从客户端发起。
+* 含义 - 该操作无法从客户端发起。通常可以通过在应用设置里开启对应选项就可以解决。
 
 ## 120
 
@@ -154,6 +154,11 @@
 
 * 信息 - `Fail to convert data to image.`
 * 含义 - 转换数据到图片失败。
+
+## 160
+
+* 信息 - `Insufficient balance.`
+* 含义 - 帐户余额不足。
 
 ## 200
 

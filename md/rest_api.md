@@ -923,7 +923,7 @@ curl -X GET \
   https://leancloud.cn/1.1/classes/GameScore
 ```
 
-您可以限定返回的字段通过传入`keys`参数和一个逗号分隔列表.为了返回对象只包含score和playerName字段(还有特殊的内置字段比如objectId,createdAt和updatedAt):
+您可以限定返回的字段通过传入 `keys` 参数和一个逗号分隔列表。为了返回对象只包含 `score` 和 `playerName` 字段(还有特殊的内置字段比如 `objectId,createdAt` 和 `updatedAt`):
 
 ```sh
 curl -X GET \
@@ -931,6 +931,17 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
   --data-urlencode 'keys=score,playerName' \
+  https://leancloud.cn/1.1/classes/GameScore
+```
+
+`keys` 还支持反向选择，也就是不返回某些字段，字段名前面加个减号即可，比如我不想查询返回 `playerName`：
+
+```sh
+curl -X GET \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -G \
+  --data-urlencode 'keys=-playerName' \
   https://leancloud.cn/1.1/classes/GameScore
 ```
 
