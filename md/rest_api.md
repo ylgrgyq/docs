@@ -360,6 +360,11 @@ REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进
       <td>POST</td>
       <td>通过 API 向用户发消息</td>
     </tr>
+    <tr>
+      <td>/1.1/rtm/transient_group/onlines</td>
+      <td>GET</td>
+      <td>获取开放群组的在线人数</td>
+    </tr>
   </tbody>
 </table>
 
@@ -2497,6 +2502,23 @@ curl -X POST \
     <td>消息内容</td>
   </tr>
 </table>
+
+### 获取开放群组的在线人数
+
+你可以通过这个 API 获得开放群组的在线人数。由于开放群组没有成员列表支持，所以通常使用这个 API 获得当前的在线人数。
+
+```sh
+curl -X GET \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  https://leancloud.cn/1.1/rtm/transient_group/onlines?gid=GROUP_ID
+```
+
+返回：
+
+```json
+{"result":0}
+```
 
 ##统计数据API
 
