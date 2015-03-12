@@ -454,7 +454,7 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
 
     NSString *oldestMsgId;
     int64_t oldestMsgTimestamp;
-    [conversation queryHistoricalMessagesBeforeId:oldestMsgId
+    [conversation queryMessagesBeforeId:oldestMsgId
                               timestamp:oldestMsgTimestamp
                                   limit:20
                                callback:^(NSArray *objects, NSError *error){
@@ -468,6 +468,16 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
 > 获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 msgId，起始消息的发送时间戳，需要获取的消息条数。
 
 通过这一 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。
+
+### 启用离线消息推送
+
+不管是单聊还是群聊，当用户 A 发出消息后，如果目标对话中有部分用户当前不在线，LeanCloud 云端可以提供离线推送的方式来提醒用户。这一功能默认是关闭的，你可以在 LeanCloud 应用控制台中开启它。开启方法如下：
+
+* 登录 LeanCloud 应用控制台，选择正确的应用进入；
+* 选择最顶端的「消息」服务，依次点击左侧菜单「实时消息」->「设置」；
+* 在右侧「iOS 用户离线时的推送内容」下填好你要推送出去的消息内容，保存；
+
+这样 iOS 平台上的用户就可以收到 Push Notification 了（当然，前提是应用本身申请到了 RemoteNotification 权限，也将正确的推送证书上传到了 LeanCloud 控制台）。
 
 ### 群组消息免打扰
 
