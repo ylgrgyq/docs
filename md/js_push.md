@@ -2,11 +2,11 @@
 
 ## 简介
 
-感谢您使用 JavaScript 的 Push SDK，LeanCloud 的 Push 服务每天处理超过百万级的请求，安全可靠，您的明智之选。发送 Push 服务是基于 HTTP 的一个 Post 请求，接收 Push 消息是通过 WebSocket 来监听数据，SDK 对数据进行过包装，并且会对连接产生的错误进行处理，包括网络断开重连等，所以稳定可靠。
+感谢使用 JavaScript 的 Push SDK，LeanCloud 的 Push 服务每天处理超过百万级的请求，安全可靠，绝对是明智之选。发送 Push 服务是基于 HTTP 的一个 Post 请求，接收 Push 消息是通过 WebSocket 来监听数据，SDK 对数据进行过包装，并且会对连接产生的错误进行处理，包括网络断开重连等，所以稳定可靠。
 
-您可以基于 Push SDK 做很多有趣的 Web App，比如：年会上面做个简单的弹幕应用，一些客户端发，弹幕墙接收。当然，您可以做一个比较简单的消息通知功能。推送消息的方式也是很灵活的，可以在客户端通过对应 SDK 的接口发送，也可以在「控制台」- 「消息」中手动发送推送消息到各个客户端。
+你可以基于 Push SDK 做很多有趣的 Web App，比如：年会上面做个简单的弹幕应用，一些客户端发，弹幕墙接收。当然，你可以做一个比较简单的消息通知功能。推送消息的方式也是很灵活的，可以在客户端通过对应 SDK 的接口发送，也可以在「控制台」- 「消息」中手动发送推送消息到各个客户端。
 
-如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用您的服务器资源。
+如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。
 
 ## 使用方式
 
@@ -30,7 +30,7 @@ Release 地址: [https://github.com/leancloud/js-push-sdk/releases](https://gith
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的 [Demo 代码](https://github.com/leancloud/js-push-sdk/tree/master/demo)，并且下载自己运行一下试试看。
 
-```js
+```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
 var appId = '9p6hyhh60av3ukkni3i9z53qsie3cewft18vm';
 var appKey = 'nhqqc1x7r7r89kp8pggrmyd0ukr2z3ayojpvf4';
@@ -94,7 +94,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 例子：
 
 
-```js
+```javascript
 var pushObject = AV.push({
     appId: 'abcdefg123',
     appKey: 'qwertyuio222',
@@ -117,7 +117,7 @@ var pushObject = AV.push({
 
 例子：
 
-```js
+```javascript
 console.log(AV.push.version);   // 2.0.0
 ```
 
@@ -133,7 +133,7 @@ console.log(AV.push.version);   // 2.0.0
 
 例子：
 
-```js
+```javascript
 pushObject.open(function() {
     console.log('open');
 });
@@ -152,7 +152,7 @@ pushObject.open(function() {
 
 例子：
 
-```js
+```javascript
 pushObject.send({
     test: 123
 });
@@ -182,7 +182,7 @@ pushObject.send({
 
 例子：
 
-```js
+```javascript
 pushObject.send({
     data: {test: 123},
     channels: ['cctv1', 'cctv2']
@@ -201,7 +201,7 @@ pushObject.send({
 
 例子：
 
-```js
+```javascript
 pushObject.channel(['testChannel'], function() {
     console.log('订阅成功！');
 });
@@ -225,7 +225,7 @@ pushObject.send({
 
 例子：
 
-```js
+```javascript
 pushObject.unChannel('testChannel', function() {
     console.log('取消订阅成功！');
 });
@@ -251,7 +251,7 @@ pushObject.send({
 
 例子：
 
-```js
+```javascript
 pushObject.on('message', function(data) {
     console.log(data);
 });
@@ -271,7 +271,7 @@ pushObject.on('message', function(data) {
 
 例子：
 
-```js
+```javascript
 pushObject.once('open', function(data) {
     console.log(data);
 });
@@ -291,7 +291,7 @@ pushObject.once('open', function(data) {
 
 例子：
 
-```js
+```javascript
 pushObject.emit('customEvent', {test: 123});
 ```
 
@@ -303,7 +303,7 @@ pushObject.emit('customEvent', {test: 123});
 
 例子：
 
-```js
+```javascript
 pushObject.close();
 ```
 
