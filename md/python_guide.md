@@ -318,7 +318,7 @@ query.limit(10) # limit to at most 10 results
 GameScore = Object.extend('GameScore')
 query = Query(GameScore)
 query.equal_to('playerEmail', 'dstemkoski@example.com')
-gameScore = query.first()
+game_score = query.first()
 ```
 
 你可以用 skip 跳过前面的结果, 这可能对于分页很有用。
