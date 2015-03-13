@@ -246,7 +246,7 @@ query = relation.query().equal_to('title', 'I am Hungry')
 posts = query.find()
 ```
 
-如果想查询所有 like 了某个 Post 的用户，可以使用 `reverse_query` 方法来进行返乡查询：
+如果想查询所有 like 了某个 Post 的用户，可以使用 `reverse_query` 方法来进行反向查询：
 
 ```python
 from leancloud import Relation
