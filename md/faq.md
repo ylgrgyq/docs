@@ -145,11 +145,10 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ## 控制台相关
 
-### 如何导入数据？
+### 如何导入或者导出数据？
 
-在数据管理的左侧 class 列表上方的设置链接，可以创建或者导入数据，导入的数据格式要求参考[数据与安全](./data_security.html)。
+请参考数据与安全文档[导入数据](./data_security.html#导入数据)和[导出数据](./data_security.html#导出数据)。
 
-![image](images/data_import.png)
 
 ### 如何在App邮件内完全使用自己的品牌
 

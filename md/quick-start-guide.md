@@ -92,7 +92,7 @@
 ## 你要导入导出数据？
 
 <ul>
-<li><a href="./faq.html#如何导入数据_">如何导入数据</a></li>
+<li><a href="./data_security.html#导入数据">导入数据</a></li>
 <li><a href="./data_security.html#导出数据">导出数据</a></li>
  </ul>
 

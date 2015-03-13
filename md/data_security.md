@@ -51,6 +51,8 @@ Object类型简单地表示每个字段的值都可以由能JSON编码的内嵌�
 
 为了通过JSON文件创建一个新Class，请到[数据管理](/data.html?appid={{appid}})并点击左侧class导航的"数据导入"按钮。
 
+![image](images/data_import.png)
+
 **数据文件的扩展名必须是`.csv`或者`.json`结尾，我们根据这个来判断导入数据的类型。**
 
 #### JSON文件格式
