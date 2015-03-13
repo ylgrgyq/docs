@@ -96,7 +96,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 为了保证聊天通道的安全，我们设计了签名的概念。默认这一功能是关闭的，你可以在 LeanCloud 应用控制台 -> 设置 -> 应用选项 中强制启用签名。启用后，所有的用户登录、新建/加入对话、邀请/踢出对话成员等操作都需要包含签名，这样你可以对聊天过程进行充分的控制。
 
-![image](images/leanmessage_signature2.png)
+![image](../images/leanmessage_signature2.png)
 
 1. 客户端进行登录或新建对话等操作，SDK 会调用 SignatureFactory 的实现，并携带用户信息和用户行为（登录、新建对话或群组操作）请求签名；
 2. 应用自有的权限系统，或应用在 LeanCloud 云代码上的签名程序收到请求，进行权限验证，如果通过则利用**下文所述的签名算法**生成时间戳、随机字符串和签名返回给客户端；

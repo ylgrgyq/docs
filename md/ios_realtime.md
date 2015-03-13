@@ -130,7 +130,7 @@ session.signatureDlegate = self;
 其中四个属性分别是:
 
 * signature 签名
-* timestamp 时间戳，单位毫秒
+* timestamp 时间戳，单位秒
 * nonce 随机字符串 nonce
 * signedPeerIds 签名通过的可关注的 signedPeerIds
 

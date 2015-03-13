@@ -5,3 +5,5 @@ dist
 custom/css/app.css
 custom/css/app-docs.css
 .tmp/
+
+npm-debug.log

@@ -9,7 +9,7 @@
 
             <div class="navbar-app-actions-wrap">
                 <ul class="nav navbar-nav navbar-app-actions" >
-                  <li class="dropdown dropdown-toggle-app-name">
+                  <li class="dropdown dropdown-toggle-app-name" ng-show="user.username">
                     <a href="/applist.html">
                       <i class="icon icon-dashbd-icon icon-blank-app"></i>
                       <div class="name">返回控制台</div>
@@ -101,6 +101,7 @@
           <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#">JavaScript</a>
           <ul class="dropdown-menu">
             <li><a href="js_guide.html">JavaScript 指南</a></li>
+            <li><a href="js_push.html">JavaScript 推送 SDK</a></li>
             <li><a href="api/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
             <li><a href="cloud_code_guide.html">云代码指南</a></li>
           </ul>
