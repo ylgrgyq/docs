@@ -145,6 +145,12 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ## 控制台相关
 
+### 如何导入数据？
+
+在数据管理的左侧 class 列表上方的设置链接，可以创建或者导入数据，导入的数据格式要求参考[数据与安全](./data_security.html)。
+
+![image](images/data_import.png)
+
 ### 如何在App邮件内完全使用自己的品牌
 
 请参考博客文章[自定义应用内用户重设密码和邮箱验证页面](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。

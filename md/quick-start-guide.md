@@ -88,6 +88,13 @@
 <ul>
 <li><a href="cloud_code_guide.html#web-hosting">云代码指南</a></li>
  </ul>
+ 
+## 你要导入导出数据？
+
+<ul>
+<li><a href="./faq.html#如何导入数据_">如何导入数据</a></li>
+<li><a href="./data_security.html#导出数据">导出数据</a></li>
+ </ul>
 
 ## 常见问题
 
