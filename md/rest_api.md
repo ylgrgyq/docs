@@ -2368,8 +2368,8 @@ curl -X GET \
     <td>对话 id</td>
   </tr>
   <tr>
-    <td>timestamp</td>
-    <td>查询起始的时间戳，返回小于等于这个时间的记录。可选，默认是当前时间</td>
+    <td>max_ts</td>
+    <td>查询起始的时间戳，返回小于这个时间(不包含)的记录。可选，默认是当前时间</td>
   </tr>
   <tr>
     <td>limit</td>
