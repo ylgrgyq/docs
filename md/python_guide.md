@@ -201,7 +201,7 @@ comment.save()
 ```python
 post = Post()
 post.id = '520c7e1ae4b0a3ac9ebe326a'
-# or: post = Post.create_withou_data('520c7e1ae4b0a3ac9ebe326a')
+# or: post = Post.create_without_data('520c7e1ae4b0a3ac9ebe326a')
 comment.set('parent', post)
 ```
 
@@ -663,7 +663,7 @@ user.sign_up()
 
 你也可以使用 email 来作为用户名，只要求你的用户输入他们的 email 但是同时自动填充好 username 属性就可以了，User 会跟原来一样工作。我们会在下面的重设密码环节再次说明这个细节。
 
-### 登陆
+### 登录
 
 在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登陆。
 
