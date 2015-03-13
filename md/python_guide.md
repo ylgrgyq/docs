@@ -64,7 +64,7 @@ leancloud.init('APP_ID', 'APP_KEY/MASTER_KEY')
 from leancloud import Object
 
 class GameScore(Object):
-    def is_cheeted(self):
+    def is_cheated(self):
         # 可以像正常 Python 类一样定义方法
         return self.get('cheatMode')
 
@@ -88,7 +88,7 @@ class GameScore(Object):
 ```python
 game_score = GameScore()
 game_score.set('score', 42)  # or game_score.score = 42
-game_score.set('cheetMode', False)
+game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
 game.save()
 
@@ -128,7 +128,7 @@ from leancloud import Object
 GameScore = Object.extend('GameScore')
 
 game_score.set('score', 42)
-game_score.set('cheetMode', False)
+game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
 game.save()
 
@@ -145,7 +145,7 @@ from leancloud import Object
 GameScore = Object.extend('GameScore')
 
 game_score.set('score', 42)
-game_score.set('cheetMode', False)
+game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
 game_score.save()
 
