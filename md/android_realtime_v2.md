@@ -791,7 +791,7 @@ conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
 -------------
 为了满足开发者对权限和认证的要求，LeanCloud 还设计了操作签名的机制。我们可以在 LeanCloud 应用控制台中的「设置」->「应用选项」->「聊天推送」下面勾选「聊天服务签名认证」来启用签名（强烈推荐这样做）。启用后，所有的用户登录、对话创建/加入、邀请成员、踢出成员等操作都需要验证签名，这样开发者就可以对消息进行充分的控制。
 
-客户端这边究竟该如何使用呢？我们只需要实现 SignatureFactory 接口，然后在用户登录之前，把这个接口的实例赋值给 AVIMClient 即可（AVIMClient.setSignatureFactory(factory)）。
+客户端这边究竟该如何使用呢？我们只需要实现 SignatureFactory 接口，然后在用户登录之前，把这个接口的实例赋值给 AVIMClient 即可（`AVIMClient.setSignatureFactory(factory)`）。
 
 设定了 signatureFactory 之后，对于需要鉴权的操作，LeanCloud IM SDK 与服务器端通讯的时候都会带上应用自己生成的 Signature 信息，LeanCloud 云端会使用 app 的 masterKey 来验证信息的有效性，保证聊天渠道的安全。
 
@@ -869,7 +869,8 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
        signature.setNonce((String)serverSignature.get("nonce"));
        return signature;
      }
-   }catch(Exception e){
+   }catch(AVException e){
+     throw (SignatureFactory.SignatureException) e;
    }
    return null;
  }
@@ -892,7 +893,8 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
         signature.setNonce((String)serverSignature.get("nonce"));
         return signature;
      }
-   }catch(Exception e){
+   }catch(AVException e){
+     throw (SignatureFactory.SignatureException) e;
    }
    return null;
   }
