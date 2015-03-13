@@ -201,7 +201,7 @@ comment.save()
 ```python
 post = Post()
 post.id = '520c7e1ae4b0a3ac9ebe326a'
-# or: post = Post.createWithouData('520c7e1ae4b0a3ac9ebe326a')
+# or: post = Post.create_withou_data('520c7e1ae4b0a3ac9ebe326a')
 comment.set('parent', post)
 ```
 
