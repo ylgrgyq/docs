@@ -25,11 +25,13 @@ public class MyApplication extends Application{
 并且在AndroidManifest.xml中间声明：
 
 ```
-<manifest ...
+<manifest>
+   ...
 
    <application
         android:name=".MyApplication"
         ....>
+        ...
 
         <service android:name="com.avos.avoscloud.PushService" />
 
@@ -39,7 +41,7 @@ public class MyApplication extends Application{
                 <action android:name="android.intent.action.USER_PRESENT" />
             </intent-filter>
         </receiver>
-
+        ...
    </application>
 
 </manifest>
@@ -49,7 +51,7 @@ public class MyApplication extends Application{
 
 ###登录
 
-假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统，代码如下：
+假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统（LeanCloud 云端只要求 `clientId` 在应用内唯一即可，具体用什么数据由应用层决定），代码如下：
 
 ```
 AVIMClient imClient = AVIMClient.getInstance("Tom");
@@ -71,6 +73,7 @@ imClient.open(new IMClientCallback(){
 假定我们要跟「Bob」这个用户进行聊天，我们先创建一个对话，代码如下：
 
 ```
+// 先查询一下是否已经存在与「Bob」的私聊对话
 List<String> clientIds = new ArrayList<String>();
 clientIds.add("Tom");
 clientIds.add("Bob");
@@ -78,9 +81,9 @@ clientIds.add("Bob");
 AVIMConversationQuery conversationQuery = imClient.getQuery();
 conversationQuery.whereContainsAll("m", clientIds);
 // 之前有常量定义：
-// const int ConversationType_OneOne = 0;
-// const int ConversationType_Group = 1;
-conversationQuery.whereEqualTo("type", ConversationType_OneOne);
+// int ConversationType_OneOne = 0; // 两个人之间的单聊
+// int ConversationType_Group = 1;  // 多人之间的群聊
+conversationQuery.whereEqualTo("attr.type", ConversationType_OneOne);
 
 conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
   @Override
@@ -143,12 +146,12 @@ conversation.sendMessage(message, new AVIMConversationCallback() {
 AVIMMessageManager.registerDefaultMessageHandler(new AVIMMessageHandler() {
   @Override
   public void onMessage(AVIMMessage message, AVIMConversation conversation) {
-    // 新消息到来了
+    // 新消息到来了。在这里增加你自己的处理代码。
   }
 
   @Override
   public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation) {
-    // 消息已经被接收。
+    // 消息已经被接收。这个函数什么时候被调用，后面会有说明。
   }
 });
 ```
@@ -162,7 +165,7 @@ AVIMMessageManager.registerDefaultMessageHandler(new AVIMMessageHandler() {
 * 对话中有新成员加入
 * 对话中有成员离开
 * 被邀请加入某对话
-* 被从某对话中踢出
+* 被踢出对话
 
 LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 
@@ -318,6 +321,22 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 }
 ```
 
+要发送文本消息，示例代码为：
+
+```
+AVIMTextMessage message = new AVIMTextMessage();
+message.setText("hello");
+conversation.sendMessage(message, new AVIMConversationCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null != e) {
+       // 出错了。。。
+    } else {
+    }
+  }
+});
+```
+
 ### AVIMImageMessage
 AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其声明为：
 
@@ -352,7 +371,26 @@ public class AVIMImageMessage extends AVIMFileMessage {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干图片元数据（width，height，图片 size，图片 format）和一个包含图片数据的 AVFile 实例。
+发送图片消息的示例代码为：
+
+```
+String localImagePath;
+try {
+  AVIMImageMessage message = new AVIMImageMessage(localImagePath);
+  conversation.sendMessage(message, new AVIMConversationCallback() {
+    @Override
+    public void done(AVException e) {
+      if (null != e) {
+        // 出错了。。。
+      } else {
+      }
+    }
+  });
+} catch (Exception ex) {
+}
+```
+
+接收到这样消息之后，开发者可以获取到若干图片元数据（width，height，图片 size，图片 format）和一个包含图片数据的 AVFile 相关信息（url，metaData）。
 
 ### AVIMAudioMessage
 AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其声明为：
@@ -380,7 +418,26 @@ public class AVIMAudioMessage extends AVIMFileMessage {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含图片数据的 AVFile 实例。
+发送音频消息的示例代码为：
+
+```
+String localAudioPath;
+try {
+  AVIMAudioMessage message = new AVIMAudioMessage(localAudioPath);
+  conversation.sendMessage(message, new AVIMConversationCallback() {
+    @Override
+    public void done(AVException e) {
+      if (null != e) {
+        // 出错了。。。
+      } else {
+      }
+    }
+  });
+} catch (Exception ex) {
+}
+```
+
+接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含图片数据的 AVFile 相关信息（url，metaData）。
 
 ### AVIMVideoMessage
 AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其声明为：
@@ -410,7 +467,26 @@ public class AVIMVideoMessage extends AVIMFileMessage {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含图片数据的 AVFile 实例。
+发送视频消息的示例代码为：
+
+```
+String localVideoPath;
+try {
+  AVIMVideoMessage message = new AVIMVideoMessage(localVideoPath);
+  conversation.sendMessage(message, new AVIMConversationCallback() {
+    @Override
+    public void done(AVException e) {
+      if (null != e) {
+        // 出错了。。。
+      } else {
+      }
+    }
+  });
+} catch (Exception ex) {
+}
+```
+
+接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含图片数据的 AVFile 相关信息（url，metaData）。
 
 ### AVIMLocationMessage
 AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合消息，其声明为：
@@ -426,6 +502,22 @@ public class AVIMLocationMessage extends AVIMTypedMessage {
   public AVGeoPoint getLocation();
   public void setLocation(AVGeoPoint location);
 }
+```
+
+要发送位置消息的示例代码为：
+```
+AVIMLocationMessage message = new AVIMLocationMessage();
+message.setText("快点过来！");
+message.setLocation(new AVGeoPoint(15.9, 56.4));
+conversation.sendMessage(message, new AVIMConversationCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null != e) {
+       // 出错了。。。
+    } else {
+    }
+  }
+});
 ```
 
 接收到这样的消息之后，开发者可以获取到具体的地理位置数据。
@@ -448,7 +540,9 @@ public abstract class AVIMTypedMessageHandler<T extends AVIMTypedMessage> extend
 开发者可以编写自己的消息处理 handler，然后调用 `AVIMMessageManager.registerMessageHandler(Class<? extends AVIMMessage> clazz,
       MessageHandler<?> handler)` 函数来注册目标 handler。
       
-这样，如果发送端发送的是 AVIMMessage 消息，那么接受端就是 **AVIMMessageManager.registerDefaultMessageHandler()中指定的 handler** 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 **AVIMMessageManager.registerMessageHandler()中指定的 handler** 被调用。
+LeanCloud IM SDK 内部消息分发的逻辑是这样的：对于收到的任一新消息，SDK 内部都会先解析消息的类型，然后找到开发者为这一类型注册的处理 handler，然后逐一调用这些 handler 的 onMessage 函数。如果没有找到专门处理这一类型消息的 handler，就会转交给 defaultHandler 处理。
+
+这样一来，在开发者为 TypedMessage（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 **AVIMMessageManager.registerDefaultMessageHandler()中指定的 handler** 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 **AVIMMessageManager.registerMessageHandler()中指定的 handler** 被调用。
 
 接收端对于富媒体消息的通知处理代码片段如下：
 
@@ -476,7 +570,39 @@ AVIMMessageManager.registerMessageHandler(AVIMLocationMessage.class, msgHandler)
 
 继承于 AVIMTypedMessage，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
-* 实现新的消息类型，继承自 AVIMTypedMessage 
+* 实现新的消息类型，继承自 AVIMTypedMessage。可以参考我们已有类的实现：
+
+```
+// 从 AVIMTypedMessage 继承，实现自己的消息类的时候要注意两点
+// 1, 在class上增加一个@AVIMMessageType(type=123)
+// 2, 在消息内部属性上要增加@AVIMMessageField(name="")name为可选字段在声明字段属性，同时自定义的字段要有对应的getter/setter方法
+//
+@AVIMMessageType(type = -1)
+public class AVIMTextMessage extends AVIMTypedMessage {
+
+  @AVIMMessageField(name = "_lctext")
+  String text;
+  @AVIMMessageField(name = "_lcattrs")
+  Map<String, Object> attrs;
+
+  public String getText() {
+    return this.text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Map<String, Object> getAttrs() {
+    return this.attrs;
+  }
+
+  public void setAttrs(Map<String, Object> attr) {
+    this.attrs = attr;
+  }
+}
+```
+
 * 调用 `AVIMMessageManager.registerAVIMMessageType(Class<? extends AVIMTypedMessage> messageType)` 函数进行注册
 * 调用 `AVIMMessageManager.registerMessageHandler(Class<? extends AVIMMessage> clazz,
       MessageHandler<?> handler)` 注册消息处理 handler
@@ -519,9 +645,9 @@ public void sendMessage(final AVIMMessage message, final int messageFlag,
 
 而这里 flag 的定义有如下三种类型：
 
-* 暂态消息（TRANSIENT_MESSAGE_FLAG = 0x00）。这种消息不会被自动保存（以后在历史消息中无法找到它），也不支持延迟接收，离线用户更不会收到推送通知，所以适合用来做控制协议。譬如聊天过程中「某某正在输入中...」这样的状态信息，就适合通过暂态消息来发送。
-* 普通消息（NONTRANSIENT_MESSAGE_FLAG = 0x01）。这种消息就是我们最常用的消息类型，在 LeanCloud 云端会自动保存起来，支持延迟接收和离线推送，以后在历史消息中可以找到它。
-* 待回执消息（RECEIPT_MESSAGE_FLAG = 0x11）。这也是一种普通消息，只是消息被对方收到之后 LeanCloud 服务端会发送一个回执通知给发送方（这就是 AVIMMessageHandler 中 `public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation)` 函数被调用的时机）。
+* 暂态消息（AVIMConversation.TRANSIENT_MESSAGE_FLAG）。这种消息不会被自动保存（以后在历史消息中无法找到它），也不支持延迟接收，离线用户更不会收到推送通知，所以适合用来做控制协议。譬如聊天过程中「某某正在输入中...」这样的状态信息，就适合通过暂态消息来发送。
+* 普通消息（AVIMConversation.NONTRANSIENT_MESSAGE_FLAG）。这种消息就是我们最常用的消息类型，在 LeanCloud 云端会自动保存起来，支持延迟接收和离线推送，以后在历史消息中可以找到它。
+* 待回执消息（AVIMConversation.RECEIPT_MESSAGE_FLAG）。这也是一种普通消息，只是消息被对方收到之后 LeanCloud 服务端会发送一个回执通知给发送方（这就是 AVIMMessageHandler 中 `public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation)` 函数被调用的时机）。
 
 ### 接收群组消息 ###
 
@@ -539,7 +665,7 @@ public void sendMessage(final AVIMMessage message, final int messageFlag,
     conversation.addMembers(userIds, new AVIMConversationCallback() {
       @Override
       public void done(AVException error) {
-        if (error) {
+        if (null != error) {
           // 加入失败，报错.
         } else {
           // 发出邀请，此后新成员就可以看到这个对话中的所有消息了。
@@ -561,7 +687,7 @@ public void sendMessage(final AVIMMessage message, final int messageFlag,
     conversation.kickMembers(userIds, new AVIMConversationCallback() {
       @Override
       public void done(AVException error) {
-        if (error) {
+        if (null != error) {
           // 失败，报错.
         } else {
           // 成功。
@@ -588,7 +714,7 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
     conversation.queryHistoryMessage(oldestMsgId,oldestMsgTimestamp, limit, new AVIMHistoryMessageCallback(){
       @Override
       public void done(List<AVIMMessage> messages, AVException e) {
-        if (e) {
+        if (null != e) {
           // 出错了:(
         } else {
           // 成功
@@ -650,7 +776,7 @@ conversationQuery.whereEqualTo("type", ConversationType_Group);
 conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
   @Override
   public void done(List<AVIMConversation> conversations, AVException e) {
-    if (e) {
+    if (null != e) {
       // 出错了。。。
     } else {
       // done!
