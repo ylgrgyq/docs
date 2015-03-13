@@ -16,6 +16,8 @@ SDK 对数据进行过包装，并且会对连接产生的错误进行处理，�
 
 ## 通过 bower 安装
 
+[什么是 bower ?](http://bower.io/)
+
 ```
 bower install leancloud-push -- save
 ```
@@ -78,6 +80,7 @@ push.on('reuse', function() {
 ### 全局命名空间 AV
 
 LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
+
 ### AV.push(options)
 
 描述：配置一个 Push 服务，生成一个 PushObject，提供后续调用的方法。
@@ -199,7 +202,7 @@ pushObject.send({
 
 参数：
 
-* channels {Array} 订阅的 channel 名字的数组，注意名字中不能含有横线「-」
+* channels {Array} 订阅的 channel 名字的数组，**注意名字中不能含有横线「-」**
 
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
@@ -219,11 +222,11 @@ pushObject.send({
 
 ### pushObject.unsubscribe(channels, callback)
 
-描述：增加订阅的频道
+描述：退订已经订阅的频道
 
 参数：
 
-* channels {Array} 订阅的 channel 名字的数组，注意名字中不能含有横线「-」
+* channels {Array} 订阅的 channel 名字的数组，**注意名字中不能含有横线「-」**
 
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
