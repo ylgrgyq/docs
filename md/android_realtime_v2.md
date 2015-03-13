@@ -79,7 +79,7 @@ clientIds.add("Tom");
 clientIds.add("Bob");
 
 AVIMConversationQuery conversationQuery = imClient.getQuery();
-conversationQuery.whereContainsAll("m", clientIds);
+conversationQuery.withMembers(clientIds);
 // 之前有常量定义：
 // int ConversationType_OneOne = 0; // 两个人之间的单聊
 // int ConversationType_Group = 1;  // 多人之间的群聊
@@ -711,7 +711,7 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
 
     String oldestMsgId;
     long oldestMsgTimestamp;
-    conversation.queryHistoryMessage(oldestMsgId,oldestMsgTimestamp, limit, new AVIMHistoryMessageCallback(){
+    conversation.queryMessages(oldestMsgId,oldestMsgTimestamp, limit, new AVIMHistoryMessageCallback(){
       @Override
       public void done(List<AVIMMessage> messages, AVException e) {
         if (null != e) {
