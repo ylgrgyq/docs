@@ -618,7 +618,7 @@ from StringIO import StringIO
 
 file1 = File('fileFromStringIO', StringIO('data'))
 
-local_file = open('~/lena.png')
+local_file = open('~/avatar.png')
 file2 = File('fileFromLocalFile', local_file)
 local_file.close()
 
@@ -636,7 +636,7 @@ file4 = File('truth', StringIO('{"truth": 42}'), 'application/json')
 另外还可以直接创建一个只有 URL 没有数据的 leancloud.File 对象，用来引用现有网络上的文件。
 
 ```python
-file = File.create_with_url('lena.jpg', 'http://www.cs.cmu.edu/~chuck/lennapg/len_top.jpg')
+file = File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
 ```
 
 在一个 File 实例上调用 save 方法，可以将文件上传至服务器。我们还可以将一个 File 对象和 一个 Object 对象关联起来，作为其中的一个字段。
