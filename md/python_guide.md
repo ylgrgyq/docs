@@ -11,6 +11,10 @@ LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位�
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
+### 兼容性
+
+目前 LeanCloud Python SDK 基于 Python 2.x 开发，在 Python 3.x 环境下使用仍然有一些兼容性问题。我们会尽快改善这一问题的。
+
 ### 安装
 
 您可以使用 `pip` 或者 `easy_install` 安装 Python SDK
