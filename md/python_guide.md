@@ -530,23 +530,25 @@ print "Sean has played %d games" % count
 
 ### 组合查询
 
-如果你想要查找满足一系列查询的对象，你可以使用 leancloud.Query.or 方法来构建查询，这样得到的结果是所有查询的并集。比如你想要找的玩家或者是有很多或者很少的胜利的时候，你可以这样:
+如果你想要查找满足一系列查询的对象，你可以使用 Query.or_ 方法来构建查询，这样得到的结果是所有查询的并集。比如你想要找的玩家或者是有很多或者很少的胜利的时候，你可以这样:
 
 ```python
-lots_of_wins = leancloud.Query("Player")
+from leancloud import Query
+
+lots_of_wins = Query("Player")
 lots_of_wins.greater_than("wins", 150)
 
-few_wins = leancloud.Query("Player")
+few_wins = Query("Player")
 few_wins.less_than("wins", 5)
 
-main_query = leancloud.Query.or(lots_of_wins, few_wins)
+main_query = Query.or_(lots_of_wins, few_wins)
 results = mainQuery.find()
 # results contains a list of players that either have won a lot of games or won only a few games.
 ```
 
-你也可以对 AV.Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
+你也可以使用 Query.and_ 对 Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
 
-请注意我们不会在组合查询的子查询中支持非过滤型的条件 (比如:limit,skip,ascending/descending,include)。
+请注意我们不会在组合查询的子查询中支持非过滤型的条件 (比如:limit, skip, ascending/descending, include)。
 
 ### 删除查询结果
 
