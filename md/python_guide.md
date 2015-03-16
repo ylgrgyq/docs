@@ -35,7 +35,7 @@ easy_install leancloud
 
 ### 配合 gevent 使用
 
-Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果您的代码需要应对高并发场景，可以使用 gevent 来提高性能。
+Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果您的代码需要应对高并发场景，推荐使用 gevent 来提高性能。
 
 ```python
 from gevent import monkey
@@ -43,7 +43,7 @@ from gevent import monkey
 monkey.patch_all()  # 或者只 patch 指定的模块
 ```
 
-请注意上述代码一定要在其他代码之前执行，比如说写在您的模块的 `__init__.py` 最前面。
+请注意**上述代码一定要在其他代码之前执行**，比如说写在您的模块的 `__init__.py` 最前面。
 
 关于 gevent 的详细介绍，可以参考[gevent 官方文档](http://www.gevent.org/)。
 
@@ -297,7 +297,7 @@ gameScores = query.find()
 
 ### 查询条件
 
-有几种方式来设置查询条件。 你可以用 notEqual 方法和一个特定的值来过滤不符合要求的对象:
+有几种方式来设置查询条件。 你可以用 not_equal_to 方法和一个特定的值来过滤不符合要求的对象:
 
 ```python
 query.not_equal_to("playerName", "Michael Yabuti")
@@ -331,7 +331,7 @@ game_score = query.first()
 query.skip(10)  # skip the first 10 results
 ```
 
-对于可以排序的类型，比如 int 和 str，你可以控制返回结果的顺序:
+对于可以排序的类型，比如 int / datetime 和 str，你可以控制返回结果的顺序:
 
 ```python
 # Sorts the results in ascending order by the score field
@@ -458,7 +458,7 @@ comments = query.find()
 # comments now contains the comments for my_post
 ```
 
-如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 matches_query 操作。注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询，所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment，你可以:
+如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 matches_query 操作。**注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询，所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状况**。例如，为了找到 post 中有图片的 comment，你可以:
 
 ```python
 inner_query = leancloud.Query(Post)
@@ -552,7 +552,7 @@ results = mainQuery.find()
 
 你也可以使用 Query.and_ 对 Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
 
-请注意我们不会在组合查询的子查询中支持非过滤型的条件 (比如:limit, skip, ascending/descending, include)。
+请注意 **我们不会在组合查询的子查询中支持非过滤型的条件**（比如:limit, skip, ascending/descending, include）。
 
 ### 删除查询结果
 
@@ -575,8 +575,13 @@ leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以
 from leancloud import File
 from StringIO import StringIO
 
+
 file1 = File('fileFromStringIO', StringIO('data'))
-file2 = File('fileFromLocalFile', open('~/lena.png'))  # 生产环境代码请务必记得 close 打开的文件
+
+local_file = open('~/lena.png')
+file2 = File('fileFromLocalFile', local_file)
+local_file.close()
+
 file3 = File('fileFromBuffer', buffer('\x42\x43\x44'))
 
 # 还可以指定文件的mime type，如果不指定的话会根据文件名后缀来猜测
@@ -597,14 +602,16 @@ file = File.create_with_url('lena.jpg', 'http://www.cs.cmu.edu/~chuck/lennapg/le
 在一个 File 实例上调用 save 方法，可以将文件上传至服务器。我们还可以将一个 File 对象和 一个 Object 对象关联起来，作为其中的一个字段。
 
 ```python
-avatar_image = File('avatar.png', open(path))
+f = open(avatar_file_path)
+avatar_image = File('avatar.png', f)
+f.close()
 avatar_image.save()
 
 user.set('avatar', avatar_image)
 user.save()
 ```
 
-对象需要注意的一点是，leancloud.File 不是 leancloud.Object 的子类，虽然它们之间有很多类似的方法。
+对象需要注意的一点是，**leancloud.File 不是 leancloud.Object 的子类，虽然它们之间有很多类似的方法**。
 
 
 ### 获取文件内容
@@ -664,7 +671,7 @@ user.sign_up()
 
 这个调用会在在你的应用中创建一个新的用户。在这样做之前，同样会确认用户名和 email 在应用内都是唯一的。为了安全我们会将密码散列过后存储在 LeanCloud 中。我们从不会将用户密码以明文存储，我们也不会用明文向任何客户端发送密码。
 
-注意我们使用了 sign_up 方法而不是 save 方法。新的 User 永远应该使用 sign_up 方法来新建。而随后的用户的信息更新可以调用 save 来做。
+**注意我们使用了 sign_up 方法而不是 save 方法。新的 User 永远应该使用 sign_up 方法来新建。而随后的用户的信息更新可以调用 save 来做**。
 
 如果一个 sign_up 没有成功的话，方法调用会抛出异常。最常见的问题是 username 或者 email 已经被其他用户所使用了。你应该清楚地反馈给你的用户，让他们再次用一个不同的用户名来注册。
 
@@ -705,7 +712,7 @@ Role 有一些属性与普通的 Object 不同：
 
 ### 角色对象的安全性
 
-Role 使用和其他 LeanCloud 对象一样的 ACL 权限策略，除开它需要 ACL 被显式地设置以外。通常来说，只有用户有极大的权限（比如管理员）才应该被允许创建或者更改 Role。所以你应该按这种标准来设定 Role 的 ACL。请注意，如果你给了用户一个 Role 一个写权限，这个用户有可能会在这个权限中加入另一个 user，或者甚至直接把角色删除掉。
+Role 使用和其他 LeanCloud 对象一样的 ACL 权限策略，除开它需要 ACL 被显式地设置以外。通常来说，只有用户有极大的权限（比如管理员）才应该被允许创建或者更改 Role。所以你应该按这种标准来设定 Role 的 ACL。请注意，**如果你给了用户一个 Role 一个写权限，这个用户有可能会在这个权限中加入另一个 user，或者甚至直接把角色删除掉**。
 
 为了创建一个新的 Role，你应该如下写：
 
@@ -714,7 +721,7 @@ from leancloud import ACL
 from leancloud import Role
 
 # By specifying no write privileges for the ACL, we can ensure the role cannot be altered.
-var role_acl = ACL();
+role_acl = ACL();
 role_acl.set_public_read_access(True)
 role = Role('Administrator', role_acl)
 role.save()
@@ -731,7 +738,7 @@ for r in roles_to_add_to_tole.length:
 role.save()
 ```
 
-请非常注意一点，注册角色的 ACL 的时候，它们只能被应该有权限修改它的人修改。
+请非常注意一点，**注册角色的 ACL 的时候，它们只能被应该有权限修改它的人修改**。
 
 ### 其他对象的安全性
 
@@ -787,7 +794,7 @@ point = GeoPoint(latitude=40.0, longitude=-30.0)
 place_object.set("location", point)
 ```
 
-注意：现在我们只支持一个类中只能有一个 key 能对应 AV.GeoPoint。
+注意：**现在我们只支持一个类中只能有一个 key 能对应 AV.GeoPoint**。
 
 ### 地理位置查询
 
