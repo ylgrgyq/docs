@@ -699,6 +699,74 @@ Role 有一些属性与普通的 Object 不同：
 - users 一个关系，包含了会继承角色权限的 User
 - roles 一个关系，包含了会继承角色权限的子角色
 
+### 角色对象的安全性
+
+Role 使用和其他 LeanCloud 对象一样的 ACL 权限策略，除开它需要 ACL 被显式地设置以外。通常来说，只有用户有极大的权限（比如管理员）才应该被允许创建或者更改 Role。所以你应该按这种标准来设定 Role 的 ACL。请注意，如果你给了用户一个 Role 一个写权限，这个用户有可能会在这个权限中加入另一个 user，或者甚至直接把角色删除掉。
+
+为了创建一个新的 Role，你应该如下写：
+
+```python
+from leancloud import ACL
+from leancloud import Role
+
+# By specifying no write privileges for the ACL, we can ensure the role cannot be altered.
+var role_acl = ACL();
+role_acl.set_public_read_access(True)
+role = Role('Administrator', role_acl)
+role.save()
+```
+
+你可以通过增加 "user" 和 "roles" 关系的成员来在 Role 中加入用户或者子角色：
+
+```python
+role = Role(role_name, role_acl);
+for u in users_to_add_to_tole:
+  role.get_users().add(u)
+for r in roles_to_add_to_tole.length:
+  role.get_roles().add(r)
+role.save()
+```
+
+请非常注意一点，注册角色的 ACL 的时候，它们只能被应该有权限修改它的人修改。
+
+### 其他对象的安全性
+
+现在你应该已经创建了在你的程序中要使用的一系列的角色，你可以用 ACL 来定义他们的用户可以拥有的权限。每一个 Object 都可以指定一个 ACL，这样提供了哪些用户或者角色应该有权限来读或者写这个对象。
+
+将一个读或者写的权限授予一个角色是很直观的：
+
+```python
+moderators = your_moderators_rols
+wall_post = Object.create("WallPost")
+post_acl = ACL()
+post_acl.set_role_write_access(moderators, True)
+wall_post.set_acl(post_acl)
+wallPost.save()
+```
+
+你可以不需要查找这个 Role，直接把名字提供给 ACL：
+
+```python
+wall_post = Object.create("WallPost")
+post_acl = ACL()
+post_acl.set_role_write_access("Moderators", True)
+wall_post.set_acl(post_acl)
+wall_post.save()
+```
+
+### 角色继承
+
+就像上面所描述的一样，一个角色可能包含其他的角色，表示两个角色之间的父 - 子关系，这样做的结果就是任何被授予一个角色的权限都会被隐式地授予这个角色的所有子角色。
+
+这样的关系很经常会在有用户管理内容的程序之中看到，比如论坛，有一个很少量 的用户称为管理员，有最高的权限，比如程序设定，创建新的论坛，设定所有人能看 到的内容等等。另一类有一部分类似于「版主」的用户，这些人有责任保持用户创建的内容是合适的，任何一个「版主」有的权限「管理员」都应该有。为了启用这种关系，你应该使「管理员」成为「版主」的一个子角色。
+
+```python
+administrators = your_administrators_role
+moderators = your_moderators_role
+moderators.get_roles().add(administrators)
+moderators.save()
+```
+
 ## 地理位置
 
 LeanCloud 允许你能够将真实世界的经度和纬度坐标放入对象之中。在 Object 中 加入一个 leancloud.GeoPoint 可以让你查询一个 Object 离一个参考点的相对位置。这允许你轻松的发现一个用户周围最近的用户，或者离一个用户最近的地点。
