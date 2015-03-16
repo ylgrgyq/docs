@@ -563,6 +563,46 @@ query.destroy_all()
 # delete all objects by this query successfully.
 ```
 
+### CQL 查询语言
+
+我们允许使用类 SQL 语法的 CQL 查询语言来查询 LeanCloud 应用内的数据，例如：
+
+```python
+from leancloud import Query
+
+result = Query.do_cloud_query('select * from GameScore')
+# results 是查询返回的结果，Object 列表
+results = result.results
+# do something with results...
+
+# 查询分数大于 50 的记录数并返回前100条。
+result = Query.do_cloud_query('select count(*), * from GameScore where score>50')
+# results 是查询返回的结果，Object 列表
+results = result.results
+# count 表示符合查询条件的总记录数
+count = result.count
+```
+
+do_cloud_query 返回的 result 包含三个属性：
+
+- results - 查询结果的 AV.Object 列表
+- count - 如果使用了 `select count(*)` 的查询语法，返回符合查询条件的记录数目
+- class_name - 查询的 class name
+
+CQL 语法请参考 [CQL 详细指南](../cql_guide.html)。
+
+针对查询条件，我们推荐使用占位符的 CQL 语句来提升性能，占位符对应的值按照顺序组合起来作为第二个参数 pvalues 数组传入：
+
+```python
+# 查询分数大于 50 的记录数并返回前10条
+result = Query.do_cloud_query('select count(*), * from GameScore where score > ? limit ?', 50, 10)
+# results 是查询返回的结果，Object 列表
+results = result.results
+# count 表示符合查询条件的总记录数
+count = result.count
+# do something with results ...
+```
+
 ## 文件
 
 leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可 以随意用来存储文档，视频，音乐或者任何二进制数据。
