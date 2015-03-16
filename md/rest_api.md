@@ -2471,14 +2471,14 @@ curl -X GET \
 ### 通过 REST API 向用户发消息
 
 我们目前提供 REST API 允许向指定用户发送消息。您可以一次向至多 20 个用
-户发送消息。目前这种消息是 transient 消息，仅对在线用户有效，暂不支持离线消息、推送通知、消息记录等。
+户或一个特定的群组发送消息。消息类型支持普通消息，和 transient 消息。
 
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"]}' \
+  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"], "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
 ```
 
@@ -2495,7 +2495,15 @@ curl -X POST \
   </tr>
   <tr>
     <td>to_peers</td>
-    <td>消息的收件人 id 列表，数组，一次至多发送20个</td>
+    <td>消息的收件人 id 列表，数组，一次至多发送20个（可选，与 group_id 二选一）</td>
+  </tr>
+  <tr>
+    <td>group_id</td>
+    <id>发送的目标群组 id（可选，与 to_peers 二选一）</id>
+  </tr>
+  <tr>
+    <td>transient</td>
+    <id>是否为暂态消息（可选，**由于向后兼容的考虑，默认为 true**，请注意设置这个值）</id>
   </tr>
   <tr>
     <td>message</td>
