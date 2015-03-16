@@ -5,7 +5,7 @@
 
 LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位的后端服务。我们的目标是让你不需要进行后端开发及服务器运维等工作就可以开发和发布成熟的应用。
 
-对于熟悉 Python 的用户，我们提供了 Python 语言版本的 SDK ， 方便开发。
+对于熟悉 Python 的用户，我们提供了 Python 语言版本的 SDK ，方便开发。
 
 ## 快速入门
 
@@ -299,20 +299,20 @@ gameScores = query.find()
 query.not_equal_to("playerName", "Michael Yabuti")
 ```
 
-你可以给定更多的条件, 只有满足所有条件的对象才会作为结果返回。
+你可以给定更多的条件，只有满足所有条件的对象才会作为结果返回。
 
 ```python
 query.not_equal_to("playerName", "Michael Yabuti")
 query.greater_than("playerAge", 18)
 ```
 
-你可以用设定 limit 的方法来限定返回的结果数, 默认的返回结果数是 100, 但是任何 1 到 1000 之间的数值都是合法的，在 0 到 1000 范围之外的都强制转成默认的 100。
+你可以用设定 limit 的方法来限定返回的结果数，默认的返回结果数是 100，但是任何 1 到 1000 之间的数值都是合法的，在 0 到 1000 范围之外的都强制转成默认的 100。
 
 ```python
 query.limit(10) # limit to at most 10 results
 ```
 
-如果你只想要一个结果, 一个更加方便的方法可能是使用 first, 而不是 find 方法。
+如果你只想要一个结果，一个更加方便的方法可能是使用 first，而不是 find 方法。
 
 ```python
 GameScore = Object.extend('GameScore')
@@ -321,13 +321,13 @@ query.equal_to('playerEmail', 'dstemkoski@example.com')
 game_score = query.first()
 ```
 
-你可以用 skip 跳过前面的结果, 这可能对于分页很有用。
+你可以用 skip 跳过前面的结果，这可能对于分页很有用。
 
 ```python
 query.skip(10)  # skip the first 10 results
 ```
 
-对于可以排序的类型, 比如 int 和 str, 你可以控制返回结果的顺序:
+对于可以排序的类型，比如 int 和 str，你可以控制返回结果的顺序:
 
 ```python
 # Sorts the results in ascending order by the score field
@@ -337,14 +337,14 @@ query.ascending("score")
 query.descending("score")
 ```
 
-对于可以排序的类型, 你同样可以在查询中进行比较。
+对于可以排序的类型，你同样可以在查询中进行比较。
 
 ```python
 # Restricts to wins < 50
 query.less_than("wins", 50)
 
 # Restricts to wins <= 50
-query.less_than_or_equalTo("wins", 50)
+query.less_than_or_equal_to("wins", 50)
 
 # Restricts to wins > 50
 query.greater_than("wins", 50)
@@ -353,16 +353,16 @@ query.greater_than("wins", 50)
 query.greater_than_or_equal_to("wins", 50)
 ```
 
-如果想让返回的对象的某个属性匹配多个值, 你可以使用 contained_in, 提供一个数组就可以了。这样通常可以用单个的查询来获取多个结果。比如你想获取某几个玩家的分数:
+如果想让返回的对象的某个属性匹配多个值，你可以使用 contained_in，提供一个数组就可以了。这样通常可以用单个的查询来获取多个结果。比如你想获取某几个玩家的分数:
 
 ```python
 # Finds scores from any of Jonathan, Dario, or Shawn
 query.contained_in("playerName", ["Jonathan Walsh", "Dario Wunsch", "Shawn Simon"])
 ```
 
-相反地，你可以使用 notContainedIn 方法来查询在集合之外的目标对象。
+相反地，你可以使用 not_contained_in 方法来查询在集合之外的目标对象。
 
-如果你想要查询含有某一特定属性的对象, 你可以使用 exists。相对地, 如果你想获取没有这一特定属性的对象, 你可以使用 `does_not_exist`。
+如果你想要查询含有某一特定属性的对象，你可以使用 exists。相对地，如果你想获取没有这一特定属性的对象，你可以使用 `does_not_exist`。
 
 ```python
 # Finds objects that have the score set
@@ -370,8 +370,9 @@ query.exists("score")
 
 # Finds objects that don't have the score set
 query.does_not_exist("score")
+```
 
-你可以使用 `matches_key_in_query` 方法来进行嵌套的子查询。举例说, 如果你有一个类包含了运动队, 而你在用户的类中存储了用户的家乡信息, 你可以构造一个查询来查找某地的运动队有赢的记录的用户。查询应该看起来像下面这样:
+你可以使用 `matches_key_in_query` 方法来进行嵌套的子查询。举例说，如果你有一个类包含了运动队，而你在用户的类中存储了用户的家乡信息，你可以构造一个查询来查找某地的运动队有赢的记录的用户。查询应该看起来像下面这样:
 
 ```python
 from leancloud import Object
@@ -388,7 +389,7 @@ user_query.matches_key_in_query("hometown", "city", team_query)
 results = user_query.find()
 ```
 
-相对地, 可以使用 `does_not_match_key_in_query` 来获取属性不在子查询结果中的对象。比如为了获得用户的家乡队输了的情况:
+相对地，可以使用 `does_not_match_key_in_query` 来获取属性不在子查询结果中的对象。比如为了获得用户的家乡队输了的情况:
 
 ```python
 losing_user_query = Query(User)
@@ -398,7 +399,7 @@ losing_user_query.does_not_match_key_in_query("hometown", "city", teamQuery)
 results = losingUserQuery.find()
 ```
 
-你可以用 select 和一个 keys 的列表来限定返回的字段。为了获得只包含 score 和 playername 字段的文档 ( 包括 build-in 的字段,objectId,createdAt, updatedAt):
+你可以用 select 和一个 keys 的列表来限定返回的字段。为了获得只包含 score 和 playername 字段的文档 ( 包括 build-in 的字段，objectId，createdAt，updatedAt):
 
 ```python
 GameScore = Object.extend("GameScore")
@@ -417,14 +418,14 @@ result = query.first().fetch()
 
 ### 对数组值做查询
 
-对于 value 是数组的情况, 你可以这样查询数组中的值有 2 的情况的对象:
+对于 value 是数组的情况，你可以这样查询数组中的值有 2 的情况的对象:
 
 ```python
 # Find objects where the array in arrayKey contains 2.
 query.equal_to("arrayKey", 2)
 ```
 
-你同样可以用下面的方式找到同时包含元素 2,3,4 的数组:
+你同样可以用下面的方式找到同时包含元素 2，3，4 的数组:
 
 ```python
 # Find objects where the array in arrayKey contains all of the elements 2, 3, and 4.
@@ -433,7 +434,7 @@ query.contains_all("arrayKey", [2, 3, 4])
 
 ### 对字符串类型做查询
 
-使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像, 因为有索引所以对于大的数据集这个操作也是很高效的.
+使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的.
 
 ```python
 # Finds barbecue sauces that start with "Big Daddy's".
@@ -443,7 +444,7 @@ query.starts_with("name", "Big Daddy's")
 
 ### 关系查询
 
-对于查询关系型数据来说有几种不同的方式, 如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object, 你可以使用 equal_to, 就像对于别的数据类型一样. 举个例子, 如果每一个 Comment 在它的 post 字段都有一个 Post 对象, 你可以通过 如下的方式来获取一个 Post 的 comment:
+对于查询关系型数据来说有几种不同的方式，如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object，你可以使用 equal_to，就像对于别的数据类型一样. 举个例子，如果每一个 Comment 在它的 post 字段都有一个 Post 对象，你可以通过 如下的方式来获取一个 Post 的 comment:
 
 ```python
 # Assume leancloud.Object my_post was previously created.
@@ -453,7 +454,7 @@ comments = query.find()
 # comments now contains the comments for my_post
 ```
 
-如果你想得到其字段中包含的子对象满足另一个查询的结果, 你可以使用 matches_query 操作. 注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询, 所以对于大的数据集你可能需要小心构建你的查询, 否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment, 你可以:
+如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 matches_query 操作. 注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询，所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment，你可以:
 
 ```python
 inner_query = leancloud.Query(Post)
@@ -464,7 +465,7 @@ comments = query.find()
 # comments now contains the comments for posts with images.
 ```
 
-如果你想要获取某字段中包含的子对象不满足指定查询的结果, 你可以使用 does_not_match_query. 例如，为了找到针对不含图片的 post 的 comment, 你可以这样:
+如果你想要获取某字段中包含的子对象不满足指定查询的结果，你可以使用 does_not_match_query. 例如，为了找到针对不含图片的 post 的 comment，你可以这样:
 
 ```python
 inner_query = leancloud.Query(Post)
@@ -483,7 +484,7 @@ post.id = "520c7e1ae4b0a3ac9ebe326a"
 query.equal_to("post", post)
 ```
 
-在某些情况下, 你可能希望查询结果中包含多个相关联的其他数据类型。你可以使用 include 方法. 比如: 假设你想获得最新的 10 个 comment, 你可能想同时获取它们相关的 post 数据:
+在某些情况下，你可能希望查询结果中包含多个相关联的其他数据类型。你可以使用 include 方法. 比如: 假设你想获得最新的 10 个 comment，你可能想同时获取它们相关的 post 数据:
 
 ```python
 query = leancloud.Query(Comment)
@@ -505,17 +506,17 @@ for comment in comments:
     post = comment.get("post")
 ```
 
-你同样可以用点操作符来做多级查询, 如果你想同时找到 comment 的 post 和相应 post 的 author, 你可以这样做:
+你同样可以用点操作符来做多级查询，如果你想同时找到 comment 的 post 和相应 post 的 author，你可以这样做:
 
 ```python
 query.include(["post.author"])
 ```
 
-你可以多次使用 include 来构建一个有多个字段的查询, 这项功能同样适用于 leancloud.Query 的 helper 函数例如 first 和 get。
+你可以多次使用 include 来构建一个有多个字段的查询，这项功能同样适用于 leancloud.Query 的 helper 函数例如 first 和 get。
 
 ### 对象计数
 ``
-如果你只是想查询满足一个 query 的结果集到底有多少对象, 但是你不需要得到它们, 你可以使用 count 来取代 find. 比如, 为了获得某个玩家到底玩过多少局游戏:
+如果你只是想查询满足一个 query 的结果集到底有多少对象，但是你不需要得到它们，你可以使用 count 来取代 find. 比如，为了获得某个玩家到底玩过多少局游戏:
 
 ```python
 query = leancloud.Query(GameScore)
@@ -529,7 +530,7 @@ print "Sean has played %d games" % count
 
 ### 组合查询
 
-如果你想要查找满足一系列查询的对象, 你可以使用 leancloud.Query.or 方法来构建查询, 这样得到的结果是所有查询的并集。比如你想要找的玩家或者是有很多或者很少的胜利的时候, 你可以这样:
+如果你想要查找满足一系列查询的对象，你可以使用 leancloud.Query.or 方法来构建查询，这样得到的结果是所有查询的并集。比如你想要找的玩家或者是有很多或者很少的胜利的时候，你可以这样:
 
 ```python
 lots_of_wins = leancloud.Query("Player")
@@ -558,7 +559,7 @@ query.destroy_all()
 
 ## 文件
 
-leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题. 最常见的用例就是存储图片, 但是你可 以随意用来存储文档, 视频, 音乐或者任何二进制数据。
+leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题. 最常见的用例就是存储图片，但是你可 以随意用来存储文档，视频，音乐或者任何二进制数据。
 
 ### 创建
 
@@ -573,7 +574,7 @@ file2 = File('fileFromLocalFile', open('~/lena.png'))  # 生产环境代码请�
 file3 = File('fileFromBuffer', buffer('\x42\x43\x44'))
 
 # 还可以指定文件的mime type，如果不指定的话会根据文件名后缀来猜测
-file4 = File('truth', '{"truth": 42}', 'application/json')
+file4 = File('truth', StringIO('{"truth": 42}'), 'application/json')
 ```
 
 需要注意的有两点：
@@ -688,7 +689,13 @@ user.save()
 
 我们提供一个特殊的类称为 leancloud.Role 在客户端代码中表示这种角色对象，Role 是一个 Object 的子类，而且有所有的特性，比如没有固定模式，自动持久化和 key value 接口等。所有的在 Object 上有用的方法在 Role 上依然有作用。不同之处是 Role有一些普通对象没有的特殊属性和方法。
 
-TODO
+### 属性
+
+Role 有一些属性与普通的 Object 不同：
+
+- name 角色的名称，这个值是必须的，而且只能在角色创建的时候指定一次，名字 必须由字母，数字，空格，减号或者下划线组成. 名称会被用于表示角色名而不需 要角色的 objectId
+- users 一个关系，包含了会继承角色权限的 User
+- roles 一个关系，包含了会继承角色权限的子角色
 
 ## 地理位置
 
@@ -696,7 +703,7 @@ LeanCloud 允许你能够将真实世界的经度和纬度坐标放入对象之�
 
 ### GeoPoint
 
-为了将一个对象联系到一个点上，你需要先创建一个 GeoPoint。举例来说，为了创建一个地理位置在纬度 40 度, 经度在 -30 度的点：
+为了将一个对象联系到一个点上，你需要先创建一个 GeoPoint。举例来说，为了创建一个地理位置在纬度 40 度，经度在 -30 度的点：
 
 ```python
 from leancloud import GeoPoint
