@@ -434,7 +434,7 @@ query.contains_all("arrayKey", [2, 3, 4])
 
 ### 对字符串类型做查询
 
-使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的.
+使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的。
 
 ```python
 # Finds barbecue sauces that start with "Big Daddy's".
@@ -444,7 +444,7 @@ query.starts_with("name", "Big Daddy's")
 
 ### 关系查询
 
-对于查询关系型数据来说有几种不同的方式，如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object，你可以使用 equal_to，就像对于别的数据类型一样. 举个例子，如果每一个 Comment 在它的 post 字段都有一个 Post 对象，你可以通过 如下的方式来获取一个 Post 的 comment:
+对于查询关系型数据来说有几种不同的方式，如果你想要获取的对象中有某个属性 包含一个特定的 leancloud.Object，你可以使用 equal_to，就像对于别的数据类型一样。举个例子，如果每一个 Comment 在它的 post 字段都有一个 Post 对象，你可以通过 如下的方式来获取一个 Post 的 comment:
 
 ```python
 # Assume leancloud.Object my_post was previously created.
@@ -454,7 +454,7 @@ comments = query.find()
 # comments now contains the comments for my_post
 ```
 
-如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 matches_query 操作. 注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询，所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment，你可以:
+如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 matches_query 操作。注意默认的结果条数限制 100 和最大 limit 1000 也同样适用于子查询，所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状况。例如，为了找到 post 中有图片的 comment，你可以:
 
 ```python
 inner_query = leancloud.Query(Post)
@@ -465,7 +465,7 @@ comments = query.find()
 # comments now contains the comments for posts with images.
 ```
 
-如果你想要获取某字段中包含的子对象不满足指定查询的结果，你可以使用 does_not_match_query. 例如，为了找到针对不含图片的 post 的 comment，你可以这样:
+如果你想要获取某字段中包含的子对象不满足指定查询的结果，你可以使用 does_not_match_query。例如，为了找到针对不含图片的 post 的 comment，你可以这样:
 
 ```python
 inner_query = leancloud.Query(Post)
@@ -484,7 +484,7 @@ post.id = "520c7e1ae4b0a3ac9ebe326a"
 query.equal_to("post", post)
 ```
 
-在某些情况下，你可能希望查询结果中包含多个相关联的其他数据类型。你可以使用 include 方法. 比如: 假设你想获得最新的 10 个 comment，你可能想同时获取它们相关的 post 数据:
+在某些情况下，你可能希望查询结果中包含多个相关联的其他数据类型。你可以使用 include 方法。比如: 假设你想获得最新的 10 个 comment，你可能想同时获取它们相关的 post 数据:
 
 ```python
 query = leancloud.Query(Comment)
@@ -516,7 +516,7 @@ query.include(["post.author"])
 
 ### 对象计数
 ``
-如果你只是想查询满足一个 query 的结果集到底有多少对象，但是你不需要得到它们，你可以使用 count 来取代 find. 比如，为了获得某个玩家到底玩过多少局游戏:
+如果你只是想查询满足一个 query 的结果集到底有多少对象，但是你不需要得到它们，你可以使用 count 来取代 find。比如，为了获得某个玩家到底玩过多少局游戏:
 
 ```python
 query = leancloud.Query(GameScore)
@@ -526,7 +526,7 @@ count = query.count()
 print "Sean has played %d games" % count
 ```
 
-对于超过 1000 个对象的类来说，count 操作会被时间限制所约束。它们可能会一直 返回超时错误，或者只是返回一个近似正确的值. 这样的话你应该更合理地规划你程序的结构来避免这种情况。
+对于超过 1000 个对象的类来说，count 操作会被时间限制所约束。它们可能会一直 返回超时错误，或者只是返回一个近似正确的值。这样的话你应该更合理地规划你程序的结构来避免这种情况。
 
 ### 组合查询
 
@@ -559,7 +559,7 @@ query.destroy_all()
 
 ## 文件
 
-leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题. 最常见的用例就是存储图片，但是你可 以随意用来存储文档，视频，音乐或者任何二进制数据。
+leancloud.File 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 AV.Object 存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可 以随意用来存储文档，视频，音乐或者任何二进制数据。
 
 ### 创建
 
@@ -693,7 +693,7 @@ user.save()
 
 Role 有一些属性与普通的 Object 不同：
 
-- name 角色的名称，这个值是必须的，而且只能在角色创建的时候指定一次，名字 必须由字母，数字，空格，减号或者下划线组成. 名称会被用于表示角色名而不需 要角色的 objectId
+- name 角色的名称，这个值是必须的，而且只能在角色创建的时候指定一次，名字 必须由字母，数字，空格，减号或者下划线组成。名称会被用于表示角色名而不需 要角色的 objectId
 - users 一个关系，包含了会继承角色权限的 User
 - roles 一个关系，包含了会继承角色权限的子角色
 
