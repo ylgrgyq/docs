@@ -3,13 +3,13 @@
 
 ## 介绍
 
-LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位的后端服务。我们的目标是让你不需要进行后端开发及服务器运维等工作就可以开发和发布成熟的应用。
+LeanCloud 是一个完整的平台解决方案，为你的应用提供全方位的后端服务。我们的目标是让你不需要进行后端开发及服务器运维等工作就可以开发和发布成熟的应用。
 
 对于熟悉 Python 的用户，我们提供了 Python 语言版本的 SDK ，方便开发。
 
 ## 快速入门
 
-建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议你在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ### 兼容性
 
@@ -17,7 +17,7 @@ LeanCloud 是一个完整的平台解决方案，为您的应用提供全方位�
 
 ### 安装
 
-您可以使用 `pip` 或者 `easy_install` 安装 Python SDK
+你可以使用 `pip` 或者 `easy_install` 安装 Python SDK
 
 ```sh
 pip install leancloud
@@ -29,13 +29,13 @@ or
 easy_install leancloud
 ```
 
-根据您的环境，命令之前可能还需要加上 `sudo` 。
+根据你的环境，命令之前可能还需要加上 `sudo` 。
 
-另外，我们推荐您使用 [virtualenv](https://virtualenv.pypa.io/en/latest/) 创建与系统全局环境隔离的 Python 环境，防止不同项目之间依赖的第三方模块版本之间产生冲突。
+另外，我们推荐你使用 [virtualenv](https://virtualenv.pypa.io/en/latest/) 创建与系统全局环境隔离的 Python 环境，防止不同项目之间依赖的第三方模块版本之间产生冲突。
 
 ### 配合 gevent 使用
 
-Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果您的代码需要应对高并发场景，推荐使用 gevent 来提高性能。
+Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果你的代码需要应对高并发场景，推荐使用 gevent 来提高性能。
 
 ```python
 from gevent import monkey
@@ -43,11 +43,11 @@ from gevent import monkey
 monkey.patch_all()  # 或者只 patch 指定的模块
 ```
 
-请注意**上述代码一定要在其他代码之前执行**，比如说写在您的模块的 `__init__.py` 最前面。
+请注意**上述代码一定要在其他代码之前执行**，比如说写在你的模块的 `__init__.py` 最前面。
 
 关于 gevent 的详细介绍，可以参考[gevent 官方文档](http://www.gevent.org/)。
 
-另外如果您使用我们的云代码环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
+另外如果你使用我们的云代码环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
 
 ## 初始化
 
@@ -61,7 +61,7 @@ leancloud.init('APP_ID', 'APP_KEY/MASTER_KEY')
 
 ## 对象
 
-您可以通过子类化 `leancloud.Object` 来创建自己的类，使用此类生成对象再保存，将会将数据保存到 LeanCloud 数据服务上，类名对应的表中。
+你可以通过子类化 `leancloud.Object` 来创建自己的类，使用此类生成对象再保存，将会将数据保存到 LeanCloud 数据服务上，类名对应的表中。
 
 ```python
 
@@ -678,7 +678,7 @@ thumbnail_url = file.get_thumbnail_url(width='100', height='100')
 
 绝大部分应用都有「用户」这个一概念。我们提供了 leancloud.User 类，可以用来处理用户相关的逻辑。
 
-与 File 类不同，User 类是 Object 的子类，您可以像 Object 一样使用 User 类。不过 User 类有一些用户系统相关的功能。
+与 File 类不同，User 类是 Object 的子类，你可以像 Object 一样使用 User 类。不过 User 类有一些用户系统相关的功能。
 
 ### 属性
 
