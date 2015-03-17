@@ -2499,11 +2499,11 @@ curl -X POST \
   </tr>
   <tr>
     <td>group_id</td>
-    <id>发送的目标群组 id（可选，与 to_peers 二选一）</id>
+    <td>发送的目标群组 id（可选，与 to_peers 二选一）</td>
   </tr>
   <tr>
     <td>transient</td>
-    <id>是否为暂态消息（可选，**由于向后兼容的考虑，默认为 true**，请注意设置这个值）</id>
+    <td>是否为暂态消息（可选，**由于向后兼容的考虑，默认为 true**，请注意设置这个值）</td>
   </tr>
   <tr>
     <td>message</td>
