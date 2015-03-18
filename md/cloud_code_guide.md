@@ -350,13 +350,15 @@ https://leancloud.cn/1.1/functions/hello
 请通过npm安装调试SDK：
 
 ```sh
-sudo npm install -g avoscloud-code
+npm install -g avoscloud-code
 ```
 
+在一些系统上你可能需要 `sudo` 权限： `npm install -g avoscloud-code`。
+ 
 如果从npm安装失败，可以从Github安装：
 
 ```sh
-sudo npm install -g  git+https://github.com/leancloud/CloudCodeMockSDK
+npm install -g  git+https://github.com/leancloud/CloudCodeMockSDK
 ```
 
 
