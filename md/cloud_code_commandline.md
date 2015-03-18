@@ -9,8 +9,10 @@
 首先，你需要安装 [Node.js](http://nodejs.org/) 环境以及 [npm](https://npmjs.org/) 包管理工具，在 ubuntu 上的 terminal（终端）可以简单地执行
 
 ```sh
-sudo apt-get install nodejs
+apt-get install nodejs
 ```
+
+在一些系统上你可能需要 `sudo` 权限：`sudo apt-get install nodejs`。
 
 (apt 提供的版本的 nodejs 版本可能太老旧，推荐从[官方网站](http://nodejs.org/)下载安装)。
 
@@ -31,22 +33,24 @@ brew install nodejs
 接下来，通过执行下列命令安装 avoscloud 命令行工具：
 
 ```sh
-sudo npm install -g avoscloud-code
+npm install -g avoscloud-code
 ```
+
+**在一些系统上你可能需要 `sudo` 权限**：`sudo npm install -g avoscloud-code`。
 
 加上 `-g` 表示全局安装。**以后升级也请执行此命令**。
 
 我们更推荐从 [cnpm](http://cnpmjs.org/) 仓库安装，速度理论上更快，请执行下列两个命令：
 
 ```sh
-sudo npm install -g cnpm --registry=http://r.cnpmjs.org
-sudo cnpm install -g avoscloud-code
+npm install -g cnpm --registry=http://r.cnpmjs.org
+cnpm install -g avoscloud-code
 ```
 
 如果从 npm 安装失败，也可以直接从 Github 源码安装：
 
 ```sh
-sudo npm install -g  git+https://github.com/leancloud/avoscloud-code-command
+npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 安装成功之后，直接在 terminal（终端）运行 `avoscloud -h`，输出帮助信息：
