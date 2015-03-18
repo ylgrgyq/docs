@@ -53,6 +53,39 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 * name，字符串，对话的名字，可选，可用来对于群组命名
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
 
+每创建一个对话，就会在 LeanCloud 后台 _Conversation 表中增加一条记录，这可以在 LeanCloud 控制台 -> 应用 -> 存储 -> 数据 里面看到。各属性与 _Conversation 表中字段名的对应关系为：
+
+<table>
+    <tbody>
+        <tr>
+            <td>属性名</td>
+            <td>_Conversation表字段名</td>
+        </tr>
+        <tr>
+            <td>conversationId</td>
+            <td>objectId</td>
+        </tr>
+        <tr>
+            <td>creator</td>
+            <td>c</td>
+        </tr>
+        <tr>
+            <td>members</td>
+            <td>m (Array 类型)</td>
+        </tr>
+        <tr>
+            <td>name</td>
+            <td>name</td>
+        </tr>
+        <tr>
+            <td>attributes</td>
+            <td>attr (Object 类型)</td>
+        </tr>
+    </tbody>
+</table>
+
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家直接创建 _Conversation 记录来预先建立对话。
+
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 
 * **单聊** 就是两个 client 之间的对话，公开与否（能否让其他人看到这个对话存在）由应用层自己控制。一般而言，它是私密的，并且加入新的成员之后，会切换到新的对话（当然，也可以依然不离开当前对话，这一点还是由应用层来决定）。
