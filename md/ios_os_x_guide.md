@@ -1249,7 +1249,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 ### AVFile
 
-`AVFile` 可以允许应用将文件存储到服务端，它支持图片、视频、音乐等常见的文件类型，以及其他任何二进制数据。
+`AVFile` 允许应用将文件存储到服务端，它支持图片、视频、音乐等常见的文件类型，以及其他任何二进制数据。
 
 `AVFile` 的用法非常简单。首先把文件数据存到 `NSData` 中，然后用该 `NSData` 格式的数据来创建 `AVFile` 对象。下面以存储一个字符串为例：
 
@@ -1263,7 +1263,7 @@ AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 * 不必担心文件名冲突。每一个上传的文件都有惟一的 ID，所以即使上传多个文件名为 `resume.txt` 的文件也不会有问题。
 * 给文件添加扩展名非常重要。LeanCloud 通过扩展名来判断文件类型，以便正确处理文件。所以，要将一张 PNG 图片存到 `AVFile` 中，要确保使用 `.png` 扩展名。
 
-然后根据需要，调用相应的 `save` 方法，将文件存到 LeanCloud 上：
+然后根据需要，调用相应的 `saveInBackground` 方法，将文件存到 LeanCloud 上：
 
 ```objc
 [file saveInBackground];
@@ -1287,7 +1287,7 @@ NSData *resumeData = [applicantResume getData];
 
 也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
 
-**如果一个对象有一个数组类型的属性，若将文件数据存入其中，那么在查询该对象的时候必须在 `includeKey:` 中加入该属性名称，否则查询出来的结果将是 `AVObject` 数组。**
+**如果对象的某一属性是一个文件数组，那么在获取该属性的查询中，必须加上 `includeKey:` 来指定该属性名，否则，查询结果中该属性对应的值将是 `AVObject` 数组，而不是 `AVFile` 数组。**
 
 ### 图像
 
@@ -1308,7 +1308,7 @@ AVObject *userPhoto = [AVObject objectWithClassName:@"UserPhoto"];
 
 ### 进度提示
 
-使用 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:` 可以轻松获取 `AVFile` 的上传或下载进度。比如：
+使用 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:` 可以获取 `AVFile` 的上传或下载进度。比如：
 
 ```objc
 NSData *data = [@"Working at AVOS is great!" dataUsingEncoding:NSUTF8StringEncoding];
@@ -1332,13 +1332,13 @@ AVFile *file = [AVFile fileWithURL:@"the-file-remote-url"];
 
 ### 文件元数据
 
-`AVFile` 的 `metadata` 属性，可以用来保存和获取该文件对象的元数据信息：
+`AVFile` 的 `metaData` 属性，可以用来保存和获取该文件对象的元数据信息：
 
 ```objc
 AVFile *file = [AVFile fileWithName:@"test.jpg" contentsAtPath:@"file-local-path"];
-[file.metadata setObject:@(100) forKey:@"width"];
-[file.metadata setObject:@(100) forKey:@"height"];
-[file.metadata setObject:@"LeanCloud" forKey:@"author"];
+[file.metaData setObject:@(100) forKey:@"width"];
+[file.metaData setObject:@(100) forKey:@"height"];
+[file.metaData setObject:@"LeanCloud" forKey:@"author"];
 NSError *error = nil;
 [file save:&error];
 ```
@@ -1382,11 +1382,9 @@ NSError *error = nil;
 * `password` : 用户的密码（必需）
 * `email` : 用户的电子邮件地址（可选）
 
-和其他 `AVObject` 对象不同的是，在设置 `AVUser` 这些属性时，不能用 `put` 方法，而要用专门的 `set...` 方法。
-
 ### 注册
 
-要求用户注册可能是应用程序要做第一件事。下面的代码是一个典型的注册过程：
+要求用户注册可能是应用程序要做的第一件事。下面的代码是一个典型的注册过程：
 
 ```objc
 AVUser *user = [AVUser user];
@@ -1420,7 +1418,7 @@ user.email = @"steve@company.com";
 
 ### 登录
 
-要让用户在注册成功后才能开始使用应用，可以用 `AVUser` 类的 `loginInBackground` 方法。
+让注册成功的用户登录到自己的账户，可以调用 `AVUser` 类的 `loginInBackground` 方法。
 
 ```objc
 [AVUser logInWithUsernameInBackground:@"username" password:@"password" block:^(AVUser *user, NSError *error) {
@@ -1434,7 +1432,7 @@ user.email = @"steve@company.com";
 
 ### 当前用户
 
-如果用户在每次打开应用程序时都要登录，这会直接影响用户体验。为了避免这种情况，可以将 `currentUser` 对象缓存起来。
+如果用户在每次打开应用程序时都要登录，这会直接影响用户体验。为了避免这种情况，可以使用缓存的 `currentUser` 对象。
 
 每当用户成功注册或第一次成功登录后，就在本地磁盘中缓存下这 个用户对象，供下次调用：
 
@@ -1455,7 +1453,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 ```
 
 ### 重置密码
-我们都知道，应用一旦加入了用户登录功能，那么肯定会有用户忘记密码的情况发生。对于这种情况，我们为用户提供了一种安全重置密码的方法。
+我们都知道，应用一旦加入账户密码系统，那么肯定会有用户忘记密码的情况发生。对于这种情况，我们为用户提供了一种安全重置密码的方法。
 
 重置密码的过程很简单，用户只需要输入注册的电子邮件地址即可：
 
@@ -1488,7 +1486,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     //处理结果
 }];
 ```
-如果要求更改密码的用户不在登录状态、原密码错误和用户不存在等情况都会通过回调返回。
+如果要求更改密码的用户尚未登录、原密码错误或用户不存在，这些情况都会通过回调返回操作错误信息。
 
 ###  手机号码验证
 
@@ -1514,7 +1512,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     }];
 ```
 
-验证成功后，用户的 `mobilePhoneVerified` 属性变为     `true`，并会触发调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
+验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1705,7 +1703,7 @@ NSArray<AVObject *> *pizzaPlacesInSF = [query findObjects];
         // 执行结果
     }];
    //短信格式类似于：
-   //你正在{某应用}中进行{具体操作名称}，你的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
+   //您正在{某应用}中进行{具体操作名称}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
 
 ```
 
