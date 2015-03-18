@@ -4,9 +4,12 @@
 
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
-* iOS 和 Android 的聊天 Demo 应用：[KeepAlive Android 版](https://github.com/leancloud/android-keepalive) 以及 [KeepAlive iOS 版](https://github.com/leancloud/ios-keepalive)
-* [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+* iOS 聊天应用：
+  * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios/tree/v2)
+  * [FreeChat](https://github.com/jwfing/FreeChat)
+* Android 聊天应用：
+  * [LeanChat Android 版](https://github.com/leancloud/leanchat-android/tree/v2)
+* [JavaScript Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 
 ## 功能和特性
@@ -229,19 +232,15 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
 ## Android 开发指南（v2）
 
-参考 [Android 实时通信开发指南](./android_realtime_v2.html)
+参考 [Android 实时通信开发指南(v2)](./android_realtime_v2.html)
 
 ## iOS 开发指南（v2）
 
-参考 [iOS 实时通信开发指南](./ios_realtime_v2.html)
-
-## Windows Phone 8.0 开发指南（v2）
-
-参考 [Windows Phone 8.0 开发指南](dotnet_realtime_v2.html)
+参考 [iOS 实时通信开发指南(v2)](./ios_realtime_v2.html)
 
 ##  JavaScript 开发指南（v2）
 
-我们已经开源 JS Messaging SDK 了， 见 [leancloud/realtime-messaging-jssdk](https://github.com/leancloud/js-realtime-sdk) 。
+我们已经开源 JS Messaging SDK 了， 见 [leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk) 。
 
 
 ## FAQ
@@ -250,14 +249,6 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
 对于普通对话的新消息，LeanCloud 实时通信服务有选项支持将消息以 Push Notification 的方式通知当前不在线的成员，但是有时候，这种推送会非常频繁对用户造成干扰。LeanCloud 提供选项，支持让单个用户关闭特定对话的离线消息推送。具体可以看相应平台的开发指南文档。
 
-### 未读消息数
-
-你可以调用 [REST API](rest_api.html#实时通信-api) 获得某个用户的未读消息数。
-
 ### 敏感词过滤怎么做
 
 LeanCloud 服务器端已经存有一份敏感词的列表对消息进行过滤，这部分功能无需用户参与，是内置默认支持的。
-
-### 能否通过 API 给用户发消息
-
-对于不方便使用 Node.js 客户端的用户，我们最近提供了一个 [REST API](https://leancloud.cn/docs/rest_api.html#%E9%80%9A%E8%BF%87-rest-api-%E5%90%91%E7%94%A8%E6%88%B7%E5%8F%91%E6%B6%88%E6%81%AF) 用于给特定用户发消息。
