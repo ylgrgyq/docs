@@ -32,7 +32,7 @@
 }
 ```
 
-接下来，我们需要完成用户（假定 Tom，为直观起见，我们使用用户名来作为 `clientId`）登录：
+接下来，我们需要完成用户登录。假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统（LeanCloud 云端只要求 `clientId` 在应用内唯一即可，具体用什么数据由应用层决定）。示例代码如下：
 
     AVIMClient *imClient = [[AVIMClient alloc] init];
     imClient.delegate = self;
@@ -47,16 +47,17 @@
 
 第三步，我们要跟「Bob」这个用户进行聊天，我们先创建一个对话，代码如下：
 
+    // 先查询一下是否和 Bob 建立过单聊对话
     AVIMConversationQuery *query = [imClient conversationQuery];
     NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
     [query whereKey:kAVIMKeyMember containsAllObjectsInArray:clientIds];
     // 之前有常量定义：
-    // const int kConversationType_OneOne = 0;
-    // const int kConversationType_Group = 1;
+    // const int kConversationType_OneOne = 0; // 表示一对一的单聊
+    // const int kConversationType_Group = 1;  // 表示多人群聊
     [query whereKey:AVIMAttr(@"type") equalTo:[NSNumber numberWithInt:kConversationType_OneOne]];
     [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
         if (error) {
-            [MessageDisplayer displayError:error];
+            // 出错了，请稍候重试
         } else if (!objects || [objects count] < 1) {
             // 不曾和 Bob 聊过，新建一个对话
             [imClient createConversationWithName:nil
@@ -76,7 +77,12 @@
             [self openConversation:conversation];
         }
     }];
-    
+
+> 如何查询「对话」
+> 
+> 如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** -> **存储** -> **数据** 里面会看到，_Conversation 表中增加了一条记录，新记录的 `m` 属性值为`["Tom", "Bob"]`，`attr` 属性值为`{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。
+> 
+> 与 `AVObject` 的检索方法一样，要检索这样的对话，我们需要通过 `[imClient conversationQuery]` 得到一个 `AVIMConversationQuery` 实例，然后调用 `[query whereKey:containsAllObjects:]` 来限定成员列表，调用 `[query whereKey:equalTo:]` 来限定额外的 `attr` 属性。按照 `AVQuery` 的惯例，限定成员的时候需要指定的属性名是 `m`，限定额外的 type 条件的时候需要指定的属性名是 `attr.type`。为了方便大家使用，我们在 `AVIMConversationQuery.h` 中定义了常量 `kAVIMKeyMember` 来表示 `m` 属性名。`AVIMAttr` 是一个宏，用来将用户自定义的属性名转化成 LeanCloud 云端存储时使用的实际属性名，例如 `AVIMAttr(type)` 会被解析成 `attr.type`。类似的还有三个属性名常量 `kAVIMKeyName`、`kAVIMKeyCreator`、`kAVIMKeyConversationId`，分别对应 `对话名`、`创建者`、`对话 id`，大家在检索对话的使用，应该尽量使用我们给出来的常量定义，而不要直接写属性名。
 
 第四步，我们往对话中发送一条消息：
 
@@ -120,7 +126,7 @@ AVIMClientDelegate
 * 对话中有新成员加入
 * 对话中有成员离开
 * 被邀请加入某对话
-* 被从某对话中踢出
+* 被踢出对话
 
 此外，还有网络相关的通知（网络断开、恢复等），也都是通过 delegate 的方式实现的。
 
@@ -244,6 +250,17 @@ AVIMTypedMessage 子类，表示一般的文本消息，其构造函数为
 @end
 ```
 
+发送文本消息的示例代码为：
+
+    AVIMTextMessage *message = [AVIMTextMessage messageWithText:@"hello" attributes:nil];
+    [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
+    if (error) {
+        // 出错了 :(
+    } else {
+        // 成功！
+    }
+    }];
+
 ### AVIMImageMessage
 AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其声明为：
 
@@ -260,6 +277,17 @@ AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其
 
 @end
 ```
+
+发送图片消息的示例代码为：
+
+    AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"萌照" attachedFilePath:filePath attributes:attr];
+    [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
+    if (error) {
+        // 出错了 :(
+    } else {
+        // 成功！
+    }
+    }];
 
 接收到这样消息之后，开发者可以获取到若干图片元数据（width，height，图片 size，图片 format）和一个包含图片数据的 AVFile 实例。
 
@@ -279,6 +307,17 @@ AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其
 @end
 ```
 
+发送音频消息的示例代码为：
+
+    AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:nil attachedFilePath:filePath attributes:attr];
+    [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
+    if (error) {
+        // 出错了 :(
+    } else {
+        // 成功！
+    }
+    }];
+
 接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含图片数据的 AVFile 实例。
 
 ### AVIMVideoMessage
@@ -297,6 +336,17 @@ AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其
 @end
 ```
 
+发送视频消息的示例代码为：
+
+    AVIMVideoMessage *message = [AVIMVideoMessage messageWithText:@"你要不要这么二" attachedFilePath:filePath attributes:attr];
+    [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
+    if (error) {
+        // 出错了 :(
+    } else {
+        // 成功！
+    }
+    }];
+
 接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含图片数据的 AVFile 实例。
 
 ### AVIMLocationMessage
@@ -314,6 +364,17 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
 
 @end
 ```
+
+发送位置消息的示例代码为：
+
+    AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:@"速来！" latitude: 45.0 longitude:34.0 attributes:nil];
+    [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
+    if (error) {
+        // 出错了 :(
+    } else {
+        // 成功！
+    }
+    }];
 
 接收到这样的消息之后，开发者可以获取到具体的地理位置数据：
 
@@ -398,6 +459,9 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
                                 }];
 ```
 
+> 扩展属性 attributes
+> 对于每一个对话，我们保留了一个扩展属性 attributes（Dictionary 类型，key-value 由开发者自己决定），也支持在这个扩展属性之上的任意条件检索。所以你可以根据业务需要，将对话涉及到的其他属性全部放到这里。如本例，就把对话的单聊/群聊特征存在了这里。
+
 加入成功之后，我们就可以进入聊天界面了。
 
 ### 往群组发送消息 ###
@@ -425,7 +489,7 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
      
         操作者（管理员）                       被邀请者                        其他人
     1, 发出请求 addMembers
-    2, 收到 invitedByClientId 通知    收到 invitedByClientId 通知
+    2,                              收到 invitedByClientId 通知
     3, 收到 membersAdded 通知           收到 membersAdded 通知      收到 membersAdded 通知
    
 相应地，踢人时的调用 API 是：
@@ -450,7 +514,7 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
 
 ### 获取历史消息 ###
 
-LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
+LeanMessage 会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
 
     NSString *oldestMsgId;
     int64_t oldestMsgTimestamp;
@@ -481,7 +545,7 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
 
 ### 群组消息免打扰
 
-不管是单聊还是群聊，对于发往普通的 Conversation 的普通消息，如果接收方当前不在线，LeanCloud 云端支持通过 Push Notification 的方式进行提醒。一般情况下这都是很好的，但是如果某个群组特别活跃，那离线用户就会收到过多的推送，会形成不小的干扰。
+对于发往普通的 Conversation 的普通消息，如果接收方当前不在线，LeanCloud 云端支持通过 Push Notification 的方式进行提醒。一般情况下这都是很好的，但是如果某个群组特别活跃，那离线用户就会收到过多的推送，会形成不小的干扰。
 对此 LeanCloud IM 服务也允许单个用户来关闭/打开某个对话的离线推送功能。调用 API 如下：
 
 ```
@@ -525,6 +589,51 @@ LeanMessage 会将非暂态消息自动保存在云端，之后开发者可以�
 
 `AVIMConversationQuery` 中设置条件的方法与 `AVQuery` 类似，具体可以参看其头文件。
 
+开放聊天室
+-------------
+开放聊天室（也叫暂态对话）可以用于很多地方，譬如弹幕、直播等等。在 LeanCloud IM SDK 中，开放聊天室是一类特殊的群组，它也支持创建、加入/踢出成员等操作，消息记录会被保存并可供获取；与普通群组不一样的地方具体体现为：
+
+* 不支持查询成员列表，你可以通过相关 API 查询在线人数；
+* 不支持离线消息、离线推送通知等功能；
+* 没有成员加入、离开的通知；
+* 一个用户一次登录只能加入一个开放聊天室，加入新的开放聊天室后会自动离开原来的聊天室；
+* 加入后半小时内断网重连会自动加入原聊天室，超过这个时间则需要重新加入；
+
+### 创建开放聊天室 ###
+
+和普通的群组类似，建立一个开放聊天室也是很简单的，只是在 `[imClient createConversationWithName:clientIds:attributes:options:callback:]` 中我们需要传入特定的 `options` 选项。例如：
+
+```
+    NSMutableArray *convMembers = [NSMutableArray arrayWithArray:clients];
+    if (![clients containsObject:currentUserId]) {
+        [convMembers addObject:currentUserId];
+    }
+    [imClient createConversationWithName:nil
+                               clientIds:convMembers
+                              attributes:nil
+                                 options:AVIMConversationOptionTransient
+                                callback:^(AVIMConversation *conversation, NSError *error) {
+                                    if (error) {
+                                        // 出错了 :(
+                                    } else {
+                                        // 成功，进入聊天界面
+                                    }
+                                }];
+```
+
+加入成功之后，我们就可以进入聊天界面了。开放聊天室的其他操作，都与普通群组操作一样。
+
+### 查询在线人数 ###
+通过 `[conversation countMembersWithCallback:]` 方法可以实时查询开放聊天室的在线人数。示例代码如下：
+
+```
+[conversation countMembersWithCallback:^(NSInteger number, NSError *error){
+                               if (error) {
+                                   // 出错了:(
+                               } else {
+                                   // 成功，此时 number 的数值就是实时在线人数
+                               }];
+```
 
 签名和安全
 -------------
