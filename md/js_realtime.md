@@ -151,6 +151,15 @@ realtimeObj.on('message', function(data) {
     console.log('某个当前用户在的 Conversation 接收到消息：', data);
 });
 ```
+## 安全
+
+### 安全域名
+
+如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。详细请看 JavaScript 指南中的 [「安全域名」](https://leancloud.cn/docs/js_guide.html#安全域名) 部分。
+
+### 权限和认证
+
+为了满足开发者对权限和认证的需求，我们设计了签名的概念。详细请看实时通信开发指南中的 [「权限和认证」](https://leancloud.cn/docs/realtime.html#权限和认证) 部分。
 
 ## 使用方法
 
@@ -927,13 +936,3 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 ### reuse
 
 * 发生连接错误，可能是网络原因，SDK 在自动尝试重连。可以监听这个状态，给用户「服务器已断开，正在重新连接。。。」之类的提示。
-
-## 安全
-
-### 安全域名
-
-如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。详细请看 JavaScript 指南中的 [「安全域名」](https://leancloud.cn/docs/js_guide.html#安全域名) 部分。
-
-### 权限和认证
-
-为了满足开发者对权限和认证的需求，我们设计了签名的概念。详细请看实时通信开发指南中的 [「权限和认证」](https://leancloud.cn/docs/realtime.html#权限和认证) 部分。
