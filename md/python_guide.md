@@ -20,13 +20,13 @@ LeanCloud 是一个完整的平台解决方案，为你的应用提供全方位�
 你可以使用 `pip` 或者 `easy_install` 安装 Python SDK
 
 ```sh
-pip install leancloud
+pip install leancloud-sdk
 ```
 
 or
 
 ```sh
-easy_install leancloud
+easy_install leancloud-sdk
 ```
 
 根据你的环境，命令之前可能还需要加上 `sudo` 。
