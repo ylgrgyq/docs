@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
-		<title>AVCloudQueryResult Class Reference</title>
+		<title>AVIMSignatureDataSource Protocol Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
@@ -16,7 +16,7 @@
 			</div>
 			
 			<div id="title" role="banner">
-				<h1 class="hideInXcode">AVCloudQueryResult Class Reference</h1>
+				<h1 class="hideInXcode">AVIMSignatureDataSource Protocol Reference</h1>
 			</div>
 			<ul id="headerButtons" role="toolbar">
 				<li id="toc_button">
@@ -35,17 +35,13 @@
 	
 	
 	
-	<option value="properties">Properties</option>
-	
-	<option value="//api/name/className">&nbsp;&nbsp;&nbsp;&nbsp;className</option>
-	
-	<option value="//api/name/count">&nbsp;&nbsp;&nbsp;&nbsp;count</option>
-	
-	<option value="//api/name/results">&nbsp;&nbsp;&nbsp;&nbsp;results</option>
 	
 	
 	
 	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/signatureWithClientId:conversationId:action:actionOnClientIds:">&nbsp;&nbsp;&nbsp;&nbsp;- signatureWithClientId:conversationId:action:actionOnClientIds:</option>
 	
 	
 	
@@ -67,26 +63,22 @@
 
 
 
-<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#properties">Properties</a></span><ul>
+
+
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/className">className</a></span></li>
-	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/count">count</a></span></li>
-	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/results">results</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/signatureWithClientId:conversationId:action:actionOnClientIds:">signatureWithClientId:conversationId:action:actionOnClientIds:</a></span></li>
 	
 </ul></li>
-
-
-
-
 
 
 			</ul>
 		</nav>
 		<article>
 			<div id="contents" class="isShowingTOC" role="main">
-				<a title="AVCloudQueryResult Class Reference" name="top"></a>
+				<a title="AVIMSignatureDataSource Protocol Reference" name="top"></a>
 				<div class="main-navigation navigation-top">
 					<ul>
 	<li><a href="../index.html">Index</a></li>
@@ -95,18 +87,18 @@
 				</div>
 				<div id="header">
 					<div class="section-header">
-						<h1 class="title title-header">AVCloudQueryResult Class Reference</h1>
+						<h1 class="title title-header">AVIMSignatureDataSource Protocol Reference</h1>
 					</div>		
 				</div>
 				<div id="container">	
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
 						<tr>
-	<td class="specification-title">Inherits from</td>
+	<td class="specification-title">Conforms to</td>
 	<td class="specification-value">NSObject</td>
 </tr><tr>
 	<td class="specification-title">Declared in</td>
-	<td class="specification-value">AVCloudQueryResult.h</td>
+	<td class="specification-value">AVIMSignature.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -126,21 +118,9 @@
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
-		<code><a href="#//api/name/className">&nbsp;&nbsp;className</a></code>
+		<code><a href="#//api/name/signatureWithClientId:conversationId:action:actionOnClientIds:">&ndash;&nbsp;signatureWithClientId:conversationId:action:actionOnClientIds:</a></code>
 	</span>
-	<span class="task-item-suffix">property</span>
 	
-</li><li>
-	<span class="tooltip">
-		<code><a href="#//api/name/results">&nbsp;&nbsp;results</a></code>
-	</span>
-	<span class="task-item-suffix">property</span>
-	
-</li><li>
-	<span class="tooltip">
-		<code><a href="#//api/name/count">&nbsp;&nbsp;count</a></code>
-	</span>
-	<span class="task-item-suffix">property</span>
 	
 </li>
 						</ul>
@@ -151,27 +131,67 @@
 					
 					
 					
+					
+					
+					
+					
 					<div class="section section-methods">
-						<a title="Properties" name="properties"></a>
-						<h2 class="subtitle subtitle-methods">Properties</h2>
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
 						
 						<div class="section-method">
-	<a name="//api/name/className" title="className"></a>
-	<h3 class="subsubtitle method-title">className</h3>
+	<a name="//api/name/signatureWithClientId:conversationId:action:actionOnClientIds:" title="signatureWithClientId:conversationId:action:actionOnClientIds:"></a>
+	<h3 class="subsubtitle method-title">signatureWithClientId:conversationId:action:actionOnClientIds:</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>查询结果的 className</p>
+		<p>对一个操作进行签名. 注意:本调用会在后台线程被执行</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) NSString *className</code></div>
+	<div class="method-subsection method-declaration"><code>- (AVIMSignature *)signatureWithClientId:(NSString *)<em>clientId</em> conversationId:(NSString *)<em>conversationId</em> action:(NSString *)<em>action</em> actionOnClientIds:(NSArray *)<em>clientIds</em></code></div>
 
     
 	
+	<div class="method-subsection arguments-section parameters">
+		<h4 class="method-subtitle parameter-title">Parameters</h4>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientId</em></dt>
+			<dd><ul>
+<li>操作发起人的 id</li>
+</ul>
+</dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>conversationId</em></dt>
+			<dd><p>－ 操作所属对话的 id</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>action</em></dt>
+			<dd><p>－ 操作的种类，主要有：
+&ldquo;join&rdquo;: 表示操作发起人要加入对话
+&ldquo;invite&rdquo;: 表示邀请其他人加入对话
+&ldquo;kick&rdquo;: 表示从对话中踢出部分人</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>clientIds</em></dt>
+			<dd><p>－ 操作目标的 id 列表</p></dd>
+		</dl>
+		
+	</div>
 	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>一个 AVIMSignature 签名对象.</p>
+	</div>
 	
 	
 	
@@ -179,7 +199,7 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>查询结果的 className</p>
+		<p>对一个操作进行签名. 注意:本调用会在后台线程被执行</p>
 	</div>
 	
 	
@@ -190,99 +210,13 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloudQueryResult.h</code><br />
-	</div>				
-	
-	
-</div>
-						
-						<div class="section-method">
-	<a name="//api/name/count" title="count"></a>
-	<h3 class="subsubtitle method-title">count</h3>
-	
-	
-	
-	<div class="method-subsection brief-description">
-		<p>查询 count 结果, 只有使用 select count(*) &hellip; 时有效</p>
-	</div>		
-	
-    
-
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSUInteger count</code></div>
-
-    
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>查询 count 结果, 只有使用 select count(*) &hellip; 时有效</p>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection declared-in-section">
-		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloudQueryResult.h</code><br />
-	</div>				
-	
-	
-</div>
-						
-						<div class="section-method">
-	<a name="//api/name/results" title="results"></a>
-	<h3 class="subsubtitle method-title">results</h3>
-	
-	
-	
-	<div class="method-subsection brief-description">
-		<p>查询的结果 <a href="../Classes/AVObject.html">AVObject</a> 对象列表</p>
-	</div>		
-	
-    
-
-	<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) NSArray *results</code></div>
-
-    
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>查询的结果 <a href="../Classes/AVObject.html">AVObject</a> 对象列表</p>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection declared-in-section">
-		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloudQueryResult.h</code><br />
+		<code class="declared-in-ref">AVIMSignature.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 					</div>
-					
-					
-					
-					
 					
 					
                     
