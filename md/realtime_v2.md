@@ -52,6 +52,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 * members，数组，对话参与者，这里记录了所有的参与者
 * name，字符串，对话的名字，可选，可用来对于群组命名
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
+* transient，布尔值，表示对话是否为暂态对话
 
 每创建一个对话，就会在 LeanCloud 后台 _Conversation 表中增加一条记录，这可以在 LeanCloud 控制台 -> 应用 -> 存储 -> 数据 里面看到。各属性与 _Conversation 表中字段名的对应关系为：
 
@@ -80,6 +81,10 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         <tr>
             <td>attributes</td>
             <td>attr (Object 类型)</td>
+        </tr>
+        <tr>
+            <td>transient</td>
+            <td>tr</td>
         </tr>
     </tbody>
 </table>
