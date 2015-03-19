@@ -207,7 +207,7 @@ rt.on('reuse', function() {
 
 LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
-### lc.realtime(options, callback)
+### AV.realtime(options, callback)
 
 描述：
 
@@ -231,7 +231,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -248,7 +248,7 @@ rtObject.on('open', function() {
 
 ```
 
-### lc.realtime.version
+### AV.realtime.version
 
 描述：
 
@@ -261,7 +261,7 @@ rtObject.on('open', function() {
 例子：
 
 ```js
-console.log(lc.realtime.version);   // 2.0.0
+console.log(AV.realtime.version);   // 2.0.0
 ```
 
 ### RealtimeObject.open(callback)
@@ -281,7 +281,7 @@ console.log(lc.realtime.version);   // 2.0.0
 例子：
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -312,7 +312,7 @@ rtObject.on('open', function() {
 例子：
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -345,7 +345,7 @@ rtObject.on('close', function() {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -382,7 +382,7 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -419,7 +419,7 @@ rtObject.once('close', function() {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -459,7 +459,7 @@ rtObject.emit('wangxiao', {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -502,7 +502,7 @@ rtObject.on('create', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -529,7 +529,7 @@ var room = rtObject.room('sasfalklkjdlfs123');
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -564,7 +564,7 @@ rtObject.on('open', function() {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -609,7 +609,7 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -652,7 +652,7 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -697,7 +697,7 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -741,7 +741,7 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -779,7 +779,7 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -821,7 +821,7 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -862,7 +862,7 @@ room.list(function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
@@ -908,7 +908,7 @@ rtObject.on('message', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = lc.realtime({
+var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
    // clientId 是自定义的名字，当前客户端可以理解的名字
