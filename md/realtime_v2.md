@@ -63,11 +63,11 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>conversationId</td>
-            <td>objectId</td>
+            <td>objectId（String 类型）</td>
         </tr>
         <tr>
             <td>creator</td>
-            <td>c</td>
+            <td>c（String 类型）</td>
         </tr>
         <tr>
             <td>members</td>
@@ -75,7 +75,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>name</td>
-            <td>name</td>
+            <td>name（String 类型）</td>
         </tr>
         <tr>
             <td>attributes</td>
@@ -273,7 +273,7 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
 ##  JavaScript 开发指南（v2）
 
-我们已经开源 JS Messaging SDK 了， 见 [leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk) 。
+参考 [JavaScript 实时通信开发指南](./js_realtime.html)。另外，我们已经开源 JS Realtime SDK 了， 见 [leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk) 。
 
 
 ## FAQ
