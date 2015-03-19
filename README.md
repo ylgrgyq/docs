@@ -26,6 +26,7 @@ LeanCloud 开发者文档
 * 更新文档只需要修改或创建相应的 `.md` 文件，然后提交 Pull Request 即可
 * 由于文档会采用 AngularJS 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 AngularJS 渲染
 * 图片资源放在当前 repo 的 `images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
+* 当增加一个全新的文档，需要更新文档首页 `templates/pages/index.html`，顶部菜单 `templates/include/header.html`
 
 ## LeanCloud 内部员工发布新文档
 
