@@ -2222,7 +2222,9 @@ AV.Cloud.run('hello', {}, {
 
 ##Push 通知
 
-通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。（如果想在 Web 端独立使用推送模块，包括通过 Web 端推送消息到各个设备、以及通过 Web 端也可以接收其他端的推送，可以了解下我们的 [「JavaScript 推送 SDK 使用指南」](./push_guide.html) 来获取更详细的信息。）
+通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。
+
+（如果想在 Web 端独立使用推送模块，包括通过 Web 端推送消息到各个设备、以及通过 Web 端也可以接收其他端的推送，可以了解下我们的「[JavaScript 推送 SDK 使用指南](./js_push.html)」来获取更详细的信息。）
 
 一个简单例子推送给所有订阅了`public`频道的设备：
 
