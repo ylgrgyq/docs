@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
-		<title>AVCloud Class Reference</title>
+		<title>AVIMClient Class Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
@@ -16,7 +16,7 @@
 			</div>
 			
 			<div id="title" role="banner">
-				<h1 class="hideInXcode">AVCloud Class Reference</h1>
+				<h1 class="hideInXcode">AVIMClient Class Reference</h1>
 			</div>
 			<ul id="headerButtons" role="toolbar">
 				<li id="toc_button">
@@ -25,8 +25,6 @@
 				<li id="jumpto_button" role="navigation">
 					<select id="jumpTo">
 	<option value="top">Jump To&#133;</option>
-	
-	<option value="overview">Overview</option>
 	
 	
 	
@@ -39,19 +37,19 @@
 	
 	
 	
-	<option value="class_methods">Class Methods</option>
-	
-	<option value="//api/name/callFunction:withParameters:">&nbsp;&nbsp;&nbsp;&nbsp;+ callFunction:withParameters:</option>
-	
-	<option value="//api/name/callFunction:withParameters:error:">&nbsp;&nbsp;&nbsp;&nbsp;+ callFunction:withParameters:error:</option>
-	
-	<option value="//api/name/callFunctionInBackground:withParameters:block:">&nbsp;&nbsp;&nbsp;&nbsp;+ callFunctionInBackground:withParameters:block:</option>
-	
-	<option value="//api/name/callFunctionInBackground:withParameters:target:selector:">&nbsp;&nbsp;&nbsp;&nbsp;+ callFunctionInBackground:withParameters:target:selector:</option>
-	
-	<option value="//api/name/setProductionMode:">&nbsp;&nbsp;&nbsp;&nbsp;+ setProductionMode:</option>
 	
 	
+	<option value="instance_methods">Instance Methods</option>
+	
+	<option value="//api/name/closeWithCallback:">&nbsp;&nbsp;&nbsp;&nbsp;- closeWithCallback:</option>
+	
+	<option value="//api/name/conversationQuery">&nbsp;&nbsp;&nbsp;&nbsp;- conversationQuery</option>
+	
+	<option value="//api/name/createConversationWithName:clientIds:attributes:options:callback:">&nbsp;&nbsp;&nbsp;&nbsp;- createConversationWithName:clientIds:attributes:options:callback:</option>
+	
+	<option value="//api/name/createConversationWithName:clientIds:callback:">&nbsp;&nbsp;&nbsp;&nbsp;- createConversationWithName:clientIds:callback:</option>
+	
+	<option value="//api/name/openWithClientId:callback:">&nbsp;&nbsp;&nbsp;&nbsp;- openWithClientId:callback:</option>
 	
 	
 	
@@ -62,8 +60,6 @@
 		<nav id="tocContainer" class="isShowingTOC">
 			<ul id="toc" role="tree">
 				
-<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
-
 
 
 
@@ -77,28 +73,28 @@
 
 
 
-<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
+
+
+<li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#instance_methods">Instance Methods</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/callFunction:withParameters:">callFunction:withParameters:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/closeWithCallback:">closeWithCallback:</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/callFunction:withParameters:error:">callFunction:withParameters:error:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/conversationQuery">conversationQuery</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/callFunctionInBackground:withParameters:block:">callFunctionInBackground:withParameters:block:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/createConversationWithName:clientIds:attributes:options:callback:">createConversationWithName:clientIds:attributes:options:callback:</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/callFunctionInBackground:withParameters:target:selector:">callFunctionInBackground:withParameters:target:selector:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/createConversationWithName:clientIds:callback:">createConversationWithName:clientIds:callback:</a></span></li>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/setProductionMode:">setProductionMode:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/openWithClientId:callback:">openWithClientId:callback:</a></span></li>
 	
 </ul></li>
-
-
 
 
 			</ul>
 		</nav>
 		<article>
 			<div id="contents" class="isShowingTOC" role="main">
-				<a title="AVCloud Class Reference" name="top"></a>
+				<a title="AVIMClient Class Reference" name="top"></a>
 				<div class="main-navigation navigation-top">
 					<ul>
 	<li><a href="../index.html">Index</a></li>
@@ -107,7 +103,7 @@
 				</div>
 				<div id="header">
 					<div class="section-header">
-						<h1 class="title title-header">AVCloud Class Reference</h1>
+						<h1 class="title title-header">AVIMClient Class Reference</h1>
 					</div>		
 				</div>
 				<div id="container">	
@@ -118,20 +114,12 @@
 	<td class="specification-value">NSObject</td>
 </tr><tr>
 	<td class="specification-title">Declared in</td>
-	<td class="specification-value">AVCloud.h</td>
+	<td class="specification-value">AVIMClient.h</td>
 </tr>
 						</tbody></table></div>
 					
                     
                     
-					
-					<div class="section section-overview">
-						<a title="Overview" name="overview"></a>
-						<h2 class="subtitle subtitle-overview">Overview</h2>
-						<p>Call the cloud code from client</p>
-					</div>
-					
-					
 					
 					
 					
@@ -146,31 +134,31 @@
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
-		<code><a href="#//api/name/callFunction:withParameters:">+&nbsp;callFunction:withParameters:</a></code>
+		<code><a href="#//api/name/openWithClientId:callback:">&ndash;&nbsp;openWithClientId:callback:</a></code>
 	</span>
 	
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/callFunction:withParameters:error:">+&nbsp;callFunction:withParameters:error:</a></code>
+		<code><a href="#//api/name/closeWithCallback:">&ndash;&nbsp;closeWithCallback:</a></code>
 	</span>
 	
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/callFunctionInBackground:withParameters:block:">+&nbsp;callFunctionInBackground:withParameters:block:</a></code>
+		<code><a href="#//api/name/createConversationWithName:clientIds:callback:">&ndash;&nbsp;createConversationWithName:clientIds:callback:</a></code>
 	</span>
 	
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/callFunctionInBackground:withParameters:target:selector:">+&nbsp;callFunctionInBackground:withParameters:target:selector:</a></code>
+		<code><a href="#//api/name/createConversationWithName:clientIds:attributes:options:callback:">&ndash;&nbsp;createConversationWithName:clientIds:attributes:options:callback:</a></code>
 	</span>
 	
 	
 </li><li>
 	<span class="tooltip">
-		<code><a href="#//api/name/setProductionMode:">+&nbsp;setProductionMode:</a></code>
+		<code><a href="#//api/name/conversationQuery">&ndash;&nbsp;conversationQuery</a></code>
 	</span>
 	
 	
@@ -185,23 +173,25 @@
 					
 					
 					
+					
+					
 					<div class="section section-methods">
-						<a title="Class Methods" name="class_methods"></a>
-						<h2 class="subtitle subtitle-methods">Class Methods</h2>
+						<a title="Instance Methods" name="instance_methods"></a>
+						<h2 class="subtitle subtitle-methods">Instance Methods</h2>
 						
 						<div class="section-method">
-	<a name="//api/name/callFunction:withParameters:" title="callFunction:withParameters:"></a>
-	<h3 class="subsubtitle method-title">callFunction:withParameters:</h3>
+	<a name="//api/name/closeWithCallback:" title="closeWithCallback:"></a>
+	<h3 class="subsubtitle method-title">closeWithCallback:</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Calls the given cloud function with the parameters passed in.</p>
+		<p>结束某个账户的聊天</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>+ (id)callFunction:(NSString *)<em>function</em> withParameters:(NSDictionary *)<em>parameters</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)closeWithCallback:(AVIMBooleanResultBlock)<em>callback</em></code></div>
 
     
 	
@@ -209,13 +199,8 @@
 		<h4 class="method-subtitle parameter-title">Parameters</h4>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>function</em></dt>
-			<dd><p>The function name to call.</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>parameters</em></dt>
-			<dd><p>The parameters to send to the function.</p></dd>
+			<dt><em>callback</em></dt>
+			<dd><p>－ 聊天关闭之后的回调</p></dd>
 		</dl>
 		
 	</div>
@@ -224,7 +209,7 @@
 	
 	<div class="method-subsection return">
 		<h4 class="method-subtitle parameter-title">Return Value</h4>
-		<p>The response from the cloud function.</p>
+		<p>None.</p>
 	</div>
 	
 	
@@ -233,7 +218,7 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Calls the given cloud function with the parameters passed in.</p>
+		<p>结束某个账户的聊天</p>
 	</div>
 	
 	
@@ -244,25 +229,72 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloud.h</code><br />
+		<code class="declared-in-ref">AVIMClient.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/callFunction:withParameters:error:" title="callFunction:withParameters:error:"></a>
-	<h3 class="subsubtitle method-title">callFunction:withParameters:error:</h3>
+	<a name="//api/name/conversationQuery" title="conversationQuery"></a>
+	<h3 class="subsubtitle method-title">conversationQuery</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Calls the given cloud function with the parameters passed in and sets the error if there is one.</p>
+		<p>构造一个对话查询对象</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>+ (id)callFunction:(NSString *)<em>function</em> withParameters:(NSDictionary *)<em>parameters</em> error:(NSError **)<em>error</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (AVIMConversationQuery *)conversationQuery</code></div>
+
+    
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>对话查询对象.</p>
+	</div>
+	
+	
+	
+	
+	
+	<div class="method-subsection discussion-section">
+		<h4 class="method-subtitle">Discussion</h4>
+		<p>构造一个对话查询对象</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVIMClient.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/createConversationWithName:clientIds:attributes:options:callback:" title="createConversationWithName:clientIds:attributes:options:callback:"></a>
+	<h3 class="subsubtitle method-title">createConversationWithName:clientIds:attributes:options:callback:</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>创建一个新的用户对话。
+在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>- (void)createConversationWithName:(NSString *)<em>name</em> clientIds:(NSArray *)<em>clientIds</em> attributes:(NSDictionary *)<em>attributes</em> options:(AVIMConversationOption)<em>options</em> callback:(AVIMConversationResultBlock)<em>callback</em></code></div>
 
     
 	
@@ -270,18 +302,37 @@
 		<h4 class="method-subtitle parameter-title">Parameters</h4>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>function</em></dt>
-			<dd><p>The function name to call.</p></dd>
+			<dt><em>name</em></dt>
+			<dd><ul>
+<li>会话名称。</li>
+</ul>
+</dd>
 		</dl>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>parameters</em></dt>
-			<dd><p>The parameters to send to the function.</p></dd>
+			<dt><em>clientIds</em></dt>
+			<dd><ul>
+<li>聊天参与者（发起人除外）的 clientId 列表。</li>
+</ul>
+</dd>
 		</dl>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>error</em></dt>
-			<dd><p>Pointer to an NSError that will be set if necessary.</p></dd>
+			<dt><em>attributes</em></dt>
+			<dd><ul>
+<li>会话的自定义属性。</li>
+</ul>
+</dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>options</em></dt>
+			<dd><p>－ 可选参数，可以使用或 “|” 操作表示多个选项</p></dd>
+		</dl>
+		
+		<dl class="argument-def parameter-def">
+			<dt><em>callback</em></dt>
+			<dd><p>－ 对话建立之后的回调</p></dd>
 		</dl>
 		
 	</div>
@@ -290,7 +341,7 @@
 	
 	<div class="method-subsection return">
 		<h4 class="method-subtitle parameter-title">Return Value</h4>
-		<p>The response from the cloud function.  This result could be a NSDictionary, an NSArray, NSInteger or NSString.</p>
+		<p>None.</p>
 	</div>
 	
 	
@@ -299,7 +350,8 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Calls the given cloud function with the parameters passed in and sets the error if there is one.</p>
+		<p>创建一个新的用户对话。
+在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表</p>
 	</div>
 	
 	
@@ -310,25 +362,26 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloud.h</code><br />
+		<code class="declared-in-ref">AVIMClient.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/callFunctionInBackground:withParameters:block:" title="callFunctionInBackground:withParameters:block:"></a>
-	<h3 class="subsubtitle method-title">callFunctionInBackground:withParameters:block:</h3>
+	<a name="//api/name/createConversationWithName:clientIds:callback:" title="createConversationWithName:clientIds:callback:"></a>
+	<h3 class="subsubtitle method-title">createConversationWithName:clientIds:callback:</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Calls the given cloud function with the parameters provided asynchronously and calls the given block when it is done.</p>
+		<p>创建一个新的用户对话。
+在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>+ (void)callFunctionInBackground:(NSString *)<em>function</em> withParameters:(NSDictionary *)<em>parameters</em> block:(AVIdResultBlock)<em>block</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)createConversationWithName:(NSString *)<em>name</em> clientIds:(NSArray *)<em>clientIds</em> callback:(AVIMConversationResultBlock)<em>callback</em></code></div>
 
     
 	
@@ -336,23 +389,34 @@
 		<h4 class="method-subtitle parameter-title">Parameters</h4>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>function</em></dt>
-			<dd><p>The function name to call.</p></dd>
+			<dt><em>name</em></dt>
+			<dd><ul>
+<li>会话名称。</li>
+</ul>
+</dd>
 		</dl>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>parameters</em></dt>
-			<dd><p>The parameters to send to the function.</p></dd>
+			<dt><em>clientIds</em></dt>
+			<dd><ul>
+<li>聊天参与者（发起人除外）的 clientId 列表。</li>
+</ul>
+</dd>
 		</dl>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>block</em></dt>
-			<dd><p>The block to execute. The block should have the following argument signature:(id result, NSError *error).</p></dd>
+			<dt><em>callback</em></dt>
+			<dd><p>－ 对话建立之后的回调</p></dd>
 		</dl>
 		
 	</div>
 	
 	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>None.</p>
+	</div>
 	
 	
 	
@@ -360,7 +424,8 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Calls the given cloud function with the parameters provided asynchronously and calls the given block when it is done.</p>
+		<p>创建一个新的用户对话。
+在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表</p>
 	</div>
 	
 	
@@ -371,25 +436,25 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloud.h</code><br />
+		<code class="declared-in-ref">AVIMClient.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 						<div class="section-method">
-	<a name="//api/name/callFunctionInBackground:withParameters:target:selector:" title="callFunctionInBackground:withParameters:target:selector:"></a>
-	<h3 class="subsubtitle method-title">callFunctionInBackground:withParameters:target:selector:</h3>
+	<a name="//api/name/openWithClientId:callback:" title="openWithClientId:callback:"></a>
+	<h3 class="subsubtitle method-title">openWithClientId:callback:</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>Calls the given cloud function with the parameters provided asynchronously and runs the callback when it is done.</p>
+		<p>开启某个账户的聊天</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>+ (void)callFunctionInBackground:(NSString *)<em>function</em> withParameters:(NSDictionary *)<em>parameters</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+	<div class="method-subsection method-declaration"><code>- (void)openWithClientId:(NSString *)<em>clientId</em> callback:(AVIMBooleanResultBlock)<em>callback</em></code></div>
 
     
 	
@@ -397,28 +462,26 @@
 		<h4 class="method-subtitle parameter-title">Parameters</h4>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>function</em></dt>
-			<dd><p>The function name to call.</p></dd>
+			<dt><em>clientId</em></dt>
+			<dd><ul>
+<li>操作发起人的 id，以后使用该账户的所有聊天行为，都由此人发起。</li>
+</ul>
+</dd>
 		</dl>
 		
 		<dl class="argument-def parameter-def">
-			<dt><em>parameters</em></dt>
-			<dd><p>The parameters to send to the function.</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>target</em></dt>
-			<dd><p>The object to call the selector on.</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>selector</em></dt>
-			<dd><p>The selector to call. It should have the following signature: (void)callbackWithResult:(id) result error:(NSError *)error. result will be nil if error is set and vice versa.</p></dd>
+			<dt><em>callback</em></dt>
+			<dd><p>－ 聊天开启之后的回调</p></dd>
 		</dl>
 		
 	</div>
 	
 	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p>None.</p>
+	</div>
 	
 	
 	
@@ -426,7 +489,7 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>Calls the given cloud function with the parameters provided asynchronously and runs the callback when it is done.</p>
+		<p>开启某个账户的聊天</p>
 	</div>
 	
 	
@@ -437,66 +500,13 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloud.h</code><br />
-	</div>				
-	
-	
-</div>
-						
-						<div class="section-method">
-	<a name="//api/name/setProductionMode:" title="setProductionMode:"></a>
-	<h3 class="subsubtitle method-title">setProductionMode:</h3>
-	
-	
-	
-	<div class="method-subsection brief-description">
-		<p>Set call what production mode&rsquo;s cloud code</p>
-	</div>		
-	
-    
-
-	<div class="method-subsection method-declaration"><code>+ (void)setProductionMode:(BOOL)<em>isProduction</em></code></div>
-
-    
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>isProduction</em></dt>
-			<dd><p>the production mode or test mode</p></dd>
-		</dl>
-		
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection discussion-section">
-		<h4 class="method-subtitle">Discussion</h4>
-		<p>Set call what production mode&rsquo;s cloud code</p>
-	</div>
-	
-	
-	
-	
-	
-	
-	
-	<div class="method-subsection declared-in-section">
-		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVCloud.h</code><br />
+		<code class="declared-in-ref">AVIMClient.h</code><br />
 	</div>				
 	
 	
 </div>
 						
 					</div>
-					
-					
 					
 					
                     
