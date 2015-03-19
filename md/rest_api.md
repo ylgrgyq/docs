@@ -363,7 +363,7 @@ REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进
     <tr>
       <td>/1.1/rtm/transient_group/onlines</td>
       <td>GET</td>
-      <td>获取开放群组的在线人数</td>
+      <td>获取暂态对话的在线人数</td>
     </tr>
   </tbody>
 </table>
@@ -2447,9 +2447,10 @@ curl -X DELETE \
 
 实时通信中的 `convid` 构建规则：
 
-* 对点对点通信，convid 为所有对话参与者的 peer id **排序**后以`:`分隔，做 md5 所得。如对话参与者 peer id 为 `u1234` 和 `u0988`，那么对话 ID 为 `bcd26a54e98687390b0abb4d83683d4b`。
-* 对群组功能，convid 即群组 ID。
-* 对于 v2，convid 即对话 ID。
+* 目前版本中，convid 即对话 ID。
+* 对早期版本来说：
+  * 对点对点通信，convid 为所有对话参与者的 peer id **排序**后以`:`分隔，做 md5 所得。如对话参与者 peer id 为 `u1234` 和 `u0988`，那么对话 ID 为 `bcd26a54e98687390b0abb4d83683d4b`。
+  * 对群组功能，convid 即群组 ID。
 
 ### 取未读消息数
 
@@ -2479,7 +2480,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"from_peer": "1a", "message": "helloworld", "to_peers": ["1b"], "transient": false}' \
+  -d '{"from_peer": "1a", "message": "helloworld", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
 ```
 
@@ -2495,12 +2496,8 @@ curl -X POST \
     <td>消息的发件人 id</td>
   </tr>
   <tr>
-    <td>to_peers</td>
-    <td>消息的收件人 id 列表，数组，一次至多发送20个（可选，与 group_id 二选一）</td>
-  </tr>
-  <tr>
-    <td>group_id</td>
-    <td>发送的目标群组 id（可选，与 to_peers 二选一）</td>
+    <td>conv_id</td>
+    <td>发送到对话 id</td>
   </tr>
   <tr>
     <td>transient</td>
@@ -2512,9 +2509,11 @@ curl -X POST \
   </tr>
 </table>
 
-### 获取开放群组的在线人数
+对早期版本的实时通信，可以使用 `to_peers` （数组） 或 `group_id` 参数分别发消息到用户或群组。
 
-你可以通过这个 API 获得开放群组或暂态对话的在线人数。由于开放群组或暂态对话没有成员列表支持，所以通常使用这个 API 获得当前的在线人数。
+### 获取暂态对话的在线人数
+
+你可以通过这个 API 获得暂态对话的在线人数。由于暂态对话没有成员列表支持，所以通常使用这个 API 获得当前的在线人数。
 
 <table>
   <tr>
@@ -2523,7 +2522,7 @@ curl -X POST \
   </tr>
   <tr>
     <td>gid</td>
-    <td>在 v1 中是开放群组的 id，在 v2 中是暂态对话的 id</td>
+    <td>暂态对话的 id</td>
   </tr>
 </table>
 
@@ -2531,7 +2530,7 @@ curl -X POST \
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://leancloud.cn/1.1/rtm/transient_group/onlines?gid=GROUP_ID
+  https://leancloud.cn/1.1/rtm/transient_group/onlines?gid=...
 ```
 
 返回：
@@ -2539,6 +2538,8 @@ curl -X GET \
 ```json
 {"result":0}
 ```
+
+这个 API 也可以用于获取早期版本开放群组的在线人数。
 
 ##统计数据API
 
