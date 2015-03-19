@@ -4,7 +4,7 @@
 > 开始之前
 > 在看下面的内容之前，我们假设您已经看过我们的[实时通信开发指南（v2）](./realtime_v2.html)，了解了基本的概念和模型。
 
-注意 请首先确保你添加了如下依赖库：
+LeanCloud IM SDK v2 被包含在 `AVOSCloudIM.framework` 中，它依赖于 `AVOSCloud.framework` 这一核心库。在使用之前，请首先确保你也添加了如下依赖库：
 
 - SystemConfiguration.framework
 - MobileCoreServices.framework
