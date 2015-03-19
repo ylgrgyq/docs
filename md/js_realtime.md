@@ -44,10 +44,12 @@ Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://git
 // 最简的示例代码，请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
 var appId = '9p6hyhh60av3ukkni3i9z53q1l8y';
 // clientId 就是实时通信中的唯一用户 id
-var clientId = 'LeanCloud123';
+var clientId = 'LeanCloud01';
+var realtimeObj;
+var conversationObj;
 
-// 创建聊天实例（支持单页多实例）
-var realtimeObject = AV.realtime({
+// 创建实时通信实例（支持单页多实例）
+realtimeObj = AV.realtime({
     appId: appId,
     clientId: clientId
     // 是否开启服务器端认证
@@ -58,17 +60,18 @@ var realtimeObject = AV.realtime({
 console.log('当前 SDK 版本是 ' + AV.realtime.version);
 
 // 实时通信服务连接成功
-realtimeObject.on('open', function() {
+realtimeObj.on('open', function() {
     console.log('实时通信服务建立成功！');
 
     // 创建一个聊天室
-    conv = realtimeObject.conv({
+    conversationObj = realtimeObj.conv({
         // 人员的 id
         members: [
             'LeanCloud02'
         ],
         // 默认的数据，可以放 Conversation 名字等
         data: {
+            name: 'WangXiao',
             m: 123
         }
     }, function(data) {
@@ -76,128 +79,76 @@ realtimeObject.on('open', function() {
             console.log('Conversation 创建成功!', data);
         }
     });
-
-    // 查询当前 Conversation 的相关信息
-    realtimeObject.query(function(data) {
-        console.log('查询 Conversation 所有相关信息：', data);
-    });
 });
 
 // 当聊天断开时触发
-realtimeObject.on('close', function() {
+realtimeObj.on('close', function() {
     console.log('实时通信服务被断开！');
 });
 
+// 接收断线或者网络状况不佳的事件（断网可测试）
+realtimeObj.on('reuse', function() {
+    console.log('正在重新连接。。。');
+});
+
 // 当 Conversation 被创建时触发，当然您可以使用回调函数来处理，不一定要监听这个事件
-realtimeObject.on('create', function(data) {
-    // 当前用户加入这个 Conversation 
-    conv.join(function(data) {
-        console.log('当前用户成功加入 Conversation');
-    });
+realtimeObj.on('create', function(data) {
+
     // 向这个 Conversation 添加新的用户
-    conv.add([
+    conversationObj.add([
         'LeanCloud03', 'LeanCloud04'
     ], function(data) {
         console.log('成功添加用户：', data);
     });
 
     // 从这个 Conversation 中删除用户
-    conv.remove('LeanCloud03', function(data) {
+    conversationObj.remove('LeanCloud03', function(data) {
         console.log('成功删除用户：', data);
     });
 
-    // 当前用户离开这个 Conversation 
-    conv.leave(function(data) {
-        console.log('当前用户成功离开 Conversation');
-    });
-
     // 向这个 Conversation 中发送消息
-    conv.send({
+    conversationObj.send({
         abc: 123
     }, function(data) {
         console.log('发送的消息服务端已收收到：', data);
+    });
 
+    setTimeout(function() {
         // 查看历史消息
-        conv.log(function(data) {
+        conversationObj.log(function(data) {
             console.log('查看当前 Conversation 最近的聊天记录：', data);
         });
-    });
-
-    // 向这个 Conversation 中发送暂态消息
-    conv.send({
-        msg: '当前用户正在输入。。。'
-    }, {
-        // 暂态消息，不需要回调
-        transient: true
-    }, function(data) {
-        console.log('暂态消息的回调不会被运行');
-    });
-
-    // 向这个 Conversation 中发送消息，并且消息是否对方收到要有回执
-    conv.send({
-        abc: 123
-    }, {
-        // 获取阅读回执
-        receipt: true
-    }, function(data) {
-        console.log('信息发送成功，该信息会获取阅读回执');
-    });
+    }, 2000);
 
     // 当前 Conversation 接收到消息
-    conv.receive(function(data) {
+    conversationObj.receive(function(data) {
         console.log('当前 Conversation 收到消息：', data);
     });
 
     // 获取当前 Conversation 中的成员信息
-    conv.list(function(data) {
+    conversationObj.list(function(data) {
         console.log('列出当前 Conversation 的成员列表：', data);
     });
 
-    // 发送多媒体消息
-    conv.send({
-        text: '图片测试',
-        // 自定义的属性
-        attr: {
-            a:123
-        },
-        url: 'https://leancloud.cn/images/static/press/Logo%20-%20Blue%20Padding.png',
-        metaData: {
-            name:'logo',
-            format:'png',
-            height: 123,
-            width: 123,
-            size: 888
-        }
-    }, {
-       type: 'image'
-    }, function(data) {
-        console.log('图片数据发送成功！');
-    });
-
     // 取得当前 Conversation 中的人数
-    conv.count(function(num) {
+    conversationObj.count(function(num) {
         console.log('取得当前的用户数量：' + num);
     });
 });
 
 // 监听所有用户加入的情况
-rt.on('join', function(data) {
+realtimeObj.on('join', function(data) {
     console.log('有用户加入某个当前用户在的 Conversation：', data);
 });
 
 // 监听所有用户离开的情况
-rt.on('left', function(data) {
+realtimeObj.on('left', function(data) {
     console.log('有用户离开某个当前用户在的 Conversation：', data);
 });
 
 // 监听所有 Conversation 中发送的消息
-rt.on('message', function(data) {
+realtimeObj.on('message', function(data) {
     console.log('某个当前用户在的 Conversation 接收到消息：', data);
-});
-
-// 接收断线或者网络状况不佳的事件（断网可测试）
-rt.on('reuse', function() {
-    console.log('正在重新连接。。。');
 });
 ```
 
@@ -233,7 +184,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -283,7 +234,7 @@ console.log(AV.realtime.version);   // 2.0.0
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -314,7 +265,7 @@ rtObject.on('open', function() {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -347,7 +298,7 @@ rtObject.on('close', function() {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -384,7 +335,7 @@ rtObject.on('join', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -421,7 +372,7 @@ rtObject.once('close', function() {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -461,7 +412,7 @@ rtObject.emit('wangxiao', {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -504,7 +455,7 @@ rtObject.on('create', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -531,7 +482,7 @@ var room = rtObject.room('sasfalklkjdlfs123');
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -566,7 +517,7 @@ rtObject.on('open', function() {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -611,7 +562,7 @@ rtObject.on('join', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -654,7 +605,7 @@ rtObject.on('join', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -699,7 +650,7 @@ rtObject.on('left', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -743,7 +694,7 @@ rtObject.on('left', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -781,7 +732,7 @@ rtObject.on('join', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -823,7 +774,7 @@ rtObject.on('left', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -864,7 +815,7 @@ room.list(function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -910,7 +861,7 @@ rtObject.on('message', function(data) {
 ```js
 var rtObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8yy3cijj6sie3cewft18vm',
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
    // auth 是权限校验的服务器地址，具体请看文档
@@ -976,3 +927,13 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 ### reuse
 
 * 发生连接错误，可能是网络原因，SDK 在自动尝试重连。可以监听这个状态，给用户「服务器已断开，正在重新连接。。。」之类的提示。
+
+## 安全
+
+### 安全域名
+
+如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。详细请看 JavaScript 指南中的 [「安全域名」](https://leancloud.cn/docs/js_guide.html#安全域名) 部分。
+
+### 权限和认证
+
+为了满足开发者对权限和认证的需求，我们设计了签名的概念。详细请看实时通信开发指南中的 [「权限和认证」](https://leancloud.cn/docs/realtime.html#权限和认证) 部分。
