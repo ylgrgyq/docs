@@ -57,7 +57,7 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 部署在 LeanCloud 上的每个应用都有自己的 ID 和客户端密钥，客户端代码应该使用它们来初始化 SDK。
 
-LeanCloud 的每一个帐户都可以创建多个应用。同一个应用可分别在测试环境和生产环境部署不同的版本。
+LeanCloud 的每一个账户都可以创建多个应用。同一个应用可分别在测试环境和生产环境部署不同的版本。
 
 ## 对象
 
@@ -1247,29 +1247,29 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 ## 文件
 
-
 ### AVFile
 
-`AVFile` 可以让你的应用程序将文件存储到服务器中，比如常见的文件类型图像文件、影像文件、音乐文件和任何其他二进制数据都可以使用。
-使用 `AVFile` 非常容易，首先你可以将文件数据存在 `NSData` 中，然后由 `NSData` 创建一个 `AVFile` 对象。 在下面的例子中，我们会使用一个字符串：
+`AVFile` 允许应用将文件存储到服务端，它支持图片、视频、音乐等常见的文件类型，以及其他任何二进制数据。
+
+`AVFile` 的用法非常简单。首先把文件数据存到 `NSData` 中，然后用该 `NSData` 格式的数据来创建 `AVFile` 对象。下面以存储一个字符串为例：
 
 ```objc
 NSData *data = [@"Working with LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
 AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 ```
 
-请注意，在本例中，我们将文件名定为 `resume.txt`。这里有两件事情值得注意:
+注意在上例中，我们将文件命名为 `resume.txt`。这里需要注意两点：
 
-* 你不需要担心文件名的冲突。每一个上传的文件有惟一的ID，所即使上传多个文件名为 `resume.txt` 的文件也不会有问题。
-* 给文件添加扩展名非常重要，通过扩展名，LeanCloud 可以获取文件类型以便可以正确处理文件。所以如果你将一个 `PNG` 图象存在 `AVFile` 中，要确保使用 `.png` 扩展名。
+* 不必担心文件名冲突。每一个上传的文件都有惟一的 ID，所以即使上传多个文件名为 `resume.txt` 的文件也不会有问题。
+* 给文件添加扩展名非常重要。LeanCloud 通过扩展名来判断文件类型，以便正确处理文件。所以，要将一张 PNG 图片存到 `AVFile` 中，要确保使用 `.png` 扩展名。
 
-然后你会需要将文件存在LeanCloud中，你可以根据需要调用不同版本的save方法。
+然后根据需要，调用相应的 `saveInBackground` 方法，将文件存到 LeanCloud 上：
 
 ```objc
 [file saveInBackground];
 ```
 
-最终当文件存储完成后，你可以象其他的对象那样，将 `AVFile` 关联到 `AVObject`。
+最终当文件存储完成后，你可以象操作其他数据那样，将 `AVFile` 关联到 `AVObject` 上。
 
 ```objc
 AVObject *jobApplication = [AVObject objectWithClassName:@"JobApplication"]
@@ -1278,21 +1278,22 @@ AVObject *jobApplication = [AVObject objectWithClassName:@"JobApplication"]
 [jobApplication saveInBackground];
 ```
 
-重新获取只需要调用 `AVFile` 的 `getData`。
-
+重新获取该数据时，只需要调用 `AVFile` 的 `getData` 方法。
 
 ```objc
 AVFile *applicantResume = [anotherApplication objectForKey:@"applicantResumeFile"];
 NSData *resumeData = [applicantResume getData];
 ```
 
-如 `AVObject` 那样，你也可以使用 `getData` 的异步版本。
+也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
 
-**如果将文件存储到对象的一个数组类型的属性内，那么必须在查询该对象的时候加上include该属性，否则查询出来的数组将是AVObject数组。**
+**如果对象的某一属性是一个文件数组，那么在获取该属性的查询中，必须加上 `includeKey:` 来指定该属性名，否则，查询结果中该属性对应的值将是 `AVObject` 数组，而不是 `AVFile` 数组。**
 
-### 图象
+### 图像
 
-你可以通过将图象转成 `NSData`，然后使用 `AVFile`，这样可以很容易地将图象存到LeanCloud上。比如你有一个叫"image"的 `UIImage` 对象，你希望将它存到 `AVFile` 中。
+将图像转成 `NSData` 再使用 `AVFile` ，就能很容易地将数据保存到 LeanCloud 上。
+
+例如，把名为 `image` 的 `UIImage` 对象保存到 `AVFile` 中：
 
 ```objc
 NSData *imageData = UIImagePNGRepresentation(image);
@@ -1307,53 +1308,53 @@ AVObject *userPhoto = [AVObject objectWithClassName:@"UserPhoto"];
 
 ### 进度提示
 
-通过 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:`  很容易可以得到 `AVFile` 的上传或者下载的进度。比如
+使用 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:` 可以获取 `AVFile` 的上传或下载进度。比如：
 
 ```objc
 NSData *data = [@"Working at AVOS is great!" dataUsingEncoding:NSUTF8StringEncoding];
 AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-  // Handle success or failure here ...
+  // 成功或失败处理...
 } progressBlock:^(int percentDone) {
-  // Update your progress spinner here. percentDone will be between 0 and 100.
+  // 更新进度数据，percentDone 介于 0 和 100。
 }];
 ```
 
-### 得到图象的缩略图
+### 得到图像的缩略图
 
-当您保存了一个图象文件时，您可能希望在下载原图之前，得到缩略图，我们为您提供了便捷的API，您可以使用
+保存图像时，如果想在下载原图之前先得到缩略图，那么用我们的 API 实现起来会易如反掌：
 
 ```objc
-AVFile * file = [AVFile fileWithURL:@"the-file-remote-url"];
-[file getThumbnail:YES width:100 height:100 withBlock:^(UIImage * image, NSError *error) {
+AVFile *file = [AVFile fileWithURL:@"the-file-remote-url"];
+[file getThumbnail:YES width:100 height:100 withBlock:^(UIImage *image, NSError *error) {
     }];
 ```
-得到缩略图
 
 ### 文件元数据
 
-某些时候，您会希望将一些元数据保存在文件对象中，您可以通过metadat属性来保存和获取这些数据
+`AVFile` 的 `metaData` 属性，可以用来保存和获取该文件对象的元数据信息：
 
 ```objc
-AVFile * file = [AVFile fileWithName:@"test.jpg" contentsAtPath:@"file-local-path"];
-[file.metadata setObject:@(100) forKey:@"width"];
-[file.metadata setObject:@(100) forKey:@"height"];
-[file.metadata setObject:@”LeanCloud" forKey:@"author"];
-NSError * error = nil;
+AVFile *file = [AVFile fileWithName:@"test.jpg" contentsAtPath:@"file-local-path"];
+[file.metaData setObject:@(100) forKey:@"width"];
+[file.metaData setObject:@(100) forKey:@"height"];
+[file.metaData setObject:@"LeanCloud" forKey:@"author"];
+NSError *error = nil;
 [file save:&error];
 ```
 
 ### 删除
 
-当您的文件比较多时，您可能希望将一些不需要的文件从LeanCloud上删除，您可以使用
+当文件较多时，要把一些不需要的文件从 LeanCloud 上删除：
+
 ```objc
 [file deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 }];
 ```
-来删除您的文件
 
 ### 清除缓存
-AVFile也提供了清除缓存的方法
+
+`AVFile` 也提供了清除缓存的方法：
 
 ```objc
 //清除当前文件缓存
@@ -1367,27 +1368,26 @@ AVFile也提供了清除缓存的方法
 
 ```
 
-
 ## 用户
 
-用户是一个应用程序的核心。对于个人开发者来说，能够让自己的应用程序积累到多的用户，就能给自己带来更多的创作动力。因此LeanCloud提供了一个专门的用户类，AVUser来自动处理用户账户管理所需的功能。
-有了这个类，你就可以在您的应用程序中添加用户账户功能。
-AVUser是一个AVObject的子类，它继承了AVObject所有的方法具有AVObject相同的功能。不同的是，AVUser增加了一些特定的关于用户账户相关的功能。
+用户是一个应用程序的核心。对于个人开发者来说，能够让自己的应用程序积累更多的用户，就能给自己带来更多的创作动力。因此 LeanCloud 提供了一个专门的用户类 `AVUser`，来自动处理用户账户管理所需的功能。有了这个类，你就可以在应用程序中添加用户账户功能。
+
+`AVUser` 是一个 `AVObject` 的子类，它继承了 `AVObject` 所有的方法，具有 `AVObject` 相同的功能。不同的是，`AVUser` 增加了一些特定的与用户账户相关的功能。
 
 ### 属性
-AVUser除了从AVObject继承的属性外，还有几个特定的属性：
-username: 用户的用户名（必需）。
-password: 用户的密码（必需）。
-email: 用户的电子邮件地址（可选）。
-和其他AVObject对象不同的是，在设置AVUser这些属性的时候不是使用的put方法，而是专门的setXXX方法。
 
+`AVUser` 除了继承 `AVObject` 的属性外，还有几个特有的属性：
+
+* `username` : 用户的用户名（必需）
+* `password` : 用户的密码（必需）
+* `email` : 用户的电子邮件地址（可选）
 
 ### 注册
 
-你的应用程序会做的第一件事可能是要求用户注册。下面的代码是一个典型的注册过程：
+要求用户注册可能是应用程序要做的第一件事。下面的代码是一个典型的注册过程：
 
 ```objc
-AVUser * user = [AVUser user];
+AVUser *user = [AVUser user];
 user.username = @"steve";
 user.password =  @"f32@ds*@&dsa";
 user.email = @"steve@company.com";
@@ -1402,15 +1402,23 @@ user.email = @"steve@company.com";
 }];
 ```
 
-在注册过程中，服务器会进行注册用户信息的检查，以确保注册的用户名和电子邮件地址是惟一的。**服务端还会对用户密码进行不可逆的加密处理，不会明文保存任何密码，应用切勿再次在客户端加密密码，这会导致重置密码等功能不可用**。请注意，我们使用的是signUpInBackgroundWithBlock方法，而不是saveInBackground方法。另外还有各种不同的signUp方法。像往常一样，我们建议在可能的情况下尽量使用异步版本的signUp方法，这样就不会影响到应用程序主UI线程的响应。你可以阅读API中更多的有关这些具体方法的使用。
-如果注册不成功，你可以查看返回的错误对象。最有可能的情况是，用户名或电子邮件已经被另一个用户注册。这种情况您可以提示用户，要求他们尝试使用不同的用户名进行注册。
-你也可以要求用户使用Email做为用户名注册，这样做的好处是，你在提交信息的时候可以将输入的“用户名“默认设置为用户的Email地址，以后在用户忘记密码的情况下可以使用LeanCloud提供重置密码功能。
+在注册过程中，服务端会检查注册用户的信息，以确保注册的用户名和电子邮件地址是惟一的。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+**服务端还会对用户密码进行不可逆的加密处理，不会明文保存任何密码。在客户端，应用切勿再次对密码加密，这会导致重置密码等功能失效。**
+
+请注意，我们使用的是 `signUpInBackgroundWithBlock` 方法，而不是 `saveInBackground` 方法。另外还有各种不同的 `signUp` 方法可供使用。
+
+像往常一样，我们建议，在可能的情况下，尽量使用异步版本的 `signUp` 方法，这样就不会影响到应用程序主 UI 线程的响应。具体方法请参考 [API 文档](api/iOS/index.html) 。
+
+如果注册不成功，请检查一下返回的错误对象。最有可能的情况是，用户名或电子邮件已经被另一个用户注册，此时可以提示用户尝试用不同的用户名进行注册，也可以要求用户用 Email 做为用户名注册。
+
+这样做的好处是，在用户提交信息时可以将输入的「用户名」默认设置为用户的 Email 地址，以后在用户忘记了密码的情况下，可以使用 LeanCloud 提供的「重置密码」功能。
+
+关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 。
 
 ### 登录
-当用户注册成功后，您需要让他们以后能够登录到他们的账户后使用应用。要做到这样一点，你可以使用
-AVUser类的loginInBackground方法。
+
+让注册成功的用户登录到自己的账户，可以调用 `AVUser` 类的 `loginInBackground` 方法。
 
 ```objc
 [AVUser logInWithUsernameInBackground:@"username" password:@"password" block:^(AVUser *user, NSError *error) {
@@ -1424,29 +1432,30 @@ AVUser类的loginInBackground方法。
 
 ### 当前用户
 
-如果用户在每次打开你的应用程序时都要登录，这将会直接影响到你应用的用户体验。为了避免这种情况，你可以使用缓存的currentUser对象。
-每当你注册成功或是第一次登录成功，都会在本地磁盘中又一个缓存的用户对象，你可以这样来获取这个缓存的用户对象来进行登录：
+如果用户在每次打开应用程序时都要登录，这会直接影响用户体验。为了避免这种情况，可以使用缓存的 `currentUser` 对象。
 
+每当用户成功注册或第一次成功登录后，就在本地磁盘中缓存下这 个用户对象，供下次调用：
 
 ```objc
-AVUser * currentUser = [AVUser currentUser];
+AVUser *currentUser = [AVUser currentUser];
 if (currentUser != nil) {
     // 允许用户使用应用
 } else {
-    //缓存用户对象为空时， 可打开用户注册界面…
+    //缓存用户对象为空时，可打开用户注册界面…
 }
 ```
 
-当然，你也可以使用如下方法清除缓存用户对象：
+要清除缓存用户对象：
 
 ```objc
 [AVUser logOut];  //清除缓存用户对象
-AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
+AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了 
 ```
 
 ### 重置密码
-这是一个事实，一旦你引入了一个密码系统，那么肯定会有用户忘记密码的情况。对于这种情况，我们提供了一种方法，让用户安全地重置起密码。
-重置密码的流程很简单，开发者只要求用户输入注册的电子邮件地址即可：
+我们都知道，应用一旦加入账户密码系统，那么肯定会有用户忘记密码的情况发生。对于这种情况，我们为用户提供了一种安全重置密码的方法。
+
+重置密码的过程很简单，用户只需要输入注册的电子邮件地址即可：
 
 ```objc
 [AVUser requestPasswordResetForEmailInBackground:@"myemail@example.com" block:^(BOOL succeeded, NSError *error) {
@@ -1460,33 +1469,33 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 密码重置流程如下：
 
- * 用户输入他们的电子邮件，请求重置自己的密码。
- * LeanCloud向他们的邮箱发送一封包含特殊的密码重置连接的电子邮件。
- * 用户根据向导点击重置密码连接，打开一个特殊的页面，让他们输入一个新的密码。
- * 用户的密码已被重置为新输入的密码。
+1. 用户输入注册的电子邮件，请求重置密码；
+2. LeanCloud 向该邮箱发送一封包含重置密码的特殊链接的电子邮件；
+3. 用户点击重置密码链接后，一个特殊的页面会打开，让他们输入新密码；
+4. 用户的密码已被重置为新输入的密码。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 。
 
 ### 修改密码
 
-当用户系统中存在密码的时候，就会存在用户更改密码的需求，对于这种情况，我们提供了一种方法，能够同时验证老密码和修改新密码:
+当用户系统中存在密码时，自然会有更改密码的需求。我们所提供的方法能够同时验证老密码和修改新密码：
 
 ```objc
 [AVUser logInWithUsername:@"username" password:@"111111"]; //请确保用户当前的有效登录状态
 [[AVUser currentUser] updatePassword:@"111111" newPassword:@"123456" block:^(id object, NSError *error) {
-    //doSomething
+    //处理结果
 }];
 ```
-如果要求更改密码的用户不再登录状态、原密码错误和用户不存在等情况都会通过callback返回。
+如果要求更改密码的用户尚未登录、原密码错误或用户不存在，这些情况都会通过回调返回操作错误信息。
 
 ###  手机号码验证
 
-在应用设置中打开`注册手机号码验证`选项后。当你在注册用户时，填写用户手机字段后，LeanCloud 会自动向该手机号码发送一个验证短信，用户在输入验证码以后，该用户就被表示为已经验证过手机。
+如果在应用设置的 **应用选项** 中打开了 **验证注册用户手机号码** 选项，那么当用户在注册时填写完手机字段后，LeanCloud 会自动向该手机号码发送一条验证短信，用户输入验证码后，该用户即被标识为已经验证过手机了。
 
-以下代码就可发送注册验证码到用户手机:
+以下代码将注册验证码发送到用户手机上：
 
 ```objc
-	AVUser * user = [AVUser user];
+	AVUser *user = [AVUser user];
 	user.username = @"steve";
 	user.password =  @"f32@ds*@&dsa";
 	user.email = @"steve@company.com";
@@ -1498,18 +1507,21 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 调用以下代码即可验证验证码:
 
 ```objc
-	[AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
+	[AVUser verifyMobilePhone:@"13613613613" withBlock:^(BOOL succeeded, NSError *error) {
         //验证结果
     }];
 ```
 
-验证成功后，用户的`mobilePhoneVerified`属性变为true，并且调用云代码的`AV.Cloud.onVerifed('sms', function)`方法。
+验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
-在手机号码被验证后，用户可以使用手机号码进行登录。手机号码包括两种方式：手机号码＋密码方式，手机号码＋短信验证码方式。
+当手机号码通过验证后，用户可以使用该手机号码进行登录。手机号码包括两种方式：
 
-以下为手机号码＋密码来登录的方式：
+* 手机号码＋密码方式
+* 手机号码＋短信验证码
+
+用「手机号码＋密码」来登录的方法：
 
 ```objc
     [AVUser logInWithMobilePhoneNumberInBackground:@"13613613613" password:@"yourpassword" block:^(AVUser *user, NSError *error) {
@@ -1517,7 +1529,7 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     }];
 ```
 
-以下为发送登录短信验证码：
+发送登录短信验证码：
 
 ```objc
     [AVUser requestLoginSmsCode:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
@@ -1525,7 +1537,7 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     }];
 ```
 
-最后使用短信验证码＋手机号码进行登录:
+最后使用「短信验证码＋手机号码」进行登录：
 
 ```objc
     [AVUser logInWithMobilePhoneNumberInBackground:@"13613613613" smsCode:smsCode block:^(AVUser *user, NSError *error) {
@@ -1534,7 +1546,8 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 ```
 
 ### 手机号码重置密码
-和使用电子邮件地址重置密码类似，使用手机号码重置密码使用下面的方法获取短信验证码：
+
+与使用「电子邮件地址重置密码」类似，「手机号码重置密码」使用下面的方法来获取短信验证码：
 
 ```objc
 [AVUser requestPasswordResetWithPhoneNumber:@"18812345678" block:^(BOOL succeeded, NSError *error) {
@@ -1546,8 +1559,7 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 }];
 ```
 
-注意用户需要先绑定手机号码。
-然后使用短信验证码重置密码：
+注意！用户需要先绑定手机号码，然后使用短信验证码来重置密码：
 
 ```objc
 [AVUser resetPasswordWithSmsCode:@"123456" newPassword:@"password" block:^(BOOL succeeded, NSError *error) {
@@ -1561,10 +1573,10 @@ AVUser * currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ### 查询
 
-查询用户，你需要使用特殊的用户查询对象来完成：
+查询用户的信息，需要使用特殊的用户查询对象来完成：
 
 ```objc
-AVQuery * query = [AVUser query];
+AVQuery *query = [AVUser query];
 [query whereKey:@"gender" equalTo:@"female"];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (error == nil) {
@@ -1576,12 +1588,12 @@ AVQuery * query = [AVUser query];
 
 ```
 
-浏览器中查看用户表
-User表是一个特殊的表，专门存储AVUser对象。在浏览器端，你会看到一个_user表。
+###浏览器中查看用户表
+用户表是一个特殊的表，专门存储 `AVUser` 对象。在浏览器端，打开 LeanCloud 账户页面的 **存储** 菜单，找到名为 `_User` 的表来查看数据。
 
 ### 匿名用户
-如果你需要创建匿名用户，可以使用 `AVAnonymousUtils` 来完成。通过如下代码，服务端会为你自动创建一个 `AVUser` 对象，其用户名为随机字符串。
-完成之后，`currentUser` 会被置为此用户对象。之后的修改、保存、登出等操作都可以使用 `currentUser` 来完成。
+
+要创建匿名用户，可以使用 `AVAnonymousUtils` 来完成。通过如下代码，服务端会自动创建一个 `AVUser` 对象，其用户名为随机字符串。完成之后，此用户对象会被设置为 `currentUser`，之后的修改、保存、登出等操作都可以使用 `currentUser` 来完成。
 
 ```objc
     [AVAnonymousUtils logInWithBlock:^(AVUser *user, NSError *error) {
@@ -1594,16 +1606,16 @@ User表是一个特殊的表，专门存储AVUser对象。在浏览器端，你�
 ```
 
 ## 地理位置
-LeanCloud允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。你可以在AVObject的查询中添加一个AVGeoPoint的对象查询。您可以实现轻松查找出离当前用户最接近的信息或地点的功能。
+LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。只要将 `AVGeoPoint` 添加到 `AVObject` 中，那么在查询时，即可轻松实现如找出离当前用户最近的信息或地点的功能。
 
 ### 地理位置对象
-首先需要创建一个AVGeoPoint对象。例如，创建一个北纬40.0度-东经-30.0度的AVGeoPoint对象：
+首先要创建一个 `AVGeoPoint` 对象。例如，创建一个北纬 `40.0` 度、东经 `-30.0` 度的 `AVGeoPoint` 对象：
 
 ```objc
-AVGeoPoint * point = [AVGeoPoint geoPointWithLatitude:40.0 longitude:-30.0];new AVGeoPoint(40.0, -30.0);
+AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:40.0 longitude:-30.0];
 ```
 
-添加地理位置信息
+添加地理位置信息：
 
 ```objc
 [placeObject setObject:point forKey:@"location"];
@@ -1611,66 +1623,76 @@ AVGeoPoint * point = [AVGeoPoint geoPointWithLatitude:40.0 longitude:-30.0];new 
 
 ### 地理查询
 
-现在，你的数据表中有了一定的地理坐标对象的数据，这样可以测试找出最接近某个点的信息了。你可以使用AVQuery对象的whereNear方法来这样做：
+假设现在数据表中已保存了一些地理坐标数据，接下来使用 `AVQuery` 对象的 `whereNear` 方法来试着找出最接近某个点的信息：
 
 ```objc
-AVObject * userObject = nil;
-AVGeoPoint * userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"];
-AVQuery * query = [AVQuery queryWithClassName:@"PlaceObject"];
+AVObject *userObject = nil;
+AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"];
+AVQuery *query = [AVQuery queryWithClassName:@"PlaceObject"];
 [query whereKey:@"locaton" nearGeoPoint:userLocation];
-query.limit = 10;      //获取最接近用户地点的10条数据
+//获取最接近用户地点的10条数据
+query.limit = 10;      
 NSArray<AVObject *> nearPlaces = [query findObjects];
 ```
 
-在以上代码中，nearPlaces是一个返回的距离userLocation点（最近到最远）的对象数组。
-要限制查询指定距离范围的数据可以使用whereWithinKilometers、whereWithinMiles或whereWithinRadians方法。
-要查询一个矩形范围内的信息可以使用whereWithinGeoBox来实现：
+在上面的代码中，`nearPlaces` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。
+
+要查找指定距离范围内的数据，可使用 `whereWithinKilometers` 、 `whereWithinMiles` 或 `whereWithinRadians` 方法。
+
+要查找位于矩形范围内的信息，可使用 `whereWithinGeoBox` 来实现：
 
 ```objc
-AVGeoPoint * northeastOfSF = [AVGeoPoint geoPointWithLatitude:37.9 longitude:40.1];
-AVGeoPoint * southwestOfSF = [AVGeoPoint geoPointWithLatitude:37.8 longitude:40.04];
-AVQuery * query = [AVQuery queryWithClassName:@"PizzaPlaceObject"];
+AVGeoPoint *northeastOfSF = [AVGeoPoint geoPointWithLatitude:37.9 longitude:40.1];
+AVGeoPoint *southwestOfSF = [AVGeoPoint geoPointWithLatitude:37.8 longitude:40.04];
+AVQuery *query = [AVQuery queryWithClassName:@"PizzaPlaceObject"];
 [query whereKey:@"location" withinGeoBoxFromSouthwest:southwestOfSF toNortheast:northeastOfSF];
-NSArray<AVObject *> * pizzaPlacesInSF = [query findObjects];
+NSArray<AVObject *> *pizzaPlacesInSF = [query findObjects];
 ```
 
-注意事项
-目前有几个需要注意的地方：
+###注意事项
+目前需要注意以下方面：
 
- * 每个AVObject数据对象中只能有一个AVGeoPoint对象。
- * 地理位置的点不能超过规定的范围。纬度的范围应该是在-90.0到90.0之间。经度的范围应该是在-180.0到180.0之间。如果您添加的经纬度超出了以上范围，将导致程序错误。
- * iOS 8.0 之后使用定位服务前需要调用 [locationManager requestWhenInUseAuthorization] 或者 [locationManager requestAlwaysAuthorization] 获取用户使用期授权或永久授权，而这两个请求授权需要在 info.plist 里面对应添加 NSLocationWhenInUseUsageDescription 或 NSLocationWhenInUseUsageDescription 的 key/value，value 为开启定位服务原因的描述，SDK 内部默认使用的是使用期授权。
+ * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
+ * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
+ * iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationWhenInUseUsageDescription` 的 键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
 
 ## 调用云代码
 
 ### 调用云代码函数
 
-使用`AVCloud`类的静态方法来调用云代码中定义的函数：
+使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
 
-
-  NSDictionary *parameters=@{...};
+```objc
+    NSDictionary *parameters=@{...};
 
     [AVCloud callFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
         // 执行结果
     }];
+```
 
-
-`aFunctionName`是函数的名称，`parameters`是传入的函数参数，`block`对象作为调用结果的回调传入。
+`aFunctionName` 是函数的名称，`parameters` 是传入的函数参数，`block` 对象作为调用结果的回调传入。
 
 ### 区分生产环境调用
 
-云代码区分测试和生成环境, 所以可以通过设置AVCloud来调用不同生成环境
+云代码区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
 
-  [AVCloud setProductionMode:NO];
-
-其中`NO`表示测试环境. 默认是调用生产环境云代码.
+```objc
+[AVCloud setProductionMode:NO];
+```
+其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
 
 ## 短信验证码服务
-除了用户相关的包括注册，登录等操作以外，LeanCloud还支持额外的短信验证码服务。
-在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，您希望能够通过短信验证的方式来与用户进行确认，您就可以在用户验证过手机号码，应用管理平台打开了`启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）`选项的前提下，使用LeanCloud提供的短信验证码服务。
+
+除了与用户相关的注册、登录等操作以外，LeanCloud 还支持额外的短信验证码服务。
+
+在实际应用中，有些类型的操作对安全性比较敏感，比如付费、删除重要资源等等。若想通过短信验证的方式来与用户进行确认，就可以在以下前提下，使用 LeanCloud 提供的短信验证码服务：
+
+* 用户已验证过手机号码。
+* 应用管理平台打开了 **启用账号无关短信验证服务（针对 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。
 
 ### 请求短信验证码
-以下操作为给某个操作发送验证短信
+
+为某个操作发送验证短信：
 
 ```objc
     [AVOSCloud requestSmsCodeWithPhoneNumber:@"13613613613"
@@ -1687,22 +1709,22 @@ NSArray<AVObject *> * pizzaPlacesInSF = [query findObjects];
 
 ### 自定义短信模板
 
-如果您想完全自定义短信的内容，可以在应用设置的短信模板创建自定义的短信模板，但是需要**审核**。
+若想完全自定义短信的内容，可在应用管理平台中，通过 **短信模板** 来创建自定义的短信模板，但是需要**审核**。
 
-在提交了短信模板并且得到审核以后，你可以通过SDK来发送符合短信模板的短信给你的用户。
+短信模板提交并审核后，即可使用 SDK 向用户发送符合短信模板定义的短信内容。
 
-假设您提交了如下的短信模板，并且将这个模板的名称保存为"Register_Template"：
-
+比如，提交如下短信模板，模板名称为 `Register_Template`：
+```html
 <pre ng-non-bindable ><code>
 Hi {{username}},
-欢迎注册{{name}}应用，您可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
+欢迎注册{{name}}应用，你可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
 以上。
 {{appname}}
 </code></pre>
+```
+**注：`name`、 `code`、 `ttl`  是预留的字段，分别代表应用名、验证码、过期时间。系统会自动为它们填充内容。**
 
-**注：其中的name,code,ttl是预留的字段，分别代表应用名、验证码、过期时间。不需要填充内容，会自动填充。**
-
-您可以通过如下代码进行短信发送：
+发送短信：
 
 ```objc
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
@@ -1710,7 +1732,7 @@ Hi {{username}},
     [dict setObject:@"MyApplication" forKey:@"appname"];
     [AVOSCloud requestSmsCodeWithPhoneNumber:@"12312312312" templateName:@"Register_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
-            //do something
+            //操作成功
         } else {
             NSLog(@"%@", error);
         }
@@ -1718,7 +1740,8 @@ Hi {{username}},
 ```
 
 ### 验证短信验证码
-您可以通过以下代码来验证短信验证码：
+
+验证短信验证码：
 
 ```objc
     [AVOSCloud verifySmsCode:@"123456" callback:^(BOOL succeeded, NSError *error) {
@@ -1729,19 +1752,19 @@ Hi {{username}},
 ## FAQ 常见问题和解答
 
 ### 怎么使用 LeanCloud iOS SDK
-最简单的方式，使用CocoaPods，如以下的PodFile
+最简单的方式，使用 CocoaPods，在 PodFile 加入以下内容：
 
 ```sh
 pod 'AVOSCloud'
 ```
 
-AVOSCloudSNS SDK:
+AVOSCloudSNS SDK：
 
 ```sh
 pod 'AVOSCloudSNS'
 ```
 
-### 如何使用用户登录功能
+### 如何使用「用户登录」功能
 
 ```objc
     [AVUser logInWithUsernameInBackground:@"zeng" password:@"123456" block:^(AVUser *user, NSError *error) {
@@ -1754,7 +1777,6 @@ pod 'AVOSCloudSNS'
 
 ```
 
-
 ### 如何登出
 
 ```objc
@@ -1762,14 +1784,13 @@ pod 'AVOSCloudSNS'
 
 ```
 
-
-### 如何使用新浪微博登录
+### 如何使用「新浪微博」登录
 
 
 ```objc
 [AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
 
-  //callback code here
+  //回调代码
 
 } toPlatform:AVOSCloudSNSSinaWeibo];
 
@@ -1777,7 +1798,7 @@ pod 'AVOSCloudSNS'
 
 ### 使用 AVOSCloudSNS，运行时报错：+[AVUser loginWithAuthData:block:]: unrecognized selector sent to class
 
-请将 `Build Settings -> Linking -> Other Linker Flags` 设置为 `-ObjC`。具体原因可以参考苹果官方的 Technical Q&A QA1490 [Building Objective-C static libraries with categories](https://developer.apple.com/library/mac/qa/qa1490/_index.html)。此外，stackoverfow 也有一个比较详细的答案 [Objective-C categories in static library](http://stackoverflow.com/questions/2567498/objective-c-categories-in-static-library)。
+请将 **Build Settings** -> **Linking** -> **Other Linker Flags** 设置为 **-ObjC**。具体原因可以参考苹果官方文档《Technical Q&A QA1490 [Building Objective-C static libraries with categories](https://developer.apple.com/library/mac/qa/qa1490/_index.html)》。此外，stackoverfow 上也有一个比较详细的答案：《[Objective-C categories in static library](http://stackoverflow.com/questions/2567498/objective-c-categories-in-static-library)》。
 
 
 
