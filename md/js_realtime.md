@@ -4,7 +4,11 @@
 
 感谢你使用 JavaScript 的实时通信 SDK，LeanCloud 的实时通信服务每天处理请求数超过百万级，安全可靠，你的明智之选。
 
-你可以通过使用我们提供的 SDK，一行后端代码都不用写，就可以做一个功能完备的实时聊天应用、也可以做一个实时对战类的游戏，总之一切与实时通信相关的业务都可以使用 LeanCloud 提供的实时通信服务。你还可以通过实时通信 SDK 配合 [「云代码」](https://leancloud.cn/docs/cloud_code_guide.html) 简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
+你可以通过使用我们提供的 SDK，一行后端代码都不用写，就可以做一个功能完备的实时聊天应用、也可以做一个实时对战类的游戏，总之一切与实时通信相关的业务都可以使用 LeanCloud 提供的实时通信服务。
+
+你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
+
+本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信的 WebView 中。 
 
 ## 概念
 
@@ -14,9 +18,13 @@
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
+## 特别说明
+
 Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），就是几个客户端节点在通信之前要放到同一个房间中，其实这两个是一个道理，只是名字不同，SDK 中为了让大家好理解，两个名字都可以使用。如果你觉得更喜欢 Room 这个概念，那就可以使用 room 方法创建 Room，如果喜欢 Conversation，那就使用 conv 方法创建 Conversation。
 
 也许说到这里你已经跃跃欲试了，好的，那你可以试用一下看看了。
+
+注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
 
 ## 通过 bower 安装
 
@@ -38,7 +46,7 @@ Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://git
 
 ## Demo 及示例代码
 
-如果您觉得一点点阅读文档较慢，可以直接看我们的 [「Demo 代码」](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
+如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
@@ -63,7 +71,7 @@ console.log('当前 SDK 版本是 ' + AV.realtime.version);
 realtimeObj.on('open', function() {
     console.log('实时通信服务建立成功！');
 
-    // 创建一个聊天室
+    // 创建一个聊天室，conv 是 conversation 的缩写，也可以用 Room 方法替换
     conversationObj = realtimeObj.conv({
         // 人员的 id
         members: [
@@ -151,19 +159,24 @@ realtimeObj.on('message', function(data) {
     console.log('某个当前用户在的 Conversation 接收到消息：', data);
 });
 ```
+
 ## 安全
 
 ### 安全域名
 
-如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。详细请看 JavaScript 指南中的 [「安全域名」](https://leancloud.cn/docs/js_guide.html#安全域名) 部分。
+如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+
+详细请看 JavaScript 指南中的「[安全域名](https://leancloud.cn/docs/js_guide.html#安全域名)」部分。
 
 ### 权限和认证
 
-为了满足开发者对权限和认证的需求，我们设计了签名的概念。详细请看实时通信开发指南中的 [「权限和认证」](https://leancloud.cn/docs/realtime.html#权限和认证) 部分。
+为了满足开发者对权限和认证的需求，我们设计了签名的概念。
+
+详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」部分。
 
 ## 使用方法
 
-### 全局命名空间 AV
+### 全局命名空间
 
 LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
@@ -171,7 +184,9 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 描述：
 
-* 创建实时通信对象的方法，会启动实时通信的连接。自动调用 open 方法，内部与服务器匹配，并建立 WebSocket 连接。内部会自动维持与服务器的链接稳定，控制心跳数据包的频率等，如果发生中断可以通过对应的事件来给用户界面上的变化提示。另外，此方法支持多实例，也就是说，你可以在一个页面中，创建多个 RealtimeObject 来实现聊天。
+* 这是创建实时通信对象的方法，会启动实时通信的连接。自动调用 open 方法，内部与服务器匹配，并建立 WebSocket 连接。内部会自动维持与服务器的链接稳定，控制心跳数据包的频率，超时检测等，如果发生中断可以通过监听对应的事件来给用户界面上的变化提示。
+
+* 另外，此方法支持多实例，也就是说，你可以在一个页面中，创建多个 RealtimeObject 来实现聊天。
 
 参数：
 
@@ -181,31 +196,30 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
     * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
 
-    * auth {String}（可选）可以传入一个服务器 url 地址，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接；
+    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
 
 返回：
 
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject（实时通信对象），其中有后续调用的方法，支持链式调用。
 
 例子：
 
-
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
+   // auth 是权限校验的方法函数
+   // auth: authFun
 }, function() {
-   console.log('open');
+   console.log('与服务器连接成功！');
 });
 
-rtObject.on('open', function() {
-   console.log('open');
+// 监听 open 事件会得到同样的效果
+realtimeObject.on('open', function() {
+   console.log('与服务器连接成功！');
 });
-
 ```
 
 ### AV.realtime.version
@@ -221,7 +235,8 @@ rtObject.on('open', function() {
 例子：
 
 ```js
-console.log(AV.realtime.version);   // 2.0.0
+// 返回版本号
+console.log('当前版本是：' + AV.realtime.version);   
 ```
 
 ### RealtimeObject.open(callback)
@@ -232,7 +247,7 @@ console.log(AV.realtime.version);   // 2.0.0
 
 参数：
 
-* callback {Function}（可选）创建成功并且与服务器建立连接后触发的回调，此时也会派发一个私有的事件到 RealtimeObject 内部，也可以通过监听当前的 RealtimeObject 实例的 open 事件来处理连接成功的业务逻辑；
+* callback {Function}（可选）创建成功并且与服务器建立连接后触发的回调，此时也会派发一个私有的事件「open」到 RealtimeObject 内部，也可以通过监听当前的 RealtimeObject 实例的 open 事件来处理连接成功的业务逻辑；
 
 返回：
 
@@ -241,20 +256,20 @@ console.log(AV.realtime.version);   // 2.0.0
 例子：
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-rtObject.open(function() {
+// 真正使用时这里也无需调用，实例化 RealtimeObject 的时候 SDK 会自动调用 open 方法
+realtimeObject.open(function() {
+   // 与服务器连接成功
    console.log('open');
 });
 
-rtObject.on('open', function() {
+realtimeObject.on('open', function() {
    console.log('open,too.');
 });
 ```
@@ -272,19 +287,17 @@ rtObject.on('open', function() {
 例子：
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-rtObject.close();
+realtimeObject.close();
 
-rtObject.on('close', function() {
-   console.log('close');
+realtimeObject.on('close', function() {
+   console.log('与服务器已经断开！');
 });
 ```
 
@@ -305,22 +318,20 @@ rtObject.on('close', function() {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
 // 当新建一个 Room 的时候就会触发
-rtObject.on('new', function(data) {
+realtimeObject.on('create', function(data) {
    console.log(data);
 });
 
 // 有人加入 Room 的时候会被触发
-rtObject.on('join', function(data) {
+realtimeObject.on('join', function(data) {
    console.log(data);
 });
 ```
@@ -342,22 +353,20 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
 // 当服务建立之后会被触发
-rtObject.once('open', function() {
+realtimeObject.once('open', function() {
    console.log('opened');
 });
 
 // 当服务关闭的时候会被触发
-rtObject.once('close', function() {
+realtimeObject.once('close', function() {
    console.log('closed');
 });
 ```
@@ -379,32 +388,71 @@ rtObject.once('close', function() {
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
 // 当事件被派发的时候会触发
-rtObject.on('wangxiao', function(data) {
+realtimeObject.on('LeanCloud123', function(data) {
    // 会输出 test
    console.log(data.aaa);
 });
 
-// 派发了一个自定义的事件，名字叫「wangxiao」。
-rtObject.emit('wangxiao', {
+// 派发了一个自定义的事件，名字叫「LeanCloud123」。
+realtimeObject.emit('LeanCloud123', {
     aaa: 'test'
 });
 ```
 
-### RealtimeObject.room(options, callback)
+### RealtimeObject.off(eventName, callback)
 
 描述：
 
-* 创建一个 Room（房间），实时通信的最小单元；
+* 从 RealtimeObject 中的私有的事件中心，删除一个事件对应的回调函数绑定
+
+参数：
+
+* eventName {String} （必须）一个绑定过的事件名称
+
+* callback {Function}（必须）要在这个事件中移除的函数
+
+返回：
+
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
+
+```js
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var eventFun = function(data) {
+   // 会输出 test
+   console.log(data.aaa);
+};
+
+// 当事件被派发的时候会触发
+realtimeObject.on('LeanCloud123', eventFun);
+
+// 事件方法从事件监听中删除
+realtimeObject.off('LeanCloud123', eventFun);
+
+// 派发了一个自定义的事件，名字叫「LeanCloud123」。
+realtimeObject.emit('LeanCloud123', {
+    aaa: 'test'
+});
+```
+
+### RealtimeObject.conv(options, callback)
+
+描述：
+
+* 创建一个 Conversation（对话），实时通信的最小单元，conv 和 room 方法实现的是同样的方法，为了保持概念上的统一，详见「[特别说明](#特别说明)」；
 
 参数：
 
@@ -412,23 +460,52 @@ rtObject.emit('wangxiao', {
 
     * data {Object} （可选）自定义的数据信息，如 title、name 等
     
-    * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 new 事件，可以通过 RealtimeObject.on() 方法来监听；
+    * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.conv({
+    members: [
+        'wangxiao02'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+}, function(result) {
+    console.log('Conversation created callback');
+});
+
+// 当新 Room 被创建时触发
+realtimeObject.on('create', function(data) {
+   console.log(data);
+});
+```
+
+### RealtimeObject.room(options, callback)
+
+描述：
+
+* 创建一个 Room（房间），实时通信的最小单元，room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
+
+```js
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
     members: [
         'wangxiao02'
     ],
@@ -440,7 +517,7 @@ var room = rtObject.room({
 });
 
 // 当新 Room 被创建时触发
-rtObject.on('create', function(data) {
+realtimeObject.on('create', function(data) {
    console.log(data);
 });
 ```
@@ -462,16 +539,15 @@ rtObject.on('create', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room('sasfalklkjdlfs123');
+var roomId = 'sasfalklkjdlfs123';
+var room = realtimeObject.room(roomId);
 ```
 
 ### RealtimeObject.query(callback)
@@ -489,19 +565,17 @@ var room = rtObject.room('sasfalklkjdlfs123');
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
 // 当实时通信建立成功之后
-rtObject.on('open', function() {
+realtimeObject.on('open', function() {
    // 查询当前用户所在的组
-   rtObject.query(function(data) {
+   realtimeObject.query(function(data) {
       console.log(data);  // list
    });
 });
@@ -524,16 +598,14 @@ rtObject.on('open', function() {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02'
     ],
@@ -547,7 +619,7 @@ room.add('wangxiao03', function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-rtObject.on('join', function(data) {
+realtimeObject.on('join', function(data) {
    console.log(data);
 });
 ```
@@ -569,16 +641,14 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02'
     ],
@@ -592,7 +662,7 @@ room.add(['wangxiao03', 'wangxiao04'], function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-rtObject.on('join', function(data) {
+realtimeObject.on('join', function(data) {
    console.log(data);
 });
 ```
@@ -612,16 +682,14 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02'
     ],
@@ -635,7 +703,7 @@ room.remove('wangxiao02', function() {
 });
 
 // 当前 Room 有 client 立刻时触发
-rtObject.on('left', function(data) {
+realtimeObject.on('left', function(data) {
    console.log(data);
 });
 ```
@@ -657,16 +725,14 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02',
         'wangxiao03'
@@ -681,7 +747,7 @@ room.remove(['wangxiao02', 'wangxiao03'], function() {
 });
 
 // 当前 Room 有 client 立刻时触发
-rtObject.on('left', function(data) {
+realtimeObject.on('left', function(data) {
    console.log(data);
 });
 ```
@@ -701,23 +767,21 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room('safjslakjlfkjla123');
+var room = realtimeObject.room('safjslakjlfkjla123');
 
 room.join(function() {
     console.log('join');
 });
 
 // 当前 Room 有新的 client 加入时触发
-rtObject.on('join', function(data) {
+realtimeObject.on('join', function(data) {
    console.log(data);
 });
 ```
@@ -739,16 +803,14 @@ rtObject.on('join', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02',
         'wangxiao03'
@@ -761,7 +823,7 @@ var room = rtObject.room({
 room.leave();
 
 // 当前 Room 有 client 立刻时触发
-rtObject.on('left', function(data) {
+realtimeObject.on('left', function(data) {
    console.log(data);
 });
 ```
@@ -781,16 +843,14 @@ rtObject.on('left', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02',
         'wangxiao03'
@@ -822,16 +882,14 @@ room.list(function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02',
         'wangxiao03'
@@ -848,7 +906,7 @@ room.send({
 });
 
 // 当前用户所在的组，有消息时触发
-rtObject.on('message', function(data) {
+realtimeObject.on('message', function(data) {
    console.log(data);
 });
 ```
@@ -868,16 +926,14 @@ rtObject.on('message', function(data) {
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
 ```js
-var rtObject = AV.realtime({
+var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: 'abc123'
-   // auth 是权限校验的服务器地址，具体请看文档
-   // auth: 'http://signature-example.avosapps.com/sign'
 });
 
-var room = rtObject.room({
+var room = realtimeObject.room({
     members: [
         'wangxiao02',
         'wangxiao03'
