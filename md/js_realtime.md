@@ -180,7 +180,12 @@ realtimeObj.on('message', function(data) {
 
 LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
-### AV.realtime(options, callback)
+### AV.realtime
+
+使用:
+```javascript
+AV.realtime(options, callback)
+```
 
 描述：
 
@@ -204,7 +209,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 例子：
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -224,6 +229,11 @@ realtimeObject.on('open', function() {
 
 ### AV.realtime.version
 
+用法：
+```javascript
+AV.realtime.version
+```
+
 描述：
 
 * 获取当前 SDK 的版本信息
@@ -234,12 +244,17 @@ realtimeObject.on('open', function() {
 
 例子：
 
-```js
+```javascript
 // 返回版本号
 console.log('当前版本是：' + AV.realtime.version);   
 ```
 
-### RealtimeObject.open(callback)
+### RealtimeObject.open
+
+用法：
+```javascript
+RealtimeObject.open(callback)
+```
 
 描述：
 
@@ -255,7 +270,7 @@ console.log('当前版本是：' + AV.realtime.version);
 
 例子：
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -274,7 +289,12 @@ realtimeObject.on('open', function() {
 });
 ```
 
-### RealtimeObject.close()
+### RealtimeObject.close
+
+用法：
+```javascript
+RealtimeObject.close()
+```
 
 描述：
 
@@ -286,7 +306,7 @@ realtimeObject.on('open', function() {
 
 例子：
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -301,7 +321,12 @@ realtimeObject.on('close', function() {
 });
 ```
 
-### RealtimeObject.on(eventName, callback)
+### RealtimeObject.on
+
+用法：
+```javascript
+RealtimeObject.on(eventName, callback)
+```
 
 描述：
 
@@ -317,7 +342,7 @@ realtimeObject.on('close', function() {
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -336,7 +361,12 @@ realtimeObject.on('join', function(data) {
 });
 ```
 
-### RealtimeObject.once(eventName, callback)
+### RealtimeObject.once
+
+用法：
+```javascript
+RealtimeObject.once(eventName, callback)
+```
 
 描述：
 
@@ -352,7 +382,7 @@ realtimeObject.on('join', function(data) {
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -371,7 +401,12 @@ realtimeObject.once('close', function() {
 });
 ```
 
-### RealtimeObject.emit(eventName, dataObject)
+### RealtimeObject.emit
+
+用法：
+```javascript
+RealtimeObject.emit(eventName, dataObject)
+```
 
 描述：
 
@@ -387,7 +422,7 @@ realtimeObject.once('close', function() {
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -407,7 +442,12 @@ realtimeObject.emit('LeanCloud123', {
 });
 ```
 
-### RealtimeObject.off(eventName, callback)
+### RealtimeObject.off
+
+用法：
+```javascript
+RealtimeObject.off(eventName, callback)
+```
 
 描述：
 
@@ -423,7 +463,7 @@ realtimeObject.emit('LeanCloud123', {
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -448,7 +488,12 @@ realtimeObject.emit('LeanCloud123', {
 });
 ```
 
-### RealtimeObject.conv(options, callback)
+### RealtimeObject.conv
+
+用法：
+```javascript
+RealtimeObject.conv(options, callback)
+```
 
 描述：
 
@@ -466,7 +511,7 @@ realtimeObject.emit('LeanCloud123', {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -491,13 +536,18 @@ realtimeObject.on('create', function(data) {
 });
 ```
 
-### RealtimeObject.room(options, callback)
+### RealtimeObject.room
+
+用法：
+```javascript
+RealtimeObject.room(options, callback)
+```
 
 描述：
 
 * 创建一个 Room（房间），实时通信的最小单元，room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -522,7 +572,12 @@ realtimeObject.on('create', function(data) {
 });
 ```
 
-### RealtimeObject.room(roomId, callback)
+### RealtimeObject.room
+
+用法：
+```javascript
+RealtimeObject.room(roomId, callback)
+```
 
 描述：
 
@@ -538,7 +593,7 @@ realtimeObject.on('create', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -550,7 +605,12 @@ var roomId = 'sasfalklkjdlfs123';
 var room = realtimeObject.room(roomId);
 ```
 
-### RealtimeObject.query(callback)
+### RealtimeObject.query
+
+用法：
+```javascript
+RealtimeObject.query(callback)
+```
 
 描述：
 
@@ -564,7 +624,7 @@ var room = realtimeObject.room(roomId);
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -581,7 +641,12 @@ realtimeObject.on('open', function() {
 });
 ```
 
-### RoomObject.add(clientId, callback)
+### RoomObject.add
+
+用法：
+```javascript
+RoomObject.add(clientId, callback)
+```
 
 描述：
 
@@ -597,7 +662,7 @@ realtimeObject.on('open', function() {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -624,7 +689,12 @@ realtimeObject.on('join', function(data) {
 });
 ```
 
-### RoomObject.add(clientIdList, callback)
+### RoomObject.add
+
+用法：
+```javascript
+RoomObject.add(clientIdList, callback)
+```
 
 描述：
 
@@ -640,7 +710,7 @@ realtimeObject.on('join', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -667,7 +737,12 @@ realtimeObject.on('join', function(data) {
 });
 ```
 
-### RoomObject.remove(clientId, callback)
+### RoomObject.remove
+
+用法：
+```javascript
+RoomObject.remove(clientId, callback)
+```
 
 * 描述：从当前 RoomObject 中删除一个用户
 
@@ -681,7 +756,7 @@ realtimeObject.on('join', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -708,7 +783,12 @@ realtimeObject.on('left', function(data) {
 });
 ```
 
-### RoomObject.remove(clientIdList, callback)
+### RoomObject.remove
+
+用法：
+```javascript
+RoomObject.remove(clientIdList, callback)
+```
 
 描述：
 
@@ -724,7 +804,7 @@ realtimeObject.on('left', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -752,7 +832,12 @@ realtimeObject.on('left', function(data) {
 });
 ```
 
-### RoomObject.join(callback)
+### RoomObject.join
+
+用法：
+```javascript
+RoomObject.join(callback)
+```
 
 描述：
 
@@ -766,7 +851,7 @@ realtimeObject.on('left', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -786,7 +871,12 @@ realtimeObject.on('join', function(data) {
 });
 ```
 
-### RoomObject.leave(callback)
+### RoomObject.leave
+
+用法：
+```javascript
+RoomObject.leave(callback)
+```
 
 描述：
 
@@ -802,7 +892,7 @@ realtimeObject.on('join', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -828,7 +918,12 @@ realtimeObject.on('left', function(data) {
 });
 ```
 
-### RoomObject.list(callback)
+### RoomObject.list
+
+用法：
+```javascript
+RoomObject.list(callback)
+```
 
 描述：
 
@@ -842,7 +937,7 @@ realtimeObject.on('left', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -865,7 +960,12 @@ room.list(function(data) {
 });
 ``` 
 
-### RoomObject.send(dataObject, callback)
+### RoomObject.send
+
+用法：
+```javascript
+RoomObject.send(dataObject, callback)
+```
 
 描述：
 
@@ -881,7 +981,7 @@ room.list(function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
@@ -911,7 +1011,12 @@ realtimeObject.on('message', function(data) {
 });
 ```
 
-### RoomObject.receive(callback)
+### RoomObject.receive
+
+用法：
+```javascript
+RoomObject.receive(callback)
+```
 
 描述：
 
@@ -925,7 +1030,7 @@ realtimeObject.on('message', function(data) {
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-```js
+```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
