@@ -2414,6 +2414,55 @@ curl -X GET \
 ]
 ```
 
+返回字段说明：
+
+<table>
+  <tr>
+    <td>字段名</td>
+    <td>含义</td>
+  </tr>
+  <tr>
+    <td>conv-id</td>
+    <td>用于查询的对话 id</td>
+  </tr>
+  <tr>
+    <td>from</td>
+    <td>消息来自 id</td>
+  </tr>
+  <tr>
+    <td>data</td>
+    <td>消息内容</td>
+  </tr>
+  <tr>
+    <td>timestamp</td>
+    <td>消息到达服务器的 Unix 时间戳，毫秒</td>
+  </tr>
+  <tr>
+    <td>msg-id</td>
+    <td>消息 id</td>
+  </tr>
+  <tr>
+    <td>is-conv</td>
+    <td>是否是 v2 中对话模型的消息</td>
+  </tr>
+  <tr>
+    <td>is-room</td>
+    <td>是否是早期版本中的群组消息</td>
+  </tr>
+  <tr>
+    <td>to</td>
+    <td>早期版本中的收件人列表</td>
+  </tr>
+  <tr>
+    <td>bin</td>
+    <td>是否是 BASE64 编码的二进制内容</td>
+  </tr>
+  <tr>
+    <td>from-ip</td>
+    <td>消息的来源 IP</td>
+  </tr>
+</table>
+
 ### 删除聊天记录
 删除一条指定的聊天历史记录，必须采用 master key 授权，所以不建议在客户端使用此接口
 
