@@ -75,7 +75,8 @@ imClient.open(new IMClientCallback(){
 假定我们要跟「Bob」这个用户进行聊天，我们先创建一个对话，代码如下：
 
 ```
-// 先查询一下是否已经存在与「Bob」的私聊对话
+// 下面的代码包含了实际应用中的所有逻辑：查询－>创建「对话」。
+// 先查询一下是否已经存在与「Bob」的私聊对话，可以先忽略这部分代码。
 List<String> clientIds = new ArrayList<String>();
 clientIds.add("Tom");
 clientIds.add("Bob");
@@ -96,7 +97,7 @@ conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
       // 已经有一个和 Bob 的对话存在，继续在这一对话中聊天
       ...
     } else {
-      // 不曾和 Bob 聊过，新建一个对话
+      // 不曾和 Bob 聊过，新建一个对话。！！**这里是重点**！！
       Map<String, Object> attr = new HashMap<String, Object>();
       attr.put("type", ConversationType_OneOne);
       imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
@@ -175,7 +176,7 @@ AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
 
 LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 
-### AVIMClientEventHandler
+### 网络事件响应接口（AVIMClientEventHandler）
 主要用来处理网络变化事件，主要函数为：
 
 ```
@@ -201,7 +202,7 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 
 通过 `AVIMClient.setClientEventHandler(AVIMClientEventHandler handler)` 可以设定全局的 ClientEventHandler。
 
-### AVIMConversationEventHandler
+### 对话成员变化响应接口（AVIMConversationEventHandler）
 主要用来处理对话中成员变化的事件，主要函数为：
 
 ```
@@ -257,7 +258,7 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 
 通过 `AVIMMessageManager.setConversationEventHandler(AVIMConversationEventHandler handler)` 可以设置全局的 ConversationEventHandler。
 
-### MessageHandler
+### 消息响应接口（MessageHandler）
 主要用来处理新消息到达事件，主要的函数为：
 
 ```
@@ -278,10 +279,10 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 支持富媒体的聊天消息
 -------------
 
-上面的代码演示了如何发送简单文本信息，但是现在的交互方式已经越来越多样化，图片、语音、视频已是非常普遍的消息类型。v2 版的 LeanCloud IM SDK 已经可以很好地支持这些富媒体消息，具体说明如下：
+上面的代码演示了如何发送简单文本信息，但是现在的交互方式已经越来越多样化，图像、语音、视频已是非常普遍的消息类型。v2 版的 LeanCloud IM SDK 已经可以很好地支持这些富媒体消息，具体说明如下：
 
 
-### AVIMTypedMessage
+### 基类：AVIMTypedMessage
 
 所有富媒体消息的基类，其声明为
 
@@ -310,7 +311,7 @@ public abstract class AVIMTypedMessage extends AVIMMessage {
 }
 ```
 
-### AVIMTextMessage
+### 文本消息（AVIMTextMessage）
 
 AVIMTypedMessage 子类，表示一般的文本消息，其声明为
 
@@ -343,8 +344,8 @@ conversation.sendMessage(message, new AVIMConversationCallback() {
 });
 ```
 
-### AVIMImageMessage
-AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其声明为：
+### 图像消息（AVIMImageMessage）
+AVIMTypedMessage 子类，支持发送图像和附带文本的混合消息，其声明为：
 
 ```
 public class AVIMImageMessage extends AVIMFileMessage {
@@ -362,14 +363,14 @@ public class AVIMImageMessage extends AVIMFileMessage {
   public Map<String, Object> getFileMetaData();
 
   /**
-   * 获取图片的高
+   * 获取图像的高
    * 
    * @return
    */
   public int getHeight();
 
   /**
-   * 获取图片的宽度
+   * 获取图像的宽度
    * 
    * @return
    */
@@ -377,7 +378,7 @@ public class AVIMImageMessage extends AVIMFileMessage {
 }
 ```
 
-发送图片消息的示例代码为：
+发送图像消息的示例代码为：
 
 ```
 String localImagePath;
@@ -396,9 +397,9 @@ try {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干图片元数据（width，height，图片 size，图片 format）和一个包含图片数据的 AVFile 对象。
+接收到这样消息之后，开发者可以获取到若干图像元数据（width，height，图像 size，图像 format）和一个包含图像数据的 AVFile 对象。
 
-### AVIMAudioMessage
+### 音频消息（AVIMAudioMessage）
 AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其声明为：
 
 ```
@@ -443,9 +444,9 @@ try {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含图片数据的 AVFile 对象。
+接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含音频数据的 AVFile 对象。
 
-### AVIMVideoMessage
+### 视频消息（AVIMVideoMessage）
 AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其声明为：
 
 ```
@@ -492,9 +493,9 @@ try {
 }
 ```
 
-接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含图片数据的 AVFile 对象。
+接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含视频数据的 AVFile 对象。
 
-### AVIMLocationMessage
+### 地理位置消息（AVIMLocationMessage）
 AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合消息，其声明为：
 
 ```

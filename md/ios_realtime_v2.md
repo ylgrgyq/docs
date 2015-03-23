@@ -118,7 +118,7 @@ LeanCloud IM SDK v2 被包含在 `AVOSCloudIM.framework` 中，它依赖于 `AVO
 }
 ```
 
-AVIMClientDelegate
+客户端事件代理
 ------------
 从上面的例子中可以看到，要接收到别人给你发送的消息，需要实现 AVIMClientDelegate 协议。从 v2 版开始，LeanCloud IM SDK 大量采用回调来反馈操作结果，但是对于一些被动的消息通知，则还是采用代理来实现的，包括：
 
@@ -213,9 +213,9 @@ AVIMClientDelegate 的详细定义如下：
 支持富媒体的聊天消息
 -------------
 
-上面的代码演示了如何发送简单文本信息，但是现在的交互方式已经越来越多样化，图片、语音、视频已是非常普遍的消息类型。v2 版的 LeanCloud IM SDK 已经可以很好地支持这些富媒体消息，具体说明如下：
+上面的代码演示了如何发送简单文本信息，但是现在的交互方式已经越来越多样化，图像、语音、视频已是非常普遍的消息类型。v2 版的 LeanCloud IM SDK 已经可以很好地支持这些富媒体消息，具体说明如下：
 
-### AVIMTypedMessage
+### 基类：AVIMTypedMessage
 所有富媒体消息的基类，其声明为
 
 ```
@@ -239,7 +239,7 @@ enum : AVIMMessageMediaType {
 @end
 ```
 
-### AVIMTextMessage
+### 文本消息（AVIMTextMessage）
 
 AVIMTypedMessage 子类，表示一般的文本消息，其构造函数为
 
@@ -261,8 +261,8 @@ AVIMTypedMessage 子类，表示一般的文本消息，其构造函数为
     }
     }];
 
-### AVIMImageMessage
-AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其声明为：
+### 图像消息（AVIMImageMessage）
+AVIMTypedMessage 子类，支持发送图像和附带文本的混合消息，其声明为：
 
 ```
 @interface AVIMImageMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
@@ -278,7 +278,7 @@ AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其
 @end
 ```
 
-发送图片消息的示例代码为：
+发送图像消息的示例代码为：
 
     AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"萌照" attachedFilePath:filePath attributes:attr];
     [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
@@ -289,9 +289,9 @@ AVIMTypedMessage 子类，支持发送图片和附带文本的混合消息，其
     }
     }];
 
-接收到这样消息之后，开发者可以获取到若干图片元数据（width，height，图片 size，图片 format）和一个包含图片数据的 AVFile 实例。
+接收到这样消息之后，开发者可以获取到若干图像元数据（width，height，图像 size，图像 format）和一个包含图像数据的 AVFile 实例。
 
-### AVIMAudioMessage
+### 音频消息（AVIMAudioMessage）
 AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其声明为：
 
 ```
@@ -318,9 +318,9 @@ AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其
     }
     }];
 
-接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含图片数据的 AVFile 实例。
+接收到这样消息之后，开发者可以获取到若干音频元数据（时长 duration、音频 size，音频 format）和一个包含音频数据的 AVFile 实例。
 
-### AVIMVideoMessage
+### 视频消息（AVIMVideoMessage）
 AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其声明为：
 
 ```
@@ -347,9 +347,9 @@ AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其
     }
     }];
 
-接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含图片数据的 AVFile 实例。
+接收到这样消息之后，开发者可以获取到若干视频元数据（时长 duration、视频 size，视频 format）和一个包含视频数据的 AVFile 实例。
 
-### AVIMLocationMessage
+### 地理位置消息（AVIMLocationMessage）
 AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合消息，其声明为：
 
 ```
@@ -403,7 +403,7 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
             break;
         case kAVIMMessageMediaTypeImage:
             AVIMImageMessage *imageMsg = (AVIMImageMessage*)message;
-            // 显示图片消息
+            // 显示图像消息
             break;
         case kAVIMMessageMediaTypeAudio:
             AVIMAudioMessage *audioMsg = (AVIMAudioMessage*)message;
@@ -696,3 +696,5 @@ LeanMessage 会将普通的对话消息自动保存在云端，之后开发者�
 * timestamp 时间戳，单位秒
 * nonce 随机字符串 nonce
 * error 签名错误信息
+
+在启用签名功能的情况下，LeanCloud IM SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。 
