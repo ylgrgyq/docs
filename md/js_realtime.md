@@ -1179,6 +1179,60 @@ room.receive(function(data) {
 });
 ```
 
+### RoomObject.receipt
+
+用法：
+```javascript
+RoomObject.receipt(callback)
+```
+
+描述：
+
+* 如果你通过 RoomObject.send 方法发送了需要有回执功能的信息，那么通过 RoomObject.receipt 可以接收当前这个房间中的所有这类回执信息；回执表示从实时通信服务本身，对方的客户端已经收到该信息
+
+参数：
+
+* callback {Function} （必须）收到的回执信息
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'wangxiao02',
+        'wangxiao03'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+room.send({
+    abc: 123
+}, {
+    // 需要获取阅读回执
+    receipt: true
+}, function(data) {
+    console.log('信息发送成功，该信息会获取阅读回执');
+});
+
+// 当前用户所在的组，有消息时触发
+room.receipt(function(data) {
+   console.log(data); // 已经收到的 clientId
+});
+```
+
 ### 事件
 
 SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被派发（注意：RoomObject 内部默认不会派发任何事件），你可以通过监听这些事件来完成你的操作。以下是默认事件的说明：
