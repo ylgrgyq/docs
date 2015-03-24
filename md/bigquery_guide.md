@@ -49,6 +49,53 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
 
+### 常用的UDF
+#### 计算类
+
+* 取整函数: round
+* 指定精度取整函数: round
+* 向下取整函数: floor
+* 向上取整函数: ceil
+* 向上取整函数: ceiling
+* 取随机数函数: rand
+* 自然指数函数: exp
+* 以10为底对数函数: log10
+* 以2为底对数函数: log2
+* 对数函数: log
+* 幂运算函数: pow
+* 幂运算函数: power
+* 开平方函数: sqrt
+* 二进制函数: bin
+* 十六进制函数: hex
+* 反转十六进制函数: unhex
+* 进制转换函数: conv
+* 绝对值函数: abs
+* 正取余函数: pmod
+* 正弦函数: sin
+* 反正弦函数: asin
+* 余弦函数: cos
+* 反余弦函数: acos
+* positive函数: positive
+* negative函数: negative
+
+#### 日期类
+
+* UNIX时间戳转日期函数: from_unixtime
+* 获取当前UNIX时间戳函数: unix_timestamp 
+* 日期转UNIX时间戳函数: unix_timestamp 
+* 指定格式日期转UNIX时间戳函数: unix_timestamp 
+* 日期时间转日期函数: to_date 
+* 日期转年函数: year 
+* 日期转月函数: month 
+* 日期转天函数: day 
+* 日期转小时函数: hour 
+* 日期转分钟函数: minute 
+* 日期转秒函数: second 
+* 日期转周函数: weekofyear 
+* 日期比较函数: datediff 
+* 日期增加函数: date_add 
+* 日期减少函数: date_sub
+
 
 ### 多表 Join：
 
