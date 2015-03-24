@@ -174,7 +174,7 @@ realtimeObj.on('message', function(data) {
 
 详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」部分。
 
-## 使用方法
+## 方法列表
 
 ### 全局命名空间
 
@@ -342,6 +342,8 @@ RealtimeObject.on(eventName, callback)
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -382,6 +384,8 @@ RealtimeObject.once(eventName, callback)
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -421,6 +425,8 @@ RealtimeObject.emit(eventName, dataObject)
 返回：
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -463,6 +469,8 @@ RealtimeObject.off(eventName, callback)
 
 * {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -497,7 +505,7 @@ RealtimeObject.conv(options, callback)
 
 描述：
 
-* 创建一个 Conversation（对话），实时通信的最小单元，conv 和 room 方法实现的是同样的方法，为了保持概念上的统一，详见「[特别说明](#特别说明)」；
+* 创建一个 Conversation（对话），实时通信的最小单元。conv 和 room 方法实现的是同样的方法，为了保持概念上的统一，详见「[特别说明](#特别说明)」；
 
 参数：
 
@@ -509,7 +517,9 @@ RealtimeObject.conv(options, callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 convObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -536,6 +546,41 @@ realtimeObject.on('create', function(data) {
 });
 ```
 
+### RealtimeObject.conv
+
+用法：
+```javascript
+RealtimeObject.conv(convId, callback)
+```
+
+描述：
+
+* 匹配一个在服务器端已有的 Conversation（对话），并生成对应的 convObject，此时不派发任何事件；
+
+参数：
+
+* convId {String} （必须）传入已有 Conversation（对话） 的 id
+
+* callback {Function} （可选）创建成功后的回调函数，此时不会派发任何事件；
+
+返回：
+
+* {Object} 返回 convObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var convId = 'sasfalklkjdlfs123';
+var conv = realtimeObject.conv(convId);
+```
+
 ### RealtimeObject.room
 
 用法：
@@ -545,7 +590,9 @@ RealtimeObject.room(options, callback)
 
 描述：
 
-* 创建一个 Room（房间），实时通信的最小单元，room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
+* 创建一个 Room（房间），实时通信的最小单元。room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -581,7 +628,7 @@ RealtimeObject.room(roomId, callback)
 
 描述：
 
-* 匹配一个在服务器端已有的 room，并生成对应的 RoomObject，此时不派发任何事件；
+* 匹配一个在服务器端已有的 room，并生成对应的 RoomObject，此时不派发任何事件；room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
 
 参数：
 
@@ -592,6 +639,8 @@ RealtimeObject.room(roomId, callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -622,7 +671,9 @@ RealtimeObject.query(callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 realtimeObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -636,6 +687,62 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    // 查询当前用户所在的组
    realtimeObject.query(function(data) {
+      console.log(data);  // list
+   });
+});
+```
+
+### RealtimeObject.query
+
+用法：
+```javascript
+RealtimeObject.query(options, callback)
+```
+
+描述：
+
+* 查询实时通信表中的数据
+
+参数：
+
+* options {Object} （可选）一些配置参数
+
+  * where {Object} （可选）默认为包含自己的查询 {m: clientId}
+
+  * sort {String} （可选）默认为 -lm，最近对话反序
+
+  * limit {Number} （可选）一次获取的条目数量，默认为 10
+
+  * skip {Number} （可选）跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询，默认为 0
+
+  * compact {Boolean} （可选）是否要去掉内置大字段（成员列表，静音列表和当前用户静音的状态），默认 false
+
+* callback {Function} （必须）创建成功后的回调函数，参数中可以获取到 Room 的列表
+
+返回：
+
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+// 当实时通信建立成功之后
+realtimeObject.on('open', function() {
+   // 各种条件查询
+   realtimeObject.query({
+       where: {m: 'abc123'},
+       sort: '-lm',
+       limit: 100,
+       skip: 200,
+       compact: false
+   },function(data) {
       console.log(data);  // list
    });
 });
@@ -661,6 +768,8 @@ RoomObject.add(clientId, callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -710,6 +819,8 @@ RoomObject.add(clientIdList, callback)
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -755,6 +866,8 @@ RoomObject.remove(clientId, callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -804,6 +917,8 @@ RoomObject.remove(clientIdList, callback)
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -851,6 +966,8 @@ RoomObject.join(callback)
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -891,6 +1008,8 @@ RoomObject.leave(callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -937,6 +1056,8 @@ RoomObject.list(callback)
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
+例子：
+
 ```javascript
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
@@ -980,6 +1101,8 @@ RoomObject.send(dataObject, callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
@@ -1029,6 +1152,8 @@ RoomObject.receive(callback)
 返回：
 
 * {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
 
 ```javascript
 var realtimeObject = AV.realtime({
