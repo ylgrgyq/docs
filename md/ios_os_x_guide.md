@@ -283,7 +283,7 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 
 也可以使用 `incrementKey:byAmount:` 来累加字段的数值。
 
-那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了 
+那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了
 `fetchWhenSave` 属性，当设置为 `true` 时，LeanCloud 会在保存操作发生时，自动返回当前计数器的最新数值。
 
 
@@ -589,7 +589,7 @@ NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
 相反，要让查询不包含某些值的对象，则用 `whereKey:notContainedIn:` ：
 
 ```objc
-// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数 
+// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数
 NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
                                            @"Dario Wunsch",
                                            @"Shawn Simon",
@@ -990,7 +990,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
   ......
 ```
 
-这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成： 
+这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
 ```objc
 [student setAge:19]
 ```
@@ -1449,7 +1449,7 @@ if (currentUser != nil) {
 
 ```objc
 [AVUser logOut];  //清除缓存用户对象
-AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了 
+AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 ```
 
 ### 重置密码
@@ -1631,7 +1631,7 @@ AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"]
 AVQuery *query = [AVQuery queryWithClassName:@"PlaceObject"];
 [query whereKey:@"locaton" nearGeoPoint:userLocation];
 //获取最接近用户地点的10条数据
-query.limit = 10;      
+query.limit = 10;
 NSArray<AVObject *> nearPlaces = [query findObjects];
 ```
 
@@ -1714,14 +1714,14 @@ NSArray<AVObject *> *pizzaPlacesInSF = [query findObjects];
 短信模板提交并审核后，即可使用 SDK 向用户发送符合短信模板定义的短信内容。
 
 比如，提交如下短信模板，模板名称为 `Register_Template`：
-```html
+
 <pre ng-non-bindable ><code>
 Hi {{username}},
 欢迎注册{{name}}应用，你可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
 以上。
 {{appname}}
 </code></pre>
-```
+
 **注：`name`、 `code`、 `ttl`  是预留的字段，分别代表应用名、验证码、过期时间。系统会自动为它们填充内容。**
 
 发送短信：
