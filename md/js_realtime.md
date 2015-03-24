@@ -79,7 +79,7 @@ realtimeObj.on('open', function() {
         ],
         // 默认的数据，可以放 Conversation 名字等
         data: {
-            name: 'WangXiao',
+            name: 'LeanCloud',
             m: 123
         }
     }, function(data) {
@@ -531,7 +531,7 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.conv({
     members: [
-        'wangxiao02'
+        'LeanCloud02'
     ],
     data: {
         title: 'testTitle'
@@ -604,7 +604,7 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02'
+        'LeanCloud02'
     ],
     data: {
         title: 'testTitle'
@@ -748,6 +748,106 @@ realtimeObject.on('open', function() {
 });
 ```
 
+### RoomObject.ping
+
+用法：
+```javascript
+RoomObject.ping(clientIdList, callback)
+```
+
+描述：
+
+* 查询对应的 clientId 是否处于服务在线状态
+
+参数：
+
+* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']
+
+* callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud2']，则说明 LeanCloud2 在线
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'LeanCloud01',
+        'LeanCloud02'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+rt.ping([
+    'LeanCloud01',
+    'LeanCloud02'
+], function(data) {
+    // 返回传入的 id 中，在线的用户 id
+    console.log(data);
+});
+```
+
+### RoomObject.ping
+
+用法：
+```javascript
+RoomObject.ping(clientId, callback)
+```
+
+描述：
+
+* 查询对应的 clientId 是否处于服务在线状态
+
+参数：
+
+* clientId {String} （必须）传入已有用户的 clientId，如 'LeanCloud1'
+
+* callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud1']，则说明 LeanCloud1 在线
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'LeanCloud01',
+        'LeanCloud02'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+rt.ping('LeanCloud01', function(data) {
+    if (data.length) {
+       console.log('用户在线');
+    } else {
+       console.log('用户不在线');
+    }
+});
+```
+
 ### RoomObject.add
 
 用法：
@@ -781,14 +881,14 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02'
+        'LeanCloud02'
     ],
     data: {
         title: 'testTitle'
     }
 });
 
-room.add('wangxiao03', function() {
+room.add('LeanCloud03', function() {
     console.log('Add success.');
 });
 
@@ -831,14 +931,14 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02'
+        'LeanCloud02'
     ],
     data: {
         title: 'testTitle'
     }
 });
 
-room.add(['wangxiao03', 'wangxiao04'], function() {
+room.add(['LeanCloud03', 'LeanCloud04'], function() {
     console.log('Add success.');
 });
 
@@ -879,14 +979,14 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02'
+        'LeanCloud02'
     ],
     data: {
         title: 'testTitle'
     }
 });
 
-room.remove('wangxiao02', function() {
+room.remove('LeanCloud02', function() {
     console.log('Remove success.');
 });
 
@@ -929,15 +1029,15 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
     }
 });
 
-room.remove(['wangxiao02', 'wangxiao03'], function() {
+room.remove(['LeanCloud02', 'LeanCloud03'], function() {
     console.log('Remove success.');
 });
 
@@ -1021,8 +1121,8 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
@@ -1068,8 +1168,8 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
@@ -1114,8 +1214,8 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
@@ -1165,8 +1265,8 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
@@ -1210,8 +1310,8 @@ var realtimeObject = AV.realtime({
 
 var room = realtimeObject.room({
     members: [
-        'wangxiao02',
-        'wangxiao03'
+        'LeanCloud02',
+        'LeanCloud03'
     ],
     data: {
         title: 'testTitle'
