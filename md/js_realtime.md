@@ -1332,6 +1332,51 @@ room.receipt(function(data) {
    console.log(data); // 已经收到的 clientId
 });
 ```
+### RoomObject.count
+
+用法：
+```javascript
+RoomObject.count(callback)
+```
+
+描述：
+
+* 获取当前这个 Room（或者 Conversation）中的用户数量
+
+参数：
+
+* callback {Function} （必须）返回的数据中可以获取到用户数量
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'LeanCloud01'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'LeanCloud02',
+        'LeanCloud03'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+// 当前用户所在的组，有消息时触发
+room.count(function(data) {
+   // 当前用户数量
+   console.log(data); 
+});
+```
 
 ## 全局事件
 
