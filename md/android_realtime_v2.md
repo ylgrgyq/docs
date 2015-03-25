@@ -222,17 +222,21 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 主要用来处理对话中成员变化的事件，接口定义在 `AVIMConversationEventHandler`,主要函数为：
 
 * `onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy)` 对话中有成员离开时所有剩余成员都会收到这一通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
   - conversation 指目标对话；
   - members 指离开的成员列表；
   - kickedBy 表示踢人者的 id；
 * `onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy)` 对话中有新成员加入时所有成员都会收到这一通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
   - conversation 指目标对话；
   - members 指加入的新成员列表；
   - invitedBy 表示邀请者的 id
 * `onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy)` 当前用户被踢出对话的通知，参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
   - conversation 指目标对话；
   - kickedBy 表示踢人者的 id
 * `onInvited(AVIMClient client, AVIMConversation conversation, String operator)` 当前用户被邀请加入对话的通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
   - conversation 指目标对话；
   - operator 表示邀请者的 id
 
@@ -241,7 +245,8 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 ### 消息响应接口
 主要用来处理新消息到达事件，接口定义在 `MessageHandler`，`AVIMMessageHandler` 是一个空的实现类，我们应该通过重载 AVIMMessageHandler 的相关方法来完成消息处理。主要的方法有：
 
-* `onMessage(AVIMMessage message, AVIMConversation conversation)` 指接收到新的消息。参数意义说明如下：
+* `onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client)` 指接收到新的消息。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
   - conversation 指目标对话；
   - message 表示消息实例
 * `onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client)` 自己发送的消息被对方接收时会收到此通知，各参数意义同上。
