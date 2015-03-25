@@ -211,17 +211,8 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 ### 网络事件响应接口
 主要用来处理网络变化事件，接口定义在 `AVIMClientEventHandler`，主要函数为：
 
-```
-  /**
-   * 实现本方法以处理网络断开事件
-   */
-  public abstract void onConnectionPaused(AVIMClient client);
-
-  /**
-   * 实现本方法以处理网络恢复事件
-   */
-  public abstract void onConnectionResume(AVIMClient client);
-```
+* `void onConnectionPaused(AVIMClient client)` 指网络连接断开事件发生，此时聊天服务不可用。
+* `void onConnectionResume(AVIMClient client)` 指网络连接恢复正常，此时聊天服务变得可用。
 
 在网络中断的情况下，所有的消息收发和对话操作都会出现问题。
 
@@ -230,63 +221,42 @@ LeanCloud IM SDK 内部使用了三种接口来响应这些事件。
 ### 对话成员变化响应接口
 主要用来处理对话中成员变化的事件，接口定义在 `AVIMConversationEventHandler`,主要函数为：
 
-```
-  /**
-   * 实现本方法以处理聊天对话中的参与者离开事件
-   *
-   * @param members 离开的参与者
-   * @param kickedBy 踢人者，自愿退出的情况下踢人者就是参与者
-   */
-  public abstract void onMemberLeft(AVIMClient client,
-      AVIMConversation conversation, List<String> members, String kickedBy);
-
-  /**
-   * 实现本方法以处理聊天对话中的参与者加入事件
-   *
-   * @param members 加入的参与者
-   * @param invitedBy 邀请人，有可能是加入的参与者本身
-   */
-  public abstract void onMemberJoined(AVIMClient client,
-      AVIMConversation conversation, List<String> members, String invitedBy);
-
-  /**
-   * 实现本方法来处理当前用户被踢出某个聊天对话事件
-   *
-   * @param kickedBy 踢出你的人
-   */
-  public abstract void onKicked(AVIMClient client, AVIMConversation conversation,
-      String kickedBy);
-
-  /**
-   * 实现本方法来处理当前用户被邀请到某个聊天对话事件
-   *
-   * @param conversation 被邀请的聊天对话
-   * @param operator 邀请你的人
-   */
-  public abstract void onInvited(AVIMClient client, AVIMConversation conversation,
-      String operator);
-```
+* `onMemberLeft(AVIMClient client, AVIMConversation conversation, List<String> members, String kickedBy)` 对话中有成员离开时所有剩余成员都会收到这一通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
+  - conversation 指目标对话；
+  - members 指离开的成员列表；
+  - kickedBy 表示踢人者的 id；
+* `onMemberJoined(AVIMClient client, AVIMConversation conversation, List<String> members, String invitedBy)` 对话中有新成员加入时所有成员都会收到这一通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
+  - conversation 指目标对话；
+  - members 指加入的新成员列表；
+  - invitedBy 表示邀请者的 id
+* `onKicked(AVIMClient client, AVIMConversation conversation, String kickedBy)` 当前用户被踢出对话的通知，参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
+  - conversation 指目标对话；
+  - kickedBy 表示踢人者的 id
+* `onInvited(AVIMClient client, AVIMConversation conversation, String operator)` 当前用户被邀请加入对话的通知。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
+  - conversation 指目标对话；
+  - operator 表示邀请者的 id
 
 通过 `AVIMMessageManager.setConversationEventHandler(AVIMConversationEventHandler handler)` 可以设置全局的 ConversationEventHandler。
 
 ### 消息响应接口
 主要用来处理新消息到达事件，接口定义在 `MessageHandler`，`AVIMMessageHandler` 是一个空的实现类，我们应该通过重载 AVIMMessageHandler 的相关方法来完成消息处理。主要的方法有：
 
-```
-  // 收到新的消息
-  @Override
-  public void onMessage(AVIMMessage message, AVIMConversation conversation);
-
-  // 自己发送的消息已经被对方接收
-  @Override
-  public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client);
-```
+* `onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client)` 指接收到新的消息。参数意义说明如下：
+  - client 指已经登录的 client，因为支持一个客户端多账户登录，每个账户会对应一个 client
+  - conversation 指目标对话；
+  - message 表示消息实例
+* `onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client)` 自己发送的消息被对方接收时会收到此通知，各参数意义同上。
 
 通过 `AVIMMessageManager.registerDefaultMessageHandler(handler)` 可以设置全局的 MessageHandler。
 
 我们实现这三类接口，就可以处理所有的通知消息了。示例代码如下：
 
 ```
+// 处理网络状态变化事件
 class CustomNetworkHandler extends AVIMClientEventHandler {
   @Override
   public void onConnectionPaused(AVIMClient client) {
@@ -301,6 +271,7 @@ class CustomNetworkHandler extends AVIMClientEventHandler {
   }
 }
 
+// 处理对话成员变化事件
 class CustomConversationHandler extends AVIMConversationEventHandler {
   public private Context gContext = null;
   private void toast(String str) {
@@ -337,6 +308,7 @@ class CustomConversationHandler extends AVIMConversationEventHandler {
   }
 };
 
+// 处理新消息到达事件
 class CustomMsgHandler extends AVIMMessageHandler {
   @Override
   public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
@@ -672,22 +644,27 @@ class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
       AVIMTextMessage textMsg = (AVIMTextMessage)message;
       Logger.d("收到文本消息:" + textMsg.getText() + ", msgId:" + textMsg.getMessageId());
       break;
+
     case AVIMReservedMessageType.FileMessageType:
       AVIMFileMessage fileMsg = (AVIMFileMessage)message;
       Logger.id("收到文件消息。msgId=" + fileMsg.getMessageId() + ", url=" + fileMsg.getFileUrl() + ", size=" + fileMsg.getSize());
       break;
+
     case AVIMReservedMessageType.ImageMessageType:
       AVIMImageMessage imageMsg = (AVIMImageMessage)message;
       Logger.id("收到图片消息。msgId=" + imageMsg.getMessageId() + ", url=" + imageMsg.getFileUrl() + ", width=" + imageMsg.getWidth() + ", height=" + imageMsg.getHeight());
       break;
+
     case AVIMReservedMessageType.AudioMessageType:
       AVIMAudioMessage audioMsg = (AVIMAudioMessage)message;
       Logger.id("收到音频消息。msgId=" + audioMsg.getMessageId() + ", url=" + audioMsg.getFileUrl() + ", duration=" + audioMsg.getDuration());
       break;
+
     case AVIMReservedMessageType.VideoMessageType:
       AVIMVideoMessage videoMsg = (AVIMAudioMessage)message;
       Logger.id("收到视频消息。msgId=" + videoMsg.getMessageId() + ", url=" + videoMsg.getFileUrl() + ", duration=" + videoMsg.getDuration());
       break;
+
     case AVIMReservedMessageType.LocationMessageType:
       AVIMLocationMessage locMsg = (AVIMLocationMessage)message;
       Logger.id("收到位置消息。msgId=" + locMsg.getMessageId() + ", latitude=" + locMsg.getLocation().getLatitude() + ", longitude=" + locMsg.getLocation().getLongitude());
@@ -697,13 +674,13 @@ class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
 
   @Override
   public void onMessageReceipt(AVIMTypedMessage message, AVIMConversation conversation, AVIMClient client) {
+    // 请加入你自己需要的逻辑...
   }
 }
 MsgHandler msgHandler = new MsgHandler();
 AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 ```
 
-      
 LeanCloud IM SDK 内部消息分发的逻辑是这样的：对于收到的任一新消息，SDK 内部都会先解析消息的类型，根据类型找到开发者为这一类型注册的处理 handler，然后逐一调用这些 handler 的 onMessage 函数。如果没有找到专门处理这一类型消息的 handler，就会转交给 defaultHandler 处理。
 
 这样一来，在开发者为 TypedMessage（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 **AVIMMessageManager.registerDefaultMessageHandler()中指定的 handler** 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 **AVIMMessageManager.registerMessageHandler()中指定的 handler** 被调用。
