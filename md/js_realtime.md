@@ -77,7 +77,7 @@ console.log('当前 SDK 版本是 ' + AV.realtime.version);
 realtimeObj.on('open', function() {
     console.log('实时通信服务建立成功！');
 
-    // 创建一个聊天室，conv 是 conversation 的缩写，也可以用 Room 方法替换
+    // 创建一个聊天室，conv 是 conversation 的缩写，也可以用 room 方法替换
     conversationObj = realtimeObj.conv({
         // 人员的 id
         members: [

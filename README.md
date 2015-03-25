@@ -12,7 +12,7 @@ LeanCloud 开发者文档
 
 我们欢迎所有用户为我们贡献或者修正错误。您只要 [fork](https://github.com/leancloud/docs/fork) 这个项目，并提交 [Pull Request](https://github.com/leancloud/docs/pulls) 即可。
 
-我们所有文档的源文件都在 MD 目录中，相关图片放在 images 目录下。
+我们所有文档的源文件都在 md 目录中（内容使用 markdown 语法），相关图片放在 images 目录下。
 
 LeanCloud 衷心感谢您的贡献。
 
@@ -20,9 +20,20 @@ LeanCloud 衷心感谢您的贡献。
 
 开发服务基于 Grunt，所以需要有 Nodejs 环境，通过 NPM 安装测试需要的依赖
 
-`npm install` 安装依赖。
+安装 Grunt
+```
+sudo npm install -g grunt-cli
+```
 
-`grunt server` 本地启动一个 HTTP Server（localhost:3000），然后打开浏览器访问即可。
+安装需要的依赖
+```
+sudo npm install
+```
+
+本地启动一个 HTTP Server，然后打开浏览器访问 http://localhost:3000 即可
+```
+grunt server
+```
 
 ## 注意事项
 
