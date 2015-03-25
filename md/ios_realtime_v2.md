@@ -591,7 +591,7 @@ NSArray* userIds = @[@"Chad"];
 
 ### 获取历史消息 ###
 
-LeanMessage 会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
+LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
 
 ```
 NSString *oldestMsgId;
