@@ -465,9 +465,9 @@ try {
 }
 ```
 
-接收到这样消息之后，开发者可以通过以下方法，获取到文件元数据（size 等）和一个包含图像数据的 AVFile 对象：
+接收到这样消息之后，开发者可以通过以下方法，获取到文件元数据（size 等）和一个包含二进制数据的 AVFile 对象：
 
-* `AVFile getAVFile()` 方法会返回一个二进制文件的 AVFile 实例，之后可以通过 AVFile 来完成数据下载或者其他操作，具体可以参见 AVFile 说明
+* `AVFile getAVFile()` 方法会返回一个二进制文件的 AVFile 实例，之后可以通过 AVFile 来完成数据下载或者其他操作，具体可以参见 [AVFile 说明](./android_guide.html#文件)
 * `String getFileUrl()` 方法会返回二进制文件的 url
 * `long getSize()` 方法会返回二进制文件的实际大小（单位：byte）
 * `Map<String, Object> getFileMetaData()` 可以获取二进制文件的其他元数据信息。
@@ -558,7 +558,7 @@ try {
 * `AVFile getAVFile()` （继承自 AVIMFileMessage）方法会返回一个音频文件的 AVFile 实例
 * `String getFileUrl()` （继承自 AVIMFileMessage）方法会返回音频文件的 url
 * `long getSize()` （继承自 AVIMFileMessage）方法会返回音频文件的实际大小（单位：byte）
-* `String getText()` （继承自 AVIMFileMessage）方法会返回随视频一起发送的文本信息。
+* `String getText()` （继承自 AVIMFileMessage）方法会返回随音频一起发送的文本信息。
 * `Map<String, Object> getFileMetaData()` （继承自 AVIMFileMessage）可以获取音频的其他元数据信息。
 
 
