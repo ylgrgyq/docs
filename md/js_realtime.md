@@ -44,6 +44,12 @@ Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://git
 
 所有的 Release 地址: [https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
 
+## 文档贡献
+
+如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
+
+Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
+
 ## Demo 及示例代码
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
