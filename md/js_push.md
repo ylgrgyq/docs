@@ -77,7 +77,7 @@ push.on('reuse', function() {
 
 ## 方法文档
 
-### 全局命名空间 AV
+### 全局命名空间
 
 LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 

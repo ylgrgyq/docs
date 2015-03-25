@@ -8,17 +8,32 @@ LeanCloud 开发者文档
 
 因此 Markdown 文件里部分链接写的是最终渲染后的链接，如果直接点击会发现 404 错误。敬请谅解。
 
-## 安装
-
-`npm install` 安装依赖。
-
-## 预览
-
-`grunt server` 本地启动一个 HTTP Server（localhost:3000），然后打开浏览器访问即可，（更改文档后无需刷新页面）。
-
 ## 贡献
 
 我们欢迎所有用户为我们贡献或者修正错误。您只要 [fork](https://github.com/leancloud/docs/fork) 这个项目，并提交 [Pull Request](https://github.com/leancloud/docs/pulls) 即可。
+
+我们所有文档的源文件都在 md 目录中（内容使用 markdown 语法），相关图片放在 images 目录下。
+
+LeanCloud 衷心感谢您的贡献。
+
+## 预览
+
+开发服务基于 Grunt，所以需要有 Nodejs 环境，通过 NPM 安装测试需要的依赖
+
+安装 Grunt
+```
+sudo npm install -g grunt-cli
+```
+
+安装需要的依赖
+```
+sudo npm install
+```
+
+本地启动一个 HTTP Server，然后打开浏览器访问 http://localhost:3000 即可
+```
+grunt server
+```
 
 ## 注意事项
 
