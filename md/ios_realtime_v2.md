@@ -130,7 +130,7 @@ AVIMMessage *message = [AVIMMessage messageWithContent:@"hello"];
 }
 ```
 
-AVIMClientDelegate 的是一个非常的接口，所有的消息和事件通知都需要通过它响应。下面我们就来仔细讨论一下代理接口。
+AVIMClientDelegate 是一个非常重要的接口，所有的消息和事件通知都需要通过它响应。下面我们就来仔细讨论一下这个代理接口。
 
 客户端事件代理
 ------------
