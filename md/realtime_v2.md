@@ -218,7 +218,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云代码 hook 要求云代码部署在云代码生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云代码 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
 
 ### _messageReceived
 
