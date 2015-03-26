@@ -47,8 +47,6 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 字符串函数（instr, length, printf, etc）
 * 日期函数（unix_timestamp, from_unixtime, to_date, weekofyear, year, month, day, current_timestamp, etc）
 
-更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
-
 ### 常用的UDF
 #### 计算类
 
@@ -96,6 +94,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 日期增加函数: date_add 
 * 日期减少函数: date_sub
 
+更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
 
 ### 多表 Join：
 
