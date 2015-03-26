@@ -73,7 +73,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>members</td>
-            <td>m (Array 类型)</td>
+            <td>m （Array 类型）</td>
         </tr>
         <tr>
             <td>name</td>
@@ -81,16 +81,16 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>attributes</td>
-            <td>attr (Object 类型)</td>
+            <td>attr （Object 类型）</td>
         </tr>
         <tr>
             <td>transient</td>
-            <td>tr</td>
+            <td>tr （Boolean 类型）</td>
         </tr>
     </tbody>
 </table>
 
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家直接创建 _Conversation 记录来预先建立对话。
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 
