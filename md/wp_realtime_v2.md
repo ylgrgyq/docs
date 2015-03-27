@@ -1,8 +1,8 @@
-# Windows Phone 实时通信服务(v2)
+# Windows Phone 实时通信服务
 
 ## 简介
 
-在阅读本开发指南之前，请先阅读下[《实时通信开发指南(v2)》](./realtime_v2.html)，了解实时通信的基本概念和模型。
+在阅读本开发指南之前，请先阅读下[《实时通信开发指南》](./realtime_v2.html)，了解实时通信的基本概念和模型。
 
 目前我们的实时通信服务仅支持 Windows Phone Silverlight 运行时，支持微软新一代的全平台统一运行时的 LeanCloud SDK for Windows Runtime 会尽快发布，本文档所提及的概念以及示例代码都兼容以上提及的 2 个运行时。
 
@@ -25,45 +25,49 @@ public App()
 ## 单聊
 
 ###  发送消息
-此场景类似于微信的私聊，微博的私信以及 QQ 单聊的场景，我们在 V2 版本内建立了一个统一的概念来描述聊天的各种场景：对话 — AVIMConversation，在[《实时通信开发指南(v2)》](./realtime_v2.html)里面有详细的介绍。
+此场景类似于微信的私聊，微博的私信以及 QQ 单聊的场景，我们建立了一个统一的概念来描述聊天的各种场景：对话 — AVIMConversation，在[《实时通信开发指南》](./realtime_v2.html)里面有详细的介绍。
 
-刘备想发送一条消息给曹操，下面的代码将帮助他实现这一功能：
+Tom 想发送一条消息给 Jerry，下面的代码将帮助他实现这一功能：
 
 ```c#
-public async void Sanguo_Episode1()
+public async void TomCreateConversationWithJerry()
 {
-    AVIMClient client = new AVIMClient("Liubei");//刘备用自己的名字作为 ClientId。
-    //注：ClientId 在单个应用中保持唯一即可，值为任意长度不超50的字符，由开发者自己维护
+    //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+    AVIMClient client = new AVIMClient("Tom");
 
-    await client.ConnectAsync();//刘备登陆到 LeanCloud 服务端
+    //Tom 登陆到系统
+    await client.ConnectAsync();
 
-    AVIMConversation conversationWithCaocao = await client.CreateConversationAsync("Caocao");
-    //创建一个只包含 刘备 和 曹操 对话，这就是单聊。
+    //Tom 建立了与 Jerry 的对话
+    AVIMConversation conversation = await client.CreateConversationAsync("Jerry");
 
-    await conversationWithCaocao.SendTextMessageAsync("丞相，皇上又赏赐我新手机了！");
-    //调用 AVIMConversation.SendTextMessageAsync 方法发送消息。
-
+    //Tom 发了一条消息给 Jerry
+    await conversation.SendTextMessageAsync("Hello,Jerry!");
 }
 ```
 
-### 接受消息
+### 接收消息
 
-曹操如果想收到刘备的消息，他需要如下代码：
+Jerry 如果想收到 Tom 的消息，他需要如下代码：
 
 ```c#
-public async void Sanguo_Episode1_1()
+public async void JerryReceiveMessageFromTom()
 {
-    AVIMClient client = new AVIMClient("CaoCao");//刘备用自己的名字作为 ClientId。
+    //Jerry 用自己的名字作为 ClientId 建立了一个 AVIMClient
+    AVIMClient client = new AVIMClient("Jerry");
+
+    //Tom 登陆到系统
     await client.ConnectAsync();
+
+    //Jerry 设置接受消息的方法，一旦有消息收到就会调用这个方法
     client.OnMessageReceieved += (s, e) =>
     {
         if (e.Message is AVIMTextMessage)
         {
             string words = ((AVIMTextMessage)e.Message).TextContent;
-            //words 的内容就是：丞相，皇上又送我新手机了！
+            //words 内容即为：Hello,Jerry!
         }
     };
-
 }
 ```
 运行以上代码之后，在 LeanCloud 网站的控制台找到指定的应用，打开存储管理控制台，可以看到默认表 `_Conversation`中多了一条数据，该条数据的字段解释如下：
@@ -79,89 +83,97 @@ public async void Sanguo_Episode1_1()
 此场景类似于微信的多人聊天群组，以及 QQ 群 ，请注意这里的群聊指的是持久化存储的一个群组的概念，比如 QQ 群，除非群主解散该群，这个群应该是一直存在于 我的QQ群 列表中。关于临时群组聊天（聊天室）会在之后做单独解释。
 
 ### 发送消息
-刘备想建立一个群，把自己家里人都拉进这个群，然后给他们发消息，他需要做的事情是：
+Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们发消息，他需要做的事情是：
 
-* 第一步：建立一个家庭成员列表
-* 第二步：新建一个对话，把家庭成员列表里面的成员列为对话的参与人员
+* 第一步：建立一个朋友列表
+* 第二步：新建一个对话，把朋友列为对话的参与人员
 * 第三步：发送一条消息
 
 以下代码将实现这个需求：
 
 ```c#
-public async void Sanguo_Eposode2()
+public async void TomCreateConversationWithFriends()
 {
-    AVIMClient client = new AVIMClient("LiuBei");//刘备用自己的名字作为 ClientId。
+    //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+    AVIMClient client = new AVIMClient("Tom");
 
-    await client.ConnectAsync();//刘备登陆到 LeanCloud 服务端
+    //Tom 登陆到系统
+    await client.ConnectAsync();
 
-    #region 第一步：建立一个家庭成员列表
-    IList<string> familyMembers = new List<string>();
-    familyMembers.Add("GuanYu");
-    familyMembers.Add("ZhangFei");
-    familyMembers.Add("Wife01");
-    familyMembers.Add("Wife02");
-    //把家里人都作为群成员
+    #region 第一步：建立一个朋友列表
+    IList<string> friends = new List<string>();
+    friends.Add("Jerry");
+    friends.Add("Bob");
+    friends.Add("Harry");
+    friends.Add("William");
     #endregion
 
-    #region 第二步：新建一个对话，把家庭成员列表列为对话的参与人员
-    AVIMConversation familyConversation = await client.CreateConversationAsync(familyMembers);
-    //创建一个对话，对话包含了 刘关张以及两位夫人
+    #region 新建一个对话，把朋友们列为对话的参与人员
+    AVIMConversation friendConversation = await client.CreateConversationAsync(friends);
     #endregion
 
     #region 第三步：发送一条消息
-    await familyConversation.SendTextMessageAsync("曹操已对我起了疑心，我们还是赶紧跑路吧……");
+    await friendConversation.SendTextMessageAsync("Hey，你们在哪里？");
     #endregion
 }
 ```
 
-### 接受消息
-群聊的接受消息于单聊的接受消息是一样的。
+### 接收消息
+群聊的接收消息与单聊的接收消息是一样的。
 
 ```c#
-AVIMConversation NitifiedConversation = null;
-public async void Sanguo_Episode2_1()
+AVIMConversation NotifiedConversation = null;
+public async void BobReceiveMessageFromTom()
 {
-    AVIMClient client = new AVIMClient("GuanYu");//刘备用自己的名字作为 ClientId。
+    //Bob 用自己的名字作为 ClientId 建立了一个 AVIMClient
+    AVIMClient client = new AVIMClient("Bob");
+
+    //Bob 登陆到系统
     await client.ConnectAsync();
-    
+
+    //Bob 设置接受消息的方法，一旦有消息收到就会调用这个方法
     client.OnMessageReceieved += (s, e) =>
     {
         if (e.Message is AVIMTextMessage)
         {
+            //words 的内容就是：Hey，你们在哪里？
             string words = ((AVIMTextMessage)e.Message).TextContent;
-            //words 的内容就是：曹操已对我起了疑心，我们还是赶紧跑路吧……
-            NitifiedConversation = e.Conversation;
+
+            //AVIMClient 在接收到消息的时候，会一并提供消息所在的 AVIMConversation
+            NotifiedConversation = e.Conversation;
+
+            if (NotifiedConversation != null)
+            {
+                //Bob 收到消息后又回复了一条消息
+                NotifiedConversation.SendTextMessageAsync("HI,Tom :我在 Jerry 家里，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
+            }
         }
     };
 }
-public async void SendToBoss()
-{
-    if (NitifiedConversation != null)
-    {
-        await NitifiedConversation.SendTextMessageAsync("大哥，莫怕！有我和三弟保护你!");
-    }
-}
 ```
 
-而以上刘备和关羽发送的消息，张飞上线的时候都会收到。
+而以上 Tom 和 Bob 发送的消息，William 上线的时候都会收到。
+
+**注： AVIMClient CreateConversationAsync 有多种重载方法供开发者调用，详细的开发者可以在 Visual Studio 中查看定义**。
 
 ## 消息
-消息在 v2 版本的 SDK 中做了多层抽象以及封装，详细的我们先从如何发送接收富媒体消息开始。
+消息在最新版本的 SDK 中做了多层抽象以及封装，详细的我们先从如何发送接收富媒体消息开始。
 ### 富媒体消息
-富媒体消息的支持是 V2 版本针对 V1 的一个核心提升，我们目前 SDK 已经支持的富媒体消息类型有以下几种：
+富媒体消息的支持是新版 SDK 的核心提升，我们目前 SDK 已经支持的富媒体消息类型有以下几种：
 
-* 图片消息：`AVIMImageMessage`
+* 图像消息：`AVIMImageMessage`
 * 音频消息：`AVIMAudioMessage`
 * 视频消息：`AVIMVideoMessage`
 *  文件消息：`AVIMFileMessage`
 * 地理位置消息：`AVIMLocationMessage`
 
 
-#### 图片消息
-图片消息可以由系统提供的拍照 API，以及媒体库中获取，也可以是可访问的图片有效 Url，只要开发者调用一个构造方法，构造出一个 `AVIMImageMessage`，然后把 `AVIMImageMessage` 对象当做参数交由 `AVConversation` 发送出去即可。
+#### 图像消息
+图像消息可以由系统提供的拍照 API，以及媒体库中获取，也可以是可访问的图像有效 Url，只要开发者调用一个构造方法，构造出一个 `AVIMImageMessage`，然后把 `AVIMImageMessage` 对象当做参数交由 `AVConversation` 发送出去即可。
 
-##### 发送图片消息
-比如从微博拷贝了一个图片链接，然后可以通过 SDK 直接构建一个 `AVIMImageMessage`并且发送出去：
+##### 发送图像消息
+
+场景 1：比如从微博拷贝了一个图像链接，然后可以通过 SDK 直接构建一个 `AVIMImageMessage`并且发送出去：
 ```c#
 public async void SendImageMessageAsync_Test()
 {
@@ -171,12 +183,12 @@ public async void SendImageMessageAsync_Test()
 
     AVIMConversation conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
 
-    AVIMImageMessage imgMessage = new AVIMImageMessage("http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif");//从外部链接创建图片消息
+    AVIMImageMessage imgMessage = new AVIMImageMessage("http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif");//从外部链接创建图像消息
     await conversation.SendImageMessageAsync(imgMessage);//发送给 Jerry
 }
 ``` 
 
-系统也提供了 API 去获取媒体库里面的照片，开发者只需要调用系统的 API 获取图片文件的数据流，然后构造出一个 `AVIMImageMessage`，再调用 `AVIMConversation.SendImageMessageAsync`去发送图片：
+场景 2：系统也提供了 API 去获取媒体库里面的照片，开发者只需要调用系统的 API 获取图像文件的数据流，然后构造出一个 `AVIMImageMessage`，再调用 `AVIMConversation.SendImageMessageAsync`去发送图像：
 
 ```c#
 MediaLibrary library = new MediaLibrary();//系统媒体库
@@ -187,11 +199,15 @@ imgMessage.Attributes = new Dictionary<string, object>()
 { 
     {"location","San Francisco"}
 };
-imgMessage.Title = "发自我的WP";
+imgMessage.Title = "发自我的 WP";
 await conversation.SendImageMessageAsync(imgMessage);
 ```
 
-##### 接受图片消息
+以上 2 种场景中对于 SDK 的区别就是如下：
+* 场景 1 中，SDK 并没有实际上传到服务端，而是仅仅是把 URL 包装在消息体内发送出去，并且这种情况下接收方是无法从消息体中获取到元信息等数据的，不过开发者可以自行获取。
+* 场景 2中，SDK 获取了完整的图像的数据流，所以 SDK 会先上传文件到服务端，然后将文件的元数据以及 URL 等一并包装，再发送出去。
+
+##### 接收图像消息
 类似于第一章节中单聊中的接收消息，在 `AVIMClient` 中的 `OnMessageReceived` 可以收到消息，但是假如接收方在客户端也正好加载了这个对话，那么接收方在 `AVIMConversation` 里面也会收到 `OnImageMessageReceived` 的事件响应：
 
 ```c#
@@ -199,12 +215,20 @@ public async void ReceiveImageMessageAsync_Test()
 {
     AVIMClient client = new AVIMClient("Jerry");
     await client.ConnectAsync();
-    AVIMConversation conversaion = client.CreateConversationById("55117292e4b065f7ee9edd29");
+    AVIMConversation conversaion = client.GetConversationById("55117292e4b065f7ee9edd29");
     await conversaion.FetchAsync();
-    conversaion.OnImageMessageReceived += (sImage, eImage) => 
+    conversaion.OnImageMessageReceived += (s, e) =>
     {
-        string url = eImage.Url;//读取图片的 url
-        //读取了 ulr 之后，开发者在客户端做展示
+        //图像的 url
+        string url = e.Url;
+        //图像的元数据
+        IDictionary<string, object> metaData = e.FileMetaData;
+        //图像的发送者 ClientId
+        string  from= e.FromClientId;
+        //图像发送者为图像设定的 Title
+        string title = e.Title;
+
+        //一些其他的属性都可以在这里获取
     };
 }
 ```
@@ -269,8 +293,24 @@ private async void SendAudioMessageAsync()
     //这段代码运行之前，请确保 `conversation` 已经实例化
 }
 ``` 
-##### 接受音频消息
-与接收图片消息一样，在 `AVIMConversation` 中有 `OnAudioMessageReceived` ，实例代码请参照图片消息接收。
+
+与图像消息类似，音频消息也支持从 URL 构建，然后发送：
+
+```c#
+public async void SendAudioMessageAsync()
+{
+    AVIMClient client = new AVIMClient("Tom");
+    //Tom 登陆
+    await client.ConnectAsync();
+    var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
+
+    AVIMAudioMessage audioMessage = new AVIMAudioMessage("http://ac-lhzo7z96.clouddn.com/1427444393952");//从外部链接创建音频消息
+    await conversation.SendAudioMessageAsync(audioMessage);//发送给 Jerry
+}
+```
+
+##### 接收音频消息
+与接收图像消息一样，在 `AVIMConversation` 中有 `OnAudioMessageReceived` ，实例代码请参照图像消息接收。
 
 #### 视频消息
 
@@ -308,6 +348,7 @@ public async void StopRecordVideoAsync(object sender, RoutedEventArgs e)
     randomAccessStream.Dispose();
 }
 ```
+
 ##### 发送视频消息
 配上上节的代码就可以用如下代码发送视频消息：
 ```c#
@@ -323,7 +364,7 @@ private async void SendVideoMessageAsync()
 }
 ```
 
-同样我们也支持从一个视频的Url 创建视频消息，然后发送出去：
+同样我们也支持从一个视频的 URL 创建视频消息，然后发送出去：
 
 ```c#
 public async void SendVideoMessageAsync()
@@ -337,10 +378,10 @@ public async void SendVideoMessageAsync()
     await conversation.SendVideoMessageAsync(videoMessage);//发送给 Jerry
 }
 ```
-**注：这里说的视频 Url 指的是物理地址，不是视频网站上的播放地址**
+**注：这里说的 URL指的是视频文件自身的 URL，而不是视频网站上播放页的 URL。**
 
-##### 接受视频消息
-与接收图片消息一样，在 `AVIMConversation` 中有 `OnVideoMessageReceived` ，实例代码请参照图片消息接收。
+##### 接收视频消息
+与接收图像消息一样，在 `AVIMConversation` 中有 `OnVideoMessageReceived` ，实例代码请参照图像消息接收。
 
 #### 通用文件消息
 Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
@@ -361,11 +402,19 @@ public async void SendDocAsync()
 }
 ```
 
-##### 接受通用文件消息
-与接收图片消息一样，在 `AVIMConversation` 中有 `OnFileMessageReceived` ，实例代码请参照图片消息接收。
+##### 接收通用文件消息
+与接收图像消息一样，在 `AVIMConversation` 中有 `OnFileMessageReceived` ，实例代码请参照图像消息接收。
 
 #### 地理位置消息
-地理位置消息依赖于 AVGeoPoint 进行构建。
+地理位置消息构建方式有 2 种：
+
+```c#
+//1.根据纬度和经度构建
+ AVIMLocationMessage locationMessage = new AVIMLocationMessage(Latitude, Longitude);
+//2.根据 AVGeoPoint 构建
+AVGeoPoint avGeoPoint = new AVGeoPoint(31.3853142377, 121.0553079844);
+AVIMLocationMessage locationMessage = new AVIMLocationMessage(avGeoPoint);
+```
 ##### 发送地理位置消息
 
 ```c#
@@ -394,22 +443,22 @@ public async void SendLocatioAsync()
     }
 }
 ```
-##### 接受地理位置消息
-与接收图片消息一样，在 `AVIMConversation` 中有 `OnLocationMessageReceived` ，实例代码请参照图片消息接收。
+##### 接收地理位置消息
+与接收图像消息一样，在 `AVIMConversation` 中有 `OnLocationMessageReceived` ，实例代码请参照图像消息接收。
 
 ### 消息的发送策略
-开发者在阅读完前面的富媒体消息并且运行过实例代码之后，应该可以发现图片，音频，视频在类的继承关系上是继承自 `AVIMFileMessageBase`，所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
+开发者在阅读完前面的富媒体消息并且运行过实例代码之后，在 Visaul Studio 中使用 F12 快捷键查看各个消息类型的定义，应该可以看见图像，音频，视频在类的继承关系上是继承自 `AVIMFileMessageBase`，所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
 
 * 如果文件是从客户端 API 读取的数据流 (Stream) 
 ``` 
 第一步：从本地构造 AVFile
 第二步：调用 AVFile 的上传的方法上传到服务器，并获取文件的元信息（MetaData）
-第三步：把 AVFile 的 objectId 以及 url ，以及文件的元信息封装在消息体内
+第三步：把 AVFile 的 objectId 以及 URL ，以及文件的元信息封装在消息体内
 第四步：发送消息
 ```
-* 如果文件是外部链接的 Url
+* 如果文件是外部链接的 URL
 ```
-第一步：直接将 Url 封装在消息体内，不获取元信息，不包含 objectId
+第一步：直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
 第二步：发送消息
 ``` 
 
@@ -423,20 +472,21 @@ AVIMFileMessage
 ```
 
 ### 消息的接收策略
-消息接受有 **2** 个层级：
+消息接收有 **2** 个层级：
 
-* 第一个是在 `AVIMClient` 上，它是为了帮助开发者实现被动接受消息，尤其是在本地并没有加载任何对话的时候，类似于刚登陆，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前 `AVIMClient.OnMessageReceived` 负责接受这类消息，但是它并没有针对消息的类型做区分。
+* 第一个是在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登陆，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前 `AVIMClient.OnMessageReceived` 负责接收这类消息，但是它并没有针对消息的类型做区分。
 
-* 第二个是在 `AVIMConversation` 上，负责接受对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
+* 第二个是在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
 
-以上 **2** 个层级的消息接受策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
+以上 **2** 个层级的消息接收策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
 
-AVIMClient 接收端 | AVIMClient.OnMessageReceived |AVIMConversation.OnMessageReceived| AVIMConversation.OnTextMessageReceived 
+AVIMClient 接收端 | AVIMClient.OnMessageReceived |AVIMConversation.OnMessageReceived| AVIMConversation.OnTypedMessageReceived| AVIMConversation.OnTextMessageReceived 
 ----------- | ------------ | ------------- | ------------- 
-条件① | × | × | × 
-条件② | √ | × | × 
-条件③ | √ | √ | × 
-条件④ | √ | × | √ 
+条件① | × | × | × | × 
+条件② | √ | × | × | × 
+条件③ | √ | √ | × | × 
+条件④ | √ | × | √ | × 
+条件⑤ | √ | × | × | √ 
 
 对应条件如下：
 
@@ -459,9 +509,26 @@ AVIMClient.Status == Online
 AVIMClient.Status == Online 
 && AVIMClient.OnMessageReceived != null 
 && AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
+&& AVIMConversation.OnTextMessageReceived == null
+```
+
+* 条件⑤：
+```c#
+AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
 && AVIMConversation.OnTextMessageReceived != null
 ```
-条件④需要特殊解释一下：当 AVIMConversation 收到 AVIMTextMessage 时，它会先检测 AVIMConversation.OnTextMessageReceived 是否有值，如果有就直接响应，并且不会再次响应 AVIMConversation.OnMessageReceived，而只有当 AVIMConversation.OnTextMessageReceived 为空的时候，才会再次去响应 AVIMConversation.OnMessageReceived。
+
+在 AVIMConversation 内，接受消息的顺序是按照 
+
+```
+OnTextMessageReceived > OnTypedMessageReceived > OnMessageReceived
+```
+
+这是为了方便开发者在接受消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
 
 ### 消息类详解
 ![消息的类图](http://ac-lhzo7z96.clouddn.com/1427252943504)
@@ -471,15 +538,15 @@ AVIMClient.Status == Online
 * `AVIMFileMessageBase` 所有包含了文件内容的消息的基类，三级抽象类
 * `AVIMTextMessage` 文本你消息，三级实例类；
 * `AVIMLocationMessage` 地理位置消息，三级实例类
-* `AVIMImageMessage` 图片消息，四级实例类
+* `AVIMImageMessage` 图像消息，四级实例类
 * `AVIMAudioMessage` 音频消息，四级实例类
 * `AVIMVideoMessage` 视频消息，四级实例类
 * `AVIMFileMessage` 通用文件消息类，四级实例类
 
-结合图例，v2 实时通信 SDK 在封装的时候，做了明确的分层，开发者需要根据自己的需求去使用。
+结合图例，实时通信 SDK 在封装的时候，做了明确的分层，开发者需要根据自己的需求去使用。
 
 ### 消息的自定义属性
-有些场景下需要开发者在发送消息的时候附带一下自己业务逻辑需求的自定义属性，比如消息发送的设备名称，或者图片消息的拍摄地点，或者视频消息的来源等等，如果业务需要，开发者都可以通过 `AVIMMessage.Attributes` 实现这一需求。
+有些场景下需要开发者在发送消息的时候附带一下自己业务逻辑需求的自定义属性，比如消息发送的设备名称，或者图像消息的拍摄地点，或者视频消息的来源等等，如果业务需要，开发者都可以通过 `AVIMMessage.Attributes` 实现这一需求。
 
 场景1：在发送照片给自己朋友的时候，想告诉朋友这张照片是在旧金山拍摄的，如下代码可以实现这个需求：
 
@@ -511,7 +578,7 @@ client.OnMessageReceieved += (s, e) =>
 所有消息都支持这一属性。
 
 ## 对话的管理
-以上 三个章节基本演示了 V2 版本的实时聊天 SDK 的核心概念——AVIMConversation ，LeanCloud 将单聊和群聊（包括聊天室）的消息发送和接受都依托于 `AVIMConversation`这个统一的概念进行操作。
+以上 三个章节基本演示了实时聊天 SDK 的核心概念——AVIMConversation ，LeanCloud 将单聊和群聊（包括聊天室）的消息发送和接收都依托于 `AVIMConversation`这个统一的概念进行操作。
 
 所以，开发者需要强化理解的一个概念就是：**SDK 层面是不再区分单聊以及群聊。**
 
@@ -552,7 +619,7 @@ public async void InitiativeJoinAsync()
     await client.ConnectAsync();
 
     string conversationId = "551260efe4b01608686c3e0f";//获取 Jerry 创建的对话的 Id，这里是直接从控制台拷贝了上一节准备工作中 JerryCreateConversation 成功之后的 objectId
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//Tom 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
     await conversation.JoinAsync();//Tom 主动加入到对话中
 }
 ```
@@ -606,7 +673,7 @@ public async void BobOnTomJoined_S2()
 
     string conversationId = "551260efe4b01608686c3e0f";
 
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//Bob 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//Bob 获取到这个对话的对象
 
     conversation.OnMembersJoined += (s, e) =>
     {
@@ -626,7 +693,7 @@ public async void InviteMarysync()
     await client.ConnectAsync();
 
     string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//Jerry 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//Jerry 获取到这个对话的对象
     await conversation.AddMembersAsync("Mary");//Jerry 把 Mary 加入到对话
 }
 ```
@@ -644,7 +711,7 @@ public async void InitiativeLeftAsync()
     await client.ConnectAsync();
 
     string conversationId = "551260efe4b01608686c3e0f";//获取 Jerry 创建的对话的 Id
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//Tom 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
     await conversation.LeftAsync();//Tom 主动从对话中退出
 }
 ``` 
@@ -663,7 +730,7 @@ public async void WilliamKickHarryOutsync()
     await client.ConnectAsync();
 
     string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//William 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//William 获取到这个对话的对象
     await conversation.RemoveMembersAsync("Harry");//William 把 Harry 从对话中剔除
 }
 ```
@@ -736,7 +803,7 @@ public async void UpdateConversationAsync()
     AVIMClient client = new AVIMClient("Black");
     await client.ConnectAsync();//Balck 登陆
 
-    AVIMConversation conversation = client.CreateConversationById("55117292e4b065f7ee9edd29");//获取 Tom 创建的对话
+    AVIMConversation conversation = client.GetConversationById("55117292e4b065f7ee9edd29");//获取 Tom 创建的对话
 
     conversation.Name = "聪明的喵星人";//修改名称
 
@@ -761,10 +828,12 @@ public async void MuteConversationAsync()
     await client.ConnectAsync();//Tom 登陆
 
     string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.CreateConversationById(conversationId);//Tom 获取到这个对话的对象
+    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
     await conversation.MuteAsync();//Tom 设置静音
 }
-``` 
+```
+
+**设置静音之后，针对 iOS 以及 Windows Phone 用户就不会收到推送消息**
 
 此操作修改的是服务端 `_Conversation` 里面的 `mu` 属性。
 与之对应的就是 `UnmuteAsync`操作，就是取消静音，示例代码参照静音操作。
@@ -810,7 +879,7 @@ public async void CreateConversationWithCustomAttributesAsync()
  }
 ```
 
-**注意这个方法和  AVIMClient.CreateConversationById 本质上是不一样的，AVIMClient.CreateConversationById 可以理解为本地构造一个 AVIMConversation ，但是它除了 Id 别的属性都为空，而 GetAsync 是直接从服务端拉取数据，更为可靠，但是它是异步的。**
+**注意这个方法和  AVIMClient.GetConversationById 本质上是不一样的，AVIMClient.GetConversationById 可以理解为本地构造一个 AVIMConversation ，但是它除了 Id 别的属性都为空，而 GetAsync 是直接从服务端拉取数据，更为可靠，但是它是异步的。**
 
 ### 条件查询
 条件查询包含分类有`比较查询`,`匹配查询`
@@ -982,6 +1051,7 @@ var chatroom = client.CreateChatRoomAsync("皇马 VS 巴萨");//可以理解为�
 ```
 ### 查询在线人数
 `AVIMConversation.CountMembersAsync` 不但可以用来查询普通对话的成员总数，在聊天室中，它返回的就是实时在线的人数：
+
 ```c#
 public async void CountMembers_SampleCode()
 {
@@ -1020,14 +1090,14 @@ public async void QueryChatRoom_SampleCode()
 
 ```c#
 AVIMClient userA = new AVIMClient("UserA");
-AVIMConversation con = userA.CreateConversationById("2f08e882f2a11ef07902eeb510d4223b");
+AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d4223b");
 con.QueryHistory(DateTime.Now, 0, "UserA").Wait();
 //查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
 ```
 与查询类似，它提供了  limit 和 skip 操作，可以帮助开发者实现翻页等功能。
 
 ## 签名与安全
-在继续阅读本文档之前，请确保您已经对 [实时通信服务开发指南_v2_—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了一定的了解。
+在继续阅读本文档之前，请确保您已经对 [实时通信服务开发指南—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了一定的了解。
 ### 实现签名工厂
 `AVIMClient` 有一个属性：
 
