@@ -259,6 +259,10 @@ ul.inheritsList
 	
 	<li><a href="../symbols/AV.Router.html">AV.Router</a></li>
 	
+	<li><a href="../symbols/AV.SearchQuery.html">AV.SearchQuery</a></li>
+	
+	<li><a href="../symbols/AV.SearchSortBuilder.html">AV.SearchSortBuilder</a></li>
+	
 	<li><a href="../symbols/AV.Status.html">AV.Status</a></li>
 	
 	<li><a href="../symbols/AV.User.html">AV.User</a></li>
@@ -350,6 +354,15 @@ uniqueness.</p>
 						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
+								<div class="fixedFont">AV.User.<b><a href="../symbols/AV.User.html#.become">become</a></b>(sessionToken, options)
+								</div>
+								<div class="description">Logs in a user with a session token.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
 								<div class="fixedFont">AV.User.<b><a href="../symbols/AV.User.html#.current">current</a></b>()
 								</div>
 								<div class="description">Retrieves the currently logged in AVUser with a valid session,
@@ -376,20 +389,20 @@ either from memory or localStorage, if necessary.</div>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&lt;static&gt; &nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont">AV.User.<b><a href="../symbols/AV.User.html#.followeeQuery">followeeQuery</a></b>(userObjectId)
-								</div>
-								<div class="description">Create a followee query for special user to query the user's followees.</div>
-							</td>
-						</tr>
-					
-						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont"><b><a href="../symbols/AV.User.html#followeeQuery">followeeQuery</a></b>()
 								</div>
 								<div class="description">Create a followee query to query the user's followees.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&lt;static&gt; &nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont">AV.User.<b><a href="../symbols/AV.User.html#.followeeQuery">followeeQuery</a></b>(userObjectId)
+								</div>
+								<div class="description">Create a followee query for special user to query the user's followees.</div>
 							</td>
 						</tr>
 					
@@ -609,20 +622,20 @@ number associated with the user account.</div>
 						</tr>
 					
 						<tr>
-							<td class="attributes">&nbsp;</td>
-							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.User.html#signUp">signUp</a></b>(attrs, options)
-								</div>
-								<div class="description">Signs up a new user.</div>
-							</td>
-						</tr>
-					
-						<tr>
 							<td class="attributes">&lt;static&gt; &nbsp;</td>
 							<td class="nameDescription">
 								<div class="fixedFont">AV.User.<b><a href="../symbols/AV.User.html#.signUp">signUp</a></b>(username, password, attrs, options)
 								</div>
 								<div class="description">Signs up a new user with a username (or email) and password.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.User.html#signUp">signUp</a></b>(attrs, options)
+								</div>
+								<div class="description">Signs up a new user.</div>
 							</td>
 						</tr>
 					
@@ -744,6 +757,60 @@ If verify successfully,the user mobilePhoneVerified attribute will be true.</div
 							<dt class="heading">Returns:</dt>
 							
 								<dd>(Boolean) whether this user is the current user and is logged in.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name=".become"> </a>
+					<div class="fixedFont">&lt;static&gt; 
+					
+					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">AV.User.</span><b>become</b>(sessionToken, options)
+					
+					</div>
+					<div class="description">
+						Logs in a user with a session token. On success, this saves the session
+to disk, so you can retrieve the currently logged in user using
+<code>current</code>.
+
+<p>Calls options.success or options.error on completion.</p>
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{String}</span> <b>sessionToken</b>
+									
+								</dt>
+								<dd>The sessionToken to log in with.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									
+								</dt>
+								<dd>A Backbone-style options object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+    the login completes.</dd>
 							
 							</dl>
 						
@@ -878,6 +945,44 @@ either from memory or localStorage, if necessary.
 
 					<hr />
 				
+					<a name="followeeQuery"> </a>
+					<div class="fixedFont">
+					
+					
+					<b>followeeQuery</b>()
+					
+					</div>
+					<div class="description">
+						Create a followee query to query the user's followees.
+						
+						
+					</div>
+					
+					
+					
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Since:</dt>
+								<dd>0.3.0</dd>
+							</dl>
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.User.html#followeeQuery">AV.User#followeeQuery</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
 					<a name=".followeeQuery"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -916,44 +1021,6 @@ either from memory or localStorage, if necessary.
 						
 						
 						
-						
-
-					<hr />
-				
-					<a name="followeeQuery"> </a>
-					<div class="fixedFont">
-					
-					
-					<b>followeeQuery</b>()
-					
-					</div>
-					<div class="description">
-						Create a followee query to query the user's followees.
-						
-						
-					</div>
-					
-					
-					
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Since:</dt>
-								<dd>0.3.0</dd>
-							</dl>
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/AV.User.html#followeeQuery">AV.User#followeeQuery</a></dd>
-							
-							</dl>
 						
 
 					<hr />
@@ -2086,70 +2153,6 @@ of the function.</dd>
 
 					<hr />
 				
-					<a name="signUp"> </a>
-					<div class="fixedFont">
-					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
-					<b>signUp</b>(attrs, options)
-					
-					</div>
-					<div class="description">
-						Signs up a new user. You should call this instead of save for
-new AV.Users. This will create a new AV.User on the server, and
-also persist the session on disk so that you can access the user using
-<code>current</code>.
-
-<p>A username and password must be set before calling signUp.</p>
-
-<p>Calls options.success or options.error on completion.</p>
-						
-						
-					</div>
-					
-					
-					
-						
-							<dl class="detailList">
-							<dt class="heading">Parameters:</dt>
-							
-								<dt>
-									<span class="light fixedFont">{Object}</span> <b>attrs</b>
-									
-								</dt>
-								<dd>Extra fields to set on the new user, or null.</dd>
-							
-								<dt>
-									<span class="light fixedFont">{Object}</span> <b>options</b>
-									
-								</dt>
-								<dd>A Backbone-style options object.</dd>
-							
-							</dl>
-						
-						
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">Returns:</dt>
-							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled when the signup
-    finishes.</dd>
-							
-							</dl>
-						
-						
-						
-							<dl class="detailList">
-							<dt class="heading">See:</dt>
-							
-								<dd><a href="../symbols/AV.User.html#.signUp">AV.User.signUp</a></dd>
-							
-							</dl>
-						
-
-					<hr />
-				
 					<a name=".signUp"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
@@ -2218,6 +2221,70 @@ session in localStorage so that you can access the user using
 							<dt class="heading">See:</dt>
 							
 								<dd><a href="../symbols/AV.User.html#signUp">AV.User#signUp</a></dd>
+							
+							</dl>
+						
+
+					<hr />
+				
+					<a name="signUp"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<b>signUp</b>(attrs, options)
+					
+					</div>
+					<div class="description">
+						Signs up a new user. You should call this instead of save for
+new AV.Users. This will create a new AV.User on the server, and
+also persist the session on disk so that you can access the user using
+<code>current</code>.
+
+<p>A username and password must be set before calling signUp.</p>
+
+<p>Calls options.success or options.error on completion.</p>
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>attrs</b>
+									
+								</dt>
+								<dd>Extra fields to set on the new user, or null.</dd>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									
+								</dt>
+								<dd>A Backbone-style options object.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled when the signup
+    finishes.</dd>
+							
+							</dl>
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">See:</dt>
+							
+								<dd><a href="../symbols/AV.User.html#.signUp">AV.User.signUp</a></dd>
 							
 							</dl>
 						
@@ -2529,7 +2596,7 @@ of the function.</dd>
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Wed Mar 18 2015 13:32:42 GMT+0800 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Mar 27 2015 15:29:52 GMT+0800 (CST)
 		</div>
 	</body>
 </html>
