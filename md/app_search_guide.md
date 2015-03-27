@@ -418,6 +418,38 @@ searchQuery.fields = @[@"field1", @"field2"];
 
 ```
 
+#### JavaScript 指南
+
+JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
+
+```javascript
+     var query = new AV.SearchQuery('GameScore');
+     query.queryString('*');
+     query.find().then(function(results) {
+       console.log("Find " + query.hits() + " docs.");
+       //处理 results 结果
+     }).catch(function(err){
+       //处理 err
+     });
+     
+     
+```
+
+当返回数目小于 `query.hits()` 的时候，你可以不停地调用 `query.find()` 来向下翻页。
+
+复杂排序可以使用 `AV.SearchSortBuilder`：
+
+```javascript
+  var query = new AV.SearchQuery('GameScore');
+  //假设 scores 是分数组成的数组，根据分数里的平均分倒序排序，并且没有分数的排在最后。
+  query.sortBy(new AV.SearchSortBuilder().descending('scores','avg', 'last'));
+  query.queryString('*');
+  query.find().then(function(results) {
+       //处理结果
+  });
+```
+
+更多 API 请参考 [AV.SearchQuery](https://leancloud.cn/docs/api/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](https://leancloud.cn/docs/api/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
 
 ## 搜索 API
 
