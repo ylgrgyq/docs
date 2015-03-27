@@ -14,7 +14,7 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 ## Demo 及示例代码
 
-如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/leanchat-android/tree/v2)」，并且下载自己运行一下试试看。
+如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/leanchat-android)」，并且下载自己运行一下试试看。
 
 
 一对一的文本聊天

@@ -1,14 +1,14 @@
-# 实时通信服务开发指
+# 实时通信服务开发指南
 
 实时通信服务是 LeanCloud 消息服务中的重要一环。通过它，你不但可以在应用中加入实时聊天、私信等，更可以用来实现游戏对战等实时互动功能。
 
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
 * iOS 聊天应用：
-  * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios/tree/v2)
+  * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
   * [FreeChat](https://github.com/jwfing/FreeChat)
 * Android 聊天应用：
-  * [LeanChat Android 版](https://github.com/leancloud/leanchat-android/tree/v2)
+  * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 * [JavaScript Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
