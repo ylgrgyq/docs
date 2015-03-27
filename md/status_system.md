@@ -806,7 +806,7 @@ curl -X POST \
          "inboxType": "default",
          "query": {
              "className": "_Follower",
-             "key": "follower",
+             "keys": "follower",
              "where": {
                  "user": {
                      "__type": "Pointer",
