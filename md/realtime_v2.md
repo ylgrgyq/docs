@@ -73,7 +73,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>members</td>
-            <td>m (Array 类型)</td>
+            <td>m （Array 类型）</td>
         </tr>
         <tr>
             <td>name</td>
@@ -81,16 +81,16 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>attributes</td>
-            <td>attr (Object 类型)</td>
+            <td>attr （Object 类型）</td>
         </tr>
         <tr>
             <td>transient</td>
-            <td>tr</td>
+            <td>tr （Boolean 类型）</td>
         </tr>
     </tbody>
 </table>
 
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家直接创建 _Conversation 记录来预先建立对话。
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 
@@ -218,7 +218,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云代码 hook 要求云代码部署在云代码生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云代码 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
 
 ### _messageReceived
 
