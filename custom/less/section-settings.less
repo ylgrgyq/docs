@@ -45,13 +45,17 @@
 
   span {
     font-size: 16px;
-    font-weight: 300;
+    margin-left: 6px;
   }
 }
 
 .billing-stat-text-info {
   color: @gray-light;
   margin-top: -16px;
+
+  span {
+    margin-left: 6px;
+  }
 }
 
 .remove-btn {
@@ -190,6 +194,7 @@ table > tbody > tr > td > .cursor-pointer {
 
   label {
     cursor: pointer;
+    vertical-align: top;
 
     .payment-method-radio {
       outline: none !important;
@@ -197,22 +202,33 @@ table > tbody > tr > td > .cursor-pointer {
 
       &:checked {
 
-        ~ img {
+        ~ .payment-method-image,
+        ~ .payment-method-text {
+          color: @link-color;
           border-color: @input-border-focus;
         }
       }
     }
 
-    img {
+    .payment-method-image {
       padding: 10px;
-      border-radius: 4px;
+      border-radius: @border-radius-base;
+      border: 1px solid #ddd;
+    }
+
+    .payment-method-text {
+      width: 110px;
+      height: 51px;
+      line-height: 51px;
+      text-align: center;
+      border-radius: @border-radius-base;
       border: 1px solid #ddd;
     }
 
     &:hover,
     &:focus {
 
-      img {
+      .payment-method-image {
         border-color: @input-border-focus;
       }
     }
@@ -228,8 +244,20 @@ table > tbody > tr > td > .cursor-pointer {
       color: @gray-light;
     }
 
+    .billing-stat-wrapper {
+      margin-bottom: 30px;
+    }
+
     .billing-stat-text {
       margin-bottom: 0;
+    }
+
+    .payment-method-text {
+      display: inline-block;
+      font-size: 16px;
+      padding: 10px 20px;
+      border: 1px solid @gray-light;
+      border-radius: @border-radius-base;
     }
 
     .form-group {
@@ -265,6 +293,10 @@ table > tbody > tr > td > .cursor-pointer {
     }
   }
 
+  .billing-invoice-title {
+    color: @gray-light;
+  }
+
   p.billing-stat-text {
     font-size: 32px;
     margin-bottom: 20px;
@@ -272,6 +304,8 @@ table > tbody > tr > td > .cursor-pointer {
 
     &.small {
       font-size: 16px;
+      line-height: 1.4;
+      margin-bottom: 0;
     }
   }
 }
