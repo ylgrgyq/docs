@@ -13,13 +13,16 @@
     .col-md-12 {
       padding-top: 4px;
 
-      > .ng-scope {
-
-        > *:first-child,
-        > .row > div[class^="col-"] > *:first-child {
-          margin-top: 0;
-        }
-      }
+      // This is too tricky, disable and investigate
+      // Date: Mar 24, 2015, 12:16 AM
+      // Tunghsiao Liu
+      // > .ng-scope {
+      //
+      //   > *:first-child,
+      //   > .row > div[class^="col-"] > *:first-child {
+      //     margin-top: 0;
+      //   }
+      // }
     }
   }
 }
@@ -44,6 +47,21 @@
   text-overflow: ellipsis;
 }
 
+.no-margin-top {
+  margin-top: 0 !important;
+}
+
+.no-margin-right {
+  margin-right: 0 !important;
+}
+
+.no-margin-bottom {
+  margin-bottom: 0 !important;
+}
+
+.no-margin-left {
+  margin-left: 0 !important;
+}
 
 
 
@@ -116,13 +134,13 @@
     margin: 0;
 
     li {
-      padding: 4px 0;
+      padding: 0 0 8px;
 
       span {
         color: #555;
         border: 1px solid #ddd;
         display: inline-block;
-        width: 2em;
+        padding: 0 .7em;
         line-height: 2em;
         text-align: center;
         margin-right: 6px;

@@ -83,6 +83,24 @@
   }
 }
 
+@keyframes fadeInWithoutScaleTooltip {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: .9;
+  }
+}
+
+@keyframes fadeOutWithoutScaleTooltip {
+  from {
+    opacity: .9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
 // Bootstrap 3
 //
 
@@ -109,10 +127,10 @@
 .typeahead {
 
   &.ng-enter {
-    animation-name: fadeInWithoutScale;
+    animation-name: fadeInWithoutScaleTooltip;
   }
 
   &.ng-leave {
-    animation-name: fadeOutWithoutScale;
+    animation-name: fadeOutWithoutScaleTooltip;
   }
 }

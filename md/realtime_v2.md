@@ -1,14 +1,14 @@
-# 实时通信服务开发指南（v2）
+# 实时通信服务开发指南
 
 实时通信服务是 LeanCloud 消息服务中的重要一环。通过它，你不但可以在应用中加入实时聊天、私信等，更可以用来实现游戏对战等实时互动功能。
 
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
 * iOS 聊天应用：
-  * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios/tree/v2)
+  * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
   * [FreeChat](https://github.com/jwfing/FreeChat)
 * Android 聊天应用：
-  * [LeanChat Android 版](https://github.com/leancloud/leanchat-android/tree/v2)
+  * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 * [JavaScript Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
@@ -73,7 +73,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>members</td>
-            <td>m (Array 类型)</td>
+            <td>m （Array 类型）</td>
         </tr>
         <tr>
             <td>name</td>
@@ -81,16 +81,16 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
         </tr>
         <tr>
             <td>attributes</td>
-            <td>attr (Object 类型)</td>
+            <td>attr （Object 类型）</td>
         </tr>
         <tr>
             <td>transient</td>
-            <td>tr</td>
+            <td>tr （Boolean 类型）</td>
         </tr>
     </tbody>
 </table>
 
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家直接创建 _Conversation 记录来预先建立对话。
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 
@@ -218,7 +218,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云代码 hook 要求云代码部署在云代码生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云代码 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
 
 ### _messageReceived
 
@@ -294,3 +294,37 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 ### 敏感词过滤怎么做
 
 LeanCloud 服务器端已经存有一份敏感词的列表对消息进行过滤，这部分功能无需用户参与，是内置默认支持的。
+
+### 聊天离线时可以推送吗？
+
+当然可以。我们的Android聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。消息达到后，你可以根据用户的设置来 判断是否需要弹出通知。网络断开时，我们为用户保存50条的离线消息。
+
+iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的推送。因为 APNS 有消息长度限制，且你们的消息正文可能还包含上层协议，所以 我们现在 APNS 的推送内容是让应用在控制台设置一个静态的 APNS json，如“您有新的消息” 。你可以通过上文提到的云代码 hook `_receiversOffline` 来根据消息内容、对话信息等上下文信息来自定义推送内容。
+
+![image](images/realtime_ios_push.png)
+
+![image](images/rtm-push.png)
+
+桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
+
+云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime.html#云代码-hook) 章节。
+
+
+### 为什么我的 iPhone 收不到离线消息推送？
+
+请先看上一个 FAQ。在控制台的设置页面，填写“您有新的未读消息”后，当对方不在线的时候，便会触发一个 APNS 的推送。首先，请确保控制台能向 iOS 推送消息，也即如下图所示的推送能顺利到达 iOS 系统，请参考[消息推送指南](push_guide.html#ios消息推送)。
+
+![image](images/realtime_faq_push.png)
+
+之后，还要确保对方确实是离线，如果对方程序在前台并且网络良好，则不会触发推送。如果对方网络未连接，则下次联网的时候收到回调，也不触发推送。也可以利用控制台实时消息页的用户状态查询来确保对方是在离线状态，如下图。
+
+![image](images/realtime_faq_console.png)
+
+离线消息推送用的是生产环境编辑框里上传的证书，即无论下图中上传的是您应用的开发证书还是生产证书，都将用来作为 iOS 离线消息推送使用的证书。所以，调试时可能要上传开发证书，如果应用已发布不方便更改这里的证书，您可以创建另外一个应用来调试。 [LeanChat](https://github.com/leancloud/leanchat-ios) 应用在调试期间所用的证书，如下图。
+
+![image](images/realtime_faq_cert.png)
+
+检查方法总结如下：
+
+* 检查普通的 iOS 推送是否到达
+* 在控制台检查接收方是否在离线状态

@@ -226,6 +226,10 @@
         .field-access {
 
           &.field-public {
+            color: @brand-info;
+          }
+
+          &.field-restricted {
             color: @brand-success;
           }
 
@@ -234,6 +238,31 @@
           }
         }
       }
+    }
+  }
+}
+
+.permission-item {
+  margin-bottom: 10px;
+
+  .permission-item-remove {
+    display: none;
+    font-size: 18px;
+    line-height: 1;
+    text-decoration: none;
+    color: @gray-light;
+
+    &:hover,
+    &:focus {
+      color: @brand-danger;
+    }
+  }
+
+  &:hover,
+  &:focus {
+
+    .permission-item-remove {
+      display: inline;
     }
   }
 }
