@@ -1001,7 +1001,7 @@ public async void QueryMembers_SampleCode()
 ### 组合查询
 组合查询的概念就是把诸多查询条件合并成一个查询，再交给 SDK 去服务端进行查询。
 
-LeanCloud .NET SDK 的风格一致保持一个链式的方式提供给开着去组合符合自己业务逻辑的查询，例如，要查询年龄小于18岁，并且关键字包含「教育」的对话：
+LeanCloud .NET SDK 的风格上一直保持以链式的方式提供给开发者去组合符合自己业务逻辑的查询，例如，要查询年龄小于18岁，并且关键字包含「教育」的对话：
 
 ```c#
 public async void CombinationQuery_SampleCode()
