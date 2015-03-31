@@ -95,7 +95,7 @@ $(function() {
   $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
 });
 
-$(window).load(function() {
-  $('#toc-wrapper').width($('#left-nav').width());
-})
+// $(window).load(function() {
+//   $('#toc-wrapper').width($('#left-nav').width());
+// })
 
