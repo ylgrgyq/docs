@@ -283,7 +283,7 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
 ## REST API
 
-参考 [REST API 详解](./rest_api.html#实时通信_API) 实时通信部分。
+参考 [实时通信 REST API](./realtime_rest_api.html)。
 
 ## FAQ
 
