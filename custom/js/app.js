@@ -6,6 +6,12 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
 
+        var sdkversion = 'unknown';
+        if(typeof $sdk_versions != 'undefined'){
+          sdkversion = $sdk_versions;
+        }
+        angular.element("body").scope().sdkversion = sdkversion;
+
         $http.get('/1/clients/self').success(function(data){
             $scope.user=data;
         });
@@ -53,10 +59,6 @@ angular.module('ui.gravatar').config([
 $(function(){
     angular.element(document).ready(function() {
       angular.bootstrap(document, ['app']);
-      var sdkversion = 'unknown';
-      if(typeof $sdk_versions != 'undefined'){
-        sdkversion = $sdk_versions;
-      }
-      angular.element("body").scope().sdkversion = sdkversion;
+
     });
 });
