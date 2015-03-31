@@ -932,7 +932,7 @@ AV.Query.doCloudQuery('select count(*),* from GameScore where score>? limit ?',[
 
 我们虽然提供了基于正则的模糊查询，但是正则查询有两个缺点：
 
-* 当数据量增大的似乎，查询效率较低。
+* 当数据量逐步增大后，查询效率将越来越低
 * 没有文本相关性排序
 
 因此，我们还提供了[应用内搜索功能](./app_search_guide.html)，基于搜索引擎构建，提供更强大的搜索功能。
