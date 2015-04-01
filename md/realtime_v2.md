@@ -226,6 +226,8 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 
 你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象则会执行系统默认的流程。
 
+如果你使用了 LeanCloud 默认提供的富媒体消息格式，云代码参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考[文档说明](./realtime_rest_api.html#富媒体消息格式说明)。
+
 #### 参数
 
 参数 | 说明
