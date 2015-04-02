@@ -1,5 +1,9 @@
 #实时通信 REST API
 
+## 通过 REST API 创建、更新、删除对话数据
+
+你可以通过 REST API 对对话（相应的聊天室、群组或单聊等）进行操作，例如提前创建聊天室，关联聊天室到其他数据实体。LeanCloud 实时通信系统采用透明的设计，对话数据在 LeanCloud 系统中是普通的数据表，表名为 `_Conversation`，你可以直接调用[数据存储相关的 API 进行数据操作](./rest_api.html#%E5%AF%B9%E8%B1%A1-1)。`_Conversation` 包含一些内置的关键字段定义了对话的属性、成员等，你可以在[这里](./realtime_v2.html#%E5%AF%B9%E8%AF%9D_Conversation_)了解。
+
 ##获取聊天记录
 
 获取某个应用的聊天记录
