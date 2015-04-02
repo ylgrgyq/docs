@@ -224,6 +224,7 @@ public class MyActivity extends Activity {
 </activity>
 ```
 
+并下载 [libs 目录](https://github.com/sinaweibosdk/weibo_android_sdk/tree/master/libs)下的三个 .so 文件，导入到自己工程。
 
 对于其他的 SSO 请确保您有如下权限
 
