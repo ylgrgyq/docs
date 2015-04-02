@@ -2095,7 +2095,7 @@ AV.Cloud.requestSmsCode({
 在用户收到验证码并输入后，通过下列代码来验证是否正确：
 
 ```javascript
-AV.Cloud.verifySmsCode('6位数字验证码').then(function(){
+AV.Cloud.verifySmsCode('6位数字验证码', '11 位手机号码').then(function(){
   //验证成功
 }, function(err){
   //验证失败
