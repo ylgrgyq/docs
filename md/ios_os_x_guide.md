@@ -14,6 +14,8 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
+
+<!--
 ## 使用 CocoaPods 安装 SDK
 
 [快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
@@ -52,6 +54,7 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 * 执行命令 `pod install` 安装 SDK。
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
+-->
 
 ## 应用
 
