@@ -527,7 +527,7 @@ followerNameQuery.include("followee");
 很多用户反映他们需要能够一次性获取性获取粉丝和关注列表的API接口，于是我们也准备加入这个功能。
 
 ```java
-    AVFriendshipQuery query = AVUser.friendshipQuery(userBId, SubUser.class);
+    AVFriendshipQuery query = AVUser.friendshipQuery(userId, SubUser.class);
     query.include("followee");
     query.include("follower");
     query.getInBackground(new AVFriendshipCallback() {
@@ -538,7 +538,6 @@ followerNameQuery.include("followee");
 	AVUser user = friendship.getUser();//获取用户对象本身
       }
     });
-    AVLock.lock();
 ```
 
 
