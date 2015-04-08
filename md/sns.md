@@ -281,14 +281,14 @@ final SNSCallback myCallback = new SNSCallback() {
 
 通过`AVUser.loginWithAuthData`来创建一个匿名的AVUser对象：
 ```java
-    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType);//此处snsType 可以是"qq","weibo"等字符串
+    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType,openId);//此处snsType 可以是"qq","weibo"等字符串
     AVUser.loginWithAuthData(clazz, userAuth, callback);
 ```
 
 或者通过`AVUser.associateWithAuthData`或者`AVUser.dissociateAuthData`来为一个已经存在的AVUser对象来绑定一个第三方账号或者解除第三方账号绑定：
 
 ```java
-    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType)
+    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType,openId)
     AVUser.associateWithAuthData(AVUser.getCurrentUser(),userAuth,callback);
 
     AVUser.dissociateAuthData(AVUser.getCurrentUser(),AVThirdPartyUserAuth.SNS_TENCENT_WEIBO,callback);// 解除腾讯微薄的账号绑定
