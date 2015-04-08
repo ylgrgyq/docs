@@ -64,7 +64,7 @@ module.exports = function(grunt) {
         files: [{
           expand: true,
           cwd: "md",
-          src: "*.md",
+          src: "**",
           dest: "dist/md"
         }]
       },
@@ -98,7 +98,7 @@ module.exports = function(grunt) {
         flatten: true
       },
       md: {
-        src: 'dist/*.html',
+        src: ['dist/*.html','!dist/md/*.html'],
         dest: 'dist/'
       },
       html: {
@@ -113,6 +113,12 @@ module.exports = function(grunt) {
           cwd: "dist/md",
           src: '*.md',
           dest: 'dist/',
+          ext: '.html'
+        },{
+          expand: true,
+          cwd: "dist/md/start",
+          src: '*.md',
+          dest: 'dist/start',
           ext: '.html'
         }],
         options: {

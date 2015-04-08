@@ -1,4 +1,5 @@
 //apps data
+var purl = '/1/';
 angular.module("app", ['ui.gravatar']);
 angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile',
     function($scope, $http, $timeout, $compile) {
@@ -51,6 +52,64 @@ angular.module('ui.gravatar').config([
 
         // Use https endpoint
         gravatarServiceProvider.secure = true;
+    }
+]);
+
+angular.module('app').controller('StartCtrl', [
+    '$http',
+    '$scope',
+    function ($http, $scope) {
+        $scope.links = {
+            'android': {
+                doc: '/docs/android_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'ios': {
+                doc: '/docs/ios_os_x_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'js': {
+                doc: '/docs/js_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'unity': {
+                doc: '/docs/unity_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'wp': {
+                doc: '/docs/dotnet_guide.html',
+                demo: '/docs/sdk_down.html'
+            }
+        };
+
+        $scope.selectedPlat = 'ios';
+        // $scope.$watch('apps.all', function () {
+        //     if ($scope.apps.all.length > 0) {
+        //         $scope.SelectedApp = $scope.apps.all[0];
+        //     }
+        // });
+        $scope.$watch('SelectedApp', function () {
+            if ($scope.SelectedApp) {
+                $scope.app_id = $scope.SelectedApp.app_id;
+                $scope.app_key = $scope.SelectedApp.app_key;
+            }
+        });
+
+        $scope.createApp = function () {
+            $http.post(purl + 'clients/self/apps', { name: $scope.appname }).success(function (data) {
+                $scope.SelectedApp = data;
+            }).error(function (data) {
+            });
+        };
+
+        $scope.docloaded = function () {
+            prettyPrepare();
+            prettyPrint();
+            $("pre.prettyprint code").each(function(index, ele) {
+              $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
+            });
+            glueCopy();
+        };
     }
 ]);
 
