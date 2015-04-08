@@ -524,7 +524,7 @@ followerNameQuery.include("followee");
 
 ##### 一次性获取粉丝和关注列表
 
-很多用户反映他们需要能够一次性获取性获取粉丝和关注列表的API接口，于是我们也准备加入这个功能。
+很多用户反映他们需要能够一次性获取性获取粉丝和关注列表的API接口，于是我们加入这个功能。
 
 ```java
     AVFriendshipQuery query = AVUser.friendshipQuery(userId, SubUser.class);
