@@ -2,7 +2,9 @@
 var purl = '/1/';
 angular.module("app", ['ui.gravatar']);
 angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile','$rootScope',
+
     function($scope, $http, $timeout, $compile,$rootScope) {
+
 
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
