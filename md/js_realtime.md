@@ -10,6 +10,10 @@
 
 本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信的 WebView 中。 
 
+## Demo
+
+在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)。
+
 ## 概念
 
 在你开始使用之前，首先来了解一下实时通信 SDK 的基本结构。实时通信在 SDK 里面分为两个层次：
@@ -51,10 +55,6 @@ bower install leancloud-realtime -- save
 如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
 
 Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
-## Demo
-
-[聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)
 
 ##示例代码
 
