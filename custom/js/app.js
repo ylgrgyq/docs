@@ -1,11 +1,14 @@
 //apps data
+var purl = '/1/';
 angular.module("app", ['ui.gravatar']);
-angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile',
-    function($scope, $http, $timeout, $compile) {
+angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile','$rootScope',
+
+    function($scope, $http, $timeout, $compile,$rootScope) {
+
 
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
-
+        $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){
           sdkversion = $sdk_versions;
@@ -20,11 +23,13 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             function(data) {
                 if (data.length > 0) {
 
-                    $scope.currentApp = data[0];
-                    $scope.$watch('currentApp', function() {
-                        if($scope.currentApp&&$scope.currentApp.app_id){
-                            $scope.appid = $scope.currentApp.app_id;
-                            $scope.appkey = $scope.currentApp.app_key;
+
+                    $rootScope.pageState.currentApp = data[0];
+
+                    $scope.$watch('pageState.currentApp', function() {
+                        if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
+                            $scope.appid = $scope.pageState.currentApp.app_id;
+                            $scope.appkey = $scope.pageState.currentApp.app_key;
                         }
 
                     });
@@ -51,6 +56,54 @@ angular.module('ui.gravatar').config([
 
         // Use https endpoint
         gravatarServiceProvider.secure = true;
+    }
+]);
+
+angular.module('app').controller('StartCtrl', [
+    '$http',
+    '$scope',
+    function ($http, $scope) {
+        $scope.links = {
+            'android': {
+                doc: '/docs/android_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'ios': {
+                doc: '/docs/ios_os_x_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'js': {
+                doc: '/docs/js_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'unity': {
+                doc: '/docs/unity_guide.html',
+                demo: '/docs/sdk_down.html'
+            },
+            'wp': {
+                doc: '/docs/dotnet_guide.html',
+                demo: '/docs/sdk_down.html'
+            }
+        };
+
+        $scope.selectedPlat = 'ios';
+
+
+        $scope.createApp = function () {
+            $http.post(purl + 'clients/self/apps', { name: $scope.appname }).success(function (data) {
+                $scope.SelectedApp = data;
+            }).error(function (data) {
+            });
+        };
+
+        $scope.docloaded = function () {
+            prettyPrepare();
+            prettyPrint();
+            $("pre.prettyprint code").each(function(index, ele) {
+              $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
+            });
+            glueCopy();
+        };
     }
 ]);
 
