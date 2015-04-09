@@ -606,7 +606,7 @@ do_cloud_query 返回的 result 包含三个属性：
 - count - 如果使用了 `select count(*)` 的查询语法，返回符合查询条件的记录数目
 - class_name - 查询的 class name
 
-CQL 语法请参考 [CQL 详细指南](../cql_guide.html)。
+CQL 语法请参考 [CQL 详细指南](./cql_guide.html)。
 
 针对查询条件，我们推荐使用占位符的 CQL 语句来提升性能，占位符对应的值按照顺序组合起来作为第二个参数 pvalues 数组传入：
 
