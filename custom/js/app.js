@@ -8,7 +8,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
 
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
-
+        $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){
           sdkversion = $sdk_versions;
@@ -23,11 +23,11 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             function(data) {
                 if (data.length > 0) {
 
-                    $rootScope.currentApp = data[0];
-                    $scope.$watch('currentApp', function() {
-                        if($scope.currentApp&&$scope.currentApp.app_id){
-                            $scope.appid = $scope.currentApp.app_id;
-                            $scope.appkey = $scope.currentApp.app_key;
+                    $rootScope.pageState.currentApp = data[0];
+                    $scope.$watch('pageState.currentApp', function() {
+                        if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
+                            $scope.appid = $scope.pageState.currentApp.app_id;
+                            $scope.appkey = $scope.pageState.currentApp.app_key;
                         }
 
                     });
@@ -85,7 +85,6 @@ angular.module('app').controller('StartCtrl', [
         };
 
         $scope.selectedPlat = 'ios';
-
 
 
         $scope.createApp = function () {
