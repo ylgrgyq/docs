@@ -14,11 +14,11 @@ import com.avos.avoscloud.AVAnalytics;
 ```
 public void onCreate() {
     //如果使用美国节点，请加上这行代码 AVOSCloud.useAVCloudUS();
-    AVOSCloud.initialize(this, "{{app_id}}", "{{app_key}}");
+    AVOSCloud.initialize(this, "{{appid}}", "{{appkey}}");
 }
 ```
 
-创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{app_id}}#/key) 里面找到应用对应的 id 和 key。
+创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
 
 同时，你的应用需要请求 `INTERNET` 和 `ACCESS_NETWORK_STATE` 权限，如果没有设置，请添加下列两行到你的 `AndroidManifest.xml` 文件里的 `<application>` 标签前：
 
@@ -41,4 +41,4 @@ testObject.put("foo", "bar");
 testObject.saveInBackground();
 ```
 
-运行你的 app。一个类 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{app_id}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
+运行你的 app。一个类 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。

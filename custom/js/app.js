@@ -1,8 +1,8 @@
 //apps data
 var purl = '/1/';
 angular.module("app", ['ui.gravatar']);
-angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile',
-    function($scope, $http, $timeout, $compile) {
+angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile','$rootScope',
+    function($scope, $http, $timeout, $compile,$rootScope) {
 
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
@@ -21,7 +21,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             function(data) {
                 if (data.length > 0) {
 
-                    $scope.currentApp = data[0];
+                    $rootScope.currentApp = data[0];
                     $scope.$watch('currentApp', function() {
                         if($scope.currentApp&&$scope.currentApp.app_id){
                             $scope.appid = $scope.currentApp.app_id;
@@ -83,17 +83,8 @@ angular.module('app').controller('StartCtrl', [
         };
 
         $scope.selectedPlat = 'ios';
-        // $scope.$watch('apps.all', function () {
-        //     if ($scope.apps.all.length > 0) {
-        //         $scope.SelectedApp = $scope.apps.all[0];
-        //     }
-        // });
-        $scope.$watch('SelectedApp', function () {
-            if ($scope.SelectedApp) {
-                $scope.app_id = $scope.SelectedApp.app_id;
-                $scope.app_key = $scope.SelectedApp.app_key;
-            }
-        });
+
+
 
         $scope.createApp = function () {
             $http.post(purl + 'clients/self/apps', { name: $scope.appname }).success(function (data) {

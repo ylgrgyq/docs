@@ -67,18 +67,18 @@ title: 快速入门 - LeanCloud
 
     <div class="row">
 
-      <div class="step-content col-sm-4" ng-show="apps.all">
-        <select class="form-control" ng-model="SelectedApp"  ng-options="app.app_name  for app in apps.all">  </select>
+      <div class="step-content col-sm-4" ng-show="apps">
+        <select class="form-control" ng-model="currentApp"  ng-options="app.app_name  for app in apps">  </select>
       </div>
 
       <div class="step-content col-sm-4" ng-hide="apps.all">
         <form ng-hide="apps.all" class="form-inline">
           <div class="form-group">
-            <span>{{SelectedApp.app_name}}</span>
-            <input class="form-control" type="text" ng-model="appname"  ng-hide="SelectedApp">
+            <span>{{currentApp.app_name}}</span>
+            <input class="form-control" type="text" ng-model="appname"  ng-hide="currentApp">
           </div>
-          <a ng-hide="SelectedApp"  ng-click="createApp()" class="btn  btn-primary create-app ng-scope" translate="ACTION_CREATE_APP">创建应用</a>
-          <p ng-hide="SelectedApp" class="help-block" style="">您目前还没有创建任何应用，需要先创建应用</p>
+          <a ng-hide="currentApp"  ng-click="createApp()" class="btn  btn-primary create-app ng-scope" translate="ACTION_CREATE_APP">创建应用</a>
+          <p ng-hide="currentApp" class="help-block" style="">您目前还没有创建任何应用，需要先创建应用</p>
         </form>
       </div>
     </div>
