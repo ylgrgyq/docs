@@ -26,6 +26,14 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 
 注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
 
+## Github 仓库地址
+
+可以直接通过 Github 仓库使用 SDK（src 目录中），也可以通过 Github 给我们提出您的建议
+
+Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
+
+所有的 Release 地址: [https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
+
 ## 通过 bower 安装
 
 运行命令：
@@ -36,21 +44,17 @@ bower install leancloud-realtime -- save
 
 [什么是 bower ?](http://bower.io/)
 
-## Github 仓库地址
-
-可以直接通过 Github 仓库使用 SDK，也可以通过 Github 给我们提出您的建议
-
-Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
-
-所有的 Release 地址: [https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
-
 ## 文档贡献
 
 如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
 
 Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
 
-## Demo 及示例代码
+## Demo
+
+[聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)
+
+##示例代码
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
 
@@ -65,7 +69,9 @@ var conversationObj;
 // 创建实时通信实例（支持单页多实例）
 realtimeObj = AV.realtime({
     appId: appId,
-    clientId: clientId
+    clientId: clientId,
+    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+    encodeHTML: true,
     // 是否开启服务器端认证
     // auth: authFun
 });
@@ -180,6 +186,22 @@ realtimeObj.on('message', function(data) {
 
 详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」部分。
 
+### 防御 XSS
+
+Web 端实现任何可以将用户输入直接输出到界面上的应用都要注意防止产生 XSS（跨站脚本攻击），实时通信 SDK 支持在 SDK 层面开启这个防御，但是我们默认不开启，所以你可以在实例化 realtimeObject 的时候，开启这个选项。
+
+```javascript
+// 创建实时通信实例（支持单页多实例）
+realtimeObj = AV.realtime({
+    appId: appId,
+    clientId: clientId,
+    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+    encodeHTML: true,
+    // 是否开启服务器端认证
+    // auth: authFun
+});
+```
+
 ## 方法列表
 
 ### 全局命名空间
@@ -207,6 +229,8 @@ AV.realtime(options, callback)
 
     * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
 
+    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；
+
     * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
 
 返回：
@@ -220,7 +244,9 @@ var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: 'abc123',
+   // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+   encodeHTML: true,
    // auth 是权限校验的方法函数
    // auth: authFun
 }, function() {

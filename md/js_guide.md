@@ -129,8 +129,10 @@ var monster = Monster.new({strength: 20});
 
 ### 保存对象
 
-假如你想要在LeanCloud上保存GameScore，方法和Backbone.Model差不多,就用
-save就可以了.
+假如你想要在 LeanCloud 上保存 GameScore，方法和 Backbone.Model 差不多，就用
+ save 就可以了。
+
+这里要注意，我们每个存储条目的 id 是服务器端自动生成的唯一 id（非简单的自增逻辑生成），所以 id 是不可修改的。如果你有自定义 id 的需求，可以自己建立一个字段，逻辑上作为你的自定义 id。
 
 ```javascript
 var gameScore = new GameScore();
@@ -145,7 +147,7 @@ gameScore.save(null, {
   error: function(gameScore, error) {
     // Execute any logic that should take place if the save fails.
     // error is a AV.Error with an error code and description.
-    alert('Failed to create new object, with error code: ' + error.description);
+    alert('Failed to create new object, with error code: ' + error.message);
   }
 });
 ```
@@ -219,22 +221,24 @@ var cheatMode = gameScore.get("cheatMode");
 更新一个对象也是非常简单的。首先需要获取到要更新的 `AV.Object` 对象，然后进行修改值后保存数据。例如：
 
 ```javascript
-// Create the object.
-var gameScore = new GameScore();
+// 可以先查询出要修改的那条存储
+var GameScore = AV.Object.extend("GameScore");
+var query = new AV.Query(GameScore);
 
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-gameScore.set("skills", ["pwnage", "flying"]);
+// 这个 id 是要修改条目的 id，你在生成这个存储并成功时可以获取到，请看前面的文档
+query.get('5489092ae4b0446fa5065dcf', {
+    success: function(gameScore) {
+      // 回调中可以取得这个 GameScore 对象的一个实例，然后就可以修改它了
+      gameScore.set('title', 'LeanCloud is Best!');
+      gameScore.save();
 
-gameScore.save(null, {
-  success: function(gameScore) {
-    // Now let's update it with some new data. In this case, only cheatMode and score
-    // will get sent to the cloud. playerName hasn't changed.
-    gameScore.set("cheatMode", true);
-    gameScore.set("score", 1338);
-    gameScore.save();
-  }
+      // The object was retrieved successfully.
+    },
+    error: function(object, error) {
+      console.log(object);
+      // The object was not retrieved successfully.
+      // error is a AV.Error with an error code and description.
+    }
 });
 ```
 
