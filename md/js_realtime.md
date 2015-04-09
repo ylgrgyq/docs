@@ -1274,6 +1274,71 @@ realtimeObject.on('message', function(data) {
 });
 ```
 
+### RoomObject.send
+
+用法：
+```javascript
+RoomObject.send(dataObject, options, callback)
+```
+
+描述：
+
+* 向当前这个 RoomObject 中发送消息
+
+参数：
+
+* dataObject {Object} （必须）发送的数据内容
+
+* options {Object} （可选）发送消息时的配置项
+
+    * receipt {Boolean} （可选）默认 false。是否需要接收是否收到的回执信息，true 为接收，可以在 RoomObject.receipt 方法中接收
+
+    * transient {Boolean} (可选) 默认 false。是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，可以用来发送用户的输入状态（如：「正在输入。。。」的效果）
+
+* callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'LeanCloud02',
+        'LeanCloud03'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+room.send({
+    abc: 123
+}, {
+    // 需要获取阅读回执
+    receipt: true,
+    // 是否是暂态消息
+    transient: false
+}, function(data) {
+    console.log('信息发送成功，该信息会获取阅读回执');
+});
+
+// 当前用户所在的组，有消息时触发
+room.receipt(function(data) {
+   // 已经收到的 clientId
+   console.log(data); 
+});
+```
+
 ### RoomObject.receive
 
 用法：
@@ -1369,9 +1434,11 @@ room.send({
 
 // 当前用户所在的组，有消息时触发
 room.receipt(function(data) {
-   console.log(data); // 已经收到的 clientId
+   // 已经收到的 clientId
+   console.log(data);
 });
 ```
+
 ### RoomObject.count
 
 用法：
