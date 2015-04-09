@@ -32,7 +32,7 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 
 Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
 
-所有的 Release 地址: [https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
+所有的 Release 地址：[https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
 
 ## 通过 bower 安装
 
@@ -184,7 +184,7 @@ realtimeObj.on('message', function(data) {
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」部分。
+详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证)」部分。
 
 ### 防御 XSS
 
@@ -780,11 +780,11 @@ realtimeObject.on('open', function() {
 });
 ```
 
-### RoomObject.ping
+### RealtimeObject.ping
 
 用法：
 ```javascript
-RoomObject.ping(clientIdList, callback)
+RealtimeObject.ping(clientIdList, callback)
 ```
 
 描述：
@@ -821,7 +821,7 @@ var room = realtimeObject.room({
     }
 });
 
-rt.ping([
+realtimeObject.ping([
     'LeanCloud01',
     'LeanCloud02'
 ], function(data) {
@@ -830,11 +830,11 @@ rt.ping([
 });
 ```
 
-### RoomObject.ping
+### RealtimeObject.ping
 
 用法：
 ```javascript
-RoomObject.ping(clientId, callback)
+RealtimeObject.ping(clientId, callback)
 ```
 
 描述：
@@ -871,7 +871,7 @@ var room = realtimeObject.room({
     }
 });
 
-rt.ping('LeanCloud01', function(data) {
+realtimeObject.ping('LeanCloud01', function(data) {
     if (data.length) {
        console.log('用户在线');
     } else {
