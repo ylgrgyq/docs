@@ -544,6 +544,8 @@ curl -X PUT \
   https://leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
 ```
 
+这样就将对象里的 `score` 分数加 1，其中 `amount` 指定递增的数字大小，如果为负数，就变成递减。
+
 ####数组
 
 为了存储数组型数据, LeanCloud 提供3种操作来原子性地更改一个数组字段:
