@@ -1998,7 +1998,7 @@ app的名字.
 
 ```javascript
 var query = new AV.Query(AV.User);
-query.equalTo(gender, "female");  // find all the women
+query.equalTo("gender", "female");  // find all the women
 query.find({
   success: function(women) {
     // Do stuff
