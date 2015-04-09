@@ -178,7 +178,7 @@ realtimeObj.on('message', function(data) {
 
 如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
 
-详细请看 JavaScript 指南中的「[安全域名](https://leancloud.cn/docs/js_guide.html#安全域名)」部分。
+详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
 
 ### 权限和认证
 
