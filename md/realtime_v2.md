@@ -197,7 +197,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 * `appid`, `clientid`, `sorted_member_ids`, `timestamp` 和 `nonce` 的含义同上。对加入群的情况，这里`sorted_member_ids`是空字符串。
 * `convid` 是此次行为关联的对话 id
-* `action` 是此次行为的动作，三种行为分别对应常量 `join`, `invite` 和 `kick`
+* `action` 是此次行为的动作，行为分别对应常量 `invite` （加群和邀请）和 `kick`（踢出群）
 
 ### Super User
 
