@@ -184,7 +184,7 @@ realtimeObj.on('message', function(data) {
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证)」部分。
+详细请看「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」中的 「权限和认证」部分。
 
 ### 防御 XSS
 
