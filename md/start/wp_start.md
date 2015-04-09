@@ -9,10 +9,10 @@
 ```
  public App()
         {
-            AVClient.Initialize("{{app_id}}", "{{app_key}}");
+            AVClient.Initialize("{{appid}}", "{{appkey}}");
             // Global handler for uncaught exceptions.
             UnhandledException += Application_UnhandledException;
-            
+
             // Standard XAML initialization
             InitializeComponent();
 

@@ -82,8 +82,8 @@ pod 'AVOSCloudUI'
 
 ```
 //如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
-[AVOSCloud setApplicationId:@"{{app_id}}"
-              clientKey:@"{{app_key}}"];
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
 ```
 
 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
@@ -92,7 +92,7 @@ pod 'AVOSCloudUI'
 [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 ```
 
-创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{app_id}}#/key) 里面找到应用对应的 id 和 key。
+创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
 
 修改编译选项 **Architectures** 值为 `Standard architectures(armv7,armv7s)`：
 
@@ -116,4 +116,4 @@ AVObject *testObject = [AVObject objectWithClassName:@"TestObject"];
 [testObject save];
 ```
 
-运行你的 app，一个类为 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{app_id}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
+运行你的 app，一个类为 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
