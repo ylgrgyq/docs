@@ -23,7 +23,9 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             function(data) {
                 if (data.length > 0) {
 
+
                     $rootScope.pageState.currentApp = data[0];
+
                     $scope.$watch('pageState.currentApp', function() {
                         if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
                             $scope.appid = $scope.pageState.currentApp.app_id;
