@@ -522,6 +522,24 @@ AVQuery<AVUser> followeeNameQuery = AVUser.followeeQuery(userA.getObjectId(), AV
 followerNameQuery.include("followee");
 ```
 
+##### 一次性获取粉丝和关注列表
+
+很多用户反映他们需要能够一次性获取性获取粉丝和关注列表的API接口，于是我们加入这个功能。
+
+```java
+    AVFriendshipQuery query = AVUser.friendshipQuery(userId, SubUser.class);
+    query.include("followee");
+    query.include("follower");
+    query.getInBackground(new AVFriendshipCallback() {
+      @Override
+      public void done(AVFriendship friendship, AVException e) {
+        List<SubUser> followers = friendship.getFollowers();//获取关注列表
+        List<SubUser> followees = friendship.getFollowees();//获取粉丝
+	AVUser user = friendship.getUser();//获取用户对象本身
+      }
+    });
+```
+
 ### 状态
 
 #### 发布状态

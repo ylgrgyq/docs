@@ -9,7 +9,9 @@
   * [FreeChat](https://github.com/jwfing/FreeChat)
 * Android 聊天应用：
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
-* [JavaScript Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
+* JavaScript 聊天应用
+  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)
+  * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
 
@@ -36,7 +38,7 @@ LeanCloud 实时通信服务的特性主要有：
 
 ### clientId
 
-实时通信服务中的每一个终端称为一个 client。client 拥有一个在应用内唯一标识自己的 id。这个 id 由应用自己定义，必须是不多于 50 个字节长度的字符串。
+实时通信服务中的每一个终端称为一个 client。client 拥有一个在应用内唯一标识自己的 id。这个 id 由应用自己定义，必须是不多于 64 个字符的字符串。
 
 在大部分场合，这里的 client 都可以对应到应用中的某个「用户」，但是并不是只有真的「用户」才能当成这里的 client，你完全可以把一个探测器当成一个 client，把它收集到的数据通过实时通信服务广播给更多「人」。
 
@@ -286,6 +288,19 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 ## REST API
 
 参考 [实时通信 REST API](./realtime_rest_api.html)。
+
+## 服务器端错误码说明
+
+这里的错误码主要是 websocket 关闭连接时返回的状态码，当出现异常情况时，SDK会输出状态码到日志里，以下是对部分状态码的简单说明：
+
+* `0` websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
+* `1006` websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+* `4103` Client Id 格式错误，超过 64 个字符。
+* `4105` Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
+* `4107` 读超时，服务器端长时间没有收到客户端的数据，切断连接。SDK 包装了心跳包的机制，出现此错误通常是网络问题。SDK 会自动重连，无需人工干预。
+* `4108` 登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以[创建工单](http://ticket.avosapps.com/)，我们会予以建议。
+* `4109` 包过长。消息大小超过 5KB，请缩短消息或者拆分消息。
+* `4200` 服务器内部错误，如果反复出现请收集相关线索并[创建工单](http://ticket.avosapps.com/)，我们会尽快解决。
 
 ## FAQ
 
