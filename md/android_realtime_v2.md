@@ -171,6 +171,23 @@ imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback
 
 ###发送消息
 
+所有消息都是 AVIMMessage 的实例。构造消息的方法如下：
+
+```
+public AVIMMessage()
+```
+
+你无需传入任何参数，对于每个 message 实例，我们可以访问的属性有：
+
+* content - 消息内容，可以是任何文本
+* from － 指消息发送者的 `clientId`，只读
+* conversationId － 消息所属对话 id
+* messageId － 消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+* timestamp － 消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局 timestamp
+* receiptTimestamp － 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局 timestamp
+* status － 消息状态，分为未知(`AVIMMessageStatusNone`)、发送中(`AVIMMessageStatusSending`)、发送成功(`AVIMMessageStatusSent`)、被接收(`AVIMMessageStatusReceipt`)、失败(`AVIMMessageStatusFailed`)五种取值
+* ioType － 消息传输方向，分为发给当前用户(`AVIMMessageIOTypeIn`)和由当前用户发出(`AVIMMessageIOTypeOut`)两种取值
+
 通过 `AVIMConversation` 的 `sendMessage` 族方法，可以将消息发往目标对话。方法声明如下：
 
 ```
@@ -825,6 +842,12 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 }
 ```
 
+> 什么时候需要扩展自己的富媒体消息？
+>
+> 譬如说我有一个图像消息，只是除了文本之外，我还需要附带地理位置信息，这时候我需要扩展自己的消息类型来发送吗？其实完全没有必要，这种情况下，你使用我们在消息类中预留的 `attrs` 属性就可以保存额外的地理位置信息了。注意：｀attrs` 是所有富媒体消息都支持的。
+> 
+> 只有在我们的消息类型完全无法满足你的需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面要允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 `NewsMessage` 类。
+ 
 群组聊天
 -------------
 

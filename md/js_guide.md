@@ -30,19 +30,11 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 我们的JavaScript SDK不需要引入其他的库,唯一的一个例外是AV.view
 类,需要你提供jQuery或者一个jQuery兼容的$方法.
 
-### 安全域名
+### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。
+如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
 
-设置 JavaScript SDK 安全域名后，仅可在该域名下通过 JavaScript SDK 调用服务器资源，域名配置策略与浏览器域安全策略一致，要求域名协议、域和端口号都需严格一致，不支持子域和通配符。所以如果你要配置一个域名，要写清楚协议、域和端口，缺少一个都可能导致访问被禁止。域名的区别，如：
-
-- www.a.com:8080 和 www.a.com     跨域
-- www.a.com:8080 和 www.a.com:80  跨域
-- a.com 和 www.a.com              跨域
-- xxx.a.com 和 www.a.com          跨域
-- http 和 https 不同协议            跨域
-
-这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
+具体安全相关内容可以仔细阅读「[数据和安全](https://leancloud.cn/docs/data_security.html)」文档。
 
 ## 对象
 
@@ -129,8 +121,10 @@ var monster = Monster.new({strength: 20});
 
 ### 保存对象
 
-假如你想要在LeanCloud上保存GameScore，方法和Backbone.Model差不多,就用
-save就可以了.
+假如你想要在 LeanCloud 上保存 GameScore，方法和 Backbone.Model 差不多，就用
+ save 就可以了。
+
+这里要注意，我们每个存储条目的 id 是服务器端自动生成的唯一 id（非简单的自增逻辑生成），所以 id 是不可修改的。如果你有自定义 id 的需求，可以自己建立一个字段，逻辑上作为你的自定义 id。
 
 ```javascript
 var gameScore = new GameScore();
@@ -145,7 +139,7 @@ gameScore.save(null, {
   error: function(gameScore, error) {
     // Execute any logic that should take place if the save fails.
     // error is a AV.Error with an error code and description.
-    alert('Failed to create new object, with error code: ' + error.description);
+    alert('Failed to create new object, with error code: ' + error.message);
   }
 });
 ```
@@ -219,22 +213,24 @@ var cheatMode = gameScore.get("cheatMode");
 更新一个对象也是非常简单的。首先需要获取到要更新的 `AV.Object` 对象，然后进行修改值后保存数据。例如：
 
 ```javascript
-// Create the object.
-var gameScore = new GameScore();
+// 可以先查询出要修改的那条存储
+var GameScore = AV.Object.extend("GameScore");
+var query = new AV.Query(GameScore);
 
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-gameScore.set("skills", ["pwnage", "flying"]);
+// 这个 id 是要修改条目的 id，你在生成这个存储并成功时可以获取到，请看前面的文档
+query.get('5489092ae4b0446fa5065dcf', {
+    success: function(gameScore) {
+      // 回调中可以取得这个 GameScore 对象的一个实例，然后就可以修改它了
+      gameScore.set('title', 'LeanCloud is Best!');
+      gameScore.save();
 
-gameScore.save(null, {
-  success: function(gameScore) {
-    // Now let's update it with some new data. In this case, only cheatMode and score
-    // will get sent to the cloud. playerName hasn't changed.
-    gameScore.set("cheatMode", true);
-    gameScore.set("score", 1338);
-    gameScore.save();
-  }
+      // The object was retrieved successfully.
+    },
+    error: function(object, error) {
+      console.log(object);
+      // The object was not retrieved successfully.
+      // error is a AV.Error with an error code and description.
+    }
 });
 ```
 
@@ -1994,7 +1990,7 @@ app的名字.
 
 ```javascript
 var query = new AV.Query(AV.User);
-query.equalTo(gender, "female");  // find all the women
+query.equalTo("gender", "female");  // find all the women
 query.find({
   success: function(women) {
     // Do stuff
@@ -2032,75 +2028,6 @@ post.save(null, {
 ###在后台查看 User
 
 在后台的数据查看中,你可以看到User类保存了用户的信息.
-
-## 短信验证服务
-
-对于一些危险的操作，例如付费，删除数据等，你可能希望用户接收短信验证码并验证通过之后才允许进行，那么可以使用我们提供的短信验证服务。
-
-首选需要在应用设置的应用选项里开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）`选项。
-
-发送验证码通过：
-
-```javascript
-AV.Cloud.requestSmsCode('186xxxxxxxx').then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-你还可以定制发送的内容，设置下列选项：
-
-* name 应用名称，默认是你的应用在 LeanCloud 显示的名称。
-* op 进行的操作字符串，例如`付费`。
-* ttl 以分钟为单位的过期时间。
-
-```javascript
-AV.Cloud.requestSmsCode({
-  mobilePhoneNumber: '186xxxxxxxx',
-  name: 'PP打车',
-  op: '付费',
-  ttl: 5
-}).then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-如果您在应用设置里创建了短信模板，并且通过了管理员审核，那就可以发送模板短信，假设模板名称为 `test`，模板内容为
-
-<pre ng-non-bindable ><code>
-欢迎您使用 {{name}} 服务，我们将在 {{date}} 举办庆祝活动，欢迎参加。
-</code></pre>
-
-其中`name` 和 `date` 都是可替换的模板变量，那么可以通过下列方式来发送这条模板短信：
-
-```javascript
-AV.Cloud.requestSmsCode({
-  mobilePhoneNumber: '186xxxxxxxx',
-  template: "test"
-  name: 'PP打车',
-  date: '2014 年 10 月 22 号',
-  ttl: 5
-}).then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-`template` 指定模板名称，`mobilePhoneNumber` 是接收短信的手机号码，其他变量都将作为模板变量渲染。发送的短信内容将渲染为 `欢迎您使用 pp打车 服务，我们将在 2014 年 10 月 22 号 举办庆祝活动，欢迎参加。`。
-
-在用户收到验证码并输入后，通过下列代码来验证是否正确：
-
-```javascript
-AV.Cloud.verifySmsCode('6位数字验证码').then(function(){
-  //验证成功
-}, function(err){
-  //验证失败
-});
-```
 
 ##角色
 
