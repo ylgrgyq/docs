@@ -30,19 +30,11 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 我们的JavaScript SDK不需要引入其他的库,唯一的一个例外是AV.view
 类,需要你提供jQuery或者一个jQuery兼容的$方法.
 
-### 安全域名
+### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。
+如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
 
-设置 JavaScript SDK 安全域名后，仅可在该域名下通过 JavaScript SDK 调用服务器资源，域名配置策略与浏览器域安全策略一致，要求域名协议、域和端口号都需严格一致，不支持子域和通配符。所以如果你要配置一个域名，要写清楚协议、域和端口，缺少一个都可能导致访问被禁止。域名的区别，如：
-
-- www.a.com:8080 和 www.a.com     跨域
-- www.a.com:8080 和 www.a.com:80  跨域
-- a.com 和 www.a.com              跨域
-- xxx.a.com 和 www.a.com          跨域
-- http 和 https 不同协议            跨域
-
-这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
+具体安全相关内容可以仔细阅读「[数据和安全](https://leancloud.cn/docs/data_security.html)」文档。
 
 ## 对象
 
