@@ -7,7 +7,7 @@
 目前我们的实时通信服务仅支持 Windows Phone Silverlight 运行时，支持微软新一代的全平台统一运行时的 LeanCloud SDK for Windows Runtime 会尽快发布，本文档所提及的概念以及示例代码都兼容以上提及的 2 个运行时。
 
 ## 安装
-为了支持实时聊天，LeanCloud SDK for Windows Phone Silverlight 依赖于一个开源的第三方的 WebSocket 的[库](https://www.nuget.org/packages/WebSocket4Net/)，所以推荐开发者从 [Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.2.3.4-beta) 上下载我们的 SDK。
+为了支持实时聊天，LeanCloud SDK for Windows Phone Silverlight 依赖于一个开源的第三方的 WebSocket 的[库](https://www.nuget.org/packages/WebSocket4Net/)，所以推荐开发者从 [Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.3.0-beta) 上下载我们的 SDK。
 
 ## 初始化
 导入 SDK 之后，在 `App.xaml` 的构造函数中添加如下代码：
