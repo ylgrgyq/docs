@@ -8,7 +8,7 @@
 
 你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
-本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信的 WebView 中。 
+本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信、phonegap、cordova 的 WebView 中。 
 
 ## Demo
 
@@ -203,6 +203,12 @@ realtimeObj = AV.realtime({
     // auth: authFun
 });
 ```
+
+### 与 iOS、Android 等 SDK 通信
+
+JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
+
+Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
 
 ## 方法列表
 
@@ -1297,6 +1303,8 @@ RoomObject.send(dataObject, options, callback)
 
     * transient {Boolean} (可选) 默认 false。是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，可以用来发送用户的输入状态（如：「正在输入。。。」的效果）
 
+    * type {String} （可选） 无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android 等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。 
+
 * callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到
 
 返回：
@@ -1338,6 +1346,45 @@ room.send({
 room.receipt(function(data) {
    // 已经收到的 clientId
    console.log(data); 
+});
+
+// 与 iOS、Android 等 SDK 通信
+
+// 发送文本
+room.send({
+    text: '文本内容'
+}, {
+    type: 'text'
+}, function(data) {
+    // 发送成功之后的回调
+});
+
+// 发送图片
+room.send({
+    // 描述信息
+    text: '图片测试',
+    // 自定义的属性，可选填，非必须项
+    attr: {
+        aaa: 123
+    },
+    url: 'https://leancloud.cn/images/123.png',
+    // 图片相关信息，所有选项可选填，非必须项
+    metaData: {
+        // 图片名字
+        name:'logo',
+        // 文件格式
+        format:'png',
+        // 高度，单位像素 px
+        height: 123,
+        // 宽度，单位像素 px
+        width: 123,
+        // 文件大小，单位比特 b
+        size: 888
+    }
+}, {
+   type: 'image'
+}, function(data) {
+    console.log('图片数据发送成功！');
 });
 ```
 
