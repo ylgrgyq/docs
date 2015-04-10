@@ -204,7 +204,7 @@ realtimeObj = AV.realtime({
 });
 ```
 
-### 与 iOS、Android 等 SDK 通信
+## 与 iOS、Android 等 SDK 通信
 
 JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
 
