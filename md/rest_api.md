@@ -2,7 +2,7 @@
 
 REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进行交互,您可以使用REST API做很多事情,比如:
 
-* 一个移动网站可以通过Javascript来获取 LeanCloud 上的数据.
+* 一个移动网站可以通过 JavaScript 来获取 LeanCloud 上的数据.
 * 一个网站可以展示来自 LeanCloud 的数据。
 * 您可以上传大量的数据,之后可以被一个移动app读取。
 * 您可以下载最近的数据来进行您自定义的分析统计。
@@ -374,7 +374,7 @@ REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进
 
 用户验证是通过HTTP header来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个App程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定endpoint.在下面的例子中,您的app的key被包含在命令中,您可以使用下拉框来显示其他app的示例代码.
 
-对于Javascript使用,LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用。
+对于 JavaScript 使用, LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用。
 
 
 #### 更安全的鉴权方式
@@ -2701,4 +2701,4 @@ Strict-Transport-Security: max-age=31536000
 {}
 ```
 
-总之，就是利用POST传递的参数，把 `_method` ，`_ApplicationId` 以及 `_ApplicationKey` 传递给服务端，服务端会自动把这些请求翻译成指定的方法，这样可以使得 Unity3D 以及 Javascript 等平台（或者语言）可以绕开浏览器跨域或者方法限制。
+总之，就是利用POST传递的参数，把 `_method` ，`_ApplicationId` 以及 `_ApplicationKey` 传递给服务端，服务端会自动把这些请求翻译成指定的方法，这样可以使得 Unity3D 以及 JavaScript 等平台（或者语言）可以绕开浏览器跨域或者方法限制。
