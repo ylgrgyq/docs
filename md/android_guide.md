@@ -81,7 +81,6 @@ dependencies {
     //avoscloud-sns 为 LeanCloud 第三方登陆包
     compile 'cn.leancloud.android:avoscloud-sns:v2.7+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-    compile 'cn.leancloud.android:weibo-sdk-android-sso:1.0.0-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
     compile 'cn.leancloud.android:avoscloud-search:v2.7+@aar'    
