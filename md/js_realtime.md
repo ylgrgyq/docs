@@ -8,7 +8,11 @@
 
 你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
-本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信的 WebView 中。 
+本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信、phonegap、cordova 的 WebView 中。 
+
+## Demo
+
+在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)。
 
 ## 概念
 
@@ -18,6 +22,8 @@
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
+如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+
 ## 特别说明
 
 Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），就是几个客户端节点在通信之前要放到同一个房间中，其实这两个是一个道理，只是名字不同，SDK 中为了让大家好理解，两个名字都可以使用。如果你觉得更喜欢 Room 这个概念，那就可以使用 room 方法创建 Room，如果喜欢 Conversation，那就使用 conv 方法创建 Conversation。
@@ -25,6 +31,14 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 也许说到这里你已经跃跃欲试了，好的，那你可以试用一下看看了。
 
 注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
+
+## Github 仓库地址
+
+可以直接通过 Github 仓库使用 SDK（src 目录中），也可以通过 Github 给我们提出您的建议
+
+Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
+
+所有的 Release 地址：[https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
 
 ## 通过 bower 安装
 
@@ -36,21 +50,13 @@ bower install leancloud-realtime -- save
 
 [什么是 bower ?](http://bower.io/)
 
-## Github 仓库地址
-
-可以直接通过 Github 仓库使用 SDK，也可以通过 Github 给我们提出您的建议
-
-Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
-
-所有的 Release 地址: [https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
-
 ## 文档贡献
 
 如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
 
 Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
 
-## Demo 及示例代码
+##示例代码
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
 
@@ -65,7 +71,9 @@ var conversationObj;
 // 创建实时通信实例（支持单页多实例）
 realtimeObj = AV.realtime({
     appId: appId,
-    clientId: clientId
+    clientId: clientId,
+    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+    encodeHTML: true,
     // 是否开启服务器端认证
     // auth: authFun
 });
@@ -172,13 +180,35 @@ realtimeObj.on('message', function(data) {
 
 如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
 
-详细请看 JavaScript 指南中的「[安全域名](https://leancloud.cn/docs/js_guide.html#安全域名)」部分。
+详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
 
 ### 权限和认证
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看实时通信开发指南中的 「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」部分。
+详细请看「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」中的 「权限和认证」部分。
+
+### 防御 XSS
+
+Web 端实现任何可以将用户输入直接输出到界面上的应用都要注意防止产生 XSS（跨站脚本攻击），实时通信 SDK 支持在 SDK 层面开启这个防御，但是我们默认不开启，所以你可以在实例化 realtimeObject 的时候，开启这个选项。
+
+```javascript
+// 创建实时通信实例（支持单页多实例）
+realtimeObj = AV.realtime({
+    appId: appId,
+    clientId: clientId,
+    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+    encodeHTML: true,
+    // 是否开启服务器端认证
+    // auth: authFun
+});
+```
+
+## 与 iOS、Android 等 SDK 通信
+
+JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
+
+Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
 
 ## 方法列表
 
@@ -207,6 +237,8 @@ AV.realtime(options, callback)
 
     * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
 
+    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；
+
     * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
 
 返回：
@@ -220,7 +252,9 @@ var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
    appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: 'abc123',
+   // 是否开启 HTML 转义，SDK 层面开启防御 XSS
+   encodeHTML: true,
    // auth 是权限校验的方法函数
    // auth: authFun
 }, function() {
@@ -519,6 +553,10 @@ RealtimeObject.conv(options, callback)
 
     * data {Object} （可选）自定义的数据信息，如 title、name 等
     
+    * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
+
+    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户同时在此聊天，但是不支持消息回执和历史记录
+
     * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
 返回：
@@ -536,9 +574,13 @@ var realtimeObject = AV.realtime({
 });
 
 var room = realtimeObject.conv({
+    // 人员的 id
     members: [
         'LeanCloud02'
     ],
+    // 创建暂态的聊天室
+    // transient: true,
+    // 默认的数据，可以放 Conversation 名字等
     data: {
         title: 'testTitle'
     }
@@ -754,11 +796,11 @@ realtimeObject.on('open', function() {
 });
 ```
 
-### RoomObject.ping
+### RealtimeObject.ping
 
 用法：
 ```javascript
-RoomObject.ping(clientIdList, callback)
+RealtimeObject.ping(clientIdList, callback)
 ```
 
 描述：
@@ -795,7 +837,7 @@ var room = realtimeObject.room({
     }
 });
 
-rt.ping([
+realtimeObject.ping([
     'LeanCloud01',
     'LeanCloud02'
 ], function(data) {
@@ -804,11 +846,11 @@ rt.ping([
 });
 ```
 
-### RoomObject.ping
+### RealtimeObject.ping
 
 用法：
 ```javascript
-RoomObject.ping(clientId, callback)
+RealtimeObject.ping(clientId, callback)
 ```
 
 描述：
@@ -845,7 +887,7 @@ var room = realtimeObject.room({
     }
 });
 
-rt.ping('LeanCloud01', function(data) {
+realtimeObject.ping('LeanCloud01', function(data) {
     if (data.length) {
        console.log('用户在线');
     } else {
@@ -1240,6 +1282,112 @@ realtimeObject.on('message', function(data) {
 });
 ```
 
+### RoomObject.send
+
+用法：
+```javascript
+RoomObject.send(dataObject, options, callback)
+```
+
+描述：
+
+* 向当前这个 RoomObject 中发送消息
+
+参数：
+
+* dataObject {Object} （必须）发送的数据内容
+
+* options {Object} （可选）发送消息时的配置项
+
+    * receipt {Boolean} （可选）默认 false。是否需要接收是否收到的回执信息，true 为接收，可以在 RoomObject.receipt 方法中接收
+
+    * transient {Boolean} (可选) 默认 false。是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，可以用来发送用户的输入状态（如：「正在输入。。。」的效果）
+
+    * type {String} （可选） 无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android 等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。 
+
+* callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+var room = realtimeObject.room({
+    members: [
+        'LeanCloud02',
+        'LeanCloud03'
+    ],
+    data: {
+        title: 'testTitle'
+    }
+});
+
+room.send({
+    abc: 123
+}, {
+    // 需要获取阅读回执
+    receipt: true,
+    // 是否是暂态消息
+    transient: false
+}, function(data) {
+    console.log('信息发送成功，该信息会获取阅读回执');
+});
+
+// 当前用户所在的组，有消息时触发
+room.receipt(function(data) {
+   // 已经收到的 clientId
+   console.log(data); 
+});
+
+// 与 iOS、Android 等 SDK 通信
+
+// 发送文本
+room.send({
+    text: '文本内容'
+}, {
+    type: 'text'
+}, function(data) {
+    // 发送成功之后的回调
+});
+
+// 发送图片
+room.send({
+    // 描述信息
+    text: '图片测试',
+    // 自定义的属性，可选填，非必须项
+    attr: {
+        aaa: 123
+    },
+    url: 'https://leancloud.cn/images/123.png',
+    // 图片相关信息，所有选项可选填，非必须项
+    metaData: {
+        // 图片名字
+        name:'logo',
+        // 文件格式
+        format:'png',
+        // 高度，单位像素 px
+        height: 123,
+        // 宽度，单位像素 px
+        width: 123,
+        // 文件大小，单位比特 b
+        size: 888
+    }
+}, {
+   type: 'image'
+}, function(data) {
+    console.log('图片数据发送成功！');
+});
+```
+
 ### RoomObject.receive
 
 用法：
@@ -1335,9 +1483,11 @@ room.send({
 
 // 当前用户所在的组，有消息时触发
 room.receipt(function(data) {
-   console.log(data); // 已经收到的 clientId
+   // 已经收到的 clientId
+   console.log(data);
 });
 ```
+
 ### RoomObject.count
 
 用法：

@@ -7,9 +7,13 @@
 * iOS 聊天应用：
   * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
   * [FreeChat](https://github.com/jwfing/FreeChat)
+
 * Android 聊天应用：
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
-* [JavaScript Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
+
+* JavaScript 聊天应用
+  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)
+  * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
 
@@ -195,7 +199,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 * `appid`, `clientid`, `sorted_member_ids`, `timestamp` 和 `nonce` 的含义同上。对加入群的情况，这里`sorted_member_ids`是空字符串。
 * `convid` 是此次行为关联的对话 id
-* `action` 是此次行为的动作，三种行为分别对应常量 `join`, `invite` 和 `kick`
+* `action` 是此次行为的动作，行为分别对应常量 `invite` （加群和邀请）和 `kick`（踢出群）
 
 ### Super User
 
@@ -309,6 +313,12 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 ### 敏感词过滤怎么做
 
 LeanCloud 服务器端已经存有一份敏感词的列表对消息进行过滤，这部分功能无需用户参与，是内置默认支持的。
+
+### 聊天好友关系如何实现
+
+LeanCloud 实时通信服务是完全独立的实时通信业务抽象，专注在实时通信本身，所以实时通信的业务逻辑中，并不含有好友关系，以及对应的聊天用户数据信息（如头像、名称等）。实时通信与其他业务逻辑完全隔离，不耦合，唯一关联的就是 clientId。这样做的好处是显而易见的，比如你可以很容易让匿名用户直接通信，你也可以自定义一些好友逻辑，总之可以做成因为任意逻辑而匹配产生的聊天行为。
+
+当然，如果你想维护一套好友关系，完全可以使用你自己的逻辑，只要存储着每个用户在实时通信中的 clientId 即可。我们推荐使用 LeanCloud 的存储，这样也可以结合 LeanCloud 中的 User 相关对象简单的实现账户系统，以及账户中的相关存储，详情可以阅读对应的 SDK 开发指南。
 
 ### 聊天离线时可以推送吗？
 
