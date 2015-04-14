@@ -237,6 +237,12 @@ WEB_SOCKET_SWF_LOCATION = "../plugin/web-socket-js/WebSocketMain.swf";
 <script src="../src/AV.realtime.js"></script>
 ```
 
+* IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
+
+  * 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
+  * IE8 中的 JSON.stringify 会把中文转为 unicode 编码
+  * IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，但是要用 XDomainRequest 发 request，这个 request 成功回来是没有 response.status 的
+
 ## 方法列表
 
 ### 全局命名空间
