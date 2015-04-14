@@ -10,7 +10,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 * 访问 [技术问答社区](https://forum.leancloud.cn/)，进行提问。
 * 登录进入官网 [控制台](/applist.html)，选择页面顶部菜单：**帮助** > **技术支持**，进入工单（ticket）系统，提交问题。
-* 发送邮件到 support@avoscloud.com，获取帮助。
+* 发送邮件到 support@leancloud.rocks，获取帮助。
 * 紧急情况拨打客服电话：010-82800646。
 
 ### 计费是基于账号还是应用
