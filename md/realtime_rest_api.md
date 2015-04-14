@@ -88,14 +88,13 @@ timestamp | 消息时间戳
 
 ## 取未读消息数
 
-您可以从服务器端通过 REST API 调用获取实时通信中，某个 peer 的未读消息
-数。注意这个消息数仅包含单聊的未读数，群组不算在内。
+您可以从服务器端通过 REST API 调用获取实时通信中，某个 Client ID 的未读消息数。
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://leancloud.cn/1.1/rtm/messages/unread/PEER_ID
+  https://leancloud.cn/1.1/rtm/messages/unread/CLIENT_ID
 ```
 
 返回：
