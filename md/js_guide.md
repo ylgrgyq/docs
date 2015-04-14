@@ -2441,5 +2441,5 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。
 这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
 
-4、为了防止通过 Javascript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
+4、为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
 
