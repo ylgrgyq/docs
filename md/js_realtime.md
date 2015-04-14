@@ -8,7 +8,10 @@
 
 你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
-本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信、phonegap、cordova 的 WebView 中。 
+## 兼容性
+
+本 SDK 实现轻量、高效、无依赖。支持移动终端的浏览器及各种 WebView，包括可以使用在微信、PhoneGap、Cordova 的 WebView 中。 
+同时 SDK 提供插件化的，无痛兼容 IE8+ 的方式，具体请看下面「兼容 IE8+」部分的说明。
 
 ## Demo
 
@@ -209,6 +212,49 @@ realtimeObj = AV.realtime({
 JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
 
 Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
+
+## 兼容 IE8+ 
+
+JavaScript 实时通信 SDK 设计时目标是面向未来、全面支持移动端、灵活高效，所以考虑主要实现轻量、提升性能、减少流量等特性（所以都没有默认支持 Promise），但是因为国内目前浏览器市场中仍然有很大量的 IE8+ 浏览器，所以我们提供一种非常轻量的插件方式来兼容 IE8+。
+
+当你通过 Bower 或者 Github 下载了 SDK，会有一个 plugin 目录，其中就是兼容 IE8+ 所需要用到的插件。主要实现原理就是通过 Flash 实现的 Socket 通信，然后通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。但是这样做你需要在实例化 RealtimeObject 的时候，关闭服务器的 WebScoket SSL 协议，我们的 Demo 中是兼容 IE8+ 的，也可以参考代码。
+
+**具体兼容方式：**
+
+* 在页面中加入，路径改为你自己的路径
+
+```
+<!-- 引入插件，兼容低版本浏览器 -->
+<script type="text/javascript" src="../plugin/web-socket-js/swfobject.js"></script>
+<script type="text/javascript" src="../plugin/web-socket-js/web_socket.js"></script>
+<script type="text/javascript">
+// 让插件知道 WebSocketMain.swf 的路径
+WEB_SOCKET_SWF_LOCATION = "../plugin/web-socket-js/WebSocketMain.swf";
+</script>
+<!-- 引入 LeanCloud 实时通信 SDK -->
+<script src="../src/AV.realtime.js"></script>
+```
+
+* 实例化 RealtimeObject 时关闭服务器 WebSocket SSL 协议
+
+```javascript
+// 请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
+var appId = '9p6hyhh60av3ukkni3i9z53q1l8y';
+
+// clientId 就是实时通信中的唯一用户 id
+var clientId = 'LeanCloud01';
+var realtimeObject;
+
+// 创建实时通信实例
+realtimeObject = AV.realtime({
+    appId: appId,
+    clientId: clientId,
+    // 是否 HTML 转义，防止 XSS
+    encodeHTML: true,
+    // 是否要关掉安全协议，false 为关闭
+    secure: false
+});
+```
 
 ## 方法列表
 
