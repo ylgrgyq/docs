@@ -19,7 +19,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### 如果没有缴费会怎么样
 
-账单逾期四周未缴，账户服务将被停止；应用数据被置于不可见模式，但仍会在　LeanCloud　云端保留一个月。如需要恢复服务和访问应用数据，请登录控制台，支付欠款。
+账单逾期四周未缴，账户服务将被停止；应用数据被置于不可见模式，但仍会在 LeanCloud 云端保留一个月。如需要恢复服务和访问应用数据，请登录控制台，支付欠款。
 
 我们为账单支付提供一段缓冲期，请在收到账单的十天内完成缴费即可。在此期间，我们会通过邮件或者电话等方式与您联系，因此强烈建议完整填写 [开发者信息](/settings.html#/setting/info)，以免错过我们的提醒和最佳付款时机。
 
@@ -41,7 +41,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 * 无论采取哪一种付款方式，只有当累计支付金额达到人民币**壹仟元**后系统才允许申请，单笔开票金额不低于人民币**壹仟元**。
 
-* 如有特别需求，如按月度账单金额结算，或先开发票后付款，请联系我们的市场部专员 　business@leancloud.rocks，QQ号：2607695496。
+* 如有特别需求，如按月度账单金额结算，或先开发票后付款，请联系我们的市场部专员 business@leancloud.rocks，QQ号：2607695496。
 
 * 开具发票时段为每月 10 日至 30 日，发票以快递寄送。如需开具增值税专用发票，也请联系我们的市场部专员。
 
@@ -59,7 +59,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### API 开放吗
 
-我们的 API 完全开放。我们提供的 SDK 也都是基于开放 API 实现的。详情请阅读 [REST API  详解](/docs/rest_api.html)。
+我们的 API 完全开放。我们提供的 SDK 也都是基于开放 API 实现的。详情请阅读 [REST API 详解](/docs/rest_api.html)。
 
 ### 提供哪些平台的 SDK
 
@@ -85,7 +85,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### Unity 3D 支持如何
 
-请到 [SDK 下载](https://leancloud.cn/docs/sdk_down.html)  页面，下载 Unity SDK。
+请到 [SDK 下载](https://leancloud.cn/docs/sdk_down.html) 页面，下载 Unity SDK。
 
 ### 开发文档有提供搜索功能吗
 
@@ -110,7 +110,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 应用 API 授权失败，请检查是否初始化了 App Id 和 App Key。
 
-* 如何进行初始化，请查看  [快速入门](/start.html)。
+* 如何进行初始化，请查看 [快速入门](/start.html)。
 * App Id 和 App Key 在应用的 **设置** 菜单里可以找到。
 
 ### 错误信息代码和详细解释在哪里
@@ -127,7 +127,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### 如何实现大小写不敏感的查询
 
-目前不提供直接支持，可采用正则表达式查询的办法，具体参考  [StackOverflow 的帖子](http://stackoverflow.com/questions/1863399/mongodb-is-it-possible-to-make-a-case-insensitive-query)。
+目前不提供直接支持，可采用正则表达式查询的办法，具体参考 [StackOverflow 的帖子](http://stackoverflow.com/questions/1863399/mongodb-is-it-possible-to-make-a-case-insensitive-query)。
 
 使用各平台 SDK 的 AVQuery 对象提供的 `matchesRegex` 方法（Android SDK 用 `whereMatches` 方法）。
 
@@ -138,7 +138,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### API 调用次数有什么限制吗
 
-我们每个月提供 100  万次的免费额度，超过的部分才收费。免费额度不会将完全免费的推送服务和统计服务计算进去。另外，对于免费版和专业版，默认情况下，每个应用都有每秒 1000 次的并发访问上限，如果需要提高上限，请与我们联系。
+我们每个月提供 100 万次的免费额度，超过的部分才收费。免费额度不会将完全免费的推送服务和统计服务计算进去。另外，对于免费版和专业版，默认情况下，每个应用都有每秒 1000 次的并发访问上限，如果需要提高上限，请与我们联系。
 
 对于从控制台或者使用 JavaScript SDK 上传文件（包括云代码内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
 
@@ -147,7 +147,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### 如何导入或者导出数据？
 
-请参考《数据与安全》文档的  [导入数据](./data_security.html#导入数据) 和 [导出数据](./data_security.html#导出数据) 部分。
+请参考《数据与安全》文档的 [导入数据](./data_security.html#导入数据) 和 [导出数据](./data_security.html#导出数据) 部分。
 
 
 ### 如何在 App 邮件内完全使用自己的品牌
@@ -226,7 +226,7 @@ LeanCloud 依赖的 Framework 包括：
 
 ### 有没有同步 API
 
-JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback  的形式调用。我们提供了 [Promise 模式](https://leancloud.cn/docs/js_guide.html#promise) 来减少 callback 嵌套过多的问题。
+JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](https://leancloud.cn/docs/js_guide.html#promise) 来减少 callback 嵌套过多的问题。
 
 ## 消息推送
 
@@ -246,7 +246,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 可以。请参考 [消息推送开发指南](/docs/push_guide.html#%E8%87%AA%E5%AE%9A%E4%B9%89-receiver)。
 
-如果要自定义 receiver，必须在消息的 data 里带上自定义的  action。LeanCloud 在接收到消息后，将广播 action 为您定义的值的 intent 事件，您的 receiver 里也必须带上 `intent-filter` 来捕获该 action 值的 intent 事件。
+如果要自定义 receiver，必须在消息的 data 里带上自定义的 action。LeanCloud 在接收到消息后，将广播 action 为您定义的值的 intent 事件，您的 receiver 里也必须带上 `intent-filter` 来捕获该 action 值的 intent 事件。
 
 ## 统计
 
@@ -288,7 +288,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 云代码中如何处理用户登录和 Cookie
 
-请参考这篇 [博文](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者  [云代码指南](https://leancloud.cn/docs/cloud_code_guide.html#%E5%A4%84%E7%90%86%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E5%92%8C%E7%99%BB%E5%87%BA) 中的相关内容。
+请参考这篇 [博文](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云代码指南](https://leancloud.cn/docs/cloud_code_guide.html#%E5%A4%84%E7%90%86%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E5%92%8C%E7%99%BB%E5%87%BA) 中的相关内容。
 
 
 ### 云代码的二级域名多久生效
@@ -313,7 +313,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 文件存储有大小限制吗？
 
-没有。除了在浏览器里通过 JavaScript SDK  上传文件，或者通过我们网站直接上传文件，有 10 MB 的大小限制之外，其他 SDK 都没有限制。 JavaScript SDK 在 Node.js 环境中也没有大小限制。
+没有。除了在浏览器里通过 JavaScript SDK 上传文件，或者通过我们网站直接上传文件，有 10 MB 的大小限制之外，其他 SDK 都没有限制。 JavaScript SDK 在 Node.js 环境中也没有大小限制。
 
 ### 存储图片可以做缩略图等处理吗？
 
@@ -330,7 +330,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 我们通过接入多个短信提供商来提升短信的到达率。从我们实际使用来看，整体的到达率还是令人满意的。但是请注意，短信是无法保证 100% 送达，因此，除了短信之外，应该加入其他备份手段来向用户提供应用的重要功能。
 
 ### 短信签名是什么？必须的吗？
-根据运营商的要求，短信签名是必须的。短信签名是指短信里 `【】` 括起来的短信发送方名称。我们只允许自定义短信模板的用户自定义签名，其他用户都使用应用名称。短信签名限制在 10  个字符内，应用名称可以在应用设置里修改。
+根据运营商的要求，短信签名是必须的。短信签名是指短信里 `【】` 括起来的短信发送方名称。我们只允许自定义短信模板的用户自定义签名，其他用户都使用应用名称。短信签名限制在 10 个字符内，应用名称可以在应用设置里修改。
 
 ### 短信有什么限制吗？
 
