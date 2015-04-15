@@ -11,7 +11,7 @@
 ## 兼容性
 
 本 SDK 实现轻量、高效、无依赖。支持移动终端的浏览器及各种 WebView，包括可以使用在微信、PhoneGap、Cordova 的 WebView 中。 
-同时 SDK 提供插件化的、无痛兼容 IE8+ 老版本 IE 浏览器的方式，具体请看下面「兼容 IE8+」部分的说明，默认不兼容且性能最佳。
+同时 SDK 提供插件化的、无痛兼容 IE8+ 老版本 IE 浏览器的方式，具体请看下面「[兼容 IE8+](#兼容_IE8_)」部分的说明，默认不兼容且性能最佳。
 
 ## Demo
 
@@ -209,19 +209,21 @@ realtimeObj = AV.realtime({
 
 ## 与 iOS、Android 等 SDK 通信
 
-JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
+JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 [roomObject.send](#RoomObject_send) 方法中详细了解。
 
 Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
 
-## 兼容 IE8+ 
+## 兼容
+
+### 兼容 IE8+ 
 
 JavaScript 实时通信 SDK 设计时目标是面向未来、全面支持移动端、灵活高效，所以考虑主要实现轻量、提升性能、减少流量等特性（所以都没有默认支持 Promise），但是因为国内目前浏览器市场中仍然有很大量的 IE8+ 浏览器，所以我们提供一种非常轻量的插件方式来兼容 IE8+。
 
-当你通过 Bower 或者 Github 下载了 SDK，会有一个 plugin 目录，其中就是兼容 IE8+ 所需要用到的插件。主要实现原理就是通过 Flash 实现的 Socket 通信，然后通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 中是兼容 IE8+ 的，也可以参考代码。
+当你通过 Bower 或者 Github 下载 SDK，会有一个 plugin 目录，其中就是兼容 IE8+ 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 中是兼容 IE8+ 的，也可以参考代码。
 
 **具体兼容方式：**
 
-* 在页面中加入，路径改为你自己的路径
+1. 在页面中加入以下代码，路径改为你自己的路径
 
 ```
 <!-- 引入插件，兼容低 IE8+ 等低版本浏览器，注意看下面的注释。如果不需要兼容，可以去掉这部分。 -->
@@ -239,11 +241,15 @@ WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
 <script src="../../src/AV.realtime.js"></script>
 ```
 
-* IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
+2. IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
 
   * 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
   * IE8 中的 JSON.stringify 会把中文转为 unicode 编码
   * IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，但是要用 XDomainRequest 发 request，这个 request 成功回来没有 response.status
+
+### 其他兼容问题
+
+如果要想在 Android WebView 中使用，请务必开启 WebSocket 支持。另外根据用户反馈，在部分 Android 机型的 WebView 中不支持 WebSocket 的安全链接，所以需要从 wss 协议转为 ws 协议，关闭 WebSocket 的 SSL，RealtimeObject 在初始化时提供 secure 选项可以关闭，详细使用方式请看 [AV.realtime](#AV_realtime) 方法。
 
 ## 方法列表
 
@@ -272,9 +278,11 @@ AV.realtime(options, callback)
 
     * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
 
-    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；
+    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；true 为开启，false 为关闭。
 
     * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
+
+    * secure {Boolean}（可选）是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护，默认开启。true 为开启，false 为关闭。
 
 返回：
 
@@ -291,7 +299,9 @@ var realtimeObject = AV.realtime({
    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
    encodeHTML: true,
    // auth 是权限校验的方法函数
-   // auth: authFun
+   // auth: authFun,
+   // 是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护
+   secure: true
 }, function() {
    console.log('与服务器连接成功！');
 });
