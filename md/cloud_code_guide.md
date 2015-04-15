@@ -642,6 +642,24 @@ AV.Cloud.afterSave('_User', function(request) {
 });
 ```
 
+### 用户登录 hook 函数
+
+有些时候你可能需要禁止一些用户登录（比如黑名单内的用户），可以定义以下函数：
+
+```
+AV.Cloud.onLogin(function(request, response) {
+  // 因为此时用户还没有登录，所以用户信息是保存在 request.object 对象中
+  console.log("on login:", request.object);
+  if (request.object.get('username') == 'noLogin') {
+    // 如果是 error 回调，则用户无法登录（收到 401 响应）
+    response.error('Forbidden');
+  } else {
+    // 如果是 success 回调，则用户可以登录
+    response.success();
+  }
+});
+```
+
 ## 定时任务
 
 很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
