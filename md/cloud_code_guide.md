@@ -770,7 +770,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为 `myapp、`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将App的二级域名设置为 `myapp`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
 
 ### 绑定独立域名
 
@@ -778,7 +778,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 #### 主域名
 
-如果你想为您的App绑定一个独立域名，需要您用注册的邮箱发送下列信息到我们的支持邮箱 `support@avoscloud.com` 提出申请或者从 `帮助菜单` 里的技术支持系统提出 Ticket：
+如果你想为您的App绑定一个独立域名，需要您用注册的邮箱发送下列信息到我们的支持邮箱 `support@avoscloud.com` 提出申请或者从 `帮助菜单` 里的技术支持系统提交 Ticket：
 
 * 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
 * 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com(国内)或avosapps.us(美国)）
@@ -789,6 +789,8 @@ AV.Cloud.define('Logger', function(request, response) {
 我们将在3个工作日内审核，如果审核通过将为您绑定域名。
 
 #### 域名备案流程
+
+**域名备案的前置条件：云代码已经部署，并且网站内容和备案申请的内容一致。**
 
 对于企业用户，如果您的域名没有在国内备案过，我们可以协助您与我们的备案接入商一起完成备案，大概分为3个步骤
 
@@ -811,6 +813,7 @@ AV.Cloud.define('Logger', function(request, response) {
    * 单位门户网站
    * 网络游戏
    * 网络广告
+5. 绑定独立域名所需的信息，参考上节文档  
 
 #####第二步：
 
