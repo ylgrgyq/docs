@@ -6,12 +6,8 @@
 
 ## 简介
 
-LeanCloud平台提供了一个移动App的完整后端解决方案,我们的目标是完全消除写
-后端代码和维护服务器的必要性.
-
-我们的 JavaScript SDK 基于流行的 Backbone.js 框架.它与已经存在的
-Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我们的最小化
-配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
+LeanCloud 提供了一个移动 App 的完整后端解决方案，我们的目标是完全消除写
+后端代码和维护服务器的必要性。
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)。本指南并没有完全覆盖所有的 API 调用。
 
