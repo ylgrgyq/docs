@@ -223,9 +223,9 @@ JavaScript 实时通信 SDK 设计时目标是面向未来、全面支持移动�
 
 **具体兼容方式：**
 
-1. 在页面中加入以下代码，路径改为你自己的路径
+1、在页面中加入以下代码，路径改为你自己的路径
 
-```
+```html
 <!-- 引入插件，兼容低 IE8+ 等低版本浏览器，注意看下面的注释。如果不需要兼容，可以去掉这部分。 -->
 <!--[if lt IE 10]>
 <script type="text/javascript" src="../../plugin/web-socket-js/swfobject.js"></script>
@@ -241,11 +241,11 @@ WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
 <script src="../../src/AV.realtime.js"></script>
 ```
 
-2. IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
+2、IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
 
-  * 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
-  * IE8 中的 JSON.stringify 会把中文转为 unicode 编码
-  * IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，但是要用 XDomainRequest 发 request，这个 request 成功回来没有 response.status
+* 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
+* IE8 中的 JSON.stringify 会把中文转为 unicode 编码
+* IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，但是要用 XDomainRequest 发 request，这个 request 成功回来没有 response.status
 
 ### 其他兼容问题
 
