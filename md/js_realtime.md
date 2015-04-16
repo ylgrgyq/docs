@@ -25,7 +25,7 @@
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
-如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](https://leancloud.cn/docs/realtime_rest_api.html)」。
 
 ## 特别说明
 
@@ -671,7 +671,20 @@ var realtimeObject = AV.realtime({
 });
 
 var convId = 'sasfalklkjdlfs123';
-var conv = realtimeObject.conv(convId);
+var conv;
+
+// 获取已有的 conversation
+realtimeObject.conv(convId, function(obj) {
+  // 判断服务器端是否存在这个 conversation
+  if (obj) {
+    // 获取到这个 conversation 的实例对象
+    conv = obj;
+    console.log('可以取到 id', conv.id);
+    console.log('可以取到属性', conv.data);
+  } else {
+    console.log('服务器端不存在这个 conversation。');      
+  }
+});
 ```
 
 ### RealtimeObject.room
@@ -696,9 +709,11 @@ var realtimeObject = AV.realtime({
 });
 
 var room = realtimeObject.room({
+    // 成员列表
     members: [
         'LeanCloud02'
     ],
+    // 默认的数据，可以放 room 名字等
     data: {
         title: 'testTitle'
     }
@@ -744,7 +759,16 @@ var realtimeObject = AV.realtime({
 });
 
 var roomId = 'sasfalklkjdlfs123';
-var room = realtimeObject.room(roomId);
+var room;
+realtimeObject.room(roomId, function(obj) {
+  if (obj) {
+    room = obj;
+    console.log('room id:', room.id);
+    console.log('room data:', room.data);
+  } else {
+    console.log('服务器不存在这个 room。');
+  }
+});
 ```
 
 ### RealtimeObject.query
