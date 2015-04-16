@@ -57,6 +57,6 @@ try:
     test_object.save()
 except LeanCloudError, e:
     print e
-``
+```
 
 大功告成，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 TestObject 的相关数据。
