@@ -600,7 +600,8 @@ RealtimeObject.conv(options, callback)
     
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
 
-    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户同时在此聊天，但是不支持消息回执和历史记录
+    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
+    **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
 
     * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
