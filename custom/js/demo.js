@@ -27,22 +27,10 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
         mdPath: 'https://github.com/leancloud/ios-simple-demo',
         type: 'ios'
       },{
-        name: 'AVOSChatDemo',
-        desc: '这个示例项目是为了帮助使用AVOSCloud的开发者快速实现具有实时通讯功能的应用',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/iOS-SDK-demos/tree/master/AVOSChatDemo',
-        type: 'ios'
-      },{
         name: 'FeedbackDemo',
         desc: '这个是一个演示反馈功能用法的示例项目',
         downPath: '',
         mdPath: 'https://github.com/leancloud/feedback-demo',
-        type: 'ios'
-      },{
-        name: 'KeepAlive ',
-        desc: 'KeepAlive 是一个基于 AVOS Cloud 实时通信 SDK 的 Demo 项目，其功能接近于聊天室',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/iOS-SDK-demos/tree/master/KeepAlive',
         type: 'ios'
       }, {
         name: 'DianPingShangHu',
