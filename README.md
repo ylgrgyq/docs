@@ -27,7 +27,7 @@ sudo npm install -g grunt-cli
 
 安装需要的依赖
 ```
-sudo npm install
+npm install
 ```
 
 本地启动一个 HTTP Server，然后打开浏览器访问 http://localhost:3000 即可
