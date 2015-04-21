@@ -4,6 +4,12 @@
 
 除了 iOS、Android SDK 做推送服务之外，你还可以通过我们的 REST API 来发送推送请求。
 
+## 文档贡献
+
+如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
+
+Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
+
 ## 基本概念
 
 ### Installation
@@ -76,7 +82,7 @@ curl -X POST \
 
 ##### 保存 Android 设备的 installaitonId
 
-对于 Android 设备，AVOS SDK 会自动生成 uuid 作为 installaitonId 保存到 LeanCloud. 您可以使用以下 REST API 保存 Android 设备的 installaiton ID.
+对于 Android 设备，LeanCloud SDK 会自动生成 uuid 作为 installaitonId 保存到 LeanCloud. 您可以使用以下 REST API 保存 Android 设备的 installaiton ID.
 
 ```sh
 curl -X POST \
@@ -217,7 +223,7 @@ curl -X PUT \
 }
 ```
 
-WindowsPhone 设备类似，也支持`title`和`alert`，同时支持`wp-param`用于定义打开通知的时候打开的是哪个 Page:
+Windows Phone 设备类似，也支持`title`和`alert`，同时支持`wp-param`用于定义打开通知的时候打开的是哪个 Page:
 
 ```
 {

@@ -1,26 +1,32 @@
 # Android 消息推送开发指南
 
 > 开始之前
-> 在看下面的内容之前，我们假设您已经看过我们的[消息推送开发总览](./push_guide.html)，了解了基本的概念和模型。
+> 在看下面的内容之前，我们假设你已经看过我们的[消息推送开发总览](./push_guide.html)，了解了基本的概念和模型。
 
 Android 推送功能除了需要必须的 avoscloud.jar 以外，还需要额外的 avospush.jar。
 
-Android 消息推送有专门的 Demo，请见[AVOSCloud-Push](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Push)项目。
+Android 消息推送有专门的 Demo，请见[Android-Push-Demo](https://github.com/leancloud/android-push-demo)项目。
+
+## 文档贡献
+
+如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
+
+Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
 
 ## Installation
 
-当您的应用安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。Installation 对象包含了推送所需要的所有信息。您可以使用 Android SDK，通过 Installation 对象进行消息推送。Installation 对象本质上代表了设备安装您的应用的一个安装信息。
+当你的应用安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。Installation 对象包含了推送所需要的所有信息。你可以使用 Android SDK，通过 Installation 对象进行消息推送。Installation 对象本质上代表了设备安装你的应用的一个安装信息。
 
 ### 保存 Installation
 
-您可以通过以下代码保存您的 Installation id。如果您的系统之前还没有 Installation id, 系统会为您自动生成一个。如果您的应用卸载后，Installation id也将会被删除。
+你可以通过以下代码保存你的 Installation id。如果你的系统之前还没有 Installation id, 系统会为你自动生成一个。如果你的应用卸载后，Installation id也将会被删除。
 
 
 ```java
 AVInstallation.getCurrentInstallation().saveInBackground();
 ```
 
-**这段代码应该在应用启动的时候调用一次，保证设备注册到 LeanCloud 平台，您可以监听调用回调，获取 installationId 做数据关联**
+**这段代码应该在应用启动的时候调用一次，保证设备注册到 LeanCloud 平台，你可以监听调用回调，获取 installationId 做数据关联**
 
 ```
 AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
@@ -64,7 +70,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 
 ### 配置
 
-请确保您的 AndroidManifest.xml 包含如下内容
+请确保你的 AndroidManifest.xml 包含如下内容
 ```xml
 <service android:name="com.avos.avoscloud.PushService"/>
 ```
@@ -168,9 +174,9 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 
 ### 自定义 Receiver
 
-如果您想推送消息，但不显示在 Andoid 系统的通知栏中，而是执行应用程序预定义的逻辑，你需要在你的 Android 项目中添加如下配置：
+如果你想推送消息，但不显示在 Andoid 系统的通知栏中，而是执行应用程序预定义的逻辑，你需要在你的 Android 项目中添加如下配置：
 
-* AndroidManifest.xml 中声明您的 Receiver
+* AndroidManifest.xml 中声明你的 Receiver
 
 ```xml
 <receiver android:name="com.avos.avoscloud.PushDemo.MyCustomReceiver">
@@ -183,7 +189,7 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 </receiver>
 ```
 
-其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是您的 Android 的 Receiver 类。
+其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是你的 Android 的 Receiver 类。
 
 而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与 push 的 data 中指定的 action 相对应。
 
@@ -232,12 +238,12 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果您使用自定义的 Receiver，发送的消息必须带 action，并且其值在自定义的 Receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义**
+请注意：**如果你使用自定义的 Receiver，发送的消息必须带 action，并且其值在自定义的 Receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义**
 
 
 ### 跟踪 Android 推送和应用的打开情况
 
-您可以在订阅频道对应的 Activity 中添加跟踪应用打开情况的统计代码，您的 Activity 可以按照如下方式实现 `onStart` 方法：
+你可以在订阅频道对应的 Activity 中添加跟踪应用打开情况的统计代码，你的 Activity 可以按照如下方式实现 `onStart` 方法：
 
 ```java
 public class MyActivity extends Activity {
@@ -251,11 +257,4 @@ public class MyActivity extends Activity {
 }
 ```
 
-您可以在 [请求分析](/apistat.html?appid={{appid}}#/_appOpenWithPush) 菜单里看到通知和应用的打开情况。
-
-
-### Installation自动过期和清理
-
-每当用户打开应用，我们都会更新该设备的 Installation 的 updatedAt 时间戳。当用户长期没有更新 Installation 的 updatedAt 时间戳，换句话说，就是用户长期没有打开应用（默认是超过 60 天没有打开），这个 Installation 的 valid 将被设置为 false，往这个 Installation 发送的消息将被忽略，直到用户以后某天打开应用更新了 updatedAt，valid 将再次设置为 true。
-
-如果超过 120 天，用户仍然没有打开过应用，那么该 Installation 将被删除。不过您不需要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
+你可以在 [请求分析](/apistat.html?appid={{appid}}#/_appOpenWithPush) 菜单里看到通知和应用的打开情况。

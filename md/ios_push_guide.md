@@ -5,6 +5,12 @@
 
 本节将向你简单介绍如何在 iOS 设备中使用 LeanCloud 的推送功能（如果你对 iOS 消息推送还不太了解，推荐先看我们的博客文章：[细说 iOS 消息推送](https://blog.leancloud.cn/1163/)）。
 
+## 文档贡献
+
+如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
+
+Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
+
 
 ## 配置 iOS 推送证书
 
@@ -429,7 +435,7 @@ Application opens and push-related open rates will be available in your applicat
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
-***如果您的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，您可以使用`UILocalNotification`展示一个通知给用户。***
+***如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用`UILocalNotification`展示一个通知给用户。***
 
 如果应用在后台，并且用户点击了通知，那么应用将被带到前台可视，为了跟踪这种通过通知打开应用的情况，你需要在跟踪代码里多作一个检查：
 
@@ -480,10 +486,4 @@ Application opens and push-related open rates will be available in your applicat
 ```
 
 清除 Badge 数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
-
-
-## Installation 自动过期和清理
-
-我们根据 Apple 推送服务的反馈，将 Installation 设置为失效，失效后推送到该设备的消息就被忽略。当失效时间超过 60 天，并且用户没有再次使用这个 Installation，我们会删除该 Installation；在 60 天内，用户如果再次使用这个 Installation，将自动启用 Installation 并设置为有效状态，并继续推送消息给该设备。
-
 
