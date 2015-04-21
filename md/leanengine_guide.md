@@ -235,6 +235,23 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 在您的项目根目录下，执行 `npm install avoscloud-sdk` 来安装 LeanCloud JavaScript SDK，之后您就可以在项目中使用了。
 
+在正式使用数据存储 API 之前，您需要使用自己的应用 key 进行设置。
+
+```js
+var AV = require('avoscloud-sdk').AV;
+
+APP_ID = process.env.LC_APP_ID || 'your_app_id';
+APP_KEY = process.env.LC_APP_KEY || 'your_app_key';
+MASTER_KEY = process.env.LC_APP_MASTER_KEY || 'your_master_key';
+
+AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
+```
+
+请保证在使用任何数据存储功能前执行这段代码，我们推荐将这段代码放在 `server.js` 文件前面的位置。
+
+数据存储相关功能请参考 [JavaScript SDK](./js_guide.htm)。
+
+
 ### Python
 
 在您的项目 `requirements.txt` 中增加一行新的依赖：
