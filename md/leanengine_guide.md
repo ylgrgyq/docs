@@ -121,3 +121,108 @@ if __name__ == '__main__':
 LeanEngine 支持任意 python 的 web 框架，您可以使用您最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
 
 ## 部署
+
+首先，你需要将这个项目提交到一个 git 仓库，LeanCloud并不提供源码的版本管理功能，而是借助于git这个优秀的分布式版本管理工具。我们推荐您使用[CSDN Code平台](https://code.csdn.net/)，[github](https://github.com/)或者[BitBucket](https://bitbucket.org/)这样第三方的源码
+托管网站，也可以使用您自己搭建的git仓库(比如使用[gitlab.org](http://gitlab.org/))。下面我们详细描述下怎么使用。
+
+### 使用 CSDN Code 托管源码
+
+CSDN CODE是国内非常优秀的源码托管平台，您可以使用CODE平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
+
+以下是使用CODE平台与LeanCloud云代码结合的一个例子。
+首先在CODE上创建一个项目
+
+![image](images/csdn_code1.png)
+
+**提示**：在已经有项目代码的情况下，一般不推荐”使用README文件初始化项目”
+
+接下来按照给出的提示，将源代码push到这个代码仓中
+
+```sh
+cd ${PROJECT_DIR}
+git init
+git add *
+git commit -m "first commit"
+git remote add origin git@code.csdn.net:${yourname}/test.git
+git push -u origin master
+```
+
+我们已经将源码成功推送到CODE平台，接下来到LeanCloud云代码的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+
+![image](images/csdn_code2.png)
+
+添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
+保存到”项目设置””项目公钥”中，创建新的一项avoscloud:
+
+![image](images/csdn_code3.png)
+
+下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+
+![image](images/cloud_code_5.png)
+
+部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
+
+
+### 使用 GitHub 托管源码
+
+使用BitBucket与此类似，不再赘述。
+
+[Github](https://github.com)是一个非常优秀的源码托管平台，您可以使用它的免费帐号，那将无法创建私有仓库(bucket可以创建私有仓库)，也可以付费成为高级用户，可以创建私有仓库。
+
+首先在github上创建一个项目，比如就叫`test`:
+
+![image](images/github1.png)
+
+![image](images/github2.png)
+
+接下来按照github给出的提示，我们将源码push到这个代码仓库：
+
+```sh
+cd ${PROJECT_DIR}
+git init
+git add *
+git commit -m "first commit"
+git remote add origin git@github.com:${yourname}/test.git
+git push -u origin master
+```
+
+到这一步我们已经将源码成功push到github，接下来到Cloud Code的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+
+![image](images/cloud_code_4.png)
+
+并添加deploy key到你的github项目（deploy key是我们Cloud code机器的ssh public key），如果您是私有项目，需要设置deploy key，
+
+拷贝 `设置` 菜单里的 `Deploy key` 保存到 github setting 里的deploy key，创建新的一项avoscloud:
+
+![image](images/cloud_code_github_deploy_key.png)
+
+下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+
+![image](images/cloud_code_5.png)
+
+部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
+
+### Gitlab 无法部署问题
+
+很多用户自己使用[Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到LeanCloud 的问题，即使设置了Deploy Key，却仍然要求输入密码。
+
+可能的原因和解决办法如下：
+
+* 确保您gitlab运行所在服务器的/etc/shadow文件里的git（或者gitlab）用户一行的`!`修改为`*`，原因参考[这里](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启SSH服务`sudo service ssh restart`。
+* 在拷贝deploy key时，确保没有多余的换行符号。
+* Gitlab目前不支持有comment的deploy key。早期LeanCloud 用户生成的deploy key可能带comment，这个comment是在deploy key的末尾76个字符长度的字符串，例如下面这个deploy key:
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw== App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
+```
+其中最后76个字符
+
+```
+App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
+```
+
+就是comment，删除这段字符串后的deploy key(如果没有这个字样的comment无需删除)保存到gitlab即可正常使用:
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
+```
