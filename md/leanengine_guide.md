@@ -226,3 +226,37 @@ App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
 ```
+
+## 使用数据存储
+
+您可以直接在 LeanEngine 上使用我们的[数据存储](https://leancloud.cn/features/storage.html)服务。
+
+### node.js
+
+在您的项目根目录下，执行 `npm install avoscloud-sdk` 来安装 LeanCloud JavaScript SDK，之后您就可以在项目中使用了。
+
+### Python
+
+在您的项目 `requirements.txt` 中增加一行新的依赖：
+
+```
+leancloud-sdk
+```
+
+之后执行 `pip install -r requirements.txt`来安装 LeanCloud Python SDK。
+
+在正式使用数据存储 API 之前，您需要使用自己的应用 key 进行设置。
+
+```python
+import os
+import leancloud
+
+APP_ID = os.environ.get('LC_APP_ID', 'your_app_id')
+MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', 'your_master_key')
+
+leancloud.init(APP_ID, master_key=MASTER_KEY)
+```
+
+请保证在使用任何数据存储功能前执行这段代码。
+
+数据存储相关功能请参考 [Python SDK](./python_guide.htm)。
