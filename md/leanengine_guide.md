@@ -132,7 +132,7 @@ CSDN CODE是国内非常优秀的源码托管平台，您可以使用CODE平台�
 以下是使用CODE平台与LeanCloud云代码结合的一个例子。
 首先在CODE上创建一个项目
 
-![image](images/csdn_code1.png)
+![image](../images/csdn_code1.png)
 
 **提示**：在已经有项目代码的情况下，一般不推荐”使用README文件初始化项目”
 
@@ -149,16 +149,16 @@ git push -u origin master
 
 我们已经将源码成功推送到CODE平台，接下来到LeanCloud云代码的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
 
-![image](images/csdn_code2.png)
+![image](../images/csdn_code2.png)
 
 添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
 保存到”项目设置””项目公钥”中，创建新的一项avoscloud:
 
-![image](images/csdn_code3.png)
+![image](../images/csdn_code3.png)
 
 下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
 
-![image](images/cloud_code_5.png)
+![image](../images/cloud_code_5.png)
 
 部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
 
@@ -171,9 +171,9 @@ git push -u origin master
 
 首先在github上创建一个项目，比如就叫`test`:
 
-![image](images/github1.png)
+![image](../images/github1.png)
 
-![image](images/github2.png)
+![image](../images/github2.png)
 
 接下来按照github给出的提示，我们将源码push到这个代码仓库：
 
@@ -188,17 +188,17 @@ git push -u origin master
 
 到这一步我们已经将源码成功push到github，接下来到Cloud Code的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
 
-![image](images/cloud_code_4.png)
+![image](../images/cloud_code_4.png)
 
 并添加deploy key到你的github项目（deploy key是我们Cloud code机器的ssh public key），如果您是私有项目，需要设置deploy key，
 
 拷贝 `设置` 菜单里的 `Deploy key` 保存到 github setting 里的deploy key，创建新的一项avoscloud:
 
-![image](images/cloud_code_github_deploy_key.png)
+![image](../images/cloud_code_github_deploy_key.png)
 
 下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
 
-![image](images/cloud_code_5.png)
+![image](../images/cloud_code_5.png)
 
 部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
 
@@ -260,7 +260,7 @@ AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 
 请保证在使用任何数据存储功能前执行这段代码，我们推荐将这段代码放在 `server.js` 文件前面的位置。
 
-数据存储相关功能请参考 [JavaScript SDK](./js_guide.htm)。
+数据存储相关功能请参考 [JavaScript SDK](./js_guide.html)。
 
 
 ### Python
@@ -287,4 +287,4 @@ leancloud.init(APP_ID, master_key=MASTER_KEY)
 
 请保证在使用任何数据存储功能前执行这段代码。
 
-数据存储相关功能请参考 [Python SDK](./python_guide.htm)。
+数据存储相关功能请参考 [Python SDK](./python_guide.html)。
