@@ -302,7 +302,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-**我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
+**我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时，如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
 
 ### 指定设备平台
 
@@ -428,9 +428,6 @@ if (application.applicationState != UIApplicationStateBackground) {
 传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
 
 你可以在[请求分析](/apistat.html?appid={{appid}}#/_apiRequest)菜单里看到通知和 app 的打开情况。
-
-
-Application opens and push-related open rates will be available in your application's dashboard.
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
