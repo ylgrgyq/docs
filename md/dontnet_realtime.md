@@ -354,24 +354,9 @@ public async void SendLocatioAsync()
     AVIMClient client = new AVIMClient("Tom");
     await client.ConnectAsync();//Tom 登陆
     var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
-
-    Geolocator geolocator = new Geolocator();
-    geolocator.DesiredAccuracyInMeters = 50;
-
-    try
-    {
-        Geoposition geoposition = await geolocator.GetGeopositionAsync(maximumAge: TimeSpan.FromMinutes(5), timeout: TimeSpan.FromSeconds(10));
-        AVIMLocationMessage locationMessage = new AVIMLocationMessage(geoposition.Coordinate.Latitude, geoposition.Coordinate.Longitude);
-        await conversation.SendLocationMessageAsync(locationMessage);
-    }
-    catch (Exception ex)
-    {
-        if ((uint)ex.HResult == 0x80004004)
-        {
-
-            var error = "location  is disabled in phone settings.";
-        }
-    }
+    
+    AVIMLocationMessage locationMessage = new AVIMLocationMessage(138.12454, 52.56461);//以经度和纬度为参数构建一个地理位置消息，当然开发者更可以通过具体的设备的 API 去获取设备的地理位置，详细的需要查询具体的设备的 API
+    await conversation.SendLocationMessageAsync(locationMessage);
 }
 ```
 ##### 接收地理位置消息
@@ -1022,10 +1007,11 @@ public async void QueryChatRoom_SampleCode()
 ```c#
 AVIMClient userA = new AVIMClient("UserA");
 AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d4223b");
-con.QueryHistory(DateTime.Now, 0, "UserA").Wait();
+con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 //查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
 ```
-与查询类似，它提供了  limit 和 skip 操作，可以帮助开发者实现翻页等功能。
+以上将查询昨天到现在 24 小时内对话中的聊天记录。
+
 
 ## 签名与安全
 在继续阅读本文档之前，请确保您已经对 [实时通信服务开发指南—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了一定的了解。
