@@ -21,6 +21,84 @@ pod 'AVOSCloudSNS'
 ```
 
 
+#### 通过 LeanCloud Gem 安装
+
+LeanCloud Gem 是一个命令行工具包，它可以协助开发者快速集成 LeanCloud SDK。
+
+LeanCloud Gem 依赖于 Ruby 2.0 及以上版本，您可以通过 RVM 或 rbenv 进行升级。
+
+接着你可以通过以下命令安装 LeanCloud Gem：
+
+```sh
+gem install --no-wrappers leancloud    # 如果遇到权限问题，请手动加上 sudo
+```
+
+安装成功后，在你的项目根目录初始化 Leanfile 文件：
+
+```sh
+leancloud init
+```
+
+你会得到如下 Leanfile：
+
+```yaml
+# Leanfile
+# -*- mode: yaml -*- vim:ft=yaml
+
+---
+# LeanCloud SDK version (optional)
+# If empty, defaults to the latest version
+version:
+
+# Your project base SDK version
+base_sdk_version:
+
+# Your project name (optional)
+# If empty, defaults to the single project in current directory
+xcodeproj:
+
+# Target name of your project (optional)
+# If empty, defaults to the target which matches project's name
+target:
+
+# LeanCloud SDK components
+components:
+```
+
+请根据注释完善 Leanfile，下面是一个完整的例子：
+
+```yaml
+# Leanfile
+# -*- mode: yaml -*- vim:ft=yaml
+
+---
+# LeanCloud SDK version (optional)
+# If empty, defaults to the latest version
+version: 3.0.2
+
+# Your project base SDK version
+base_sdk_version: 8.2
+
+# Your project name (optional)
+# If empty, defaults to the single project in current directory
+xcodeproj: TestApp
+
+# Target name of your project (optional)
+# If empty, defaults to the target which matches project's name
+target: TestApp
+
+# LeanCloud SDK components
+components:
+- SNS
+- IM
+```
+
+完善好 Leanfile，并检查无误之后，在项目根目录运行下面命令进行安装：
+
+```sh
+leancloud install
+```
+
 
 #### 手动安装
 
