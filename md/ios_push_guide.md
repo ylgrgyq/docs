@@ -132,8 +132,7 @@ AVPush *push = [[AVPush alloc] init];
 默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用测试证书，可以通过 `setProductionMode`方法：
 
 ```
-AVPush *push = [[AVPush alloc] init];
-[push setProductionMode:NO];
+[AVPush setProductionMode:NO];
 ......
 ```
 
