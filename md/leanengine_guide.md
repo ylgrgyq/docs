@@ -227,6 +227,17 @@ App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
 ```
 
+## 环境变量
+
+LeanEngine 上有一些平台相关的环境变量，可以在您的代码中使用。
+
+* `LC_APP_ID`: 当前应用的 App Id
+* `LC_APP_KEY`: 当前应用的 App Key
+* `LC_APP_MASTER_KEY`: 当前应用的 Master Key
+* `LC_APP_ENV`: 当前应用环境，测试环境值为 `test`，生产环境值为 `production`
+* `LC_APP_PORT`: 当前应用开放给外网的端口，只有监听此端口，用户才可以访问到您的服务
+
+
 ## 使用数据存储
 
 您可以直接在 LeanEngine 上使用我们的[数据存储](https://leancloud.cn/features/storage.html)服务。
