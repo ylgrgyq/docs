@@ -359,3 +359,133 @@ https://leancloud.cn/1.1/functions/hello
 ```
 
 另外您可以使用任意客户端的 LeanCloud SDK 调用此 Cloud Func。
+
+#### Cloud Hook
+
+##### 在 save 前修改对象
+
+在某些情况下，你可能不想简单地丢弃无效的数据，而是想清理一下再保存。`before_save`可以帮你做到这一点，你只要调用`response.success`作用到修改后的对象上。
+
+在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用`before_save`来截断评论到140个字符：
+
+```python
+import cloudcode
+from cloudcode import CloudCodeError
+
+
+@cloudcode.before_save('Review')
+function before_review_save(review):
+	comment = review.get('comment')
+	if not comment:
+		raise CloudCodeError('No comment!')
+	if len(comment) > 140:
+		review.comment.set('comment', comment[:137] + '...')
+```
+
+##### 在 save 后执行动作
+
+在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过 `after_save` hook 做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
+
+```python
+import leancloud
+import cloudcode
+
+
+@cloudcode.atfer_save('Comment')
+def after_comment_save(comment):
+	post = leancloud.Query('Post').get(comment.id)
+	post.increment('commentCount')
+	try:
+		post.save()
+	except leancloud.LeanCloudError:
+		raise cloudcode.CloudCodeError('Got an error when save post')
+```
+
+如果`after_save`函数调用失败，save请求仍然会返回成功应答给客户端。`after_save`发生的任何错误，都将记录到 LeanEngine 日志里。
+
+##### 在 update 更新后执行动作
+
+同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过`after_update` hook 做到。比如每次修改文章后简单地记录日志：
+
+```python
+import cloudcode
+
+
+@cloudcode.after_update('Article')
+def after_article_update(article):
+	print 'article with id {} updated!'.format(article.id)
+```
+
+##### 在 delete 前执行动作
+
+很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过`before_delete` hook 来来做这>些检查，示例代码：
+
+```python
+import cloudcode
+import leancloud
+
+
+@cloudcode.before_delete('Album')
+def before_album_delete(albun):
+    query = leancloud.Query('Photo')
+    query.equal_to('album', album)
+    try:
+        matched_count = query.count()
+    except leancloud.LeanCloudError:
+        raise cloudcode.CloudCodeError('cloud code error')
+    if count > 0:
+	     raise cloudcode.CloudCodeError('Can\'t delete album if it still has photos.')
+```
+
+
+##### 在 delete 后执行动作
+
+另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`afterDelete`函数来实现：
+
+```python
+import cloudcode
+import leancloud
+
+
+@cloudcode.after_delete('Album')
+def after_album_delete(album):
+    query = leancloud.Query('Photo')
+    query.equal_to('album', album)
+    try:
+        query.destroy_all()
+    except leancloud.LeanCloudError:
+        raise cloudcode.CloudCodeError('cloud code error')
+```
+
+##### 用户验证通知函数
+
+很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加 `on_verified` hook：
+
+```python
+import cloudcode
+
+
+@cloudcode.on_verified('sms')
+def on_sms_verified(user):
+	print user
+```
+
+函数的第一个参数是验证类型：短信验证为`sms`，邮箱验证为`email`。另外，数据库中相关的验证字段，如`emailVerified`不需要修改，我们已经为你更新完成。
+
+##### 在用户注册成功之后
+
+在用户注册成功之后如果你想做一些事情可以定义以下函数：
+
+```python
+import cloudcode
+import leancloud
+
+
+@cloudcode.after_save('_User')
+def after_user_save(user):
+    user.set('from', 'LeanCloud')
+    try:
+    	user.save()
+    except leancloud.CloudCodeError, e:
+    	print e
+```
