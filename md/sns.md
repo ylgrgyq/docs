@@ -252,7 +252,7 @@ final SNSCallback myCallback = new SNSCallback() {
      @Override
      public void done(SNSBase object, SNSException e) {
          if (e == null) {
-            SNS.associateWithAuthData(AVUser.getCurrentUser(), object.userInfo(), null);
+            SNS.associateWithAuthData(AVUser.getCurrentUser(), object.userInfo(), null);	    		
          }
      }
  };
@@ -272,6 +272,8 @@ final SNSCallback myCallback = new SNSCallback() {
     }
 });
 ```
+
+*** 注:有用户表示想要从第三方授权中获取更多的信息包括用户名等信息，我们同样可以通过 `SNSBase.authorizedData()` 方法来获取授权返回的所有字段 ***
 
 如果您不想再使用 SNS 相关的功能，您可以使用 `logout` 解除 SNS 帐号和 LeanCloud User 帐号的绑定。
 

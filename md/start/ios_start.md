@@ -8,10 +8,10 @@
 pod 'AVOSCloud'
 ```
 
-如果需要 UI 的相关功能，可以添加：
+如果使用实时通信功能，可以添加：
 
 ```
-pod 'AVOSCloudUI'
+pod 'AVOSCloudIM'
 ```
 
 如果社交组件的相关功能，可以添加：
@@ -20,18 +20,7 @@ pod 'AVOSCloudUI'
 pod 'AVOSCloudSNS'
 ```
 
-也可以通过测试版的 Podspec 来使用我们几乎每天都会更新的开发中的 SDK：
 
-```
-pod 'AVOSCloud', :podspec => 'https://download.leancloud.cn/sdk/iOS/release-beta/AVOSCloud.podspec'
-pod 'AVOSCloudSNS', :podspec => 'https://download.leancloud.cn/sdk/iOS/release-beta/AVOSCloudSNS.podspec'
-```
-不过 AVOSCloudUI 仍然建议使用稳定版
-
-```
-pod 'AVOSCloudUI'
-
-```
 
 #### 手动安装
 

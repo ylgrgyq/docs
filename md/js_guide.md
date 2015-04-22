@@ -6,12 +6,8 @@
 
 ## 简介
 
-LeanCloud平台提供了一个移动App的完整后端解决方案,我们的目标是完全消除写
-后端代码和维护服务器的必要性.
-
-我们的 JavaScript SDK 基于流行的 Backbone.js 框架.它与已经存在的
-Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我们的最小化
-配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
+LeanCloud 提供了一个移动 App 的完整后端解决方案，我们的目标是完全消除写
+后端代码和维护服务器的必要性。
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)。本指南并没有完全覆盖所有的 API 调用。
 
@@ -2441,5 +2437,5 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。
 这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
 
-4、为了防止通过 Javascript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
+4、为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
 

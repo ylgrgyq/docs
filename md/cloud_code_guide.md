@@ -642,6 +642,24 @@ AV.Cloud.afterSave('_User', function(request) {
 });
 ```
 
+### 用户登录 hook 函数
+
+有些时候你可能需要禁止一些用户登录（比如黑名单内的用户），可以定义以下函数：
+
+```
+AV.Cloud.onLogin(function(request, response) {
+  // 因为此时用户还没有登录，所以用户信息是保存在 request.object 对象中
+  console.log("on login:", request.object);
+  if (request.object.get('username') == 'noLogin') {
+    // 如果是 error 回调，则用户无法登录（收到 401 响应）
+    response.error('Forbidden');
+  } else {
+    // 如果是 success 回调，则用户可以登录
+    response.success();
+  }
+});
+```
+
 ## 定时任务
 
 很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
@@ -770,7 +788,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为 `myapp、`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将App的二级域名设置为 `myapp`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
 
 ### 绑定独立域名
 
@@ -778,19 +796,25 @@ AV.Cloud.define('Logger', function(request, response) {
 
 #### 主域名
 
-如果你想为您的App绑定一个独立域名，需要您用注册的邮箱发送下列信息到我们的支持邮箱 `support@avoscloud.com` 提出申请或者从 `帮助菜单` 里的技术支持系统提出 Ticket：
+仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与 App 绑定的相关手续。
+
+其他用户如果需要为 App 绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.rocks> ，或者从控制台菜单中选择 **帮助** > **技术支持** ，通过工单来提出申请 ：
 
 * 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
 * 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com(国内)或avosapps.us(美国)）
 * 您的注册邮箱（必须与发送者的邮箱一致）
 * 您想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 您的域名的备案信息 （***国内必须可以在工信部查询到，美国区不需要***）
+* 您的域名的备案信息 （**国内必须可以在工信部查询到，美国区不需要**）
 
 我们将在3个工作日内审核，如果审核通过将为您绑定域名。
 
 #### 域名备案流程
 
-对于企业用户，如果您的域名没有在国内备案过，我们可以协助您与我们的备案接入商一起完成备案，大概分为3个步骤
+**域名备案的前置条件：云代码已经部署，并且网站内容和备案申请的内容一致。**
+
+仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
+
+其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
 
 1. 您提供相应资料，我们来录入
 2. 我们的备案接入商给您邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商
@@ -811,6 +835,7 @@ AV.Cloud.define('Logger', function(request, response) {
    * 单位门户网站
    * 网络游戏
    * 网络广告
+5. 绑定独立域名所需的信息，参考上节文档  
 
 #####第二步：
 

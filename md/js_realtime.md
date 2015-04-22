@@ -8,7 +8,10 @@
 
 你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
-本 SDK 实现轻量、高效、无依赖，支持移动终端的浏览器及各种 WebView，包括可以使用在微信、phonegap、cordova 的 WebView 中。 
+## 兼容性
+
+本 SDK 实现轻量、高效、无依赖。支持移动终端的浏览器及各种 WebView，包括可以使用在微信、PhoneGap、Cordova 的 WebView 中。 
+同时 SDK 提供插件化的、无痛兼容 IE8+ 老版本 IE 浏览器的方式，具体请看下面「[兼容 IE8+](#兼容_IE8_)」部分的说明，默认不兼容且性能最佳。
 
 ## Demo
 
@@ -22,7 +25,7 @@
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
-如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](https://leancloud.cn/docs/realtime_rest_api.html)」。
 
 ## 特别说明
 
@@ -192,6 +195,8 @@ realtimeObj.on('message', function(data) {
 
 Web 端实现任何可以将用户输入直接输出到界面上的应用都要注意防止产生 XSS（跨站脚本攻击），实时通信 SDK 支持在 SDK 层面开启这个防御，但是我们默认不开启，所以你可以在实例化 realtimeObject 的时候，开启这个选项。
 
+注意：我们没有对 clientId 做任何过滤，也不建议直接输出 clientId，如果你要输出 clientId 到 Web 页面中，记得要自己手工做 HTML 转义，防止 XSS。
+
 ```javascript
 // 创建实时通信实例（支持单页多实例）
 realtimeObj = AV.realtime({
@@ -206,9 +211,47 @@ realtimeObj = AV.realtime({
 
 ## 与 iOS、Android 等 SDK 通信
 
-JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 roomObject.send 方法中详细了解。
+JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 [roomObject.send](#RoomObject_send) 方法中详细了解。
 
 Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
+
+## 兼容
+
+### 兼容 IE8+ 
+
+JavaScript 实时通信 SDK 设计时目标是面向未来、全面支持移动端、灵活高效，所以考虑主要实现轻量、提升性能、减少流量等特性（所以都没有默认支持 Promise），但是因为国内目前浏览器市场中仍然有很大量的 IE8+ 浏览器，所以我们提供一种非常轻量的插件方式来兼容 IE8+。
+
+当你通过 Bower 或者 Github 下载 SDK，会有一个 plugin 目录，其中就是兼容 IE8+ 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 中是兼容 IE8+ 的，也可以参考代码。
+
+**具体兼容方式：**
+
+1、在页面中加入以下代码，路径改为你自己的路径
+
+```html
+<!-- 引入插件，兼容低 IE8+ 等低版本浏览器，注意看下面的注释。如果不需要兼容，可以去掉这部分。 -->
+<!--[if lt IE 10]>
+<script type="text/javascript" src="../../plugin/web-socket-js/swfobject.js"></script>
+<script type="text/javascript" src="../../plugin/web-socket-js/web_socket.js"></script>
+<script type="text/javascript">
+// 设置变量，配置插件中 WebSocketMain.swf 的引用路径
+WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
+</script>
+<![endif]-->
+<!-- 引入插件部分结束 -->
+
+<!-- 引入 LeanCloud 实时通信 SDK -->
+<script src="../../src/AV.realtime.js"></script>
+```
+
+2、IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
+
+* 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
+* IE8 中的 JSON.stringify 会把中文转为 unicode 编码
+* IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，而是用 XDomainRequest 发 request，不过注意这个 request 成功回来没有 response.status
+
+### 其他兼容问题
+
+如果要想在 Android WebView 中使用，请务必开启 WebSocket 支持。另外根据用户反馈，在部分 Android 机型的 WebView 中不支持 WebSocket 的安全链接，所以需要从 wss 协议转为 ws 协议，关闭 WebSocket 的 SSL，RealtimeObject 在初始化时提供 secure 选项可以关闭，详细使用方式请看 [AV.realtime](#AV_realtime) 方法。
 
 ## 方法列表
 
@@ -237,9 +280,11 @@ AV.realtime(options, callback)
 
     * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
 
-    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；
+    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；true 为开启，false 为关闭。
 
     * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
+
+    * secure {Boolean}（可选）是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护，默认开启。true 为开启，false 为关闭。
 
 返回：
 
@@ -256,7 +301,9 @@ var realtimeObject = AV.realtime({
    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
    encodeHTML: true,
    // auth 是权限校验的方法函数
-   // auth: authFun
+   // auth: authFun,
+   // 是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护
+   secure: true
 }, function() {
    console.log('与服务器连接成功！');
 });
@@ -555,7 +602,8 @@ RealtimeObject.conv(options, callback)
     
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
 
-    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户同时在此聊天，但是不支持消息回执和历史记录
+    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
+    **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
 
     * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
@@ -573,6 +621,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.conv({
     // 人员的 id
     members: [
@@ -626,7 +675,20 @@ var realtimeObject = AV.realtime({
 });
 
 var convId = 'sasfalklkjdlfs123';
-var conv = realtimeObject.conv(convId);
+var conv;
+
+// 获取已有的 conversation
+realtimeObject.conv(convId, function(obj) {
+  // 判断服务器端是否存在这个 conversation
+  if (obj) {
+    // 获取到这个 conversation 的实例对象
+    conv = obj;
+    console.log('可以取到 id', conv.id);
+    console.log('可以取到属性', conv.data);
+  } else {
+    console.log('服务器端不存在这个 conversation。');      
+  }
+});
 ```
 
 ### RealtimeObject.room
@@ -650,10 +712,13 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
+    // 成员列表
     members: [
         'LeanCloud02'
     ],
+    // 默认的数据，可以放 room 名字等
     data: {
         title: 'testTitle'
     }
@@ -699,7 +764,16 @@ var realtimeObject = AV.realtime({
 });
 
 var roomId = 'sasfalklkjdlfs123';
-var room = realtimeObject.room(roomId);
+var room;
+realtimeObject.room(roomId, function(obj) {
+  if (obj) {
+    room = obj;
+    console.log('room id:', room.id);
+    console.log('room data:', room.data);
+  } else {
+    console.log('服务器不存在这个 room。');
+  }
+});
 ```
 
 ### RealtimeObject.query
@@ -827,6 +901,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud01',
@@ -877,6 +952,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud01',
@@ -927,6 +1003,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02'
@@ -977,6 +1054,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02'
@@ -1025,6 +1103,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02'
@@ -1075,6 +1154,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1124,10 +1204,17 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
-var room = realtimeObject.room('safjslakjlfkjla123');
-
-room.join(function() {
-    console.log('join');
+// 这里创建一个 room，也可以通过 room id 获取一个 room
+var roomId = 'safjslakjlfkjla123';
+var room;
+realtimeObject.room(roomId, function(object) {
+    // 判断服务器是否存在这个 room
+    if (object) {
+        room = object;
+        room.join(function() {
+            console.log('join');
+        });
+    }
 });
 
 // 当前 Room 有新的 client 加入时触发
@@ -1167,6 +1254,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1214,6 +1302,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1260,6 +1349,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1321,6 +1411,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1417,6 +1508,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1429,7 +1521,8 @@ var room = realtimeObject.room({
 
 // 当前用户所在的组，有消息时触发
 room.receive(function(data) {
-   console.log(data); // 接收到的信息
+   // 接收到的信息
+   console.log(data); 
 });
 ```
 
@@ -1462,6 +1555,7 @@ var realtimeObject = AV.realtime({
    clientId: 'abc123'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
@@ -1486,6 +1580,109 @@ room.receipt(function(data) {
    // 已经收到的 clientId
    console.log(data);
 });
+```
+
+### RoomObject.log
+
+用法：
+```javascript
+RoomObject.log(callback)
+```
+
+描述：
+
+* 获取当前 RoomObject 中的消息历史。这个是一个简单的方式，可以获取最近 20 条历史消息。
+
+参数：
+
+* callback {Function} （必须）回调函数，参数中可以取得历史消息数据
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+// 这里创建一个 room，也可以通过 room id 获取一个 room
+var roomId = 'safjslakjlfkjla123';
+var room;
+realtimeObject.room(roomId, function(object) {
+    // 判断这个 room 在服务器端是否存在
+    if (object) {
+        // 当前用户所在的组，有消息时触发
+        room.log(function(data) {
+           console.log(data);
+        });
+    }
+};
+```
+
+### RoomObject.log
+
+用法：
+```javascript
+RoomObject.log(options, callback)
+```
+
+描述：
+
+* 获取当前 RoomObject 中的消息历史。
+
+参数：
+
+* options {Object} （可选）查询历史条目的参数
+
+  * t {String|Number} （可选）查询历史消息的时间戳，查询这个时间之前的消息
+
+  * mid {String} （可选）message id 消息的 id，当接收到消息的时候会有这个 id，用来辅助查询，防止同一时间戳下有两条一样的消息
+
+  * limit {Number} （可选）返回消息历史的条目数量，默认是查询最近 20 条历史消息 
+
+* callback {Function} （必须）回调函数，参数中可以取得历史消息数据
+
+返回：
+
+* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+例子：
+
+```javascript
+var realtimeObject = AV.realtime({
+   // appId 需要换成你自己的 appId
+   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   // clientId 是自定义的名字，当前客户端可以理解的名字
+   clientId: 'abc123'
+});
+
+// 这里创建一个 room，也可以通过 room id 获取一个 room
+var roomId = 'safjslakjlfkjla123';
+var room;
+realtimeObject.room(roomId, function(object) {
+    
+    // 判断这个 room 在服务器端是否存在
+    if (object) {
+     
+      // 当前用户所在的组，有消息时触发
+      room.log({
+         // 时间戳，查询这个时间之前的消息
+         t: 1429545834932
+         // message id
+         // mid: 'afsadsa_ds2w',
+         // 返回条目数量
+         limit: 20
+      }, function(data) {
+         console.log(data);
+      });
+    }
+};
 ```
 
 ### RoomObject.count
@@ -1517,6 +1714,7 @@ var realtimeObject = AV.realtime({
    clientId: 'LeanCloud01'
 });
 
+// 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     members: [
         'LeanCloud02',
