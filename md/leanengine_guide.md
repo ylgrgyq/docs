@@ -288,3 +288,74 @@ leancloud.init(APP_ID, master_key=MASTER_KEY)
 请保证在使用任何数据存储功能前执行这段代码。
 
 数据存储相关功能请参考 [Python SDK](./python_guide.html)。
+
+
+## Cloud Func 与 Cloud Hook
+
+使用 Cloud Func 功能，您可以定义一些简单的逻辑在 LeanEngine 上运行，使用 LeanCloud 各个语言的 SDK，可以方便的调用这些函数。
+
+Cloud Hook 功能可以定义一些逻辑，在您访问 LeanCloud 数据存储 API 时，拦截一些 API 请求，在请求前或者请求后执行自己想要的逻辑，修改保存的对象，做一些数据校验等工作。
+
+### node.js
+
+TODO
+
+### python
+
+#### 安装
+
+首先您需要安装 leancloud-cloudcode-sdk 这个模块。在您的项目 `requirements.txt` 中增加一行新的依赖：
+
+```
+leancloud-cloudcode-sdk
+```
+
+之后执行 `pip install -r requirements.txt` 来安装。cloudcode 模块是作为一个 Python WSGI 中间件来实现的，您需要在 wsgi.py 中在您的 app 上安装此中间件：
+
+```python
+# coding: utf-8
+
+import cloudcode
+from wsgiref import simple_server
+
+from app import app
+
+application = cloudcode.CloudCode(app)
+
+
+if __name__ == '__main__':
+	server = simple_server.make_server('localhost', 8000, application)
+	server.serve_forever()
+```
+
+这样您的应用的 `/1/functions` 和 `/1.1/functions` 的路径将会在中间件中处理，其中包含了 Cloud Func 与 Cloud Hook 内部使用的 URL。因此您的应用中不应该处理这两个地址开头的 URL。
+
+#### Cloud Func
+
+您可以这样定义一个 Cloud Func：
+
+```python
+import cloudcode
+
+@cloudcode.cloud_func
+def hello():
+	return 'Hello, World!'
+```
+
+将项目部署到 LeanEngine 环境上之后，您可以使用 REST API 来访问这个 Cloud Func：
+
+```bash
+curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
+       -H "X-AVOSCloud-Application-Id: ige9yk2v2jxb0a2sfhw325ezbdzdgpmiy3gmtj31df9nwo84"          \
+       -H "X-AVOSCloud-Application-Key: difvp55b80gg57r5rzwdmnwwieq8mvsioxf8jwvipl366tzz"        \
+       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+https://leancloud.cn/1.1/functions/hello
+```
+
+返回结果：
+
+```json
+{"result":"Hello, World!"}
+```
+
+另外您可以使用任意客户端的 LeanCloud SDK 调用此 Cloud Func。
