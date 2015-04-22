@@ -13,7 +13,7 @@
       <li class="muted">·</li>
       <li><a href="/apps.html" target="_self">App</a></li>
       <li class="muted">·</li>
-      <li><a href="http://leancloud.cn/docs/faq.html" target="_self">FAQ</a></li>
+      <li><a href="http://leancloud.cn/docs/faq.html" target="_self">常见问题</a></li>
       <li class="muted">·</li>
       <li><a href="http://ticket.avosapps.com/" target="_self"><span class="mobile-hide">技术</span>支持</a></li>
       <!-- <li><a href="http://ticket.avosapps.com/tickets?token={{user.session_token || 'Gs5Xw4vjyCznrP6OcgMheOWDuatVpbFPiL78eMo6JC0dENB8'}}" target="_blank"><span class="mobile-hide">用户</span>反馈</a></li> -->
@@ -24,7 +24,7 @@
       <li class="muted">·</li>
       <li><a href="http://blog.leancloud.cn/">Blog</a></li>
       <li class="muted">·</li>
-      <li><a href="https://github.com/leancloud/avoscloud-doc">文档源码</a></li>
+      <li><a href="https://github.com/leancloud/docs">文档源码</a></li>
     </ul>
   </div>
 </footer>
@@ -33,7 +33,7 @@
 
 
 
-{% if basename!='index' and basename!='sdk_down' and basename !='demo' %}
+{% if basename!='index' and basename!='sdk_down' and basename !='demo' and basename !='start' %}
 <script src="custom/js/lib/contents.js"></script>
 <script src="custom/js/md.js"></script>
 {% endif %}
@@ -43,9 +43,6 @@
 </script>
 {% endif %}
 
-<script>
-  pangu.page_spacing();
-</script>
 <script type="text/javascript">
 ZeroClipboard.setDefaults({
     moviePath: 'custom/js/lib/zeroclipboard/zeroclipboard.swf'

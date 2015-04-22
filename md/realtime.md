@@ -392,4 +392,4 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 
 ### 能否通过 API 给用户发消息
 
-对于不方便使用 Node.js 客户端的用户，我们最近提供了一个 [REST API](https://leancloud.cn/docs/rest_api.html#%E9%80%9A%E8%BF%87-rest-api-%E5%90%91%E7%94%A8%E6%88%B7%E5%8F%91%E6%B6%88%E6%81%AF) 用于给特定用户发消息。
+对于不方便使用 Node.js 客户端的用户，我们最近提供了一个 [REST API](./rest_api.html#%E9%80%9A%E8%BF%87-rest-api-%E5%90%91%E7%94%A8%E6%88%B7%E5%8F%91%E6%B6%88%E6%81%AF) 用于给特定用户发消息。

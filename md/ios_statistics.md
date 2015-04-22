@@ -10,12 +10,14 @@
 
 ### 导入 SDK
 
-您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。您也可以使用Podfile通过cocoapods下载我们的SDK，如
+您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。
+<!--
+您也可以使用Podfile通过cocoapods下载我们的SDK，如
 
 ```sh
 pod 'AVOSCloud'
 ```
-
+-->
 ### 使用统计功能
 
 经过我们的一系列更新升级, 使用最新的SDK您不需要任何代码上的操作就可以使用统计的基本功能.

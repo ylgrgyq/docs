@@ -169,6 +169,16 @@
         border-color: @link-color;
       }
     }
+
+    &.disabled,
+    &[disabled] {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        border-color: transparent;
+      }
+    }
   }
 
   &.open {
@@ -189,6 +199,34 @@
       vertical-align: -4px;
     }
   }
+}
+
+
+//
+// Text Selectability
+// --------------------------------------------------
+//
+
+a,
+p,
+label,
+input,
+textarea,
+pre *,
+code *,
+.selectable-text,
+.selectable-text *,
+.callout *,
+.figure,
+.user-name-text {
+  user-select: text;
+}
+
+.unselectable-text,
+.unselectable-text *,
+.footer *,
+.nav * {
+  user-select: none;
 }
 
 
@@ -255,6 +293,13 @@
       .icon {
         display: inline;
       }
+    }
+  }
+
+  .icon {
+
+    &-locked-on {
+      color: @gray-light;
     }
   }
 }
@@ -553,12 +598,42 @@ textarea {
   border-color: @dropdown-fallback-border; // IE8 fallback
   border-color: @dropdown-border;
 
-  > li > a {
+  > li > a,
+  > li > button {
     border-color: transparent;
 
     &:hover,
     &:focus {
       border-color: transparent;
+    }
+  }
+
+  > li > button {
+    display: block;
+    background: transparent;
+    width: 100%;
+    text-align: start;
+    line-height: @line-height-base;
+    border: none;
+    // Hide outlines for link-like buttons
+    outline: none;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+      color: @dropdown-link-hover-color;
+      background-color: @dropdown-link-hover-bg;
+    }
+
+    &:disabled,
+    &.disabled {
+      opacity: .4;
+      cursor: not-allowed !important;
+
+      &:hover,
+      &:focus {
+        background: transparent;
+      }
     }
   }
 }
@@ -567,7 +642,8 @@ textarea {
 .dropdown-toggle + .dropdown-menu {
   margin-top: 2px !important;
 
-  > li > a {
+  > li > a,
+  > li > button {
     padding: 8px 15px;
     cursor: pointer;
   }
@@ -1279,12 +1355,12 @@ select.form-control {
       cursor: not-allowed;
       background-color: @gray-lighter;
       box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .1);
+    }
 
-      // Disabled and checked state
-      &:checked ~ .control-indicator,
-      &.checked ~ .control-indicator {
-        background-color: fade(@link-color, 60%);
-      }
+    // Disabled and checked state
+    &:checked ~ .control-indicator,
+    &.checked ~ .control-indicator {
+      background-color: fade(@link-color, 60%);
     }
   }
 }

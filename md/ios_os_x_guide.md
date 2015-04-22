@@ -1,4 +1,4 @@
-# iOS / OS X 指南
+# iOS / OS X 数据存储开发指南
 
 如果还没有安装 LeanCloud iOS SDK，请阅读 [快速入门](/start.html) 来获得该 SDK，并在 Xcode 中运行和熟悉示例代码。我们的 SDK 支持 iOS 4.3 及更高版本。
 
@@ -14,6 +14,8 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
+
+<!--
 ## 使用 CocoaPods 安装 SDK
 
 [快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
@@ -52,6 +54,7 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 * 执行命令 `pod install` 安装 SDK。
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
+-->
 
 ## 应用
 
@@ -283,7 +286,7 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 
 也可以使用 `incrementKey:byAmount:` 来累加字段的数值。
 
-那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了 
+那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了
 `fetchWhenSave` 属性，当设置为 `true` 时，LeanCloud 会在保存操作发生时，自动返回当前计数器的最新数值。
 
 
@@ -589,7 +592,7 @@ NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
 相反，要让查询不包含某些值的对象，则用 `whereKey:notContainedIn:` ：
 
 ```objc
-// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数 
+// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数
 NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
                                            @"Dario Wunsch",
                                            @"Shawn Simon",
@@ -896,6 +899,15 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
 
 关于 CQL 的详细介绍，请参考 [Cloud Query Language 详细指南](cql_guide.html)。
 
+## 应用内搜索
+
+我们虽然提供了基于正则的模糊查询，但是正则查询有两个缺点：
+
+* 当数据量逐步增大后，查询效率将越来越低
+* 没有文本相关性排序
+
+因此，我们还提供了[应用内搜索功能](./app_search_guide.html)，基于搜索引擎构建，提供更强大的搜索功能。
+
 ## 子类化
 
 LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AVObject` 访问到所有的数据，用 `objectForKey:` 获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
@@ -990,7 +1002,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
   ......
 ```
 
-这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成： 
+这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
 ```objc
 [student setAge:19]
 ```
@@ -1449,7 +1461,7 @@ if (currentUser != nil) {
 
 ```objc
 [AVUser logOut];  //清除缓存用户对象
-AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了 
+AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 ```
 
 ### 重置密码
@@ -1631,7 +1643,7 @@ AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"]
 AVQuery *query = [AVQuery queryWithClassName:@"PlaceObject"];
 [query whereKey:@"locaton" nearGeoPoint:userLocation];
 //获取最接近用户地点的10条数据
-query.limit = 10;      
+query.limit = 10;
 NSArray<AVObject *> nearPlaces = [query findObjects];
 ```
 
@@ -1680,131 +1692,3 @@ NSArray<AVObject *> *pizzaPlacesInSF = [query findObjects];
 [AVCloud setProductionMode:NO];
 ```
 其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
-
-## 短信验证码服务
-
-除了与用户相关的注册、登录等操作以外，LeanCloud 还支持额外的短信验证码服务。
-
-在实际应用中，有些类型的操作对安全性比较敏感，比如付费、删除重要资源等等。若想通过短信验证的方式来与用户进行确认，就可以在以下前提下，使用 LeanCloud 提供的短信验证码服务：
-
-* 用户已验证过手机号码。
-* 应用管理平台打开了 **启用账号无关短信验证服务（针对 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。
-
-### 请求短信验证码
-
-为某个操作发送验证短信：
-
-```objc
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13613613613"
-                                     appName:@"某应用"
-                                   operation:@"具体操作名称"
-                                  timeToLive:10
-                                    callback:^(BOOL succeeded, NSError *error) {
-        // 执行结果
-    }];
-   //短信格式类似于：
-   //您正在{某应用}中进行{具体操作名称}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
-
-```
-
-### 自定义短信模板
-
-若想完全自定义短信的内容，可在应用管理平台中，通过 **短信模板** 来创建自定义的短信模板，但是需要**审核**。
-
-短信模板提交并审核后，即可使用 SDK 向用户发送符合短信模板定义的短信内容。
-
-比如，提交如下短信模板，模板名称为 `Register_Template`：
-```html
-<pre ng-non-bindable ><code>
-Hi {{username}},
-欢迎注册{{name}}应用，你可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
-以上。
-{{appname}}
-</code></pre>
-```
-**注：`name`、 `code`、 `ttl`  是预留的字段，分别代表应用名、验证码、过期时间。系统会自动为它们填充内容。**
-
-发送短信：
-
-```objc
-    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:@"MyName" forKey:@"username"];
-    [dict setObject:@"MyApplication" forKey:@"appname"];
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"12312312312" templateName:@"Register_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            //操作成功
-        } else {
-            NSLog(@"%@", error);
-        }
-    }];
-```
-
-### 验证短信验证码
-
-验证短信验证码：
-
-```objc
-    [AVOSCloud verifySmsCode:@"123456" callback:^(BOOL succeeded, NSError *error) {
-        //code
-    }];
-```
-
-## FAQ 常见问题和解答
-
-### 怎么使用 LeanCloud iOS SDK
-最简单的方式，使用 CocoaPods，在 PodFile 加入以下内容：
-
-```sh
-pod 'AVOSCloud'
-```
-
-AVOSCloudSNS SDK：
-
-```sh
-pod 'AVOSCloudSNS'
-```
-
-### 如何使用「用户登录」功能
-
-```objc
-    [AVUser logInWithUsernameInBackground:@"zeng" password:@"123456" block:^(AVUser *user, NSError *error) {
-        if (user != null) {
-            NSLog(@"login success");
-        } else {
-            NSLog(@"signin failed");
-        }
-    }];
-
-```
-
-### 如何登出
-
-```objc
-[AVUser logOut];
-
-```
-
-### 如何使用「新浪微博」登录
-
-
-```objc
-[AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
-
-  //回调代码
-
-} toPlatform:AVOSCloudSNSSinaWeibo];
-
-```
-
-### 使用 AVOSCloudSNS，运行时报错：+[AVUser loginWithAuthData:block:]: unrecognized selector sent to class
-
-请将 **Build Settings** -> **Linking** -> **Other Linker Flags** 设置为 **-ObjC**。具体原因可以参考苹果官方文档《Technical Q&A QA1490 [Building Objective-C static libraries with categories](https://developer.apple.com/library/mac/qa/qa1490/_index.html)》。此外，stackoverfow 上也有一个比较详细的答案：《[Objective-C categories in static library](http://stackoverflow.com/questions/2567498/objective-c-categories-in-static-library)》。
-
-
-
-
-
-
-
-
-

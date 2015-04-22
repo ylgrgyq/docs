@@ -33,6 +33,20 @@ easy_install leancloud-sdk
 
 另外，我们推荐你使用 [virtualenv](https://virtualenv.pypa.io/en/latest/) 创建与系统全局环境隔离的 Python 环境，防止不同项目之间依赖的第三方模块版本之间产生冲突。
 
+**注意**：如果您的 Python 版本低于 2.7.9，您可能会遇到如下的 Warning：
+
+```
+/usr/lib/python2.7/site-packages/requests-2.6.0-py2.7.egg/requests/packages/urllib3/util/ssl_.py:79: InsecurePlatformWarning: A true SSLContext object is not available. This prevents urllib3 from configuring SSL appropriately and may cause certain SSL connections to fail. For more information, see https://urllib3.readthedocs.org/en/latest/security.html#insecureplatformwarning.
+InsecurePlatformWarning
+```
+
+建议您升级您的 Python 版本，或者通过安装 PyOpenSSL 来解决：
+
+```sh
+pip install pyopenssl ndg-httpsclient pyasn1
+```
+
+
 ### 配合 gevent 使用
 
 Python SDK 使用 Python 内置网络连接库，所有的网络操作都是阻塞的。如果你的代码需要应对高并发场景，推荐使用 gevent 来提高性能。
@@ -56,7 +70,10 @@ monkey.patch_all()  # 或者只 patch 指定的模块
 ```python
 import leancloud
 
-leancloud.init('APP_ID', 'APP_KEY/MASTER_KEY')
+leancloud.init('APP_ID', 'APP_KEY')
+
+# 或者您现在需要使用 master key 的权限
+leancloud.init('APP_ID', master_key='MASTER_KEY')
 ```
 
 ## 对象
@@ -94,7 +111,7 @@ game_score = GameScore()
 game_score.set('score', 42)  # or game_score.score = 42
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
-game.save()
+game_score.save()
 
 # 还可以通过关键字参数，在创建对象的同时进行赋值
 game_score = GameScore(score=42, playerName='Marvin')
@@ -134,7 +151,7 @@ GameScore = Object.extend('GameScore')
 game_score.set('score', 42)
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
-game.save()
+game_score.save()
 
 game_score.set('score', 43)
 game_score.save()
@@ -589,7 +606,7 @@ do_cloud_query 返回的 result 包含三个属性：
 - count - 如果使用了 `select count(*)` 的查询语法，返回符合查询条件的记录数目
 - class_name - 查询的 class name
 
-CQL 语法请参考 [CQL 详细指南](../cql_guide.html)。
+CQL 语法请参考 [CQL 详细指南](./cql_guide.html)。
 
 针对查询条件，我们推荐使用占位符的 CQL 语句来提升性能，占位符对应的值按照顺序组合起来作为第二个参数 pvalues 数组传入：
 

@@ -242,11 +242,13 @@
   }
 
   .brand-logo {
+    display: block;
     font-size: 56px;
     line-height: 1;
     display: inline-block;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
     border-bottom: none;
+    letter-spacing: -0.05em;
 
     &:hover,
     &:focus {
@@ -254,9 +256,15 @@
     }
 
     @media (max-width: @screen-xs-max) {
-      font-size: 50px;
-      margin-top: 20px;
-      margin-bottom: 20px;
+      font-size: 46px;
+      padding-left: 20px;
+      padding-right: 20px;
+      // Alternative margin set
+      // Date: Mar 28, 2015, 10:55 AM
+      // margin-top: 20px;
+      // margin-bottom: 20px;
+      margin-top: -10px;
+      margin-bottom: 4px;
     }
   }
 
@@ -267,10 +275,6 @@
     @media (max-width: @screen-xs-max) {
       margin-top: 70px;
       margin-bottom: 60px;
-
-      .brand-logo {
-        margin-top: -16px;
-      }
     }
   }
 
@@ -278,6 +282,11 @@
     font-size: 28px;
     margin: 0 auto 20px;
     padding: 0 30px;
+    letter-spacing: .5em;
+
+    .last-letter {
+      letter-spacing: 0;
+    }
 
     @media (max-width: @screen-xs-max) {
       font-size: 18px;
@@ -3222,22 +3231,24 @@ body {
     @device-width: 394px;
     @device-height: 800px;
 
-    position: relative;
+    display: none;
+    position: absolute;
     width: @device-width;
     height: @device-height;
     background-image: url(../images/static/customers/frame-iphone-6-v.png);
     background-size: 100% 100%;
-    // transform: scale(.5);
-    zoom: .7;
+    transform: scale(.7);
+    // zoom: .7;
     text-align: center;
     margin: auto 0;
     margin-top: 260px;
     float: left;
     -webkit-backface-visibility: hidden;
+    transform-origin: 0 0;
     transform: translate3d(0, 0, 0);
 
-    @media (max-width: @screen-xs-max) {
-      display: none;
+    @media (min-width: @screen-md-min) {
+      display: block;
     }
 
     .slides {
@@ -3276,7 +3287,8 @@ body {
         width: @device-width;
         height: @device-height;
         background-image: url(../images/static/customers/frame-iphone-6-h.png);
-        zoom: .68;
+        transform: scale(.68);
+        // zoom: .68;
 
         .slides {
           top: 29px;
@@ -3295,7 +3307,8 @@ body {
       width: @device-width;
       height: @device-height;
       background-image: url(../images/static/customers/frame-ipadmini-v.png);
-      zoom: .4;
+      transform: scale(.4);
+      // zoom: .4;
 
       .slides {
         top: 124px;
@@ -3312,7 +3325,8 @@ body {
         width: @device-width;
         height: @device-height;
         background-image: url(../images/static/customers/frame-ipadmini-h.png);
-        zoom: .42;
+        transform: scale(.42);
+        // zoom: .42;
 
         .slides {
           top: 48px;
@@ -3331,7 +3345,8 @@ body {
       width: @device-width;
       height: @device-height;
       background-image: url(../images/static/customers/frame-android-v.png);
-      zoom: .8;
+      transform: scale(.8);
+      // zoom: .8;
 
       .slides {
         top: 52px;

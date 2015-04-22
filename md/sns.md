@@ -7,12 +7,14 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 ## iOS SNS 组件
 
 ### 导入 SDK
+您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。
+<!--
 您可以从 https://github.com/leancloud/avoscloud-sdk 下载iOS的SDK。您也可以使用Podfile通过cocoapods下载我们的SDK，如:
 
 ```sh
 pod 'AVOSCloudSNS'
 ```
-
+-->
 ### 添加代码
 
 ```objc
@@ -102,17 +104,17 @@ if (vc) {
 ## Android SNS 组件
 
 
-AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用此模块，您可以仅用少量代码便可实现社交平台用户登录的功能.
+AVOSCloud Android SNS 为开发人员提供了一个非常轻量的模块，使用此模块，您可以仅用少量代码便可实现社交平台用户登录的功能。
 
 ### 导入 SDK
 
-您可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的jar包加入您工程的libs目录。如果您还不知道如何安装SDK，请查看[快速入门指南](/start.html)。
+您可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的 jar 包加入您工程的 libs 目录。如果您还不知道如何安装 SDK，请查看[快速入门指南](/start.html)。
 
 ### WebView 授权
 
-首先你需要在[管理界面](/devcomponent.html?appid={{appid}}#/component/sns)中间配置相应平台的AppKey与AppSecret,在成功保存以后，页面上能够得到相应的`回调URL`和`登录URL`。你将在代码里用到`登陆 URL`,同时请将`回调URL`填写到对应平台的App管理中心（比如新浪开放平台）
+首先你需要在[管理界面](/devcomponent.html?appid={{appid}}#/component/sns)中间配置相应平台的 AppKey 与 AppSecret，在成功保存以后，页面上能够得到相应的`回调 URL`和`登录 URL`。你将在代码里用到`登录 URL`，同时请将`回调 URL`填写到对应平台的 App 管理中心（比如新浪开放平台）。
 
-之后你需要在AndroidManifest.xml中间添加相应的Activity:
+之后你需要在 AndroidManifest.xml 中间添加相应的 Activity:
 
 ```
         <activity
@@ -120,88 +122,86 @@ AVOSCloud Android SNS为开发人员提供了一个非常轻量的模块, 使用
         </activity>
 ```
 
-同时你需要拷贝我们准备的res/avoscloud_sns_web_activity.xml到你的项目中去。
+同时你需要拷贝我们准备的 res/avoscloud_sns_web_activity.xml 到你的项目中去。
 
-之后在你需要授权的地方，你就可以通过WebView进行相应的授权：
+之后在你需要授权的地方，你就可以通过 WebView 进行相应的授权：
 
-```
-   public class AuthActivity extends Activity{
-
-   public void onCreate(){
-
-          SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo,
-              "登录URL");
-          SNS.loginWithCallback(getActivity(), SNSType.AVOSCloudSNSSinaWeibo, new SNSCallback() {
-
-            @Override
-            public void done(SNSBase base, SNSException e) {
-              if(e==null){
-               SNS.loginWithAuthData(base.userInfo(), new LogInCallback<AVUser>() {
-
-                  @Override
-                  public void done(final AVUser user, AVException e) {
-                  }
-              });
-              }
-            }
-          });
+```java
+public class AuthActivity extends Activity{
+    
+   @Override 
+   public void onCreate(Bundle savedInstanceState){
+     SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo, "https://leancloud.cn/1.1/sns/goto/xxx");
+     SNS.loginWithCallback(this, SNSType.AVOSCloudSNSSinaWeibo, new SNSCallback() {
+       @Override
+       public void done(SNSBase base, SNSException e) {
+         if (e==null) {
+           SNS.loginWithAuthData(base.userInfo(), new LogInCallback<AVUser>() {
+             @Override
+             public void done(final AVUser user, AVException e) {
+             }
+           });
+         }
+       }
+     });
    }
 
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        SNS.onActivityResult(requestCode, resultCode, data, type);
-    }
+     super.onActivityResult(requestCode, resultCode, data);
+     SNS.onActivityResult(requestCode, resultCode, data, type);
+   }
 }
 
 ```
 
 这样就完成了新浪微博从授权到创建用户（登录）的一整套流程。
-**注:由于微信的Web授权页面为扫描二维玛，现阶段仅仅支持新浪微博和QQ授权。**
+**注:由于微信的 Web 授权页面为扫描二维玛，现阶段仅仅支持新浪微博和 QQ 授权。**
 
 ### SSO 登录
 
-利用SSO, 用户可以使用单点登录功能，避免反复输入用户名和密码等，您可以使用以下代码轻松实现:
+利用 SSO, 用户可以使用单点登录功能，避免反复输入用户名和密码等，您可以使用以下代码轻松实现:
 
-```java
-// 导入sns组件
+``` java
+// 导入 SNS 组件
 import com.avos.sns.*;
 
-// 使用新浪微博SNS登录，在您的Activity中
+// 使用新浪微博 SNS 登录，在您的 Activity 中
 public class MyActivity extends Activity {
 
-    // onCreate中初始化，并且登录
-    public void onCreate(Bundle savedInstanceState) {
-        ….
-        // callback 函数
-		final SNSCallback myCallback = new SNSCallback() {
-            @Override
-            public void done(SNSBase object, SNSException e) {
-                if (e == null) {
-                    showText("login ok " + type );
-                }
-            }
-        };
+  // onCreate 中初始化，并且登录
+  @Override
+  public void onCreate(Bundle savedInstanceState) {
+        …
+    // callback 函数
+    final SNSCallback myCallback = new SNSCallback() {
+      @Override
+      public void done(SNSBase object, SNSException e) {
+        if (e == null) {
+          showText("login ok " + type );
+        }
+      }
+    };
 
-        // 关联
-        SNS.setupPlatform(SNSType.AVOSCloudSNSSinaWeibo, "YOUR_SINA_WEIBO_APP_ID", "", "YOUR_SINAWEIBO_CALLBACK_URL");
-		SNS.loginWithCallback(this, SNSType.AVOSCloudSNSSinaWeibo, myCallback);
-    }
+    // 关联
+    SNS.setupPlatform(this, SNSType.AVOSCloudSNSSinaWeibo, "YOUR_SINA_WEIBO_APP_ID", "", "YOUR_SINAWEIBO_CALLBACK_URL");
+    SNS.loginWithCallback(this, SNSType.AVOSCloudSNSSinaWeibo, myCallback);
+  }
 
-    // 当登录完成后，请调用SNS.onActivityResult(requestCode, resultCode, data, type);
-    // 这样您的回调用将会被调用到
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        SNS.onActivityResult(requestCode, resultCode, data, type);
-    }
-
+  // 当登录完成后，请调用 SNS.onActivityResult(requestCode, resultCode, data, type);
+  // 这样您的回调用将会被调用到
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    SNS.onActivityResult(requestCode, resultCode, data, type);
+  }
+}
 ```
-您也可以将上述代码中的SNSType.AVOSCloudSNSSinaWeibo 更换为 SNSType.AVOSCloudSNSQQ 便可以使用QQ的SSO登录功能。
+您也可以将上述代码中的 SNSType.AVOSCloudSNSSinaWeibo 更换为 SNSType.AVOSCloudSNSQQ 便可以使用 QQ 的 SSO 登录功能。
 
-** QQ SNS 在腾讯SNS授权中，由于QQ SDK官方对于WebView授权的限制，导致在WebView中无法完成正常的授权过程，所以QQ SNS只支持SSO登陆授权。我们也会持续跟进QQ SDK的更新进展，同时也为对您造成的不便感到抱歉。
+** QQ SNS 在腾讯 SNS 授权中，由于 QQ SDK 官方对于 WebView 授权的限制，导致在 WebView 中无法完成正常的授权过程，所以 QQ SNS 只支持 SSO 登录授权。我们也会持续跟进 QQ SDK 的更新进展，同时也为对您造成的不便感到抱歉。
 
-***QQ SSO注意*** 当使用QQ SSO登陆时，请注意确保您的AndroidManifest.xml文件中包含如下内容
+***QQ SSO 注意*** 当使用 QQ SSO 登录时，请注意确保您的AndroidManifest.xml文件中包含如下内容
 
 ```xml
 <activity android:name="com.tencent.tauth.AuthActivity"
@@ -214,8 +214,21 @@ public class MyActivity extends Activity {
     </intent-filter>
 </activity>
 ```
+***微博 SSO 注意*** 当使用微博 SSO 登录时，请注意确保您的AndroidManifest.xml文件中包含如下内容，否则在没有安装微博客户端的设备上，会出现问题。
 
-对于其他的sso请确保您有如下权限
+```xml
+<activity
+   android:theme="@android:style/Theme.NoTitleBar"
+   android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+   android:configChanges="keyboardHidden|orientation"
+   android:exported="false"
+   android:windowSoftInputMode="adjustResize" >
+</activity>
+```
+
+并下载 [libs 目录](https://github.com/sinaweibosdk/weibo_android_sdk/tree/master/libs)下的三个 .so 文件，导入到自己工程。
+
+对于其他的 SSO 请确保您有如下权限
 
 ```xml
 </application>
@@ -228,11 +241,11 @@ public class MyActivity extends Activity {
 
 ### 绑定 LeanCloud User
 
-您也可以将SSO登录后的帐号信息与LeanCloud 的User绑定，通过绑定，您可以在两种用户体系间建立联系，方便信息的共享和使用。
+您也可以将 SSO 登录后的帐号信息与 LeanCloud 的 User 绑定，通过绑定，您可以在两种用户体系间建立联系，方便信息的共享和使用。
 
-如果您还未安装LeanCloud Android SDK，请参阅[快速入门指南](/start.html)。
+如果您还未安装 LeanCloud Android SDK，请参阅[快速入门指南](/start.html)。
 
-SSO登录过程与上述代码都相同，您只需要在callback中进行关联即可，示例代码如下
+SSO 登录过程与上述代码都相同，您只需要在 callback 中进行关联即可，示例代码如下
 
 ```java
 final SNSCallback myCallback = new SNSCallback() {
@@ -245,7 +258,7 @@ final SNSCallback myCallback = new SNSCallback() {
  };
 ```
 
-上述代码，可以将您的SNS帐号与已经创建的LeanCloud User帐号绑定。您也可以使用 `loginWithAuthData`，它将为您创建一个新的匿名用户
+上述代码，可以将您的 SNS 帐号与已经创建的 LeanCloud User 帐号绑定。您也可以使用 `loginWithAuthData`，它将为您创建一个新的匿名用户
 
 ```java
   SNS.loginWithAuthData(authData, new LogInCallback() {
@@ -260,7 +273,7 @@ final SNSCallback myCallback = new SNSCallback() {
 });
 ```
 
-如果您不想再使用SNS相关的功能，您可以使用 `logout` 解除SNS帐号和LeanCloud User帐号的绑定。
+如果您不想再使用 SNS 相关的功能，您可以使用 `logout` 解除 SNS 帐号和 LeanCloud User 帐号的绑定。
 
 ```java
   SNS.logout(AVUser.getCurrentUser(), type, new SaveCallback() {
@@ -273,26 +286,26 @@ final SNSCallback myCallback = new SNSCallback() {
 
 更多详细使用方法, 请查看SDK API文档.
 
-#### 不引入SNS模块的第三方账号与AVUser绑定
+#### 不引入 SNS 模块的第三方账号与 AVUser 绑定
 
-在实际的使用过程中，有一部分用户在涉及到SNS相关功能，比如分享模块时，引用了其他第三方库，然而这些库中所引用的SNS jar很有可能与LeanCloud存在版本的冲突。这个时候，用户往往非常的苦恼，无法解决这样的问题。考虑到这一部分用户的需求，我们在AVUser中间添加了几个类似的方法，以便用户能够更便捷地与AVUser进行绑定，从而快速的结合LeanCloud的用户系统。
+在实际的使用过程中，有一部分用户在涉及到 SNS 相关功能，比如分享模块时，引用了其他第三方库，然而这些库中所引用的 SNS jar 很有可能与 LeanCloud 存在版本的冲突。这个时候，用户往往非常的苦恼，无法解决这样的问题。考虑到这一部分用户的需求，我们在 AVUser 中间添加了几个类似的方法，以便用户能够更便捷地与 AVUser 进行绑定，从而快速的结合 LeanCloud 的用户系统。
 
-通过`AVUser.loginWithAuthData`来创建一个匿名的AVUser对象：
+通过 `AVUser.loginWithAuthData` 来创建一个匿名的 AVUser 对象：
 ```java
-    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType);//此处snsType 可以是"qq","weibo"等字符串
+    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType,openId);//此处snsType 可以是"qq","weibo"等字符串
     AVUser.loginWithAuthData(clazz, userAuth, callback);
 ```
 
-或者通过`AVUser.associateWithAuthData`或者`AVUser.dissociateAuthData`来为一个已经存在的AVUser对象来绑定一个第三方账号或者解除第三方账号绑定：
+或者通过 `AVUser.associateWithAuthData` 或者 `AVUser.dissociateAuthData` 来为一个已经存在的 AVUser 对象来绑定一个第三方账号或者解除第三方账号绑定：
 
 ```java
-    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType)
+    AVUser.AVThirdPartyUserAuth userAuth = new AVUser.AVThirdPartyUserAuth(accessToken, expiresAt, snsType,openId)
     AVUser.associateWithAuthData(AVUser.getCurrentUser(),userAuth,callback);
 
     AVUser.dissociateAuthData(AVUser.getCurrentUser(),AVThirdPartyUserAuth.SNS_TENCENT_WEIBO,callback);// 解除腾讯微薄的账号绑定
 ```
 
-如果您使用了ShareSDK来实现分享和第三方登陆的功能，能也可以非常轻松的完成和AVUser的绑定。以新浪微博为例
+如果您使用了 ShareSDK 来实现分享和第三方登录的功能，能也可以非常轻松的完成和 AVUser 的绑定。以新浪微博为例
 
 ```java
    Platfrom plat = new SinaWeibo(getActivity());
@@ -320,7 +333,7 @@ final SNSCallback myCallback = new SNSCallback() {
           return;
         }
    }
-      //如果尚未授权，则通过ShareSDK完成授权
+      //如果尚未授权，则通过 ShareSDK 完成授权
       plat.setPlatformActionListener(new PlatformActionListener() {
 
         @Override
@@ -341,7 +354,7 @@ final SNSCallback myCallback = new SNSCallback() {
             @Override
             public void done(AVUser user, AVException e) {
               if (e == null) {
-              //恭喜你，已经和我们的AVUser绑定成功
+              //恭喜你，已经和我们的 AVUser 绑定成功
               } else {
                 e.printStackTrace();
               }

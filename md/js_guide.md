@@ -6,12 +6,8 @@
 
 ## 简介
 
-LeanCloud平台提供了一个移动App的完整后端解决方案,我们的目标是完全消除写
-后端代码和维护服务器的必要性.
-
-我们的 JavaScript SDK 基于流行的 Backbone.js 框架.它与已经存在的
-Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我们的最小化
-配置,让你很快地用在LeanCloud上使用JavaScript和HTML5.
+LeanCloud 提供了一个移动 App 的完整后端解决方案，我们的目标是完全消除写
+后端代码和维护服务器的必要性。
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)。本指南并没有完全覆盖所有的 API 调用。
 
@@ -30,19 +26,11 @@ Backbone程序是兼容的,只需要在你的代码中做出一点点改变,我�
 我们的JavaScript SDK不需要引入其他的库,唯一的一个例外是AV.view
 类,需要你提供jQuery或者一个jQuery兼容的$方法.
 
-### 安全域名
+### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。
+如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
 
-设置 JavaScript SDK 安全域名后，仅可在该域名下通过 JavaScript SDK 调用服务器资源，域名配置策略与浏览器域安全策略一致，要求域名协议、域和端口号都需严格一致，不支持子域和通配符。所以如果你要配置一个域名，要写清楚协议、域和端口，缺少一个都可能导致访问被禁止。域名的区别，如：
-
-- www.a.com:8080 和 www.a.com     跨域
-- www.a.com:8080 和 www.a.com:80  跨域
-- a.com 和 www.a.com              跨域
-- xxx.a.com 和 www.a.com          跨域
-- http 和 https 不同协议            跨域
-
-这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
+具体安全相关内容可以仔细阅读「[数据和安全](https://leancloud.cn/docs/data_security.html)」文档。
 
 ## 对象
 
@@ -129,8 +117,10 @@ var monster = Monster.new({strength: 20});
 
 ### 保存对象
 
-假如你想要在LeanCloud上保存GameScore，方法和Backbone.Model差不多,就用
-save就可以了.
+假如你想要在 LeanCloud 上保存 GameScore，方法和 Backbone.Model 差不多，就用
+ save 就可以了。
+
+这里要注意，我们每个存储条目的 id 是服务器端自动生成的唯一 id（非简单的自增逻辑生成），所以 id 是不可修改的。如果你有自定义 id 的需求，可以自己建立一个字段，逻辑上作为你的自定义 id。
 
 ```javascript
 var gameScore = new GameScore();
@@ -145,7 +135,7 @@ gameScore.save(null, {
   error: function(gameScore, error) {
     // Execute any logic that should take place if the save fails.
     // error is a AV.Error with an error code and description.
-    alert('Failed to create new object, with error code: ' + error.description);
+    alert('Failed to create new object, with error code: ' + error.message);
   }
 });
 ```
@@ -219,22 +209,24 @@ var cheatMode = gameScore.get("cheatMode");
 更新一个对象也是非常简单的。首先需要获取到要更新的 `AV.Object` 对象，然后进行修改值后保存数据。例如：
 
 ```javascript
-// Create the object.
-var gameScore = new GameScore();
+// 可以先查询出要修改的那条存储
+var GameScore = AV.Object.extend("GameScore");
+var query = new AV.Query(GameScore);
 
-gameScore.set("score", 1337);
-gameScore.set("playerName", "Sean Plott");
-gameScore.set("cheatMode", false);
-gameScore.set("skills", ["pwnage", "flying"]);
+// 这个 id 是要修改条目的 id，你在生成这个存储并成功时可以获取到，请看前面的文档
+query.get('5489092ae4b0446fa5065dcf', {
+    success: function(gameScore) {
+      // 回调中可以取得这个 GameScore 对象的一个实例，然后就可以修改它了
+      gameScore.set('title', 'LeanCloud is Best!');
+      gameScore.save();
 
-gameScore.save(null, {
-  success: function(gameScore) {
-    // Now let's update it with some new data. In this case, only cheatMode and score
-    // will get sent to the cloud. playerName hasn't changed.
-    gameScore.set("cheatMode", true);
-    gameScore.set("score", 1338);
-    gameScore.save();
-  }
+      // The object was retrieved successfully.
+    },
+    error: function(object, error) {
+      console.log(object);
+      // The object was not retrieved successfully.
+      // error is a AV.Error with an error code and description.
+    }
 });
 ```
 
@@ -927,6 +919,15 @@ AV.Query.doCloudQuery('select count(*),* from GameScore where score>? limit ?',[
 ```
 
 `AV.Query.doCloudQuery` 返回的也是下面提到的 `AV.Promise` 对象。
+
+## 应用内搜索
+
+我们虽然提供了基于正则的模糊查询，但是正则查询有两个缺点：
+
+* 当数据量逐步增大后，查询效率将越来越低
+* 没有文本相关性排序
+
+因此，我们还提供了[应用内搜索功能](./app_search_guide.html)，基于搜索引擎构建，提供更强大的搜索功能。
 
 ##Promise
 
@@ -1985,7 +1986,7 @@ app的名字.
 
 ```javascript
 var query = new AV.Query(AV.User);
-query.equalTo(gender, "female");  // find all the women
+query.equalTo("gender", "female");  // find all the women
 query.find({
   success: function(women) {
     // Do stuff
@@ -2023,75 +2024,6 @@ post.save(null, {
 ###在后台查看 User
 
 在后台的数据查看中,你可以看到User类保存了用户的信息.
-
-## 短信验证服务
-
-对于一些危险的操作，例如付费，删除数据等，你可能希望用户接收短信验证码并验证通过之后才允许进行，那么可以使用我们提供的短信验证服务。
-
-首选需要在应用设置的应用选项里开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）`选项。
-
-发送验证码通过：
-
-```javascript
-AV.Cloud.requestSmsCode('186xxxxxxxx').then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-你还可以定制发送的内容，设置下列选项：
-
-* name 应用名称，默认是你的应用在 LeanCloud 显示的名称。
-* op 进行的操作字符串，例如`付费`。
-* ttl 以分钟为单位的过期时间。
-
-```javascript
-AV.Cloud.requestSmsCode({
-  mobilePhoneNumber: '186xxxxxxxx',
-  name: 'PP打车',
-  op: '付费',
-  ttl: 5
-}).then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-如果您在应用设置里创建了短信模板，并且通过了管理员审核，那就可以发送模板短信，假设模板名称为 `test`，模板内容为
-
-<pre ng-non-bindable ><code>
-欢迎您使用 {{name}} 服务，我们将在 {{date}} 举办庆祝活动，欢迎参加。
-</code></pre>
-
-其中`name` 和 `date` 都是可替换的模板变量，那么可以通过下列方式来发送这条模板短信：
-
-```javascript
-AV.Cloud.requestSmsCode({
-  mobilePhoneNumber: '186xxxxxxxx',
-  template: "test"
-  name: 'PP打车',
-  date: '2014 年 10 月 22 号',
-  ttl: 5
-}).then(function(){
-  //发送成功
-}, function(err){
-  //发送失败
-});
-```
-
-`template` 指定模板名称，`mobilePhoneNumber` 是接收短信的手机号码，其他变量都将作为模板变量渲染。发送的短信内容将渲染为 `欢迎您使用 pp打车 服务，我们将在 2014 年 10 月 22 号 举办庆祝活动，欢迎参加。`。
-
-在用户收到验证码并输入后，通过下列代码来验证是否正确：
-
-```javascript
-AV.Cloud.verifySmsCode('6位数字验证码').then(function(){
-  //验证成功
-}, function(err){
-  //验证失败
-});
-```
 
 ##角色
 
@@ -2222,7 +2154,9 @@ AV.Cloud.run('hello', {}, {
 
 ##Push 通知
 
-通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。（如果想在 Web 端独立使用推送模块，包括通过 Web 端推送消息到各个设备、以及通过 Web 端也可以接收其他端的推送，可以了解下我们的 [「JavaScript 推送 SDK 使用指南」](./push_guide.html) 来获取更详细的信息。）
+通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。
+
+（如果想在 Web 端独立使用推送模块，包括通过 Web 端推送消息到各个设备、以及通过 Web 端也可以接收其他端的推送，可以了解下我们的「[JavaScript 推送 SDK 使用指南](./js_push.html)」来获取更详细的信息。）
 
 一个简单例子推送给所有订阅了`public`频道的设备：
 
@@ -2503,5 +2437,5 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。
 这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
 
-4、为了防止通过 Javascript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
+4、为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2以后的系统中间，WebView 中间只能访问通过[@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html)标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 "Uncaught TypeError"
 

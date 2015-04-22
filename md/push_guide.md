@@ -29,6 +29,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 * status 状态，可能是"in queue","done"或者错误信息
 * data 推送的内容数据，JSON 对象。
 * where 推送的查询 `_Installation` 表的查询条件
+* invalidTokens iOS 推送中由于证书设置错误等问题，产生的推送失败数
 
 如何发送消息也请看下面的详细指南。
 

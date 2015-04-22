@@ -5,6 +5,10 @@
 * iOS的[AVConstants](https://leancloud.cn/docs/api/iOS/docs/AVConstants.html)。
 * Android的[AVException](https://leancloud.cn/docs/api/android/doc/index.html)。
 
+## 实时通信错误码
+
+参考[实时通信服务端错误码说明](./realtime.html#服务器端错误码说明)
+
 ## 1
 * 信息 - `Internal server error. No information available.`
 * 含义 - 服务器内部错误或者参数错误，一般是因为传入了错误的参数，或者没有在本文档里明确定义的运行时错误，都会以代码1指代。
@@ -74,6 +78,12 @@
 
 * 信息 - `The object is too large.`
 * 含义 - 要存储的对象超过了大小限制，我们限制单个对象的最大大小在16m。
+
+## 117
+
+* 信息 - `The key is read only.`
+* 含义 - 更新的 Key 是只读属性，无法更新。
+
 
 ## 119
 

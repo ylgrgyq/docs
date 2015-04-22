@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 dist
+*~
+.*.swp
 
 custom/css/app.css
 custom/css/app-docs.css

@@ -22,15 +22,9 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
     $scope.demos = {
       'ios': [{
         name: 'AVOSDemo',
-        desc: '这个示例项目是为了帮助使用 AVOS Cloud 的开发者, 尽快的熟悉和使用 SDK 而建立的。主要展示 AVOS Cloud SDK 的各种基础和高级用法',
+        desc: '这个示例项目是为了帮助使用 LeanCloud 的开发者, 尽快的熟悉和使用 SDK 而建立的。主要展示 LeanCloud 数据存储 SDK 的各种基础和高级用法',
         downPath: '',
         mdPath: 'https://github.com/leancloud/ios-simple-demo',
-        type: 'ios'
-      },{
-        name: 'AVOSChatDemo',
-        desc: '这个示例项目是为了帮助使用AVOSCloud的开发者快速实现具有实时通讯功能的应用',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/iOS-SDK-demos/tree/master/AVOSChatDemo',
         type: 'ios'
       },{
         name: 'FeedbackDemo',
@@ -38,17 +32,11 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
         downPath: '',
         mdPath: 'https://github.com/leancloud/feedback-demo',
         type: 'ios'
-      },{
-        name: 'KeepAlive ',
-        desc: 'KeepAlive 是一个基于 AVOS Cloud 实时通信 SDK 的 Demo 项目，其功能接近于聊天室',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/iOS-SDK-demos/tree/master/KeepAlive',
-        type: 'ios'
       }, {
-        name: 'DianPingShangHu',
-        desc: '这个示例项目是一个类似大众点评的综合应用，它包含了一个真实的 iOS 应用所需的大部分功能',
+        name: 'FreeChat',
+        desc: '这个示例项目演示了 LeanCloud 实时通信 SDK 的使用方法，包括单聊、群聊、开放聊天室，也支持图片、文字、语音等消息类型',
         downPath: '',
-        mdPath: 'https://github.com/leancloud/dian-ping-shang-shu',
+        mdPath: 'https://github.com/leancloud/FreeChat',
         type: 'ios'
       },{
         name: '微转',
@@ -59,13 +47,13 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
       }],
       'android': [{
         name: 'AVOSDemo',
-        desc: '一个 AVOS Cloud 综合型的 Demo，目前做的不够细致，请谅解，演示了大多数功能:用户系统，文件上传下载，子类化，对象复杂查询等',
+        desc: '一个 LeanCloud 综合型的 Demo，目前做的不够细致，请谅解，演示了 LeanCloud 数据存储 SDK 大多数功能：用户系统，文件上传下载，子类化，对象复杂查询等',
         downPath: '',
         mdPath: 'https://github.com/leancloud/android-simple-demo',
         type: 'android'
       },{
         name: 'AVOSPush',
-        desc: '一个 AVOS Cloud 推送消息的简单 Demo，直接在客户端推送消息，并自己接收',
+        desc: '一个 LeanCloud 推送消息的简单 Demo，直接在客户端推送消息，并自己接收',
         downPath: '',
         mdPath: 'https://github.com/leancloud/android-push-demo',
         type: 'android'
@@ -81,23 +69,17 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
         downPath: '',
         mdPath: 'https://github.com/lzwjava/AnyTime',
         type: 'android'
-      },{
-        name: 'KeepAlive',
-        desc: '',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/android-keepalive',
-        type: 'android'
       }],
       'unity': [{
         name: 'FlappyBird',
-        desc: '',
+        desc: '支持 Unity 平台的 FlappyBird 小游戏，演示了 LeanCloud 数据存储 SDK 的大多数功能',
         downPath: '',
         mdPath: 'https://github.com/leancloud/unity-sdk-demos',
         type: 'unity'
       }],
       'winphone': [{
         name: 'Tutorial',
-        desc: '',
+        desc: 'Windows Phone 平台的示例程序，演示了 LeanCloud 数据存储 SDK 的大多数功能',
         downPath: '',
         mdPath: 'https://github.com/leancloud/windows-phone-sdk-demos',
         type: 'winphone'
