@@ -15,7 +15,7 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 ## Installation
 
-当你的应用安装在用户设备后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。Installation 对象包含了推送所需要的所有信息。你可以使用 Android SDK，通过 Installation 对象进行消息推送。Installation 对象本质上代表了设备安装你的应用的一个安装信息。
+当应用在用户设备上安装好以后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。该对象本质上是应用在设备上生成的安装信息，也包含了推送所需要的所有数据，因此，要使用它来进行消息推送。
 
 ### 保存 Installation
 
@@ -47,9 +47,9 @@ AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
 你的应用可以订阅某个频道的消息，只要在保存 Installation 之前调用`PushService.subscribe`方法：
 
 ```java
-// set a default callback. It's necessary for current SDK.
-// 在v2.0以后的版本请务必添加这段代码，以避免推送无法成功达到客户端的问题
+// 设置默认打开的 Activity
 PushService.setDefaultPushCallback(this, PushDemo.class);
+// 订阅频道，当该频道消息到来的时候，打开对应的 Activity
 PushService.subscribe(this, "public", PushDemo.class);
 PushService.subscribe(this, "private", Callback1.class);
 PushService.subscribe(this, "protected", Callback2.class);
@@ -170,7 +170,9 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
       }
     });
 ```
-*注：CQL 与 AVQuery 同时只能设置一个，并且在设置 CQL 时，必须通过 CQL 来设置目标机器的类型(ios,android,wp)*
+
+> 注意：
+> CQL 与 AVQuery 同时只能设置一个，并且 setPushTarget 类函数（setPushToAndroid / setPushToIOS / setPushToWindowsPhone）只能与 AVQuery 一起使用。在设置 CQL 时，只能在 CQL 语句中设定目标机器的类型
 
 ### 自定义 Receiver
 
