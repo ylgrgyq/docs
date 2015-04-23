@@ -10,14 +10,14 @@
 建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 介绍
-LeanCloud的 .NET SDK依赖于微软提供的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式，所以您最好有.NET Framework 4.5的编程经验，或者对.NET Framework 4.5的新API有所了解。
+LeanCloud的 .NET SDK 依赖于微软提供的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式，所以您最好有 .NET Framework 4.5 的编程经验，或者对 .NET Framework 4.5 的新 API 有所了解。
 
 ## 应用
 在 LeanCloud 的每个应用有自己的 ID 和客户端密钥，在客户端代码中应该用他们来初始化 SDK。
 LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以分别在测试环境和生产环境部署不同的版本。
 
 ### 初始化
-在 LeanCloud 中，几乎所有平台下的接口我们都尽量保持一致，目的就是为了降低开发者的开发成本，所以在初始化的时候我们几乎都是遵循在`AVClient`这个类下有一个叫做`Initialize`（不同平台的编程规范可能不一样，但是在 C# 语言风格中一般方法名的首字母都是大写）的方法，这个方法目前有2个重载：
+在 LeanCloud 中，几乎所有平台下的接口我们都尽量保持一致，目的就是为了降低开发者的开发成本，所以在初始化的时候我们几乎都是遵循在 `AVClient` 这个类下有一个叫做 `Initialize`（不同平台的编程规范可能不一样，但是在 C# 语言风格中一般方法名的首字母都是大写）的方法，这个方法目前有 2 个重载：
 
 ```
   AVClient.Initialize(string applicationId, string appKey);
@@ -34,7 +34,7 @@ LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以�
 ### AVObject
 在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含了与 JSON 兼容的 key-value 对应的数据。数据是 schema-free 的，你不需要在每个 AVObject 上提前指定存在哪些键，只要直接设定对应的 key-value 即可。
 key 必须是字母数字或下划线组成的字符串。值可以是字符串，数字，布尔值，甚至数组和字典。
-每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的电视剧角色称为 `Sport`。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
+每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的体育运动称为 `Sport`。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
 ### 保存对象
 接下来，你需要将上文中的 `Sport` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有调用 `SaveAsync` 方法时才会实际保存到服务器：
 
@@ -53,11 +53,11 @@ await saveTask;
 此外，为了更方便的使用 LeanCloud，还有其它几个字段您不需要事先指定。`objectId` 是为每个对象自动生成的唯一的标识符；`createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间并会被自动填充。
 在您执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
 ### 在后台工作
-关于异步编程，一直是每一种语言和平台上必须直面的问题，牵扯到线程，进程的问题大多数都是程序员很头疼的一个难点，但是在 .NET Framework 4 之后迎来了一种新的变革，那就是[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)。当然本篇指南的重点不是讲解TAP异步模式的好处，只是希望开发者能够足够的掌握TAP实现异步用法。
+关于异步编程，一直是每一种语言和平台上必须直面的问题，牵扯到线程，进程的问题大多数都是程序员很头疼的一个难点，但是在 .NET Framework 4.5 之后迎来了一种新的变革，那就是[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)。当然本篇指南的重点不是讲解TAP异步模式的好处，只是希望开发者能够足够的掌握TAP实现异步用法。
 
-LeanCloud .NET SDK 都采用了TAP的方式去实现把所有跟LeanCloud服务端交互的部分放在后台去进行，这样可以让开发者可以花更多时间去做客户端应该做的事情，而把跟服务端交互的各种进程管理放权给LeanCloud SDK 去做。
+LeanCloud .NET SDK 都采用了 TAP 的方式去实现把所有跟 LeanCloud 服务端交互的部分放在后台去进行，这样可以让开发者可以花更多时间去做客户端应该做的事情，而把跟服务端交互的各种进程管理放权给 LeanCloud SDK 去做。
 ### 更新对象
-更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用`SaveAsync`之后会发送到服务端生效。
+更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用 `SaveAsync` 之后会发送到服务端生效。
 
 ```
 var peter = new AVObject("Character")
@@ -84,12 +84,12 @@ await character.FetchAsync();
 ```
 
 ### 删除对象
-如果想删除某个对象可以直接调用`AVObject`的`DeleteAsync`方法。
+如果想删除某个对象可以直接调用 `AVObject` 的 `DeleteAsync` 方法。
 
 ```
 await myObject.DeleteAsync();
 ```
-如果仅仅想删除某个对象的某一个属性，可以调用`Remove`方法。
+如果仅仅想删除某个对象的某一个属性，可以调用 `Remove` 方法。
 
 ```
 //执行下面的语句会将age字段置为空
@@ -98,7 +98,7 @@ myObject.Remove("age");
 await myObject.SaveAsync();
 ```
 ### 关系
-软件程序就是抽象现实中的对象之间的的关系在计算机世界里面的解释和展现。有对象必然就会有对象之间的关系，在LeanCloud中也给出了传统关系型的解决方案，并且简化了代码，使得代码简洁易维护。
+软件程序就是抽象现实中的对象之间的关系在计算机世界里面的解释和展现。有对象必然就会有对象之间的关系，在 LeanCloud 中也给出了传统关系型的解决方案，并且简化了代码，使得代码简洁易维护。
 假设这样一种场景，做一款时髦的相亲社交软件，男孩会在自己的资料里面标明自己喜欢的女生类型，于是有如下代码：
 
 ```
@@ -115,7 +115,7 @@ await beckham.SaveAsync ();//保存beckham的时候会自动将girlType也保存
 ```
 beckham["focusType"] = AVObject.CreateWithoutData("GirType", "5372d119e4b0d4bef5f036ae");
 ```
-值得注意的地方是，当需要从LeanCloud上读取数据的时候，默认的fetch方法是`不会加载关联数据类型的`，直到像如下代码执行之后，这些关联数据字段（如上实例中Boy的focusType字段）才会被实例化。
+值得注意的地方是，当需要从 LeanCloud 上读取数据的时候，默认的 fetch 方法是`不会加载关联数据类型的`，直到像如下代码执行之后，这些关联数据字段（如上实例中 Boy 的 focusType 字段）才会被实例化。
 
 ```
 AVObject focusType = beckham.Get<AVObject>("focusType");
@@ -123,15 +123,15 @@ await focusType.FetchIfNeededAsync();
 ```
 ## 查询
 ### AVQuery.GetAsync
-此方法对应的理解是根据 `objectId` 查询指定的一条数据，`GetAsync` 方法的参数为一个`objectId`：
+此方法对应的理解是根据 `objectId` 查询指定的一条数据，`GetAsync` 方法的参数为一个 `objectId`：
 
 ```
  AVQuery<AVObject> query = AVObject.GetQuery("Character");
             AVObject character = await query.GetAsync("549818e0e4b096e3561a6abd");
 ```
 ### 构建 AVQuery 的注意事项
-根据`objectId`查询，显然无法满足正常的需求，所以SDK提供了许多简化了操作的查询。
-首先需要明确最核心的一点，在.NET SDK中，`AVQuery`对象的所有带有`Where`开头方法，以及查询范围限定类的方法(`Skip||Limit||ThenBy||Include`等)都会返回一个全新的对象，它并不是在原始的`AVQuery`对象上修改内部属性。比如:
+根据 `objectId` 查询，显然无法满足正常的需求，所以SDK提供了许多简化了操作的查询。
+首先需要明确最核心的一点，在.NET SDK中，`AVQuery` 对象的所有带有 `Where` 开头方法，以及查询范围限定类的方法(`Skip||Limit||ThenBy||Include`等)都会返回一个全新的对象，它并不是在原始的 `AVQuery` 对象上修改内部属性。比如:
 
 ```
 AVQuery<AVObject> query=new AVQuery<AVObject>("Character")
@@ -140,19 +140,19 @@ await query.FindAsync ();
 ```
 ** 以上这一小段代码是用户经常会犯的错误案例，请勿拷贝到您的项目 **
 
-以上这段代码将返回`Character`中所有的数据，并不会返回所设想的那样 `age` 等于37数据。
+以上这段代码将返回 `Character` 中所有的数据，并不会返回所设想的那样 `age` 等于37数据。
 正确地写法应该是：
 
 ```
 AVQuery<AVObject> query=new AVQuery<AVObject>("Character").WhereEqualTo ("age", "37");
 ```
-以此类推，所有复合条件查询的构造都应该遵循用`.`这个符号进行链式创建出来的`AVQuery<T>`，比如，查找所有`age`等于37，并且`name`包含`peter`的`Character`：
+以此类推，所有复合条件查询的构造都应该遵循用`.`这个符号进行链式创建出来的 `AVQuery<T>`，比如，查找所有 `age` 等于37，并且 `name` 包含 `peter` 的`Character`：
 
 ```
 AVQuery<AVObject> query = new AVQuery<AVObject> ("Character").WhereEqualTo ("age", 37).WhereContains("name","peter");
 ```
 ### 基本查询
-`AVQuery<T>.WhereEqualTo`基本查询逻辑上可以理解为类似于sql语句中的
+`AVQuery<T>.WhereEqualTo` 基本查询逻辑上可以理解为类似于sql语句中的
 
 ```
 SELECT * FROM Persons WHERE FirstName='Bush'
@@ -266,7 +266,7 @@ await query.CountAsync().ContinueWith(t =>
 
 *查询数量限定的方法'Limit(int)'在CountAsync中不会生效。*
 ### 关系查询
-LeanCloud支持用关系`AVRelation`关联2个对象，当然也支持用关系查询来获取相关联的对象。
+LeanCloud 支持用关系 `AVRelation` 关联 2 个对象，当然也支持用关系查询来获取相关联的对象。
 
 ```
 AVObject girlType = new AVObject ("GirType");
@@ -299,7 +299,7 @@ query = query.WhereMatchesQuery ("focusType", girlTypeQuery);//找出喜欢这�
 
 请注意，默认的 limit 限制 100 也同样作用在内嵌查询上。因此如果是大规模的数据查询，你可能需要仔细构造你的查询对象来获取想要的行为。反之，不想匹配某个子查询，你可以使用 `WhereDoesNotMatchQuery` 方法，代码不再敖述。
 
-查询已经选择了喜欢的类型的男生，并且是限定在最近10个加入系统的男生，可以如此做：
+查询已经选择了喜欢的类型的男生，并且是限定在最近 10 个加入系统的男生，可以如此做：
 
 ```
 AVQuery<AVObject> query = new AVQuery<AVObject>("Boy");
@@ -307,7 +307,7 @@ query = query.OrderByDescending("createdAt");
 query = query.Limit(10);
 query = query.Include("focusType");
 ```
-你可以使用 dot（英语句号:"."）操作符来多层 Include 内嵌的对象。比如，你还想进一步获取`GirType`所关联的女生（就是那些标明了自己隶属于这个类型的女生）：
+你可以使用 dot（英语句号:"."）操作符来多层 Include 内嵌的对象。比如，你还想进一步获取 `GirType` 所关联的女生（就是那些标明了自己隶属于这个类型的女生）：
 
 ```
 query = query.Include("focusType.girls");
@@ -321,6 +321,8 @@ Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套
 await AVQuery<AVObject>.DoCloudQuery("select * from Character where age=37");
 ```
 如此做即可，其后续的操作与以前习惯的 `AVQuery` 其他查询一样，只是我们提供了另一种方式便于长期累积关系型数据库知识的开发者可以迅速迁移到 LeanCloud 上，CQL 的语法和详细用法可以参照：[CQL 详细指南](https://leancloud.cn/docs/cql_guide.html)
+
+#### CQL 查询占位符
 
 
 ## 用户
