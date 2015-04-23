@@ -33,10 +33,16 @@ LeanCloud Gem 依赖于 Ruby 2.0 及以上版本，您可以通过 RVM 或 rbenv
 gem install --no-wrappers leancloud    # 如果遇到权限问题，请手动加上 sudo
 ```
 
-安装成功后，在你的项目根目录初始化 Leanfile 文件：
+安装成功后，首先进入你的项目根目录
 
 ```sh
-leancloud init
+cd $PROJECT_ROOT_DIR    # 请将 $PROJECT_ROOT_DIR 替换为你自己的项目根目录
+```
+
+然后初始化 Leanfile 文件：
+
+```sh
+leancloud init    # 也可以通过参数进行初始化，使用 leancloud init --help 查看帮助
 ```
 
 你会得到如下 Leanfile：
@@ -97,6 +103,15 @@ components:
 
 ```sh
 leancloud install
+```
+
+LeanCloud 会自动根据 Leanfile 的配置，自动下载并集成 LeanCloud SDK。如果安装成功，你将会看到如下提示：
+
+```sh
+==> Downloading LeanCloud SDK
+==> Unpacking LeanCloud SDK package
+==> Integrating frameworks
+Install succeeded
 ```
 
 
