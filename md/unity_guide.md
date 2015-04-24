@@ -6,7 +6,7 @@
 
 ## 介绍
 
-Unity 支持 Mono 使用 .NET 语言来实现跨平台开发的解决方案，所以 LeanCloud 采用了 C# 来实现客户端的 SDK。如果你有 .NET 方面的编程经验，就很容易掌握 LeanCloud Unity SDK 的接口风格和用法。
+Unity 支持 Mono 使用 .NET 语言来实现跨平台开发的解决方案，所以 LeanCloud 采用了 C# 来实现客户端的 SDK。如果你有 .NET 方面的编程经验，就很容易掌握 LeanCloud Unity SDK 接口的风格和用法。
 
 LeanCloud Unity SDK 在很多重要的功能点上都采用了微软提供的 [基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)，所以如果你具备 .NET Framework 4.5 的开发经验，或对 .NET Framework 4.5 的 新 API  有所了解，将有助于快速上手。
 
@@ -32,7 +32,7 @@ LeanCloud 的每一个账户都可以创建多个应用。同一个应用可分�
 
 例如，记录游戏玩家的分数，直接创建一个独立的 `AVObject` 即可：
 
-```javascript
+```json
 score: 1337, playerName: "Steve", cheatMode: false
 ```
 
@@ -46,7 +46,7 @@ score: 1337, playerName: "Steve", cheatMode: false
 
 接下来，需要将上文中的 `GameScore` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有在调用 `SaveAsync` 方法时，数据才会被真正保存下来。
 
-```javascript
+```c#
 AVObject gameScore = new AVObject("GameScore");
 gameScore["score"] = 1337;
 gameScore["playerName"] = "Neal Caffrey";
@@ -57,7 +57,7 @@ Task saveTask = gameScore.SaveAsync();
 
 如果保存成功，`GameScore` 的数据列表应该显示出以下记录：
 
-```javascript
+```json
 objectId: "53706cd1e4b0d4bef5eb32ab", score: 1337, playerName: "Neal Caffrey",
 createdAt:"2014-05-12T14:40:17.706Z", updatedAt:"2014-05-12T14:40:17.706Z"
 ```
@@ -75,7 +75,7 @@ createdAt:"2014-05-12T14:40:17.706Z", updatedAt:"2014-05-12T14:40:17.706Z"
 
 将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以得到对应的 `AVObject` ：
 
-```javascript
+```c#
 AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore");
 query.GetAsync("53706cd1e4b0d4bef5eb32ab").ContinueWith(t =>
 {
@@ -84,7 +84,7 @@ query.GetAsync("53706cd1e4b0d4bef5eb32ab").ContinueWith(t =>
 ```
 要从检索到的 `AVObject` 对象中获取值，可以使用相应数据类型的 `Get<T>范型` 方法：
 
-```javascript
+```c#
 int score = gameScore.Get<int>("score");
 string playerName = gameScore.Get<string>("playerName");
 ```
@@ -98,7 +98,7 @@ string playerName = gameScore.Get<string>("playerName");
 
 当一个 `Task` 被返回，说明这个 `Task` 已经开始执行。这种基于 `Task` 的编程模型并不等同于多线程编程模型，它仅仅代表这项操作正在执行，但并未指明它运行在哪个线程之中。
 
-[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的编程模式，相对于回调模型和事件模型，有很多可取之处，具体还需要开发者对 TAP 编程模型有更深入的了解。
+[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx) 的编程模式，相对于回调模型和事件模型，有很多可取之处，具体还需要开发者对 TAP 编程模型有更深入的了解。
 
 基于上述观点，在 LeanCloud Unity SDK 中，所有异步操作都会返回一个 `Task`。关于 `Task` 的具体介绍，可以参考 [任务](#任务) 一节。
 
@@ -108,7 +108,7 @@ string playerName = gameScore.Get<string>("playerName");
 
 更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用 `SaveAsync` 之后，数据会发送到服务端来让修改生效。
 
-```javascript
+```c#
 var gameScore = new AVObject("GameScore")
 {
 	{ "score", 1338 },
@@ -135,12 +135,12 @@ gameScore.SaveAsync().ContinueWith(t =>//第一次调用 SaveAsync 是为了增�
 
 要删除某个对象，使用 `AVObject` 的 `DeleteAsync` 方法。
 
-```javascript
+```c#
 Task deleteTask = myObject.DeleteAsync();
 ```
 如果仅仅想删除对象的某一个属性，使用 `Remove` 方法。
 
-```javascript
+```c#
 //执行下面的语句会将 playerName 字段置为空
 myObject.Remove("playerName");
 
@@ -153,7 +153,7 @@ Task saveTask = myObject.SaveAsync();
 
 假设这样一种场景：做一款时髦的相亲社交软件，男孩会在自己的资料里面标明自己喜欢的女生类型，于是有如下代码：
 
-```javascript
+```c#
 AVObject girlType = new AVObject("GirType");
 girlType["typeName"] = "Hot";
 AVObject beckham = new AVObject("Boy");
@@ -164,12 +164,12 @@ Task saveTask =	beckham.SaveAsync();//保存 beckham 的时候会自动将 girlT
 ```
 当然，已存在的对象可以通过 `ObjectId` 来与目标对象进行关联：
 
-```javascript
+```c#
 beckham["focusType"] = AVObject.CreateWithoutData("GirType", "5372d119e4b0d4bef5f036ae");
 ```
 需要注意，当从 LeanCloud 上读取某一对象的数据时，默认的 `Fetch` 方法不会加载与之相关联的对象的字段，只有执行以下代码后，这些关联数据字段（如上例中 Boy 的 focusType 字段）才会被实例化。
 
-```javascript
+```c#
 AVObject focusType = beckham.Get<AVObject>("focusType");
 Task<AVObject> fetchTask = focusType.FetchIfNeededAsync();
 ```
@@ -179,7 +179,7 @@ Task<AVObject> fetchTask = focusType.FetchIfNeededAsync();
 
 首先需要明确最核心的一点，在我们的 SDK 中，`AVQuery` 对象的所有以 `Where` 开头的方法，以及限定查询范围类的方法（`Skip`、 `Limit`、 `ThenBy`、 `Include` 等）都会返回一个全新的对象，它并不是在原始的 `AVQuery` 对象上修改内部属性。比如:
 
-```javascript
+```c#
 AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore");
 query.WhereEqualTo("score", 999);//注意：这是错误的！！！
 query.FindAsync();
@@ -188,12 +188,12 @@ query.FindAsync();
 
 上面那段代码会返回 `GameScore` 中所有的数据，而不是所设想的只有 score 等于 999 的数据。正确的写法是：
 
-```javascript
+```c#
 AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore").WhereEqualTo("score", 999);
 ```
 以此类推，`AVQuery<T>` 的所有复合查询条件都应该使用 `.` 这个符号来创建链式表达式。例如，查找所有 score 等于 999，且 name 包含 neal 的 `GameScore`：
 
-```javascript
+```c#
 AVQuery<AVObject> query = new AVQuery<AVObject> ("GameScore").WhereEqualTo("score", 999).WhereContains("playerName","neal");
 ```
 
@@ -205,7 +205,7 @@ AVQuery<AVObject> query = new AVQuery<AVObject> ("GameScore").WhereEqualTo("scor
 SELECT * FROM Persons WHERE FirstName = 'Bush'
 ```
 
-```javascript
+```c#
 AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore").WhereEqualTo("score", 999);
 query.FindAsync().ContinueWith(t => {
 	IEnumerable<AVObject> avObjects = t.Result;
@@ -218,12 +218,12 @@ query.FindAsync().ContinueWith(t => {
 
 要过滤掉特定键的值时，可以使用 `whereNotEqualTo` 方法。比如检索 playerName 不等于 steve 的数据，可以这样写：
 
-```javascript
+```c#
 query = query.WhereNotEqualTo("playerName", "steve");
 ```
 同时包含多个约束条件的查询：
 
-```javascript
+```c#
 query = query.WhereNotEqualTo("playerName", "steve");
 query = query.WhereGreaterThan("age", 18);//这样书写是为了文档阅读方便，但是我们还是比较推荐上一节介绍的链式表达式去创建 AVQuery
 ```
@@ -232,7 +232,7 @@ query = query.WhereGreaterThan("age", 18);//这样书写是为了文档阅读方
 
 当仅需要查询返回较少的结果时，可以使用 `Limit` 方法来限定数量：
 
-```javascript
+```c#
 query = query.Limit(10);
 ```
 
