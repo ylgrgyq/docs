@@ -9,7 +9,7 @@
 ### 与云代码的区别
 
 * 多语言支持，目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
-* 标准的运行环境，之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后段服务器上。
+* 标准的运行环境，之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。
 
 ## 创建项目
 
@@ -45,7 +45,7 @@ app.get('/1/ping', function(req, res) {
 app.listen(parseInt(process.env.LC_APP_PORT || 3000, 10));
 ```
 
-**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问您的项目的此地址，检测项目可用性。
+**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问您的项目的此地址，检测项目可用性。请在此路由返回一个状态码为 200 的结果。如果返回其他信息，或者没有返回的话，您部署应用时我们会认为您的项目没有正确启动，部署将会失败。
 
 #### 本地运行
 
@@ -373,7 +373,7 @@ import cloudcode
 from cloudcode import CloudCodeError
 
 
-@cloudcode.before_save('Review')
+@cloudcode.before_save('Review')  # Review 为需要 hook 的 class 的名称
 function before_review_save(review):
 	comment = review.get('comment')
 	if not comment:
@@ -391,7 +391,7 @@ import leancloud
 import cloudcode
 
 
-@cloudcode.atfer_save('Comment')
+@cloudcode.atfer_save('Comment')  # Comment 为需要 hook 的 class 的名称
 def after_comment_save(comment):
 	post = leancloud.Query('Post').get(comment.id)
 	post.increment('commentCount')
@@ -411,7 +411,7 @@ def after_comment_save(comment):
 import cloudcode
 
 
-@cloudcode.after_update('Article')
+@cloudcode.after_update('Article')  # Article 为需要 hook 的 class 的名称
 def after_article_update(article):
 	print 'article with id {} updated!'.format(article.id)
 ```
@@ -425,7 +425,7 @@ import cloudcode
 import leancloud
 
 
-@cloudcode.before_delete('Album')
+@cloudcode.before_delete('Album')  # Article 为需要 hook 的 class 的名称
 def before_album_delete(albun):
     query = leancloud.Query('Photo')
     query.equal_to('album', album)
@@ -440,14 +440,14 @@ def before_album_delete(albun):
 
 ##### 在 delete 后执行动作
 
-另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`afterDelete`函数来实现：
+另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`after_delete`函数来实现：
 
 ```python
 import cloudcode
 import leancloud
 
 
-@cloudcode.after_delete('Album')
+@cloudcode.after_delete('Album')  # Album 为需要 hook 的 class 的名称
 def after_album_delete(album):
     query = leancloud.Query('Photo')
     query.equal_to('album', album)
