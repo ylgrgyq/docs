@@ -1,58 +1,80 @@
 # Unity 指南
-如果您还没有安装 LeanCloud Unity SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，我们的 SDK 支持 Unity 4.2 及更高版本。我们的 SDK 支持用Unity开发的iOS，Andorid，Windows Phone 8，Windows Store，Windows Desktop，以及网页游戏。
 
-如果你希望从项目中学习，请前往 [Unity SDK Demos](https://github.com/leancloud/leancloud-demos#unity) 。
+如果还没有安装 LeanCloud Unity SDK，请阅读 [快速入门](/start.html) 来获得该 SDK。我们的 SDK 兼容 Unity 4.2 及更高版本，支持使用 Unity 开发的 iOS、Android、Windows Phone 8、Windows Store、Windows Desktop，以及网页游戏。
 
+如果希望从演示项目中学习，请访问我们的 GitHub 资源库，下载 [Unity SDK Demos](https://github.com/leancloud/unity-sdk-demos) 。
 
 ## 介绍
-Unity本身支持Mono跨平台的.NET语言的解决方案，所以LeanCloud采用了C#来实现客户端的SDK。如果您有.NET方面的编程经验，您会很容易就掌握LeanCloud Unity SDK接口的风格以及用法。
 
-LeanCloud Unity SDK在很多重要的功能点上采用了微软提供的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式，所以您最好有.NET Framework 4.5的编程经验，或者对.NET Framework 4.5的新API有所了解。
+Unity 支持 Mono 使用 .NET 语言来实现跨平台开发的解决方案，所以 LeanCloud 采用了 C# 来实现客户端的 SDK。如果你有 .NET 方面的编程经验，就很容易掌握 LeanCloud Unity SDK 的接口风格和用法。
+
+LeanCloud Unity SDK 在很多重要的功能点上都采用了微软提供的 [基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)，所以如果你具备 .NET Framework 4.5 的开发经验，或对 .NET Framework 4.5 的 新 API  有所了解，将有助于快速上手。
 
 ## 快速入门
 
-建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
 ## 应用
-在 LeanCloud 的每个应用有自己的 ID 和客户端密钥，在客户端代码中应该用他们来初始化 SDK。
+
+部署在 LeanCloud 云端的每个应用都有自己的 ID 和客户端密钥，客户端代码应该使用它们来初始化 SDK。
+
+LeanCloud 的每一个账户都可以创建多个应用。同一个应用可分别在测试环境和生产环境，部署不同的版本。
 
 ### 初始化
-目前 Unity 的初始化只推荐用 `GameObject` 绑定 `AVOSCloudInitializeBehaviour` 脚本的方法。显式的调用 `AVClient.Initialize` 的方法不是推荐的方法。
+
+目前 Unity 的初始化只推荐用 `GameObject` 绑定 `AVOSCloudInitializeBehaviour` 脚本的方法，不推荐使用显式调用 `AVClient.Initialize` 的方法。
 
 ## 对象
-### AVObject
-在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含了与 JSON 兼容的 key-value 对应的数据。数据是 schema-free 的，你不需要在每个 AVObject 上提前指定存在哪些键，只要直接设定对应的 key-value 即可。
 
-例如，您需要检测一个游戏中的分数对象。建立一个独立的 `AVObject` 即可：
+### AVObject
+
+在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含与 JSON 兼容的键值对（key-value）数据。该数据不需要定义结构（schema），因此不用提前指定 `AVObject` 都有哪些键，只要直接设定键值对即可。
+
+例如，记录游戏玩家的分数，直接创建一个独立的 `AVObject` 即可：
+
 ```javascript
 score: 1337, playerName: "Steve", cheatMode: false
 ```
-key 必须是字母数字或下划线组成的字符串。值可以是字符串，数字，布尔值，甚至数组和字典。
 
-每个 `AVObject` 都必须有一个类（Class）名称，以便于您区分不同类型的数据。例如，我们可以将对应的分数称为 GameScore。我们建议的您将类和 key 按照 `NameYourClassesLikeThis` 以及 `nameYourKeysLikeThis` 这样的惯例命名。
+键，必须是由字母、数字或下划线组成的字符串；自定义的键，不能以 `_`（下划线）开头。值，可以是字符串、数字、布尔值，或是数组和字典。
+
+每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，游戏分数这个对象可取名为 `GameScore`。
+
+我们建议将类和键分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
 ### 保存对象
-接下来，你需要将上文中的 `GameScore` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有调用 `SaveAsync` 方法时才会实际保存到服务器：
+
+接下来，需要将上文中的 `GameScore` 存储到 LeanCloud 的服务。LeanCloud 的相关接口和 `IDictionary<string, object>` 类似，但只有在调用 `SaveAsync` 方法时，数据才会被真正保存下来。
 
 ```javascript
-AVObject gameScore =new AVObject("GameScore");
+AVObject gameScore = new AVObject("GameScore");
 gameScore["score"] = 1337;
 gameScore["playerName"] = "Neal Caffrey";
 Task saveTask = gameScore.SaveAsync();
 ```
-在运行此代码后，您应当了解保存动作是否已经生效 。为了确保数据被保存，您可以在 LeanCloud 上的[数据管理](/data.html?appid={{appid}})中查看您应用的数据。
+
+运行以上代码后，要想确认保存动作是否已经生效，可以到 LeanCloud 应用管理平台的 [数据管理](/data.html?appid={{appid}})  页面来查看数据的存储情况。
+
+如果保存成功，`GameScore` 的数据列表应该显示出以下记录：
 
 ```javascript
 objectId: "53706cd1e4b0d4bef5eb32ab", score: 1337, playerName: "Neal Caffrey",
 createdAt:"2014-05-12T14:40:17.706Z", updatedAt:"2014-05-12T14:40:17.706Z"
 ```
-此处有两件事情需要特别注明。
-首先，在运行此代码之前，您不必配置或设置一个称为「GameScore」的新类。LeanCloud 会自动创建这个类。
 
-此外，为了更方便的使用 LeanCloud，还有其它几个字段您不需要事先指定。`objectId` 是为每个对象自动生成的唯一的标识符；`createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间并会被自动填充。
-在您执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
+在此要特别说明两点：
+
+1. 运行此代码前，不用配置或设置 `GameScore` 类，LeanCloud 会自动创建这个类。
+2. 为更方便地使用 LeanCloud，以下字段不需要提前指定：
+  * `objectId` 是为每个对象自动生成的唯一的标识符。
+  * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
+
+  在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
+
 ### 检索对象
-如果你觉得将数据保存到 LeanCloud 是简洁而优雅的，获取数据更是如此。如果已知 `objectId`，就可以使用 `AVQuery` 得到对应的 `AVObject`：
+
+将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以得到对应的 `AVObject` ：
+
 ```javascript
 AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore");
 query.GetAsync("53706cd1e4b0d4bef5eb32ab").ContinueWith(t =>
@@ -60,23 +82,31 @@ query.GetAsync("53706cd1e4b0d4bef5eb32ab").ContinueWith(t =>
 	AVObject gameScore = t.Result;//如果成功获取，t.Result将是一个合法有效的AVObject
 });
 ```
-要从检索到的 `AVObject` 对象中获取值，可以使用相应的数据类型的 `Get<T>范型` 方法：
+要从检索到的 `AVObject` 对象中获取值，可以使用相应数据类型的 `Get<T>范型` 方法：
 
 ```javascript
 int score = gameScore.Get<int>("score");
 string playerName = gameScore.Get<string>("playerName");
 ```
-### 在后台工作
-在使用Unity打造一个良好用户体验并且具备实时响应的游戏时，应该遵循最基本的一个原则：不应该在主线程上进行耗时较长的操作，尤其使对于网络访问的操作。这就意味着，您需要在使用后台进程来处理这些操作。
+### 在后台运行
 
-为了使代码简洁优雅，我们在Unity上也实现了与.NET Framework 4.5提出的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式实现异步操作。我们添加了一个`Task`类，一个`Task`代表一个异步的操作。`Task`的典型用法就是从一个方法返回一个`Task`，并且它提供了一个接口可以在在执行`Task`之前就传入了处理`Task`执行结果的方法代理。当一个 `Task` 被返回，说明这个`Task`已经开始执行，这种基于`Task`的编程模型并不等同于多线程编程模型：它仅仅代表着这一项操作正在执行，并没有告知它在哪个线程里面被执行。
+要想用 Unity 打造一款有良好用户体验，并能实时响应的游戏，应该遵循一个最基本的原则：不应该在主线程上进行耗时较长的操作，尤其是网络访问类的操作。这些操作应该使用后台进程来处理。
 
-[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的编程模式相对于回调模型以及事件模型都有很多优势之处，具体还需要开发者对TAP编程模型有更深入了解。
+为了让代码简洁而优雅，我们在  Unity 上实现了与 .NET Framework 4.5 所采用的 [基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx) 相同的异步操作。我们添加了一个 `Task` 类，一个 `Task` 代表一个异步的操作。
 
-基于以上所述观点，在LeanCloud Unity SDK中所有的异步操作都将返回一个`Task`。
-具体关于`Task`介绍，我们可以参照[任务](#任务)一节。
+`Task` 的典型用法，是从一个方法返回一个 `Task`，并且它提供了一个接口，可以在执行 `Task` 之前，传入要处理 `Task` 执行结果的方法代理。
+
+当一个 `Task` 被返回，说明这个 `Task` 已经开始执行。这种基于 `Task` 的编程模型并不等同于多线程编程模型，它仅仅代表这项操作正在执行，但并未指明它运行在哪个线程之中。
+
+[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的编程模式，相对于回调模型和事件模型，有很多可取之处，具体还需要开发者对 TAP 编程模型有更深入的了解。
+
+基于上述观点，在 LeanCloud Unity SDK 中，所有异步操作都会返回一个 `Task`。关于 `Task` 的具体介绍，可以参考 [任务](#任务) 一节。
+
+<!--TODO: ###离线存储对象 ?-->
+
 ### 更新对象
-更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用`SaveAsync`之后会发送到服务端生效。
+
+更新对象和保存对象有点相似，只是更新对象会覆盖同名属性的值，在调用 `SaveAsync` 之后，数据会发送到服务端来让修改生效。
 
 ```javascript
 var gameScore = new AVObject("GameScore")
@@ -85,111 +115,127 @@ var gameScore = new AVObject("GameScore")
 	{ "playerName", "Peter Burke" },
 	{ "cheatMode", false },
 	{ "skills", new List<string> { "FBI", "Agent Leader" } },
-};//创建一个全新的GameScore对象
-gameScore.SaveAsync().ContinueWith(t =>//第一次调用`SaveAsync`是为了增加这个全新的对象
+};//创建一个全新的 GameScore 对象
+gameScore.SaveAsync().ContinueWith(t =>//第一次调用 SaveAsync 是为了增加这个全新的对象
 {
-	// 保存成功之后，修改一个已经在服务端生效的数据，这里我们修改cheatMode和score
-	// LeanCloud 只会针对指定的属性进行覆盖操作，本例中的playerName不会被修改
+	// 保存成功之后，修改一个已经在服务端生效的数据，这里我们修改 cheatMode 和 score
+	// LeanCloud 只会针对指定的属性进行覆盖操作，本例中的 playerName 不会被修改
 	gameScore["cheatMode"] = true;
 	gameScore["score"] = 9999;
 	gameScore.SaveAsync();//第二次调用是为了把刚才修改的2个属性发送到服务端生效。
 });
 ```
+
+<!--TODO: 
+### 计数器
+### 数组
+-->
+
 ### 删除对象
-如果想删除某个对象可以直接调用`AVObject`的`DeleteAsync`方法。
+
+要删除某个对象，使用 `AVObject` 的 `DeleteAsync` 方法。
 
 ```javascript
 Task deleteTask = myObject.DeleteAsync();
 ```
-如果仅仅想删除某个对象的某一个属性，可以调用`Remove`方法。
+如果仅仅想删除对象的某一个属性，使用 `Remove` 方法。
 
 ```javascript
-//执行下面的语句会将playerName字段置为空
+//执行下面的语句会将 playerName 字段置为空
 myObject.Remove("playerName");
 
 // 将删除操作发往服务器生效。
 Task saveTask = myObject.SaveAsync();
 ```
 ### 关系
-软件程序就是抽象现实中的对象之间的的关系在计算机世界里面的解释和展现。有对象必然就会有对象之间的关系，在LeanCloud中也给出了传统关系型的解决方案，并且简化了代码，使得代码简洁易维护。
-假设这样一种场景，做一款时髦的相亲社交软件，男孩会在自己的资料里面标明自己喜欢的女生类型，于是有如下代码：
+
+软件程序，就是在抽象现实中，对象之间的关系在计算机世界里的解释和展现。有对象必然就会有对象之间的关系，LeanCloud 为这种传统的关系型数据提供了解决方案，减少了代码量，让代码变得简洁且易于维护。
+
+假设这样一种场景：做一款时髦的相亲社交软件，男孩会在自己的资料里面标明自己喜欢的女生类型，于是有如下代码：
 
 ```javascript
-AVObject girlType = new AVObject ("GirType");
-girlType ["typeName"] = "Hot";
-AVObject beckham = new AVObject ("Boy");
-beckham["name"]="David Beckham";
-beckham ["age"] = 38;
-beckham ["focusType"] = girlType;
-Task saveTask=	beckham.SaveAsync ();//保存beckham的时候会自动将girlType也保存到服务器。
+AVObject girlType = new AVObject("GirType");
+girlType["typeName"] = "Hot";
+AVObject beckham = new AVObject("Boy");
+beckham["name"]= "David Beckham";
+beckham["age"] = 38;
+beckham["focusType"] = girlType;
+Task saveTask =	beckham.SaveAsync();//保存 beckham 的时候会自动将 girlType 也保存到服务器。
 ```
-当然必然存在一种方法就是将已存在的对象通过`ObjectId`将它于目标对象进行关联：
+当然，已存在的对象可以通过 `ObjectId` 来与目标对象进行关联：
 
 ```javascript
 beckham["focusType"] = AVObject.CreateWithoutData("GirType", "5372d119e4b0d4bef5f036ae");
 ```
-值得注意的地方是，当需要从LeanCloud上读取数据的时候，默认的fetch方法是`不会加载关联数据类型的`，直到像如下代码执行之后，这些关联数据字段（如上实例中Boy的focusType字段）才会被实例化。
+需要注意，当从 LeanCloud 上读取某一对象的数据时，默认的 `Fetch` 方法不会加载与之相关联的对象的字段，只有执行以下代码后，这些关联数据字段（如上例中 Boy 的 focusType 字段）才会被实例化。
 
 ```javascript
 AVObject focusType = beckham.Get<AVObject>("focusType");
 Task<AVObject> fetchTask = focusType.FetchIfNeededAsync();
 ```
 ## 查询
-根据`objectId`查询，显然无法满足正常的需求，所以Unity SDK提供了许多简化了操作的查询。
-首先需要明确最核心的一点，在Unity SDK中，`AVQuery`对象的所有带有`Where`开头方法，以及查询范围限定类的方法(`Skip||Limit||ThenBy||Include`等)都会返回一个全新的对象，它并不是在原始的`AVQuery`对象上修改内部属性。比如:
+
+通过 `objectId` 来检索数据，显然无法满足需求，所以 LeanCloud Unity SDK 还提供了更多的查询方法来简化操作。
+
+首先需要明确最核心的一点，在我们的 SDK 中，`AVQuery` 对象的所有以 `Where` 开头的方法，以及限定查询范围类的方法（`Skip`、 `Limit`、 `ThenBy`、 `Include` 等）都会返回一个全新的对象，它并不是在原始的 `AVQuery` 对象上修改内部属性。比如:
 
 ```javascript
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore")
-query.WhereEqualTo ("score", 999);//注意：这是错误的！！！
-query.FindAsync ();
+AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore");
+query.WhereEqualTo("score", 999);//注意：这是错误的！！！
+query.FindAsync();
 ```
-** 以上这一小段代码是用户经常会犯的错误案例，请勿拷贝到您的项目 **
+**以上代码是用户经常会犯的错误案例，请勿拷贝到项目中使用！**
 
-以上这段代码将返回`GameScore`中所有的数据，并不会返回所设想的那样`score`等于999数据。
-正确地写法应该是：
+上面那段代码会返回 `GameScore` 中所有的数据，而不是所设想的只有 score 等于 999 的数据。正确的写法是：
 
 ```javascript
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore").WhereEqualTo ("score", 999);
+AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore").WhereEqualTo("score", 999);
 ```
-以此类推，所有复合条件查询的构造都应该遵循用`.`这个符号进行链式创建出来的`AVQuery<T>`，比如，查找所有`score`等于999，并且`name`包含`neal`的`GameScore`：
+以此类推，`AVQuery<T>` 的所有复合查询条件都应该使用 `.` 这个符号来创建链式表达式。例如，查找所有 score 等于 999，且 name 包含 neal 的 `GameScore`：
 
 ```javascript
-AVQuery<AVObject> query = new AVQuery<AVObject> ("GameScore").WhereEqualTo ("score", 999).WhereContains("playerName","neal");
+AVQuery<AVObject> query = new AVQuery<AVObject> ("GameScore").WhereEqualTo("score", 999).WhereContains("playerName","neal");
 ```
 
 ### 基本查询
-`AVQuery<T>.WhereEqualTo`基本查询逻辑上可以理解为类似于sql语句中的
+
+`AVQuery<T>.WhereEqualTo`， 逻辑上可以理解为类似于 SQL 语句中的 `=` 操作。
 
 ```sql
-SELECT * FROM Persons WHERE FirstName='Bush'
+SELECT * FROM Persons WHERE FirstName = 'Bush'
 ```
-的`=`操作，如下：
 
 ```javascript
-AVQuery<AVObject> query=new AVQuery<AVObject>("GameScore").WhereEqualTo ("score", 999);
-query.FindAsync ().ContinueWith (t => {
-	IEnumerable<AVObject> avObjects=t.Result;
-	int sum=avObjects.Count();
+AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore").WhereEqualTo("score", 999);
+query.FindAsync().ContinueWith(t => {
+	IEnumerable<AVObject> avObjects = t.Result;
+	//获取返回记录数
+	int sum = avObjects.Count();
 });
 ```
+
 ### 查询条件
-如果要过滤掉特定键的值时可以使用 whereNotEqualTo 方法。比如需要查询 playerName 不等于“steve”的数据时可以这样写：
+
+要过滤掉特定键的值时，可以使用 `whereNotEqualTo` 方法。比如检索 playerName 不等于 steve 的数据，可以这样写：
 
 ```javascript
-query = query.WhereNotEqualTo ("playerName", "steve");
+query = query.WhereNotEqualTo("playerName", "steve");
 ```
-同时包含多个约束条件的查询，可以这样写：
+同时包含多个约束条件的查询：
 
 ```javascript
-query = query.WhereNotEqualTo ("playerName", "steve");
-query = query.WhereGreaterThan("age", 18);//这样书写是为了文档阅读方便，但是我们还是比较推荐上一节介绍的链式表达式去创建AVQuery
+query = query.WhereNotEqualTo("playerName", "steve");
+query = query.WhereGreaterThan("age", 18);//这样书写是为了文档阅读方便，但是我们还是比较推荐上一节介绍的链式表达式去创建 AVQuery
 ```
-以此类推，可以添加多个约束条件，他们彼此是`AND`的关系。
-有些需求中，也许只要较少的几条查询结果即可，这种情况下，可以通过设定查询结果的数量：
+
+约束条件可以设置多个，它们彼此是 `AND` 的关系。
+
+当仅需要查询返回较少的结果时，可以使用 `Limit` 方法来限定数量：
 
 ```javascript
-query = query.Limit (10);
+query = query.Limit(10);
 ```
+
 在数据较多的情况下，分页显示数据是比较合理的解决办法，limit 默认 100，最大1000，在 0 到 1000 范围之外的都强制转成默认的 100。
 Skip 方法可以做到跳过首次查询的多少条数据来实现分页的功能。比如，一页显示10条数据，那么跳过前10个查询结果的方法就是：
 
