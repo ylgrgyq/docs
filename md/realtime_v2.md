@@ -217,12 +217,21 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 
 可以使用「云代码 Hook」！
 
-云代码 hook 允许你通过自定义的云代码函数处理实时通信中的某些事件，修改默认的流程等等。目前开放了两个  hook 云函数：
+云代码 hook 允许你通过自定义的云代码函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
 
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
+* _conversationStart 创建对话，在签名校验（如果开启）之后，实际创建之前
+* _conversationAdd 向对话添加成员，在签名校验（如果开启）之后，实际加入之前，包括主动加入和被其他用户加入两种情况
+* _conversationRemove 从对话中踢出成员，在签名校验（如果开启）之后，实际踢出之前，用户自己退出对话不会调用
 
 关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云代码 hook 要求云代码部署在云代码生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云代码 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
+
+### 使用场景
+
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云代码 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+
+Conversation 相关的 hook 可以在应用签名之外增加额外的权限判断，控制对话是否允许被建立、某些用户是否允许被加入对话等。你可以用这个 hook 实现黑名单功能。
 
 ### _messageReceived
 
@@ -273,7 +282,59 @@ skip | 可选，如果是 truthy 将跳过推送（比如已经在云代码里�
 offlinePeers | 可选，数组，筛选过的推送收件人
 pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
-示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云代码 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+### _conversationStart
+
+在创建对话时调用，发生在签名验证之后、创建对话之前
+
+#### 参数
+
+参数 | 说明
+--- | ---
+initBy | 由谁发起的 clientId
+members | 初始成员数组，包含初始成员
+
+#### 返回
+
+参数 | 说明
+--- | ---
+reject | 是否拒绝，可选，默认为 `false`
+
+### _conversationAdd
+
+在将用户加入到对话时调用，发生在签名验证之后、加入对话之前。如果是自己加入，那么 `initBy` 和 `members` 的唯一元素是一样的。
+
+#### 参数
+
+参数 | 说明
+--- | ---
+initBy | 由谁发起的 clientId
+members | 要加入的成员，数组
+convId | 对话 id
+
+#### 返回
+
+参数 | 说明
+--- | ---
+reject | 是否拒绝，默认为 `false`
+
+### _conversationRemove
+
+在创建对话时调用，发生在签名验证之后、从对话移除成员之前。
+移除自己时不会触发这个 hook
+
+#### 参数
+
+参数 | 说明
+--- | ---
+initBy | 由谁发起
+members | 要踢出的成员，数组
+convId | 对话 id
+
+#### 返回
+
+参数 | 说明
+--- | ---
+reject | 是否拒绝，默认为 `false`
 
 ## Android 开发指南（v2）
 
