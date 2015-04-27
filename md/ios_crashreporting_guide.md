@@ -38,6 +38,7 @@ leancloud upload_symbol \
 ```
 
 你可以从这些位置寻找你的应用的符号文件，具体位置跟你的发布流程相关：
+
 * 当你 "Archive" 你的应用时会得到一个 `xcarchive` 文件。你可以通过 Xcode Organizer 里面的 Archives 选项卡定位到文件位置。
 * dSYM 文件是和你的应用同时产生的。它经常仅在使用 'Release' 或 'Archiving' 构建应用时出现。你可以在 Xcode DerivedData 文件夹下面你生成的 .app 同级的文件夹下面找到。
 * DWARF 是最底层的也是我们支持最好的，它可以通过 strip 你生成的二进制文件得到
@@ -55,6 +56,7 @@ leancloud upload_symbol \
 [self performSelector:@selector(crash) withObject:nil afterDelay:5.0];
 ```
 现在，按下面的步骤操作：
+
 1. build，run，然后 stop 应用。
 2. 不使用调试器开启应用，因为调试器开启时不会收集崩溃信息。最简单的方法就是在你 Home 界面点开应用。
 3. 等待应用崩溃。
