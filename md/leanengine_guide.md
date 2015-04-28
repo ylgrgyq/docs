@@ -328,7 +328,7 @@ if __name__ == '__main__':
 	server.serve_forever()
 ```
 
-这样您的应用的 `/1/functions` 和 `/1.1/functions` 的路径将会在中间件中处理，其中包含了 Cloud Func 与 Cloud Hook 内部使用的 URL。因此您的应用中不应该处理这两个地址开头的 URL。
+这样您的应用的 `/1/functions` 和 `/1.1/functions` 的路径将会在中间件中处理，其中包含了 Cloud Func 与 Cloud Hook 内部使用的 URL。因此您的应用中不应该处理这两个地址开头的 URL。另外上面的 `/1/ping` 也可以省掉了。
 
 #### Cloud Func
 
@@ -338,8 +338,8 @@ if __name__ == '__main__':
 import cloudcode
 
 @cloudcode.cloud_func
-def hello():
-	return 'Hello, World!'
+def hello(name):
+	return 'Hello, {}!'.format(name)
 ```
 
 将项目部署到 LeanEngine 环境上之后，您可以使用 REST API 来访问这个 Cloud Func：
@@ -348,14 +348,14 @@ def hello():
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
        -H "X-AVOSCloud-Application-Id: ige9yk2v2jxb0a2sfhw325ezbdzdgpmiy3gmtj31df9nwo84"          \
        -H "X-AVOSCloud-Application-Key: difvp55b80gg57r5rzwdmnwwieq8mvsioxf8jwvipl366tzz"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+       -H "X-AVOSCloud-Application-Production: 0"  -d '{name: "LeanCloud"}' \
 https://leancloud.cn/1.1/functions/hello
 ```
 
 返回结果：
 
 ```json
-{"result":"Hello, World!"}
+{"result":"Hello, LeanCloud!"}
 ```
 
 另外您可以使用任意客户端的 LeanCloud SDK 调用此 Cloud Func。
