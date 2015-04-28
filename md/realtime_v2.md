@@ -247,6 +247,7 @@ Conversation 相关的 hook 可以在应用签名之外增加额外的权限判�
 --- | ---
 fromPeer | 消息发送者的 ID
 convId   | 消息所属对话的 ID
+toPeers | 解析出的对话相关的 Client ID
 transient | 是否是 transient 消息
 content | 消息体字符串
 receipt | 是否要求回执
@@ -259,6 +260,7 @@ sourceIP | 消息发送者的 IP
 --- | ---
 drop | 可选，如果返回 truthy 值消息将被丢弃
 content | 可选，修改后的 content，如果不提供则保留原消息
+toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
 
 ### _receiversOffline
 
