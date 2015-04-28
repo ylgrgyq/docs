@@ -380,7 +380,10 @@ function before_review_save(review):
 		raise CloudCodeError('No comment!')
 	if len(comment) > 140:
 		review.comment.set('comment', comment[:137] + '...')
+	return review
 ```
+
+请记得在 `before_xxx` 类的 hook 中，最后返回修改后的对象，请求才能生效。
 
 ##### 在 save 后执行动作
 
@@ -489,3 +492,7 @@ def after_user_save(user):
     except leancloud.CloudCodeError, e:
     	print e
 ```
+
+#### 请求用户
+
+如果您请求 Cloud Func 或者 Cloud Hook 的时候，带上 `X-AVOSCloud-Session-Token` 这个请求头（或者使用 Client 对应的功能），值为您应用内某个用户的 session token，就可以直接通过 `cloud.user` 拿到此用户对象。方便您进行相关的权限限制，以及进行用户相关的操作。
