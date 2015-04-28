@@ -11,7 +11,7 @@
 [AVOSCloudCrashReporting enable];
 
 // Setup AVOSCloud
-[AVOSCloud setApplicationId:@"LeanCloudAppId" clientKey:@"LeanCloudClientKey"];
+[AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
 ```
 只要开启了崩溃报告，你应用的崩溃信息将会发送到 LeanCloud 服务器，并且会在应用后台统计分析中列出来。
 
@@ -25,16 +25,16 @@
 ```sh
 leancloud upload_symbol \
 -f "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}" \
--i your_appid \
--k your_masterkey
+-i {{appid}} \
+-k {{appkey}}
 ```
 
 要手动上传符号文件，你可以使用使用命令：
 ```sh
 leancloud upload_symbol \
 -f "<dSYM/xcarchive/DWARF path>" \
--i your_appid \
--k your_masterkey
+-i {{appid}} \
+-k {{appkey}}
 ```
 
 你可以从这些位置寻找你的应用的符号文件，具体位置跟你的发布流程相关：
