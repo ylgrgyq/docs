@@ -660,6 +660,26 @@ AV.Cloud.onLogin(function(request, response) {
 });
 ```
 
+### 错误响应码
+
+有些时候你希望能自己定义错误响应码。云代码的 `response.error(err)` 回调中，如果 err 对象有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 `1`， `message` 为 `err` 对象的字符串形式。比如下列代码：
+
+```
+AV.Cloud.define('errorCode', function(req, res) {
+  AV.User.logIn('NoThisUser', 'lalala', {
+    error: function(user, err) {
+      res.error(err);
+      // 客户端收到的响应： {"code":211,"error":"Could not find user"}
+    }
+  });
+});
+
+AV.Cloud.define('customErrorCode', function(req, res) {
+  res.error({code: 123, message: 'custom error message'});
+  // 客户端收到的响应： {"code":123,"error":"custom error message"}
+});
+```
+
 ## 定时任务
 
 很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
