@@ -383,7 +383,7 @@ function before_review_save(review):
 	return review
 ```
 
-请记得在 `before_xxx` 类的 hook 中，最后返回修改后的对象，请求才能生效。
+**注意**：请记得在 `before_xxx` 类的 hook 中，最后返回修改后的对象，请求才能生效。
 
 ##### 在 save 后执行动作
 
@@ -405,6 +405,8 @@ def after_comment_save(comment):
 ```
 
 如果`after_save`函数调用失败，save请求仍然会返回成功应答给客户端。`after_save`发生的任何错误，都将记录到 LeanEngine 日志里。
+
+**注意**：在 `after_xxx` 的 hook 中，不需要任何返回结果。此时对象的修改已经保存在了数据库中，如果您需要再次修改此对象的话，只要调用 `save()` 方法即可。
 
 ##### 在 update 更新后执行动作
 
@@ -493,6 +495,22 @@ def after_user_save(user):
     	print e
 ```
 
-#### 请求用户
+##### 在用户登录成功之后
 
-如果您请求 Cloud Func 或者 Cloud Hook 的时候，带上 `X-AVOSCloud-Session-Token` 这个请求头（或者使用 Client 对应的功能），值为您应用内某个用户的 session token，就可以直接通过 `cloud.user` 拿到此用户对象。方便您进行相关的权限限制，以及进行用户相关的操作。
+有些时候你可能需要禁止一些用户登录（比如黑名单内的用户），可以定义以下函数
+
+```python
+import cloudcode
+
+
+@cloudcoode.on_login
+def on_user_login(user):
+    user.increment('login_count', 1)
+    if user.get('username') == 'noLogin':
+        raise cloudcode.CloudCodeError('Forbidden')
+```
+
+
+#### 当前登陆用户
+
+如果您请求 Cloud Func 或者 Cloud Hook 的时候，带上 `X-AVOSCloud-Session-Token` 这个请求头，值为您应用内某个用户的 session token，（或者直接使用 Client 对应的功能）就可以直接通过 `cloudcode.user` 拿到此用户对象。方便您进行相关的权限限制，以及进行用户相关的操作。
