@@ -66,6 +66,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 * channels 当前设备订阅的频道数组。
 * appName 应用名称，只读
 * appVersion 应用版本，只读
+* deviceProfile 设备对应的后台自定义证书名称，用于多证书推送
 
 ## 发送推送消息
 
