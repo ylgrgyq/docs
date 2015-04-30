@@ -253,7 +253,7 @@ var AV = require('avoscloud-sdk').AV;
 
 APP_ID = process.env.LC_APP_ID || '{{appid}}';
 APP_KEY = process.env.LC_APP_KEY || '{{appkey}}';
-MASTER_KEY = process.env.LC_APP_MASTER_KEY || '{{appmasterkey}}';
+MASTER_KEY = process.env.LC_APP_MASTER_KEY || '{{masterkey}}';
 
 AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```
