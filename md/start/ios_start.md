@@ -8,6 +8,12 @@
 pod 'AVOSCloud'
 ```
 
+如果使用崩溃收集功能，可以添加：
+
+```
+pod 'AVOSCloudCrashReporting'
+```
+
 如果使用实时通信功能，可以添加：
 
 ```
@@ -151,7 +157,7 @@ Install succeeded
 - `CoreLocation.framework`
 - `libicucore.dylib`
 
-如果使用 `AVOSCloudUI` ，还需额外添加 `CFNetwork.framework`
+如果使用 `AVOSCloudCrashReporting` ，还需额外添加 `libc++.dylib`
 
 
 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
@@ -176,13 +182,9 @@ Install succeeded
 
 创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
 
-修改编译选项 **Architectures** 值为 `Standard architectures(armv7,armv7s)`：
+修改编译选项 **Architectures** 值为 `Standard architectures(armv7,arm64)`：
 
 ![img](https://leancloud.cn/docs/images/quick_start/ios/arm64.png)
-
-如果你的目标 iOS 版本小于 5.0，你需要添加 `-fobjc-arc` 标志到你的 target build settings 里的 **Other Linker Flags** 选项：
-
-![img](https://leancloud.cn/docs/images/quick_start/ios/fobjc.gif)
 
 保证在你的 `.h` 头文件里包含了 SDK 库文件：
 

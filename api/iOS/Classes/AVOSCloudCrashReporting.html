@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="html/html; charset=utf-8" />
-		<title>AVIMVideoMessage Class Reference</title>
+		<title>AVOSCloudCrashReporting Class Reference</title>
 		<meta id="xcode-display" name="xcode-display" content="render"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" media="all" />
 		<link rel="stylesheet" type="text/css" media="print" href="../css/stylesPrint.css" />
@@ -16,7 +16,7 @@
 			</div>
 			
 			<div id="title" role="banner">
-				<h1 class="hideInXcode">AVIMVideoMessage Class Reference</h1>
+				<h1 class="hideInXcode">AVOSCloudCrashReporting Class Reference</h1>
 			</div>
 			<ul id="headerButtons" role="toolbar">
 				<li id="toc_button">
@@ -25,6 +25,8 @@
 				<li id="jumpto_button" role="navigation">
 					<select id="jumpTo">
 	<option value="top">Jump To&#133;</option>
+	
+	<option value="overview">Overview</option>
 	
 	
 	
@@ -39,7 +41,9 @@
 	
 	<option value="class_methods">Class Methods</option>
 	
-	<option value="//api/name/messageWithText:attachedFilePath:attributes:">&nbsp;&nbsp;&nbsp;&nbsp;+ messageWithText:attachedFilePath:attributes:</option>
+	<option value="//api/name/enable">&nbsp;&nbsp;&nbsp;&nbsp;+ enable</option>
+	
+	<option value="//api/name/isCrashReportingEnabled">&nbsp;&nbsp;&nbsp;&nbsp;+ isCrashReportingEnabled</option>
 	
 	
 	
@@ -52,10 +56,14 @@
 		<nav id="tocContainer" class="isShowingTOC">
 			<ul id="toc" role="tree">
 				
+<li role="treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#overview">Overview</a></span></li>
+
 
 
 
 <li role="treeitem" id="task_treeitem"><span class="nodisclosure"></span><span class="sectionName"><a href="#tasks">Tasks</a></span><ul>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#task_Crash Reporting">Crash Reporting</a></span></li>
 	
 </ul></li>
 
@@ -67,7 +75,9 @@
 
 <li role="treeitem" class="children"><span class="disclosure"></span><span class="sectionName"><a href="#class_methods">Class Methods</a></span><ul>
 	
-	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/messageWithText:attachedFilePath:attributes:">messageWithText:attachedFilePath:attributes:</a></span></li>
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/enable">enable</a></span></li>
+	
+	<li><span class="nodisclosure"></span><span class="sectionName"><a href="#//api/name/isCrashReportingEnabled">isCrashReportingEnabled</a></span></li>
 	
 </ul></li>
 
@@ -78,7 +88,7 @@
 		</nav>
 		<article>
 			<div id="contents" class="isShowingTOC" role="main">
-				<a title="AVIMVideoMessage Class Reference" name="top"></a>
+				<a title="AVOSCloudCrashReporting Class Reference" name="top"></a>
 				<div class="main-navigation navigation-top">
 					<ul>
 	<li><a href="../index.html">Index</a></li>
@@ -87,7 +97,7 @@
 				</div>
 				<div id="header">
 					<div class="section-header">
-						<h1 class="title title-header">AVIMVideoMessage Class Reference</h1>
+						<h1 class="title title-header">AVOSCloudCrashReporting Class Reference</h1>
 					</div>		
 				</div>
 				<div id="container">	
@@ -95,18 +105,23 @@
 					<div class="section section-specification"><table cellspacing="0"><tbody>
 						<tr>
 	<td class="specification-title">Inherits from</td>
-	<td class="specification-value">AVIMTypedMessage : <a href="../Classes/AVIMMessage.html">AVIMMessage</a> : NSObject</td>
-</tr><tr>
-	<td class="specification-title">Conforms to</td>
-	<td class="specification-value"><a href="../Protocols/AVIMTypedMessageSubclassing.html">AVIMTypedMessageSubclassing</a></td>
+	<td class="specification-value">NSObject</td>
 </tr><tr>
 	<td class="specification-title">Declared in</td>
-	<td class="specification-value">AVIMVideoMessage.h</td>
+	<td class="specification-value">AVOSCloudCrashReporting.h</td>
 </tr>
 						</tbody></table></div>
 					
                     
                     
+					
+					<div class="section section-overview">
+						<a title="Overview" name="overview"></a>
+						<h2 class="subtitle subtitle-overview">Overview</h2>
+						<p>The <code>AVOSCloudCrashReporting</code> class is responsible for enabling crash reporting in your application.</p>
+					</div>
+					
+					
 					
 					
 					
@@ -115,13 +130,19 @@
 						<h2 class="subtitle subtitle-tasks">Tasks</h2>
 						
 						
+						<a title="Crash Reporting" name="task_Crash Reporting"></a>
 						
-						
-
+<h3 class="subsubtitle task-title">Crash Reporting</h3>
 						<ul class="task-list">
 							<li>
 	<span class="tooltip">
-		<code><a href="#//api/name/messageWithText:attachedFilePath:attributes:">+&nbsp;messageWithText:attachedFilePath:attributes:</a></code>
+		<code><a href="#//api/name/enable">+&nbsp;enable</a></code>
+	</span>
+	
+	
+</li><li>
+	<span class="tooltip">
+		<code><a href="#//api/name/isCrashReportingEnabled">+&nbsp;isCrashReportingEnabled</a></code>
 	</span>
 	
 	
@@ -141,40 +162,20 @@
 						<h2 class="subtitle subtitle-methods">Class Methods</h2>
 						
 						<div class="section-method">
-	<a name="//api/name/messageWithText:attachedFilePath:attributes:" title="messageWithText:attachedFilePath:attributes:"></a>
-	<h3 class="subsubtitle method-title">messageWithText:attachedFilePath:attributes:</h3>
+	<a name="//api/name/enable" title="enable"></a>
+	<h3 class="subsubtitle method-title">enable</h3>
 	
 	
 	
 	<div class="method-subsection brief-description">
-		<p>使用本地文件创建视频消息。</p>
+		<p>Enables crash reporting for your app.</p>
 	</div>		
 	
     
 
-	<div class="method-subsection method-declaration"><code>+ (instancetype)messageWithText:(NSString *)<em>text</em> attachedFilePath:(NSString *)<em>attachedFilePath</em> attributes:(NSDictionary *)<em>attributes</em></code></div>
+	<div class="method-subsection method-declaration"><code>+ (void)enable</code></div>
 
     
-	
-	<div class="method-subsection arguments-section parameters">
-		<h4 class="method-subtitle parameter-title">Parameters</h4>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>text</em></dt>
-			<dd><p>－ 消息文本.</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>attachedFilePath</em></dt>
-			<dd><p>－ 文件路径</p></dd>
-		</dl>
-		
-		<dl class="argument-def parameter-def">
-			<dt><em>attributes</em></dt>
-			<dd><p>－ 用户附加属性</p></dd>
-		</dl>
-		
-	</div>
 	
 	
 	
@@ -184,7 +185,7 @@
 	
 	<div class="method-subsection discussion-section">
 		<h4 class="method-subtitle">Discussion</h4>
-		<p>使用本地文件创建视频消息。</p>
+		<div class="warning"><p><strong>Warning:</strong> This must be called before you set Application ID and Client Key on <a href="../Classes/AVOSCloud.html">AVOSCloud</a>.</p></div>
 	</div>
 	
 	
@@ -195,7 +196,48 @@
 	
 	<div class="method-subsection declared-in-section">
 		<h4 class="method-subtitle">Declared In</h4>
-		<code class="declared-in-ref">AVIMVideoMessage.h</code><br />
+		<code class="declared-in-ref">AVOSCloudCrashReporting.h</code><br />
+	</div>				
+	
+	
+</div>
+						
+						<div class="section-method">
+	<a name="//api/name/isCrashReportingEnabled" title="isCrashReportingEnabled"></a>
+	<h3 class="subsubtitle method-title">isCrashReportingEnabled</h3>
+	
+	
+	
+	<div class="method-subsection brief-description">
+		<p>Indicates whether crash reporting is currently enabled.</p>
+	</div>		
+	
+    
+
+	<div class="method-subsection method-declaration"><code>+ (BOOL)isCrashReportingEnabled</code></div>
+
+    
+	
+	
+	
+	<div class="method-subsection return">
+		<h4 class="method-subtitle parameter-title">Return Value</h4>
+		<p><code>YES</code> if crash reporting is enabled, <code>NO</code> - otherwise.</p>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<div class="method-subsection declared-in-section">
+		<h4 class="method-subtitle">Declared In</h4>
+		<code class="declared-in-ref">AVOSCloudCrashReporting.h</code><br />
 	</div>				
 	
 	
