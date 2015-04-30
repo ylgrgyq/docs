@@ -152,7 +152,7 @@ git push -u origin master
 ![image](../images/csdn_code2.png)
 
 添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
-保存到”项目设置””项目公钥”中，创建新的一项avoscloud:
+保存到”项目设置” > ”项目公钥”中，创建新的一项avoscloud:
 
 ![image](../images/csdn_code3.png)
 
@@ -204,7 +204,7 @@ git push -u origin master
 
 ### Gitlab 无法部署问题
 
-很多用户自己使用[Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到LeanCloud 的问题，即使设置了Deploy Key，却仍然要求输入密码。
+很多用户自己使用[Gitlab](http://gitlab.org/)搭建了自己的源码仓库，但有时会遇到无法部署到LeanCloud 的问题，即使设置了Deploy Key，却仍然要求输入密码。
 
 可能的原因和解决办法如下：
 
@@ -251,9 +251,9 @@ LeanEngine 上有一些平台相关的环境变量，可以在您的代码中使
 ```js
 var AV = require('avoscloud-sdk').AV;
 
-APP_ID = process.env.LC_APP_ID || 'your_app_id';
-APP_KEY = process.env.LC_APP_KEY || 'your_app_key';
-MASTER_KEY = process.env.LC_APP_MASTER_KEY || 'your_master_key';
+APP_ID = process.env.LC_APP_ID || '{{appid}}';
+APP_KEY = process.env.LC_APP_KEY || '{{appkey}}';
+MASTER_KEY = process.env.LC_APP_MASTER_KEY || '{{appmasterkey}}';
 
 AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```
@@ -346,8 +346,8 @@ def hello(name):
 
 ```bash
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: ige9yk2v2jxb0a2sfhw325ezbdzdgpmiy3gmtj31df9nwo84"          \
-       -H "X-AVOSCloud-Application-Key: difvp55b80gg57r5rzwdmnwwieq8mvsioxf8jwvipl366tzz"        \
+       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
+       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
        -H "X-AVOSCloud-Application-Production: 0"  -d '{name: "LeanCloud"}' \
 https://leancloud.cn/1.1/functions/hello
 ```
@@ -423,7 +423,7 @@ def after_article_update(article):
 
 ##### 在 delete 前执行动作
 
-很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过`before_delete` hook 来来做这>些检查，示例代码：
+很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过 `before_delete` hook 来做这些检查，示例代码：
 
 ```python
 import cloudcode
@@ -431,7 +431,7 @@ import leancloud
 
 
 @cloudcode.before_delete('Album')  # Article 为需要 hook 的 class 的名称
-def before_album_delete(albun):
+def before_album_delete(album):
     query = leancloud.Query('Photo')
     query.equal_to('album', album)
     try:
