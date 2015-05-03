@@ -1154,12 +1154,15 @@ var task = push.SendAsync();
 3. 从官网上下载的 SDK ，在 Unity 4.3 以后的版本都需要重命名，把版本号去掉，例如下载的文件叫做 `AVOSCloud.Unity-v1.1.5.dll`，请重命名为 `AVOSCloud.Unity.dll`，否则会出现引入脚本失败的错误。
 4. Unity 自从升级到 5.0 之后就会出现一个 iOS 上访问 HTTPS 请求时的 SSL 证书访问错误：NSURLErrorDomain error -1012.
 解决方案是：
-
-* 在 Unity 构建完成 iOS 项目之后，使用 XCode 打开项目，找到 Classes/Unity/WWWConnection.mm 文件
-* 找到这个方法：- (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge
-* 把该方法按照如下代码修改即可：
-
-```
+  在 Unity 构建完成 iOS 项目之后，使用 XCode 打开项目，找到 Classes/Unity/WWWConnection.mm 文件
+  找到这个方法：
+  
+  ```
+  (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge
+   ```
+ 把该方法按照如下代码修改即可：
+ 
+ ```
 - (void)connection:(NSURLConnection*)connection willSendRequestForAuthenticationChallenge:(NSURLAuthenticationChallenge*)challenge
 {
     if ([[challenge protectionSpace] authenticationMethod] == NSURLAuthenticationMethodServerTrust) {
