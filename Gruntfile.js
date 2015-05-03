@@ -57,6 +57,10 @@ module.exports = function(grunt) {
       html: {
         files: ["templates/**"],
         tasks: ["clean:html", "markdown", "assemble"]
+      },
+      nunjucks: {
+        files: ["views/**"],
+        tasks: ['nunjucks']
       }
     },
     copy: {
@@ -186,6 +190,13 @@ module.exports = function(grunt) {
           }
         }
       }
+    },
+    nunjucks: {
+      precompile: {
+        baseDir: 'views',
+        src: 'views/*.md',
+        destDir: 'md'
+      }
     }
   });
 
@@ -206,6 +217,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   // grunt.loadNpmTasks('grunt-useminPrepare');
+  grunt.loadNpmTasks('grunt-nunjucks');
 
   grunt.registerTask("build", ["clean", "copy:md", "markdown", "assemble",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
