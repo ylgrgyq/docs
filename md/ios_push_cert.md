@@ -1,3 +1,4 @@
+
 # iOS 推送证书设置指南
 
 
@@ -63,15 +64,6 @@
 
 ## 上传证书
 
-在 LeanCloud的[应用设置 -> 推送设置](/messaging.html?.html?appid={{appid}}#/message/push/conf)里，上传上面步骤得到 .p12 证书文件。这是 iOS SDK 能够接收到 LeanCloud 推送消息的必要步骤。
+在 LeanCloud的 **消息 -> 推送 -> 设置** 里，上传上面步骤得到 .p12 证书文件。这是 iOS SDK 能够接收到 LeanCloud 推送消息的必要步骤。
 
 ![Enable push](images/ios_cert/upload_p12.png)
-
-
-
-
-
-
-
-
-
