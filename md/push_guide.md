@@ -310,7 +310,7 @@ where 是用来查询 `_Installation` 表的，`_Installation`表有的属性（
 
 ```
 {
-      "push_time": "2013-12-04T00:51:13Z",
+      "push_time": "2013-12-04T00:51:13.931ZZ",
       "expiration_interval": "86400",
       "data": {
         "alert": "北京时间 12 月 4 号 8:51 发送这条推送,24小时后过期"
@@ -505,7 +505,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
-        "push_time": "2013-11-28T00:51:13Z",
+        "push_time": "2013-11-28T00:51:13.931Z",
         "expiration_interval": 518400,
         "data": {
           "alert": "Season tickets on sale until December  4, 2013"
