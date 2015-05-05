@@ -2,32 +2,32 @@
 
 ## 介绍
 
-之前 LeanCloud 的[云代码](../cloud_code_guide.html)可以支持用户将自己的代码上传至我们的服务器上，来做一些自定义逻辑，以及拦截数据存储的 API 请求，做自定义的操作，以及 web hosting 功能，架设自己的网站。
+LeanCloud [云代码](../cloud_code_guide.html) 允许用户将代码上传至 LeanCloud 服务端，来部署自定义的业务逻辑，拦截数据存储的 API 请求并执行自定义操作，以及网站托管来架设自己的网站。
 
-现在我们将云代码的功能做了升级，开放性更高，并且更名为「LeanEngine」。老的云代码产品将继续运行并且维护下去，但是云代码上的功能都可以在 LeanEngine 实现，并且自由度更高，因此我们强烈建议您将您的项目改为 LeanEngine 实现。
+现在，我们将云代码的功能做了升级，提高了它的开放性，并将其更名为「LeanEngine」。虽然我们会继续运行和维护老的云代码产品，但是 LeanEngine 可以提供云代码的所有功能，并具有更多的灵性性，所以我们强烈建议将项目改为由 LeanEngine 来实现。
 
 ### 与云代码的区别
 
-* 多语言支持，目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
-* 标准的运行环境，之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。
+* **多语言支持**。目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
+* **标准的运行环境**。之前云代码是我们定制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。
 
 ## 创建项目
 
-### node.js
+### Node.js
 
-首先请安装好 [node.js](https://nodejs.org/) 与 [npm](https://www.npmjs.com/)。
+首先请安装好 [Node.js](https://nodejs.org/) 与 [npm](https://www.npmjs.com/)。
 
-**注意**： 目前 LeanEngine 的 node.js 版本为 0.12，请您最好使用此版本的 node.js 进行开发，至少不要低于 0.10 。
+> 注意：目前 LeanEngine 的 Node.js 版本为 0.12，建议使用此版本或不低于 0.10 的 Node.js 来开发。
 
 创建一个叫做 `HelloLeanEngine` 的文件夹，作为项目的根目录。
 
-在 `HelloLeanEngine` 目录中执行 `npm init`，接下来跟随 `npm` 向导，其中 `entry point` 请填入 `server.js`，其他根据您的情况自行选择（也可以全部选择默认值）。
+在 HelloLeanEngine 目录中执行 `npm init`，然后按照 npm 的引导来操作。其中 `entry point` 要填入 `server.js`，其他选项可根据情况做出选择（也可以全部采用默认值）。
 
-接下来您的项目根目录下应该有了一个 `package.json` 文件。LeanEngine 是根据此文件来判断该项目的运行时语言为 node.js 的。
+接下来，项目根目录下应该会产生一个 package.json 文件。LeanEngine 根据此文件来判断该项目的运行时语言为 Node.js。
 
-在项目根目录下执行 `npm install express --save`，这样会将 `express` 模块安装到当前目录，并且将依赖写入进 `package.json`，您的代码中就可以使用 `express` 了。
+在项目根目录下执行 `npm install express --save`，这样会将 express 模块安装到当前目录，并将依赖写入 package.json，这样 express 就可以使用了。
 
-创建一个 `server.js` 的文件。这个文件将作为入口文件被 LeanEngine 执行。将下面内容填入 `server.js`：
+创建一个 server.js 文件。 LeanEngine 会把它作为入口文件来执行。在 server.js 中加入下面的内容：
 
 ```js
 var express = require('express');
@@ -45,33 +45,33 @@ app.get('/1/ping', function(req, res) {
 app.listen(parseInt(process.env.LC_APP_PORT || 3000, 10));
 ```
 
-**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问您的项目的此地址，检测项目可用性。请在此路由返回一个状态码为 200 的结果。如果返回其他信息，或者没有返回的话，您部署应用时我们会认为您的项目没有正确启动，部署将会失败。
+> 注意：向 `/1/ping` 这个页面发送请求是必须的。LeanEngine 会定期访问该项目的这一地址，来检测其可用性。请在此路由返回一个状态码为 200 的结果。如果返回了其他信息或没有任何返回结果，那么该项目在部署时，我们会认为它没有正确启动，部署将会失败。
 
 #### 本地运行
 
-在项目根目录中执行 `npm start`，打开浏览器，访问 [http://localhost:3000/]() 即可访问您的项目。
+在项目根目录中执行 `npm start`，打开浏览器，键入 [http://localhost:3000/]() 即可访问到此项目。
 
 #### 其他框架
 
-LeanEngine 支持任意 node.js 的 web 框架，您可以使用您最熟悉的框架进行开发，或者不使用任何框架，直接使用 node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动您的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
+LeanEngine 支持基于 Node.js 的各种 Web 框架。你既可以使用自己最熟悉的框架，也可以不使用任何框架，而直接通过 Node.js 的 http 模块进行开发。但是请保证你的项目可以通过执行 `server.js` 来正常启动，启动之后，程序的监听端口为 `process.env.LC_APP_PORT`。
 
 ### Python
 
-首先请安装好 [python](https://www.python.org/) 与 [pip](https://pip.pypa.io/)。
+首先，请安装好 [Python](https://www.python.org/) 与 [pip](https://pip.pypa.io/)。
 
-**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请您最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。
+>注意：目前 LeanEngine 使用的 Python 版本为 2.7，建议使用该版本进行开发。对 Python 3 的支持正在开发中。
 
 创建一个叫做 `HelloLeanEngine` 的文件夹，作为项目的根目录。
 
-在您的项目根目录创建一个 requirements.txt 的文件，填入以下内容：
+在项目根目录创建一个 requirements.txt 文件，填入以下内容：
 
 ```
 flask
 ```
 
-在项目根目录执行 `pip install -r requirements.txt`。这样即可将 flask 安装至系统。
+在项目根目录执行 `pip install -r requirements.txt`，这样就安装好了 flask。
 
-**注意**： 推荐您使用 [virtualenv](https://virtualenv.pypa.io) 来将当前项目的第三方依赖与系统全局依赖做隔离，防止不同项目之间依赖的版本冲突。
+>注意：推荐使用 [virtualenv](https://virtualenv.pypa.io) 来将当前项目的第三方依赖与系统全局依赖做隔离，防止不同项目之间的依赖发生版本冲突。
 
 创建 `app.py`：
 
@@ -93,7 +93,7 @@ def ping():
     return 'pong'
 ```
 
-**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问您的项目的此地址，检测项目可用性。
+>注意：对 `/1/ping` 这个页面发送请求是必须的，LeanEngine 会定期访问项目的这一地址，检测项目的可用性。
 
 创建 `wsgi.py`：
 
@@ -114,29 +114,29 @@ if __name__ == '__main__':
 
 #### 本地运行
 
-在您的项目根目录执行 `python wsgi.py`，访问 [http://localhost:3000/]() 即可访问您的项目。
+在项目根目录执行 `python wsgi.py`，访问 [http://localhost:3000/]() 即可浏览到该项目。
 
 #### 使用其他框架
 
-LeanEngine 支持任意 python 的 web 框架，您可以使用您最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
+LeanEngine 支持任意基于  Python 的 Web 框架。你可以使用自己最熟悉的框架进行开发，但是请保证 `wsgi.py` 文件要包含 `application` 这个全局变量，值为一个 wsgi 函数。
 
 ## 部署
 
-首先，你需要将这个项目提交到一个 git 仓库，LeanCloud并不提供源码的版本管理功能，而是借助于git这个优秀的分布式版本管理工具。我们推荐您使用[CSDN Code平台](https://code.csdn.net/)，[github](https://github.com/)或者[BitBucket](https://bitbucket.org/)这样第三方的源码
-托管网站，也可以使用您自己搭建的git仓库(比如使用[gitlab.org](http://gitlab.org/))。下面我们详细描述下怎么使用。
+首先，要将这个项目提交到一个 Git 仓库。LeanCloud 并不提供源码的版本管理功能，所以要借助 Git 这个优秀的分布式版本管理工具来实现。推荐使用 [CSDN Code 平台](https://code.csdn.net/)、[Github](https://github.com/)，或者 [BitBucket](https://bitbucket.org/) 这样的第三方源码托管网站，也可使用自己搭建的 Git 仓库（如 [gitlab.org](http://gitlab.org/)）。下面详细描述下使用方法。
 
 ### 使用 CSDN Code 托管源码
 
-CSDN CODE是国内非常优秀的源码托管平台，您可以使用CODE平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
+CSDN Code 是国内非常优秀的源码托管平台，你可以使用该平台提供的公有仓库和有限的私有仓库来完成代码管理功能。
 
-以下是使用CODE平台与LeanCloud云代码结合的一个例子。
-首先在CODE上创建一个项目
+下面是使用 CSDN Code 平台与 LeanCloud 云代码结合的一个例子。
+
+首先在 CSDN Code 上创建一个项目：
 
 ![image](../images/csdn_code1.png)
 
-**提示**：在已经有项目代码的情况下，一般不推荐”使用README文件初始化项目”
+>提示：在已经有项目代码的情况下，一般不推荐选择「使用 README 文件初始化项目」。
 
-接下来按照给出的提示，将源代码push到这个代码仓中
+然后按照给出的提示，将源代码推送（push）到这个代码仓中：
 
 ```sh
 cd ${PROJECT_DIR}
@@ -147,12 +147,14 @@ git remote add origin git@code.csdn.net:${yourname}/test.git
 git push -u origin master
 ```
 
-我们已经将源码成功推送到CODE平台，接下来到LeanCloud云代码的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+接下来，进入 LeanCloud 云代码的管理界面，填写自己的 Git 地址并保存。
+
+>注意：一定要填写以 `git@` 开头的地址，我们暂不支持使用 https 协议来克隆源码。
 
 ![image](../images/csdn_code2.png)
 
-添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
-保存到”项目设置” > ”项目公钥”中，创建新的一项avoscloud:
+添加 Deploy Key 到你的 CODE 平台项目上（Deploy Key是我们LeanCloud机器的SSH Public Key）
+保存到 项目设置” > ”项目公钥”中，创建新的一项 avoscloud:
 
 ![image](../images/csdn_code3.png)
 
@@ -503,7 +505,7 @@ def after_user_save(user):
 import cloudcode
 
 
-@cloudcoode.on_login
+@cloudcode.on_login
 def on_user_login(user):
     user.increment('login_count', 1)
     if user.get('username') == 'noLogin':
@@ -511,6 +513,6 @@ def on_user_login(user):
 ```
 
 
-#### 当前登陆用户
+#### 当前登录用户
 
 如果您请求 Cloud Func 或者 Cloud Hook 的时候，带上 `X-AVOSCloud-Session-Token` 这个请求头，值为您应用内某个用户的 session token，（或者直接使用 Client 对应的功能）就可以直接通过 `cloudcode.user` 拿到此用户对象。方便您进行相关的权限限制，以及进行用户相关的操作。
