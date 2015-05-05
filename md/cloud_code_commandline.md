@@ -14,6 +14,8 @@ apt-get install nodejs
 
 在一些系统上你可能需要 `sudo` 权限：`sudo apt-get install nodejs`。
 
+**Windows 系统用户请确保安装 Node.js 在系统盘 C 盘，否则命令行工具无法正常运行。**
+
 (apt 提供的版本的 nodejs 版本可能太老旧，推荐从[官方网站](http://nodejs.org/)下载安装)。
 
 在 Mac OSX 上，可以通过 [MacPort](http://www.macports.org/) 或者 [Homebrew](http://brew.sh/) 安装，terminal（终端）执行下列命令：
