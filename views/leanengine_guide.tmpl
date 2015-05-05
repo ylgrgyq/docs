@@ -488,6 +488,23 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 解决上面的办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
 
+另外一个场景：
+1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
+1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
+  * `toISOString` 2015-04-09T03:35:09.678Z
+  * `toLocaleString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+  * `toUTCString` Thu, 09 Apr 2015 03:35:09 GMT
+  * `toString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+  * `getHours` 3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
+
+如果需要获取小时数据，解决办法是使用第三方的组件，比如 [moment-timezone](http://momentjs.com/timezone/)，通过下面的方式可以获得东八区的小时时间：
+
+```
+var time = moment(obj.createdAt).tz('Asia/Shanghai');
+console.log('toString', time.toString());
+console.log('getHours', time.hours())
+```
+
 ### 云代码 2.0 和 LeanEngine 时区的差异
 
 为了方便大家的使用，更加符合通常的习惯，LeanEngine 运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
