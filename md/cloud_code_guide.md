@@ -347,7 +347,7 @@ https://leancloud.cn/1.1/functions/hello
 
 ### 本地调试云代码
 
-**Windows 系统用户请确保安装 Node.js 在系统盘 C 盘，否则命令行工具无法正常运行。**
+**Windows 系统用户请确保在系统盘 C 盘上安装 Node.js，否则命令行工具无法正常运行。**
 
 请通过npm安装调试SDK：
 
