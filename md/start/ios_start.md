@@ -1,32 +1,3 @@
-#### 自动安装
-
-[CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化的简化安装过程。
-
-在 Podfile 中添加：
-
-```
-pod 'AVOSCloud'
-```
-
-如果使用崩溃收集功能，可以添加：
-
-```
-pod 'AVOSCloudCrashReporting'
-```
-
-如果使用实时通信功能，可以添加：
-
-```
-pod 'AVOSCloudIM'
-```
-
-如果社交组件的相关功能，可以添加：
-
-```
-pod 'AVOSCloudSNS'
-```
-
-
 #### 通过 LeanCloud Gem 安装
 
 LeanCloud Gem 是一个命令行工具包，它可以协助开发者快速集成 LeanCloud SDK。
@@ -113,11 +84,40 @@ leancloud install
 
 LeanCloud 会自动根据 Leanfile 的配置，自动下载并集成 LeanCloud SDK。如果安装成功，你将会看到如下提示：
 
-```sh
+```
 ==> Downloading LeanCloud SDK
 ==> Unpacking LeanCloud SDK package
 ==> Integrating frameworks
 Install succeeded
+```
+
+
+#### 自动安装
+
+[CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化的简化安装过程。
+
+在 Podfile 中添加：
+
+```
+pod 'AVOSCloud'
+```
+
+如果使用崩溃收集功能，可以添加：
+
+```
+pod 'AVOSCloudCrashReporting'
+```
+
+如果使用实时通信功能，可以添加：
+
+```
+pod 'AVOSCloudIM'
+```
+
+如果社交组件的相关功能，可以添加：
+
+```
+pod 'AVOSCloudSNS'
 ```
 
 
