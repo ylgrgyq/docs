@@ -6,24 +6,24 @@
 
 ##获取聊天记录
 
-获取某个应用的聊天记录
-
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
+###获取某个对话的聊天记录
 
-参数 | 含义
---- | ---
-convid | 对话 id
-max_ts | 查询起始的时间戳，返回小于这个时间(不包含)的记录。可选，默认是当前时间
-limit | 返回条数限制，可选，默认100条，最大1000条
-peerid | 查看者id（签名参数）
-nonce | 签名随机字符串（签名参数）
-signature_ts | 签名时间戳（签名参数）
-signature | 签名时间戳（签名参数）
+参数 | 必选 | 含义
+--- | --- | ---
+convid | Y | 对话 id
+max_ts | N | 查询起始的时间戳，返回小于这个时间(不包含)的记录。默认是当前时间。
+msgid | N | 起始的消息 id ，与 max_ts 一起作为查询的起点。
+limit | N | 返回条数限制，可选，默认100条，最大1000条。
+peerid | N | 查看者id（签名参数）。
+nonce | N | 签名随机字符串（签名参数）。
+signature_ts | N | 签名时间戳（签名参数）。
+signature | N | 签名时间戳（签名参数）。
 
 为了保证获取聊天记录的安全性，可以开启签名认证（应用选项：聊天记录签名认证）。了解更详细的签名规则请参考[聊天签名方法](realtime.html#签名方法)。签名参数仅在开启应用选项后有效，如果没有开启选项，就不需要传签名参数。
 
@@ -36,17 +36,39 @@ signature | 签名时间戳（签名参数）
 ```json
 [
   {
-    timestamp: 1408008498571,
-    conv-id: "219946ef32e40c515d33ae6975a5c593",
-    data: "今天天气不错！",
-    app-id: "ndxxv7lefvpj7z9jk4hh6o686790i8mxgxmf27da7vr6767s"
-    from: "u111872755_9d0461adf9c267ae263b3742c60fa"
+    "timestamp": 1408008498571,
+    "conv-id": "219946ef32e40c515d33ae6975a5c593",
+    "data": "今天天气不错！",
+    "from": "u111872755_9d0461adf9c267ae263b3742c60fa",
+    "msg-id": "vdkGm4dtRNmhQ5gqUTFBiA",
+    "is-conv": true,
+    "is-room": false,
+    "to": "5541c02ce4b0f83f4d44414e",
+    "bin": false,
+    "from-ip": "202.117.15.217"
   },
   ...
 ]
 ```
+###获取某个用户发送的聊天记录
+此接口仅支持 master key [鉴权认证](rest_api.html#更安全的鉴权方式)，建议仅在服务端使用
 
-返回字段说明：
+参数 | 必选 | 含义
+--- | --- | ---
+from | Y | 发送人 id
+max_ts | N | 查询起始的时间戳，返回小于这个时间(不包含)的记录。默认是当前时间。
+msgid | N | 起始的消息 id , 与 max_ts 一起作为查询的起点。
+limit | N | 返回条数限制，默认100条，最大1000条。
+###获取应用的所有聊天记录
+此接口仅支持 master key [鉴权认证](rest_api.html#更安全的鉴权方式)，建议仅在服务端使用
+
+参数 | 必选 | 含义
+--- | --- | ---
+max_ts | N | 查询起始的时间戳，返回小于这个时间(不包含)的记录。可选，默认是当前时间。
+msgid | N | 起始的消息 id , 可选，与 max_ts 一起作为查询的起点。
+limit | N | 返回条数限制，可选，默认100条，最大1000条。
+
+###聊天记录返回字段说明：
 
 字段名 | 含义
 --- | ---
