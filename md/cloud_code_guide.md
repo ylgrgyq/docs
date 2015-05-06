@@ -347,6 +347,8 @@ https://leancloud.cn/1.1/functions/hello
 
 ### 本地调试云代码
 
+**Windows 系统用户请确保在系统盘 C 盘上安装 Node.js，否则命令行工具无法正常运行。**
+
 请通过npm安装调试SDK：
 
 ```sh
@@ -358,7 +360,7 @@ npm install -g avoscloud-code
 如果从npm安装失败，可以从Github安装：
 
 ```sh
-npm install -g  git+https://github.com/leancloud/CloudCodeMockSDK
+npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 
@@ -384,6 +386,7 @@ curl -X POST -H 'Content-Type:application/json' \
 ```
 其中`MyUser`是className，beforeSave指定调用`MyUser`定义的beforeSave函数，其他函数类似。
 
+更多使用参考[云代码命令行工具详解](./cloud_code_commandline.html)。
 
 ### 测试环境和生产环境
 
