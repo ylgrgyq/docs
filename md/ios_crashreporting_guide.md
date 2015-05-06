@@ -54,6 +54,24 @@ leancloud upload_symbol \
 
 * DWARF 文件在路径的最底层，它可以通过 strip 应用生成的二进制文件来获得。
 
+请参考以下路径结构，应用文件名为 Demo.app：
+
+```
+├── Build
+    ├── Intermediates
+        ├── ArchiveIntermediates
+            └── Demo
+                ├── BuildProductsPath
+                    └── Release-iphoneos
+                        ├── Demo.app -> /Users/admin/Library/Developer/Xcode/DerivedData/Demo-dkvwhbscbgyeoldhsxxzmorfqmyf/Build/Intermediates/ArchiveIntermediates/Demo/InstallationBuildProductsLocation/Applications/Demo.app
+                        └── Demo.app.dSYM
+                            └── Contents
+                                ├── Info.plist
+                                └── Resources
+                                    └── DWARF
+                                        └── Demo
+```
+
 如果在发布应用时忘了上传符号文件，可以手动来上传。如果一个崩溃报告没有对应的符号文件，系统会提示要符号化。
 
 ## 测试
