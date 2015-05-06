@@ -42,13 +42,20 @@ AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
 });
 ```
 
+## 启动推送服务
+
+通过调用以下代码启动推送服务，同时设置默认打开的 Activity。
+
+```
+// 设置默认打开的 Activity
+PushService.setDefaultPushCallback(this, PushDemo.class);
+```
+
 ## 订阅频道
 
 你的应用可以订阅某个频道的消息，只要在保存 Installation 之前调用`PushService.subscribe`方法：
 
 ```java
-// 设置默认打开的 Activity
-PushService.setDefaultPushCallback(this, PushDemo.class);
 // 订阅频道，当该频道消息到来的时候，打开对应的 Activity
 PushService.subscribe(this, "public", PushDemo.class);
 PushService.subscribe(this, "private", Callback1.class);
