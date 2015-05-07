@@ -50,9 +50,9 @@
 
 ```
 
-## 美国节点使用的时候，报错：`create SSL socket factory` 失败
+## 使用美国节点时 SDK 报错：`create SSL socket factory` 失败
 
-在使用美国节点的时候，sdk 初始化时即报错，显示 `create SSL socket factory` 失败。怎么办？
+在使用美国节点的时候，SDK 初始化时即报错，显示 `create SSL socket factory` 失败。怎么办？
 
 这是因为 LeanCloud 的 SSL 证书不在工程资源里面导致的，解决办法如下：
 
