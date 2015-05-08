@@ -1575,7 +1575,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 查询用户，你需要使用特殊的用户查询对象来完成：
 
 ```java
-AVQuery<AVObject> query = AVQuery.getQuery();
+AVQuery<AVUser> query = AVUser.getQuery();
 query.whereEqualTo("gender", "female");
 query.findInBackground(new FindCallback<AVObject>() {
     public void done(List<AVObject> objects, AVException e) {
