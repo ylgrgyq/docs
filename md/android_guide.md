@@ -66,24 +66,24 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v2.7+'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.1+'
 
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v2.7+@aar'
+    compile 'cn.leancloud.android:avoscloud-push:v3.1+@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v2.7+@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:3.1+@aar'
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v2.7+@aar'
+    compile 'cn.leancloud.android:avoscloud-feedback:3.1+@aar'
 
     //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v2.7+@aar'
+    compile 'cn.leancloud.android:avoscloud-sns:3.1+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v2.7+@aar'    
+    compile 'cn.leancloud.android:avoscloud-search:3.1+@aar'    
 }
 ```
 
@@ -1575,7 +1575,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 查询用户，你需要使用特殊的用户查询对象来完成：
 
 ```java
-AVQuery<AVObject> query = AVQuery.getQuery();
+AVQuery<AVUser> query = AVUser.getQuery();
 query.whereEqualTo("gender", "female");
 query.findInBackground(new FindCallback<AVObject>() {
     public void done(List<AVObject> objects, AVException e) {
@@ -1697,6 +1697,7 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 -dontwarn sun.misc.**
 -keep class sun.misc.** { *;}
 
+-dontwarn com.alibaba.fastjson.**
 -keep class com.alibaba.fastjson.** { *;}
 
 -dontwarn sun.security.**

@@ -62,7 +62,8 @@ angular.module('ui.gravatar').config([
 angular.module('app').controller('StartCtrl', [
     '$http',
     '$scope',
-    function ($http, $scope) {
+    '$timeout',
+    function ($http, $scope, $timeout) {
         $scope.links = {
             'android': {
                 doc: '/docs/android_guide.html',
@@ -97,12 +98,15 @@ angular.module('app').controller('StartCtrl', [
         };
 
         $scope.docloaded = function () {
-            prettyPrepare();
-            prettyPrint();
-            $("pre.prettyprint code").each(function(index, ele) {
-              $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
-            });
-            glueCopy();
+            $timeout(function(){
+                prettyPrepare();
+                prettyPrint();
+                $("pre.prettyprint code").each(function(index, ele) {
+                  $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
+                });
+                glueCopy();
+            },100);
+
         };
     }
 ]);

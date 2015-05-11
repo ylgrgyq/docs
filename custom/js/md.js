@@ -89,6 +89,10 @@ $(window).scrollStopped(function() {
   }, 250);
 });
 
+$(window).resize(function(){
+  updateSidebarAffixShadowWidth();
+});
+
 $(function() {
   var arr = $('#toc ul').parents('li');
   angular.forEach(arr, function(v, k) {
