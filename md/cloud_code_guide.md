@@ -125,7 +125,7 @@ if (name) {
 }
 ```
 
-** 注：如果想要发送 HTTP 请求，请看文档下面「[HTTP 请求相关](#HTTP_请求相关)」**
+**注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送 HTTP 请求)」**
 
 
 点击保存后，Cloud Code 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
@@ -685,7 +685,7 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 });
 ```
 
-## HTTP 请求相关
+## 发送 HTTP 请求
 
 Cloud Code 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。这个函数接受一个选项对象来配置请求，一个简单的 GET 请求看起来是这样：
 
