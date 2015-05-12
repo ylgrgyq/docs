@@ -68,7 +68,7 @@ LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的�
 {% endblock %}
 
 {% block install_middleware %}
-在你的项目 `requirements.txt` 中增加一行新的依赖：
+首先需要安装 LeanCloud Python SDK，在你的项目 `requirements.txt` 中增加一行新的依赖：
 
 ```
 leancloud-sdk
@@ -80,19 +80,44 @@ leancloud-sdk
 {% block init_middleware %}
 ```python
 import os
+
 import leancloud
+from flask import Flask
+
 
 APP_ID = os.environ.get('LC_APP_ID', 'your_app_id')
 MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', 'your_master_key')
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
+
+app = Flask(__name__)
+engine = leancloud.Engine(app)
 ```
+
+之后请在 wsgi.py 中将 engine 赋值给 application（而不是之前的 Flask 实例）。
 {% endblock %}
 
 {% block sdk_guide_link %}[Python SDK](./python_guide.html){% endblock %}
 
 {% block cloudFuncExample %}
-TODO
+```python
+from leancloud import Query
+from leancloud import Engine
+
+@cloudcode.cloud_func
+def averageStars(movie):
+    sum = 0
+    query = Query('Review')
+    try:
+        reviews = query.find()
+    except leancloud.LeanCloudError, e:
+        // 如果不想做特殊处理，可以不捕获这个异常，直接抛出
+        print e
+        raise e
+    for review in reviews:
+        sum += review.get('starts')
+	return sum / len(reviews)
+```
 {% endblock %}
 
 {% block cloudFuncParams %}
