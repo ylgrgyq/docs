@@ -1519,7 +1519,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 调用以下代码即可验证验证码:
 
 ```objc
-	[AVUser verifyMobilePhone:@"13613613613" withBlock:^(BOOL succeeded, NSError *error) {
+	[AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
         //验证结果
     }];
 ```
