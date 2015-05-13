@@ -1321,7 +1321,7 @@ curl -X POST \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestMobilePhoneVerify
 ```
-  
+ 
 ### 手机号码短信登录
 
 在验证号码后，用户可以采用短信验证码登录，来避免繁琐的输入密码的过程，请求发送登录验证码：
