@@ -160,7 +160,7 @@ curl -X PUT \
 * expiration_time 消息过期的绝对日期时间
 * expiration_interval 消息过期的相对时间，从调用 API 的时间开始算起，单位是秒。
 * push_time 定期推送时间
-* prod 设置使用测试证书(dev)还是生产证书(prod)，只对 iOS 有效。当设备设置了 deviceProfile 时我们有限按照 deviceProfile 指定的证书推送。
+* prod 设置使用测试证书(dev)还是生产证书(prod)，只对 iOS 有效。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 
 **我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
 
@@ -275,7 +275,7 @@ Windows Phone 设备类似，也支持`title`和`alert`，同时支持`wp-param`
 }
 ```
 
-如果是 `dev` 值就表示使用测试证书，`prod` 值表示使用生产证书。默认使用生产证书。注意，当设备设置了 deviceProfile 时我们有限按照 deviceProfile 指定的证书推送。
+如果是 `dev` 值就表示使用测试证书，`prod` 值表示使用生产证书。默认使用生产证书。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 
 #### 推送查询条件
 
