@@ -34,7 +34,7 @@ curl -X POST \
 
 你可以通过 REST API 操作对话数据的 `m` 字段来实现成员的增删。`m` 字段是一个数组字段，使用数组的操作符进行修改。
 
-增加一个 client id 为 `LarryPage` 的用户到已有对话：
+增加一个 client id 为 `LarryPage` 的用户到已有（以对话 id 5552c0c6e4b0846760927d5a 为例）对话：
 
 ```sh
 curl -X POST \
@@ -45,7 +45,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
 ```
 
-将不再活跃的 `SteveJobs` 请出对话：
+将不再活跃的 `SteveJobs` 请出对话（以对话 id 5552c0c6e4b0846760927d5a 为例）：
 
 ```sh
 curl -X POST \
