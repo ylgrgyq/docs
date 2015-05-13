@@ -55,6 +55,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 * conversationId，字符串，对话 id，只读，对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
 * creator，字符串，对话创建者的 clientId，只读，标识对话创建者信息
 * members，数组，对话参与者，这里记录了所有的参与者
+* mute，数组，对对话静音的参与者，这部分参与者不会收到推送
 * name，字符串，对话的名字，可选，可用来对于群组命名
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
 * transient，布尔值，表示对话是否为暂态对话
@@ -80,6 +81,10 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
             <td>m （Array 类型）</td>
         </tr>
         <tr>
+            <td>mute</td>
+            <td>mu （Array 类型）</td>
+        </tr>
+        <tr>
             <td>name</td>
             <td>name（String 类型）</td>
         </tr>
@@ -94,7 +99,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
     </tbody>
 </table>
 
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 

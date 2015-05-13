@@ -4,6 +4,60 @@
 
 你可以通过 REST API 对对话（相应的聊天室、群组或单聊等）进行操作，例如提前创建聊天室，关联聊天室到其他数据实体。LeanCloud 实时通信系统采用透明的设计，对话数据在 LeanCloud 系统中是普通的数据表，表名为 `_Conversation`，你可以直接调用[数据存储相关的 API 进行数据操作](./rest_api.html#%E5%AF%B9%E8%B1%A1-1)。`_Conversation` 包含一些内置的关键字段定义了对话的属性、成员等，你可以在[这里](./realtime_v2.html#%E5%AF%B9%E8%AF%9D_Conversation_)了解。
 
+### 创建一个对话
+
+创建一个对话即在 `_Conversation` 表中创建一条记录。对于没有使用过实时通信服务的新用户， `_Conversation` 表会在第一条记录创建后出现。
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"My Private Room","m": ["BillGates", "SteveJobs"]}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation
+```
+
+上面的例子会创建一个最简单的对话，包括两个 client ID 为 BillGates 和 SteveJobs 的初始成员。对话创建成功会返回 objectId，即实时通信中的对话 ID，客户端就可以通过这个 ID 发送消息了。
+
+常见的开放聊天室的场景，需要通过 REST API 预先创建聊天室，并把对话 ID 与应用内的某个对象关联（如视频、比赛等）。创建开放聊天室只需要包含一个 `tr` 参数，设置为 true 即可。
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "OpenConf","tr": true}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation
+```
+
+### 增删对话成员
+
+你可以通过 REST API 操作对话数据的 `m` 字段来实现成员的增删。`m` 字段是一个数组字段，使用数组的操作符进行修改。
+
+增加一个 client id 为 `LarryPage` 的用户到已有对话：
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"m": {"__op":"AddUnique","objects":["LarryPage"]}}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
+```
+
+将不再活跃的 `SteveJobs` 请出对话：
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"m": {"__op":"Remove","objects":["SteveJobs"]}}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
+```
+
+对 `_Conversation` 表的查询等其他操作与普通表完全一致，可以参考 [REST API](./rest_api.html#查询) 的相应说明，这里不再赘述。
+
 ##获取聊天记录
 
 ```sh
