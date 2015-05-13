@@ -53,8 +53,9 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 ## Windows Phone 消息推送
 详细请参看 [Windows Phone 推送开发文档](./dotnet_push_guide.html)。
 
-## 云代码创建推送
+## 云代码和 JavaScript 创建推送
 请参考 [JavaScript SDK 指南中关于推送的部分](./js_guide.html#Push_通知)。
+我们还提供单独的 [JavaScript 推送客户端](https://github.com/leancloud/js-push-sdk/)用于在网页中收发推送。
 
 ## 使用 REST API 推送消息
 
