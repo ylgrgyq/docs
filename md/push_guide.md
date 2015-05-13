@@ -46,13 +46,17 @@ Installation 表示一个允许推送的设备的唯一标示，对应[数据管
 这里重点说明一下***subscribers***这个属性。它的值表示我们查找出来的符合条件的 Installation 数量。有时候它的值为 0，即表示没有找到任何符合目标条件的设备，这时候自然所有人都收不到推送通知；有时候它的值不为 0，也仅仅只是说明找到了这么多符合条件的设备，而并不保证所有设备都收到了推送通知。所以大家在 debug 的时候可以多注意***subscribers***。
 
 ## iOS 消息推送
-详细请参看[iOS 推送开发文档](./ios_push_guide.html)。
+详细请参看 [iOS 推送开发文档](./ios_push_guide.html)。
 
 ## Android 消息推送
-详细请参看[Android 推送开发文档](./android_push_guide.html)。
+详细请参看 [Android 推送开发文档](./android_push_guide.html)。
 
 ## Windows Phone 消息推送
-详细请参看[Windows Phone 推送开发文档](./dotnet_push_guide.html)。
+详细请参看 [Windows Phone 推送开发文档](./dotnet_push_guide.html)。
+
+## 云代码和 JavaScript 创建推送
+请参考 [JavaScript SDK 指南中关于推送的部分](./js_guide.html#Push_通知)。
+我们还提供单独的 [JavaScript 推送客户端](https://github.com/leancloud/js-push-sdk/)用于在网页中收发推送。
 
 ## 使用 REST API 推送消息
 
