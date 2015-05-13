@@ -1,6 +1,6 @@
 # 消息推送开发指南
 
-消息推送，使得开发者可以即时地向其应用程序的用户推送通知或者消息，与用户保持互动，从而有效地提高留存率，提升用户体验。平台提供整合了 Android 推送、iOS 推送的统一推送服务。
+消息推送，使得开发者可以即时地向其应用程序的用户推送通知或者消息，与用户保持互动，从而有效地提高留存率，提升用户体验。平台提供整合了 Android 推送、iOS 推送、Windows Phone 推送和 Web 网页推送的统一推送服务。
 
 除了 iOS、Android SDK 做推送服务之外，你还可以通过我们的 REST API 来发送推送请求。
 
@@ -17,7 +17,8 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 Installation 表示一个允许推送的设备的唯一标示，对应[数据管理](/data.html?appid={{appid}})平台中的 `_Installation` 表。它就是一个普通的对象，主要属性包括:
 
 * deviceType  设备类型，目前只支持"ios"和"android"
-* deviceToken iOS设备才有的用于 APNS 推送的唯一标识符，只对 iOS 有效。
+* deviceToken iOS 设备才有的用于 APNS 推送的唯一标识符，只对 iOS 有效。
+* deviceProfile 在应用有多个推送证书的场景下，deviceProfile 用于指定该设备对应的证书名
 * installationId LeanCloud 为每个 Android 设备产生的唯一标识符，只对 android 有效。
 * badge iOS 设备呈现在应用程序图标右上角的红色圆形数字提示,用于提示一些无需即时处置的音讯,比方程序更新数、未读数等。
 * timeZone 设备设定的时区
@@ -584,4 +585,3 @@ curl -X POST \
 * 可以在控制台的 `消息 -> 推送 -> 帮助` 根据 `installationId` 查询设备是否在线。
 * 请确保 `com.avos.avoscloud.PushService` 添加到 AndroidManifest.xml 文件中。
 * 如果使用自定义 Receiver，请确保在 AndroidManifest.xml 中声明您的 Receiver，并且保证 data 里的 action 一致。
-
