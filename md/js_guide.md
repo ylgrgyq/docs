@@ -686,6 +686,12 @@ query.equalTo("arrayKey", 2);
 query.containsAll("arrayKey", [2, 3, 4]);
 ```
 
+此外，你还可以根据数组长度来查询，比如查询 `arrayKey` 的长度为 3 的对象列表：
+
+```javascript
+query.sizeEqualTo('arrayKey', 3);
+```
+
 ###对字符串类型做查询
 
 使用startWith来限制属性值以一个特定的字符串开头，这和MySQL的LIKE操作
