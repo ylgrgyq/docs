@@ -146,7 +146,7 @@ dMEbKFJiQo,19rUj9I0cy
 mQtjuMF5xk,xPVrHL0W4n
 ```
 
-csv 导入也支持 pointer 类型，要求类型声明为 `pointer:类名`，其中类名就是该 Pointer 列说指定的 className，列的值只要提供 objectId 即可，例如：
+csv 导入也支持 pointer 类型，要求类型声明为 `pointer:类名`，其中类名就是该 Pointer 列所指定的 className，列的值只要提供 objectId 即可，例如：
 
 ```csv
 string,pointer:Player
