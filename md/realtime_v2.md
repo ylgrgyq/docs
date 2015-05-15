@@ -7,7 +7,6 @@
 * iOS 聊天应用：
   * [SimpleChat iOS 版](https://github.com/leancloud/simple-chat-ios) (推荐)
   * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
-  * [FreeChat](https://github.com/jwfing/FreeChat)
 
 * Android 聊天应用：
   * [SimpleChat Android 版](https://github.com/leancloud/simple-chat-android) (推荐)
