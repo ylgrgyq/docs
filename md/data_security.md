@@ -34,7 +34,7 @@ LeanCloud，为应用开发加速！
 * Number 数字
 * Boolean 布尔类型
 * Array 数组
-* Object 对象
+* Object 或者 Pointer 对象
 * Date 日期
 * Bytes base64编码的二进制数据
 * File  文件
@@ -85,7 +85,12 @@ JSON格式要求是一个符合我们REST格式的JSON对象数组，或者一�
 { "results": [
   {
     "score": 1337,
-    "playerName": "Sean Plott",
+    "playerName": "James",
+    "player": {
+      "__type": "Pointer",
+      "className": "Player",
+      "objectId": "mQtjuMF5xk"
+    },
     "cheatMode": false,
     "createdAt": "2012-07-11T20:56:12.347Z",
     "updatedAt": "2012-07-11T20:56:12.347Z",
@@ -139,6 +144,15 @@ name,age,address,account,createdAt
 ```csv
 dMEbKFJiQo,19rUj9I0cy
 mQtjuMF5xk,xPVrHL0W4n
+```
+
+csv 导入也支持 pointer 类型，要求类型声明为 `pointer:类名`，其中类名就是该 Pointer 列说指定的 className，列的值只要提供 objectId 即可，例如：
+
+```csv
+string,pointer:Player
+playerName,player
+张三,mQtjuMF5xk
+李四,xPVrHL0W4n
 ```
 
 ### 导出数据
