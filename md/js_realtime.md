@@ -883,7 +883,7 @@ RealtimeObject.ping(clientIdList, callback)
 
 参数：
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']
+* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']。**注意：每次最多只能判断 20 个 clientId，超过 20 个只查询前 20 个，因为消息过长可能导致 WebSocket 包过长而被服务器断开连接。**
 
 * callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud2']，则说明 LeanCloud2 在线
 
