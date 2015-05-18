@@ -2315,6 +2315,26 @@ curl -X POST \
   https://api.leancloud.cn/1.1/requestSmsCode
 ```
 
+### 语音验证码
+
+语音验证码，是通过电话直接呼叫用户的电话号码来播报验证码。它可以作为一种备选方案，来解决因各种原因导致短信无法及时到达的问题。发送方式如下：
+
+```sh
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
+  https://api.leancloud.cn/1.1/requestSmsCode
+```
+
+语音验证码是一个 6 位的数字组合，语音只播报数字内容，不能添加其他任何内容,`smsType` 可以为 `voice` 或者 `sms`。
+
+ - `voice` 为发送语音验证码
+ - `sms` 为发送短信验证码
+
+此接口与之前的 『`验证短信 API`』 完全兼容，如果你不需要此服务，完全不需要修改之前的发送短信代码。
+
 验证收到的 6 位数字验证码是否正确通过：
 
 ```sh
