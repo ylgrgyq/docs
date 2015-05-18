@@ -2328,7 +2328,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/requestSmsCode
 ```
 
-语音验证码是一个 6 位的数字组合，语音只播放数字内容，不能添加其他任何其他内容,`smsType` 可以为 `voice` 或者 `sms`。
+语音验证码是一个 6 位的数字组合，语音只播报数字内容，不能添加其他其他任何内容,`smsType` 可以为 `voice` 或者 `sms`。
 
  - `voice` 为发送语音验证码
  - `sms` 为发送短信验证码
