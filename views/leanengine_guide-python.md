@@ -187,7 +187,7 @@ def after_comment_save(comment):
 	try:
 		post.save()
 	except leancloud.LeanCloudError:
-		raise leancloud.LeanEngineError(message='Got an error when save post')
+		raise leancloud.LeanEngineError(message='An error occurred while trying to save the Post. ')
 ```
 {% endblock %}
 
@@ -263,9 +263,9 @@ def on_sms_verified(user):
 def on_login(user):
     print 'on login:', user
     if user.get('username') == 'noLogin':
-      # 如果抛出 LeanEngineError，则用户无法登陆（收到 401 响应）
+      # 如果抛出 LeanEngineError，则用户无法登录（收到 401 响应）
       raise LeanEngineError('Forbidden')
-    # 没有抛出异常，函数正常执行完毕的话，用户可以登陆
+    # 没有抛出异常，函数正常执行完毕的话，用户可以登录
 ```
 {% endblock %}
 
@@ -313,7 +313,7 @@ def push_timer():
 
 {% block masterKeyInit %}
 ```python
-leancloud.init('app id', master_key='master_key')
+leancloud.init('{{appid}}', master_key='{{masterkey}}')
 ```
 {% endblock %}
 
