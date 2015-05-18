@@ -255,6 +255,9 @@ AV.Cloud.onLogin(function(request, response) {
 {% endblock %}
 
 {% block errorCodeExample %}
+
+有些时候你希望能自己定义错误响应码。云代码方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 `1`， `message` 为错误对象的字符串形式。比如下列代码：
+
 ```
 AV.Cloud.define('errorCode', function(req, res) {
   AV.User.logIn('NoThisUser', 'lalala', {
