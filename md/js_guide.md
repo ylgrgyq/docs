@@ -378,7 +378,9 @@ post.fetch({
 
 多对多关系是通过AV.Relation来建模的.这样很像在一个key中存储一个
 AV.Object数组,但是你不需要一次性下载关系中的所有对象.这使得
-AV.Relation比数组可以更好地扩展到更多对象。例如,一个User可能喜欢很多Post,
+AV.Relation比数组可以更好地扩展到更多对象。
+
+例如,一个User可能喜欢很多Post,
 在这种情况下,你可以把一个用户喜欢的所有Post存为一个Relation,
 为了将一个Post加入一个User的like列表,你可以:
 
@@ -388,6 +390,9 @@ var relation = user.relation("likes");
 relation.add(post);
 user.save();
 ```
+
+值得一提的是，Relation会自动去重。
+所以，你不用去担心用户会重复like同一篇post。
 
 你可以从一个AV.Relation中删除一个post:
 
@@ -684,6 +689,12 @@ query.equalTo("arrayKey", 2);
 ```javascript
 // Find objects where the array in arrayKey contains all of the elements 2, 3, and 4.
 query.containsAll("arrayKey", [2, 3, 4]);
+```
+
+此外，你还可以根据数组长度来查询，比如查询 `arrayKey` 的长度为 3 的对象列表：
+
+```javascript
+query.sizeEqualTo('arrayKey', 3);
 ```
 
 ###对字符串类型做查询

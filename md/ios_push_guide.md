@@ -16,6 +16,11 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 配置 iOS 证书相对麻烦，但是却是必须的步骤，请仔细看[iOS推送证书设置指南](./ios_push_cert.html)。
 
+## 多证书场景
+
+对于一些应用，他们在发布和上架时分为不同的版本（司机版、乘客版），但数据和消息是互通的，这种场景下我们允许应用上传多个自定义证书并对不同的设备设置 `deviceProfile`，从而可以用合适的证书给不同版本的应用推送。
+
+当你上传自定义证书时会被要求输入“证书类型”，即 deviceProfile 的名字。当 installation 上保存了 deviceProfile 时，我们将忽略原先的开发、生产证书设置，而直接按照 deviceProfile 推送。
 
 ## 保存 Installation
 
@@ -483,4 +488,3 @@ if (application.applicationState != UIApplicationStateBackground) {
 ```
 
 清除 Badge 数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
-

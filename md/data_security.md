@@ -34,7 +34,7 @@ LeanCloud，为应用开发加速！
 * Number 数字
 * Boolean 布尔类型
 * Array 数组
-* Object 对象
+* Object 或者 Pointer 对象
 * Date 日期
 * Bytes base64编码的二进制数据
 * File  文件
@@ -85,7 +85,12 @@ JSON格式要求是一个符合我们REST格式的JSON对象数组，或者一�
 { "results": [
   {
     "score": 1337,
-    "playerName": "Sean Plott",
+    "playerName": "James",
+    "player": {
+      "__type": "Pointer",
+      "className": "Player",
+      "objectId": "mQtjuMF5xk"
+    },
     "cheatMode": false,
     "createdAt": "2012-07-11T20:56:12.347Z",
     "updatedAt": "2012-07-11T20:56:12.347Z",
@@ -139,6 +144,15 @@ name,age,address,account,createdAt
 ```csv
 dMEbKFJiQo,19rUj9I0cy
 mQtjuMF5xk,xPVrHL0W4n
+```
+
+csv 导入也支持 pointer 类型，要求类型声明为 `pointer:类名`，其中类名就是该 Pointer 列所指定的 className，列的值只要提供 objectId 即可，例如：
+
+```csv
+string,pointer:Player
+playerName,player
+张三,mQtjuMF5xk
+李四,xPVrHL0W4n
 ```
 
 ### 导出数据
@@ -220,6 +234,8 @@ LeanCloud提供多种方式使用权限控制来获得安全性。如果你有�
 ### 列级别的权限
 
 这个概念比较简单，通过编辑数据管理页面某个 Class 的列属性，某一列数据可以设置为「只读」。对于 `_User` Class，还可以设置为 「只限当前用户读写」，即只能当前登录的用户读写自己的数据。
+
+某一列的数据还可以设置为 「客户端不可见」。设置了之后，当客户端发起查询的时候，返回的结果将不包含相关字段。比如，匿名发帖的应用，你仍然希望发帖的时候，也记录下真实的作者，但不希望将此信息返回给客户端，所以，这时候就可以设置作者字段为「客户端不可见」。
 
 ### Class 级别的权限
 

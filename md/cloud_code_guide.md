@@ -10,7 +10,10 @@
 
 ### 升级到 2.0
 
-1. 时区问题：2.0版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
+1. 时区问题：2.0 版解决了 1.0 中时区错误的问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
+
+  * 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+
 1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
 
 ```json
@@ -124,6 +127,8 @@ if (name) {
     response.error('name?')
 }
 ```
+
+**注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送 HTTP 请求)」**
 
 
 点击保存后，Cloud Code 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
@@ -683,6 +688,165 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 });
 ```
 
+## 发送 HTTP 请求
+
+Cloud Code 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。这个函数接受一个选项对象来配置请求，一个简单的 GET 请求看起来是这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当返回的 HTTP 状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
+
+### 查询参数
+
+如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: {
+    q : 'Sean Plott'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+也可以是一个原始的字符串：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: 'q=Sean Plott',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置 HTTP 头部
+
+通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置超时
+
+默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过timeout选项：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+上面的代码设置请求超时为15秒。
+
+### 发送 POST 请求
+
+通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当然，body可以被任何想发送出去的String对象替换。
+
+### HTTP 应答对象
+
+传给success和error函数的应答对象包括下列属性：
+
+* status - HTTP状态码
+* headers - HTTP应答头部信息
+* text - 原始的应答body内容。
+* buffer - 原始的应答Buffer对象
+* data - 解析后的应答内容，如果Cloud Code可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+
+如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  text: false,
+  ......
+});
+```
+
+
+
 ## 定时任务
 
 很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
@@ -1196,6 +1360,7 @@ else
 
 这样，测试代码将使用`cloud/dev_views`目录作为views模板目录。
 
+
 ## 第三方平台接入
 
 因为 Cloud Code 提供了 webHosting 功能，这相当于为你在 internet 上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
@@ -1208,162 +1373,6 @@ else
 
 通过 [这个](https://github.com/leancloud/cloud-code-weixin) 示例，你可以了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
 
-## HTTP 客户端
-
-Cloud Code允许你使用`AV.Cloud.httpRequest`函数来发送HTTP请求到任意的HTTP服务器。这个函数接受一个选项对象来配置请求，一个简单的GET请求看起来是这样：
-
-```javascript
-AV.Cloud.httpRequest({
-  url: 'http://www.google.com/',
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-
-当返回的HTTP状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
-
-### 查询参数
-
-如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
-
-```javascript
-AV.Cloud.httpRequest({
-  url: 'http://www.google.com/search',
-  params: {
-    q : 'Sean Plott'
-  },
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-也可以是一个原始的字符串：
-
-```javascript
-AV.Cloud.httpRequest({
-  url: 'http://www.google.com/search',
-  params: 'q=Sean Plott',
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-
-### 设置 HTTP 头部
-
-通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
-
-```javascript
-AV.Cloud.httpRequest({
-  url: 'http://www.example.com/',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-
-### 设置超时
-
-默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过timeout选项：
-
-```javascript
-AV.Cloud.httpRequest({
-  url: 'http://www.example.com/',
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-上面的代码设置请求超时为15秒。
-
-### 发送 POST 请求
-
-通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
-
-```javascript
-AV.Cloud.httpRequest({
-  method: 'POST',
-  url: 'http://www.example.com/create_post',
-  body: {
-    title: 'Vote for Pedro',
-    body: 'If you vote for Pedro, your wildest dreams will come true'
-  },
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-
-这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
-
-```javascript
-AV.Cloud.httpRequest({
-  method: 'POST',
-  url: 'http://www.example.com/create_post',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: {
-    title: 'Vote for Pedro',
-    body: 'If you vote for Pedro, your wildest dreams will come true'
-  },
-  success: function(httpResponse) {
-    console.log(httpResponse.text);
-  },
-  error: function(httpResponse) {
-    console.error('Request failed with response code ' + httpResponse.status);
-  }
-});
-```
-
-当然，body可以被任何想发送出去的String对象替换。
-
-### HTTP 应答对象
-
-传给success和error函数的应答对象包括下列属性：
-
-* status - HTTP状态码
-* headers - HTTP应答头部信息
-* text - 原始的应答body内容。
-* buffer - 原始的应答Buffer对象
-* data - 解析后的应答内容，如果Cloud Code可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
-
-如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
-
-```javascript
-AV.Cloud.httpRequest({
-  method: 'POST',
-  url: 'http://www.example.com/create_post',
-  text: false,
-  ......
-});
-```
 
 ## 运行环境区分
 
@@ -1433,3 +1442,37 @@ xml2js
 
 **云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
 
+## 时区问题
+
+因为某些原因，云代码 2.0 默认使用的是 UTC 时间，这给很多开发者带来了困惑，所以我们着重讨论下时区问题。
+
+比如有这样一个时间：`2015-05-05T06:15:22.024Z` (ISO 8601 表示法)，最后末尾的 `Z` 表示该时间是 UTC 时间。
+
+上面的时间等价于：`2015-05-05T14:15:22.024+0800`，注意此时末尾是 `+0800` 表示该时间是东八区时间。这两个时间的「小时」部分相差了 8 小时。
+
+### 时区问题产生的原因
+
+很多开发者在时间处理上会忽略「时区」标志，导致最后总是莫名其妙的出现 8 小时的偏差。我们假设有下面一个场景：
+
+1. 某开发者开发的应用使用云代码的 WebHosting 功能做了一个网站，其中有时间格式的表单提交。
+1. 某用户使用浏览器访问该网站，提交表单，时间格式为：`2015-05-05 14:15:22.024`，注意该时间没有「时区」标志。因为这个时间是浏览器生成的，而该用户浏览器上的时间通常是东八区时间，所以该业务数据希望表达的时间是「东八区的 14 点」。
+1. 该时间 `2015-05-05 14:15:22.024` 提交到云代码服务器，被转换为 Date 类型（JS 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云代码 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
+
+解决办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
+
+另外一个场景：
+1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
+1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
+  * `toISOString` 2015-04-09T03:35:09.678Z
+  * `toLocaleString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+  * `toUTCString` Thu, 09 Apr 2015 03:35:09 GMT
+  * `toString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+  * `getHours` 3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
+
+如果需要获取小时数据，解决办法是使用第三方的组件，比如 [moment-timezone](http://momentjs.com/timezone/)，通过下面的方式可以获得东八区的小时时间：
+
+```
+var time = moment(obj.createdAt).tz('Asia/Shanghai');
+console.log('toString', time.toString());
+console.log('getHours', time.hours())
+```
