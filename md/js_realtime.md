@@ -597,7 +597,7 @@ RealtimeObject.conv(options, callback)
 
 参数：
 
-* options {Object} （必须）传入配置信息
+* options {Object} （可选）传入配置信息
     
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
 
