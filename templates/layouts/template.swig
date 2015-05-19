@@ -8,15 +8,14 @@
 </head>
 
 
-<body  class="dashboard-init" data-spy="scroll" data-target=".sidebar-wrapper" data-offset="30" ng-cloak ng-controller="AppCtrl">
-
+<body  class="dashboard-init" data-offset="0" ng-cloak ng-controller="AppCtrl">
 {% include 'templates/include/header.html' %}
 
 <div class="container-fluid">
 
   <div class="row">
 
-    <div class="col-sm-3 sidebar-gruntfile-trigger" id="left-nav">
+    <div class="sidebar-gruntfile-trigger" id="left-nav">
 
       <div class="sidebar-affix-shadow sidebar-hover-off">
 
