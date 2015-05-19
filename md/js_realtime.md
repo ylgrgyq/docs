@@ -94,10 +94,11 @@ realtimeObj.on('open', function() {
         members: [
             'LeanCloud02'
         ],
-        // 默认的数据，可以放 Conversation 名字等
-        data: {
-            name: 'LeanCloud',
-            m: 123
+        // 默认名字
+        name: 'LeanCloud-Room',
+        // 默认的属性，可以放 Conversation 的一些初始值等
+        attr: {
+            test: 'testTitle'
         }
     }, function(data) {
         if (data) {
@@ -597,10 +598,12 @@ RealtimeObject.conv(options, callback)
 参数：
 
 * options {Object} （必须）传入配置信息
-
-    * data {Object} （可选）自定义的数据信息，如 title、name 等
     
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
+
+    * attr {Object} （可选）自定义的数据信息，如 title、image、xxx 等
+
+    * name {String} （可选）Conversation 的名字
 
     * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
     **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
@@ -627,11 +630,13 @@ var room = realtimeObject.conv({
     members: [
         'LeanCloud02'
     ],
+    // 默认名字
+    name: 'LeanCloud-Room',
     // 创建暂态的聊天室
     // transient: true,
-    // 默认的数据，可以放 Conversation 名字等
-    data: {
-        title: 'testTitle'
+    // 默认的属性，可以放 Conversation 的一些初始值等
+    attr: {
+        test: 'testTitle'
     }
 }, function(result) {
     console.log('Conversation created callback');
@@ -718,9 +723,11 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    // 默认的数据，可以放 room 名字等
-    data: {
-        title: 'testTitle'
+    // 默认名字
+    name: 'LeanCloud-Room',
+    // 默认的属性，可以放 Conversation 的一些初始值等
+    attr: {
+        test: 'testTitle'
     }
 }, function(result) {
     console.log('Room created callback');
