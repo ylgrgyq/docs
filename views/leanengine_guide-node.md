@@ -18,6 +18,14 @@ $ avoscloud app <appName> <appId>
 {% block runtime_env %}**注意**： 目前 LeanEngine 的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock%}
 
 {% block run_in_local_command %}
+安装依赖：
+
+```
+$ npm install
+```
+
+启动应用：
+
 ```
 $ avoscloud
 ```

@@ -18,6 +18,12 @@ $ avoscloud app <appName> <appId>
 {% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock%}
 
 {% block run_in_local_command %}
+安装依赖：
+
+TODO
+
+启动应用：
+
 ```
 $ python wsgi.py
 ```
