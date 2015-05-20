@@ -1,5 +1,19 @@
 {% extends "./leanengine_guide.tmpl" %}
 
+{% block quick_start_create_project %}
+命令行界面输入命令创建应用：
+
+```
+$ avoscloud new
+```
+
+根据提示信息输入 appId 等相关信息即可创建一个初始应用。然后进入项目目录：
+
+```
+$ cd <appName>
+```
+{% endblock %}
+
 {% block introduceCloudCodeV2 %}
 ## 云代码 2.0 版
 
@@ -8,6 +22,7 @@
 ### 升级到 2.0
 
 1. 时区问题：2.0版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
+  * 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论。
 1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
 
 ```json
@@ -53,32 +68,14 @@ xml2js: "0.4.4"
 * 修正：项目从代码仓库迁出有可能失败的问题
 {% endblock %}
 
-{% block createProject %}
-首先请安装好 [node.js](https://nodejs.org/) 与 [npm](https://www.npmjs.com/)。
-
+{% block download_skeleton %}
 ### 下载项目框架
 
 你可以在 云代码 -> 设置 页面下载到项目框架：
 
 ![image](images/cloud_code_skeleton.png)
 
-点击 `下载项目框架(基本版)` 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以 App 名称命名的目录，这个目录即可作为你的项目开始。
-
-### 命令行工具创建项目
-
-另外一种创建项目的方式是使用 [命令行工具](https://leancloud.cn/docs/cloud_code_commandline.html)，通过该工具可以创建、部署、发布、回滚、查询云代码，并且支持多应用管理。
-
-在需要的目录执行指令：
-
-```
-avoscloud new
-```
-
-然后根据提示输入 appId、masterKey，选择项目类型即可创建项目。
-
-### 项目框架
-
-不管使用上述哪种方式创建项目，最终的目录结构都是这样：
+点击 `下载项目框架(基本版)` 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以 App 名称命名的目录，目录结构是这样：
 
 ```
 <appName>
@@ -107,13 +104,49 @@ AV.Cloud.define('hello', function(request, response) {
 * config 目录下是项目的配置文件 `global.json`，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
 * public 目录，用于存放 [Web Hosting](#web-hosting) 功能的静态资源文件，具体请看后面的介绍。
 
+### 下载Web Hosting项目框架
+
+进入 云代码 -> 设置 菜单下载项目框架（web主机版）：
+
+![image](images/cloud_code_skeleton.png)
+
+下载后的代码结构类似Cloud code（基本版），只是在`Cloud`目录下多了`app.js`文件和`views`目录:
+
+```
+<appName>
+├── README.md
+├── cloud
+│   ├── app.js
+│   ├── main.js
+│   └── views
+│       └── hello.ejs
+├── config
+│   └── global.json
+└── public
+    └── index.html
+```
+
+并且`cloud/main.js`里还多了一行代码：
+
+```javascript
+require('cloud/app.js');
+```
+
+用来加载app.js
+
+代码部署的过程跟Cloud code部署是一样的，具体见[上面的章节](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)。
 {% endblock %}
 
 {% block run_in_local_command %}
 ```
 $ avoscloud
 ```
-**注意**：云代码 2.0 的项目本地运行需要安装 [命令行工具](https://leancloud.cn/docs/cloud_code_commandline.html)
+{% endblock %}
+
+{% block cloud_func_file %}`$PROJECT_DIR/cloud/main.js`{% endblock %}
+
+{% block project_constraint %}
+云代码 2.0 的项目必须有 `$PROJECT_DIR/cloud/main.js` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block others_web_framework %}
@@ -373,38 +406,236 @@ AV.Cloud.define('Logger', function(request, response) {
 ```
 {% endblock %}
 
-{% block downloadWebHostingSkeletonLegacy %}
-### 下载Web Hosting项目框架
-
-进入 云代码 -> 设置 菜单下载项目框架（web主机版）：
-
-![image](images/cloud_code_skeleton.png)
-
-下载后的代码结构类似Cloud code（基本版），只是在`Cloud`目录下多了`app.js`文件和`views`目录:
-
-```
-<appName>
-├── README.md
-├── cloud
-│   ├── app.js
-│   ├── main.js
-│   └── views
-│       └── hello.ejs
-├── config
-│   └── global.json
-└── public
-    └── index.html
-```
-
-
-并且`cloud/main.js`里还多了一行代码：
+{% block static_cache %}
+默认静态资源的`Cache-Control`是`max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回304状态码。你还可以在`app.listen`的时候传入选项，设置静态资源的maxAge：
 
 ```javascript
-require('cloud/app.js');
+//设置7天不过期
+app.listen({'static': {maxAge: 604800000}});
 ```
 
-用来加载app.js
+请注意`maxAge`的单位是毫秒，这样cache-control头会变成`max-age=604800`。更多static选项参考[static middleware](http://www.senchalabs.org/connect/static.html)。
+{% endblock %}
 
-代码部署的过程跟Cloud code部署是一样的，具体见[上面的章节](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)。
+{% block dynamic_request %}
+这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+
+关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
+
+在下载的项目框架`cloud/app.js`，我们可以看到一个初始代码：
+
+```javascript
+// 在Cloud code里初始化express框架
+var express = require('express');
+var app = express();
+var name = require('cloud/name.js');
+
+// App全局配置
+app.set('views','cloud/views');   //设置模板目录
+app.set('view engine', 'ejs');    // 设置template引擎
+app.use(express.bodyParser());    // 读取请求body的中间件
+
+//使用express路由API服务/hello的http GET请求
+app.get('/hello', function(req, res) {
+  res.render('hello', { message: 'Congrats, you just set up your app!' });
+});
+
+//最后，必须有这行代码来使express响应http请求
+app.listen();
+```
+
+我们使用`ejs`模板来渲染view，默认的模板都放在`views`目录下，比如这里`hello.ejs`:
+
+```html
+<%= message %>
+```
+
+简单地显示message内容。你还可以选用[jade](https://github.com/visionmedia/jade)这个模板引擎：
+
+```javascript
+app.set('view engine', 'jade');
+```
+
+您可以参照上面的[部署文档](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)来部署这个框架代码，部署成功之后，直接可以访问`http://${your_app_domain}.avosapps.com/hello`将看到展示的message:
+
+```
+Congrats, you just set up your app!
+```
+
+更多复杂的路由和参数传递，请看[express.js框架文档](http://expressjs.com/guide.html)。
+
+我们还提供了一个在线demo：[http://myapp.avosapps.com/](http://myapp.avosapps.com/)，源码在[https://github.com/killme2008/cloudcode-test](https://github.com/killme2008/cloudcode-test)，您可以作为参考。
+{% endblock %}
+
+{% block error_page_404 %}
+自定义404页面在云代码里比较特殊，假设我们要渲染一个404页面，必须将下列代码放在`app.listen()`之后：
+
+```javascript
+// 在app.listen();之后。
+app.use(function(req, res, next){
+  res.status(404).render('404', {title: 'Sorry, page not found'});
+});
+```
+
+这将渲染views下面的404模板页面。
+{% endblock %}
+
+{% block get_client_ip %}
+```javascript
+var ip = req.headers['x-real-ip']
+```
+{% endblock %}
+
+{% block upload_file %}
+在Cloud Code里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+
+```javascript
+app.use(express.bodyParser());
+```
+
+使用表单上传文件，假设文件字段名叫iconImage:
+
+```html
+<form enctype="multipart/form-data" method="post" action="/upload">
+  <input type="file" name="iconImage">
+  <input type="submit" name="submit" value="submit">
+</form>
+```
+
+上传文件使用multipart表单，并POST提交到/upload路径下。
+
+接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+
+```javascript
+var fs = require('fs');
+app.post('/upload', function(req, res){
+  var iconFile = req.files.iconImage;
+  if(iconFile){
+    fs.readFile(iconFile.path, function(err, data){
+      if(err)
+        return res.send('读取文件失败');
+      var base64Data = data.toString('base64');
+      var theFile = new AV.File(iconFile.name, {base64: base64Data});
+      theFile.save().then(function(theFile){
+        res.send('上传成功！');
+      });
+    });
+  }else
+    res.send('请选择一个文件。');
+});
+```
+{% endblock %}
+
+{% block cookie_session %}
+假设你创建了一个支持web主机功能的云代码项目，在app.js里添加下列代码：
+
+```javascript
+var express = require('express');
+var app = express();
+var avosExpressCookieSession = require('avos-express-cookie-session');
+
+// App全局配置
+app.set('views','cloud/views');   //设置模板目录
+app.set('view engine', 'ejs');    // 设置template引擎
+app.use(express.bodyParser());    // 读取请求body的中间件
+
+// 启用 cookieParser
+app.use(express.cookieParser('Your Cookie Secure'));
+// 使用 avos-express-cookie-session 记录登录信息到 cookie
+app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}));
+```
+
+使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+
+`avos-express-cookie-session`支持的选项包括：
+
+* cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
+* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
+
+登录很简单：
+
+```javascript
+app.get('/login', function(req, res) {
+    // 渲染登录页面
+    res.render('login.ejs');
+});
+// 点击登录页面的提交将出发下列函数
+app.post('/login', function(req, res) {
+    AV.User.logIn(req.body.username, req.body.password).then(function() {
+      //登录成功，avosExpressCookieSession会自动将登录用户信息存储到cookie
+      //跳转到profile页面。
+      console.log('signin successfully: %j', req.AV.user);
+      res.redirect('/profile');
+    },function(error) {
+      //登录失败，跳转到登录页面
+      res.redirect('/login');
+  });
+});
+//查看用户profile信息
+app.get('/profile', function(req, res) {
+    // 判断用户是否已经登录
+    if (req.AV.user) {
+      // 如果已经登录，发送当前登录用户信息。
+      res.send(req.AV.user);
+    } else {
+      // 没有登录，跳转到登录页面。
+      res.redirect('/login');
+    }
+});
+
+//调用此url来登出帐号
+app.get('/logout', function(req, res) {
+  //avosExpressCookieSession将自动清除登录cookie信息
+    AV.User.logOut();
+    res.redirect('/profile');
+});
+```
+
+登录页面大概是这样login.ejs:
+
+```html
+<html>
+    <head></head>
+    <body>
+      <form method="post" action="/login">
+        rlaber>Username</label>
+        <input name="username"></input>
+        <label>Password</label>
+        <input name="password" type="password"></input>
+        <input class="button" type="submit" value="登录">
+      </form>
+    </body>
+  </html>
+```
+
+注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+{% endblock %}
+
+{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock%}
+
+{% block https_redirect %}
+```javascript
+var avosExpressHttpsRedirect = require('avos-express-https-redirect');
+app.use(avosExpressHttpsRedirect());
+```
+{% endblock %}
+
+{% block get_env %}
+```javascript
+if (__local) {
+  // 当前环境为「开发环境」，是由命令行工具启动的
+} else if(__production) {
+  // 当前环境为「生产环境」，是线上正式运行的环境
+} else {
+  // 当前环境为「测试环境」
+}
+```
 {% endblock %}
 

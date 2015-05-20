@@ -1,49 +1,42 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block updateToLeanEngine%}
-### 升级到 LeanEngine
-云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
-
-* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以可以不需要任何声明而直接使用。我们认为这样会略微违反知觉,所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
-* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以 LeanEngine 默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
-* `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [TODO]()。
-* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。
-{% endblock %}
-
-{% block createProject %}
-首先请安装好 [node.js](https://nodejs.org/) 与 [npm](https://www.npmjs.com/)。
-
-**注意**： 目前 LeanEngine 的 node.js 版本为 0.12，请你最好使用此版本的 node.js 进行开发，至少不要低于 0.10 。
-
-推荐使用 node-js-getting-started 项目作为起步，这是一个简单的 Express 4 的项目。
-
-从 Github 迁出，或从 [这里](https://github.com/leancloud/node-js-getting-started/archive/master.zip) 下载并解压：
+{% block quick_start_create_project %}
+从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
 
 ```
 $ git clone git@github.com:leancloud/node-js-getting-started.git
 $ cd node-js-getting-started
 ```
 
-准备启动文件:
+然后添加应用 appId 等信息到该项目：
 
 ```
-$ cp start.sh.example start.sh
-$ chmod +x start.sh
-```
-
-将 appId 等信息更新到 `start.sh` 文件中：
-
-```
-export LC_APP_ID=<your app id>
-export LC_APP_KEY=<your app key>
-export LC_APP_MASTER_KEY=<your master key>
+$ avoscloud app <appName> <appId>
 ```
 {% endblock %}
 
+{% block updateToLeanEngine%}
+### 升级到 LeanEngine
+云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
+
+* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样略微违反知觉，所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
+* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以 LeanEngine 默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+* `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
+* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)
+{% endblock %}
+
+{% block runtime_env %}**注意**： 目前 LeanEngine 的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock%}
+
 {% block run_in_local_command %}
 ```
-$ ./start.sh
+$ avoscloud
 ```
+{% endblock %}
+
+{% block cloud_func_file %}`$PROJECT_DIR/cloud.js`{% endblock %}
+
+{% block project_constraint %}
+LeanEngine Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block others_web_framework %}
@@ -314,4 +307,292 @@ AV.Cloud.define('Logger', function(request, response) {
   response.success();
 });
 ```
+{% endblock %}
+
+{% block static_cache %}
+默认静态资源的`Cache-Control`是`max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回304状态码。你还可以在`app.listen`的时候传入选项，设置静态资源的maxAge：
+
+```javascript
+//设置7天不过期
+app.listen({'static': {maxAge: 604800000}});
+```
+
+请注意`maxAge`的单位是毫秒，这样cache-control头会变成`max-age=604800`。更多static选项参考[static middleware](http://www.senchalabs.org/connect/static.html)。
+{% endblock %}
+
+{% block dynamic_request %}
+这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+
+关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
+
+在项目实例 `$PROJECT_DIR/app.js`，我们可以看到一个初始代码：
+
+```javascript
+var express = require('express');
+var app = express();
+
+// App全局配置
+app.set('views', path.join(__dirname, 'views'));     // 设置模板目录
+app.set('view engine', 'ejs');                       // 设置template引擎
+app.use(bodyParser.json());                          // 读取请求body的中间件
+app.use(bodyParser.urlencoded({ extended: false }));
+
+//使用express路由API服务/hello的http GET请求
+app.get('/hello', function(req, res) {
+  res.render('hello', { message: 'Congrats, you just set up your app!' });
+});
+
+// 端口一定要从环境变量 `LC_APP_PORT` 中获取。
+// LeanEngine 运行时会分配端口并赋值到该变量。
+var PORT = parseInt(process.env.LC_APP_PORT || 3000);
+var server = app.listen(PORT, function () {
+  console.log('Node app is running, port:', PORT);
+});
+```
+
+我们使用`ejs`模板来渲染view，默认的模板都放在`views`目录下，比如这里`hello.ejs`:
+
+```html
+<%= message %>
+```
+
+简单地显示message内容。你还可以选用[jade](https://github.com/visionmedia/jade)这个模板引擎：
+
+```javascript
+app.set('view engine', 'jade');
+```
+
+您可以参照上面的 [部署](#部署) 文档来部署这个代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message:
+
+```
+Congrats, you just set up your app!
+```
+
+更多复杂的路由和参数传递，请看 [express.js框架文档](http://expressjs.com/guide.html)。
+
+我们还提供了一个在线demo：[http://node-runtime.avosapps.com/](http://node-runtime.avosapps.com/)，源码在 [https://github.com/leancloud/node-js-getting-started](https://github.com/leancloud/node-js-getting-started)，您可以作为参考。
+{% endblock %}
+
+{% block error_page_404 %}
+假设我们要渲染一个404页面，必须将下列代码放在所有 middleware 之后：
+
+```javascript
+// 在所有 middleware 之后。
+app.use(function(req, res, next){
+  res.status(404).render('404', {title: 'Sorry, page not found'});
+});
+```
+
+这将渲染views下面的404模板页面。
+{% endblock %}
+
+{% block get_client_ip %}
+```javascript
+var ip = req.headers['x-real-ip']
+```
+{% endblock %}
+
+{% block upload_file %}
+在 LeanEngine 里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+
+```javascript
+app.use(express.bodyParser());
+```
+
+使用表单上传文件，假设文件字段名叫iconImage:
+
+```html
+<form enctype="multipart/form-data" method="post" action="/upload">
+  <input type="file" name="iconImage">
+  <input type="submit" name="submit" value="submit">
+</form>
+```
+
+上传文件使用multipart表单，并POST提交到/upload路径下。
+
+接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+
+```javascript
+var fs = require('fs');
+app.post('/upload', function(req, res){
+  var iconFile = req.files.iconImage;
+  if(iconFile){
+    fs.readFile(iconFile.path, function(err, data){
+      if(err)
+        return res.send('读取文件失败');
+      var base64Data = data.toString('base64');
+      var theFile = new AV.File(iconFile.name, {base64: base64Data});
+      theFile.save().then(function(theFile){
+        res.send('上传成功！');
+      });
+    });
+  }else
+    res.send('请选择一个文件。');
+});
+```
+{% endblock %}
+
+{% block cookie_session %}
+要让 LeanEngine 支持 LeanCloud 用户体系的 Session，在 app.js 里添加下列代码：
+
+```javascript
+var express = require('express');
+var AV = require('leanengine-sdk');
+
+var app = express();
+// 加载 cookieSession 以支持 AV.User 的会话状态
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
+```
+
+使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+
+`AV.Cloud.CookieSession` 支持的选项包括：
+
+* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* name -- session在cookie中存储的key名称，默认为 `avos.sess`。
+* maxAge -- 设置cookie的过期时间。
+
+`httpOnly` 和 `signed` 参数我们强制设置为 true。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
+
+登录很简单：
+
+```javascript
+app.get('/login', function(req, res) {
+  // 渲染登录页面
+  res.render('login.ejs');
+});
+// 点击登录页面的提交将出发下列函数
+app.post('/login', function(req, res) {
+  AV.User.logIn(req.body.username, req.body.password).then(function() {
+    //登录成功，AV.Cloud.CookieSession 会自动将登录用户信息存储到 cookie
+    //跳转到profile页面。
+    console.log('signin successfully: %j', req.AV.user);
+    res.redirect('/profile');
+  },function(error) {
+    //登录失败，跳转到登录页面
+    res.redirect('/login');
+  });
+});
+//查看用户profile信息
+app.get('/profile', function(req, res) {
+  // 判断用户是否已经登录
+  if (req.AV.user) {
+    // 如果已经登录，发送当前登录用户信息。
+    res.send(req.AV.user);
+  } else {
+    // 没有登录，跳转到登录页面。
+    res.redirect('/login');
+  }
+});
+
+//调用此url来登出帐号
+app.get('/logout', function(req, res) {
+  // AV.Cloud.CookieSession 将自动清除登录 cookie 信息
+  AV.User.logOut();
+  res.redirect('/profile');
+});
+```
+
+登录页面大概是这样login.ejs:
+
+```html
+<html>
+    <head></head>
+    <body>
+      <form method="post" action="/login">
+        <label>Username</label>
+        <input name="username"></input>
+        <label>Password</label>
+        <input name="password" type="password"></input>
+        <input class="button" type="submit" value="登录">
+      </form>
+    </body>
+  </html>
+```
+
+注意： express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+{% endblock %}
+
+{% block cookie_session_middleware %}`AV.Cloud.CookieSession`{% endblock%}
+
+{% block https_redirect %}
+```javascript
+var HttpsRedirect = AV.Cloud.HttpsRedirect;
+app.use(HttpsRedirect());
+```
+{% endblock %}
+
+{% block get_env %}
+```javascript
+var NODE_ENV = process.env.NODE_ENV || 'development';
+if (NODE_ENV === 'development') {
+  // 当前环境为「开发环境」，是由命令行工具启动的
+} else if(NODE_ENV == 'production') {
+  // 当前环境为「生产环境」，是线上正式运行的环境
+} else {
+  // 当前环境为「测试环境」
+}
+```
+{% endblock %}
+
+{% block cloud_code_module %}
+## 模块
+
+Cloud Code支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，Cloud Code模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+
+```javascript
+var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
+exports.isACoolName = function(name) {
+  return coolNames.indexOf(name) !== -1;
+}
+```
+然后在`cloud/main.js`包含下列代码片段：
+
+```javascript
+var name = require('cloud/name.js');
+name.isACoolName('Fred'); // 返回false
+name.isACoolName('Skippy'); // 返回true;
+name.coolNames; // 未定义.
+```
+（提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
+
+name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的Cloud Code项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+
+### 可用的第三方模块
+
+因为Cloud Code 1.0运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
+
+```
+qiniu
+underscore
+underscore.string
+moment
+util
+express
+crypto
+url
+events
+string_decoder
+buffer
+punycode
+querystring
+express-ejs-layouts
+weibo
+node-qiniu
+mailgun
+mandrill
+stripe
+sendgrid
+xml2js
+```
+上面这些模块都可以直接require使用。
+我们还提供受限制的`fs`文件模块，仅可以读取上传文件目录下的文件。
+
+**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
 {% endblock %}

@@ -1,61 +1,21 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block createProject %}
-首先请安装好 [python](https://www.python.org/) 与 [pip](https://pip.pypa.io/)。
-
-**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。
-
-创建一个叫做 `HelloLeanEngine` 的文件夹，作为项目的根目录。
-
-在你的项目根目录创建一个 requirements.txt 的文件，填入以下内容：
+{% block quick_start_create_project %}
+从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
 
 ```
-flask
+$ git clone git@github.com:leancloud/python-getting-started.git
+$ cd python-getting-started
 ```
 
-在项目根目录执行 `pip install -r requirements.txt`。这样即可将 flask 安装>至系统。
+然后添加应用 appId 等信息到该项目：
 
-**注意**： 推荐你使用 [virtualenv](https://virtualenv.pypa.io) 来将当前项>目的第三方依赖与系统全局依赖做隔离，防止不同项目之间依赖的版本冲突。
-
-创建 `app.py`：
-
-```python
-# coding: utf-8
-
-from flask import Flask
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-    return 'Hello, World!'
-
-
-@app.route('/1/ping')
-def ping():
-    return 'pong'
 ```
-
-**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问你的项目的此地址，检测项目可用性。
-
-创建 `wsgi.py`：
-
-```python
-# coding: utf-8
-
-from wsgiref import simple_server
-
-from app import app
-
-application = app
-
-
-if __name__ == '__main__':
-  server = simple_server.make_server('localhost', 8000, application)
-  server.serve_forever()
+$ avoscloud app <appName> <appId>
 ```
 {% endblock %}
+
+{% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock%}
 
 {% block run_in_local_command %}
 ```
@@ -63,8 +23,14 @@ $ python wsgi.py
 ```
 {% endblock %}
 
+{% block cloud_func_file %}`$PROJECT_DIR/cloud.py`{% endblock %}
+
 {% block others_web_framework %}
 LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
+{% endblock %}
+
+{% block project_constraint %}
+TODO
 {% endblock %}
 
 {% block install_middleware %}
@@ -324,3 +290,38 @@ def log_something(**params):
     print params
 ```
 {% endblock %}
+
+{% block static_cache %}
+TODO
+{% endblock %}
+
+{% block dynamic_request %}
+TODO
+{% endblock %}
+
+{% block error_page_404 %}
+TODO
+{% endblock %}
+
+{% block get_client_ip %}
+TODO
+{% endblock %}
+
+{% block upload_file %}
+TODO
+{% endblock %}
+
+{% block cookie_session %}
+TODO
+{% endblock %}
+
+{% block cookie_session_middleware %}TODO{% endblock%}
+
+{% block https_redirect %}
+TODO
+{% endblock %}
+
+{% block get_env %}
+TODO
+{% endblock %}
+
