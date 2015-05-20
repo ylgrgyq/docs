@@ -291,18 +291,6 @@ def log_something(**params):
 ```
 {% endblock %}
 
-{% block static_cache %}
-TODO
-{% endblock %}
-
-{% block dynamic_request %}
-TODO
-{% endblock %}
-
-{% block error_page_404 %}
-TODO
-{% endblock %}
-
 {% block get_client_ip %}
 TODO
 {% endblock %}

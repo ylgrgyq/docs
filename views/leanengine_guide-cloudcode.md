@@ -1,5 +1,15 @@
 {% extends "./leanengine_guide.tmpl" %}
 
+{% block updateToLeanEngine%}
+### 升级到 LeanEngine
+云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
+
+* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样略微违反知觉，所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
+* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以 LeanEngine 默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+* `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
+* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)
+{% endblock %}
+
 {% block quick_start_create_project %}
 命令行界面输入命令创建应用：
 
@@ -407,6 +417,20 @@ AV.Cloud.define('Logger', function(request, response) {
 {% endblock %}
 
 {% block static_cache %}
+### 静态资源
+
+`public`目录下的资源将作为静态文件服务，例如，你在public下有个文件叫`index.html`，那么就可以通过`http://${your_app_domain}.avosapps.com/index.html`访问到这个文件。
+
+通常，你会将资源文件按照类型分目录存放，比如css文件放在`stylesheets`目录下，将图片放在`images`目录下，将javascript文件放在`js`目录下，Cloud code同样能支持这些目录的访问。
+
+例如，`public/stylesheets/app.css`可以通过`http://${your_app_domain}.avosapps.com/stylesheets/app.css`访问到。
+
+在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在`public/index.html`下引用`app.css`：
+
+```html
+<link href="stylesheets/app.css" rel="stylesheet">
+```
+
 默认静态资源的`Cache-Control`是`max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回304状态码。你还可以在`app.listen`的时候传入选项，设置静态资源的maxAge：
 
 ```javascript
@@ -418,7 +442,9 @@ app.listen({'static': {maxAge: 604800000}});
 {% endblock %}
 
 {% block dynamic_request %}
-这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+### 动态请求
+
+如果只是展现静态资源，您可能使用 Github Pages 类似的免费服务也能做到，但是 LeanEngine 提供的 Web Hosting 功能同时支持动态请求。 这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
 
 关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
 
@@ -468,6 +494,8 @@ Congrats, you just set up your app!
 {% endblock %}
 
 {% block error_page_404 %}
+### 自定义404页面
+
 自定义404页面在云代码里比较特殊，假设我们要渲染一个404页面，必须将下列代码放在`app.listen()`之后：
 
 ```javascript
@@ -639,3 +667,58 @@ if (__local) {
 ```
 {% endblock %}
 
+{% block cloud_code_module %}
+## 模块
+
+Cloud Code支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，Cloud Code模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+
+```javascript
+var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
+exports.isACoolName = function(name) {
+  return coolNames.indexOf(name) !== -1;
+}
+```
+然后在`cloud/main.js`包含下列代码片段：
+
+```javascript
+var name = require('cloud/name.js');
+name.isACoolName('Fred'); // 返回false
+name.isACoolName('Skippy'); // 返回true;
+name.coolNames; // 未定义.
+```
+（提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
+
+name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的Cloud Code项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+
+### 可用的第三方模块
+
+因为Cloud Code 1.0运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
+
+```
+qiniu
+underscore
+underscore.string
+moment
+util
+express
+crypto
+url
+events
+string_decoder
+buffer
+punycode
+querystring
+express-ejs-layouts
+weibo
+node-qiniu
+mailgun
+mandrill
+stripe
+sendgrid
+xml2js
+```
+上面这些模块都可以直接require使用。
+我们还提供受限制的`fs`文件模块，仅可以读取上传文件目录下的文件。
+
+**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
+{% endblock %}

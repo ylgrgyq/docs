@@ -639,27 +639,9 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 备案完成后，我们再执行绑定操作。
 
-### 静态资源
-
-`public`目录下的资源将作为静态文件服务，例如，你在public下有个文件叫`index.html`，那么就可以通过`http://${your_app_domain}.avosapps.com/index.html`访问到这个文件。
-
-通常，你会将资源文件按照类型分目录存放，比如css文件放在`stylesheets`目录下，将图片放在`images`目录下，将javascript文件放在`js`目录下，Cloud code同样能支持这些目录的访问。
-
-例如，`public/stylesheets/app.css`可以通过`http://${your_app_domain}.avosapps.com/stylesheets/app.css`访问到。
-
-在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在`public/index.html`下引用`app.css`：
-
-```html
-<link href="stylesheets/app.css" rel="stylesheet">
-```
-
 {% block static_cache %}{% endblock %}
 
-### 动态请求
-
-如果只是展现静态资源，您可能使用 Github Pages 类似的免费服务也能做到，但是 LeanEngine 提供的 Web Hosting 功能同时支持动态请求。{% block dynamic_request %}{% endblock %}
-
-### 自定义404页面
+{% block dynamic_request %}{% endblock %}
 
 {% block error_page_404 %}{% endblock %}
 
@@ -682,7 +664,6 @@ Web Hosting的动态请求超时也被限定为15秒。
 ### 自定义 session
 
 有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [文档](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock%} 组件可以并存。
-
 
 ### 启用HTTPS
 
