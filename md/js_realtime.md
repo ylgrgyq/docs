@@ -15,7 +15,7 @@
 
 ## Demo
 
-在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)。
+在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的简单实时对战游戏 [Demo](http://cutpage.sinaapp.com/)。
 
 ## 概念
 
