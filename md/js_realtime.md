@@ -689,7 +689,8 @@ realtimeObject.conv(convId, function(obj) {
     // 获取到这个 conversation 的实例对象
     conv = obj;
     console.log('可以取到 id', conv.id);
-    console.log('可以取到属性', conv.data);
+    console.log('可以取到 name', conv.name);
+    console.log('可以取到属性', conv.attr);
   } else {
     console.log('服务器端不存在这个 conversation。');      
   }
@@ -776,7 +777,8 @@ realtimeObject.room(roomId, function(obj) {
   if (obj) {
     room = obj;
     console.log('room id:', room.id);
-    console.log('room data:', room.data);
+    console.log('room name:', room.name);
+    console.log('room data:', room.attr);
   } else {
     console.log('服务器不存在这个 room。');
   }
