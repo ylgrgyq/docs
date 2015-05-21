@@ -86,9 +86,9 @@ public class SampleAVSessionListener : IAVSessionListener
 
 以上代码和逻辑顺序能够很好的理解的话，关于 `IAVSessionListener` 这个接口的作用也一目了然，它所承担的职责就是帮助开发者用自己的代码与 SDK 进行交互，比如 `OnSessionOpen`：
 
-```
+
 每一次创建了一个 AVSession，只要连接创建成功，都会激发 OnSessionOpen 代理。
-```
+
 以此类推，根据开发者不同的需求需要对不同的代理做出相应的处理。也正因为如此，SDK 中只定义了接口，并没有定义一个强类型的类去给开发者使用，方便开发者将现有的一些功能与 `IAVSessionListener` 进行集成。
 
 **注意：在任何时候创建了 `AVSession` 之后一定要主动并且显式的调用一下 `AVSession.SetListener` 方法，将代理设置成开发者自己定义的代理类，这一点是*必须*做的**。
@@ -115,13 +115,15 @@ App.session.SendMessage("亲爱的，周末我们去哪里吃？", "Wife", false
             });
 ```
 
-以上方法实际上调用的是 SDK 中
+以上方法实际上调用的是如下方法，只是用匿名方法作为回调的事件参数：
 
 
 ```c#
 public void SendMessage(string msg, string toPeer, bool transient, 
             EventHandler<AVMessageReceivedEventArgs> onMessage);
 ```
+
+
 如接收消息可以有如下写法：
 
 ```c#
@@ -256,7 +258,7 @@ group.RemoveMembers(peerIds, (sr, er) =>
     });
 });
 ```
-相应的，如果 Neal 在某一个地方登陆，他将会收到一个事件响应：
+相应的，如果 Neal 在某一个地方登录，他将会收到一个事件响应：
 
 ```
  public event EventHandler<EventArgs> OnLeft;
