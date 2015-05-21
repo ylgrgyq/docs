@@ -1,9 +1,6 @@
-$(function(){
-  prettyPrepare();
-  refactDom();
-  prettyPrint();
-  glueCopy();
-});
+// $(function(){
+
+// });
 
 
 // $(body).html($com)

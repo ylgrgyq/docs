@@ -15,7 +15,7 @@
 
 ## Demo
 
-在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)。
+在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的简单实时对战游戏 [Demo](http://cutpage.sinaapp.com/)。
 
 ## 概念
 
@@ -94,10 +94,11 @@ realtimeObj.on('open', function() {
         members: [
             'LeanCloud02'
         ],
-        // 默认的数据，可以放 Conversation 名字等
-        data: {
-            name: 'LeanCloud',
-            m: 123
+        // 默认名字
+        name: 'LeanCloud-Room',
+        // 默认的属性，可以放 Conversation 的一些初始值等
+        attr: {
+            test: 'testTitle'
         }
     }, function(data) {
         if (data) {
@@ -596,11 +597,13 @@ RealtimeObject.conv(options, callback)
 
 参数：
 
-* options {Object} （必须）传入配置信息
-
-    * data {Object} （可选）自定义的数据信息，如 title、name 等
+* options {Object} （可选）传入配置信息
     
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
+
+    * attr {Object} （可选）自定义的数据信息，如 title、image、xxx 等
+
+    * name {String} （可选）Conversation 的名字
 
     * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
     **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
@@ -627,11 +630,13 @@ var room = realtimeObject.conv({
     members: [
         'LeanCloud02'
     ],
+    // 默认名字
+    name: 'LeanCloud-Room',
     // 创建暂态的聊天室
     // transient: true,
-    // 默认的数据，可以放 Conversation 名字等
-    data: {
-        title: 'testTitle'
+    // 默认的属性，可以放 Conversation 的一些初始值等
+    attr: {
+        test: 'testTitle'
     }
 }, function(result) {
     console.log('Conversation created callback');
@@ -684,7 +689,8 @@ realtimeObject.conv(convId, function(obj) {
     // 获取到这个 conversation 的实例对象
     conv = obj;
     console.log('可以取到 id', conv.id);
-    console.log('可以取到属性', conv.data);
+    console.log('可以取到 name', conv.name);
+    console.log('可以取到属性', conv.attr);
   } else {
     console.log('服务器端不存在这个 conversation。');      
   }
@@ -718,9 +724,11 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    // 默认的数据，可以放 room 名字等
-    data: {
-        title: 'testTitle'
+    // 默认名字
+    name: 'LeanCloud-Room',
+    // 默认的属性，可以放 Conversation 的一些初始值等
+    attr: {
+        test: 'testTitle'
     }
 }, function(result) {
     console.log('Room created callback');
@@ -769,7 +777,8 @@ realtimeObject.room(roomId, function(obj) {
   if (obj) {
     room = obj;
     console.log('room id:', room.id);
-    console.log('room data:', room.data);
+    console.log('room name:', room.name);
+    console.log('room data:', room.attr);
   } else {
     console.log('服务器不存在这个 room。');
   }
@@ -883,7 +892,7 @@ RealtimeObject.ping(clientIdList, callback)
 
 参数：
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']
+* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']。**注意：每次最多只能判断 20 个 clientId，超过 20 个只查询前 20 个，因为消息过长可能导致 WebSocket 包过长而被服务器断开连接。**
 
 * callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud2']，则说明 LeanCloud2 在线
 

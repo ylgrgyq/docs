@@ -34,16 +34,16 @@ gem install --no-wrappers leancloud
   ```sh
 leancloud upload_symbol \
 -f "${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}" \
--i {{appid}} \
--k {{appkey}}
+-i "{{appid}}" \
+-k "{{appkey}}"
   ```
 
 要手动上传符号文件，则使用：
 ```sh
 leancloud upload_symbol \
 -f "<dSYM/xcarchive/DWARF 请按下面提示替换本路径>" \
--i {{appid}} \
--k {{appkey}}
+-i "{{appid}}" \
+-k "{{appkey}}"
 ```
 
 符号文件的存放位置，与你的发布流程有关，具体为：
@@ -119,6 +119,10 @@ leancloud upload_symbol \
 5. 重复以上步骤，不断改进应用。
 
 ## 排错
+
+### 为什么编译的时候会报错：`Undefined symbols for architecture i386: "std::__1::basic_string<char, std::__1::char_traits<char>...`
+
+这是在项目依赖里面缺少 libc++.dylib 库。你在「Target 设置」->「General」-> 「Linked Frameworks and Libraries」 中加入 `libc++.dylib` 即可。
 
 ### 为什么我的崩溃没有在后台显示
 

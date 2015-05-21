@@ -88,7 +88,7 @@ public void open(final AVIMClientCallback callback)
 
 ```
 AVIMClient imClient = AVIMClient.getInstance("Tom");
-imClient.open(new IMClientCallback(){
+imClient.open(new AVIMClientCallback(){
   @Override
   public void done(AVIMClient client, AVException e) {
     if (null != e) {
@@ -158,7 +158,7 @@ imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback
     if (null != conversation) {
       // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
       Intent intent = new Intent(this, ChatActivity.class);
-      Intent.putExtra(“conversation”, conversation);
+      intent.putExtra("conversation", conversation);
       startActivity(intent);
     }
   }

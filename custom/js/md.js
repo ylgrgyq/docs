@@ -89,6 +89,27 @@ $(window).scrollStopped(function() {
   }, 250);
 });
 
+jQuery(document).ready(function() {
+  //加载完成后
+  prettyPrepare();//找出需要进行 pretty 的dom
+  refactDom();//
+  prettyPrint(updateScrollSpy);//pretty
+  glueCopy();
+  setTimeout(updateScrollSpy, 1000);//延迟进行 scollspy 功能添加
+});
+
+function updateScrollSpy() {
+  if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
+    window.location=window.location.hash;
+  }
+  //定位完成后再添加 scrollspy 功能
+  setTimeout(function(){
+    $('body').scrollspy({ target: '.sidebar-wrapper' })
+  },1000)
+
+}
+
+
 $(window).resize(function(){
   updateSidebarAffixShadowWidth();
 });
