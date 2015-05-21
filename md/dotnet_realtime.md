@@ -67,7 +67,7 @@ public async void JerryReceiveMessageFromTom()
     //Tom 登录到系统
     await client.ConnectAsync();
 
-    //Jerry 设置接受消息的方法，一旦有消息收到就会调用这个方法
+    //Jerry 设置接收消息的方法，一旦有消息收到就会调用这个方法
     client.OnMessageReceieved += (s, e) =>
     {
         if (e.Message is AVIMTextMessage)
@@ -139,7 +139,7 @@ public async void BobReceiveMessageFromTom()
     //Bob 登录到系统
     await client.ConnectAsync();
 
-    //Bob 设置接受消息的方法，一旦有消息收到就会调用这个方法
+    //Bob 设置接收消息的方法，一旦有消息收到就会调用这个方法
     client.OnMessageReceieved += (s, e) =>
     {
         if (e.Message is AVIMTextMessage)
@@ -212,7 +212,7 @@ await conversation.SendImageMessageAsync(imgMessage);
 ```
 
 以上 2 种场景中对于 SDK 的区别就是如下：
-* 场景 1 中，SDK 并没有实际上传到服务端，而是仅仅是把 URL 包装在消息体内发送出去，并且这种情况下接收方是无法从消息体中获取到元信息等数据的，不过开发者可以自行获取。
+* 场景 1 中，SDK 并没有实际将图像上传到服务端，而是仅仅是把 URL 包装在消息体内发送出去，并且这种情况下接收方是无法从消息体中获取到元信息等数据的，不过开发者可以自行获取。
 * 场景 2中，SDK 获取了完整的图像的数据流，所以 SDK 会先上传文件到服务端，然后将文件的元数据以及 URL 等一并包装，再发送出去。
 
 ##### 接收图像消息
@@ -362,7 +362,7 @@ public async void SendLocationAsync()
 与接收图像消息一样，在 `AVIMConversation` 中有 `OnLocationMessageReceived` ，实例代码请参照图像消息接收。
 
 ### 消息的发送策略
-开发者在阅读完前面的富媒体消息并且运行过实例代码之后，在 Visual Studio 中使用 F12 快捷键查看各个消息类型的定义，应该可以看见图像，音频，视频在类的继承关系上是继承自 `AVIMFileMessageBase`，所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
+开发者在阅读完前面的富媒体消息并且运行过实例代码之后，在 Visual Studio 中使用 F12 快捷键查看各个消息类型的定义，应该可以看见图像、音频、视频在类的继承关系上是继承自 `AVIMFileMessageBase`，所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
 
 * 如果文件是从客户端 API 读取的数据流 (Stream) 
 
@@ -374,7 +374,6 @@ public async void SendLocationAsync()
 * 如果文件是外部链接的 URL
   * 第一步：直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
   * 第二步：发送消息
-``` 
 
 以上逻辑对所有继承 `AVIMFileMessageBase` 的消息类型有效，目前 SDK 内置的继承自 `AVIMFileMessageBase` 包含以下几种：
 
@@ -435,13 +434,13 @@ AVIMClient.Status == Online
 && AVIMConversation.OnTextMessageReceived != null
 ```
 
-在 AVIMConversation 内，接受消息的顺序是按照 
+在 AVIMConversation 内，接收消息的顺序是按照 
 
 ```
 OnTextMessageReceived > OnTypedMessageReceived > OnMessageReceived
 ```
 
-这是为了方便开发者在接受消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
+这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
 
 ### 消息类详解
 ![消息的类图](http://ac-lhzo7z96.clouddn.com/1427252943504)
@@ -449,7 +448,7 @@ OnTextMessageReceived > OnTypedMessageReceived > OnMessageReceived
 * `AVIMMessage` 所有消息的基类，一级抽象类；
 * `AVIMTypedMessage` 富媒体消息的基类，二级抽象类；
 * `AVIMFileMessageBase` 所有包含了文件内容的消息的基类，三级抽象类
-* `AVIMTextMessage` 文本你消息，三级实例类；
+* `AVIMTextMessage` 文本消息，三级实例类；
 * `AVIMLocationMessage` 地理位置消息，三级实例类
 * `AVIMImageMessage` 图像消息，四级实例类
 * `AVIMAudioMessage` 音频消息，四级实例类
@@ -496,9 +495,9 @@ client.OnMessageReceieved += (s, e) =>
 所以，开发者需要强化理解的一个概念就是：**SDK 层面是不再区分单聊以及群聊。**
 
 ### 对话的成员管理
-对话的管理包括`成员管理`，`属性管理`两个方面。
+对话的管理包括「成员管理」，「属性管理」两个方面。
 
-`成员管理`是对话中成员的一个实时生效的操作，一旦操作成功不可逆。
+成员管理，是对话中成员的一个实时生效的操作，一旦操作成功不可逆。
 
 #### 准备工作
 在进行下面几个章节之前，请复制如下代码到 IDE 并且执行，后面的文档中的示例代码是基于以下代码进行的，这是一项**必须的**工作： 
@@ -610,7 +609,7 @@ public async void InviteMaryAsync()
     await conversation.AddMembersAsync("Mary");//Jerry 把 Mary 加入到对话
 }
 ```
-该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节`自身主动加入`中**Tom 加入对话之后，Bob 受到的影响。**
+该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节[自身主动加入](#自身主动加入)中**Tom 加入对话之后，Bob 受到的影响。**
 
 #### 自身退出对话
 这里一定要区分**自身退出对话**的主动性，它与**自身被动被剔除**（下一小节）在逻辑上完全是不一样的。
@@ -619,7 +618,7 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 
 ```c#
 public async void InitiativeLeftAsync()
-{`****`
+{
     AVIMClient client = new AVIMClient("Tom");
     await client.ConnectAsync();
 
@@ -637,7 +636,7 @@ public async void InitiativeLeftAsync()
 以下代码可以帮助 William 实现这一功能：
 
 ```c#
-public async void WilliamKickHarryOutsync()
+public async void WilliamKickHarryOutAsync()
 {
     AVIMClient client = new AVIMClient("William");
     await client.ConnectAsync();
@@ -729,7 +728,7 @@ public async void UpdateConversationAsync()
 这个属性**强烈建议开发者切勿在控制台中随意修改**，所有关于成员的操作请参照上一章节中的 `成员管理` 来进行。
 
 #### 静音成员
-`AVIMConversation .MuteMemberIds` ：该属性表示当前对话中所进行了静音操作成员的 `clientId` ，
+`AVIMConversation.MuteMemberIds` ：该属性表示当前对话中所进行了静音操作成员的 `clientId` ，
 假如某一个用户不想再收到某对话的消息，又不想直接退出对话，可以使用静音操作。
 
 比如 Tom 工作繁忙，对某个对话设置了静音：
@@ -823,7 +822,7 @@ public async void WhereEqualTo_SampleCode()
 }
 ```
 
-目前条件查询只针对  `AVIMConversatioon` 的 `Attributes` 属性进行的，也就是针对 `_Conversation`  表中的 `attr` 字段进行的 `AVQuery` 查询。
+目前条件查询只针对  `AVIMConversation` 的 `Attributes` 属性进行的，也就是针对 `_Conversation`  表中的 `attr` 字段进行的 `AVQuery` 查询。
 
 实际上为了方便开发者自动为了自定义属性的 key 值增加 `attr.` 的前缀，SDK 特地添加了一个针对 `string` 类型的[拓展方法](https://msdn.microsoft.com/zh-cn/library/bb383977.aspx)
 
@@ -897,7 +896,7 @@ public async void WhereContains_SampleCode()
 }
 ```
 
-另外，包含查询在关于成员的查询中也可以有很大的作用。
+另外，包含查询还能检索与成员相关的对话数据。
 以下代码将帮助 `Tom` 查找出 `Jerry` 以及 `Bob` 都存在的对话：
 
 ```c#
@@ -929,7 +928,7 @@ public async void CombinationQuery_SampleCode()
 }
 ``` 
 
-组合查询的性能开发者不必担心，只要合理地构造查询，性能完全不需要开发者去担心。
+只要查询构建得合理，开发者完全不需要担心组合查询的性能。
 
 ### 计数查询
 任意的查询，不管是单查询还是组合查询，都支持计数查询:

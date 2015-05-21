@@ -20,12 +20,12 @@
   Step1.UserA 创建 AVSession 与 LeanCloud 服务端建立长连接
   Step2.UserA 告诉 LeanCloud 服务端我要关注（Watch）UserB
   Step3.UserA 发送消息给 LeanCloud 服务端，因为在第二步的时候，已经关注了 UserB，LeanCloud 服务端就会把这条信息发送给 UserB
-  Step4.UserB 想接受到别人发的消息，也需要创建 AVSession 与 LeanCloud 服务端建立长连接
+  Step4.UserB 想接收到别人发的消息，也需要创建 AVSession 与 LeanCloud 服务端建立长连接
   Step5.UserB 告诉 LeanCloud 服务端我也要关注（Watch）UserA
   Step6.UserB 就能收到第3步，由 UserA 发来的消息了。
 ```
 ### 场景实现
-以上逻辑是一个最基本的聊天系统应该有的逻辑交互，在 LeanCloud 中，实现以上步骤需要如下代码：
+以上是一个最基本的聊天系统应该有的逻辑交互接收，在 LeanCloud 中，实现以上步骤需要如下代码：
 
 ```c#
 AVSession session = new AVSession("UserA"); //Step1
@@ -35,10 +35,10 @@ session.OnSessionOpen += (s_open, e_open) =>
 session.SendMessage("Hello,B!", "UserB", true); //Step3
 };
 ```
-这是UserA需要做的事情，UserB 想要实现接受的话需要如下几步：
+这是UserA需要做的事情，UserB 想要实现接收的话需要如下几步：
 
 ```c#
-  AVSession session = new AVSession("UserB"); Step4
+  AVSession session = new AVSession("UserB"); //Step4
   session.Open("UserA"); //Step5
   session.SetListener(new SampleAVSessionListener()
             {
@@ -65,7 +65,7 @@ public class SampleAVSessionListener : IAVSessionListener
 
         public SessionClosed OnSessionClosed { get; set; }//关闭 AVSession 之后执行的代理。
 
-        public Message OnMessage { get; set; }//接受到消息时执行的代理。
+        public Message OnMessage { get; set; }//接收到消息时执行的代理。
 
         public MessageSent OnMessageSent { get; set; }//消息发送成功之后执行的代理。
 
@@ -82,14 +82,14 @@ public class SampleAVSessionListener : IAVSessionListener
         public Error OnError { get; set; }//发生错误时所执行的代理，例如抛出一些异常。
 }
 ```
-这样只要2边同时运行，就可以 UserB 就可以收到来自 UserA 发来的信息。
+这样只要两边同时运行，UserB 就可以收到来自 UserA 发来的信息了。
 
 以上代码和逻辑顺序能够很好的理解的话，关于 `IAVSessionListener` 这个接口的作用也一目了然，它所承担的职责就是帮助开发者用自己的代码与 SDK 进行交互，比如 `OnSessionOpen`：
 
 ```
 每一次创建了一个 AVSession，只要连接创建成功，都会激发 OnSessionOpen 代理。
 ```
-以此类推，根据开发者不同的需求需要对不同的代理做出相应的处理。也正因为如此，SDK 中只定义了接口，并没有定义一个强类型的类去给开发者使用，接口很方便于开发者将现有的一些功能类集成一下 `IAVSessionListener`。
+以此类推，根据开发者不同的需求需要对不同的代理做出相应的处理。也正因为如此，SDK 中只定义了接口，并没有定义一个强类型的类去给开发者使用，方便开发者将现有的一些功能与 `IAVSessionListener` 进行集成。
 
 **注意：在任何时候创建了 `AVSession` 之后一定要主动并且显式的调用一下 `AVSession.SetListener` 方法，将代理设置成开发者自己定义的代理类，这一点是*必须*做的**。
 
@@ -101,7 +101,7 @@ public class SampleAVSessionListener : IAVSessionListener
 ```
 
 ## 基于事件的回调
-基于事件的回调（EAP） 是 .NET 程序员熟悉的一种处理异步以及被动响应操作的常用方式，为此我们在聊天组件里面添加了一些被动响应的事件类型来响应消息的接受，群组人员变动等操作。
+基于事件的回调（EAP） 是 .NET 程序员熟悉的一种处理异步以及被动响应操作的常用方式，为此我们在聊天组件里面添加了一些被动响应的事件类型来响应消息的接收，群组人员变动等操作。
 
 实时通信是架构在长连接上的一种 Client——Server——Client 的模式，所以我们提供了一套 C# 程序员比较熟悉的基于事件的回调方式来处理实时通信里面的相关操作，如果配合 Lambda 表达式，代码会显得优雅一点。
 
@@ -110,7 +110,7 @@ public class SampleAVSessionListener : IAVSessionListener
 ```c#
 App.session.SendMessage("亲爱的，周末我们去哪里吃？", "Wife", false, (s, message) => 
             {
-                //s 就是 接受到这个消息的 AVSession 实例。
+                //s 就是 接收到这个消息的 AVSession 实例。
                 Console.WriteLine(message);
             });
 ```
@@ -122,7 +122,7 @@ App.session.SendMessage("亲爱的，周末我们去哪里吃？", "Wife", false
 public void SendMessage(string msg, string toPeer, bool transient, 
             EventHandler<AVMessageReceivedEventArgs> onMessage);
 ```
-如接受消息可以有如下写法：
+如接收消息可以有如下写法：
 
 ```c#
 AVSession session = new AVSession("UserB");//UserB 打开 Session
@@ -221,13 +221,12 @@ public void SendMessage(string msg,
              EventHandler<AVGroupMessageReceivedEventArgs> onGroupMessageRecevied);
 ```
 
-### 接受消息
-接受消息只要订阅的事件：
+### 接收消息
+只要订阅了事件，就可以监听发送到该组的消息了。
 
 ```
 public event EventHandler<AVGroupMessageReceivedEventArgs> OnMessage;
 ```
-就可以监听发送到该组的消息。
 
 ### 群成员管理
 群组聊天目前的权限管理是开放给开发者自己去掌控和维护的，服务端只认证签名，假如开发者的应用开启了签名服务，如果没有开启签名认证，所有关于群成员的管理操作都被认为是有效的。
@@ -361,14 +360,12 @@ public class SampleSignatureFactory : ISignatureFactory
 
 目前尚在公测版，已经支持的功能组件是：
 
-```
 * 单聊
 * 群组聊天
 * 签名
-```
+
 
 尚未支持的是：
 
-```
+
 * 聊天记录的获取
-```
