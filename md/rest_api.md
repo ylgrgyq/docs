@@ -2633,7 +2633,7 @@ curl -i X POST \
     "id":"vdkGm4dtRNmhQ5gqUTFBiA",
     "platform": "iOS",
     "app_version": "1.0",
-    "app_channel": "App Store",
+    "app_channel": "App Store"
   },
   "session": {
     "id":"Q5tYi4BTQ5i3Xuycgr7l"
@@ -2651,7 +2651,7 @@ curl -i X POST \
     },
     {
       "event": "_session.close",
-      "duration": 10000,
+      "duration": 10000
     }
   ]
  }' \
@@ -2660,31 +2660,31 @@ https://api.leancloud.cn/1.1/stats/open/collect
 统计发送的数据格式包括 3 个节点
 
 #### client 节点
-包括了用户设备和应用的相关信息，这个节点是必选节点。有了这个节点的数据就可以统计出每天的新增，活跃，累计用户，用户留存率，流失率等重要的关键数据。
+包括了用户设备和应用的相关信息，这个节点是必选节点。有了这个节点的数据就可以统计出每天的新增、活跃和累计用户，以及用户留存率、流失率等关键数据。
 
-|字段|必选|含义|解释|
-|-|-|-|-|
-|id|Y|用户的唯一 id|系统将根据这个 id 来区分新增用户，活跃用户，累计用户等用户相关数据|
-|platform|N|应用的平台|例如: iOS , Android 等|
-|app_version|N|应用的版本||
-|app_channel|N|应用的发布渠道||
+字段|必选|含义
+---|:---:|---
+id|Y|用户的唯一 id（系统将根据这个 id 来区分新增用户，活跃用户，累计用户等用户相关数据）
+platform|N|应用的平台（例如: iOS , Android 等）
+app_version|N|应用的版本
+app_channel|N|应用的发布渠道
 
 #### session 节点
 包含了用户一次启动的数据信息，这个节点是可选节点。有了这个节点的数据，可以统计出用户每天使用应用的频率相关的数据。
 
-|字段|必选|含义|
-|-|-|-|
-|id|Y|应用一次使用就产生唯一的一个 id |
+字段|必选|含义
+---|:---:|---
+id|Y|应用一次使用就产生唯一的一个 id 
 
 #### events 节点
 包含了自定义事件和预定义事件，是一个数组，其中每个元素的结构为：
 
-|字段|必选|含义|
-|-|-|-|
-|event|Y|事件名称|
-|attributes|N|事件属性：包含一个 key-value 的字典|
-|duration|N|事件持续时长|
-|tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} 这个元素|
+字段|必选|含义
+---|:---:|---
+event|Y|事件名称
+attributes|N|事件属性：包含一个 key-value 的字典
+duration|N|事件持续时长
+tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} 这个元素
 
 #### 预定义的事件
 ##### 页面访问
@@ -2699,7 +2699,7 @@ https://api.leancloud.cn/1.1/stats/open/collect
 ```
 {
   "event": "_session.close", //必须为 _session.close 表示一次使用结束
-  "duration": 60000, // 使用时长，单位毫秒
+  "duration": 60000 // 使用时长，单位毫秒
 }
 ```
 
