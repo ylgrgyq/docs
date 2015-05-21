@@ -129,7 +129,7 @@ Hi {{username}},
 验证短信验证码：
 
 ```objc
-    [AVOSCloud verifySmsCode:@"123456" callback:^(BOOL succeeded, NSError *error) {
+    [AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"13613613613" callback:^(BOOL succeeded, NSError *error) {
         //code
     }];
 ```
