@@ -116,9 +116,8 @@ Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html
 
 我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
 
-**注：如果您需要使用美国站点，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
 
-**注:如果您已经是v3.3以上的版本，美国站点不再需要SSL证书引入操作 **
 
 ## 简介
 
@@ -1700,7 +1699,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
 				      }});
 ```
 
-### 验证验校验
+### 验证码校验
 
 不管是短信验证码还是语音验证码，用户收到验证码以后都可以通过统一的方法来进行验证：
 
