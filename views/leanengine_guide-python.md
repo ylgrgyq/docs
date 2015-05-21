@@ -351,10 +351,12 @@ application = engine
 ```python
 import os
 
-if os.env['LC_APP_PROD'] = '1':
+if os.environ.get('LC_APP_PROD') == '1':
     # 当前为生产环境
-else:
+elif os.environ.get('LC_APP_PROD') == '0':
     # 当前为测试环境
+else:
+    # 当前为开发环境
 ```
 {% endblock %}
 
