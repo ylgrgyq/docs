@@ -1655,6 +1655,51 @@ ArrayList<AVObject> pizzaPlacesInSF = query.find();
  * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
  * 地理位置的点不能超过规定的范围。纬度的范围应该是在 -90.0 到 90.0 之间。经度的范围应该是在 -180.0 到 180.0 之间。如果你添加的经纬度超出了以上范围，将导致程序错误。
 
+## 短信验证API
+除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
+
+```java
+AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
+				    new RequestMobileCodeCallback(){
+				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }
+				    })
+```
+
+除了这种最简单的调用方法以外，我们也支持短信模板的调用。
+
+```java
+  Map<String,Object> env = new HashMap<String,Object>();
+  env.put("name","LeanCloud Test");//这里放的都是你在短信模板中间定义的变量名和对应想要替换的值
+
+  AVOSCloud.requestSMSCodeInBackground("12312312312","模板名称",env,new RequestMobileCodeCallback(){
+				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }
+				    });
+```
+
+### 语音验证码
+语音验证码，是通过电话直接呼叫用户的电话号码来播报验证码。它可以作为一种备选方案，来解决因各种原因导致短信无法及时到达的问题
+
+```java
+  AVOSCloud.requestVoiceCodeInBackground("12312312312",
+				   new RequestMobileCodeCallback callback(){
+  				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }});
+```
+
 ## 调用云代码
 
 ### 调用函数
