@@ -307,10 +307,20 @@ AV.Cloud.define('Logger', function(request, response) {
 ```
 {% endblock %}
 
-{% block get_client_ip %}
+{% block use_framework %}
+
+LeanEngine 中可以使用 [express](http://expressjs.com/)、[connect](http://senchalabs.github.com/connect) 等 web 框架，您只要安装了 LeanEngine 提供的中间件即可正常运行。
+
 ```javascript
-var ip = req.headers['x-real-ip']
+var express = require('express');
+var AV = require('leanengine-sdk');
+
+var app = express();
+
+app.use(AV.Cloud);
+app.listen(process.env.LC_APP_PORT);
 ```
+
 {% endblock %}
 
 {% block upload_file %}
@@ -354,6 +364,9 @@ app.post('/upload', function(req, res){
 {% endblock %}
 
 {% block cookie_session %}
+
+### 处理用户登录和登出
+
 要让 LeanEngine 支持 LeanCloud 用户体系的 Session，在 app.js 里添加下列代码：
 
 ```javascript
@@ -438,6 +451,14 @@ app.get('/logout', function(req, res) {
 ```
 
 注意： express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+{% endblock %}
+
+{% block custom_session %}
+
+### 自定义 session
+
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [文档](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock%} 组件可以并存。
+
 {% endblock %}
 
 {% block cookie_session_middleware %}`AV.Cloud.CookieSession`{% endblock%}

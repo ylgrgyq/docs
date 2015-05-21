@@ -639,6 +639,11 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 备案完成后，我们再执行绑定操作。
 
+### 使用框架
+
+{% block use_framework %}
+{% endblock %}
+
 {% block static_cache %}{% endblock %}
 
 {% block dynamic_request %}{% endblock %}
@@ -647,9 +652,9 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 获取客户端 IP
 
-如果你想获取客户端的 IP，可以使用下面的方式：
+如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip`字段获取。
 
-{% block get_client_ip %}{% endblock %}
+{#
 
 ### 上传文件
 
@@ -657,13 +662,13 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 上传成功后，即可在数据管理平台里看到您所上传的文件。
 
-### 处理用户登录和登出
+#}
+
 
 {% block cookie_session %}{% endblock %}
 
-### 自定义 session
-
-有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [文档](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock%} 组件可以并存。
+{% block custom_session %}
+{% endblock %}
 
 ### 启用HTTPS
 
