@@ -1700,6 +1700,22 @@ AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
 				      }});
 ```
 
+### 验证验证码
+
+不管是短信验证码还是语音验证码，用户收到验证码以后都可以通过统一的方法来进行验证：
+
+```java
+  AVOSCloud.verifyCodeInBackground("123456","12312312312",
+				  new AVMobilePhoneVerifyCallback(){
+  		          	    @Override
+				    public void done(AVException e){
+				    if(e==null){
+				      //发送成功
+				     }
+				    }
+  })
+```
+
 ## 调用云代码
 
 ### 调用函数
