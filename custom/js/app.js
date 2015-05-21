@@ -63,7 +63,8 @@ angular.module('app').controller('StartCtrl', [
     '$http',
     '$scope',
     '$timeout',
-    function ($http, $scope, $timeout) {
+    '$compile',
+    function ($http, $scope, $timeout, $compile) {
         $scope.links = {
             'android': {
                 doc: '/docs/android_guide.html',
@@ -97,21 +98,35 @@ angular.module('app').controller('StartCtrl', [
             });
         };
 
-        $scope.docloaded = function () {
-            $timeout(function(){
-                prettyPrepare();
-                prettyPrint();
-                $("pre.prettyprint code").each(function(index, ele) {
-                  $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
-                });
-                glueCopy();
-            },100);
 
-        };
+
+        $scope.$watch('selectedPlat',function(){
+            $http.get('start/'+$scope.selectedPlat+'_start.html').
+                success(function(result){
+                    $('#start-main').html(result);
+                    prettyPrepare();
+                    prettyPrint();
+                    $("pre.prettyprint code").each(function(index, ele) {
+                      $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
+                    });
+                    glueCopy();
+                    $timeout(function(){
+                        $compile($('#start-main').contents())($scope);
+                    },0);
+                    // console.log(result)
+                });
+        });
     }
 ]);
 
-
+// angular.module('app').directive('pre', function() {
+//     return {
+//         restrict: 'E',
+//         link: function postLink(scope, element, attrs) {
+//               element.html(prettyPrintOne(element.html()));
+//         }
+//     };
+// });
 
 $(function(){
     angular.element(document).ready(function() {

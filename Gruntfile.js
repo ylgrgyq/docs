@@ -1,4 +1,5 @@
 var lrSnippet = require('grunt-contrib-livereload/lib/utils').livereloadSnippet;
+var proxySnippet = require("grunt-connect-proxy/lib/utils").proxyRequest;
 var mountFolder = function(connect, dir) {
     return connect.static(require('path').resolve(dir));
   };
@@ -181,11 +182,21 @@ module.exports = function(grunt) {
           target: "http://localhost:3000"
         }
       },
-      dev: {
+      proxies: [
+        {
+          context: "/1",
+          host: "cn-stg1.leancloud.cn",
+          port: 443,
+          https: true,
+          changeOrigin: true
+        }
+      ],
+      livereload: {
         options: {
           middleware: function(connect) {
             return [
-            require('connect-livereload')(), // <--- here
+            proxySnippet,
+            // require('connect-livereload')(), // <--- here
             mountFolder(connect, 'dist')];
           }
         }
@@ -208,6 +219,7 @@ module.exports = function(grunt) {
 
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-connect');
+  grunt.loadNpmTasks('grunt-connect-proxy');
   grunt.loadNpmTasks('grunt-autoprefixer');
   grunt.loadNpmTasks('grunt-contrib-less');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
@@ -225,6 +237,6 @@ module.exports = function(grunt) {
     'uglify:generated',"usemin"]);
   grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble",
    "less:dist", "autoprefixer", "copy:asset"]);
-  grunt.registerTask("server", ["localBuild", "less:server", "connect", "watch"]);
+  grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
 
 };

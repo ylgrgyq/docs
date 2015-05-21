@@ -5,15 +5,18 @@
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
 * iOS 聊天应用：
+  * [SimpleChat iOS 版](https://github.com/leancloud/simple-chat-ios) (推荐)
   * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
-  * [FreeChat](https://github.com/jwfing/FreeChat)
 
 * Android 聊天应用：
+  * [SimpleChat Android 版](https://github.com/leancloud/simple-chat-android) (推荐)
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
-  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)
+  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/) (可与 SimpleChat 通信)
   * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
+
+关于这些项目的更多介绍、截图预览，可见 [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) 。
 
 目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
 
@@ -55,6 +58,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 * conversationId，字符串，对话 id，只读，对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
 * creator，字符串，对话创建者的 clientId，只读，标识对话创建者信息
 * members，数组，对话参与者，这里记录了所有的参与者
+* mute，数组，将对话设为静音的参与者，这部分参与者不会收到推送
 * name，字符串，对话的名字，可选，可用来对于群组命名
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
 * transient，布尔值，表示对话是否为暂态对话
@@ -80,6 +84,10 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
             <td>m （Array 类型）</td>
         </tr>
         <tr>
+            <td>mute</td>
+            <td>mu （Array 类型）</td>
+        </tr>
+        <tr>
             <td>name</td>
             <td>name（String 类型）</td>
         </tr>
@@ -94,7 +102,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
     </tbody>
 </table>
 
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 REST API 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
+除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下「单聊」「群聊」「聊天室」等概念。
 
