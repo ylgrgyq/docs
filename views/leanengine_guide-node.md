@@ -38,7 +38,7 @@ LeanEngine Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件�
 {% endblock %}
 
 {% block others_web_framework %}
-LeanEngine 支持任意 node.js 的 web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
+LeanEngine 支持任意 Node.js 的 web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 Node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
 {% endblock %}
 
 {% block install_middleware %}
