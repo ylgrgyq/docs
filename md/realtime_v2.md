@@ -5,11 +5,11 @@
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
 * iOS 聊天应用：
-  * [SimpleChat iOS 版](https://github.com/leancloud/simple-chat-ios) (推荐)
+  * [LeanMessageDemo iOS 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
   * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
 
 * Android 聊天应用：
-  * [SimpleChat Android 版](https://github.com/leancloud/simple-chat-android) (推荐)
+  * [LeanMessageDemo Android 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
