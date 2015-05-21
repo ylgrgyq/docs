@@ -66,24 +66,24 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.2+'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.3+'
 
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-push:v3.3+@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.3+@aar'
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.1+@aar'
+    compile 'cn.leancloud.android:avoscloud-feedback:v3.3+@aar'
 
     //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-sns:v3.3+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.2+@aar'    
+    compile 'cn.leancloud.android:avoscloud-search:v3.3+@aar'    
 }
 ```
 
@@ -117,6 +117,8 @@ Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html
 我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
 
 **注：如果您需要使用美国站点，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+
+**注:如果您已经是v3.3以上的版本，美国站点不再需要SSL证书引入操作 **
 
 ## 简介
 
