@@ -107,6 +107,7 @@ Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html
 
 * LeanCloud 基础存储模块
 * avosstatistics-版本号.jar
+* Java-WebSocket-1.2.0-leancloud.jar
 
 #### LeanCloud SNS 模块
 
