@@ -27,7 +27,7 @@ $ cd <appName>
 {% block introduceCloudCodeV2 %}
 ## 云代码 2.0 版
 
-2014 年 8 月 14 号，Cloud Code 推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从 14 号开始，新创建的应用都将使用云代码2.0版本。
+2014 年 8 月 14 号，云代码推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从 14 号开始，新创建的应用都将使用云代码2.0版本。
 
 ### 升级到 2.0
 
@@ -144,7 +144,7 @@ require('cloud/app.js');
 
 用来加载app.js
 
-代码部署的过程跟 LeanEngine 部署是一样的，具体见[上面的章节](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)。
+代码部署的过程跟 LeanEngine 部署是一样的，具体见[部署](#部署)。
 {% endblock %}
 
 {% block run_in_local_command %}
@@ -369,6 +369,165 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 ```
 {% endblock %}
 
+{% block http_client %}
+LeanEngine 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐您使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
+
+使用 `AV.Cloud.httpRequest` ，一个简单的 GET 请求看起来是这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当返回的 HTTP 状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
+
+### 查询参数
+
+如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: {
+    q : 'Sean Plott'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+也可以是一个原始的字符串：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: 'q=Sean Plott',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置 HTTP 头部
+
+通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置超时
+
+默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过timeout选项：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+上面的代码设置请求超时为15秒。
+
+### 发送 POST 请求
+
+通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当然，body可以被任何想发送出去的String对象替换。
+
+### HTTP 应答对象
+
+传给success和error函数的应答对象包括下列属性：
+
+* status - HTTP状态码
+* headers - HTTP应答头部信息
+* text - 原始的应答body内容。
+* buffer - 原始的应答Buffer对象
+* data - 解析后的应答内容，如果Cloud Code可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+
+如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  text: false,
+  ......
+});
+```
+{% endblock %}
+
 {% block timerLegacy %}
 **原来提供的`AV.Cloud.setInterval`和`AV.Cloud.cronjob`都已经废弃，这两个函数的功能变成和`AV.Cloud.define`一样，已经定义的任务会自动帮您做转换并启动**
 {% endblock %}
@@ -482,15 +641,15 @@ app.listen();
 app.set('view engine', 'jade');
 ```
 
-您可以参照上面的[部署文档](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)来部署这个框架代码，部署成功之后，直接可以访问`http://${your_app_domain}.avosapps.com/hello`将看到展示的message:
+您可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message:
 
 ```
 Congrats, you just set up your app!
 ```
 
-更多复杂的路由和参数传递，请看[express.js框架文档](http://expressjs.com/guide.html)。
+更多复杂的路由和参数传递，请看 [express.js框架文档](http://expressjs.com/guide.html)。
 
-我们还提供了一个在线demo：[http://myapp.avosapps.com/](http://myapp.avosapps.com/)，源码在[https://github.com/killme2008/cloudcode-test](https://github.com/killme2008/cloudcode-test)，您可以作为参考。
+我们还提供了一个在线demo： http://myapp.avosapps.com/ ，源码在 https://github.com/killme2008/cloudcode-test ，您可以作为参考。
 {% endblock %}
 
 {% block error_page_404 %}
@@ -515,7 +674,7 @@ var ip = req.headers['x-real-ip']
 {% endblock %}
 
 {% block upload_file %}
-在Cloud Code里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+在 LeanEngine 里上传文件也很容易，首先配置 app 使用 bodyParser 中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到 request.files 里：
 
 ```javascript
 app.use(express.bodyParser());
@@ -633,7 +792,7 @@ app.get('/logout', function(req, res) {
     <head></head>
     <body>
       <form method="post" action="/login">
-        rlaber>Username</label>
+        <label>Username</label>
         <input name="username"></input>
         <label>Password</label>
         <input name="password" type="password"></input>
@@ -670,7 +829,7 @@ if (__local) {
 {% block cloud_code_module %}
 ## 模块
 
-Cloud Code支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，Cloud Code模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+云代码 2.0 支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
 
 ```javascript
 var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
@@ -688,11 +847,11 @@ name.coolNames; // 未定义.
 ```
 （提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
 
-name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的Cloud Code项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的云代码项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
 
 ### 可用的第三方模块
 
-因为Cloud Code 1.0运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
+因为云代码 1.0 运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
 
 ```
 qiniu

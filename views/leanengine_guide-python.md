@@ -262,6 +262,10 @@ def custom_error_code(**params):
 ```
 {% endblock %}
 
+{% block http_client %}
+LeanEngine 可以使用 Python 内置的 urllib，不过推荐您使用 [requests](http://docs.python-requests.org/) 等第三方模块来处理 HTTP 请求。
+{% endblock %}
+
 {% block timerExample %}
 ```python
 @engine.cloud_code
