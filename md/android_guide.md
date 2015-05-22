@@ -66,24 +66,24 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.2+'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.3+'
 
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-push:v3.3+@aar'
     compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
     
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-statistics:v3.3+@aar'
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.1+@aar'
+    compile 'cn.leancloud.android:avoscloud-feedback:v3.3+@aar'
 
     //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.2+@aar'
+    compile 'cn.leancloud.android:avoscloud-sns:v3.3+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.2+@aar'    
+    compile 'cn.leancloud.android:avoscloud-search:v3.3+@aar'    
 }
 ```
 
@@ -116,7 +116,8 @@ Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html
 
 我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
 
-**注：如果您需要使用美国站点，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+
 
 ## 简介
 
@@ -1652,6 +1653,67 @@ ArrayList<AVObject> pizzaPlacesInSF = query.find();
 
  * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
  * 地理位置的点不能超过规定的范围。纬度的范围应该是在 -90.0 到 90.0 之间。经度的范围应该是在 -180.0 到 180.0 之间。如果你添加的经纬度超出了以上范围，将导致程序错误。
+
+## 短信验证API
+除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
+
+```java
+AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
+				    new RequestMobileCodeCallback(){
+				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }
+				    })
+```
+
+除了这种最简单的调用方法以外，我们也支持短信模板的调用。
+
+```java
+  Map<String,Object> env = new HashMap<String,Object>();
+  env.put("name","LeanCloud Test");//这里放的都是你在短信模板中间定义的变量名和对应想要替换的值
+
+  AVOSCloud.requestSMSCodeInBackground("12312312312","模板名称",env,new RequestMobileCodeCallback(){
+				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }
+				    });
+```
+
+### 语音验证码
+语音验证码，是通过电话直接呼叫用户的电话号码来播报验证码。它可以作为一种备选方案，来解决因各种原因导致短信无法及时到达的问题
+
+```java
+  AVOSCloud.requestVoiceCodeInBackground("12312312312",
+				   new RequestMobileCodeCallback callback(){
+  				      @Override
+				      public void done(AVException e){
+				      	if(e==null){
+					  //发送成功
+					}
+				      }});
+```
+
+### 验证码校验
+
+不管是短信验证码还是语音验证码，用户收到验证码以后都可以通过统一的方法来进行验证：
+
+```java
+  AVOSCloud.verifyCodeInBackground("123456","12312312312",
+				  new AVMobilePhoneVerifyCallback(){
+  		          	    @Override
+				    public void done(AVException e){
+				    if(e==null){
+				      //发送成功
+				     }
+				    }
+  })
+```
 
 ## 调用云代码
 

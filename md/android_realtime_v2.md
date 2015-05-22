@@ -246,7 +246,7 @@ class CustomMessageHandler extends AVIMMessageHandler {
   public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
     // 新消息到来了。在这里增加你自己的处理代码。
     String msgContent = message.getContent();
-    Logger.d(conversation.getConversationid() + " 收到一条新消息：" + msgContent);
+    Logger.d(conversation.getConversationId() + " 收到一条新消息：" + msgContent);
   }
 }
 ```
@@ -262,7 +262,7 @@ class CustomMessageHandler extends AVIMMessageHandler {
   public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
     // 新消息到来了。在这里增加你自己的处理代码。
     String msgContent = message.getContent();
-    Logger.d(conversation.getConversationid() + " 收到一条新消息：" + msgContent);
+    Logger.d(conversation.getConversationId() + " 收到一条新消息：" + msgContent);
   }
 }
 
@@ -419,13 +419,13 @@ class CustomMsgHandler extends AVIMMessageHandler {
   public void onMessage(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
     // 请按自己需求改写
     String msgContent = message.getContent();
-    Logger.d(conversation.getConversationid() + " 收到一条新消息：" + msgContent);
+    Logger.d(conversation.getConversationId() + " 收到一条新消息：" + msgContent);
   }
 
   @Override
   public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
     // 请按自己需求改写
-    Logger.d("发往对话 " + conversation.getConversationid() + " 的消息 "+ message.getMessageId() +" 已被接收");
+    Logger.d("发往对话 " + conversation.getConversationId() + " 的消息 "+ message.getMessageId() +" 已被接收");
   }
 }
 
