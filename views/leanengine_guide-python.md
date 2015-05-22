@@ -20,7 +20,9 @@ $ avoscloud app <appName> <appId>
 {% block run_in_local_command %}
 安装依赖：
 
-TODO
+```
+$ pip install requirements.txt
+```
 
 启动应用：
 
@@ -36,7 +38,7 @@ LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的�
 {% endblock %}
 
 {% block project_constraint %}
-TODO
+LeanEngine Python 项目必须有 `$PROJECT_DIR/wsgi.py` 与 `$PROJECT_DIR/requirements.txt` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block install_middleware %}
@@ -301,8 +303,27 @@ def log_something(**params):
 ```
 {% endblock %}
 
-{% block get_client_ip %}
-TODO
+{% block use_framework %}
+
+LeanEngine 环境中可以使用大部分 Python Web Framework，比如 [Flask](http://flask.pocoo.org/)、[web.py](http://webpy.org/)、[bottle](http://bottlepy.org/)。
+
+事实上，您只需要提供一个兼容 WSGI 标准的框架，并且安装了 LeanEngine 的中间件，就可以在 LeanEngine 上运行。您提供的 WSGI 函数对象需要放在 `$PROJECT_DIR/wsgi.py` 文件中，并且变量名需要为 `application`。
+
+```python
+from leancloud import Engine
+
+
+def wsgi_func(environ, start_response):
+    // 定义一个简单的 WSGI 函数，或者您可以直接使用框架提供的
+    start_response('200 OK', [('Content-Type', 'text/plain')])
+    return ['Hello LeanCloud']
+
+
+application = Engine(wsgi_func)
+```
+
+将这段代码放到 `wsgi.py` 中，就可以实现一个最简单的动态路由。
+
 {% endblock %}
 
 {% block upload_file %}
@@ -310,16 +331,36 @@ TODO
 {% endblock %}
 
 {% block cookie_session %}
-TODO
+{% endblock %}
+
+{% block custom_session %}
 {% endblock %}
 
 {% block cookie_session_middleware %}TODO{% endblock%}
 
 {% block https_redirect %}
-TODO
+
+```python
+from leancloud import HttpsRedirectMiddleware
+
+# app 为您的 wsgi 函数
+app = HttpsRedirectMiddleware(app)
+engine = Engine(app)
+application = engine
+```
+
 {% endblock %}
 
 {% block get_env %}
-TODO
+```python
+import os
+
+if os.environ.get('LC_APP_PROD') == '1':
+    # 当前为生产环境
+elif os.environ.get('LC_APP_PROD') == '0':
+    # 当前为测试环境
+else:
+    # 当前为开发环境
+```
 {% endblock %}
 
