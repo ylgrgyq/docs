@@ -37,7 +37,7 @@ curl -X POST \
 增加一个 client id 为 `LarryPage` 的用户到已有（以对话 id 5552c0c6e4b0846760927d5a 为例）对话：
 
 ```sh
-curl -X POST \
+curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
@@ -48,7 +48,7 @@ curl -X POST \
 将不再活跃的 `SteveJobs` 请出对话（以对话 id 5552c0c6e4b0846760927d5a 为例）：
 
 ```sh
-curl -X POST \
+curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
