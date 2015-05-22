@@ -2,8 +2,6 @@
 
 如果你还没有设置你的项目，请查看我们的QuickStart。
 
-如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/leancloud-demos#javascript)。
-
 ## 简介
 
 LeanCloud平台提供了一个移动App的完整后端解决方案,我们的目标是完全消除写
