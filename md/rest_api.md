@@ -2393,8 +2393,9 @@ Hi {{username}},
 参考 [实时通信 REST API](./realtime_rest_api.html)。
 
 ##统计数据API
+###数据查询API
 
-统计API可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计API必须使用master key的签名方式鉴权，请参考 更安全的鉴权方式 一节。
+统计API可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计数据查询API必须使用master key的签名方式鉴权，请参考 更安全的鉴权方式 一节。
 
 获取某个应用的基本信息，包括各平台的应用版本，应用发布渠道。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐您在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
 
@@ -2616,6 +2617,89 @@ curl -X GET \
   "parameters":{ // 自定义在线参数
     "showBeauty":"1"
   }
+}
+```
+###统计数据收集API
+格式概览如下：
+
+```
+curl -i X POST \
+-H "Content-Type: application/json" \
+-H "X-AVOSCloud-Application-Id: {{appid}}" \
+-H "X-AVOSCloud-Application-Key: {{appkey}}" \
+-d \
+'{
+  "client": {
+    "id":"vdkGm4dtRNmhQ5gqUTFBiA",
+    "platform": "iOS",
+    "app_version": "1.0",
+    "app_channel": "App Store"
+  },
+  "session": {
+    "id":"Q5tYi4BTQ5i3Xuycgr7l"
+  },
+  "events": [
+    {
+      "event": "_page",
+      "duration": 2000,
+      "tag": "BookDetail"
+    },
+    {
+      "event": "buy-item",
+      "attributes": {"item-category": "book"},
+      "metrics": {"amount": 9.99}
+    },
+    {
+      "event": "_session.close",
+      "duration": 10000
+    }
+  ]
+ }' \
+https://api.leancloud.cn/1.1/stats/open/collect
+```
+统计发送的数据格式包括 3 个节点
+
+#### client 节点
+包括了用户设备和应用的相关信息，这个节点是必选节点。有了这个节点的数据就可以统计出每天的新增、活跃和累计用户，以及用户留存率、流失率等关键数据。
+
+字段|必选|含义
+---|:---:|---
+id|Y|用户的唯一 id（系统将根据这个 id 来区分新增用户，活跃用户，累计用户等用户相关数据）
+platform|N|应用的平台（例如: iOS , Android 等）
+app_version|N|应用的版本
+app_channel|N|应用的发布渠道
+
+#### session 节点
+包含了用户一次启动的数据信息，这个节点是可选节点。有了这个节点的数据，可以统计出用户每天使用应用的频率相关的数据。
+
+字段|必选|含义
+---|:---:|---
+id|Y|应用一次使用就产生唯一的一个 id 
+
+#### events 节点
+包含了自定义事件和预定义事件，是一个数组，其中每个元素的结构为：
+
+字段|必选|含义
+---|:---:|---
+event|Y|事件名称
+attributes|N|事件属性：包含一个 key-value 的字典
+duration|N|事件持续时长
+tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} 这个元素
+
+#### 预定义的事件
+##### 页面访问
+```
+{
+  "event": "_page", // 必须为 _page 表示一次页面访问
+  "duration": 100000, // 页面停留时间，单位毫秒
+  "tag": "HomePage" // 页面名称
+}
+```
+##### session 结束
+```
+{
+  "event": "_session.close", //必须为 _session.close 表示一次使用结束
+  "duration": 60000 // 使用时长，单位毫秒
 }
 ```
 
