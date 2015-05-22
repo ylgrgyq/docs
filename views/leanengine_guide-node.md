@@ -341,7 +341,7 @@ AV.Cloud.httpRequest({
 
 ### 设置超时
 
-默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过timeout选项：
+默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过 timeout 选项（单位毫秒）：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -413,7 +413,7 @@ AV.Cloud.httpRequest({
 * headers - HTTP应答头部信息
 * text - 原始的应答body内容。
 * buffer - 原始的应答Buffer对象
-* data - 解析后的应答内容，如果Cloud Code可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+* data - 解析后的应答内容，如果 LeanEngine 可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
 
 如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
 
