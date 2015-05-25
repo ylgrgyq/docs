@@ -73,7 +73,7 @@ var updateScrollSpy = function() {
   //定位完成后再添加 scrollspy 功能
   setTimeout(function(){
     $('body').scrollspy({ target: '.sidebar-wrapper' })
-  },1000)
+  }, 200)
 }
 
 // Add a hover class to detect if users mouse is hovering over the sidebar
@@ -113,10 +113,13 @@ var initGitHubLinks = function() {
 
 var initScrollHistoryState = function() {
   var activeItem = $("#toc li .active").last().find("a").attr("href");
-  if (typeof activeItem !== 'undefined') {
-    // Will change URL without reloading, affecting the history
-    history.replaceState("data", "title", location.origin + location.pathname + activeItem);
-  };
+  if (typeof activeItem === 'undefined') {
+    activeItem = "";
+  }
+
+  // Will change URL without reloading, affecting the history
+  history.replaceState("data", "title", location.origin + location.pathname + activeItem);
+  console.log(location.origin + location.pathname + activeItem);
 }
 
 $(function() {
@@ -142,9 +145,8 @@ $(window).scrollStopped(function() {
     $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
     // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
     updateSidebarAffixShadowWidth();
-  }, 300);
-
-  initScrollHistoryState();
+    initScrollHistoryState();
+  }, 200);
 });
 
 $(window).resize(function() {
