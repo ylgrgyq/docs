@@ -87,6 +87,18 @@ var addSidebarHoverListener = function() {
   );
 }
 
+// Smooth scrolling, disabled by default
+var initSmoothScroll = function() {
+  // Bind to the click of all links with a #hash in the href
+  $('a[href^="#"]').click(function(e) {
+    // Prevent the jump and the #hash from appearing on the address bar
+    e.preventDefault();
+    // Scroll the window, stop any previous animation, stop on user manual scroll
+    // Check https://github.com/flesler/jquery.scrollTo for more customizability
+    $(window).stop(true).scrollTo(this.hash, {duration: 400, interrupt: true});
+  });
+}
+
 // Init GitHub links
 var initGitHubLinks = function() {
   var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
@@ -107,6 +119,7 @@ $(function() {
   updateScrollSpy();
   addSidebarHoverListener();
   initGitHubLinks();
+  // initSmoothScroll();
 
   var arr = $('#toc ul').parents('li');
   angular.forEach(arr, function(v, k) {
