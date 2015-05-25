@@ -111,6 +111,14 @@ var initGitHubLinks = function() {
   $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
 }
 
+var initScrollHistoryState = function() {
+  var activeItem = $("#toc li .active").last().find("a")[0].getAttribute("href");
+  if (typeof activeItem !== 'undefined') {
+    // Will change URL without reloading, affecting the history
+    history.replaceState("data", "title", location.origin + location.pathname + activeItem);
+  };
+}
+
 $(function() {
   prettyPrepare(); // prepare elements that need to be prettified
   refactDom();//
@@ -135,6 +143,8 @@ $(window).scrollStopped(function() {
     // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
     updateSidebarAffixShadowWidth();
   }, 300);
+
+  initScrollHistoryState();
 });
 
 $(window).resize(function() {
