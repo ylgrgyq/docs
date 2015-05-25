@@ -112,7 +112,7 @@ AV.Cloud.define('hello', function(request, response) {
   这段代码定义了一个名为`hello`的函数，它简单的返回应答`Hello world!`。
 
 * config 目录下是项目的配置文件 `global.json`，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
-* public 目录，用于存放 [Web Hosting](#web-hosting) 功能的静态资源文件，具体请看后面的介绍。
+* public 目录，用于存放 [Web Hosting](#web_hosting) 功能的静态资源文件，具体请看后面的介绍。
 
 ### 下载Web Hosting项目框架
 
