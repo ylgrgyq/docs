@@ -147,6 +147,10 @@ require('cloud/app.js');
 代码部署的过程跟 LeanEngine 部署是一样的，具体见[部署](#部署)。
 {% endblock %}
 
+{% block demo %}
+* [cloudcode-test](https://github.com/killme2008/cloudcode-test)：一个简单留言板网站。效果体验：https://myapp.avosapps.com/
+{% endblock %}
+
 {% block run_in_local_command %}
 ```
 $ avoscloud
