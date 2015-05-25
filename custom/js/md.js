@@ -72,6 +72,16 @@ var doSideBar = function(){
   });
 }
 
+var updateScrollSpy = function() {
+  if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
+    window.location=window.location.hash;
+  }
+  //定位完成后再添加 scrollspy 功能
+  setTimeout(function(){
+    $('body').scrollspy({ target: '.sidebar-wrapper' })
+  },1000)
+}
+
 // Add a hover class to detect if users mouse is hovering over the sidebar
 $(".sidebar-affix-shadow").hover(
   function() {
@@ -86,35 +96,22 @@ $(window).scrollStopped(function() {
   setTimeout(function() {
     $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
     // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
+    updateSidebarAffixShadowWidth();
   }, 250);
 });
 
-jQuery(document).ready(function() {
+$(window).resize(function() {
+  updateSidebarAffixShadowWidth();
+});
+
+$(function() {
   //加载完成后
   prettyPrepare();//找出需要进行 pretty 的dom
   refactDom();//
   prettyPrint(updateScrollSpy);//pretty
   glueCopy();
   setTimeout(updateScrollSpy, 1000);//延迟进行 scollspy 功能添加
-});
 
-function updateScrollSpy() {
-  if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
-    window.location=window.location.hash;
-  }
-  //定位完成后再添加 scrollspy 功能
-  setTimeout(function(){
-    $('body').scrollspy({ target: '.sidebar-wrapper' })
-  },1000)
-
-}
-
-
-$(window).resize(function(){
-  updateSidebarAffixShadowWidth();
-});
-
-$(function() {
   var arr = $('#toc ul').parents('li');
   angular.forEach(arr, function(v, k) {
     var a = $(v).children('a:first-child');
