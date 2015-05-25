@@ -42,18 +42,18 @@ LeanEngine 支持任意 Node.js 的 web 框架，你可以使用你最熟悉的�
 {% endblock %}
 
 {% block install_middleware %}
-在 Node.js 环境，使用 [leanengine-sdk](https://github.com/leancloud/leanengine-node-sdk) 来代替 [javascript-sdk](https://github.com/leancloud/javascript-sdk) 组件。前者扩展了后者，增加了云代码方法和 hook 的支持。在项目根目录下，执行：
+在 Node.js 环境，使用 [leanengine](https://github.com/leancloud/leanengine-node-sdk) 来代替 [javascript-sdk](https://github.com/leancloud/javascript-sdk) 组件。前者扩展了后者，增加了云代码方法和 hook 的支持。在项目根目录下，执行：
 
 ```
-$ npm install leanengine-sdk --save
+$ npm install leanengine --save
 ```
 
-来安装 leanengine-sdk，之后你就可以在项目中使用了。
+来安装 leanengine，之后你就可以在项目中使用了。
 {% endblock %}
 
 {% block init_middleware %}
 ```js
-var AV = require('leanengine-sdk');
+var AV = require('leanengine');
 
 var APP_ID = process.env.LC_APP_ID || 'your_app_id';
 var APP_KEY = process.env.LC_APP_KEY || 'your_app_key';
@@ -472,7 +472,7 @@ LeanEngine 中可以使用 [express](http://expressjs.com/)、[connect](http://s
 
 ```javascript
 var express = require('express');
-var AV = require('leanengine-sdk');
+var AV = require('leanengine');
 
 var app = express();
 
@@ -530,7 +530,7 @@ app.post('/upload', function(req, res){
 
 ```javascript
 var express = require('express');
-var AV = require('leanengine-sdk');
+var AV = require('leanengine');
 
 var app = express();
 // 加载 cookieSession 以支持 AV.User 的会话状态
