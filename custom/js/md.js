@@ -112,7 +112,7 @@ var initGitHubLinks = function() {
 }
 
 var initScrollHistoryState = function() {
-  var activeItem = $("#toc li .active").last().find("a")[0].getAttribute("href");
+  var activeItem = $("#toc li .active").last().find("a").attr("href");
   if (typeof activeItem !== 'undefined') {
     // Will change URL without reloading, affecting the history
     history.replaceState("data", "title", location.origin + location.pathname + activeItem);
