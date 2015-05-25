@@ -60,9 +60,9 @@ $ npm install leanengine --save
 ```js
 var AV = require('leanengine');
 
-var APP_ID = process.env.LC_APP_ID || 'your_app_id';
-var APP_KEY = process.env.LC_APP_KEY || 'your_app_key';
-var MASTER_KEY = process.env.LC_APP_MASTER_KEY || 'your_master_key';
+var APP_ID = process.env.LC_APP_ID || '{{appid}}'; // your app id
+var APP_KEY = process.env.LC_APP_KEY || '{{appkey}}'; // your app key
+var MASTER_KEY = process.env.LC_APP_MASTER_KEY || '{{masterkey}}'; // your app master key
 
 AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```

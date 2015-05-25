@@ -63,8 +63,8 @@ import leancloud
 from flask import Flask
 
 
-APP_ID = os.environ.get('LC_APP_ID', 'your_app_id')
-MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', 'your_master_key')
+APP_ID = os.environ.get('LC_APP_ID', '{{appid}}') # your app id
+MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', '{{masterkey}}') # your app master key
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
 
