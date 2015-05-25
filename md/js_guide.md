@@ -994,8 +994,6 @@ obj.save().done(function(obj) {
 });
 ```
 
-### 
-
 ###将 Promise 组织在一起
 
 Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。
@@ -1080,7 +1078,7 @@ query.find().try(function(students) {
   // 这里的代码也将被忽略
   students[1].set("salutatorian", true);
   return students[1].save();
-  
+
 }).catch(function(error) {
   // 这个错误处理函数将被调用，并且错误信息是 "There was an error.".
   // 让我们处理这个错误，并返回一个“正确”的新 Promise
@@ -1191,7 +1189,7 @@ query.find().then(function(results) {
       }, delay);
      });
   };
-  
+
    var startDate = Date.now();
 
    AV.Promise.when(
@@ -1204,7 +1202,7 @@ query.find().then(function(results) {
         //大概耗时在 128 毫秒
         console.log(new Date() - startDate);
    });
-   
+
    //尝试下其中一个失败的例子
    var startDate = Date.now();
    AV.Promise.when(
@@ -1255,7 +1253,7 @@ query.find().then(function(results) {
        timerPromisefy(128)
      ]).then(function (values) {
        //values 数组为 [1, 32, 64, 128]
-     }) 
+     })
      //测试下失败的例子
      AV.Promise.when(
        timerPromisefy(1),
@@ -1266,7 +1264,7 @@ query.find().then(function(results) {
         //不会执行
      }, function(error){
        console.dir(error);  //print 'test error'
-     }); 
+     });
 ```
 
 ### race 方法
@@ -1768,7 +1766,7 @@ user.signUpOrlogInWithMobilePhone({
   mobilePhoneNumber: '186xxxxxxxx',
   smsCode: '手机收到的 6 位验证码字符串',
   ……其他属性，比如 username 等。
-}, 
+},
 {
   success:function(user){
     //注册或者登录成功
@@ -2213,7 +2211,7 @@ iOS 设备可以通过 `prod` 属性指定使用测试环境还是生产环境�
 
 ```javascript
 AV.Push.send({
-  prod: "dev",  
+  prod: "dev",
   data: {
     alert: "Public message"
   }
@@ -2425,7 +2423,7 @@ JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 Lea
 这些选项生成 WebView 的时候默认并不会被打开，需要配置：
 
 1、因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 WebView 的 localStorage；
-设置方式： 
+设置方式：
 
 ```java
 yourWebView.getSettings().setDomStorageEnabled(true);
