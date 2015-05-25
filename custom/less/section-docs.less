@@ -466,7 +466,14 @@ ul#toc,#toc li {
 #toc a{
   color: #999;
   text-decoration: none;
-  border-right: 1px solid #eee;
+  border-right: 1px solid transparent;
+
+  // Note: May 25, 2015, 5:52 PM
+  // By: Tunghsiao Liu
+  // A very tricky way to hide right border line from users if sidebar isn't ready. See related method in `md.js`
+  .sidebar-affix-shadow.on & {
+    border-right-color: #eee;
+  }
 }
 #toc a:hover,
 #toc a:focus{
