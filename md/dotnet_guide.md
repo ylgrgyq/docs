@@ -1,10 +1,19 @@
-# .NET 指南
+# .NET 数据存储开发指南
 
-如果您还没有安装 LeanCloud .NET SDK，请按照[快速入门引导](/start.html)来获得我们的 SDK，我们的 SDK 支持 .NET 4.5及更高版本。我们的 SDK 支持用.NET开发的 Windows Phone 8（已发布[正式版](https://www.nuget.org/packages/AVOSCloud.Phone/)），Windows Store（SDK开发中），Windows Desktop（已经在Nuget上发布了[公测版](https://www.nuget.org/packages/AVOSCloud.NetFx45/)）应用。
+## 简介
+目前我们的 .NET 数据存储支持如下运行时：
 
-如果你希望从项目中学习，请前往 [Windows Phone Demos](https://github.com/leancloud/leancloud-demos#windows-phone) 。
+* Windows Phone Silverlight （8.0 & 8.1）
+* Windows Desktop .NET Framework 4.5+
+* Xamarin Form 1.4+
+* Xamarin iOS 8+
+* Xamarin Android 5+
 
+尚未发布但是已在计划内的如下：
 
+* Windows Runtime （for Windows 10）
+
+文档中涉及的语法以及接口均对所有运行时有效。
 ## 快速入门
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
@@ -452,7 +461,7 @@ catch(AVException avException)
 注意，验证过的用户，TA的`emailVerified`将会置成`true`，反之`false`，但是如果**未启用注册用户邮箱验证**，这个字段会为空。
 
 ### 手机号认证
-相对于邮箱认证，手机号认证的过程稍微需要多一点代码，如果当您的应用在注册的时候没有开启短信验证，伴随业务发展，发现需要验证用户的手机，LeanCloud正好提供了这一接口。
+相对于邮箱认证，手机号认证的过程稍微需要多一点代码，如果当您的应用在注册的时候没有开启短信验证，伴随业务发展，发现需要验证用户的手机，LeanCloud 正好提供了这一接口。
 
 ```
 //调用的前提是，改手机号已经与已存在的用户有关联(_User表中的mobilePhoneNumber即可关联手机，至于如何关联取决于客户端的业务逻辑)
@@ -525,6 +534,21 @@ public void VerifySMSCode(string mobileNumber,string code)
     await task；
 }
 ```
+##### 语音短信验证码
+文本短信验证码在到达率上有一定的风险，尽管经过我们长期得到的用户反馈，到达率已接近 100%，但是有些应用的时效性和安全性要求极高，所以我们也推出了语音短信验证码的服务，调用的方式如下：
+
+```
+await AVCloud.RequestVoiceCode ("18688888888");
+```
+发送成功之后，用户的手机就会收到一段语音通话，里面包含了 6 位数的验证码，然后开发者需要再次调用：
+
+```
+AVCloud.VerifySmsCode ("18688888888","012345")
+```
+再次验证用户输入的验证码是否正确。
+
+目前语音短信验证码仅支持大陆的手机号（移动，电信，联通全面覆盖）。
+ 
 ### 当前用户
 诚如所有移动应用一样当前用户一直是被在客户端视作持久化存储处理，比如手机QQ等流行的App，LeanCloud必然也会如此为开发者解决持久化存储当前用户，只要调用了`登陆`相关的接口，当前用户就会被持久化存储在客户端。
 
