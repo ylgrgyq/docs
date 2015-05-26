@@ -403,7 +403,7 @@ iOS 在应用退出前台后即离线，这时收到消息会触发一个 APNs �
 
 桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
 
-云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime.html#云代码-hook) 章节。
+云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime_v2.html#云代码-hook) 章节。
 
 
 ### 为什么我的 iPhone 收不到离线消息推送？
