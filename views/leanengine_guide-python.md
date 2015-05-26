@@ -25,7 +25,7 @@ $ avoscloud app <appName> <appId>
 安装依赖：
 
 ```
-$ pip install requirements.txt
+$ pip install -Ur requirements.txt
 ```
 
 启动应用：
