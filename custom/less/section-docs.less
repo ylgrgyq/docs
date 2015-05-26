@@ -16,8 +16,6 @@ body {
 
   pre {
     margin-bottom: 18px;
-    // Padding fix for .copybtn
-    padding-right: 36px;
   }
 
   sup {
@@ -428,7 +426,12 @@ body {
 
     > a {
       color: @link-color;
-      border-right-color: @link-color;
+      border-right-color: transparent;
+      transition: border .6s ease;
+
+      .sidebar-affix-shadow.on & {
+        border-right-color: @link-color;
+      }
     }
 
     > a + ol {
@@ -467,6 +470,7 @@ ul#toc,#toc li {
   color: #999;
   text-decoration: none;
   border-right: 1px solid transparent;
+  transition: border .6s ease;
 
   // Note: May 25, 2015, 5:52 PM
   // By: Tunghsiao Liu
