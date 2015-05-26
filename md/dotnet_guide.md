@@ -540,7 +540,7 @@ public void VerifySMSCode(string mobileNumber,string code)
 ```
 await AVCloud.RequestVoiceCode ("18688888888");
 ```
-发送成功之后，用户的手机就会收到一段语音通话，里面包含了 6 位数的验证码，然后开发者需要再次调用：
+发送成功之后，用户的手机就会收到一段语音通话，它会播报 6 位数的验证码，然后开发者需要再次调用：
 
 ```
 AVCloud.VerifySmsCode ("18688888888","012345")
