@@ -739,7 +739,7 @@ user.sign_up()
 在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登陆。
 
 ```python
-User.login("myname", "mypass")
+User().login("myname", "mypass")
 ```
 
 ### 修改密码
