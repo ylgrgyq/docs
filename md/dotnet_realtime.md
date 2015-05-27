@@ -1,4 +1,4 @@
-# .NET 实时通信服务
+# .NET 实时通信开发指南
 
 ## 简介
 
@@ -7,7 +7,10 @@
 目前我们的 .NET 实时通信支持如下运行时：
 
 * Windows Phone Silverlight （8.0 & 8.1）
-* Windows Desktop With .NET Framework 4.5
+* Windows Desktop .NET Framework 4.5+
+* Xamarin Form 1.4+
+* Xamarin iOS 8+
+* Xamarin Android 5+
 
 尚未发布但是已在计划内的如下：
 
