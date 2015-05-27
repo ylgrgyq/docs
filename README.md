@@ -43,7 +43,7 @@ grunt server
 * 图片资源放在当前 repo 的 `images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
 * 当增加一个全新的文档，需要更新文档首页 `templates/pages/index.html`，顶部菜单 `templates/include/header.html`
 
-### 一套模板多分渲染
+### 一套模板多份渲染
 
 有些文档的相似度非常高，多以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云代码 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
 
