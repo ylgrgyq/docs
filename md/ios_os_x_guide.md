@@ -2,7 +2,7 @@
 
 如果还没有安装 LeanCloud iOS SDK，请阅读 [快速入门](/start.html) 来获得该 SDK，并在 Xcode 中运行和熟悉示例代码。我们的 SDK 支持 iOS 5.1.1 及更高版本。
 
-如果想从项目中学习，请到我们的 GitHub 资源库中获取 [iOS SDK Demos](https://github.com/leancloud/leancloud-demos#ios) 。
+如果想从项目中学习，请到我们的 GitHub 资源库中获取 [iOS SDK Demos](https://github.com/leancloud/leancloud-demos#ios) 。其中，我们推荐与这个指南配套的 [LeanStorageDemo](https://github.com/leancloud/LeanStorage-Demo)。
 
 ## 介绍
 
