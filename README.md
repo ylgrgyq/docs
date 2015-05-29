@@ -57,7 +57,7 @@ $ grunt server
   ```
 
   括起来。可以参考 [leanengine_guide.tmpl](https://github.com/leancloud/docs/blob/master/views/leanengine_guide.tmpl)。
-* 在 `views ` 目录里编写多分渲染变量（以 `md` 作为文件扩展名）。第一行表明自己继承哪个模板：
+* 在 `views ` 目录里编写多份渲染变量（以 `md` 作为文件扩展名）。第一行表明自己继承哪个模板：
 
   ```
   {% extends "./<your-tmpl-file>" %}
@@ -78,6 +78,15 @@ $ grunt server
 
   同样支持 `grunt server` 命令，该命令最终会执行 `watch` 插件，此时修改模板文件，或者变量文件都会自动重新生成最终的 md 文件（可能需要等待 2~4 秒）。
 * 记得将这种方式生成的 md 文件添加到 [.gitignote](https://github.com/leancloud/docs/blob/master/.gitignore) 文件中，确保这类文件不会被提交。
+
+**注意：如果在模板中需要渲染 `{{appid}}` 这样的 AngularJS 变量，则必然在模板文件的最上方先定义好一个新变量，如 `appid`，其值为 `'{{appid}}'`，例如：**
+
+```
+{% set appid = '{{appid}}' %}
+{% set appkey = '{{appkey}}' %}
+{% set masterkey = '{{masterkey}}' %}
+```
+这样，在生成的 html 文档中，`{{appid}}` 才可以被正确渲染，否则，它会被替换为空值，原因是 nunjucks 在上下文中找不到该变量的定义。
 
 ## LeanCloud 内部员工发布新文档
 
