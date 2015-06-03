@@ -11,7 +11,7 @@ $ cd python-getting-started
 然后添加应用 appId 等信息到该项目：
 
 ```
-$ avoscloud app <appName> <appId>
+$ avoscloud add <appName> <appId>
 ```
 {% endblock %}
 
