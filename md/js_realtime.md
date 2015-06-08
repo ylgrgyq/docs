@@ -178,6 +178,10 @@ realtimeObj.on('message', function(data) {
 });
 ```
 
+如果A用户创建了一个包含B用户的Conversation，并向其发送消息。
+B用户尚未主动加入该Conversation，那么，B用户会on('message')接口获取此消息（可以是离线消息）。
+on('message')接口回调函数传入参数中的cid字段，即是该Conversation的id。通过此id即可创建同样的Room，然后对其回复。
+
 ## 安全
 
 ### 安全域名
