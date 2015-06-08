@@ -178,11 +178,11 @@ realtimeObj.on('message', function(data) {
 });
 ```
 
-如果A用户创建了一个包含B用户的Conversation，并向其发送消息。
-那么，B用户会on('message')接口获取此消息（可以是离线消息），即使B用户尚未主动加入该Conversation。
-on('message')是接收消息最底层的实现，所以即使你通过Conversation.receive接受了该消息，依然会触发message事件。
-on('message')接口回调函数传入参数中的cid字段，即是该Conversation的id。
-通过此id即可创建同样的Conversation，然后对其回复。
+如果A用户创建了一个包含B用户的 Conversation ，并向其发送消息。
+那么，B用户可以通过 on 方法监听 message 事件获取此消息（可以是离线消息），即使B用户尚未主动加入该 Conversation 。
+message 事件是接收消息最底层的实现，所以即使你通过 Conversation.receive 监听了该消息，依然会触发 message 事件。
+message 事件接口回调函数传入参数中的 cid 字段，即是该 Conversation 的 id 。
+通过此 id 即可创建同样的 Conversation ，然后对其回复。
 
 ## 安全
 
