@@ -1662,6 +1662,7 @@ curl -X PUT \
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-AVOSCloud-Session-Token: samplei3l83eerhnln0ecxgy5" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
