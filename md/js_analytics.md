@@ -1,0 +1,226 @@
+# JavaScript 分析统计 SDK
+
+## 简介
+
+欢迎使用 JavaScript Analytics SDK 来分析统计你的产品。
+
+该 SDK 可以使用在 Web 页面及 WebApp 等场景中，兼容 IE8+，各种移动端浏览器，及各种 WebView，包括 Phonegap、Cordova 和微信的 WebView。使用简单，功能强大。只需要加载，实例化之后，SDK 既可以自动统计，LeanCloud 的后台会自动来分析，最终可以在应用的「分析」中看到诸如访问时长、用户增长、用户留存率和实时在线用户量等各种统计数据。
+
+## 通过 bower 安装
+
+[什么是 bower ?](http://bower.io/)
+
+```
+bower install leancloud-analytics --save
+```
+
+安装之后，页面直接加载 bower_components/leancloud-analytics/src/AV.analytics.js 即可。
+
+## Github 仓库地址
+
+可以直接通过 Github 仓库使用，也可以通过 Github 给我们提出您的建议
+
+Github 仓库地址：[https://github.com/leancloud/js-analytics-sdk](https://github.com/leancloud/js-analytics-sdk)
+
+Release 地址: [https://github.com/leancloud/js-analytics-sdk/releases](https://github.com/leancloud/js-analytics-sdk/releases)
+
+## Demo 及示例代码
+
+如果您觉得一点点阅读文档较慢，可以直接看我们的 [Demo 代码](https://github.com/leancloud/js-analytics-sdk/tree/master/demo)，并且下载自己运行一下试试看。
+
+```javascript
+// 最简的示例代码，请换成自己的 appId 和 appKey
+var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
+var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+
+// 实例化分析统计功能
+var analytics = AV.analytics({
+
+    // 设置 AppId
+    appId: appId,
+
+    // 设置 AppKey
+    appKey: appKey,
+
+    // 你当前应用或者想要指定的版本号（自定义）
+    version: '1.8.6',
+
+    // 你当前应用的渠道或者你想指定的渠道（自定义）
+    channel: 'weixin'
+});
+
+// 发送自定义的统计事件
+analytics.send({
+
+    // 事件名称
+    event: 'test-event-name',
+
+    // 事件属性，任意数据
+    attr: {
+        testa: 123,
+        testb: 'abc'
+    },
+
+    // 该事件持续时间（毫秒）
+    duration: 6000
+}, function(result) {
+    if (result) {
+        console.log('统计数据发送成功！');
+    }
+});
+
+```
+
+## 方法文档
+
+### 全局命名空间
+
+LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
+
+### AV.analytics(options)
+
+描述：配置一个分析统计功能，实例化一个 analyticsObject 可以来做后续操作。
+
+参数：
+
+* options {Object} （必须） 配置分析统计中所需的参数。其中包括：
+
+    * appId {String} （必须）应用的 AppId，在「控制台」-「设置」-「基本信息」中可以查看；
+
+    * appKey {String} （必须）应用的 AppKey；
+
+    * version {String} （可选）可以设置一个版本号，可以是当前应用的版本，完全自定义；
+
+    * channel {String} （可选）渠道信息，可以设置一个渠道，完全自定义。比如微信、微博等；
+
+返回：{Object} 返回 analyticsObject，可以做后续的方法，支持链式。
+
+例子：
+
+```javascript
+var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
+var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+var analytics = AV.analytics({
+    appId: appId,
+    appKey: appKey,
+    // 你当前应用或者想要指定的版本号（自定义）
+    version: '1.8.6',
+    // 你当前应用的渠道或者你想指定的渠道（自定义）
+    channel: 'weixin'
+});
+```
+
+### AV.analytics.version
+
+描述：获取当前 SDK 的版本信息
+
+返回：{String} 返回当前版本
+
+例子：
+
+```javascript
+console.log(AV.analytics.version);   // 0.0.1
+```
+
+### analyticsObject.send(options, callback)
+
+描述：发送自定义事件，可以用来监测用户行为，或者做其他相关统计。
+
+参数：
+
+* options {Object} （必须）发送数据的配置，具体参数包括：
+
+    * event {String} （必须）事件的名称
+
+    * attr {Object} （可选）事件所携带的数据，可以是任意的 JSON，完全自定义
+
+    * duration {Number} （可选）该事件持续的时间，单位是毫秒
+
+* callback {Function}（可选）自定义发送成功或者失败后，会触发的回调函数
+
+返回：{Object} 返回 analyticsObject，可以做后续的方法，支持链式。
+
+例子：
+
+```javascript
+// 最简的示例代码，请换成自己的 appId 和 appKey
+var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
+var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+
+// 实例化分析统计功能
+var analytics = AV.analytics({
+    appId: appId,
+    appKey: appKey,
+    version: '1.8.6',
+    channel: 'weixin'
+}).send({
+
+    // 事件名称
+    event: 'test-event-name',
+
+    // 事件属性，任意数据
+    attr: {
+        testa: 123,
+        testb: 'abc'
+    },
+
+    // 该事件持续时间（毫秒）
+    duration: 6000
+}, function(result) {
+    if (result) {
+        console.log('统计数据发送成功！');
+    }
+});
+```
+
+### analyticsObject.send(eventList, callback)
+
+描述：发送自定义事件，可以用来监测用户行为，或者做其他相关统计。
+
+参数：
+
+* eventList {Array} （必须）发送事件列表，每个事件单元的说明，请参考上一个 send 方法的 options 选项；
+
+* callback {Function}（可选）自定义发送成功或者失败后，会触发的回调函数
+
+返回：{Object} 返回 analyticsObject，可以做后续的方法，支持链式。
+
+例子：
+
+```javascript
+// 最简的示例代码，请换成自己的 appId 和 appKey
+var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
+var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+
+var eventList = [
+    {
+        // 事件名称
+        event: 'test-event-name',
+
+        // 事件属性，任意数据
+        attr: {
+            testa: 123,
+            testb: 'abc'
+        },
+
+        // 该事件持续时间（毫秒）
+        duration: 6000
+    },
+    {
+        event: 'daasdfname',
+        duration: 2100
+    }
+];
+
+// 实例化分析统计功能
+var analytics = AV.analytics({
+    appId: appId,
+    appKey: appKey,
+    version: '1.8.6',
+    channel: 'weixin'
+}).send(eventList, function(result) {
+    if (result) {
+        console.log('统计数据发送成功！');
+    }
+});
+```
