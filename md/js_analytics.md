@@ -8,11 +8,11 @@
 
 ## 通过 bower 安装
 
-[什么是 bower ?](http://bower.io/)
-
 ```
 bower install leancloud-analytics --save
 ```
+
+[什么是 bower ?](http://bower.io/)
 
 安装之后，页面直接加载 bower_components/leancloud-analytics/src/AV.analytics.js 即可。
 
@@ -79,7 +79,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 ### AV.analytics(options)
 
-描述：配置一个分析统计功能，实例化一个 analyticsObject 可以来做后续操作。
+描述：配置一个分析统计功能，实例化一个 analyticsObject 可以来做后续操作。通过该方法实例化之后，SDK 会自动记录页面时间、一次访问的时间、标记不同用户等数据，LeanCloud 服务端会每天处理一次所有统计数据，自动计算出你想要的关键数据。
 
 参数：
 
