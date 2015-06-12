@@ -34,8 +34,8 @@ Release 地址: [https://github.com/leancloud/js-analytics-sdk/releases](https:/
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = {{appid}};
-var appKey = {{appkey}};
+var appId = '{{appid}}';
+var appKey = '{{appkey}}';
 
 // 实例化统计分析功能
 var analytics = AV.analytics({
@@ -101,8 +101,8 @@ channel|String|可选|渠道信息，可以设置一个渠道，完全自定义�
 例子：
 
 ```javascript
-var appId = {{appid}};
-var appKey = {{appkey}};
+var appId = '{{appid}}';
+var appKey = '{{appkey}}';
 var analytics = AV.analytics({
     appId: appId,
     appKey: appKey,
@@ -147,8 +147,8 @@ duration|Number|可选|该事件持续的时间，单位是毫秒
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = {{appid}};
-var appKey = {{appkey}};
+var appId = '{{appid}}';
+var appKey = '{{appkey}}';
 
 // 实例化统计分析功能
 var analytics = AV.analytics({
@@ -192,8 +192,8 @@ var analytics = AV.analytics({
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = {{appid}};
-var appKey = {{appkey}};
+var appId = '{{appid}}';
+var appKey = '{{appkey}}';
 
 var eventList = [
     {
