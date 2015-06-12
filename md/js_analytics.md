@@ -1,20 +1,24 @@
-# JavaScript 分析统计 SDK
+# JavaScript 统计分析开发指南
 
 ## 简介
 
-欢迎使用 JavaScript Analytics SDK 来分析统计你的产品。
+使用本模块，你不仅可以精准统计每个分发渠道所获取的新增用户、活跃用户、留存率等指标，还可以自定义事件来深度追踪用户的使用细节、用户属性以及行为特征，直观解读用户的操作流程，为业务分析和用户体验优化获取最真实的样本数据。 
 
-该 SDK 可以使用在 Web 页面及 WebApp 等场景中，兼容 IE8+，各种移动端浏览器，及各种 WebView，包括 Phonegap、Cordova 和微信的 WebView。使用简单，功能强大。只需要加载，实例化之后，SDK 既可以自动统计，LeanCloud 的后台会自动来分析，最终可以在应用的「分析」中看到诸如访问时长、用户增长、用户留存率和实时在线用户量等各种统计数据。
+## 特性
+
+* 该 SDK 可以使用在 Web 页面及 WebApp 等场景中，兼容 IE8+，各种移动端浏览器，及各种 WebView，包括 Phonegap、Cordova 和微信的 WebView。
+
+* 使用简单，功能强大。只需要加载，实例化之后，SDK 既可以自动统计，LeanCloud 的后台会自动来分析，最终可以在应用的「分析」中看到诸如访问时长、用户增长、用户留存率和实时在线用户量等各种统计数据。
+
+* 支持 WebApp，支持 Web 前端路由，完全自动统计。
 
 ## 通过 bower 安装
 
 ```
 bower install leancloud-analytics --save
 ```
-
-[什么是 bower ?](http://bower.io/)
-
 安装之后，页面直接加载 bower_components/leancloud-analytics/src/AV.analytics.js 即可。
+[什么是 bower ?](http://bower.io/)
 
 ## Github 仓库地址
 
@@ -30,10 +34,10 @@ Release 地址: [https://github.com/leancloud/js-analytics-sdk/releases](https:/
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
-var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+var appId = {{appid}};
+var appKey = {{appkey}};
 
-// 实例化分析统计功能
+// 实例化统计分析功能
 var analytics = AV.analytics({
 
     // 设置 AppId
@@ -79,27 +83,26 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 ### AV.analytics(options)
 
-描述：配置一个分析统计功能，实例化一个 analyticsObject 可以来做后续操作。通过该方法实例化之后，SDK 会自动记录页面时间、一次访问的时间、标记不同用户等数据，LeanCloud 服务端会每天处理一次所有统计数据，自动计算出你想要的关键数据。
+描述：配置一个统计分析功能，实例化一个 analyticsObject 可以来做后续操作。通过该方法实例化之后，SDK 会自动记录页面时间、一次访问的时间、标记不同用户等数据，LeanCloud 服务端会每天处理一次所有统计数据，自动计算出你想要的关键数据。
 
 参数：
 
-* options {Object} （必须） 配置分析统计中所需的参数。其中包括：
+* options {Object} （必须） 配置统计分析中所需的参数。其中包括：
 
-    * appId {String} （必须）应用的 AppId，在「控制台」-「设置」-「基本信息」中可以查看；
-
-    * appKey {String} （必须）应用的 AppKey；
-
-    * version {String} （可选）可以设置一个版本号，可以是当前应用的版本，完全自定义；
-
-    * channel {String} （可选）渠道信息，可以设置一个渠道，完全自定义。比如微信、微博等；
+参数|类型|约束|说明
+---|---|---|:---
+appId|String|必须|应用的 AppId，在「控制台」-「设置」-「基本信息」中可以查看。
+appKey|String|必须|应用的 AppKey
+version|String|可选|可以设置一个版本号，可以是当前应用的版本，完全自定义。
+channel|String|可选|渠道信息，可以设置一个渠道，完全自定义，比如微信、微博等。
 
 返回：{Object} 返回 analyticsObject，可以做后续的方法，支持链式。
 
 例子：
 
 ```javascript
-var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
-var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+var appId = {{appid}};
+var appKey = {{appkey}};
 var analytics = AV.analytics({
     appId: appId,
     appKey: appKey,
@@ -130,11 +133,11 @@ console.log(AV.analytics.version);   // 0.0.1
 
 * options {Object} （必须）发送数据的配置，具体参数包括：
 
-    * event {String} （必须）事件的名称
-
-    * attr {Object} （可选）事件所携带的数据，可以是任意的 JSON，完全自定义
-
-    * duration {Number} （可选）该事件持续的时间，单位是毫秒
+参数|类型|约束|说明
+---|---|---|:---
+event|String|必须|事件的名称
+attr|Object|可选|事件所携带的数据，可以是任意的 JSON，完全自定义
+duration|Number|可选|该事件持续的时间，单位是毫秒
 
 * callback {Function}（可选）自定义发送成功或者失败后，会触发的回调函数
 
@@ -144,10 +147,10 @@ console.log(AV.analytics.version);   // 0.0.1
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
-var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+var appId = {{appid}};
+var appKey = {{appkey}};
 
-// 实例化分析统计功能
+// 实例化统计分析功能
 var analytics = AV.analytics({
     appId: appId,
     appKey: appKey,
@@ -189,8 +192,8 @@ var analytics = AV.analytics({
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
-var appId = 'u5rykzag4wz0y3h2qnbaicbcjrlft8euv2';
-var appKey = 'dl9vmrtcc5z1kj8rmj4n3wq1t9u76me49';
+var appId = {{appid}};
+var appKey = {{appkey}};
 
 var eventList = [
     {
@@ -212,7 +215,7 @@ var eventList = [
     }
 ];
 
-// 实例化分析统计功能
+// 实例化统计分析功能
 var analytics = AV.analytics({
     appId: appId,
     appKey: appKey,
