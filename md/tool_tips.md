@@ -27,8 +27,9 @@
 * 适当使用[查询缓存](https://leancloud.cn/docs/ios_os_x_guide.html#缓存查询)功能，可以提升查询性能，并提供离线浏览。
 * 在应用设置的**应用选项**菜单里，可以设置短信测试的手机号码，没有流量限制。
 * 实现应用 DeepLink，参考 [应用内搜索和 DeepLink 开发指南](https://leancloud.cn/docs/app_search_guide.html)。
-* 如果您想针对一个列建立唯一索引，不允许该列的数据出现重复，请提出[技术申请](https://ticket.avosapps.com)，说明应用、Class 和列名。
+* 如果您想针对一个列建立唯一索引，不允许该列的数据出现重复，请提出[技术申请](https://ticket.avosapps.com)或者发邮件到 support@leancloud.rocks，说明应用、Class 和列名。
 * 想实现先验证手机号码再注册，可以用requestSMSCode，verifySMSCodeInBackground得到一个正确的手机号码再进行new AVUser()的注册。
+
 
 ## 文件
 
@@ -113,3 +114,4 @@
 * 关注我们的[博客](https://blog.leancloud.cn/)和[微博](http://weibo.com/avoscloud)，获取 LeanCloud 最新消息。
 * 在应用设置的基本设置菜单里，可以更改应用名称，提交应用图标，申请发布到[应用墙](https://leancloud.cn/customers.html)。
 * 为您的应用添加用户反馈，请使用我们的[用户反馈组件](https://leancloud.cn/docs/feedback.html)。
+
