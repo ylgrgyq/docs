@@ -93,9 +93,6 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
     * appKey {String}（必须）应用的 AppKey；
 
-    * channels {Array}（可选）Push 的频道。默认不传，会发到所有频道；
-
-
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
 例子：
@@ -104,8 +101,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 ```javascript
 var pushObject = AV.push({
     appId: 'abcdefg123',
-    appKey: 'qwertyuio222',
-    channels: ['aaa', 'bbb']
+    appKey: 'qwertyuio222'
 }).open(function() {
     console.log('receiving message...');
 }).on('message', function(data) {
