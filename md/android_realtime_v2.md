@@ -31,7 +31,7 @@ public class MyApplication extends Application{
 
     public void onCreate(){
       ...
-      AVOSCloud.initialize(this,"{{appId}}","{{appKey}}");
+      AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
       ...
     }
 }
@@ -269,7 +269,7 @@ class CustomMessageHandler extends AVIMMessageHandler {
 // application 的初始化部分
 public void onCreate(){
   ...
-  AVOSCloud.initialize(this,"{{appId}}","{{appKey}}");
+  AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
   AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
   ...
 }
