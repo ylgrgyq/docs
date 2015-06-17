@@ -131,6 +131,11 @@ module.exports = function(grunt) {
         }
       }
     },
+    comment:{
+      md: {
+        src: 'dist/*.html'
+      }
+    },
     less: {
       server: {
         options: {
@@ -231,12 +236,88 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-useminPrepare');
   grunt.loadNpmTasks('grunt-nunjucks');
 
-  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble",
+  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown","comment", "assemble",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
     'uglify:generated',"usemin"]);
-  grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble",
+  grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "copy:asset"]);
   grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
 
-};
+
+
+
+
+    grunt.registerMultiTask('comment','add version info',function(){
+      // console.log('comment task',this.files,this.filesSrc);
+      var cheerio = require('cheerio');
+      var crypto = require('crypto');
+      var AV = require('avoscloud-sdk').AV;
+      AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
+      var Doc = AV.Object.extend('Doc');
+      var commentDoms = ['p', 'pre', 'li'];
+      var done = this.async();
+
+      var sequence = Promise.resolve();
+
+      var  allPromise = [];
+
+      function initDocVersion(filepath,resolve,reject){
+          var file = filepath;
+          var content = grunt.file.read(filepath);
+          var docVersion = crypto.createHash('md5').update(content).digest('hex');
+          // console.log(docVersion)
+          var $ = cheerio.load(content);
+          $('html').first().attr('version', docVersion);
+
+          var query = new AV.Query(Doc);
+          query.equalTo('version', docVersion);
+          console.log(3)
+
+          query.first().then(function(doc) {
+            console.log('first then')
+            if (!doc) {
+              doc = new Doc();
+              doc.set('file', file)
+              doc.set('version', docVersion);
+              var snippets = [];
+              commentDoms.forEach(function(dom) {
+                $('#content ' + dom).each(function() {
+                  var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+                  snippets.push({version: version});
+                });
+              });
+              doc.set('snippets', snippets);
+              return doc.save();
+            }
+          }).then(function() {
+            console.log('second then')
+            // 在文档中添加 version 标记
+            commentDoms.forEach(function(dom) {
+              $('#content ' + dom).each(function() {
+                console.log('infile dom')
+                console.log($(this))
+                var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+                $(this).attr('version', version);
+              });
+            });
+          grunt.file.write(filepath, $.html());
+          resolve();
+          // done();
+        });
+      }
+
+      this.filesSrc.forEach(function(filepath) {
+        allPromise.push(new Promise(function(resolve,reject){
+          initDocVersion(filepath,resolve,reject)
+        }));
+      });
+
+      Promise.all(allPromise).then(function(){
+        console.log('allcompleted');
+        done();
+      })
+  });
+
+
+}
