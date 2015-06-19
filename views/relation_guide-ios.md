@@ -56,7 +56,6 @@ NSArray *topics = [[AVUser currentUser] objectForKey:@"topicList"];
 ```
 {% endblock %}
 
-
 {% block queryIncludeTopicList %}
 
 ```objc
@@ -90,6 +89,8 @@ AVQuery *userQuery = [AVUser query];
 
 {% block studentAVRelationCourse %}
 
+以下代码是实现 Book 和 Author 之间的关系的，请替换成实现 学生和课程 之间的关系的代码。注释请注意替换。
+
 ```objc
 // let’s say we have a few objects representing Author objects
 AVObject *authorOne = …
@@ -115,6 +116,7 @@ AVRelation *relation = [book relationforKey:@"authors"];
 {% endblock %}
 
 {% block queryStudentByCourse %}
+
 ```objc
 // suppose we have a book object
 AVObject *book = ...
@@ -130,6 +132,7 @@ AVQuery *query = [relation query];
 {% endblock %}
 
 {% block queryCoursesByStudent %}
+
 ```objc
 // suppose we have a author object, for which we want to get all books
 AVObject *author = ...
@@ -141,4 +144,118 @@ AVQuery *query = [AVQuery queryWithClassName:@"Book"];
 // we have is contained therein
 [query whereKey:@"authors" equalTo:author];
 ```
+{% endblock %}
+
+{% block  relationTableStudentCourse%}
+
+```objc
+// suppose we have a user we want to follow
+AVUser *otherUser = ...
+ 
+// create an entry in the Follow table
+AVObject *follow = [AVObject objectWithClassName:@"Follow"];
+[follow setObject:[AVUser currentUser]  forKey:@"from"];
+[follow setObject:otherUser forKey:@"to"];
+[follow setObject:[NSDate date] forKey:@"date"];
+[follow saveInBackground];
+```
+{% endblock %}
+
+{% block relationTableQueryStudentInCourse %}
+
+```objc
+// set up the query on the Follow table
+AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
+[query whereKey:@"from" equalTo:[AVUser currentUser]];
+ 
+// execute the query
+[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+  for(AVObject *o in objects) {
+    // o is an entry in the Follow table
+    // to get the user, we get the object with the to key
+    AVUser *otherUser = [o objectForKey:@"to"];
+ 
+    // to get the time when we followed this user, get the date key
+    NSDate *when = [o objectForKey:@"date"];
+  }
+}];
+```
+{% endblock %}
+
+{% block relationTableQueryCourseOfStudent %}
+
+```objc
+// set up the query on the Follow table
+AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
+[query whereKey:@"to" equalTo:[AVUser currentUser]];
+ 
+// execute the query
+[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+  for(AVObject *o in objects) {
+    // o is an entry in the Follow table
+    // to get the user, we get the object with the from key
+    AVUser *otherUser = [o objectForKey:@"from"];
+ 
+    // to get the time the user was followed, get the date key
+    NSDate *when = [o objectForKey:@"date"];
+  }
+}];
+```
+
+{% endblock %}
+
+{% block addFocusTagsForAVUserUsingArray %}
+
+```objc
+// let's say we have an author
+AVObject *author = ...
+ 
+// and let's also say we have an book
+AVObject *book = ...
+ 
+// add the author to the authors list for the book
+[book addObject:author forKey:@"authors"];
+```
+{% endblock %}
+
+
+{% block queryFocusTagsForAVUserUsingInclude %}
+
+```objc
+// set up our query for the Book object
+AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
+ 
+// configure any constraints on your query...
+// tell the query to fetch all of the Author objects along with the Book
+[bookQuery includeKey:@"authors"];
+ 
+// execute the query
+[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    // objects is all of the Book objects, and their associated 
+    // Author objects, too
+}];
+```
+{% endblock %}
+
+{% block queryAVUserFocusHotTag %}
+
+```objc
+// suppose we have an Author object
+AVObject *author = ...
+ 
+// set up our query for the Book object
+AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
+ 
+// configure any constraints on your query...
+[bookQuery whereKey:@"authors" equalTo:author];
+ 
+// tell the query to fetch all of the Author objects along with the Book
+[bookQuery includeKey:@"authors"];
+ 
+// execute the query
+[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    // objects is all of the Book objects, and their associated Author objects, too
+}];
+```
+
 {% endblock %}
