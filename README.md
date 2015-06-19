@@ -77,9 +77,9 @@ $ grunt server
   ```
 
   同样支持 `grunt server` 命令，该命令最终会执行 `watch` 插件，此时修改模板文件，或者变量文件都会自动重新生成最终的 md 文件（可能需要等待 2~4 秒）。
-* 记得将这种方式生成的 md 文件添加到 [.gitignote](https://github.com/leancloud/docs/blob/master/.gitignore) 文件中，确保这类文件不会被提交。
+* 记得将这种方式生成的 md 文件添加到 [.gitignore](https://github.com/leancloud/docs/blob/master/.gitignore) 文件中，确保这类文件不会被提交。
 
-**注意：如果在模板中需要渲染 `{{appid}}` 这样的 AngularJS 变量，则必然在模板文件的最上方先定义好一个新变量，如 `appid`，其值为 `'{{appid}}'`，例如：**
+**注意：如果在模板中需要渲染 `{{appid}}` 这样的 AngularJS 变量，则必须在模板文件的最上方先定义好一个新变量，如 `appid`，其值为 `'{{appid}}'`，例如：**
 
 ```
 {% set appid = '{{appid}}' %}
