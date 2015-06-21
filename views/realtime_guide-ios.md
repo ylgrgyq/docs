@@ -2,6 +2,10 @@
 
 {% block language %}iOS{% endblock%}
 
+{% block offlineMessage_ios %}
+这样 iOS 平台上的用户就可以收到消息推送了。当然，前提是应用本身申请到了 RemoteNotification 权限，也将正确的推送证书上传到了 LeanCloud 控制台。
+{% endblock %}
+
 系统依赖库
 -------------
 > 开始之前

@@ -2,6 +2,15 @@
 
 {% block language %}.NET{% endblock%}
 
+{% block messageSendMethod %}OnMessageReceived{% endblock %}
+
+{% block messageReceiveMethod %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}
+{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
+{% block attributes %}Attributes{% endblock %}
+
 {% block dotnetCreateConversationAsync %}
 > 注： `AVIMClient.CreateConversationAsync()` 有多种重载方法供开发者调用，详细定义可在 Visual Studio 中进行查看。
 {% endblock %}
@@ -201,6 +210,226 @@ public async void SendLocationAsync()
     AVIMLocationMessage locationMessage = new AVIMLocationMessage(138.12454, 52.56461);//以经度和纬度为参数构建一个地理位置消息，当然开发者更可以通过具体的设备的 API 去获取设备的地理位置，详细的需要查询具体的设备的 API
     await conversation.SendLocationMessageAsync(locationMessage);
 }
+{% endblock %}
+
+
+{% block customMessage_send %}
+```c#
+AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
+imgMessage.Attributes = new Dictionary<string, object>() 
+{ 
+    {"location","San Francisco"}
+};
+imgMessage.Title = "发自我的WP";
+await conversation.SendImageMessageAsync(imgMessage);
+```
+{% endblock %}
+
+{% block customMessage_receive %}
+```c#
+AVIMClient client = new AVIMClient("friend");
+await client.ConnectAsync();
+client.OnMessageReceieved += (s, e) =>
+{
+    if (e.Message is AVIMImageMessage)
+    {
+        AVIMImageMessage imgMessage = (AVIMImageMessage)e.Message;
+        string url = imgMessage.Url;
+        string location = imgMessage.Attributes["location"].ToString();//读取的结果就是 San Francisco
+    }
+};
+```
+{% endblock %}
+
+{% block messageSendingPolicy_dotnet %}
+开发者在阅读完前面的富媒体消息并且运行过实例代码之后，在 Visual Studio 中可以使用 F12 快捷键查看各个消息类型的定义。
+{% endblock %}
+
+{% block conversation_query_insertAttrPrefix %}
+实际上为了方便开发者自动为了自定义属性的 key 值增加 `attr.` 的前缀，SDK 特地添加了一个针对 `string` 类型的[拓展方法](https://msdn.microsoft.com/zh-cn/library/bb383977.aspx)
+
+```c#
+/// <summary>
+/// 为聊天的自定义属性查询自动添加 "attr." 的前缀
+/// </summary>
+/// <param name="key">属性 key 值，例如 type </param>
+/// <returns>添加前缀的值，例如，attr.type </returns>
+public static string InsertAttrPrefix(this string key)
+{
+    return key.Insert(0, "attr.");
+}
+```
+
+导入 SDK 之后在 Visual Studio 里面使用 `string` 类型的时候可以智能感应提示该方法。
+
+```c#
+AVIMConversationQuery query = client.GetQuery().WhereEqualTo("topic".InsertAttrPrefix(), "movie");//这样就可以实现自动为 `topic` 添加 `attr.` 前缀的效果的效果。
+```
+{% endblock %}
+
+
+
+
+{% block conversation_query_regexIntro %}
+匹配查询指的是在 `AVIMConversationQuery` 中以 `WhereMatches` 为前缀的方法。
+
+Match 类方法的最大便捷之处在于可以使用正则表达式来匹配数据，这样使得客户端在构建基于正则表达式的查询时可以利用 .NET 里面诸多已经熟悉了的概念和接口。
+{% endblock %}
+
+{% block conversation_query_regex %}
+```c#
+public async void WhereMatchs_SampleCode()
+{
+    AVIMClient client = new AVIMClient("Tom");
+    await client.ConnectAsync();//Tom 登录客户端
+    AVIMConversationQuery query = client.GetQuery().WhereMatches("attr.tag", "[\u4e00-\u9fa5]");//查询 tag 是中文的对话
+    var result = await query.FindAsync();//执行查询
+}
+```
+{% endblock %}
+
+
+{% block conversation_chatroom_create %}
+另外，为了方便开发者快速创建聊天室，SDK 提供了一个快捷方法创建聊天室：
+
+```c#
+var chatroom = client.CreateChatRoomAsync("皇马 VS 巴萨");//可以理解为一个语法糖，与调用CreateConversationAsync 没有本质区别
+```
+{% endblock %}
+
+{% block conversation_signature %}
+`AVIMClient` 有一个属性：
+
+```c#
+/// <summary>
+/// 获取签名的接口
+/// </summary>
+public ISignatureFactoryV2 SignatureFactory { get; set; }
+```
+是预留给开发者实现签名需求的接口，开发者只需要在登录之前实现这个接口即可。
+
+###  签名的云引擎实例
+为了方便开发者理解签名，我们特地开源了签名的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)，只要按照要求正确配置，就可以在客户端通过调用云引擎的具体的函数实现签名。
+
+演示实例的步骤：
+
+* 首先您需要下载最新版本的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云引擎命令行工具使用详解](https://leancloud.cn/docs/cloud_code_commandline.html#)
+
+* 其次，在 Visual Studio 中，新建一个类叫做 `SampleSignatureFactory` ，把下面这段代码拷贝到其中：
+
+```c#
+/// <summary>
+/// 签名示例类，推荐开发者用这段代码理解签名的整体概念，正式生产环境，请慎用
+/// </summary>
+public class SampleSignatureFactory : ISignatureFactoryV2
+{
+    /// <summary>
+    /// 为更新对话成员的操作进行签名
+    /// </summary>
+    /// <param name="conversationId">对话的Id</param>
+    /// <param name="clientId">当前的 clientId</param>
+    /// <param name="targetIds">被操作所影响到的 clientIds</param>
+    /// <param name="action">执行的操作，目前只有 add，remove</param>
+    /// <returns></returns>
+    public Task<AVIMSignatureV2> CreateConversationSignature(string conversationId, string clientId, IList<string> targetIds, string action)
+    {
+        var data = new Dictionary<string, object>();
+
+        data.Add("client_id", clientId);//表示当前是谁在操作。
+        data.Add("member_ids", targetIds);//memberIds不要包含当前的ClientId。
+        data.Add("conversation_id", conversationId);//conversationId是签名必须的参数。
+           
+        data.Add("action", action);//conversationId是签名必须的参数。
+            
+            
+        //调用云引擎进行签名。
+        return AVCloud.CallFunctionAsync<IDictionary<string, object>>("actionOnCoversation", data).ContinueWith<AVIMSignatureV2>(t =>
+        {
+            return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
+        });
+        //以上这段代码，开发者无需手动调用，只要开发者对一个 AVIMClient 设置了 SignatureFactory，SDK 会在执行对应的操作时主动调用这个方法进行签名。
+    }
+    /// <summary>
+    /// 登录签名
+    /// </summary>
+    /// <param name="clientId">当前的 clientId</param>
+    /// <returns></returns>
+    public Task<AVIMSignatureV2> CreateConnectSignature(string clientId)
+    {
+        var data = new Dictionary<string, object>();
+
+        data.Add("client_id", clientId);//表示当前是谁要求连接服务器。 
+
+        //调用云引擎进行签名。
+        return AVCloud.CallFunctionAsync<IDictionary<string, object>>("connect", data).ContinueWith<AVIMSignatureV2>(t =>
+        {
+            return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
+        });
+    }
+
+    /// <summary>
+    /// 为创建对话签名
+    /// </summary>
+    /// <param name="clientId">当前的 clientId </param>
+    /// <param name="targetIds">被影响的 clientIds </param>
+    /// <returns></returns>
+    public Task<AVIMSignatureV2> CreateStartConversationSignature(string clientId, IList<string> targetIds)
+    {
+        var data = new Dictionary<string, object>();
+
+        data.Add("client_id", clientId);//表示当前是谁在操作。
+        data.Add("member_ids", targetIds);//memberIds不要包含当前的ClientId。
+
+        //调用云引擎进行签名。
+        return AVCloud.CallFunctionAsync<IDictionary<string, object>>("startConversation", data).ContinueWith<AVIMSignatureV2>(t =>
+        {
+            return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
+        });
+    }
+
+    /// <summary>
+    /// 获取签名信息并且把它返回给 SDK 去进行下一步的操作
+    /// </summary>
+    /// <param name="dataFromCloudcode"></param>
+    /// <returns></returns>
+    protected AVIMSignatureV2 MakeSignature(IDictionary<string, object> dataFromCloudcode)
+    {
+        AVIMSignatureV2 signature = new AVIMSignatureV2();
+        signature.Nonce = dataFromCloudcode["nonce"].ToString();
+        signature.SignatureContent = dataFromCloudcode["signature"].ToString();
+        signature.Timestamp = (long)dataFromCloudcode["timestamp"];
+        return signature;//拼装成一个 Signature 对象
+    }
+
+    /// <summary>
+    /// 为获取聊天记录的操作签名
+    /// </summary>
+    /// <param name="clientId">当前的 clientId </param>
+    /// <param name="conversationId">对话 Id</param>
+    /// <returns></returns>
+    public Task<AVIMSignatureV2> CreateQueryHistorySignature(string clientId, string conversationId)
+    {
+        var data = new Dictionary<string, object>();
+
+        data.Add("client_id", clientId);//表示当前是谁在操作。
+        data.Add("convid", conversationId);//memberIds不要包含当前的ClientId。
+
+        //调用云引擎进行签名。
+        return AVCloud.CallFunctionAsync<IDictionary<string, object>>("queryHistory", data).ContinueWith<AVIMSignatureV2>(t =>
+        {
+            return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
+        });
+    }
+}
+```
+
+*  然后在调用如下代码进行测试（确保您已经在控制台开启了聊天签名的服务，否则签名操作无效）：
+
+```c#
+AVIMClient client = new AVIMClient("Tom");
+client.SignatureFactory = new SampleSignatureFactory();//这里是一个开发者自己实现的接口的具体的类
+await client.ConnectAsync();//Tom 登录客户端
+```
 {% endblock %}
 
 
