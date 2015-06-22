@@ -6,12 +6,18 @@
 这样 iOS 平台上的用户就可以收到消息推送了。当然，前提是应用本身申请到了 RemoteNotification 权限，也将正确的推送证书上传到了 LeanCloud 控制台。
 {% endblock %}
 
-系统依赖库
--------------
-> 开始之前
-> 在看下面的内容之前，我们假设您已经看过我们的[实时通信开发指南](./realtime_v2.html)，了解了基本的概念和模型。
+{% block demo %}
+## Demo
+相比阅读文档，如果你更喜欢从代码入手了解功能的具体实现，可以下载 Demo 来研究：
 
-LeanCloud IM SDK 被包含在 `AVOSCloudIM.framework` 中，它依赖于 `AVOSCloud.framework` 这一核心库。在使用之前，请首先确保你也添加了如下依赖库：
+* [LeanMessage](https://github.com/leancloud/LeanMessage-Demo)（推荐）
+* [LeanChat](https://github.com/leancloud/leanchat-ios)
+
+我们把所有 Demo 项目放在了 [LeanCloud Demos 资源库](https://github.com/leancloud/leancloud-demos) 中，方便大家浏览和参考。
+{% endblock %}
+
+{% block setup_init %}
+实时通信 SDK 包含在 `AVOSCloudIM.framework` 中，它依赖于 `AVOSCloud.framework` 这一核心库。在使用之前，请首先确保添加了如下依赖库：
 
 - SystemConfiguration.framework
 - MobileCoreServices.framework
@@ -19,46 +25,78 @@ LeanCloud IM SDK 被包含在 `AVOSCloudIM.framework` 中，它依赖于 `AVOSCl
 - CoreLocation.framework
 - libicucore.dylib
 
-## 文档贡献
-
-如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
-
-Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
-## Demo 及示例代码
-
-如果您觉得一点点阅读文档较慢，可以直接看我们的 Demo 代码：
-
-* [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
-* [FreeChat](https://github.com/jwfing/FreeChat)
-
-并且下载自己运行一下试试看。
-
-
-一对一的文本聊天
--------------
-
-我们先从最简单的环节入手，看看怎么用 LeanCloud IM SDK 实现一对一文本聊天。
-
-### 初始化
-
-首先我们需要在 application 的 `applicationDelegate` 函数中进行 LeanCloud IM SDK 最基本的初始化：
+然后我们需要在 application 的 `applicationDelegate` 函数中进行实时通信 SDK 最基本的初始化：
 
 ```
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // 其他处理...
     ...
-    [AVOSCloud setApplicationId:@"yourAppID" clientKey:@"yourAppKey"];
+    //"你的 AppId", "你的 AppKey"
+    [AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
     ...
 }
 ```
+{% endblock %}
 
-### 登录
 
-用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名、密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个可唯一标识当前用户的 `clientId` 即可。
+{% block oneOnOneChat_send %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录到系统
+- 向 Jerry 发送消息：'耗子，起床！' 
+```
+{% endblock %}
 
-在本 SDK 中，我们需要为每一个用户开启一个 `AVIMClient` 实例，你在客户端应该缓存这一实例。如果要支持同一个客户端内多账号登录，则需要为每个账号缓存一个 `AVIMClient` 实例。
+{% block oneOnOneChat_receive %}
+```
+- 初始化 ClientId = Jerry 
+- Jerry 登录到系统
+- 设置接收消息的方法
+```
+{% endblock %}
+
+{% block groupChat_send %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录到系统
+- 建立一个朋友列表 friends：[Jerry, Bob, Harry, William]
+- 新建对话，把朋友们列为对话的参与人员
+- 发送消息：'Hey，你们在哪儿？'
+```
+{% endblock %}
+
+{% block groupChat_receive %}
+```
+- 初始化 ClientId = Bob
+- Bob 登录到系统
+- 设置接收消息的方法
+- Bob 收到消息后又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
+```
+{% endblock %}
+
+{% block groupChat_receive %}
+```
+- 初始化 ClientId = Bob
+- Bob 登录到系统
+- 设置接收消息的方法
+- Bob 收到消息后又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
+```
+{% endblock %}
+
+{% block messageSendMethod_text %} `sendMessage:callback:` 族{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
 
 用户登录是通过调用`［AVIMClient openWithClientId:callback:]` 方法实现的，该方法声明如下：
 

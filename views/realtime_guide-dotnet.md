@@ -2,19 +2,6 @@
 
 {% block language %}.NET{% endblock%}
 
-{% block messageSendMethod %}OnMessageReceived{% endblock %}
-
-{% block messageReceiveMethod %}OnMessageReceived{% endblock %}
-{% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}
-{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
-{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
-{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
-{% block attributes %}Attributes{% endblock %}
-
-{% block dotnetCreateConversationAsync %}
-> 注： `AVIMClient.CreateConversationAsync()` 有多种重载方法供开发者调用，详细定义可在 Visual Studio 中进行查看。
-{% endblock %}
-
 {% block supportedRuntime %}
 目前我们的 .NET 实时通信支持如下运行时：
 
@@ -31,11 +18,9 @@
 文档中涉及的语法以及接口均对所有运行时有效。
 {% endblock %}
 
-{% block setup %}
-为了支持实时聊天，LeanCloud SDK for .NET 依赖于几个开源的 WebSocket 的库，所以推荐开发者从 [Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.3.0-beta) 上下载我们的 SDK。
-{% endblock %}
+{% block setup_init %}
+为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.3.0-beta) 上下载我们的 SDK。
 
-{% block init %}
 导入 SDK 之后，在应用入口函数中添加如下代码：
 
 ```c#
@@ -48,6 +33,20 @@
 ```
 例如，在 Windows 控制台的 Main 函数入口可以调用以上代码进行初始化。
 {% endblock %}
+
+{% block messageSendMethod %} `OnMessageReceived` {% endblock %}
+
+
+{% block messageSendMethod_text %} `SendTextMessageAsync` {% endblock %}
+
+
+{% block messageReceiveMethod %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}
+{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
+{% block attributes %}Attributes{% endblock %}
+
 
 {% block oneOnOneChat_send %}
 ```c#
@@ -84,7 +83,7 @@ public async void JerryReceiveMessageFromTom()
         if (e.Message is AVIMTextMessage)
         {
             string words = ((AVIMTextMessage)e.Message).TextContent;
-            //words 内容即为：Hello,Jerry!
+            //words 内容即为：耗子，起床！
         }
     };
 }
@@ -119,6 +118,46 @@ public async void TomCreateConversationWithFriends()
 }
 ```
 {% endblock %}
+
+{% block createConversationAsync %}
+> 注： `AVIMClient.CreateConversationAsync()` 有多种重载方法供开发者调用，详细定义可在 Visual Studio 中进行查看。
+{% endblock %}
+
+{% block groupChat_receive %}
+```c#
+AVIMConversation NotifiedConversation = null;
+public async void BobReceiveMessageFromTom()
+{
+    //Bob 用自己的名字作为 ClientId 建立了一个 AVIMClient
+    AVIMClient client = new AVIMClient("Bob");
+
+    //Bob 登录到系统
+    await client.ConnectAsync();
+
+    //Bob 设置接收消息的方法，一旦有消息收到就会调用这个方法
+    client.OnMessageReceieved += (s, e) =>
+    {
+        if (e.Message is AVIMTextMessage)
+        {
+            //words 的内容就是：Hey，你们在哪里？
+            string words = ((AVIMTextMessage)e.Message).TextContent;
+
+            //AVIMClient 在接收到消息的时候，会一并提供消息所在的 AVIMConversation
+            NotifiedConversation = e.Conversation;
+
+            if (NotifiedConversation != null)
+            {
+                //Bob 收到消息后又回复了一条消息
+                NotifiedConversation.SendTextMessageAsync("@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
+            }
+        }
+    };
+}
+```
+{% endblock %}
+
+
+
 
 {% block textMessage_receive %}
 
@@ -266,7 +305,6 @@ public static string InsertAttrPrefix(this string key)
 AVIMConversationQuery query = client.GetQuery().WhereEqualTo("topic".InsertAttrPrefix(), "movie");//这样就可以实现自动为 `topic` 添加 `attr.` 前缀的效果的效果。
 ```
 {% endblock %}
-
 
 
 
@@ -442,36 +480,7 @@ await client.ConnectAsync();//Tom 登录客户端
 ### 接收消息
 群聊的接收消息与单聊的接收消息是一样的。
 
-```c#
-AVIMConversation NotifiedConversation = null;
-public async void BobReceiveMessageFromTom()
-{
-    //Bob 用自己的名字作为 ClientId 建立了一个 AVIMClient
-    AVIMClient client = new AVIMClient("Bob");
 
-    //Bob 登录到系统
-    await client.ConnectAsync();
-
-    //Bob 设置接收消息的方法，一旦有消息收到就会调用这个方法
-    client.OnMessageReceieved += (s, e) =>
-    {
-        if (e.Message is AVIMTextMessage)
-        {
-            //words 的内容就是：Hey，你们在哪里？
-            string words = ((AVIMTextMessage)e.Message).TextContent;
-
-            //AVIMClient 在接收到消息的时候，会一并提供消息所在的 AVIMConversation
-            NotifiedConversation = e.Conversation;
-
-            if (NotifiedConversation != null)
-            {
-                //Bob 收到消息后又回复了一条消息
-                NotifiedConversation.SendTextMessageAsync("HI,Tom :我在 Jerry 家里，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
-            }
-        }
-    };
-}
-```
 
 而以上 Tom 和 Bob 发送的消息，William 上线的时候都会收到。
 

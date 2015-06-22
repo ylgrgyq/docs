@@ -1,35 +1,29 @@
-{% set appid = '{{appid}}' %}
-{% set appkey = '{{appkey}}' %}
-{% set masterkey = '{{masterkey}}' %}
-
 #  {% block language %}{% endblock %} 实时通信开发指南
 
 ## 简介
 
-实时通信服务可以帮你快速实现聊天和对话管理功能，比如单聊、群聊、建聊天室、管理群组成员、查询消息历史等等。所有聊天记录都保存在云端，离线消息会通过消息推送来及时送达，推送消息文本可以灵活进行定制。
+实时通信服务可以帮你快速实现聊天和对话管理功能，比如私聊、群聊、建聊天室、管理群组成员、查询消息历史等等。所有聊天记录都保存在云端，离线消息会通过消息推送来及时送达，推送消息文本可以灵活进行定制。
 
-在继续阅读本文档之前，请先阅读[《实时通信开发指南》](./realtime_v2.html)，了解一下实时通信的基本概念和模型。
+>在继续阅读本文档之前，请先阅读[《实时通信开发指南》](./realtime_v2.html)，了解一下实时通信的基本概念和模型。
 
 {% block supportedRuntime %}{% endblock %}
 
 ### 文档贡献
 我们欢迎和鼓励大家对本文档的不足提出修改建议。请访问我们的 [Github 文档仓库](https://github.com/leancloud/docs) 来提交 Pull Request。
 
-## 安装
-<!-- 导入 SDK /系统依赖库 / bower  -->
-{% block setup %}{% endblock %}
+{% block demo %}{% endblock %}
 
-## 初始化
-{% block init %}{% endblock %}
+## 安装和初始化
 
-## Demo
-<!-- 概述一下 Demo 的功能，加入一张 Demo 的截屏/ github 地址 -->
+{% block setup_init %}{% endblock %}
 
 ## 单聊
 
-我们先从最简单的环节入手。此场景类似于微信的私聊、微博的私信和 QQ 单聊。我们创建了一个统一的概念来描述聊天的各种场景：`AVIMConversation`（对话），在[《实时通信开发指南》](./realtime_v2.html) 里也有它的详细介绍。
+我们先从最简单的环节入手。此场景类似于微信的私聊、微博的私信和 QQ 单聊。我们创建了一个统一的概念来描述聊天的各种场景：`AVIMConversation`（对话），在[《实时通信开发指南》](./realtime_v2.html) 里也有相关的详细介绍。
 
 ### 发送消息
+
+![Tom and Jerry](images/tom-and-jerry-avartar.png)
 
 Tom 想给 Jerry 发一条消息，实现代码如下：
 
@@ -37,7 +31,7 @@ Tom 想给 Jerry 发一条消息，实现代码如下：
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
-- 向 Jerry 发送消息：'耗子，起床！' 
+- 向 Jerry 发送消息："耗子，起床！" 
 ```
 
 ### 接收消息
@@ -48,7 +42,7 @@ Tom 想给 Jerry 发一条消息，实现代码如下：
 ```
 - 初始化 ClientId = Jerry 
 - Jerry 登录到系统
-- 设置接收消息的方法
+- 接收到消息
 ```
 
 执行完以上代码，在 LeanCloud 网站的控制台找到指定的应用，进入 **存储** > **数据** 页面，可以看到默认表 `_Conversation` 中多了一行数据，其字段含义如下：
@@ -62,11 +56,9 @@ c|String|对话的创建者的 ClientId
 mu|Array|对话中设置了静音的成员，仅针对 iOS 以及 Windows Phone 用户有效。
 attr|Object|开发者设置的对话的自定义属性
 
-> TODO: message 存在哪里？
-
 ## 群聊
 
-此场景类似于微信的多人聊天群组和 QQ 的群。请注意这里的群聊是指可以**持久保存**的一个群组的概念，比如 QQ 群，除非群主解散该群，这个群会一直存在于我的 QQ 群的列表中。而临时群组聊天（即聊天室）会放到后面单独介绍。
+此场景类似于微信的多人聊天群组和 QQ 的群。请注意这里的群聊是指可以**持久保存**的群组的概念，比如 QQ 群，除非群主解散该群，这个群会一直出现在 QQ 的 聊天列表中，而临时群组聊天（即聊天室）会放到后面单独介绍。
 
 ### 发送消息
 
@@ -82,7 +74,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 - Tom 登录到系统
 - 建立一个朋友列表 friends：[Jerry, Bob, Harry, William]
 - 新建对话，把朋友们列为对话的参与人员
-- 发送消息：'Hey，你们在哪里？'
+- 发送消息：'你们在哪儿？'
 ```
 ### 接收消息
 
@@ -92,15 +84,19 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ```
 - 初始化 ClientId = Bob
 - Bob 登录到系统
-- 设置接收消息的方法
-- Bob 收到消息后又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
+- 调用接收消息的方法
+- Bob 收到消息后，又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
 ```
 
 以上由 Tom 和 Bob 发送的消息，William 在上线时都会收到。
 
+{% block createConversationAsync %}{% endblock %}
+
 由此可以看出，**群聊和单聊本质上都是对话**，只是参与人数不同。单聊是一对一的对话，群聊是多对多的对话。
 
-{% block dotnetCreateConversationAsync %}{% endblock %}
+用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名和密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个唯一标识作为当前用户的 `ClientId` 即可。
+
+为直观起见，我们使用了 Tom、Jerry 等字符串作为 ClientId 登录聊天系统。LeanCloud 云端只要求 ClientId 在应用内唯一、不超过 64 个字符的字符串即可，具体用什么数据由应用层决定。
 
 ## 消息
 消息是对话的主要组成部分，我们支持的消息类型有：
@@ -118,20 +114,18 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ##### 发送文本消息
 
-文本消息是最基本的消息类型，要使用 `AVIMConversation` 的 `SendTextMessageAsync` 方法来发送。具体操作可参考上面 [单聊](#发送消息) 或 [群聊](#发送消息-1) 发送消息的示例。
+文本消息是最基本的消息类型，要使用 `AVIMConversation` 的{% block textMessage_send_method %}{% endblock %}方法来发送。具体操作可参考上面 [单聊](#发送消息) 或 [群聊](#发送消息-1) 发送消息的示例。
 
 ##### 接收文本消息
 
-客户端登录后可以通过 `AVIMClient` 中的 `OnMessageReceived` 方法来接收消息，如果接收方正好加载了这个对话，那么接收方在 `AVIMConversation` 里面也会收到 `OnTextMessageReceived` 的事件响应。
+{% block textMessage_receive_intro %}{% endblock %}
 
 {% block textMessage_receive %}{% endblock %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 从系统媒体库获取第一张照片
-- 创建图像消息
-- 给图像加一个自定义属性：location = 'San Francisco'
-- 发送
+- 初始化 ClientId = Jerry
+- Jerry 登录到系统
+- 进入与 Tom 的对话 //假设 ConversationById = 55117292e4b065f7ee9edd29
+- 回复 '早起了。啥事？'
 ```
 
 #### 图像消息
@@ -147,7 +141,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 - Tom 登录到系统
 - 从系统媒体库获取第一张照片
 - 创建图像消息
-- 给图像加一个自定义属性：location = 'San Francisco'
+- 给图像加一个自定义属性：location = '旧金山'
 - 发送
 ```
 
@@ -166,7 +160,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 * 场景一：SDK 获取了完整的图像数据流，先上传文件到服务端，再将文件的元数据以及 URL 等一并包装，发送出去。
 
-* 场景二：SDK 并没有实际将图像上传到服务端，而仅仅把 URL 包装在消息体内发送出去，这种情况下接收方是无法从消息体中获取图像的元信息数据，但开发者可以自行获取。
+* 场景二：SDK 并没有将图像实际上传到服务端，而仅仅把 URL 包装在消息体内发送出去，这种情况下接收方是无法从消息体中获取图像的元信息数据，但开发者可以自行获取。
 
 ##### 接收图像消息
 
@@ -489,9 +483,10 @@ AVIMClient.Status == Online
 
 
 
+
 ## 对话
 
-以上章节基本演示了实时通信 SDK 的核心概念  `AVIMConversation`。我们将单聊和群聊（包括聊天室）的消息发送和接收都依托于 `AVIMConversation` 这个统一的概念进行操作。所以，开发者需要强化理解的一个概念就是：
+以上章节基本演示了实时通信 SDK 的核心概念  `AVIMConversation`。我们将单聊和群聊（包括聊天室）的消息发送和接收都依托于 `AVIMConversation` 这个统一的概念进行操作，所以开发者需要强化理解的一个概念就是：
 >SDK 层面不区分单聊和群聊。
 
 对话的管理包括「成员管理」和「属性管理」两个方面。
@@ -500,11 +495,13 @@ AVIMClient.Status == Online
 
 成员管理，是在对话中对成员的一个实时生效的操作，一旦操作成功则不可逆。
 
-{% block conversation_init %}{% endblock %}
 #### 准备工作
-在进行下面几个章节之前，请将如下代码复制到 IDE 并且执行。后面的示例代码都要基于以下代码来操作，所以**这是一项必须的工作**。 
 
-```c#
+在讲解下面的内容之前，我们先来创建一个多人对话。后面的举例都要基于这个对话，所以**这一步是必须的**。请将以下代码复制到 IDE 并且执行。 
+
+{% block conversation_init %}{% endblock %}
+```
+- c#
 /// <summary>
 /// 这段代码实现的功能就是 Jerry 创建了一个包含 Bob、Harry、William 的对话。
 /// </summary>
@@ -1050,6 +1047,3 @@ con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 ### 实现签名工厂
 
 {% block conversation_signature %}{% endblock %}
-
-
-

@@ -2,49 +2,24 @@
 
 {% block language %}Android{% endblock%}
 
+{% block setup_init %}
+在 Application 的 `onCreate` 方法中对实时通信服务进行初始化：
 
-# Android 实时通信服务
-
-## 简介
-
-在阅读本开发指南之前，请先阅读下[《实时通信开发指南》](./realtime_v2.html)，了解实时通信的基本概念和模型。
-
-
-## 文档贡献
-
-如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
-
-Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
-
-## Demo 及示例代码
-
-如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/leanchat-android)」，并且下载自己运行一下试试看。
-
-
-一对一的文本聊天
-------
-
-我们先从最简单的环节入手，看看怎么用 LeanCloud IM SDK 实现一对一文本聊天。
-
-###初始化
-
-和 LeanCloud 其他服务一样，实时聊天服务的初始化也是在 Application 的 `onCreate` 方法中进行的：
-
-```
+```java
 public class MyApplication extends Application{
 
     public void onCreate(){
       ...
+      // 你的 AppID、AppKey
       AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
       ...
     }
 }
 ```
 
-并且在AndroidManifest.xml中间声明：
+并在 AndroidManifest.xml 中间声明：
 
-```
+```xml
 <manifest>
    ...
 
@@ -66,8 +41,49 @@ public class MyApplication extends Application{
 
 </manifest>
 ```
+{% endblock %}
 
-接下来我们开始一步一步接入聊天服务。
+{% block demo %}
+## Demo
+相比阅读文档，如果你更喜欢从代码入手了解功能的具体实现，可以下载 Demo 来研究：
+
+* [LeanMessage](https://github.com/leancloud/LeanMessage-Demo)（推荐）
+* [LeanChat](https://github.com/leancloud/leanchat-android)
+
+我们把所有 Demo 项目放在了 [LeanCloud Demos 资源库](https://github.com/leancloud/leancloud-demos) 中，方便大家浏览和参考。
+{% endblock %}
+
+{% block oneOnOneChat_send %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录到系统
+- 向 Jerry 发送消息：'耗子，起床！' 
+```
+{% endblock %}
+
+{% block oneOnOneChat_receive %}
+```
+- 初始化 ClientId = Jerry 
+- Jerry 登录到系统
+- 设置接收消息的方法
+```
+{% endblock %}
+
+{% block groupChat_receive %}
+```
+- 初始化 ClientId = Bob
+- Bob 登录到系统
+- 设置接收消息的方法
+- Bob 收到消息后又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
+```
+{% endblock %}
+
+
+
+
+
+
+
 
 ###登录
 
