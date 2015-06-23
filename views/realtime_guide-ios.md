@@ -73,12 +73,13 @@
 ```
 {% endblock %}
 
-{% block textMessage_send_method %} `sendMessage:callback:` 族{% endblock %}
+{% block textMessage_send_intro %}
+发送文本信息可以直接调用 [AVIMConversation sendMessage:callback:] 函数。{% endblock %}
 
 {% block textMessage_receive_intro %}
 实时通信 SDK 大量采用回调来反馈操作结果，但是对于一些被动的消息通知、网络断开与恢复等通知，则是采用 delegate（代理）来实现，即 AVIMClientDelegate。
 
-要显示 Tom 发过来的文本消息，我们需要调用 AVIMClientDelegate（客户端事件代理）的主要接口 `conversation:didReceiveCommonMessage:` 或 `conversation :didReceiveTypedMessage:` 来实现。
+要显示 Tom 发过来的文本消息，我们需要调用 `AVIMClientDelegate`（客户端事件代理）的主要接口 `conversation:didReceiveCommonMessage:` 或 `conversation:didReceiveTypedMessage:` 来实现。
 {% endblock %}
 
 {% block textMessage_receive %}
@@ -115,7 +116,7 @@
 {% endblock %}
 
 {% block imageMessage_receive_intro %}
-在接收图像消息这种富媒体消息时，需要使用 `conversation:didReceiveTypedMessage:` 方法。实际上接收所有富媒体消息都是如此，因为它们都是从 AVIMTypedMessage 派生出来的。相关内容可以在下面的 [消息类详解](#消息类详解) 中找到。
+在接收图像消息这种富媒体消息时，需要使用 `conversation:didReceiveTypedMessage:` 方法。实际上接收所有富媒体消息都是如此，因为它们都是从 `AVIMTypedMessage` 派生出来的。相关内容可以在下面的 [消息类详解](#消息类详解) 中找到。
 {% endblock %}
 
 {% block imageMessage_receive %}
@@ -238,9 +239,9 @@
 {% endblock %}
 
 {% block customMessage_create %}
-继承于 AVIMTypedMessage，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
+继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
-* 实现 AVIMTypedMessageSubclassing 协议
+* 实现 `AVIMTypedMessageSubclassing` 协议
 * 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 [YourClass registerSubclass];
 {% endblock %}
 

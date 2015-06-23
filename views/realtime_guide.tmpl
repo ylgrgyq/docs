@@ -124,7 +124,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
-- 进入与 Tom 的对话 //假设 ConversationById = 55117292e4b065f7ee9edd29
+- 进入与 Tom 的对话 //假设 ConversationId = 55117292e4b065f7ee9edd29
 - 回复 '早起了。啥事？'
 ```
 
@@ -142,6 +142,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 - 从系统媒体库获取第一张照片
 - 创建图像消息
 - 给图像加一个自定义属性：location = '旧金山'
+- 图像 Title：'发自我的 iPhone'
 - 发送
 ```
 
@@ -165,7 +166,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 接收图像消息
 
 {% block imageMessage_receive_intro %}{% endblock %}
-类似于第一章节中单聊中的接收消息，客户端登录后可以通过 `AVIMClient` 中的 `OnMessageReceived` 方法来接收图像，如果接收方此时正好加载了这个对话，那么接收方在 `AVIMConversation` 里面也会收到 `OnImageMessageReceived` 的事件响应：
 
 {% block imageMessage_receive %}{% endblock %}
 ```
@@ -205,8 +205,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ##### 接收音频消息
 
-{% block audioMessage_receive_desc %}{% endblock %}
-与接收图像消息类似，由 `AVIMConversation` 的 `OnAudioMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+{% block audioMessage_receive_intro %}{% endblock %}
 
 > TODO: 音频元信息提取/列表 [messageId, file.url, size, duration, format]
 
@@ -217,13 +216,12 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 与发送音频消息的流程类似，视频的来源可以是手机录制，可以是系统中某一个具体的视频文件：
 
 {% block videoMessage_local_send %}{% endblock %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
 - 创建与 Jerry 的对话，对话名称为「猫和老鼠」
 - 打开本地文件夹
-- 读取视频文件：'奶酪.mp4'，创建视频消息
+- 读取视频文件：'BBC_奶酪.mp4'，创建视频消息
 - 发送
 ```
 
@@ -243,9 +241,9 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ##### 接收视频消息
 
-与接收图像消息类似，由 `AVIMConversation` 的 `OnVideoMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+{% block videoMessage_receive_intro %}{% endblock %}
 
-> TODO: 视频元信息提取/列表[messageId, file.url, size, duration, format] 
+> TODO: 视频元信息提取/列表[messageId, file.url, size, duration, format]
 
 #### 通用文件消息
 
@@ -266,6 +264,7 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 ```
 
 ##### 接收通用文件消息
+{% block fileMessage_receive_intro %}{% endblock %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 
 > TODO: 文件元信息提取/列表 [messageId, FileUrl, Size]
@@ -299,9 +298,9 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 
 ##### 接收地理位置消息
 
-与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+{% block locationMessage_receive_intro %}{% endblock %}
 
-> TODO: 文件元信息提取/列表 [messageId, latitude, longitude]
+> TODO: 文件元信息提取 [messageId, latitude, longitude]
 
 #### 自定义消息
 
@@ -353,7 +352,7 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 
 ##### 消息的自定义属性
 
-在某些场景下，开发者需要在发送消息时附带上自己业务逻辑需求的自定义属性，比如消息发送的设备名称，或是图像消息的拍摄地点、视频消息的来源等等，开发者可以通过 `AVIMMessage.{% block attributes %}Attributes{% endblock %}` 实现这一需求。
+在某些场景下，开发者需要在发送消息时附带上自己业务逻辑需求的自定义属性，比如消息发送的设备名称，或是图像消息的拍摄地点、视频消息的来源等等，开发者可以通过 `AVIMMessage.{% block attributes %}{% endblock %}` 实现这一需求。
 
 【场景】发照片给朋友，告诉对方照片是在旧金山照的：
 
@@ -365,7 +364,7 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 - 发送
 ```
 
-接收时通过 `{% block messageSendMethod %}{% endblock %}` 可以读取这一属性：
+接收时通过{% block customMessage_receive_method %}{% endblock %}可以读取这一属性：
 
 {% block customMessage_receive %}{% endblock %}
 ```
@@ -374,21 +373,48 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 - 接收消息，如果是 Image，读取 Attributes[location]
 - //读取的结果就是旧金山
 ```
-所有类型的消息都支持 {% block attributes %}{% endblock %} 这一属性。
+所有类型的消息都支持 `{% block attributes %}{% endblock %}` 这一属性。
+
+##### 创建新的消息类型
+
+{% block customMessage_create %}{% endblock %}
 
 > **什么时候需要自己创建新的消息类型？**
 >
->譬如有一条图像消息，除了文本之外，还需要附带地理位置信息，为此开发者需要创建一个新的消息类型吗？从上面的例子可以看出，其实完全没有必要。这种情况只要使用消息类中预留的 {% block attributes %}{% endblock %} 属性就可以保存额外的地理位置信息了。
+>譬如有一条图像消息，除了文本之外，还需要附带地理位置信息，为此开发者需要创建一个新的消息类型吗？从上面的例子可以看出，其实完全没有必要。这种情况只要使用消息类中预留的 `{% block attributes %}{% endblock %}` 属性就可以保存额外的地理位置信息了。
 >
 >只有在我们的消息类型完全无法满足需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 NewsMessage 类。
 
 ### 消息的接收和发送策略
 
+#### 发送策略
+
+{% block messagePolicy_send %}{% endblock %}目前 SDK 内置的继承自 `AVIMFileMessageBase` 的消息类型包含：
+
+* 图像 `AVIMImageMessage`
+* 音频 `AVIMAudioMessage`
+* 视频 `AVIMVideoMessage`
+* 文件 `AVIMFileMessage`
+
+所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
+
+* 如果文件是从客户端 API 读取的数据流 (Stream)，步骤为： 
+
+1. 从本地构造 AVFile
+1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
+1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
+1. 发送消息
+
+* 如果文件是外部链接的 URL，则：
+
+1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
+2. 发送消息
+
 #### 接收策略
 
 消息接收分为**两个层级**：
 
-* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前 `AVIMClient.OnMessageReceived` 负责接收这类消息，但是它并没有针对消息的类型做区分。
+* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_send_method %}{% endblock %}负责接收这类消息，但是它并没有针对消息的类型做区分。
 
 * 第二层在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
 
@@ -440,30 +466,6 @@ AVIMClient.Status == Online
 
 这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
 
-#### 发送策略
-
-{% block messageSendingPolicy_dotnet %}{% endblock %}
-目前 SDK 内置的继承自 `AVIMFileMessageBase` 的消息类型包含：
-
-* 图像 `AVIMImageMessage`
-* 音频 `AVIMAudioMessage`
-* 视频 `AVIMVideoMessage`
-* 文件 `AVIMFileMessage`
-
-所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
-
-* 如果文件是从客户端 API 读取的数据流 (Stream)，步骤为： 
-
-1. 从本地构造 AVFile
-1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
-1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
-1. 发送消息
-
-* 如果文件是外部链接的 URL，则：
-
-1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
-2. 发送消息
-
 ##### 发送离线消息
 
 不管是单聊还是群聊，当用户 A 发出消息后，如果目标对话的部分用户当前不在线，LeanCloud 云端可以提供离线推送的方式来提醒用户。这一功能默认是关闭的，你可以在 LeanCloud 应用控制台中开启它。开启方法如下：
@@ -473,7 +475,7 @@ AVIMClient.Status == Online
 1. 在右侧 **iOS 用户离线时的推送内容** 下填好你要推送出去的消息内容；
 1. 保存。
 
-{% block offlineMessage_ios %}{% endblock %}
+{% block offlineMessage %}{% endblock %}
 
 ##### 消息送达回执
 
@@ -501,119 +503,69 @@ AVIMClient.Status == Online
 
 {% block conversation_init %}{% endblock %}
 ```
-- c#
-/// <summary>
-/// 这段代码实现的功能就是 Jerry 创建了一个包含 Bob、Harry、William 的对话。
-/// </summary>
-/// <returns></returns>
-public async void JerryCreateConversation()
-{
-    AVIMClient client = new AVIMClient("Jerry");
-    await client.ConnectAsync();//Jerry 登录
-
-    IList<string> friends = new List<string>();
-    friends.Add("Bob");
-    friends.Add("Harry");
-    friends.Add("William");
-    //添加好朋友
-
-    await client.CreateConversationAsync(friends);//返回 ConversationId
-}
+- 初始化 ClientId = Jerry
+- Jerry 登录
+- 创建朋友列表 friends = [Bob, Harry, William]
+- 用 friends 创建新对话
 ```
 
 #### 自身主动加入
 
-Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话（由上一节 `JerryCreateConversation()`  所创建）中，以下代码将帮助他实现这个功能：
+Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将帮助他实现这个功能：
 
 {% block conversation_join %}{% endblock %}
-```c#
-public async void InitiativeJoinAsync()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();
-
-    string conversationId = "551260efe4b01608686c3e0f";//获取 Jerry 创建的对话的 Id，这里是直接从控制台复制了上一节准备工作中 JerryCreateConversation 成功之后的 objectId
-    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话对象
-    await conversation.JoinAsync();//Tom 主动加入到对话中
-}
 ```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取  id 为 551260efe4b01608686c3e0f 的对话 //获取 Jerry 创建的对话的 Id，这里是直接从控制台复制了上一节准备工作中所创建的对话的 objectId
+- Tom 主动加入到对话中
+```
+
 该群的其他成员（比如 Bob）会根据自身客户端的状态不同会出现以下两种情况:
 
 * 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
 
-{% block conversation_memebersChanged %}{% endblock %}
-```c#
-public async void BobOnTomJoined_S1()
-{
-    AVIMClient client = new AVIMClient("Bob");
-    await client.ConnectAsync();
-
-    client.OnConversationMembersChanged += (s, e) =>
-    {
-        switch (e.AffectedType)
-        {
-            case AVIMConversationEventType.MembersJoined:
-                {
-                    IList<string> joinedMemberClientIds = e.AffectedMembers;//这里就是本次加入的 ClientIds
-                    string clientId = joinedMemberClientIds.FirstOrDefault();//因为我们已知本次操作只有 Tom 一个人加入了对话，所以这样就可以直接读取到 Tom 的 clientId
-                    //开发者可以在这里添加自己的业务逻辑
-                }
-                break;
-        }
-    };
-}
+{% block conversation_membersChanged %}{% endblock %}
+```
+- 初始化 ClientId = Bob
+- Bob 登录
+- 设置 MembersChanged 响应
+- switch:case 如果事件类型为 MembersJoined
+- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
+- //开发者可以继续添加自己的业务逻辑
+- break;
 ```
 
 * 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
 
 {% block conversation_memebersJoined %}{% endblock %}
-```c#
-public async void BobOnTomJoined_S2()
-{
-    AVIMClient client = new AVIMClient("Bob");
-    await client.ConnectAsync();
-
-    client.OnConversationMembersChanged += (s, e) =>
-    {
-        switch (e.AffectedType)
-        {
-            case AVIMConversationEventType.MembersJoined:
-                {
-                    IList<string> joinedMemberClientIds = e.AffectedMembers;//这里就是本次加入的 ClientIds
-                    string clientId = joinedMemberClientIds.FirstOrDefault();//因为我们已知本次操作只有 Tom 一个人加入了对话，所以这样就可以直接读取到 Tom 的 clientId
-                    //开发者可以在这里添加自己的业务逻辑
-                }
-                break;
-        }
-    };
-
-    string conversationId = "551260efe4b01608686c3e0f";
-
-    AVIMConversation conversation = client.GetConversationById(conversationId);//Bob 获取到这个对话的对象
-
-    conversation.OnMembersJoined += (s, e) =>
-    {
-        IList<string> joinedMemberClientIds = e.AffectedMembers;//这里就是本次加入的 ClientIds
-        string clientId = joinedMemberClientIds.FirstOrDefault();//因为我们已知本次操作只有 Tom 一个人加入了对话，所以这样就可以直接读取到 Tom 的 clientId
-    };
-}
 ```
+- 初始化 ClientId = Bob
+- Bob 登录
+- 设置 MembersChanged 响应
+- switch:case 如果事件类型为 MembersJoined
+- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
+- //开发者可以继续添加自己的业务逻辑
+- break; 
+- ------------ 以上与上例相同 ---------------
+- 获取对话对象 Id = 551260efe4b01608686c3e0f
+- 设置 OnMembersJoined 响应
+- 获取本次加入的 ClientIds //还是只有 Tom 一人，所以这样就可以直接读取到 Tom 的 clientId
+```
+
 #### 添加其他成员
 
 Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这个功能：
 
 {% block conversation_invite %}{% endblock %}
-```c#
-public async void InviteMaryAsync()
-{
-    AVIMClient client = new AVIMClient("Jerry");
-    await client.ConnectAsync();
-
-    string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.GetConversationById(conversationId);//Jerry 获取到这个对话的对象
-    await conversation.AddMembersAsync("Mary");//Jerry 把 Mary 加入到对话
-}
 ```
+- 初始化 ClientId = Jerry
+- Jerry 登录
+- 假定对话 Id = 551260efe4b01608686c3e0f
+- 进入对话
+- Jerry 把 Mary 加入到对话 //AddMembers
+```
+
 该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节[自身主动加入](#自身主动加入)中**Tom 加入对话之后，Bob 受到的影响。**
 
 #### 自身退出对话
@@ -622,16 +574,12 @@ public async void InviteMaryAsync()
 Tom 主动从对话中退出，他需要如下代码实现需求：
 
 {% block conversation_left %}{% endblock %}
-```c#
-public async void InitiativeLeftAsync()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();
-
-    string conversationId = "551260efe4b01608686c3e0f";//获取 Jerry 创建的对话的 Id
-    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
-    await conversation.LeftAsync();//Tom 主动从对话中退出
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 假定对话 Id = 551260efe4b01608686c3e0f //由 Jerry 创建的对话
+- 进入对话
+- Tom 主动从对话中退出 //left
 ``` 
 
 #### 剔除其他成员
@@ -643,16 +591,12 @@ Harry 被 William 从对话中删除。
 实现代码如下：
 
 {% block conversation_kick %}{% endblock %}
-```c#
-public async void WilliamKickHarryOutAsync()
-{
-    AVIMClient client = new AVIMClient("William");
-    await client.ConnectAsync();
-
-    string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.GetConversationById(conversationId);//William 获取到这个对话的对象
-    await conversation.RemoveMembersAsync("Harry");//William 把 Harry 从对话中剔除
-}
+```
+- 初始化 ClientId = William
+- William 登录
+- 对话 Id = 551260efe4b01608686c3e0f //由 Jerry 创建的对话
+- 进入对话
+- William 把 Harry 从对话中踢出去 //RemoveMembers
 ```
 
 以上的操作可归纳为：
@@ -671,19 +615,17 @@ A 对 B 的操作 | 对 B 的影响|对 C 的影响
 A 添加 B | `OnConversationMembersChanged && OnInvited`|`OnConversationMembersChanged && OnMembersJoined`
 A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersChanged && OnMembersLeft`
 
+> 如果邀请、踢人操作发生的时候，被邀请者/被踢者当前不在线，那么通知消息并不会被离线缓存，所以他们再上线的时候将不会收到通知。
+
 #### 查询成员数量
-`AVIMConversation.CountMembersAsync` 这个方法返回的是实时数据：
+{% block conversation_countMember_method %}{% endblock %}这个方法返回的是实时数据：
 
 {% block conversation_countMember %}{% endblock %}
-```c#
-public async void CountMembers_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-
-    AVIMConversation conversation = (await client.GetQuery().FindAsync()).FirstOrDefault();
-    int membersCount = await conversation.CountMembersAsync();
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取对话列表，找到第一个对话
+- 获取该对话成员数量
 ```
 
 ### 对话的属性管理
@@ -708,32 +650,21 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 Tom 想建立一个名字叫「喵星人」 对话并且邀请了好友 Black 加入对话：
 
 {% block conversation_name %}{% endblock %}
-```c#
-public async void CreateConversationAsync()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    string anotherCat = "Black";
-    await client.ConnectAsync();
-
-    AVIMConversation conversation = await client.CreateConversationAsync(anotherCat, "喵星人");
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 创建对话，同时邀请 Black，对话名称为 '喵星人'
 ```
 
 Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，他需要如下代码：   
 
 {% block conversation_changeName %}{% endblock %}
-```c#
-public async void UpdateConversationAsync()
-{
-    AVIMClient client = new AVIMClient("Black");
-    await client.ConnectAsync();//Balck 登录
-
-    AVIMConversation conversation = client.GetConversationById("55117292e4b065f7ee9edd29");//获取 Tom 创建的对话
-
-    conversation.Name = "聪明的喵星人";//修改名称
-
-    await conversation.SaveAsync();//保存到服务端
-}
+```
+- 初始化 ClientId = Black
+- Black 登录
+- 进入 Tom 创建的对话「喵星人」，id = 55117292e4b065f7ee9edd29
+- 修改对话名称为「聪明的喵星人」
+- 保存到服务端
 ```
 
 ####  成员
@@ -748,16 +679,11 @@ public async void UpdateConversationAsync()
 比如 Tom 工作繁忙，对某个对话设置了静音：
 
 {% block conversation_mute %}{% endblock %}
-```c#
-public async void MuteConversationAsync()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录
-
-    string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
-    AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
-    await conversation.MuteAsync();//Tom 设置静音
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 进入对话：id = 551260efe4b01608686c3e0f
+- 将其设置为静音 Mute
 ```
 
 >设置静音之后，iOS 和 Windows Phone 的 用户就不会收到推送消息了。
@@ -779,20 +705,17 @@ public async void MuteConversationAsync()
 典型的场景是，给某个对话加上一个值为 private 的 tag 标签，表示这个对话被标记为私有，代码如下：
 
 {% block conversation_tag %}{% endblock %}
-```c#
-public async void CreateConversationWithCustomAttributesAsync()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();
-    IDictionary<string, object> attr = new Dictionary<string, object>();
-    attr.Add("tag", "private");
-    AVIMConversation conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠", attr);//创建对话的时候传入即可。
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 创建属性 attr 列表对象
+- 加入 tag = "private"
+- 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
 ```
 
->**注意**：`AVIMConversation.{% block attributes %}Attributes{% endblock %}` **在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。**
+>**注意**：`AVIMConversation.{% block attributes %}{% endblock %}` **在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。**
 
-有关 `AVIMConversation.{% block attributes %}Attributes{% endblock %}` 更多的用法，请参见 [对话的查询](#对话的查询)。
+有关 `AVIMConversation.{% block attributes %}{% endblock %}` 更多的用法，请参见 [对话的查询](#对话的查询)。
 
 ### 对话的查询
 #### 基础查询
@@ -801,13 +724,10 @@ public async void CreateConversationWithCustomAttributesAsync()
 假如已知某一对话的 Id，可以使用它来查询该对话的详细信息：
 
 {% block conversation_getSingle %}{% endblock %}
-```c#
- public async void QueryByIdAsync()
- {
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversation conversation = await client.GetQuery().GetAsync("551260efe4b01608686c3e0f");
- }
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 异步从服务器拉取对话：id = 551260efe4b01608686c3e0f
 ```
 
 >注意：这个方法和 `AVIMClient.GetConversationById` 本质上**是不一样的**。
@@ -819,6 +739,11 @@ public async void CreateConversationWithCustomAttributesAsync()
 用户登录进应用后，取回已经存在的所有对话（不包含暂态对话，如聊天室）：
 
 {% block conversation_getList %}{% endblock %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取对话列表
+```
 
 #### 条件查询
 
@@ -839,13 +764,10 @@ public async void CreateConversationWithCustomAttributesAsync()
 
 {% block conversation_query_equalTo %}{% endblock %}
 ```
-public async void WhereEqualTo_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereEqualTo("attr.topic", "movie");//构建 topic 是 movie 的查询
-    var result = await query.FindAsync();//执行查询
-}
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 attr 属性中 topic 是 movie 的查询
+- 执行查询
 ```
 
 目前条件查询只针对 `AVIMConversation` 对象的 `Attributes` 属性进行操作，也就是针对 `_Conversation` 表中的 `attr` 字段进行 `AVQuery` 查询。
@@ -855,97 +777,73 @@ public async void WhereEqualTo_SampleCode()
 与 `WhereEqualTo` 相对的就是 `WhereNotEqualTo` ，下面检索一下类型不是私有的对话：
 
 {% block conversation_query_notEqualTo %}{% endblock %}
-```c#
-public async void WhereNotEqualTo_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereNotEqualTo("attr.type", "private");//构建 type 不等于 movie 的查询
-    var result = await query.FindAsync();//执行查询
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 attr 属性中 type 不等于 private 的查询
+- 执行查询
 ```
 
 对于可以比较大小的整型、浮点等常用类型，可以参照以下示例代码进行拓展：
 
 {% block conversation_query_greaterThan %}{% endblock %}
-```c#
-public async void WhereGreaterThan_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereGreaterThan("attr.age", 18);//构建 年龄大于 18 的查询
-    var result = await query.FindAsync();//执行查询
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 attr 属性中 age > 18 的查询
+- 执行查询
 ```
 
 ##### 正则匹配查询
 
 {% block conversation_query_regexIntro %}{% endblock %}
-匹配查询指的是在 `AVIMConversationQuery` 中以 `WhereMatches` 为前缀的方法。
-
-Match 类方法的最大便捷之处在于可以使用正则表达式来匹配数据，这样使得客户端在构建基于正则表达式的查询时可以利用 .NET 里面诸多已经熟悉了的概念和接口。
 
 比如要查询所有 tag 是中文的对话：
 
 {% block conversation_query_regex %}{% endblock %}
-```c#
-public async void WhereMatchs_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereMatches("attr.tag", "[\u4e00-\u9fa5]");//查询 tag 是中文的对话
-    var result = await query.FindAsync();//执行查询
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 attr.tag 是中文的查询 // 正则为 [\u4e00-\u9fa5] 
+- 执行查询
 ```
 
 ##### 包含查询
 
-包含查询指的是 方法名字包含 `Contains` 单词的方法，例如查询关键字包含「教育」的对话：
+包含查询是指方法名字包含 `Contains` 单词的方法，例如查询关键字包含「教育」的对话：
 
-{% block conversation_query_contain %}{% endblock %} 
-```c#
-public async void WhereContains_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育");//查询 keywords 包含教育
-    var result = await query.FindAsync();//执行查询
-}
+{% block conversation_query_contains %}{% endblock %} 
+``````
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 attr.keywords 包含「教育」的查询
+- 执行查询
 ```
 
 另外，包含查询还能检索与成员相关的对话数据。以下代码将帮助 Tom 查找出 Jerry 以及 Bob 都加入的对话：
 
 {% block conversation_query_findJoinedMemebers %}{% endblock %}
-```c#
-public async void QueryMembers_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-
-    IList<string> clientIds = new List<string>();
-    clientIds.Add("Bob");
-    clientIds.Add("Jerry");
-
-    AVIMConversationQuery query = client.GetQuery().WhereContainedIn<string>("m", clientIds);//查询对话成员 Bob 以及 Jerry 的对话
-    var result = await query.FindAsync();//执行查询
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建 clientIds 列表：[Bob, Jerry]
+- 构建对话成员有 Bob 和 Jerry 的查询条件
+- 执行查询
 ```
 
 #### 组合查询
 
 组合查询的概念就是把诸多查询条件合并成一个查询，再交给 SDK 去服务端进行查询。
 
-我们的 SDK 在查询风格上一直保持以链式方式来创建符合自己业务逻辑的组合条件。例如，要查询年龄小于 18 岁，并且关键字包含「教育」的对话：
+{% block conversation_query_chaining %}{% endblock %}例如，要查询年龄小于 18 岁，并且关键字包含「教育」的对话：
 
 {% block conversation_query_combination %}{% endblock %}
-```c#
-public async void CombinationQuery_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育").WhereLessThan("age", 18);//查询 keywords 包含教并且年龄小于18的对话
-    var result = await query.FindAsync();//执行查询
-}
-``` 
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建查询条件：attr.keywords 包含「教育」、attr.age < 18
+- 执行查询
+```
 
 只要查询构建得合理，开发者完全不需要担心组合查询的性能。
 
@@ -954,76 +852,71 @@ public async void CombinationQuery_SampleCode()
 任意的查询，不管是单查询还是组合查询，都支持计数查询:
 
 {% block conversation_query_count %}{% endblock %}
-```c#
-public async void QueryCount_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育").WhereLessThan("attr.age", 18);//查询 keywords 包含教并且年龄小于18的对话
-    var count = await query.CountAsync();//执行查询，获取符合条件的对话的数量
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 构建查询条件：attr.keywords 包含「教育」、attr.age < 18
+- 执行查询，获取符合条件的对话的数量
 ```
 
 ## 聊天室
 
-聊天室在本质上就是一个对话，所以上面章节提到的**所有属性、方法、操作以及管理都适用于聊天室**，它仅仅在逻辑上是一种暂态的、临时的对话。
+聊天室本质上就是一个对话，所以上面章节提到的**所有属性、方法、操作以及管理都适用于聊天室**，它仅仅在逻辑上是一种暂态的、临时的对话，应用场景有弹幕、直播等等。
+
+聊天室与普通对话不一样的地方具体体现为：
+
+* 不支持查询成员列表，但可以通过相关 API 查询在线人数；
+* 不支持离线消息、离线推送通知等功能。
+* 没有成员加入、成员离开的通知。
+* 一个用户一次登录只能加入一个聊天室，加入新的聊天室后会自动离开原来的聊天室。
+* 加入后半小时内断网重连会自动加入原聊天室，超过这个时间则需要重新加入。
 
 ### 创建聊天室
 
-比如某项比赛正在直播，解说员创建了一个临时对话，与球迷进行互动：
+{% block chatroom_intro %}{% endblock %}
 
-{% block conversation_chatroom_new %}{% endblock %}
-```c#
-public async void ChatRoom_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Dendi");
-    await client.ConnectAsync();//Tom 登录客户端
-    var chatroom = client.CreateConversationAsync(null, "DK VS NewBee", null, true);
-    //详细解释最后一个参数，transient 如果为 true 就说明是聊天室，逻辑上就是暂态对话
-}
+比如喵星球正在直播选美比赛，主持人 Tom 创建了一个临时对话，与喵粉们进行互动：
+
+{% block chatroom_new %}{% endblock %}
 ```
-{% block conversation_chatroom_create %}{% endblock %}
+- 初始化 ClientId = Tom
+- Tom 登录
+- 创建暂态对话，名称 "HelloKitty PK 加菲猫"
+```
+{% block chatroom_create %}{% endblock %}
 
 ### 查询在线人数
 
-`AVIMConversation.CountMembersAsync` 不但可以用来查询普通对话的成员总数，在聊天室中，它返回的就是实时在线的人数：
+{% block chatroom_count_method %}{% endblock %}不但可以用来查询普通对话的成员总数，在聊天室中，它返回的就是实时在线的人数：
 
-{% block conversation_chatroom_count %}{% endblock %}
-```c#
-public async void CountMembers_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-
-    AVIMConversation conversation = (await client.GetQuery().FindAsync()).FirstOrDefault();
-    int membersCount = await conversation.CountMembersAsync();
-}
+{% block chatroom_count %}{% endblock %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取对话列表中的第一个对话对象
+- 获取人数
 ```
 
 ### 查询聊天室
 
-开发者需要注意的是，`AVIMConversationQuery` 调用 `Where` 开头的方法都是查询全部对话的，也就是说，如果想单独查询聊天室的话，需要额外再调用一次 `WhereEqulaTo` 方法：
+开发者需要注意的是，{% block chatroom_query_method %}{% endblock %}方法都是查询全部对话的，也就是说，如果想查询指定的聊天室，需要额外再调用一次{% block chatroom_query_method2 %}{% endblock %}方法：
 
 比如查询主题包含《奔跑吧，兄弟》的聊天室：
 
-{% block conversation_chatroom_query %}{% endblock %}
-```c#
-public async void QueryChatRoom_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-
-    AVIMConversationQuery query = client.GetQuery().WhereContains("topic".InsertAttrPrefix(), "奔跑吧，兄弟").WhereEqualTo("tr", true);
-    //比如我想查询主题包含《奔跑吧，兄弟》的聊天室
-    var result = await query.FindAsync();//执行查询
-}
+{% block chatroom_query_single %}{% endblock %}
 ```
-
-从代码上可以看出，仅仅是多了一个额外的 `WhereEqualTo("tr", true)` 的链式查询即可。
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取对话列表中 attr.topic = "奔跑吧，兄弟"、tr = true
+- 执行查询
+```
+{% block chatroom_query_extra %}{% endblock %}
 
 #### 获取聊天室列表
 
->TODO:
+由于一个用户一次登录只能加入一个聊天室，加入新的聊天室后会自动离开原来的聊天室，所以聊天室列表最多只有一个对象。
+
+{% block chatroom_query_list %}{% endblock %}
 
 ## 聊天记录
 
@@ -1031,13 +924,13 @@ public async void QueryChatRoom_SampleCode()
 
 目前为了满足用户的需求，我们特地开放了从服务端获取聊天记录的功能：
 
-{% block conversation_chatroom_queryHistory %}{% endblock %}
-```c#
-AVIMClient userA = new AVIMClient("UserA");
-AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d4223b");
-con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
-//查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
+{% block chatroom_query_history %}{% endblock %}
 ```
+- 初始化 ClientId = Tom
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取从过去 24 小时的历史聊天纪录
+```
+
 以上将查询过去 24 小时内对话中所有的聊天记录。
 
 ## 签名与安全
