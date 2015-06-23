@@ -57,7 +57,7 @@ module.exports = function(grunt) {
       },
       html: {
         files: ["templates/**"],
-        tasks: ["clean:html", "markdown", "assemble"]
+        tasks: ["clean:html", "markdown", "assemble","comment"]
       },
       nunjucks: {
         files: ["views/**"],

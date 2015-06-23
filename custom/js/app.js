@@ -45,6 +45,82 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 location.reload();
             });
         }
+
+        var commentHost = 'https://comment.avosapps.com';
+        var docVersion = $('html').first().attr('version');
+        $scope.showCommentDialog = function(snippetVersion,e){
+            console.log(e)
+            getCommentsBySnipeet(snippetVersion);
+            var mouseX = e.pageX;
+            var mouseY = e.pageY;
+            var xoffset = 20;
+            var yoffset = 20;
+
+            $('#comment-container').show();
+            $('#comment-container').css({
+                left:mouseX+xoffset,
+                top: mouseY+yoffset
+            });
+        }
+        function getComments(){
+            $http.get(commentHost+'/docs/'+docVersion+'/commentCount',{
+                withCredentials: true
+            }).success(function(result){
+                $scope.allComoments = result;
+                angular.forEach(function(v,k){
+                    console.log(v);
+                })
+            });
+        }
+        $scope.getCommentUser = getUser;
+        function getUser(){
+            $http.get(commentHost+'/users/current',{
+                withCredentials: true
+            }).success(function(result){
+                $scope.currentCommentUser = result;
+            });
+        }
+        function getCommentsBySnipeet(snippet){
+            $scope.snippetVersion = snippet;
+            $http.get(commentHost+'/docs/'+docVersion+'/snippets/'+snippet+'/comments',{
+                withCredentials:true
+            }).success(function(result){
+                console.log(result);
+                $scope.currentComments = result;
+            });
+        }
+
+        $scope.createComment = function(e){
+
+            $http({
+                method: 'post',
+                url:commentHost+'/docs/'+docVersion+'/snippets/'+$scope.snippetVersion+'/comments',
+                withCredentials: true,
+                headers:{
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data:{
+                    content: 'test1s'
+                }
+
+            })
+            .success(function(result){
+                console.log(result)
+            }).error(function(err){
+                if(err.status == 401){
+                    // window.open(commentHost+'/users/login')
+                    location.href = commentHost+'/users/login';
+                }
+                console.log('error',err)
+            });
+        }
+        $scope.getCommentsBySnipeet = getCommentsBySnipeet;
+
+        $scope.closeCommentModal = function(){
+            $('#comment-container').hide();
+        }
+        getComments();
+        getUser();
     }]);
 
 angular.module('ui.gravatar').config([
@@ -116,6 +192,9 @@ angular.module('app').controller('StartCtrl', [
                     // console.log(result)
                 });
         });
+
+
+
     }
 ]);
 
@@ -128,7 +207,13 @@ angular.module('app').controller('StartCtrl', [
 //     };
 // });
 
+
+
 $(function(){
+    $('#content [version]').each(function(k,v){
+        $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+$(v).attr('version')+'\''+',$event)">++</div>')
+    })
+    // .append('<div class="toggle-comment" ng-click="showCommentDialog()">++</div>');
     angular.element(document).ready(function() {
       angular.bootstrap(document, ['app']);
 

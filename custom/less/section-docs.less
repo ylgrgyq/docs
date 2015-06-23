@@ -472,9 +472,6 @@ ul#toc,#toc li {
   border-right: 1px solid transparent;
   transition: border .6s ease;
 
-  // Note: May 25, 2015, 5:52 PM
-  // By: Tunghsiao Liu
-  // A very tricky way to hide right border line from users if sidebar isn't ready. See related method in `md.js`
   .sidebar-affix-shadow.on & {
     border-right-color: #eee;
   }
@@ -814,3 +811,35 @@ blockquote{
   font-size: 1em;
   color:#777;
 }
+
+
+#comment-container{
+  width:300px;
+  height:300px;
+  position:absolute;
+  display:none;
+  z-index:999;
+  border:1px solid;
+  background-color:white
+}
+#comment-container .hd{
+    background-color: #487858;
+    color: white;
+    padding: 2px 4px;
+    font-weight: bold;
+    margin: 0 0 6px 0;
+    position: relative;
+    height: 20px;
+}
+
+#comment-container .close{
+  position: absolute;
+  top: 3px;
+  right: 4px;
+  height: 13px;
+  width: 17px;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+

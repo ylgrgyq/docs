@@ -29,6 +29,26 @@
   </div>
 </footer>
 
+<div id="comment-container">
+  <div class="hd"><span class="close" ng-click="closeCommentModal()" >X</span></div>
+  <div class="bd">
+    <div class="comment-list">
+      <ul>
+        <li ng-repeat="comment in currentComments">
+          {{comment.content}}
+        </li>
+      </ul>
+    </div>
+    <div class="comment-create" ng-show="currentCommentUser.username">
+      <div class="form-group"> <textarea class="form-control comment-content" ng-model="commentContent"></textarea></div>
+      <div>{{currentCommentUser.username}} <button class="btn btn-sm btn-default create-comment" ng-click="createComment($event)"> 评论</button></div>
+    </div>
+    <div ng-show="!currentCommentUser.username">
+      需<button class="btn btn-sm btn-link" ng-href="{{commentHost}}+'/users/login" target="_self">登录 </button>后评论
+    </div>
+  </div>
+</div>
+
 <script src="https://download.leancloud.cn/sdk/latest.js"></script>
 
 
