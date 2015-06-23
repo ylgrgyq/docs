@@ -2717,7 +2717,7 @@ tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} �
 
 创建分析 job。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐您在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
 
-```
+``` json
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
@@ -2729,17 +2729,28 @@ curl -X POST \
 需要特别说明的是，`jobConfig` 不仅可以提供查询分析 `sql`，还可以增加其他配置项：
 
 * 查询结果自动另存为
+
 ```
 {
 "appId": "{{appId}}"
-"jobConfig":{"sql": "select count(*) as count from table", "saveAs":{"className": "Table1", "limit": 100}}
+"jobConfig":{
+	"sql": "select count(*) as count from table", 
+	"saveAs":{"className": "Table1", "limit": 100}
+	}
 }
 ```
+
 * 设置依赖 job，也就是当前的查询可以使用前趋查询结果
+
 ```
 {
 "appId": "{{appId}}"
-"jobConfig":{"sql": "select * from table inner join tempTable on table.id=tempTable.objectId", "dependencyJobs":[{"id": "xxx", className:"tempTable"}]} // `dependencyJobs` 是一个 json 数组，其中每一项均包含 `id` 和 `className` 字段。`id` 为依赖 job 的 id，`className` 则是自定义的临时表名。
+"jobConfig":{
+	"sql": "select * from table inner join tempTable on table.id=tempTable.objectId", 
+	"dependencyJobs":[
+			{"id": "xxx", className:"tempTable"} // id 为依赖 job 的 jobId，className 则为自定义的临时表名
+		]
+	} 
 } 
 ```
 
