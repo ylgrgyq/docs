@@ -48,7 +48,8 @@ public class MyApplication extends Application{
         ....>
         ...
 
-        <service android:name="com.avos.avoscloud.PushService" />
+        <service android:name="com.avos.avoscloud.PushService"
+		 android:exported="true" />
 
         <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
             <intent-filter>
