@@ -28,11 +28,12 @@ LeanCloud 目前只支持服务器的WEB应用的授权流程（server-side flow
 每个第三方应用都会分配一个 Client Key 和 Client Secret，用于鉴权。
 
 第一步授权，将用户从浏览器内重定向到下列URL：
+<div ng-non-bindable>
 
 ```
 GET https://leancloud.cn/1.1/authorize?client_id={{client_key}}&response_type=code&redirect_uri={{第三方应用的回掉URL}}&scope={{权限范围}}&state={{uuid}}
 ```
-
+</div>
 其中:
 
 * client_id      （必须）应用分配的`Client Key`
@@ -46,10 +47,13 @@ GET https://leancloud.cn/1.1/authorize?client_id={{client_key}}&response_type=co
 ![image](images/authorize.png)
 
 假设 redirect_uri 为 `http://exmaple.com/oauth2/callback` ，那么当用户确认授权后，会加入code值重定向到这个 URL:
+<div ng-non-bindable>
 
 ```
 GET http://exmaple.com/oauth2/callback?state={{传入的state}}&code={{code随机码}}
 ```
+
+</div>
 
 **code 的有效时间是5分钟**。
 
@@ -67,10 +71,12 @@ GET http://exmaple.com/oauth2/callback?state={{传入的state}}&code={{code随�
 
 用户授权后，您可以这回掉中拿到授权 code ，然后使用这个 code 去 LeanCloud 请求访问令牌(access_token)。服务端直接通过 http client 调用下列URL：
 
+<div ng-non-bindable>
+
 ```
 GET  https://leancloud.cn/1.1/token?grant_type=authorization_code&client_id={{client_key}}&client_secret={{client_secret}}&code={{第一步返回的code}}&redirect_uri={{第一步使用的redirect_uri}}
 ```
-
+</div>
 其中`client_id`和`client_key`也可以作为 http basic 认证的用户名和密码传入。
 
 各参数含义如下：

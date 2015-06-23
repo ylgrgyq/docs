@@ -854,7 +854,16 @@ NSArray* userIds = @[@"Chad"];
 
 ### 获取历史消息 ###
 
-LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
+LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 有两个：
+
+第一个 API 用于获取该会话中最近的 limit 条历史消息，通常在第一次进入会话时调用。
+
+```
+- (void)queryMessagesWithLimit:(NSUInteger)limit
+                      callback:(AVIMArrayResultBlock)callback;
+```
+
+第二个 API 用于获取某条消息之前的历史消息，通常在翻页加载更多历史消息时调用。
 
 ```
 - (void)queryMessagesBeforeId:(NSString *)messageId
@@ -865,12 +874,12 @@ LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，�
 
 各参数含义如下：
 
-* messageId - 本地已有的最旧一条消息的 messageId，可不填，此时默认是取当前对话的最新消息
-* timestamp － 本地已有的最旧一条消息的 timestamp，可不填，此时默认是取当前对话的最新消息
+* messageId － 本地已有的最旧一条消息的 messageId。
+* timestamp － 本地已有的最旧一条消息的 timestamp。
 * limit － 本次查询希望的结果条数，默认是 20，1-1000 之内的整数有效。
-* AVIMArrayResultBlock － 结果回调接口，在操作结束之后调用
+* AVIMArrayResultBlock － 结果回调接口，在操作结束之后调用。
 
-通过这一 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。示例代码如下：
+通过这两个 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。示例代码如下：
 
 ```
 NSString *oldestMsgId;
@@ -890,7 +899,7 @@ int64_t oldestMsgTimestamp;
 
 > 注意：
 >
-> 翻页获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 msgId，起始消息的发送时间戳，需要获取的消息条数。
+> 翻页获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 messageId，起始消息的发送时间戳，需要获取的消息条数。
 
 
 ### 启用离线消息推送

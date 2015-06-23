@@ -1659,9 +1659,10 @@ curl -X PUT \
 断开一个现有用户到某个服务，可以发送一个PUT请求设置authData中对应的服务为null来做到。例如，取消新浪微博关联:
 
 ```sh
-curl -X POST \
+curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-AVOSCloud-Session-Token: samplei3l83eerhnln0ecxgy5" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
