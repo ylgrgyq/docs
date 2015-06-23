@@ -2,6 +2,8 @@
 
 {% block language %}Android{% endblock%}
 
+{% block phone_system %}小米{% endblock %}
+
 {% block setup_init %}
 在 Application 的 `onCreate` 方法中对实时通信服务进行初始化：
 
@@ -78,11 +80,50 @@ public class MyApplication extends Application{
 ```
 {% endblock %}
 
+{% block textMessage_send_method %} `sendMessage` 族{% endblock %}
 
 
 
+{% block customMessage_create %}
+继承于 AVIMTypedMessage，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
+* 实现新的消息类型，继承自 AVIMTypedMessage。这里需要注意两点：
+  * 在 class 上增加一个 @AVIMMessageType(type=123) 的 Annotation，具体消息类型的值（这里是 `123`）由开发者自己决定（LeanCloud 内建的消息类型使用负数，所有正数都预留给开发者扩展使用）。
+  * 在消息内部属性上要增加 @AVIMMessageField(name="") 的 Annotation，name 为可选字段在声明字段属性，同时自定义的字段要有对应的 getter/setter 方法。
+* 调用 `AVIMMessageManager.registerAVIMMessageType(Class<? extends AVIMTypedMessage> messageType)` 函数进行类型注册
+* 调用 `AVIMMessageManager.registerMessageHandler(Class<? extends AVIMMessage> clazz, MessageHandler<?> handler)` 函数进行消息处理 handler 注册。
 
+AVIMTextMessage 的源码如下，可供参考：
+
+```
+@AVIMMessageType(type = -1)
+public class AVIMTextMessage extends AVIMTypedMessage {
+
+  @AVIMMessageField(name = "_lctext")
+  String text;
+  @AVIMMessageField(name = "_lcattrs")
+  Map<String, Object> attrs;
+
+  public String getText() {
+    return this.text;
+  }
+
+  public void setText(String text) {
+    this.text = text;
+  }
+
+  public Map<String, Object> getAttrs() {
+    return this.attrs;
+  }
+
+  public void setAttrs(Map<String, Object> attr) {
+    this.attrs = attr;
+  }
+}
+```
+{% endblock %}
+
+{% block messagePolicy_send_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
 
 ###登录
@@ -826,42 +867,7 @@ LeanCloud IM SDK 内部消息分发的逻辑是这样的：
 
 ### 如何扩展自己的富媒体消息
 
-继承于 AVIMTypedMessage，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
-* 实现新的消息类型，继承自 AVIMTypedMessage。这里需要注意两点：
-  * 在 class 上增加一个 @AVIMMessageType(type=123) 的 Annotation，具体消息类型的值（这里是 `123`）由开发者自己决定（LeanCloud 内建的消息类型使用负数，所有正数都预留给开发者扩展使用）。
-  * 在消息内部属性上要增加 @AVIMMessageField(name="") 的 Annotation，name 为可选字段在声明字段属性，同时自定义的字段要有对应的 getter/setter 方法。
-* 调用 `AVIMMessageManager.registerAVIMMessageType(Class<? extends AVIMTypedMessage> messageType)` 函数进行类型注册
-* 调用 `AVIMMessageManager.registerMessageHandler(Class<? extends AVIMMessage> clazz, MessageHandler<?> handler)` 函数进行消息处理 handler 注册。
-
-AVIMTextMessage 的源码如下，可供参考：
-
-```
-@AVIMMessageType(type = -1)
-public class AVIMTextMessage extends AVIMTypedMessage {
-
-  @AVIMMessageField(name = "_lctext")
-  String text;
-  @AVIMMessageField(name = "_lcattrs")
-  Map<String, Object> attrs;
-
-  public String getText() {
-    return this.text;
-  }
-
-  public void setText(String text) {
-    this.text = text;
-  }
-
-  public Map<String, Object> getAttrs() {
-    return this.attrs;
-  }
-
-  public void setAttrs(Map<String, Object> attr) {
-    this.attrs = attr;
-  }
-}
-```
 
 > 什么时候需要扩展自己的富媒体消息？
 >
