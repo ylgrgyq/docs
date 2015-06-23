@@ -2726,6 +2726,23 @@ curl -X POST \
   https://api.leancloud.cn/1.1/bigquery/jobs
 ```
 
+需要特别说明的是，`jobConfig` 不仅可以提供查询分析 `sql`，还可以增加其他配置项：
+
+* 查询结果自动另存为
+```
+{
+"appId": "{{appId}}"
+"jobConfig":{"sql": "select count(*) as count from table", "saveAs":{"className": "Table1", "limit": 100}}
+}
+```
+* 设置依赖 job，也就是当前的查询可以使用前趋查询结果
+```
+{
+"appId": "{{appId}}"
+"jobConfig":{"sql": "select * from table inner join tempTable on table.id=tempTable.objectId", "dependencyJobs":[{"id": "xxx", className:"tempTable"}]} // `dependencyJobs` 是一个 json 数组，其中每一项均包含 `id` 和 `className` 字段。`id` 为依赖 job 的 id，`className` 则是自定义的临时表名。
+} 
+```
+
 对应的输出：
 
 ```
