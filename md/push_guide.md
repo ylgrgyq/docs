@@ -16,7 +16,7 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 Installation 表示一个允许推送的设备的唯一标示，对应[数据管理](/data.html?appid={{appid}})平台中的 `_Installation` 表。它就是一个普通的对象，主要属性包括:
 
-* deviceType  设备类型，目前只支持"ios"和"android"
+* deviceType  设备类型，目前支持"ios"、"android"、"wp"和"web"。
 * deviceToken iOS 设备才有的用于 APNS 推送的唯一标识符，只对 iOS 有效。
 * deviceProfile 在应用有多个推送证书的场景下，deviceProfile 用于指定该设备对应的证书名
 * installationId LeanCloud 为每个 Android 设备产生的唯一标识符，只对 android 有效。
