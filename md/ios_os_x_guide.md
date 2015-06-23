@@ -76,7 +76,7 @@ score: 1337, playerName: "Steve", cheatMode: false
 
 键，必须是由字母、数字或下划线组成的字符串；自定义的键，不能以 `__`（双下划线）开头。值，可以是字符串、数字、布尔值，或是数组和字典。
 
-**注意：在 iOS SDK 中，`code`、 `uuid`、 `className`、  `keyValues`、 `fetchWhenSave`、 `running`、 `acl`、 `ACL`、 `isDataReady`、 `pendingKeys`、 `createdAt`、 `updatedAt`、 `objectId`、 `description` 都是保留字段，不能作为键来使用。**
+**注意：在 iOS SDK 中，`code`、 `error`、 `uuid`、 `className`、  `keyValues`、 `fetchWhenSave`、 `running`、 `acl`、 `ACL`、 `isDataReady`、 `pendingKeys`、 `createdAt`、 `updatedAt`、 `objectId`、 `description` 都是保留字段，不能作为键来使用。**
 
 每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，游戏分数这个对象可取名为 `GameScore`。
 
