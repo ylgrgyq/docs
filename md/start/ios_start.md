@@ -65,6 +65,7 @@ pod 'AVOSCloudSNS'
 
 如果使用 `AVOSCloudCrashReporting` ，还需额外添加 `libc++.dylib`
 
+为 target 的 Build Settings 中，为 Other Linker Flags 增加 `-all_load` 链接选项。
 
 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
 
