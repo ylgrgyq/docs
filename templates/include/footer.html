@@ -44,7 +44,7 @@
       <div>{{currentCommentUser.username}} <button class="btn btn-sm btn-default create-comment" ng-click="createComment($event)"> 评论</button></div>
     </div>
     <div ng-show="!currentCommentUser.username">
-      需<button class="btn btn-sm btn-link" ng-href="{{commentHost}}+'/users/login" target="_self">登录 </button>后评论
+      需<a ng-href="{{commentHost}}/users/login" target="_self">登录 </a>后评论
     </div>
   </div>
 </div>

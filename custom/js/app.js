@@ -5,7 +5,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
 
     function($scope, $http, $timeout, $compile,$rootScope) {
 
-
+        console.log()
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
         $rootScope.pageState = {};
@@ -47,6 +47,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         }
 
         var commentHost = 'https://comment.avosapps.com';
+        $scope.commentHost = commentHost;
         var docVersion = $('html').first().attr('version');
         $scope.showCommentDialog = function(e,snippetVersion){
             $scope.snippetVersion = snippetVersion;
