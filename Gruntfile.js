@@ -273,8 +273,10 @@ module.exports = function(grunt) {
           $('html').first().attr('version', docVersion);
           var query = new AV.Query(Doc);
           query.equalTo('version', docVersion);
+          console.log(3)
 
           query.first().then(function(doc) {
+            console.log('first then')
             if (!doc) {
               doc = new Doc();
               doc.set('file', file)
@@ -290,9 +292,12 @@ module.exports = function(grunt) {
               return doc.save();
             }
           }).then(function() {
+            console.log('second then')
             // 在文档中添加 version 标记
             commentDoms.forEach(function(dom) {
               $('#content ' + dom).each(function() {
+                console.log('infile dom')
+                console.log($(this))
                 var version = crypto.createHash('md5').update($(this).text()).digest('hex');
                 $(this).attr('version', version);
               });
