@@ -4,7 +4,9 @@
 
 云代码命令行工具是用来管理、部署云代码项目的命令行工具，称之为`avoscloud-code`项目。通过它，你可以部署、发布、回滚云代码，并且可以对同一个云代码项目做多应用管理，还可以查看云代码日志，批量上传文件到 LeanCloud 平台上等。
 
-## 安装和使用
+## 安装
+
+### Linux 和 Mac OSX
 
 首先，你需要安装 [Node.js](http://nodejs.org/) 环境以及 [npm](https://npmjs.org/) 包管理工具，在 ubuntu 上的 terminal（终端）可以简单地执行
 
@@ -14,9 +16,7 @@ apt-get install nodejs
 
 在一些系统上你可能需要 `sudo` 权限：`sudo apt-get install nodejs`。
 
-**Windows 系统用户请确保在系统盘 C 盘上安装 Node.js，，否则命令行工具无法正常运行。**
-
-(apt 提供的 Node.js 版本可能比较滞后，，推荐从[官方网站](http://nodejs.org/)下载安装)。
+提示：apt 提供的 Node.js 版本可能比较滞后，，推荐从[官方网站](http://nodejs.org/)下载安装。
 
 在 Mac OSX 上，可以通过 [MacPort](http://www.macports.org/) 或者 [Homebrew](http://brew.sh/) 安装，terminal（终端）执行下列命令：
 
@@ -42,7 +42,7 @@ npm install -g avoscloud-code
 
 加上 `-g` 表示全局安装。**以后升级也请执行此命令**。
 
-我们更推荐从 [cnpm](http://cnpmjs.org/) 仓库安装，速度理论上更快，请执行下列两个命令：
+安装过程可能有些慢，请耐心等待。我们更推荐从 [cnpm](http://cnpmjs.org/) 仓库安装，速度理论上更快，请执行下列两个命令：
 
 ```sh
 npm install -g cnpm --registry=http://r.cnpmjs.org
@@ -54,6 +54,77 @@ cnpm install -g avoscloud-code
 ```sh
 npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
+
+### Windows 系统
+
+首先，你需要安装 [Node.js](http://nodejs.org/)，到网站下载安装包安装即可。
+
+**注意：**Windows 系统用户请确保在系统盘 C 盘默认目录安装 Node.js，否则命令行工具无法正常运行。
+
+然后通过命令行执行下列命令：
+
+```
+npm install -g avoscloud-code
+```
+
+加上 `-g` 表示全局安装。**以后升级也请执行此命令**。
+
+安装过程可能有些慢，请耐心等待。
+
+##### 不建议使用 cnpm 安装命令行工具
+
+使用 `cnpm` 安装全局模块（-g 参数）时会将模块保存在 `c:\Program Files\nodejs\node_modules\` 目录，该目录没有 admin 权限是无法写入的。而原生的 `npm` 会将全局模块安装在 `%USERPROFILE%\AppData\Roaming\npm\node_modules\` 目录下，该目录写入不需要 admin 权限。
+
+使用 `cnpm` 安装命令行工具，运行时可能出现下列提示信息：
+
+```
+C:\Users\wchen\workspace\cloud-code-unit-test_v2.0>avoscloud
+提示：您可以敲入 rs 命令并回车来重启本进程
+module.js:338
+    throw err;
+          ^
+Error: Cannot find module 'C:\Users\wchen\workspace\cloud-code-unit-test_v2.0\"C:\Program'
+    at Function.Module._resolveFilename (module.js:336:15)
+    at Function.Module._load (module.js:278:25)
+    at Function.Module.runMain (module.js:501:10)
+    at startup (node.js:129:16)
+    at node.js:814:3
+```
+
+为了提高安装速度，可以使用 `cnpm` 的仓库进行安装：
+
+```
+npm install -g avoscloud-code --registry=https://r.cnpmjs.org
+```
+
+#### 仍有问题
+
+如果安装完执行仍然出现一些问题，请尝试下列步骤：
+
+* 移除命令行工具
+
+  ```
+  npm uninstall -g avoscloud-code
+  ```
+  移除之后，确认命令行工具不可运行，即执行 avoscloud 命令时会有如下提示：
+  
+  ```
+  C:\Users\wchen\workspace\cloud-code-unit-test_v2.0>avoscloud
+  'avoscloud' 不是内部或外部命令，也不是可运行的程序或批处理文件。
+  ```
+* 清除缓存：
+  
+  ```
+  npm cache clean
+  ```
+  如果有安装 `cnpm`，还需要清除 `cnpm` 的缓存：
+  
+  ```
+  cnpm cache clean
+  ```
+* 然后使用 `npm` 重新安装 avoscloud 命令行工具
+
+## 使用
 
 安装成功之后，直接在 terminal（终端）运行 `avoscloud -h`，输出帮助信息：
 
