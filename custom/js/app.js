@@ -48,8 +48,8 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
 
         var commentHost = 'https://comment.avosapps.com';
         var docVersion = $('html').first().attr('version');
-        $scope.showCommentDialog = function(snippetVersion,e){
-            console.log(e)
+        $scope.showCommentDialog = function(e,snippetVersion){
+            $scope.snippetVersion = snippetVersion;
             getCommentsBySnipeet(snippetVersion);
             var mouseX = e.pageX;
             var mouseY = e.pageY;
@@ -62,16 +62,20 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 top: mouseY+yoffset
             });
         }
+
         function getComments(){
             $http.get(commentHost+'/docs/'+docVersion+'/commentCount',{
                 withCredentials: true
             }).success(function(result){
-                $scope.allComoments = result;
-                angular.forEach(function(v,k){
-                    console.log(v);
-                })
+                var all = {};
+                angular.forEach(result,function(v,k){
+                    // $('[version="'+v.snippetVersion+'"]').append(v.count);
+                    all[v.snippetVersion] = v.count;
+                });
+                $scope.allComment = all;
             });
         }
+
         $scope.getCommentUser = getUser;
         function getUser(){
             $http.get(commentHost+'/users/current',{
@@ -80,18 +84,20 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 $scope.currentCommentUser = result;
             });
         }
+
         function getCommentsBySnipeet(snippet){
-            $scope.snippetVersion = snippet;
+            snippet = snippet || $scope.snippetVersion;
             $http.get(commentHost+'/docs/'+docVersion+'/snippets/'+snippet+'/comments',{
                 withCredentials:true
             }).success(function(result){
-                console.log(result);
                 $scope.currentComments = result;
             });
         }
 
         $scope.createComment = function(e){
-
+            if(!$scope.commentContent){
+                return;
+            }
             $http({
                 method: 'post',
                 url:commentHost+'/docs/'+docVersion+'/snippets/'+$scope.snippetVersion+'/comments',
@@ -99,13 +105,26 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 headers:{
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
+                transformRequest: function(obj) {
+                        var str = [];
+                        for(var p in obj)
+                        str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                        return str.join("&");
+                },
                 data:{
-                    content: 'test1s'
+                    content: $scope.commentContent
                 }
 
             })
             .success(function(result){
-                console.log(result)
+                $scope.commentContent = '';
+                var snippet = $scope.snippetVersion;
+                if($scope.allComment[snippet]){
+                    $scope.allComment[snippet]+=1;
+                }else{
+                    $scope.allComment[snippet]=1;
+                }
+                $scope.getCommentsBySnipeet();
             }).error(function(err){
                 if(err.status == 401){
                     // window.open(commentHost+'/users/login')
@@ -114,6 +133,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 console.log('error',err)
             });
         }
+
         $scope.getCommentsBySnipeet = getCommentsBySnipeet;
 
         $scope.closeCommentModal = function(){
@@ -198,6 +218,24 @@ angular.module('app').controller('StartCtrl', [
     }
 ]);
 
+angular.module('app').directive('lcComment',['$compile',function($compile){
+    return {
+        restrict: 'AE',
+        scope:{
+            version:'@version',
+            allComment: '=allComment'
+        },
+        template:'<div class="toggle-comment" ng-click="f($event)">+ <span>  {{allComment[version]}} </span> </div>',
+        link: function(scope, element, attrs) {
+            scope.f = function(e){
+                scope.$parent.showCommentDialog(e,scope.version);
+            }
+            // console.log(1,element.contents())
+            // $compile(element.contents())(scope.$new());
+        }
+    }
+}]);
+
 // angular.module('app').directive('pre', function() {
 //     return {
 //         restrict: 'E',
@@ -210,11 +248,17 @@ angular.module('app').controller('StartCtrl', [
 
 
 $(function(){
+    // $('#content [version]').each(function(k,v){
+    //     var version = $(v).attr('version');
+    //     $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+version+'\''+',$event)">+ <span> {{}}</span> </div>');
+    // })
     $('#content [version]').each(function(k,v){
-        $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+$(v).attr('version')+'\''+',$event)">++</div>')
+        var version = $(v).attr('version');
+        $(v).append('<div version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
     })
     // .append('<div class="toggle-comment" ng-click="showCommentDialog()">++</div>');
     angular.element(document).ready(function() {
+
       angular.bootstrap(document, ['app']);
 
     });
