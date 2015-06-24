@@ -35,7 +35,7 @@
     <div class="comment-list">
       <ul>
         <li ng-repeat="comment in currentComments">
-          {{comment.content}}
+          {{comment.content}} {{ comment.updatedAt | date: 'yyyy-MM-dd HH:mm:ss '}} {{comment.author}}
         </li>
       </ul>
     </div>
