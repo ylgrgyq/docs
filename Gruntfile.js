@@ -273,10 +273,8 @@ module.exports = function(grunt) {
           $('html').first().attr('version', docVersion);
           var query = new AV.Query(Doc);
           query.equalTo('version', docVersion);
-          console.log(3)
 
           query.first().then(function(doc) {
-            console.log('first then')
             if (!doc) {
               doc = new Doc();
               doc.set('file', file)
@@ -289,22 +287,33 @@ module.exports = function(grunt) {
                 });
               });
               doc.set('snippets', snippets);
-              return doc.save();
+              return new Promise(function(resolve,reject){
+                doc.save().then(function(){
+
+                  resolve();
+                },function(){
+                  reject();
+                })
+              });
+            }else{
+              return Promise.resolve();
             }
+          },function(){
+            return Promise.resolve();
           }).then(function() {
-            console.log('second then')
             // 在文档中添加 version 标记
             commentDoms.forEach(function(dom) {
               $('#content ' + dom).each(function() {
-                console.log('infile dom')
-                console.log($(this))
+                // console.log(2)
                 var version = crypto.createHash('md5').update($(this).text()).digest('hex');
                 $(this).attr('version', version);
               });
             });
-          grunt.file.write(filepath, $.html());
-          resolve();
+            grunt.file.write(filepath, $.html());
+            resolve();
           // done();
+        },function(){
+          reject();
         });
       }
 
@@ -315,7 +324,13 @@ module.exports = function(grunt) {
       });
 
       Promise.all(allPromise).then(function(){
-        console.log('allcompleted');
+        console.log('version build allcompleted');
+        done();
+      },function(){
+        console.log('error happened');
+        done();
+      }).catch(function(){
+        console.log('error');
         done();
       })
   });
