@@ -482,6 +482,8 @@ myObject.saveInBackground();
 我们不建议存储较大的二进制数据，如图像或文件不应使用 `AVObject` 的 byte[]字段类型。`AVObject` 的大小不应超过 128 KB。如果需要存储较大的文件类型如图像、文件、音乐，可以使用 `AVFile` 对象来存储，具体使用方法可见 [AVFile指南部分](#%E6%96%87%E4%BB%B6)。
 关于处理数据的更多信息，可查看开发指南的数据安全部分。
 
+** 注:在v3.4版本以后，`AVObject` 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的UI组件内传递 `AVObject` 对象实例。同时 `AVObject` 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。**
+
 ## 查询
 
 ### 基本查询
