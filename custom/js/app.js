@@ -140,9 +140,9 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             }).error(function(err){
                 if(err.status == 401){
                     // window.open(commentHost+'/users/login')
-                    location.href = commentHost+'/users/login';
+
+                    // location.href = commentHost+'/users/login';
                 }
-                console.log('error',err)
             });
         }
 
@@ -221,7 +221,6 @@ angular.module('app').controller('StartCtrl', [
                     $timeout(function(){
                         $compile($('#start-main').contents())($scope);
                     },0);
-                    // console.log(result)
                 });
         });
 
@@ -242,8 +241,6 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
             scope.f = function(e){
                 scope.$parent.showCommentDialog(e,scope.version);
             }
-            // console.log(1,element.contents())
-            // $compile(element.contents())(scope.$new());
         }
     }
 }]);
