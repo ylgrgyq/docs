@@ -1,11 +1,10 @@
 //apps data
+
 var purl = '/1/';
 angular.module("app", ['ui.gravatar']);
 angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$compile','$rootScope',
 
     function($scope, $http, $timeout, $compile,$rootScope) {
-
-        console.log()
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
         $rootScope.pageState = {};
@@ -22,19 +21,14 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $http.get("/1/clients/self/apps").success(
             function(data) {
                 if (data.length > 0) {
-
-
                     $rootScope.pageState.currentApp = data[0];
-
                     $scope.$watch('pageState.currentApp', function() {
                         if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
                             $scope.appid = $scope.pageState.currentApp.app_id;
                             $scope.appkey = $scope.pageState.currentApp.app_key;
                         }
-
                     });
                     $scope.apps = data;
-
                 }
 
             }).error(function(data) {
@@ -46,9 +40,26 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             });
         }
 
+        window.addEventListener("message", receiveMessage, false);
+
+        function receiveMessage(event)
+        {
+            win.close();
+            $scope.$apply(function(){
+                getUser();
+            });
+        }
+        var win;
         var commentHost = 'https://comment.avosapps.com';
         $scope.commentHost = commentHost;
         var docVersion = $('html').first().attr('version');
+
+        $scope.loginComment = function(){
+            win = window.open(commentHost+'/users/login','targetWindow',
+                           'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=300');
+            return false
+        }
+
         $scope.showCommentDialog = function(e,snippetVersion){
             $scope.snippetVersion = snippetVersion;
             getCommentsBySnipeet(snippetVersion);
@@ -253,11 +264,12 @@ $(function(){
     //     var version = $(v).attr('version');
     //     $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+version+'\''+',$event)">+ <span> {{}}</span> </div>');
     // })
+
     $('#content [version]').each(function(k,v){
         var version = $(v).attr('version');
         $(v).append('<div version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
-    })
-    // .append('<div class="toggle-comment" ng-click="showCommentDialog()">++</div>');
+    });
+
     angular.element(document).ready(function() {
 
       angular.bootstrap(document, ['app']);
