@@ -2723,7 +2723,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"appId": "{{appid}}", "jobConfig":{"sql":"select count(*) from table"}}'
+  -d '{"appId": "{{appid}}", "jobConfig":{"sql":"select count(*) from table"}}' \
   https://api.leancloud.cn/1.1/bigquery/jobs
 ```
 
