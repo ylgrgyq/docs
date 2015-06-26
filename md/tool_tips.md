@@ -107,7 +107,7 @@
 * 在右上角用户名左侧的消息中心，可以看到 LeanCloud 最火热的新闻和教程。
 * 在工具栏的资源菜单里，可以找到 LeanCloud 移动客户端下载链接，在移动设备上查看应用分析数据。
 * 使用 [drop](https://drop.avosapps.com/) 或者 [fir.im](http://fir.im/) 分发测试您的应用。
-* 我们提供[离线文档](https://leancloud.cn/docs/avoscloud-docs.tar.gz)下载。
+* 我们提供[离线文档](https://leancloud.cn/docs/leancloud-docs.tar.gz)下载。
 * 不知道怎么使用 LeanCloud？各种 [demo](https://leancloud.cn/docs/demo.html) 等你来拿。
 * [文档搜索工具](https://leancloud.cn/search.html)，查找问题或资料不用愁。
 * 所有 SDK 都提供 [API 文档](https://leancloud.cn/docs/index.html)，开发指南没有覆盖的 API 介绍都可以在里面找到解释。
