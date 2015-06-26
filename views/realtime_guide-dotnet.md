@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block setup_init %}
-为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/AVOSCloud.Phone/1.3.0-beta) 上下载我们的 SDK。
+为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/1.0.1.2-pre) 上下载我们的 SDK。
 
 导入 SDK 之后，在应用入口函数中添加如下代码：
 
@@ -176,7 +176,7 @@ await conversation.SendImageMessageAsync(imgMessage);
 {% endblock %}
 
 {% block imageMessage_url_send %}
-```
+
 ```c#
 public async void SendImageMessageAsync_Test()
 {
@@ -360,6 +360,7 @@ await conversation.SendImageMessageAsync(imgMessage);
 - 登录到系统
 - 接收消息，如果是 Image，读取 Attributes[location]
 - //读取的结果就是旧金山
+```
 {% endblock %}
 
 {% block customMessage_create %}
@@ -369,6 +370,7 @@ TODO：.NET 待补充
 {% block messagePolicy_send_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
 {% block conversation_init %}
+
 ```c#
 /// <summary>
 /// 这段代码实现的功能就是 Jerry 创建了一个包含 Bob、Harry、William 的对话。
