@@ -167,7 +167,7 @@ curl -X POST \
 **由于运营商和渠道的限制，短信验证码发送要求间隔至少一分钟，并且每天向同一手机号码发送次数不能超过 10 次，因此建议采用图形验证码、倒数计时等措施来控制频率，提示用户，防止短信轰炸等恶劣情况发生。**
 
 ### 国际短信
-上面发送短信验证码和语音验证码，默认都是对国内号码。LeanCloud 现在已经开通了国际短信验证码服务（语音验证码海外还不可用）。要发送国际短信，只需要在发送 `https://api.leancloud.cn/1.1/requestSmsCode` 请求的时候，额外加上**countryCode**这一参数项即可。`countryCode`的取值范围请参考[contrycode.org](https://countrycode.org/)里 `ISO CODES` 一列，例如 `US` 表示美国，`CN` 代表中国。
+上面发送短信验证码和语音验证码，默认都是对国内号码。LeanCloud 现在已经开通了国际短信验证码服务（语音验证码海外还不可用）。要发送国际短信，只需要在发送 `https://api.leancloud.cn/1.1/requestSmsCode` 请求的时候，额外加上**countryCode**这一参数项即可。`countryCode`的取值范围请参考[countrycode.org](https://countrycode.org/)里 `ISO CODES` 一列，例如 `US` 表示美国，`CN` 代表中国。
 
 下面的请求将给美国的手机号码("917646xxxxx")发送一条短信验证码：
 
