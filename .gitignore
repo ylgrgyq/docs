@@ -11,6 +11,7 @@ custom/css/app-docs.css
 npm-debug.log
 
 # use template
+.module-cache
 md/leanengine_guide-cloudcode.md
 md/leanengine_guide-node.md
 md/leanengine_guide-python.md
