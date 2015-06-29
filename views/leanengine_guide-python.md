@@ -37,6 +37,28 @@ $ python wsgi.py
 
 {% block cloud_func_file %}`$PROJECT_DIR/cloud.py`{% endblock %}
 
+{% block ping %}
+LeanEngine 中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
+
+```python
+from leancloud import Engine
+engine = Engine(your_wsgi_app)
+```
+
+如果未使用 LeanEngine 中间件，可以自己实现该 URL 的处理，比如这样：
+
+```python
+@app.route('/__engine/1/ping')
+def ping():
+    version = sys.version_info
+    return flask.jsonify({
+        'runtime': 'cpython-{0}.{1}.{2}'.format(version.major, version.minor, version.micro),
+        'version': 'custon',
+    })
+```
+
+{% endblock %}
+
 {% block others_web_framework %}
 LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
 {% endblock %}
