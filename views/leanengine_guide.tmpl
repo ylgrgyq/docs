@@ -90,7 +90,10 @@ LeanEngine 上有一些平台相关的环境变量，可以在你的代码中使
 * `LC_APP_ID`: 当前应用的 App Id
 * `LC_APP_KEY`: 当前应用的 App Key
 * `LC_APP_MASTER_KEY`: 当前应用的 Master Key
-* `LC_APP_ENV`: 当前应用环境，测试环境值为 `stage`，生产环境值为 `production`
+* `LC_APP_ENV`: 当前应用环境:
+  * 开发环境没有该管径变量，或值为 `development`
+  * 测试环境值为 `stage`
+  * 生产环境值为 `production`
 * `LC_APP_PORT`: 当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务
 
 
@@ -364,6 +367,12 @@ if (name) {
 你的项目需要遵循一定格式才会被 LeanEngine 识别并运行。
 
 {% block project_constraint %}{% endblock %}
+
+### 健康监测
+
+LeanEngine 项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 `应用启动检测失败` 类型的错误信息，导致部署失败。
+
+{% block ping %}{% endblock %}
 
 ### 其他框架
 
