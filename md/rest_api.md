@@ -2712,6 +2712,92 @@ tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} �
 
 参考 [搜索 API](./app_search_guide.html#搜索-api)。
 
+## 离线数据分析 API
+### 创建分析 job API
+离线数据分析 API 可以获取一个应用的备份数据。因为应用数据的隐私敏感性，离线数据分析 API 必须使用 master key 的签名方式鉴权，请参考 [更安全的鉴权方式](#更安全的鉴权方式) 一节。
+
+创建分析 job。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐您在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
+
+``` json
+curl -X POST \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"appId": "{{appid}}", "jobConfig":{"sql":"select count(*) from table"}}'
+  https://api.leancloud.cn/1.1/bigquery/jobs
+```
+
+需要特别说明的是，`jobConfig` 不仅可以提供查询分析 `sql`，还可以增加其他配置项：
+
+* 查询结果自动另存为
+
+```
+{  
+  "appId":"{{appid}}",
+  "jobConfig":{  
+    "sql":"select count(*) as count from table",
+    "saveAs":{  
+      "className":"Table1",
+      "limit":100
+    }
+  }
+}
+```
+
+* 设置依赖 job，也就是当前的查询可以使用前趋查询结果
+
+```
+{  
+  "appId":"{{appid}}",
+  "jobConfig":{  
+    "sql":"select * from table inner join tempTable on table.id=tempTable.objectId",
+    "dependencyJobs":[  
+      {  
+        "id":"xxx",
+        "className":"tempTable"
+      } // id 为依赖 job 的 jobId,  className 则为自定义的临时表名
+    ]
+  }
+}
+```
+
+对应的输出：
+
+```
+HTTP/1.1 200 OK
+Server Tengine is not blacklisted
+Server: Tengine
+Date: Fri, 05 Jun 2015 02:45:22 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 100
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000
+{"id":"63f3b70b8ac3fd779de5bcb765cf121e","appId":"{{appid}}"}
+```
+
+### 获取分析 job 结果 API
+
+```
+curl -X GET \
+  -H "X-AVOSCloud-Application-Id: {{appid}}" \
+  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "Content-Type: application/json" \
+  https://api.leancloud.cn/1.1/bigquery/jobs/:jobId
+```
+对应的输出：
+
+```
+HTTP/1.1 200 OK
+Server Tengine is not blacklisted
+Server: Tengine
+Date: Fri, 05 Jun 2015 03:03:51 GMT
+Content-Type: application/json; charset=UTF-8
+Content-Length: 127
+Connection: keep-alive
+Strict-Transport-Security: max-age=31536000
+{"id":"63f3b70b8ac3fd779de5bcb765cf121e","status":"OK","results":[{"_c0":6895}],"totalCount":1,"previewCount":1,"nextAnchor":1}
+```
+
 ## 浏览器跨域和特殊方法解决方案
 
 注：直接使用 RESTful API 遇到跨域问题，请遵守 HTML5 CORS 标准即可。以下方法非推荐方式，而是内部兼容方法。

@@ -22,8 +22,8 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的 Demo 代码：
 
+* [LeanMessageDemo iOS 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
 * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
-* [FreeChat](https://github.com/jwfing/FreeChat)
 
 并且下载自己运行一下试试看。
 
