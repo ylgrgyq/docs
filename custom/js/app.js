@@ -128,9 +128,4 @@ angular.module('app').controller('StartCtrl', [
 //     };
 // });
 
-$(function(){
-    angular.element(document).ready(function() {
-      angular.bootstrap(document, ['app']);
 
-    });
-});
