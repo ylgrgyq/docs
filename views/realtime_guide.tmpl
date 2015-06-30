@@ -412,59 +412,8 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 
 #### 接收策略
 
-消息接收分为**两个层级**：
+{% block messagePlicy_received_intro %}{% endblock %}
 
-* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_send_method %}{% endblock %}负责接收这类消息，但是它并没有针对消息的类型做区分。
-
-* 第二层在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
-
-以上两个层级的消息接收策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
-
-AVIMClient 接收端 | 条件① |条件② |条件③ | 条件④ |条件⑤ 
-:---|:---|:---|:---|:---|:---
-`AVIMClient.OnMessageReceived` | × | √ | √ | √ | √
-`AVIMConversation.OnMessageReceived` | × | × | √ | × | × 
-`AVIMConversation.OnTypedMessageReceived`| × | × | × | √ | × 
-`AVIMConversation.OnTextMessageReceived` | × | × | × | × | √ 
-对应条件如下：
-
-* 条件①：
-```c#
-AVIMClient.Status != Online
-``` 
-* 条件②：
-```c#
-AVIMClient.Status == Online && AVIMClient.OnMessageReceived != null
-```
-* 条件③：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-```
-* 条件④：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-&& AVIMConversation.OnTypedMessageReceived != null
-&& AVIMConversation.OnTextMessageReceived == null
-```
-
-* 条件⑤：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-&& AVIMConversation.OnTypedMessageReceived != null
-&& AVIMConversation.OnTextMessageReceived != null
-```
-
-在 `AVIMConversation` 内，接收消息的顺序为： 
-
-> `OnTextMessageReceived` > `OnTypedMessageReceived` > `OnMessageReceived`
-
-这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
 
 ##### 发送离线消息
 
@@ -478,13 +427,14 @@ AVIMClient.Status == Online
 {% block offlineMessage %}{% endblock %}
 
 ##### 消息送达回执
+消息送达回执指的是服务端把消息送达给接收方之后给发送方一个回执，告知消息已经送达。
+
+{% block message_sent_ack %}{% endblock %}
 
 
 ##### 消息已读回执
-
-
-
-
+消息已读回执指的是接收方告知服务端消息已被接收，紧接着服务端给发送方的一个回执，告知消息已经被接收方接收。
+{% block message_received_ack %}{% endblock %}
 
 ## 对话
 
@@ -632,16 +582,7 @@ A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersC
 
 对话（AVIMConversation）与控制台中 `_Conversation` 表是一一对应的，默认提供的属性的对应关系如下：
 
-AVIMConversation 属性名 | _Conversation 字段|含义
---- | ------------ | -------------
-`ConversationId`| `objectId` |全局唯一的 Id
-`Name` |  `name` |成员共享的统一的名字
-`MemberIds`|`m` |成员列表
-`MuteMemberIds`|`mu` |静音成员列表
-`Creator` | `c` |对话创建者
-`LastMessageAt` | `lm` |对话最后一条消息发送的时间
-`Attributes`| `attr`|自定义属性
-`IsTransient`|`tr`|是否为聊天室（暂态对话）
+{% block table_conversation_attributes_intro %}{% endblock %}
 
 #### 名称
 
@@ -669,12 +610,13 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 ####  成员
 
-`AVIMConversation.MemberIds` 是当前对话中所有成员的 `clientId`。
+表示是当前对话中所有成员的 `clientId`。
 
 >**强烈建议开发者切勿在控制台中对其进行修改**。所有关于成员的操作请参照上一章节中的 [对话的成员管理](#对话的成员管理) 来进行。
 
 #### 静音成员
-`AVIMConversation.MuteMemberIds` 代表当前对话中所有做了静音操作的成员的 `clientId`。假如某一用户不想再收到某对话的消息提醒，但又不想直接退出对话，可以使用静音操作，即开启「免打扰模式」。
+
+代表当前对话中所有做了静音操作的成员的 `clientId`。假如某一用户不想再收到某对话的消息提醒，但又不想直接退出对话，可以使用静音操作，即开启「免打扰模式」。
 
 比如 Tom 工作繁忙，对某个对话设置了静音：
 
@@ -689,17 +631,21 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 >设置静音之后，iOS 和 Windows Phone 的 用户就不会收到推送消息了。
 
 此操作会修改服务端 `_Conversation` 里面的 `mu` 属性。
-与之对应的就是 `UnmuteAsync`  操作，即取消静音/取消免打扰模式，示例代码参照静音操作。
+
+与之对应的就是取消静音的操作，即取消静音/取消免打扰模式，示例代码如下：
+
+{% block conversation_unmute %}{% endblock %}
 
 >**强烈建议开发者切勿在控制台中对 `mu` 随意进行修改**。
 
 #### 创建者
 
-`AVIMConversation.Creator` 即对话的创建者，它的值是对话创建者的 `clientId`。
+即对话的创建者，它的值是对话创建者的 `clientId`。
 
 它等价于 QQ 群中的「群创建者」，但区别于「群管理员」。比如 QQ 群的「创建者」是固定不变的，它的图标颜色与「管理员」的图标颜色都不一样。所以根据对话中成员的 `clientId` 是否与 `AVIMConversation.Creator` 一致就可以判断出他是不是群的创建者。
 
 #### 自定义属性
+
 通过该属性，开发者可以随意存储自己的键值对，为对话添加自定义属性，来满足业务逻辑需求。
 
 典型的场景是，给某个对话加上一个值为 private 的 tag 标签，表示这个对话被标记为私有，代码如下：
@@ -713,9 +659,9 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
 ```
 
->**注意**：`AVIMConversation.{% block attributes %}{% endblock %}` **在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。**
+>**注意**自定义属性**在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。**
 
-有关 `AVIMConversation.{% block attributes %}{% endblock %}` 更多的用法，请参见 [对话的查询](#对话的查询)。
+有关自定义属性的更多的用法，请参见 [对话的查询](#对话的查询)。
 
 ### 对话的查询
 #### 基础查询
@@ -729,10 +675,6 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - Tom 登录
 - 异步从服务器拉取对话：id = 551260efe4b01608686c3e0f
 ```
-
->注意：这个方法和 `AVIMClient.GetConversationById` 本质上**是不一样的**。
-
->`AVIMClient.GetConversationById` 可以理解为本地构造一个 `AVIMConversation`，但是它除了 Id 别的属性都为空，而 `GetAsync` 是直接从服务端拉取数据，更为可靠，但是它是异步的。
 
 ##### 获取对话列表
 
@@ -751,16 +693,9 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 比较查询在一般的理解上都包含以下几种：
 
-逻辑操作 | `AVIMConversationQuery` 对应的方法|
----|---
-等于 | `WhereEqualTo`
-不等于 |  `WhereNotEqualTo` 
-大于 | `WhereGreaterThan`
-大于等于 | `WhereGreaterThanOrEqualTo` 
-小于 | `WhereLessThan`
-小于等于 | `WhereLessThanOrEqualTo`
+{% block table_conservation_query_than %}{% endblock %}
 
-比较查询最常用的是 `WhereEqualTo`：
+比较查询最常用的是等于查询：
 
 {% block conversation_query_equalTo %}{% endblock %}
 ```
@@ -770,11 +705,11 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 执行查询
 ```
 
-目前条件查询只针对 `AVIMConversation` 对象的 `Attributes` 属性进行操作，也就是针对 `_Conversation` 表中的 `attr` 字段进行 `AVQuery` 查询。
+目前条件查询只针对 `AVIMConversation` 对象的自定义属性进行操作，也就是针对 `_Conversation` 表中的 `attr` 字段进行 `AVQuery` 查询。
 
 {% block conversation_query_insertAttrPrefix %}{% endblock %}
 
-与 `WhereEqualTo` 相对的就是 `WhereNotEqualTo` ，下面检索一下类型不是私有的对话：
+下面检索一下类型不是私有的对话：
 
 {% block conversation_query_notEqualTo %}{% endblock %}
 ```
@@ -810,7 +745,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 ##### 包含查询
 
-包含查询是指方法名字包含 `Contains` 单词的方法，例如查询关键字包含「教育」的对话：
+查询关键字包含「教育」的对话：
 
 {% block conversation_query_contains %}{% endblock %} 
 ``````

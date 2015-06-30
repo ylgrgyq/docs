@@ -1,6 +1,7 @@
 {% extends "./realtime_guide.tmpl" %}
 
-{% block language %}.NET{% endblock%}
+{% block language %}.NET{% endblock %}
+
 {% block phoneSystem %}WP{% endblock %}
 
 {% block supportedRuntime %}
@@ -143,7 +144,6 @@ public async void BobReceiveMessageFromTom()
 ```
 {% endblock %}
 
-
 {% block textMessage_send_method %} `SendTextMessageAsync` {% endblock %}
 
 {% block textMessage_receive_intro %}
@@ -152,10 +152,27 @@ public async void BobReceiveMessageFromTom()
 
 {% block textMessage_receive %}
 ```
-- 初始化 ClientId = Jerry
-- Jerry 登录到系统
-- 进入与 Tom 的对话 //假设 ConversationById = 55117292e4b065f7ee9edd29
-- 回复 '早起了。啥事？'
+//Jerry 用自己的名字作为 ClientId 建立了一个 AVIMClient
+AVIMClient client = new AVIMClient("Jerry");
+
+//Jerry 登陆到系统
+await client.ConnectAsync();
+
+string conversationId = "55117292e4b065f7ee9edd29";
+
+AVIMConversation conversation = client.GetConversationById(conversationId);
+
+conversation.OnTextMessageReceived += (s,e)=>
+{
+    AVIMTextMessage receivedMessage = e;
+    string words = receivedMessage.TextContent;
+    // words 内容即为：耗子,起床!
+
+    // Jerry 收到消息之后回复一下 Tom
+    AVIMTextMessage messageToTom = new AVIMTextMessage("早起了，啥事儿？");
+    // 发送 AVIMTextMessage 实例
+    conversation.SendTextMessageAsync(messageToTom);
+};
 ```
 {% endblock %}
 
@@ -369,6 +386,67 @@ TODO：.NET 待补充
 
 {% block messagePolicy_send_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
+{% block messagePlicy_received_intro %}
+消息接收分为**两个层级**：
+
+* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_send_method %}{% endblock %}负责接收这类消息，但是它并没有针对消息的类型做区分。
+
+* 第二层在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
+
+以上两个层级的消息接收策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
+
+AVIMClient 接收端 | 条件① |条件② |条件③ | 条件④ |条件⑤ 
+:---|:---|:---|:---|:---|:---
+`AVIMClient.OnMessageReceived` | × | √ | √ | √ | √
+`AVIMConversation.OnMessageReceived` | × | × | √ | × | × 
+`AVIMConversation.OnTypedMessageReceived`| × | × | × | √ | × 
+`AVIMConversation.OnTextMessageReceived` | × | × | × | × | √ 
+对应条件如下：
+
+* 条件①：
+```c#
+AVIMClient.Status != Online
+``` 
+* 条件②：
+```c#
+AVIMClient.Status == Online && AVIMClient.OnMessageReceived != null
+```
+* 条件③：
+```c#
+AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+```
+* 条件④：
+```c#
+AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
+&& AVIMConversation.OnTextMessageReceived == null
+```
+
+* 条件⑤：
+```c#
+AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
+&& AVIMConversation.OnTextMessageReceived != null
+```
+
+在 `AVIMConversation` 内，接收消息的顺序为： 
+
+> `OnTextMessageReceived` > `OnTypedMessageReceived` > `OnMessageReceived`
+
+这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
+
+{% endblock %}
+
+{% block message_sent_ack %}{% endblock %}
+
+{% block message_received_ack %}{% endblock %}
+
 {% block conversation_init %}
 
 ```c#
@@ -545,6 +623,21 @@ public async void CountMembers_SampleCode()
 ```
 {% endblock %}
 
+{% block table_conversation_attributes_intro %}
+
+AVIMConversation 属性名 | _Conversation 字段|含义
+--- | ------------ | -------------
+`ConversationId`| `objectId` |全局唯一的 Id
+`Name` |  `name` |成员共享的统一的名字
+`MemberIds`|`m` |成员列表
+`MuteMemberIds`|`mu` |静音成员列表
+`Creator` | `c` |对话创建者
+`LastMessageAt` | `lm` |对话最后一条消息发送的时间
+`Attributes`| `attr`|自定义属性
+`IsTransient`|`tr`|是否为聊天室（暂态对话）
+
+{% endblock %}
+
 {% block conversation_name %}
 ```c#
 public async void CreateConversationAsync()
@@ -588,6 +681,11 @@ public async void MuteConversationAsync()
 ```
 {% endblock %}
 
+{% block conversation_unmute %}
+
+{% endblock %}
+
+
 {% block conversation_tag %}
 ```c#
 public async void CreateConversationWithCustomAttributesAsync()
@@ -625,6 +723,17 @@ public async void CountMembers_SampleCode()
 ```
 {% endblock %}
 
+{% block table_conservation_query_than %}
+逻辑操作 | `AVIMConversationQuery` 对应的方法|
+---|---
+等于 | `WhereEqualTo`
+不等于 |  `WhereNotEqualTo` 
+大于 | `WhereGreaterThan`
+大于等于 | `WhereGreaterThanOrEqualTo` 
+小于 | `WhereLessThan`
+小于等于 | `WhereLessThanOrEqualTo`
+{% endblock %}
+
 {% block conversation_query_equalTo %}
 ```
 public async void WhereEqualTo_SampleCode()
@@ -658,7 +767,6 @@ public static string InsertAttrPrefix(this string key)
 AVIMConversationQuery query = client.GetQuery().WhereEqualTo("topic".InsertAttrPrefix(), "movie");//这样就可以实现自动为 `topic` 添加 `attr.` 前缀的效果的效果。
 ```
 {% endblock %}
-
 
 {% block conversation_query_notEqualTo %}
 ```c#
@@ -724,7 +832,7 @@ public async void WhereContains_SampleCode()
     var result = await query.FindAsync();//执行查询
 }
 ```
-{% endblock %} 
+{% endblock %}
 
 {% block conversation_query_findJoinedMemebers %}
 ```c#
@@ -745,7 +853,6 @@ public async void QueryMembers_SampleCode()
 {% block conversation_query_chaining %}
 我们的 SDK 在查询风格上一直保持以链式方式来创建符合自己业务逻辑的组合条件。
 {% endblock %}
-
 
 {% block conversation_query_combination %}
 ```c#
@@ -806,7 +913,6 @@ public async void CountMembers_SampleCode()
 ```
 {% endblock %}
 
-
 {% block chatroom_query_method %} `AVIMConversationQuery` 调用 `Where` 开头的{% endblock %}
 
 {% block chatroom_query_single %}
@@ -847,10 +953,12 @@ con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 {% endblock %}
 
 {% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}
-{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
-{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
-{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
 
+{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
+
+{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
+
+{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
 
 {% block conversation_signature %}
 `AVIMClient` 有一个属性：
@@ -985,4 +1093,11 @@ AVIMClient client = new AVIMClient("Tom");
 client.SignatureFactory = new SampleSignatureFactory();//这里是一个开发者自己实现的接口的具体的类
 await client.ConnectAsync();//Tom 登录客户端
 ```
+{% endblock %}
+
+{% block demo %}
+## Demo
+相比阅读文档，如果你更喜欢从代码入手了解功能的具体实现，可以下载 Demo 来研究：
+
+* [WPF Demo](https://github.com/leancloud/windows-phone-sdk-demos/tree/master/LeanCloud.Demo.CSharp/LeanCloud.LeanMessage.Demo.WPF.NET45)（推荐）
 {% endblock %}
