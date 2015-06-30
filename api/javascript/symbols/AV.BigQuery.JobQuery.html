@@ -5,7 +5,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 		<meta name="generator" content="JsDoc Toolkit" />
 		
-		<title>JsDoc Reference - AV.Op.Set</title>
+		<title>JsDoc Reference - AV.BigQuery.JobQuery</title>
 
 		<style type="text/css">
 			/* default.css */
@@ -286,7 +286,7 @@ ul.inheritsList
 <!-- ============================== class title ============================ -->
 			<h1 class="classTitle">
 				
-				Class AV.Op.Set
+				Class AV.BigQuery.JobQuery
 			</h1>
 
 <!-- ============================== class summary ========================== -->			
@@ -294,9 +294,7 @@ ul.inheritsList
 				
 				
 			
-				A Set operation indicates that either the field was changed using
-AV.Object.set, or it is a mutable container that was detected as being
-changed.
+				
 				
 				
 					<br /><i>Defined in: </i> <a href="../symbols/src/dist_av.js.html">av.js</a>.
@@ -305,7 +303,7 @@ changed.
 
 <!-- ============================== constructor summary ==================== -->			
 			
-			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.Op.Set.">
+			<table class="summaryTable" cellspacing="0" summary="A summary of the constructor documented in the class AV.BigQuery.JobQuery.">
 				<caption>Class Summary</caption>
 				<thead>
 					<tr>
@@ -318,9 +316,9 @@ changed.
 						<td class="attributes">&nbsp;</td>
 						<td class="nameDescription" >
 							<div class="fixedFont">
-								<b><a href="../symbols/AV.Op.Set.html#constructor">AV.Op.Set</a></b>()
+								<b><a href="../symbols/AV.BigQuery.JobQuery.html#constructor">AV.BigQuery.JobQuery</a></b>(id, className)
 							</div>
-							<div class="description"></div>
+							<div class="description">创建一个对象，用于查询 BigQuery 任务状态和结果。</div>
 						</td>
 					</tr>
 				</tbody>
@@ -334,7 +332,7 @@ changed.
 			
 				
 				
-				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class AV.Op.Set.">
+				<table class="summaryTable" cellspacing="0" summary="A summary of the methods documented in the class AV.BigQuery.JobQuery.">
 					<caption>Method Summary</caption>
 					<thead>
 						<tr>
@@ -347,18 +345,29 @@ changed.
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.Op.Set.html#toJSON">toJSON</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/AV.BigQuery.JobQuery.html#find">find</a></b>(options)
 								</div>
-								<div class="description">Returns a JSON version of the operation suitable for sending to AV.</div>
+								<div class="description">查询任务状态和结果，任务结果为一个 JSON 对象，包括 status 表示任务状态， totalCount 表示总数，
+results 数组表示任务结果数组，previewCount 表示可以返回的结果总数，任务的开始和截止时间
+startTime、endTime 等信息。</div>
 							</td>
 						</tr>
 					
 						<tr>
 							<td class="attributes">&nbsp;</td>
 							<td class="nameDescription">
-								<div class="fixedFont"><b><a href="../symbols/AV.Op.Set.html#value">value</a></b>()
+								<div class="fixedFont"><b><a href="../symbols/AV.BigQuery.JobQuery.html#limit">limit</a></b>(n)
 								</div>
-								<div class="description">Returns the new value of this field after the set.</div>
+								<div class="description">Sets the limit of the number of results to return.</div>
+							</td>
+						</tr>
+					
+						<tr>
+							<td class="attributes">&nbsp;</td>
+							<td class="nameDescription">
+								<div class="fixedFont"><b><a href="../symbols/AV.BigQuery.JobQuery.html#skip">skip</a></b>(n)
+								</div>
+								<div class="description">Sets the number of results to skip before returning any results.</div>
 							</td>
 						</tr>
 					
@@ -379,11 +388,11 @@ changed.
 				</div>
 				
 				<div class="fixedFont">
-						<b>AV.Op.Set</b>()
+						<b>AV.BigQuery.JobQuery</b>(id, className)
 				</div>
 				
 				<div class="description">
-					
+					创建一个对象，用于查询 BigQuery 任务状态和结果。
 					
 				</div>
 				
@@ -391,7 +400,29 @@ changed.
 				
 				
 					
+						<dl class="detailList">
+						<dt class="heading">Parameters:</dt>
+						
+							<dt>
+								<span class="light fixedFont">{String}</span>  <b>id</b>
+								
+							</dt>
+								<dd>任务 id</dd>
+						
+							<dt>
+								 <b>className</b>
+								
+							</dt>
+								<dd></dd>
+						
+						</dl>
 					
+					
+					
+						<dl class="detailList">
+						<dt class="heading">Since:</dt>
+							<dd>0.5.5</dd>
+						</dl>
 					
 					
 					
@@ -410,21 +441,38 @@ changed.
 					Method Detail
 				</div>
 				
-					<a name="toJSON"> </a>
+					<a name="find"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{Object}</span>
-					<b>toJSON</b>()
+					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<b>find</b>(options)
 					
 					</div>
 					<div class="description">
-						Returns a JSON version of the operation suitable for sending to AV.
+						查询任务状态和结果，任务结果为一个 JSON 对象，包括 status 表示任务状态， totalCount 表示总数，
+results 数组表示任务结果数组，previewCount 表示可以返回的结果总数，任务的开始和截止时间
+startTime、endTime 等信息。
 						
 						
 					</div>
 					
 					
 					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Object}</span> <b>options</b>
+									
+								</dt>
+								<dd>A Backbone-style options object
+options.success, if set, should be a function to handle a successful
+call to a cloud function.  options.error should be a function that
+handles an error running the cloud function.  Both functions are
+optional.  Both functions take a single argument.</dd>
+							
+							</dl>
 						
 						
 						
@@ -433,7 +481,8 @@ changed.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{Object}</span> </dd>
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that will be resolved with the result
+of the function.</dd>
 							
 							</dl>
 						
@@ -442,15 +491,16 @@ changed.
 
 					<hr />
 				
-					<a name="value"> </a>
+					<a name="limit"> </a>
 					<div class="fixedFont">
 					
-					
-					<b>value</b>()
+					<span class="light">{<a href="../symbols/AV.Query.html">AV.Query</a>}</span>
+					<b>limit</b>(n)
 					
 					</div>
 					<div class="description">
-						Returns the new value of this field after the set.
+						Sets the limit of the number of results to return. The default limit is
+100, with a maximum of 1000 results being returned at a time.
 						
 						
 					</div>
@@ -458,9 +508,72 @@ changed.
 					
 					
 						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>n</b>
+									
+								</dt>
+								<dd>the number of results to limit to.</dd>
+							
+							</dl>
 						
 						
 						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Query.html">AV.Query</a>}</span> Returns the query, so you can chain this call.</dd>
+							
+							</dl>
+						
+						
+						
+
+					<hr />
+				
+					<a name="skip"> </a>
+					<div class="fixedFont">
+					
+					<span class="light">{<a href="../symbols/AV.Query.html">AV.Query</a>}</span>
+					<b>skip</b>(n)
+					
+					</div>
+					<div class="description">
+						Sets the number of results to skip before returning any results.
+This is useful for pagination.
+Default is to skip zero results.
+						
+						
+					</div>
+					
+					
+					
+						
+							<dl class="detailList">
+							<dt class="heading">Parameters:</dt>
+							
+								<dt>
+									<span class="light fixedFont">{Number}</span> <b>n</b>
+									
+								</dt>
+								<dd>the number of results to skip.</dd>
+							
+							</dl>
+						
+						
+						
+						
+						
+							<dl class="detailList">
+							<dt class="heading">Returns:</dt>
+							
+								<dd><span class="light fixedFont">{<a href="../symbols/AV.Query.html">AV.Query</a>}</span> Returns the query, so you can chain this call.</dd>
+							
+							</dl>
 						
 						
 						
@@ -479,7 +592,7 @@ changed.
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Jun 29 2015 17:29:24 GMT+0800 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Mon Jun 29 2015 17:29:23 GMT+0800 (CST)
 		</div>
 	</body>
 </html>
