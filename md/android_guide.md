@@ -172,10 +172,10 @@ try {
 
 ```java
 objectId: "558e20cbe4b060308e3eb36c", content: "每个Java程序员必备的8个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999,
-createdAt:"2013-10-29 11:24:28", updatedAt:"2013-10-29 11:24:28"
+createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 ```
 
-因为 `AVObject` 是无模式的，后续你可以向 `Post` 里面增加新的属性，例如发布者信息中还包括头像、认证信息等级等：
+因为 `AVObject` 是无模式的，后续你可以向 `Post` 里面增加新的属性，例如发布者信息中还包括头像、认证等级等：
 
 ```java
 AVObject post = new AVObject("Post");
@@ -212,7 +212,7 @@ try {
 }
 ```
 
-要从检索到的 `AVObject` 对象中获取值，可以使用相应的数据类型的 `getType` 方法：
+要从检索到的 `AVObject` 实例中获取值，可以使用相应的数据类型的 `getType` 方法：
 
 ```
 int content = post.getString("content");
@@ -287,7 +287,7 @@ post.saveInBackground(new SaveCallback() {
 
 ### 计数器
 
-许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
 ```java
 AVObject post = new AVObject("Post");
@@ -314,7 +314,7 @@ post.increment("upvotes");
 post.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
-                // 从这时候开始，post 的修改的属性全部更新到最新状态
+                // 从这时候开始，post 修改的属性全部更新到最新状态
                 // 再次获取 upvotes 的属性值，就是最新的点赞人数
             }
  });
@@ -331,16 +331,16 @@ post.saveInBackground(new SaveCallback() {
 myObject.deleteInBackground();
 ```
 
-除了完整删除一个对象外，你还可以只删除对象中的某些指定的值。请注意只有调用 `saveInBackground()` 之后，修改才会同步到云端。
+除了完整删除一个对象实例外，你还可以只删除实例中的某些指定的值。请注意只有调用 `saveInBackground()` 之后，修改才会同步到云端。
 
 ```java
-// 删除 post 对象中 pubTimestamp 字段的值，因为我们可以直接使用 createdAt 这个属性
+// 删除 post 实例中 pubTimestamp 字段的值，因为我们可以直接使用 createdAt 这个属性
 post.remove("pubTimestamp");
-// 保存删除数据后的 post 对象到服务器
+// 保存删除数据后的 post 实例到服务器
 post.saveInBackground();
 ```
 
-批量删除对象可以通过 `deleteAll()` 方法，删除操作马上生效。
+批量删除实例可以通过 `deleteAll()` 方法，删除操作马上生效。
 
 ```java
 List<AVObject> objects = ...
@@ -350,6 +350,7 @@ AVObject.deleteAll(objects);
 ### 关联数据
 
 对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
+
 注：LeanCloud 云端是通过 Pointer 类型来解决这种数据引用的，并不会将数据 a 在数据 b 的表中再额外存储一份，这也可以保证数据的一致性。
 例如：一条微博信息可能会对应多条评论。创建一条微博信息并对应一条评论信息，你可以这样写：
 
@@ -363,7 +364,7 @@ AVObject myComment = new AVObject("Comment");
 myComment.put("content", "我若是写代码，进入状态之后最好不要停。下不下班已经不重要了，那种感觉最重要。");
 
 // 添加一个关联的微博对象
-// 如果需要预先建表，可以在 Comment 表中建立一个 Pointer 属性的 post 列
+// 如果需要预先建表，可以在 Comment 表中建立一个 Pointer 属性的 post 列；一般情况下不需要这么做。
 myComment.put("post", myWeibo);
 
 // 这将保存两条数据，分别为微博信息和评论信息
@@ -373,7 +374,7 @@ myComment.saveInBackground();
 你也可以通过 objectId 来关联已有的对象：
 
 ```java
-// Add a relation between the Post with objectId "5590cdfde4b00f7adb5860c8" and the comment
+// 把评论关联到 objectId 为 5590cdfde4b00f7adb5860c8 的这条微博上
 myComment.put("post", AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8"));
 ```
 
@@ -388,7 +389,7 @@ fetchedComment.getAVObject("post")
     });
 ```
 
-还有另外一种复杂的情况，你可以使用 `AVRelation` 来建模多对多关系。这有点像 List 链表，但是区别之处在于，在获取附加属性的时候，`AVRelation` 不需要一次性下载关系中的所有的 `AVObject` 实例。这使得 `AVRelation` 比链表的方式可以支持更多的对象，读取方式也更加灵活。例如，一个 `User` 可以喜欢很多 `Post`。这种情况下，就可以用 `getRelation` 方法保存一个用户喜欢的所有 `Post` 集合。为了新增一个喜欢的 `Post`，你可以这样做：
+还有另外一种复杂的情况，你可以使用 `AVRelation` 来建模多对多关系。这有点像 List 链表，但是区别之处在于，在获取附加属性的时候，`AVRelation` 不需要同步获取关联的所有 `AVObject` 实例。这使得 `AVRelation` 比链表的方式可以支持更多实例，读取方式也更加灵活。例如，一个 `User` 可以喜欢很多 `Post`。这种情况下，就可以用 `getRelation` 方法保存一个用户喜欢的所有 `Post` 集合。为了新增一个喜欢的 `Post`，你可以这样做：
 
 ```java
 AVUser user = AVUser.getCurrentUser();
@@ -403,7 +404,7 @@ user.saveInBackground();
 relation.remove(post);
 ```
 
-默认情况下，处于关系中的对象集合不会被下载。你可以通过 `getQuery` 方法返回的 `AVQuery` 对象，使用它的 `findInBackground` 方法来获取 Post 链表，像这样：
+默认情况下，处于关系中的对象集合不会被同步获取到。你可以通过 `getQuery` 方法返回的 `AVQuery` 对象，使用它的 `findInBackground` 方法来获取 Post 链表，像这样：
 
 ```java
 relation.getQuery().findInBackground(new FindCallback<AVObject>() {
@@ -477,10 +478,10 @@ testDataObject.saveInBackground();
 ```
 
 
-我们不建议存储较大的二进制数据，如图像或文件不应使用 `AVObject` 的 byte[]字段类型。`AVObject` 的大小不应超过 128 KB。如果需要存储较大的文件类型如图像、文件、音乐，可以使用 `AVFile` 对象来存储，具体使用方法可见 [AVFile指南部分](#%E6%96%87%E4%BB%B6)。
+我们不建议存储较大的二进制数据，如图像或文件不应使用 `AVObject` 的 byte[] 字段类型。`AVObject` 的大小**不应超过 128 KB**。如果需要存储较大的文件类型如图像、文件、音乐，可以使用 `AVFile` 对象来存储，具体使用方法可见 [AVFile 指南部分](#%E6%96%87%E4%BB%B6)。
 关于处理数据的更多信息，可查看开发指南的数据安全部分。
 
-** 注:在v3.4版本以后，`AVObject` 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的UI组件内传递 `AVObject` 对象实例。同时 `AVObject` 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。**
+** 注：在v3.4版本以后，`AVObject` 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的UI组件内传递 `AVObject` 对象实例。同时 `AVObject` 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。**
 
 ## 查询
 
@@ -516,7 +517,7 @@ try {
 ```
 
 ### 查询条件
-如果要过滤掉特定键的值时可以使用 `whereNotEqualTo` 方法。比如需要查询 `pubUSer` 不等于 `LeanCloud官方客服` 的数据时可以这样写：
+如果要过滤掉特定键的值时可以使用 `whereNotEqualTo` 方法。比如需要查询 `pubUser` 不等于 「LeanCloud官方客服」 的数据时可以这样写：
 
 ```java
 query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
@@ -557,20 +558,21 @@ query.whereLessThan("pubUserCertificate", 4);
 // 认证类型 <= 4
 query.whereLessThanOrEqualTo("pubUserCertificate", 4);
 
-//分数 > 4
+// 认证类型 > 4
 query.whereGreaterThan("pubUserCertificate", 4);
 
 // 认证类型 >= 4
 query.whereGreaterThanOrEqualTo("pubUserCertificate", 4);
 ```
 
-如果你想查询匹配几个不同值的数据，如：要查询 “LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提” 三个账号的微博时，你可以使用whereContainedIn（类似SQL中的in查询）方法来实现。
+如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」 三个账号的微博时，你可以使用whereContainedIn（类似SQL中的in查询）方法来实现。
+
 ```java
 String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"};
 query.whereContainedIn("pubUser", Arrays.asList(names));
 ```
 
-相反，你想查询排除“LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提”这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
+相反，你想查询排除「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
 `whereNotContainedIn` 方法来实现。
 
 ```java
@@ -582,7 +584,7 @@ query.whereNotContainedIn("pubUser", Arrays.asList(names));
 查询包含字符串的值，有几种方法。你可以使用任何正确的正则表达式来检索相匹配的值，使用 `whereMatches` 方法：
 
 ```java
-// 比较name字段的值是以大写字母和数字开头
+// 比较用户名字段的值是以大写字母和数字开头
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
 query.whereMatches("pubUser", "^[A-Z]\\d");
 
@@ -613,14 +615,14 @@ query.whereEndsWith("pubUser", "LeanCloud");
 如果一个 Key 对应的值是一个数组，你可以查询 Key 的数组包含了数字 208 的所有对象，通过：
 
 ```java
-// 查找出所有arrayKey对应的数组同时包含了数字208的所有对象
+// 查找出所有 arrayKey 对应的数组同时包含了数字208的所有对象
 query.whereEqualTo("arrayKey", 208);
 ```
 
 同样，你可以查询出 Key 的数组同时包含了 2，3 和 4 的所有对象：
 
 ```java
-//查找出所有arrayKey对应的数组同时包含了数字2,3,4的所有对象。
+//查找出所有 arrayKey 对应的数组同时包含了数字 2,3,4 的所有对象。
 ArrayList<Integer> numbers = new ArrayList<Integer>();
 numbers.add(2);
 numbers.add(3);
@@ -649,7 +651,7 @@ query.countInBackground(new CountCallback() {
   public void done(int count, AVException e) {
     if (e == null) {
       // The count request succeeded. Log the count
-      Log.d("successed", "LeanCloud官方客服 发布了 " + count + " 条微博");
+      Log.d("succeeded", "LeanCloud官方客服 发布了 " + count + " 条微博");
     } else {
       // The request failed
     }
@@ -666,7 +668,7 @@ query.countInBackground(new CountCallback() {
 有好几种方式可以发起关系数据的查询。如果你想获取某个字段匹配特定 `AVObject` 的实例列表，你可以像查询其他数据类型那样使用 `whereEqualTo` 来查询。例如，如果每个 `Comment` 对象都包含一个 `Post` 对象（在 `post` 字段上），你可以获取特定 `Post` 的所有 `Comment` 列表：
 
 ```java
-// 假设AVObject myPost已经在前面创建
+// 假设 AVObject myPost 已经在前面创建
 AVQuery<AVObject> query = AVQuery.getQuery("Comment");
 query.whereEqualTo("post", myPost);
 query.findInBackground(new FindCallback<AVObject>() {
@@ -721,7 +723,7 @@ query.findInBackground(new FindCallback<AVObject>() {
     for (AVObject comment : commentList) {
       //这里将不需要再来一次网络访问就可以取到 post 的值
       AVObject post = comment.getAVObject("post");
-      Log.d("post", "retrieved a related post");
+      Log.d("succeeded", "已取回一条相关微博");
     }
   }
 });
@@ -747,11 +749,9 @@ query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
 query.findInBackground(new FindCallback<AVObject>() {
 public void done(List<AVObject> objList, AVException e) {
   if (e == null) {
-    // Results were successfully found, looking first on the
-    // network and then on disk.
+    // 成功拿到结果，内部会先从网络获取，网络不可用则从本地获取数据。
   } else {
-    // The network was inaccessible and we have no cached data
-    // for this query.
+    // 网络不可用，本地也没有任何缓存数据。
   }
 });
 ```
@@ -821,7 +821,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-你还可以添加更多的约束条件到新创建的 `AVQuery` 对象上，表示一个 `and` 查询操作。
+你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
 请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`...，`include` 等。
 
@@ -835,11 +835,12 @@ query.deleteAll();
 
 ### CQL 查询
 Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套类似 SQL 查询语法的子集和变种，主要目的是降低大家学习 LeanCloud 查询的 API 的成本，可以使用传统的 SQL 语法来查询 LeanCloud 应用内的数据。
-这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](https://leancloud.cn/docs/cql_guide.html)。
+
+这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](./cql_guide.html)。
 你可以通过一下方法来进行调用
 
 ```java
-AVQuery.doCloudQueryInBackground("select * from ObjectTest",new CloudQueryCallback<AVCloudQueryResult>(){
+AVQuery.doCloudQueryInBackground("select * from ObjectTest", new CloudQueryCallback<AVCloudQueryResult>(){
           @Override
           public void done(AVCloudQueryResult result, AVException cqlException) {
              if(cqlException==null){
@@ -848,7 +849,7 @@ AVQuery.doCloudQueryInBackground("select * from ObjectTest",new CloudQueryCallba
           }
 });
 
-AVQuery.doCloudQueryInBackground("select count(*) from ObjectTest",new CloudQueryCallback<AVCloudQueryResult>(){
+AVQuery.doCloudQueryInBackground("select count(*) from ObjectTest", new CloudQueryCallback<AVCloudQueryResult>(){
           @Override
           public void done(AVCloudQueryResult result, AVException cqlException) {
                  if(cqlException==null){
@@ -868,10 +869,10 @@ AVQuery.doCloudQueryInBackground("select count(*) from ObjectTest",new CloudQuer
         new CloudQueryCallback<AVCloudQueryResult>() {
 
           @Override
-          public void done(AVCloudQueryResult result, AVException parseException) {
+          public void done(AVCloudQueryResult result, AVException cqlException) {
 
           }
-        }, TestObject.class, 100,"祈福");
+        }, TestObject.class, 100, "祈福");
 
 ```
 
@@ -951,7 +952,7 @@ public class App extends Application {
 ```java
 // Post.java
 @AVClassName("Post")
-public class Armor extends AVObject {
+public class Post extends AVObject {
   public String getContent() {
     return getString("content");
   }
@@ -961,7 +962,7 @@ public class Armor extends AVObject {
 }
 ```
 
-现在你就可以使用 `post.getContent()`方法来访问 `content` 字段，并通过 `post.setContent("blablablabla")`来修改它。这样就允许你的 IDE 提供代码自动完成功能，并且可以在编译时发现到类型错误。
+现在你就可以使用 `post.getContent()`方法来访问 `content` 字段，并通过 `post.setContent("blah blah blah")` 来修改它。这样就允许你的 IDE 提供代码自动完成功能，并且可以在编译时发现到类型错误。
 
 各种数据类型的访问器和修改器都可以这样被定义，使用各种 `get()`方法的变种，例如 `getInt()`，`getAVFile()`或者 `getMap()`。
 
@@ -969,7 +970,7 @@ public class Armor extends AVObject {
 
 ```java
 public void takeAccusation() {
-  // 处理用户举报，当达到某个条数的时候，自动打开屏蔽标志
+  // 处理用户举报，当达到某个条数的时候，自动打上屏蔽标志
   increment("accusation", 1);
   if (getAccusation() > 50) {
     setSpam(true);
@@ -979,7 +980,7 @@ public void takeAccusation() {
 
 ### 初始化子类
 
-你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 `AVObject` 中的字段，这个默认构造函数将会被SDK使用来创建子类的强类型的对象。
+你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 `AVObject` 中的字段，这个默认构造函数将会被 SDK 使用来创建子类的强类型的对象。
 
 要创建一个到现有对象的引用，可以使用 `AVObject.createWithoutData()`:
 
@@ -1063,8 +1064,8 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
       record.put("file", thisIsAnAVFile);
 
       AVACL acl = new AVACL();
-      acl.setPublicReadAccess(true);//此处设置的是所有人的可读权限
-      acl.setWriteAccess(AVUser.getCurrentUser(), true);//而这里设置了文件创建者的写权限
+      acl.setPublicReadAccess(true);   //此处设置的是所有人的可读权限
+      acl.setWriteAccess(AVUser.getCurrentUser(), true);   //而这里设置了文件创建者的写权限
 
       record.setACL(acl);
       record.save();
@@ -1122,11 +1123,11 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
         AVObect salary = new AVObject("工资");
         salary.put("value",200000000000);
 
-        AVUser boss;//假设此处为老板
-        AVUser hrWang;  //人事小王
+        AVUser boss;   //假设此处为老板
+        AVUser hrWang;   //人事小王
         AVUser me;
-        AVUser cashierZhou; //出纳老周
-        AVUser cashierGe;//出纳小葛
+        AVUser cashierZhou;   //出纳老周
+        AVUser cashierGe;   //出纳小葛
 
         //这段代码可能放在员工管理界面更恰当，但是为了示意，我们就放在这里
         AVRole hr = new AVRole("hr");
@@ -1134,12 +1135,12 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 
         hr.getUsers().add(hrWang);
         hr.save();
-        cashier.getUsers().add(cashierZhou);//此处对应的是AVRole里面有一个叫做users的Relation字段
+        cashier.getUsers().add(cashierZhou);   //此处对应的是AVRole里面有一个叫做users的Relation字段
         cashier.getUsers().add(cashierGe);
         cashier.save();
 
         AVACL acl = new AVACL();
-        acl.setReadAccess(boos,true);//老板假设只有一个
+        acl.setReadAccess(boos,true);   //老板假设只有一个
         acl.setReadAccess(me,true);
         acl.setRoleReadAccess(hr,true);
         acl.setRoleReadAccess(cashier,true);
@@ -1151,7 +1152,7 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
         salary.save();
 ```
 
-当然如果考虑到一个角色(`AVRole`)里面有多少员工(`AVUser`)，编辑这些员工可需要做权限控制，`AVRole`同样也有`setACL`方法可以使用。
+当然如果考虑到一个角色(`AVRole`)里面有多少员工(`AVUser`)，编辑这些员工可需要做权限控制，`AVRole` 同样也有 `setACL` 方法可以使用。
 
 #### AVRole 之间的从属关系
 
@@ -1241,7 +1242,7 @@ file.saveInBackground(new SaveCallback() {
       @Override
       public void done(Integer percentDone) {
           //打印进度
-        System.out.println("uploading: " + percentDone);
+          System.out.println("uploading: " + percentDone);
       }
        });
 ```
@@ -1316,11 +1317,11 @@ String url = file.getThumbnailUrl(false, 200, 100);
 
 ```java
     List<AVFile> fileList = new LinkedList<AVFile>();
-    fileList.add(parseFile1);
-    fileList.add(parseFile2);
+    fileList.add(file1);
+    fileList.add(file2);
 
     AVObject testObject = new AVObject("FileUnitTest");
-    testObject.addAll("file_array", fileList);//请不要直接使用put方法
+    testObject.addAll("file_array", fileList);   //请不要直接使用put方法
     testObject.save();
 ```
 
@@ -1348,7 +1349,7 @@ String url = file.getThumbnailUrl(false, 200, 100);
 AVUser user = new AVUser();
 user.setUsername("hjiang");
 user.setPassword("f32@ds*@&dsa");
-user.setEmail("hjiang@leancloud.rocks");
+user.setEmail("hang@leancloud.rocks");
 
 // 其他属性可以像其他AVObject对象一样使用put方法添加
 user.put("phone", "186-1234-0000");
@@ -1482,18 +1483,18 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 以下代码就可发送注册验证码到用户手机:
 ```java
-        AVUser user = new AVUser();
-        user.setUsername("hjiang@leancloud.rocks");
-        user.setPassword("whateverpassword");
-        user.setMobilePhoneNumber("13613613613");//本号码随机生成如有雷同纯属巧合
-        user.signUp();
+    AVUser user = new AVUser();
+    user.setUsername("hang@leancloud.rocks");
+    user.setPassword("whateverpassword");
+    user.setMobilePhoneNumber("13613613613");   //本号码随机生成如有雷同纯属巧合
+    user.signUp();
 
-        //如果你的账号需要重新发送短信请参考下面的代码
-        AVUser.requestMobilePhoneVerifyInBackground("13613613613",new RequestMobileCodeCallback() {
+    //如果你的账号需要重新发送短信请参考下面的代码
+    AVUser.requestMobilePhoneVerifyInBackground("13613613613",new RequestMobileCodeCallback() {
 
       @Override
       public void done(AVException e) {
-        //发送了验证码以后做点什么呢
+          //发送了验证码以后做点什么呢
       }
     })
 ```
@@ -1561,7 +1562,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 之后在用户受到重置密码的验证码之后，你可以调用这个方法来实现密码重置:
 ```java
-  AVUser.resetPasswordBySmsCodeInBackground(smsCode,newPassword,new UpdatePasswordCallback() {
+  AVUser.resetPasswordBySmsCodeInBackground(smsCode, newPassword, new UpdatePasswordCallback() {
       @Override
       public void done(AVException e) {
         if(e == null){
@@ -1617,11 +1618,13 @@ LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位�
 ### 地理位置对象
 
 首先需要创建一个 `AVGeoPoint` 对象。例如，创建一个北纬 39.9 度、东经 116.4 度的 `AVGeoPoint` 对象（LeanCloud 北京办公室所在地）：
+
 ```java
 AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
 ```
 
 添加地理位置信息
+
 ```java
 placeObject.put("location", point);
 ```
@@ -1661,7 +1664,7 @@ ArrayList<AVObject> pizzaPlacesInSF = query.find();
 除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
 
 ```java
-AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
+AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 				    new RequestMobileCodeCallback(){
 				      @Override
 				      public void done(AVException e){
@@ -1676,9 +1679,9 @@ AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
 
 ```java
   Map<String,Object> env = new HashMap<String,Object>();
-  env.put("name","LeanCloud Test");//这里放的都是你在短信模板中间定义的变量名和对应想要替换的值
+  env.put("name","LeanCloud Test");   //这里放的都是你在短信模板中间定义的变量名和对应想要替换的值
 
-  AVOSCloud.requestSMSCodeInBackground("12312312312","模板名称",env,new RequestMobileCodeCallback(){
+  AVOSCloud.requestSMSCodeInBackground("12312312312", "模板名称", env, new RequestMobileCodeCallback(){
 				      @Override
 				      public void done(AVException e){
 				      	if(e==null){
@@ -1707,7 +1710,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312",null,"短信验证",10,
 不管是短信验证码还是语音验证码，用户收到验证码以后都可以通过统一的方法来进行验证：
 
 ```java
-  AVOSCloud.verifyCodeInBackground("123456","12312312312",
+  AVOSCloud.verifyCodeInBackground("123456", "12312312312",
 				  new AVMobilePhoneVerifyCallback(){
   		          	    @Override
 				    public void done(AVException e){
