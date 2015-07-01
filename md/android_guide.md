@@ -1626,7 +1626,7 @@ AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
 添加地理位置信息
 
 ```java
-placeObject.put("location", point);
+postObject.put("location", point);
 ```
 
 ### 地理查询
@@ -1635,22 +1635,22 @@ placeObject.put("location", point);
 
 ```java
 AVGeoPoint userLocation = (AVGeoPoint) userObject.get("location");
-AVQuery<AVObject> query = new AVQuery<AVObject>("PlaceObject");
+AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
 query.whereNear("location", userLocation);
-query.setLimit(10);            //获取最接近用户地点的10条数据
-ArrayList<AVObject> nearPlaces = query.find();
+query.setLimit(10);            //获取最接近用户地点的10条微博
+ArrayList<AVObject> nearPosts = query.find();
 ```
 
-在以上代码中，nearPlaces 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
+在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
 要限制查询指定距离范围的数据可以使用 `whereWithinKilometers`、`whereWithinMiles` 或 `whereWithinRadians` 方法。
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java
-AVGeoPoint southwestOfSF = new AVGeoPoint(39.99, 116.33);
-AVGeoPoint northeastOfSF = new AVGeoPoint(39.97, 116.37);
+AVGeoPoint point1 = new AVGeoPoint(39.99, 116.33);
+AVGeoPoint point2 = new AVGeoPoint(39.97, 116.37);
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
-query.whereWithinGeoBox("location", southwestOfSF, northeastOfSF);
-ArrayList<AVObject> pizzaPlacesInSF = query.find();
+query.whereWithinGeoBox("location", point1, point2);
+ArrayList<AVObject> posts = query.find();
 ```
 
 ### 注意事项
