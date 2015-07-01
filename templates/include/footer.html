@@ -30,22 +30,32 @@
 </footer>
 
 <div id="comment-container">
-  <div class="hd"><span class="close" ng-click="closeCommentModal()" >X</span></div>
-  <div class="bd">
-    <div class="comment-list">
+  <div class="comment-head">
+    {{allComment[version]}}
+    <span class="close" ng-click="closeCommentModal()">&times;</span>
+  </div>
+  <div class="comment-body">
+    <div class="comment-list"  ng-class="{'no-login': !currentCommentUser.username}">
       <ul>
         <li ng-repeat="comment in currentComments">
-          {{comment.content}} {{ comment.updatedAt | date: 'yyyy-MM-dd HH:mm:ss '}} {{comment.author}}
+          <div class="comment-author">{{comment.author}}</div>
+          <div class="comment-timestamp">{{ comment.updatedAt | date: 'yyyy-MM-dd HH:mm:ss '}}</div>
+          <div class="comment-content">{{comment.content}}</div>
         </li>
       </ul>
     </div>
-    <div class="comment-create" ng-show="currentCommentUser.username">
-      <div class="form-group"> <textarea class="form-control comment-content" ng-model="commentContent"></textarea></div>
-      <div>{{currentCommentUser.username}} <button class="btn btn-sm btn-default create-comment" ng-click="createComment($event)"> 评论</button></div>
+  </div>
+  <div class="comment-compose" ng-show="currentCommentUser.username">
+    <div class="form-group"> <textarea class="form-control comment-content" ng-model="commentContent"></textarea></div>
+    <div class="form-meta">
+      您已登录为 <b>{{currentCommentUser.username}}</b>
+      <button class="btn btn-sm btn-default create-comment pull-right" ng-click="createComment($event)">
+        <i class="icon icon-chat-bold"></i> 评论
+      </button>
     </div>
-    <div ng-show="!currentCommentUser.username">
-      需<a class="comment-login" ng-click="loginComment()">登录 </a>后评论
-    </div>
+  </div>
+  <div class="comment-compose no-login" ng-show="!currentCommentUser.username">
+    您需要 <a class="comment-login" ng-click="loginComment()">登录</a> 后才能评论
   </div>
 </div>
 

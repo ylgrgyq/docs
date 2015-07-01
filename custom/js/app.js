@@ -65,14 +65,15 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             getCommentsBySnipeet(snippetVersion);
             var mouseX = e.pageX;
             var mouseY = e.pageY;
-            var xoffset = 20;
+            var xoffset = -20 - 400;
             var yoffset = 20;
 
-            $('#comment-container').show();
+            $('#comment-container').fadeIn(100);
             $('#comment-container').css({
                 left:mouseX+xoffset,
                 top: mouseY+yoffset
             });
+            $('p[version=' + snippetVersion + ']').addClass('on').css("background-color", "#ffffdf");
         }
 
         function getComments(){
@@ -149,7 +150,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.getCommentsBySnipeet = getCommentsBySnipeet;
 
         $scope.closeCommentModal = function(){
-            $('#comment-container').hide();
+            $('#comment-container').fadeOut(100);
         }
         getComments();
         getUser();
@@ -236,7 +237,7 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
             version:'@version',
             allComment: '=allComment'
         },
-        template:'<div class="toggle-comment" ng-click="f($event)">+ <span>  {{allComment[version]}} </span> </div>',
+        template:'<div class="toggle-comment" ng-click="f($event)"><span class="icon icon-chat-alt"></span> <span>{{allComment[version]}}</span></div>',
         link: function(scope, element, attrs) {
             scope.f = function(e){
                 scope.$parent.showCommentDialog(e,scope.version);
@@ -256,4 +257,21 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
 
 
 
+$(function(){
+    // $('#content [version]').each(function(k,v){
+    //     var version = $(v).attr('version');
+    //     $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+version+'\''+',$event)">+ <span> {{}}</span> </div>');
+    // })
+
+    $('#content [version]').each(function(k,v){
+        var version = $(v).attr('version');
+        $(v).append('<div class="inline-comment-wrap" version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
+    });
+
+    angular.element(document).ready(function() {
+
+      angular.bootstrap(document, ['app']);
+
+    });
+});
 
