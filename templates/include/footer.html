@@ -85,7 +85,7 @@ $(function(){
 
     $('#content [version]').each(function(k,v){
         var version = $(v).attr('version');
-        $(v).append('<div version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
+        $(v).append('<div class="inline-comment-wrap" version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
     });
 
     angular.element(document).ready(function() {
