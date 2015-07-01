@@ -8,6 +8,9 @@ body {
   p,
   li {
     line-height: 1.6;
+    // Prepared for inline comment system
+    position: relative;
+    padding-right: 50px;
 
     img {
       max-width: 100%;
@@ -813,6 +816,36 @@ blockquote{
 }
 
 // Comments
+.inline-comment-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity .2s ease;
+
+  .doc-content p:hover &,
+  .doc-content p:focus &,
+  .doc-content p.on & {
+    opacity: 1;
+  }
+
+  &:hover,
+  &:focus {
+    color: @link-color;
+  }
+
+  .toggle-comment {
+    opacity: .6;
+  }
+
+  .icon {
+    font-size: 14px;
+    vertical-align: middle;
+    font-weight: 600;
+  }
+}
+
 #comment-container {
   width: 400px;
   height: 500px;
