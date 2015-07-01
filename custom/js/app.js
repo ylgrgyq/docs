@@ -68,7 +68,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             var xoffset = 20;
             var yoffset = 20;
 
-            $('#comment-container').show();
+            $('#comment-container').fadeIn(100);
             $('#comment-container').css({
                 left:mouseX+xoffset,
                 top: mouseY+yoffset
@@ -149,7 +149,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.getCommentsBySnipeet = getCommentsBySnipeet;
 
         $scope.closeCommentModal = function(){
-            $('#comment-container').hide();
+            $('#comment-container').fadeOut(100);
         }
         getComments();
         getUser();
@@ -264,7 +264,7 @@ $(function(){
 
     $('#content [version]').each(function(k,v){
         var version = $(v).attr('version');
-        $(v).append('<div version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
+        $(v).append('<div class="inline-comment-wrap" version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
     });
 
     angular.element(document).ready(function() {
