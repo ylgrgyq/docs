@@ -747,7 +747,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 ```objc
 [query whereKey:@"post"
-        equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51c912bee4b012f89e344ae9"];
+        equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"];
 ```
 
 如果要做嵌套查询，请使用 `whereKey:matchesQuery`。
