@@ -157,7 +157,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 更多例子可以参考这篇[博客](https://blog.leancloud.cn/2559/)
 
-## 云代码和 JavaScript SDK 对离线分析的支持
+## 云引擎和 JavaScript SDK 对离线分析的支持
 
 JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./cloud_code_guide.html#权限说明)。**
 
@@ -185,13 +185,13 @@ JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线
 任务如果能正常启动，将返回任务的 job id，后续可以拿这个 id 去查询任务状态和结果。
 
 
-### 在云代码里监听 Job 完成
+### 在云引擎里监听 Job 完成
 
-在云代码里，可以通过一个 hook 函数来监听 job 完成情况：
+在云引擎里，可以通过一个 hook 函数来监听 job 完成情况：
 
 ```js
 AV.BigQuery.on('end', function(err, result) {
-    consoloe.dir(result);
+    console.dir(result);
 });
  ```
 
@@ -210,7 +210,7 @@ AV.BigQuery.on('end', function(err, result) {
 
 ### 主动查询 Job 状态和结果
 
-在知道任务 id 的情况下（startJob 返回或者云代码监听到任务完成），可以主动查询本次任务的结果：
+在知道任务 id 的情况下（startJob 返回或者云引擎监听到任务完成），可以主动查询本次任务的结果：
 
 ```js
   var id = '已知任务 id';
