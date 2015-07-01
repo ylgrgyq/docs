@@ -73,7 +73,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                 left:mouseX+xoffset,
                 top: mouseY+yoffset
             });
-            $('p[version=' + snippetVersion + ']').addClass('on').css("background-color", "#ffffdf");
+            $('p[version=' + snippetVersion + ']').addClass('on');
         }
 
         function getComments(){
@@ -150,6 +150,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.getCommentsBySnipeet = getCommentsBySnipeet;
 
         $scope.closeCommentModal = function(){
+            $('p[version=' + $scope.snippetVersion + ']').removeClass('on');
             $('#comment-container').fadeOut(100);
         }
         getComments();
