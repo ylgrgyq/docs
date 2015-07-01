@@ -155,6 +155,8 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 >
 > 如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** -> **存储** -> **数据** 里面会看到，_Conversation 表中增加了一条记录，新记录的 `m` 属性值为`["Tom", "Bob"]`，`attr` 属性值为`{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。具体的表结构与属性的对应关系可以参考[这里](./realtime_v2.html#对话_Conversation_)。
 
+> TIPS: 每一次调用 `createConversationWithName:` 方法，都会生成一个新的 `Conversation`，无论里面的 clientIds 是不是一样。可以用 `AVIMConversationQuery` 来查询，避免重复创建。
+
 ### 消息发送
 
 所有消息都是 AVIMMessage 的实例。构造消息的方法如下：
