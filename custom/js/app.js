@@ -237,7 +237,7 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
             version:'@version',
             allComment: '=allComment'
         },
-        template:'<div class="toggle-comment" ng-click="f($event)"><span class="icon icon-chat-alt"></span> <span>{{allComment[version]}}</span></div>',
+        template:'<div class="toggle-comment" ng-class="{\'has-comments\':allComment[version]}" ng-click="f($event)"><span class="icon icon-chat-alt"></span> <span>{{allComment[version]}}</span></div>',
         link: function(scope, element, attrs) {
             scope.f = function(e){
                 scope.$parent.showCommentDialog(e,scope.version);
