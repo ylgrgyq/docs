@@ -15,6 +15,11 @@ body {
     img {
       max-width: 100%;
     }
+
+    // When inline comments is active
+    &.on {
+      background: #fffdd0;
+    }
   }
 
   pre {
@@ -821,14 +826,6 @@ blockquote{
   top: 0;
   right: 0;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity .2s ease;
-
-  .doc-content p:hover &,
-  .doc-content p:focus &,
-  .doc-content p.on & {
-    opacity: 1;
-  }
 
   &:hover,
   &:focus {
@@ -836,7 +833,22 @@ blockquote{
   }
 
   .toggle-comment {
-    opacity: .6;
+    opacity: 0;
+    transition: opacity .2s ease;
+
+    .doc-content p:hover &,
+    .doc-content p:focus & {
+      opacity: .6;
+    }
+
+    &.has-comments,
+    .doc-content p.on & {
+      opacity: 1;
+    }
+
+    .doc-content p.on & {
+      color: @link-color;
+    }
   }
 
   .icon {
