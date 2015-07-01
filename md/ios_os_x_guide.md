@@ -14,8 +14,6 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
-
-<!--
 ## 使用 CocoaPods 安装 SDK
 
 [快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
@@ -54,29 +52,61 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 * 执行命令 `pod install` 安装 SDK。
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
--->
+
+## 手动安装 SDK
+你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见[快速入门](https://leancloud.cn/start.html) 。
+
+这里要特别注意如下几点：
+
+* 手动添加下列依赖库：
+  * SystemConfiguration.framework
+  * MobileCoreServices.framework
+  * CoreTelephony.framework
+  * CoreLocation.framework
+  * libicucore.dylib
+* 如果使用 AVOSCloudCrashReporting ，还需额外添加 `libc++.dylib`
+* 在 target 的 Build Settings 中，为 `Other Linker Flags` 增加 `-all_load` 链接选项。
 
 ## 应用
 
-部署在 LeanCloud 上的每个应用都有自己的 ID 和客户端密钥，客户端代码应该使用它们来初始化 SDK。
+LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。初始化方法如下：
 
-LeanCloud 的每一个账户都可以创建多个应用。同一个应用可分别在测试环境和生产环境部署不同的版本。
+* 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
+
+```
+#import <AVOSCloud/AVOSCloud.h>;
+```
+
+* 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
+
+```
+//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
+```
+
+* 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
+
+```
+[AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
+```
+
 
 ## 对象
 
 ### AVObject
 
-在 LeanCloud 上，数据存储是围绕 `AVObject` 进行的。每个 `AVObject` 都包含与 JSON 相兼容的键值对（key-value）数据。该数据不需要定义模式（schema），因此不用提前指定 `AVObject` 都有哪些键，只要直接设定键值对即可。
+LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，每个 `AVObject` 包含若干属性值对（key-value，也称「键值对」），属性的值是与 JSON 格式兼容的数据。你不需要预先指定每个 `AVObject` 包含哪些属性，每个属性的数据类型是什么，只要直接设定属性值对即可，你还可以随时增加新的属性。
 
-例如，记录游戏玩家的分数，直接创建一个独立的 `AVObject` 即可 ：
+假如我们要实现一个类似于微博的社交 app，主要有三类数据：账户、帖子、评论。以微博帖子为例，我们可以建立一个类名为 `Post` 的 `AVObject` 对象，包含下面几个属性：
 
-```objc
-score: 1337, playerName: "Steve", cheatMode: false
+```
+content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999
 ```
 
-键，必须是由字母、数字或下划线组成的字符串；自定义的键，不能以 `__`（双下划线）开头。值，可以是字符串、数字、布尔值，或是数组和字典。
+属性名（也称「键」，key），必须是由字母、数字或下划线组成的字符串；自定义的属性名，不能以 `__`（双下划线）开头。属性值，可以是字符串、数字、布尔值，或是数组和字典。
 
->**注意：以下为系统保留字段，不能作为键来使用。**
+>**注意：以下为系统保留字段，不能作为属性名来使用。**
 
 ```
 acl			description		objectId
@@ -86,35 +116,35 @@ code		isDataReady		updatedAt
 createdAt	keyValues		uuid
 ```
 
-每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，游戏分数这个对象可取名为 `GameScore`。
+每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，微博帖子这个对象可取名为 `Post`。
 
-我们建议将类和键分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
+我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
 ### 保存对象
 
-接下来，需要将上文中的 `GameScore` 存储到 LeanCloud 上。LeanCloud 的相关接口和 `NSMutableDictionary` 类似，但只有在调用 `save` 方法时，数据才会被真正保存下来。
+接下来，需要将上文中的 `Post` 存储到 LeanCloud 上。LeanCloud 的相关接口和 `NSMutableDictionary` 类似，但只有在调用 `save` 方法时，数据才会被真正保存下来。
 
 ```objc
-AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
-[gameScore setObject:[NSNumber numberWithInt:1337] forKey:@"score"];
-[gameScore setObject:@"Steve" forKey:@"playerName"];
-[gameScore setObject:[NSNumber numberWithBool:NO] forKey:@"cheatMode"];
-[gameScore save];
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+[post setObject:@"每个 Objective-C 程序员必备的 8 个开发工具" forKey:@"content"];
+[post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
+[post setObject:[NSNumber numberWithInt:1435541999] forKey:@"pubTimestamp"];
+[post save];
 ```
 
 运行此代码后，要想确认保存动作是否已经生效，可以到 LeanCloud 应用管理平台的 [数据管理](/data.html?appid={{appid}}) 页面来查看数据的存储情况。
 
-如果保存成功，`GameScore` 的数据列表应该显示出以下记录：
+如果保存成功，`Post` 的数据表中应该显示出以下记录：
 
 ```objc
-objectId: "51a90302e4b0d034f61623b5", score: 1337, playerName: "Steve", cheatMode: false,
-createdAt:"2013-06-01T04:07:30.32Z", updatedAt:"2013-06-01T04:07:30.32Z"
+objectId: "558e20cbe4b060308e3eb36c", content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999,
+createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 ```
 
 在此要特别说明两点：
 
-1. 运行此代码前，不用配置或设置 `GameScore` 类，LeanCloud 会自动创建这个类。
-2. 为更方便地使用 LeanCloud，以下字段不需要提前指定：
+1. 运行此代码前，不用配置或设置 `Post` 类，LeanCloud 会自动创建这个类。
+2. 对于每一个 AVObject，系统内置了一些属性，以下字段不需要提前指定：
   * `objectId` 是为每个对象自动生成的唯一的标识符
   * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
 
@@ -122,27 +152,27 @@ createdAt:"2013-06-01T04:07:30.32Z", updatedAt:"2013-06-01T04:07:30.32Z"
 
 ### 检索对象
 
-将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以得到对应的 `AVObject` ：
+将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以查询到对应的 `AVObject` 实例：
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-AVObject *gameScore = [query getObjectWithId:@"51a90302e4b0d034f61623b5"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+AVObject *post = [query getObjectWithId:@"558e20cbe4b060308e3eb36c"];
 ```
 
-用 `objectForKey` 获取属性值：
+接下来可以用 `objectForKey` 获取属性值：
 
 ```objc
-int score = [[gameScore objectForKey:@"score"] intValue];
-NSString *playerName = [gameScore objectForKey:@"playerName"];
-BOOL cheatMode = [[gameScore objectForKey:@"cheatMode"] boolValue];
+int timestamp = [[post objectForKey:@"pubTimestamp"] intValue];
+NSString *userName = [post objectForKey:@"pubUser"];
+NSString *content = [post objectForKey:@"content"];
 ```
 
 获取三个特殊属性：
 
 ```objc
-NSString *objectId = gameScore.objectId;
-NSDate *updatedAt = gameScore.updatedAt;
-NSDate *createdAt = gameScore.createdAt;
+NSString *objectId = post.objectId;
+NSDate *updatedAt = post.updatedAt;
+NSDate *createdAt = post.createdAt;
 ```
 
 如果需要刷新特定对象的最新数据，可调用 `refresh` 方法 ：
@@ -155,12 +185,12 @@ NSDate *createdAt = gameScore.createdAt;
 
 在 iOS 或 OS X 中，大部分代码是在主线程中运行的。不过，当应用在主线程中访问网络时，可能常会发生卡顿或崩溃现象。
 
-由于 `save` 和 `getObjectWithId` 这两个方法会访问网络，所以不应当在主线程上运行。这种情况一般处理起来比较麻烦，因此，LeanCloud 提供了辅助方法，能够覆盖绝大多数应用场景。
+由于 `save` 和 `getObjectWithId` 这两个方法会访问 LeanCloud 云端服务器，所以不应当在主线程上运行。这种情况一般处理起来比较麻烦，因此，LeanCloud 提供了辅助方法，能够覆盖绝大多数应用场景。
 
-例如，方法 `saveInBackground` 可在后台线程中保存之前的 `AVObject`：
+例如，方法 `saveInBackground` 可在后台线程中保存之前的 `AVObject` 实例：
 
 ```objc
-[gameScore saveInBackground];
+[post saveInBackground];
 ```
 
 这样，`saveInBackground` 的调用会立即返回，而主线程不会被阻塞，应用会保持在响应状态。
@@ -170,11 +200,11 @@ NSDate *createdAt = gameScore.createdAt;
 例如，在保存完成后运行一些代码：
 
 ```objc
-[gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
   if (!error) {
-    // gameScore 保存成功
+    // post 保存成功
   } else {
-    // 保存 gameScore 时出错
+    // 保存 post 时出错
   }
 }];
 ```
@@ -185,28 +215,28 @@ NSDate *createdAt = gameScore.createdAt;
 // 先创建一个回调
 - (void)saveCallback:(NSNumber *)result error:(NSError *)error {
   if (!error) {
-    // gameScore 保存成功
+    // post 保存成功
   } else {
-    // 保存 gameScore 时出错
+    // 保存 post 时出错
   }
 }
 
 // 然后在后续代码中执行其他操作
-[gameScore saveInBackgroundWithTarget:self
-                             selector:@selector(saveCallback:error:)];
+[post saveInBackgroundWithTarget:self
+                        selector:@selector(saveCallback:error:)];
 ```
 
 LeanCloud 在进行网络通讯时不会阻塞调用线程，Block 或回调会在主线程执行。也就是说，网络访问不会对 UI 产生不良影响，在回调中可对 UI 进行操作。
 
-`AVQuery` 也遵循相同的模式。如果需要从对象 `GameScore` 获取并保存得分，同时又确保主线程不会被阻塞，则可以：
+`AVQuery` 也遵循相同的模式。如果需要从对象 `Post` 获取并修改某一条微博帖子，同时又确保主线程不会被阻塞，则可以：
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query getObjectInBackgroundWithId:@"51a90302e4b0d034f61623b5"
-                             block:^(AVObject *gameScore, NSError *error) {
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c"
+                             block:^(AVObject *post, NSError *error) {
   if (!error) {
-    // get 请求成功完成，输出分数
-    NSLog(@"The score was: %d", [[gameScore objectForKey:@"score"] intValue]);
+    // get 请求成功完成，结果存在 post 实例中
+    NSLog(@"The content was: %@", [post objectForKey:@"content"]);
   } else {
     // 请求失败，输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -218,10 +248,10 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 
 ```objc
 // 先创建一个回调
-- (void)getCallback:(AVObject *)gameScore error:(NSError *)error {
+- (void)getCallback:(AVObject *)post error:(NSError *)error {
   if (!error) {
-    // get 请求成功完成，输出分数
-    NSLog(@"The score was: %d", [[gameScore objectForKey:@"score"] intValue]);
+    // get 请求成功完成，结果存在 post 实例中
+    NSLog(@"The content was: %@", [post objectForKey:@"content"]);
   } else {
     // 请求失败，输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -229,8 +259,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 }
 
 // 然后在后续代码中执行其他操作
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query getObjectInBackgroundWithId:@"51a90302e4b0d034f61623b5"
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c"
                             target:self
                           selector:@selector(getCallback:error:)];
 ```
@@ -239,22 +269,20 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 
 大多数保存功能可以立刻执行，并通知应用「保存完毕」。不过若不需要知道保存完成的时间，则可使用 `saveEventually` 来代替。
 
-它的优点在于：如果用户目前尚未接入网络，`saveEventually` 会保存设备中的数据，并在网络连接恢复后上传。如果应用在网络恢复之前就被关闭了，那么当它下一次打开时，LeanCloud 会再次尝试连接。
+它的优点在于：如果用户目前尚未接入网络，`saveEventually` 会缓存设备中的数据，并在网络连接恢复后上传。如果应用在网络恢复之前就被关闭了，那么当它下一次打开时，LeanCloud 会再次尝试保存操作。
 
 所有 `saveEventually`（或 `deleteEventually`）的相关调用，将按照调用的顺序依次执行。因此，多次对某一对象使用 `saveEventually` 是安全的。
 
 ```objc
 // 创建对象
-AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
-[gameScore setObject:[NSNumber numberWithInt:1337] forKey:@"score"];
-[gameScore setObject:@"Sean Plott" forKey:@"playerName"];
-[gameScore setObject:[NSNumber numberWithBool:NO] forKey:@"cheatMode"];
-[gameScore setObject:[NSArray arrayWithObjects:@"pwnage", @"flying", nil] forKey:@"skills"];
-[gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+[post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
+[post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
+[post setObject:[NSNumber numberWithInt:1435541999] forKey:@"pubTimestamp"];
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 
-    [gameScore setObject:[NSNumber numberWithBool:YES] forKey:@"cheatMode"];
-    [gameScore setObject:[NSNumber numberWithInt:1338] forKey:@"score"];
-    [gameScore saveEventually];
+    [post setObject:@"http://tp1.sinaimg.cn/3652761852/50/5730347813/0" forKey:@"pubUserAvatar"];
+    [post saveEventually];
 }];
 ```
 
@@ -264,43 +292,54 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 
 ```objc
 // 创建对象
-AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
-[gameScore setObject:[NSNumber numberWithInt:1337] forKey:@"score"];
-[gameScore setObject:@"Steve" forKey:@"playerName"];
-[gameScore setObject:[NSNumber numberWithBool:NO] forKey:@"cheatMode"];
-[gameScore setObject:[NSArray arrayWithObjects:@"pwnage", @"flying", nil] forKey:@"skills"];
-[gameScore saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+[post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
+[post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
+[post setObject:[NSNumber numberWithInt:1435541999] forKey:@"pubTimestamp"];
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 
-    // 增加些新数据，这次只更新 cheatMode 和 score
-    // playerName 不变，然后保存到云端
-    [gameScore setObject:[NSNumber numberWithBool:YES] forKey:@"cheatMode"];
-    [gameScore setObject:[NSNumber numberWithInt:1338] forKey:@"score"];
-    [gameScore saveInBackground];
+    // 增加些新数据，这次只更新头像和认证等级信息
+    [post setObject:@"http://tp1.sinaimg.cn/3652761852/50/5730347813/0" forKey:@"pubUserAvatar"];
+    [post setObject:[NSNumber numberWithInt:4] forKey:@"pubUserCertificate"];
+    [post saveInBackground];
 }];
 ```
 
-客户端会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud。未更新的数据不会产生变动，这一点请不用担心。
+SDK 内部会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud 云端。未更新的数据不会产生变动，这一点请不用担心。
 
 ### 计数器
 
-上面是一个常见的使用案例。在下面例子中，`score` 字段是一个计数器，我们需要不断更新玩家的最新得分。使用上述方法后，这个计数器运行良好，但如果有多个客户端试图更新同一个计数器，上面的方法就十分繁琐并且容易出现问题。
-
-为了优化计数器类的数据存储，LeanCloud 为所有的数字型字段都提供了「原子递增（或递减）」方法，故相同的更新可以改写为：
+许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
 ```objc
-[gameScore incrementKey:@"score"];
-[gameScore saveInBackground];
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+[post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
+[post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
+[post setObject:[NSNumber numberWithInt:1435541999] forKey:@"pubTimestamp"];
+[post setObject:[NSNumber numberWithInt:0] forKey:@"upvotes"]; //初始值为 0
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    // 增加点赞的人数
+    [post incrementKey:@"upvotes"];
+    [post saveInBackground];
+}];
 ```
 
-也可以使用 `incrementKey:byAmount:` 来累加字段的数值。
+也可以使用 `incrementKey:byAmount:` 来给字段累加一个特定数值。
 
 那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了
-`fetchWhenSave` 属性，当设置为 `true` 时，LeanCloud 会在保存操作发生时，自动返回当前计数器的最新数值。
+`fetchWhenSave` 属性，当设置为 `true` 时，SDK 会在保存操作发生时，自动返回当前计数器的最新数值。
 
+```objc
+post.fetchWhenSave = YES;
+[post incrementKey:@"upvotes"];
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    // 这时候 post.upvotes 的值会是最新的
+}];
+```
 
 ### 数组
 
-为了更好地存储数组数据，LeanCloud 提供了三种不同的操作来自动更新数组字段：
+为了更好地存储数组类型的数据，LeanCloud 提供了三种不同的操作来自动更新数组字段：
 
 * `addObject:forKey:` 和 `addObjectsFromArray:forKey:`
   将指定对象附加到数组末尾。
@@ -309,11 +348,11 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 * `removeObject:forKey:` 和 `removeObjectsInArray:forKey:`
   从数组字段中删除指定对象的所有实例。
 
-例如，将对象添加到 `skills` 字段：
+例如，给微博帖子添加 `tags` 字段：
 
 ```objc
-[gameScore addUniqueObjectsFromArray:[NSArray arrayWithObjects:@"flying", @"kungfu", nil] forKey:@"skills"];
-[gameScore saveInBackground];
+[post addUniqueObjectsFromArray:[NSArray arrayWithObjects:@"编程", @"开发工具", nil] forKey:@"tags"];
+[post saveInBackground];
 ```
 
 ###删除对象
@@ -324,68 +363,64 @@ AVObject *gameScore = [AVObject objectWithClassName:@"GameScore"];
 [myObject deleteInBackground];
 ```
 
-如果想通过回调来确认删除操作，可以使用方法 `deleteInBackgroundWithBlock:` 或 `deleteInBackgroundWithTarget:selector:`。如果想强制在当前线程执行，使用 `delete`。
+如果想通过回调来确认删除操作的结果，可以使用方法 `deleteInBackgroundWithBlock:` 或 `deleteInBackgroundWithTarget:selector:`。如果想强制在当前线程执行，使用 `delete`。
 
-`removeObjectForKey:` 方法会删除对象的单个属性。
+`removeObjectForKey:` 方法会删除 AVObject 实例的单个属性。
 
 ```objc
-// After this, playerName field will be empty
-[myObject removeObjectForKey:@"playerName"];
+// 删除 post 实例中 pubTimestamp 字段的值，因为我们可以直接使用 createdAt 这个属性
+[myObject removeObjectForKey:@"pubTimestamp"];
 
 // 字段删除后结果保存到云端
 [myObject saveInBackground];
 ```
 
+### 关联数据
 
+对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
 
-### 关系型数据
-
-对象可以与其他对象建立「关系」。为了模拟这种行为，任何 `AVObject` 均可作为另一个 `AVObject` 的属性，在其他 `AVObjects` 中使用。在内部，LeanCloud 框架会将引用到的对象储存到同一个地方，以保持一致性。
-
-「关系」最主要的特性在于它能很容易地进行动态扩展（相对于数组而言），同时又具备很好的查询能力。数组在查询上的功能比较有限，而且使用起来并不容易。数组和关系都可以用来存储「一对多」的映射。
-
-例如，在一个博客应用中，一条评论（comment）对应一篇文章（post）。下面的代码将创建一篇有一条评论的文章：
+注：LeanCloud 云端是通过 Pointer 类型来解决这种数据引用的，并不会将数据 a 在数据 b 的表中再额外存储一份，这也可以保证数据的一致性。
+例如：一条微博信息可能会对应多条评论。创建一条微博信息并对应一条评论信息，你可以这样写：
 
 ```objc
-// 创建文章、标题和内容
+// 创建微博、内容
 AVObject *myPost = [AVObject objectWithClassName:@"Post"];
-[myPost setObject:@"I'm Smith" forKey:@"title"];
-[myPost setObject:@"Where should we go for lunch?" forKey:@"content"];
+[myPost setObject:@"作为一个程序员，你认为回家以后要不要继续写代码？" forKey:@"content"];
 
 // 创建评论和内容
 AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
-[myComment setObject:@"Let's do Sushirrito." forKey:@"content"];
+[myComment setObject:@"我若是写代码，进入状态之后最好不要停。下不下班已经不重要了，那种感觉最重要。" forKey:@"content"];
 
-// 为文章和评论建立一对一关系
-[myComment setObject:myPost forKey:@"parent"];
+// 为微博和评论建立一对一关系
+[myComment setObject:myPost forKey:@"post"];
 
 // 同时保存 myPost、myComment
 [myComment saveInBackground];
 ```
 
-还可以只用 `objectID` 来关联对象：
+你也可以通过 objectId 来关联已有的对象：
 
 ```objc
-// 把评论跟 objectId 为 "51a902d3e4b0d034f6162367" 的文章关联起来
-[myComment setObject:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51a902d3e4b0d034f6162367"]
-              forKey:@"parent"];
+// 把评论跟 objectId 为 "5590cdfde4b00f7adb5860c8" 的微博关联起来
+[myComment setObject:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"]
+              forKey:@"post"];
 ```
 
-默认情况下，在获取一个对象时，与其相关联的 `AVObject` 不会被一同获取。因此，这些关联对象的属性只有在重新获取之后才能使用。例如：
+默认情况下，在获取一个对象时，与其相关联的 `AVObject` 数据不会被一同返回。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法:
 
 ```objc
-// 取回父级文章对象
-AVObject *post = [fetchedComment objectForKey:@"parent"];
+// 取回关联的微博实例
+AVObject *post = [fetchedComment objectForKey:@"post"];
 // 获取 post 的相关属性
 [post fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-  // 取回文章标题
-  NSString *title = [post objectForKey:@"title"];
+  // 取回微博帖子内容
+  NSString *content = [post objectForKey:@"content"];
 }];
 ```
 
-`AVRelation` 对象可以用来模拟「多对多」的关系，它的工作原理类似于 `AVObject` 中的 `NSArray`。二者的不同之处在于，你不需要即时下载关系中的所有对象。这意味着，使用 `AVRelation` 可以扩展出比 `AVObject` 中的 `NSArray` 更多的对象。
+还有另外一种复杂的情况，你可以使用 `AVRelation` 来建模「多对多」关系，它的工作原理类似于 `AVObject` 中的 `NSArray`。二者的不同之处在于，`AVRelation` 不用同步返回关联的所有 `AVObject` 实例数据。这意味着，使用 `AVRelation` 可以支持比 `NSArray` 更多的对象，它们的读取方式也更加灵活。
 
-例如，一个用户喜欢多篇文章，就可以用 `relationforKey:` 来保存这些文章。将一篇文章按顺序添加到列表，可这样做：
+例如，一个用户喜欢多篇微博，就可以用 `relationforKey:` 来保存这些微博。将一篇微博按顺序添加到列表，可这样做：
 
 ```objc
 AVUser *user = [AVUser currentUser];
@@ -394,20 +429,20 @@ AVRelation *relation = [user relationforKey:@"likes"];
 [user saveInBackground];
 ```
 
-从 `AVRelation` 中移除一篇喜欢的文章：
+从 `AVRelation` 中移除一篇喜欢的微博：
 
 ```objc
 [relation removeObject:post];
 ```
 
-默认情况下，这个关系中的对象列表不会被下载，需要从 `query` 查询返回的 `AVQuery` 中调用 `findObjectsInBackgroundWithBlock:` 方法来获得文章列表，如：
+默认情况下，这个关系中的对象列表不会被同步返回，需要从 `query` 查询返回的 `AVQuery` 中调用 `findObjectsInBackgroundWithBlock:` 方法来获得关联对象列表（这里是微博，Post），如：
 
 ```objc
 [[relation query] findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (error) {
      // 呃，报错了
   } else {
-    // objects 包含了当前用户喜欢的所有文章
+    // objects 包含了当前用户喜欢的所有微博
   }
 }];
 ```
@@ -417,23 +452,25 @@ AVRelation *relation = [user relationforKey:@"likes"];
 ```objc
 AVQuery *query = [relation query];
 // 增加其他查询限制条件
+query.skip = 10;
+query.limit = 10;
 ```
 
-如果想反向查询，比如，一篇文章被哪些用户喜欢过，可使用 `reverseQuery:`，例如：
+如果想反向查询，比如，一篇微博被哪些用户喜欢过，可使用 `reverseQuery:` 来进行反向查询（同样，这也是直接使用 NSArray 作为属性值无法完成的），例如：
 
 ```objc
 AVUser *user = [AVUser currentUser];
-AVRelation *relation = [user relationforKey:@"myLikes"];
-AVObject *post = [AVObject objectWithClassName:@"post"];
-[post setObject:@"article content" forKey:@"content"];
+AVRelation *relation = [user relationforKey:@"likes"];
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+[post setObject:@"作为一个程序员，你认为回家以后要不要继续写代码？" forKey:@"content"];
 [post save];
 [relation addObject:post];
 [user save];
 
 
-AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"myLikes" childObject:post];
-[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-   // 得到用户列表
+AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"likes" childObject:post];
+[query findObjectsInBackgroundWithBlock:^(NSArray *users, NSError *error) {
+   // users 就是查询出来的喜欢 myPost 的所有 User 列表
 }];
 
 ```
@@ -449,48 +486,48 @@ AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"myLikes" 
 此外，`NSDictionary` 和 `NSArray` 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。例如：
 
 ```objc
-NSNumber *number = [NSNumber numberWithInt:42];
-NSString *string = [NSString stringWithFormat:@"the number is %i", number];
+NSNumber *number = [NSNumber numberWithInt:2014];
+NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
 NSDate *date = [NSDate date];
-NSData *data = [@"foo" dataUsingEncoding:NSUTF8StringEncoding];
+NSData *data = [@"fooBar" dataUsingEncoding:NSUTF8StringEncoding];
 NSArray *array = [NSArray arrayWithObjects:string, number, nil];
 NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",
                                                                       string, @"string",
                                                                       nil];
 
-AVObject *bigObject = [AVObject objectWithClassName:@"BigObject"];
-[bigObject setObject:number     forKey:@"myNumber"];
-[bigObject setObject:string     forKey:@"myString"];
-[bigObject setObject:date       forKey:@"myDate"];
-[bigObject setObject:data       forKey:@"myData"];
-[bigObject setObject:array      forKey:@"myArray"];
-[bigObject setObject:dictionary forKey:@"myDictionary"];
-[bigObject saveInBackground];
+AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
+[testObject setObject:number     forKey:@"testInteger"];
+[testObject setObject:string     forKey:@"testString"];
+[testObject setObject:date       forKey:@"testDate"];
+[testObject setObject:data       forKey:@"testData"];
+[testObject setObject:array      forKey:@"testArray"];
+[testObject setObject:dictionary forKey:@"testDictionary"];
+[testObject saveInBackground];
 ```
 
-我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。每个 `AVObject` 的大小都不应超过 128 KB。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
+我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
 
-若想了解更多有关 LeanCloud 如何解析处理数据的信息，请查看专题文档《[数据与安全](../data_security.html)》。
+若想了解更多有关 LeanCloud 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
 
 ## 查询
 
-我们已经看到，`AVQuery` 的 `getObjectWithId:` 方法可以从 LeanCloud 中检索出单个 `AVObject`。此外，`AVQuery` 还提供更多的检索方法，来实现诸如一次检索许多对象、设定检索对象的条件、自动缓存查询结果等操作，免去了开发者需自行撰写代码的麻烦。
+我们已经看到，`AVQuery` 的 `getObjectWithId:` 方法可以从 LeanCloud 中检索出单个 `AVObject` 实例。此外，`AVQuery` 还提供更多的检索方法，来实现诸如一次检索许多对象、设定检索对象的条件、自动缓存查询结果等操作，免去了开发者需自行撰写代码的麻烦。
 
 ### 基本查询
 
-在许多情况下，`getObjectInBackgroundWithId:block:` 并不足以找到目标对象。除了检索单一对象，`AVQuery` 还允许以不同的检索方式来获取包含多个对象的列表。
+在许多情况下，`getObjectInBackgroundWithId:block:` 只能查找单个实例，并不能满足需求。除了检索单一对象，`AVQuery` 还允许以不同的检索方式来获取包含多个实例的列表。
 
-一般的方式是创建一个 `AVQuery` 并设定相应的条件，然后用 `findObjectsInBackgroundWithBlock:` 检索得到一个与 `AVObject` 匹配的 `NSArray`。
+一般的方式是创建一个 `AVQuery` 并设定相应的条件，然后用 `findObjectsInBackgroundWithBlock:` 检索得到一个 `AVObject` 组成的 `NSArray`。
 
-例如，要检索指定 `playerName` 的分数，可以使用 `whereKey:equalTo:` 方法来限定一个键和对应的值。
+例如，要查找指定 `pubUser` 发布的所有微博，可以使用 `whereKey:equalTo:` 方法来限定一个键和对应的值。
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playerName" equalTo:@"Smith"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (!error) {
     // 检索成功
-    NSLog(@"Successfully retrieved %d scores.", objects.count);
+    NSLog(@"Successfully retrieved %d posts.", objects.count);
   } else {
     // 输出错误信息
     NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -504,9 +541,9 @@ AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
 
 ```objc
 // 以下代码仅可用于测试目的，或在后台线程之中运行
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playerName" equalTo:@"Smith"];
-NSArray *scoreArray = [query findObjects];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
+NSArray *postArray = [query findObjects];
 ```
 
 ### 查询约束
@@ -516,14 +553,14 @@ NSArray *scoreArray = [query findObjects];
 用 `whereKey:notEqualTo:` 搭配对应的键和值来过滤对象：
 
 ```objc
-[query whereKey:@"playerName" notEqualTo:@"Smith"];
+[query whereKey:@"pubUser" notEqualTo:@"LeanCloud官方客服"];
 ```
 
 一次查询可以设置多个约束条件，只有满足所有条件的对象才被返回，这相当于使用 AND 类型的查询条件。
 
 ```objc
-[query whereKey:@"playerName" notEqualTo:@"Smith"];
-[query whereKey:@"playerAge" greaterThan:[NSNumber numberWithInt:18]];
+[query whereKey:@"pubUser" notEqualTo:@"LeanCloud官方客服"];
+[query whereKey:@"pubUserCertificate" greaterThan:[NSNumber numberWithInt:3]];
 ```
 
 用 `limit` 属性来控制返回结果的数量，默认值 100，允许取值范围从 1 到 1000。
@@ -535,8 +572,8 @@ query.limit = 10; // 最多返回 10 条结果
 如果只需获取一个结果，直接使用 `getFirstObject` 或 `getFirstObjectInBackground`。
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playerEmail" equalTo:@"dstemkoski@example.com"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
 [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   if (!object) {
     NSLog(@"getFirstObject 请求失败。");
@@ -555,102 +592,107 @@ query.skip = 10; // 跳过前 10 条结果
 对于适用的数据类型，如数字、字符串，可对返回结果进行排序：
 
 ```objc
-// 升序排列分数
-[query orderByAscending:@"score"];
+// 按发帖时间升序排列
+[query orderByAscending:@"createdAt"];
 
-// 降序
-[query orderByDescending:@"score"];
+// 按发帖时间降序排列
+[query orderByDescending:@"createdAt"];
 ```
 一个查询可以使用多个排序键：
 
 ```objc
-// 若上一个排序键相等，分数按升序排列
-[query addAscendingOrder:@"score"];
+// 若上一个排序键相等，按发帖者认证等级升序排列
+[query addAscendingOrder:@"pubUserCertificate"];
 
-// 如果上一个排序键相等，降序排列分数
-[query addDescendingOrder:@"score"];
+// 如果上一个排序键相等，按发帖者认证等级降序排列
+[query addDescendingOrder:@"pubUserCertificate"];
 ```
 对于适用的数据类型，检索中可以使用「比较」方法：
 
 ```objc
-// wins < 50
-[query whereKey:@"wins" lessThan:[NSNumber numberWithInt:50]];
+// 点赞数 < 50
+[query whereKey:@"upvotes" lessThan:[NSNumber numberWithInt:50]];
 
-// wins <= 50
-[query whereKey:@"wins" lessThanOrEqualTo:[NSNumber numberWithInt:50]];
+// 点赞数 <= 50
+[query whereKey:@"upvotes" lessThanOrEqualTo:[NSNumber numberWithInt:50]];
 
-// wins > 50
-[query whereKey:@"wins" greaterThan:[NSNumber numberWithInt:50]];
+// 点赞数 > 50
+[query whereKey:@"upvotes" greaterThan:[NSNumber numberWithInt:50]];
 
-// wins >= 50
-[query whereKey:@"wins" greaterThanOrEqualTo:[NSNumber numberWithInt:50]];
+// 点赞数 >= 50
+[query whereKey:@"upvotes" greaterThanOrEqualTo:[NSNumber numberWithInt:50]];
 ```
 
 `whereKey:containedIn:` 可查询包含不同值的对象。它接受数组，可实现用单一查询来代替多个查询。
 
 ```objc
-// 找出 Jonathan、Dario 或 Shawn的分数
-NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
-                                           @"Dario Wunsch",
-                                           @"Shawn Simon",
+// 找出 “LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提” 三个账号的微博帖子
+NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
+                                           @"LeanCloud江宏",
+                                           @"滚滚艾买提",
                                            nil];
-[query whereKey:@"playerName" containedIn:names];
+[query whereKey:@"pubUser" containedIn:names];
 ```
 
 相反，要让查询不包含某些值的对象，则用 `whereKey:notContainedIn:` ：
 
 ```objc
-// 找出除 Jonathan、Dario 和 Shawn 以外其他人的分数
-NSArray *names = [NSArray arrayWithObjects:@"Jonathan Walsh",
-                                           @"Dario Wunsch",
-                                           @"Shawn Simon",
+// 找出除 “LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提” 三个账号以外的其他人的微博帖子
+NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
+                                           @"LeanCloud江宏",
+                                           @"滚滚艾买提",
                                            nil];
-[query whereKey:@"playerName" notContainedIn:names];
+[query whereKey:@"pubUser" notContainedIn:names];
 ```
 
 `whereKeyExists` 用来查询具备某一键集条件的对象，`whereKeyDoesNotExist` 正好相反。
 
 ```objc
-// 找到有分数的对象
-[query whereKeyExists:@"score"];
+// 找到有图片的微博
+[query whereKeyExists:@"images"];
 
-// 没有分数的对象
-[query whereKeyDoesNotExist:@"score"];
+// 没有图片的微博
+[query whereKeyDoesNotExist:@"images"];
 ```
 
 如果要用一个对象中某一键值，去匹配另一个查询结果对象中一个键值，来得到最终结果，可以使用 `whereKey:matchesKey:inQuery:` 。
 
-例如，一个类有球队的信息（所在地），另一个类有用户的信息（家乡），要找出自己家乡球队总赢球的那些用户，则：
+例如，在微博这类应用中有三类数据：一个类是微博帖子信息（Post），另一个类是用户账户信息（AVUser），还有一个类是用户之间互相关注的信息（UserFollow），要找出当前用户关注的人发布的微博，则：
 
 ```objc
-AVQuery *teamQuery = [AVQuery queryWithClassName:@"Team"];
-// 获胜比率高于 50%
-[teamQuery whereKey:@"winPct" greaterThan:[NSNumber withDouble:0.5]];
-AVQuery *userQuery = [AVQuery queryForUser];
-// 球队所有地 = 自己家乡
-[userQuery whereKey:@"hometown" matchesKey:@"city" inQuery:teamQuery];
-[userQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-    // 得到家乡球队总赢球的所有用户
+// 先找到当前登录用户关注的用户列表
+AVQuery *followeeQuery = [AVQuery queryWithClassName:@"UserFollow"];
+[followeeQuery whereKey:@"follower" equalTo:[AVUser currentUser]];
+
+// 找到这些被关注者发布的微博
+AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
+[postQuery whereKey:@"author" matchesKey:@"followee" inQuery:followeeQuery];
+[postQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+    // 得到当前用户关注的人发布的微博
 }];
 ```
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `whereKey:doesNotMatchKey:inQuery:` 。例如，找出家乡球队表现不佳的那些用户记录：
+
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `whereKey:doesNotMatchKey:inQuery:` 。
+例如，找出当前用户没有关注的人发布的微博：
 
 ```objc
-AVQuery *losingUserQuery = [AVQuery queryForUser];
-[losingUserQuery whereKey:@"hometown" doesNotMatchKey:@"city" inQuery:teamQuery];
-[losingUserQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-    // 得到家乡球队表现不佳的所有用户
+AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
+[postQuery whereKey:@"author" doesnotMatchesKey:@"followee" inQuery:followeeQuery];
+[postQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+    // 得到当前用户未关注的人发布的微博
 }];
 ```
+
 将 `selectKeys:` 搭配 `NSArray` 类型的键值来使用可以限定查询返回的字段。
 
-例如，让查询结果只包含 `playerName` 和 `score` 字段（也可以是内置字段，如 `objectId`、 `createdAt` 或 `updatedAt`）：
+例如，让查询结果只包含 `pubUser` 和 `content` 字段（也可以是内置字段，如 `objectId`、 `createdAt` 或 `updatedAt`）：
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query selectKeys:@[@"playerName", @"score"]];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query selectKeys:@[@"pubUser", @"content"]];
 NSArray *results = [query findObjects];
 ```
+
 其余字段可以稍后对返回的对象调用 `fetchIfNeeded` 的变体来获取：
 
 ```objc
@@ -659,6 +701,7 @@ AVObject *object = (AVObject *)[results objectAtIndex:0];
   // 返回该对象的所有字段
 }];
 ```
+
 ### 查询数组值
 
 当键值为数组类型时，`equalTo:` 可以从数组中找出包含单个值的对象：
@@ -680,15 +723,15 @@ AVObject *object = (AVObject *)[results objectAtIndex:0];
 使用 `whereKey:hasPrefix:` 可以过滤出以特定字符串开头的结果，这有点像 MySQL 的 `LIKE` 条件。因为支持索引，所以该操作对于大数据集也很高效。
 
 ```objc
-// 找出名字以 "Big Daddy's" 开头的烤肉调料
-AVQuery *query = [AVQuery queryWithClassName:@"BarbecueSauce"];
-[query whereKey:@"name" hasPrefix:@"Big Daddy's"];
+// 找出名字以 "LeanCloud" 开头的账户的微博帖子
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"pubUser" hasPrefix:@"LeanCloud"];
 ```
 
 ### 关系查询
 检索关系数据有几种方法。如果用某个属性去匹配一个已知的 `AVObject` 对象，仍然可以使用 `whereKey:equalTo:`，就像使用其他数据类型一样。
 
-例如，如果每条评论 `Comment` 的 `post` 字段都有一个 `Post` 文章对象，那么找出指定文章下的评论：
+例如，如果每条评论 `Comment` 的 `post` 字段都有一个 `Post` 微博对象，那么找出指定微博下的评论：
 
 ```objc
 // 假设前面已建好了 myPost 这个 AVObject 对象
@@ -700,17 +743,16 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 }];
 ```
 
-或通过 `ObjectId` 做关系查询：
+或通过 `objectId` 做关系查询：
 
 ```objc
 [query whereKey:@"post"
         equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"51c912bee4b012f89e344ae9"];
 ```
+
 如果要做嵌套查询，请使用 `whereKey:matchesQuery`。
 
-注意：结果返回数量（默认 100 最多 1000）的限制也适用于内嵌查询，所以在处理大型数据集时，你可能需要仔细设置查询条件来获得想要的结果。
-
-例如，找出所有带图片的文章的评论：
+例如，找出所有带图片的微博的评论：
 
 ```objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
@@ -718,7 +760,7 @@ AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 [query whereKey:@"post" matchesQuery:innerQuery];
 [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-    // comments now contains the comments for posts with images
+    // 所有带图片的微博的评论都在 comments
 }];
 ```
 
@@ -733,6 +775,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
     // comments 包含了所有没有图片的文章的评论
 }];
 ```
+
+注意：结果返回数量（默认 100 最多 1000）的限制也适用于内嵌查询，所以在处理大型数据集时，你可能需要仔细设置查询条件来获得想要的结果。
 
 在一些场景中，如果需要在一个查询中返回多个类型的关联属性，可以使用方法 `includeKey:`。例如，搜索最近的十条评论，并同时找出与之对应的文章：
 
@@ -758,18 +802,19 @@ query.limit = [NSNumber numberWithInt:10];
 }];
 ```
 
-**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的文章，以及该文章的作者：
+**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
 
 ```objc
 [query includeKey:@"post.author"];
 ```
+
 `includeKey:` 既可在一次查询中多次使用来返回多个属性，也可与 `AVQuery` 的 `getFirstObject` 和 `getObjectInBackground` 等辅助方法配合使用。
 
 还有一种情况，当某些对象包括多个键，而某些键的值包含的数据量又比较大，你并不希望返回所有的数据，只想要特定键所对应的数据，这时可以用 `selectKeys:`：
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"someClass"];
-[query selectKeys:@[@"key"]];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query selectKeys:@[@"pubUser"]];
 AVObject *result = [query getFirstObject];
 ```
 
@@ -781,7 +826,7 @@ AVObject *result = [query getFirstObject];
 默认的查询行为不使用缓存，需要通过 `query.cachePolicy` 来启用。例如，当网络不可用时，尝试网络连接并同时取回已缓存的数据:
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 query.cachePolicy = kPFCachePolicyNetworkElseCache;
 
 //设置缓存有效期
@@ -838,15 +883,15 @@ LeanCloud 提供了几种不同的缓存策略：
 
 如果只需要得到查询出来的对象数量，不需要检索匹配的对象，可以用 `countObjects` 来代替 `findObjects`。
 
-例如，计算一下某位球员参加了多少场比赛：
+例如，计算一下某位用户一共发布了多少条微博：
 
 ```objc
-AVQuery *query = [AVQuery queryWithClassName:@"GameScore"];
-[query whereKey:@"playername" equalTo:@"Sean Plott"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"pubUser" equalTo:@"张三"];
 [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
   if (!error) {
     // 查询成功，输出计数
-    NSLog(@"Sean 参加了 %d 场比赛", count);
+    NSLog(@"张三 发布了 %d 条微博", count);
   } else {
     // 查询失败
   }
@@ -890,11 +935,12 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
     result = [AVQuery doCloudQueryWithCQL:cql];
     NSLog(@"count:%lu", (unsigned long)result.count);
 ```
+
 通常，查询语句会使用变量参数。为此，我们提供了与 Java JDBC 所使用的 `PreparedStatement` 占位符查询相类似的语法结构。
 
 ```objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@ where durability = ? and name = ?", @"ATestClass"];
-    NSArray *pvalues =  @[@100,@"祈福"];
+    NSArray *pvalues =  @[@100, @"祈福"];
     [AVQuery doCloudQueryInBackgroundWithCQL:cql pvalues:pvalues callback:^(AVCloudQueryResult *result, NSError *error) {
         if (!error) {
             // 操作成功
@@ -903,6 +949,7 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
         }
     }];
 ```
+
 可变参数 `100` 和 `"祈福"` 会被自动替换到查询语句中的问号位置（按问号出现的先后顺序）。我们更推荐使用占位符语法，理论上这样会降低 CQL 转换的性能开销。
 
 关于 CQL 的详细介绍，请参考 [Cloud Query Language 详细指南](cql_guide.html)。
@@ -1154,10 +1201,10 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
     [salary setObject:@(2000000) forKey:@"value"];
 
     //这里为了方便说明, 直接声明了变量, 但没有实现
-    AVUser *boss;//假设此处为老板
+    AVUser *boss;    //假设此处为老板
     AVUser *hrWang;  //人事小王
-    AVUser *me; //我们就在文档里爽一爽吧
-    AVUser *cashierZhou; //出纳老周
+    AVUser *me;      //我们就在文档里爽一爽吧
+    AVUser *cashierZhou;  //出纳老周
 
 
     AVACL *acl = [AVACL ACL];
@@ -1187,11 +1234,11 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
     [salary setObject:@(2000000) forKey:@"value"];
 
     //这里为了方便说明, 直接声明了变量, 但没有实现
-    AVUser *boss;//假设此处为老板
+    AVUser *boss;    //假设此处为老板
     AVUser *hrWang;  //人事小王
-    AVUser *me; //我们就在文档里爽一爽吧
+    AVUser *me;      //我们就在文档里爽一爽吧
     AVUser *cashierZhou; //出纳老周
-    AVUser *cashierGe;//出纳小葛
+    AVUser *cashierGe;   //出纳小葛
 
     //这段代码可能放在员工管理界面更恰当，但是为了示意，我们就放在这里
     AVRole *hr =[AVRole roleWithName:@"hr"];
@@ -1230,15 +1277,15 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 ```objc
     AVRole *androidTeam = [AVRole roleWithName:@"AndroidTeam"];
     AVRole *iOSTeam = [AVRole roleWithName:@"IOSTeam"];
-    AVRole *mobileDep = [AVRole roleWithName:@"MobileDep"];
+    AVRole *mobileDev = [AVRole roleWithName:@"MobileDev"];
 
     [androidTeam save];
     [iOSTeam save];
 
-    [[mobileDep roles] addObject:androidTeam];
-    [[mobileDep roles] addObject:iOSTeam];
+    [[mobileDev roles] addObject:androidTeam];
+    [[mobileDev roles] addObject:iOSTeam];
 
-    [mobileDep save];
+    [mobileDev save];
 
     AVObject *androidCode = [AVObject objectWithClassName:@"Code"];
     AVObject *iOSCode = [AVObject objectWithClassName:@"Code"];
@@ -1256,7 +1303,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
     [iOSCode setACL:acl2];
 
     AVACL *acl3=[AVACL ACL];
-    [acl3 setReadAccess:YES forRole:mobileDep];
+    [acl3 setReadAccess:YES forRole:mobileDev];
     [coreCode setACL:acl3];
 
     [androidCode save];
@@ -1292,17 +1339,17 @@ AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 最终当文件存储完成后，你可以象操作其他数据那样，将 `AVFile` 关联到 `AVObject` 上。
 
 ```objc
-AVObject *jobApplication = [AVObject objectWithClassName:@"JobApplication"]
-[jobApplication setObject:@"Joe Smith" forKey:@"applicantName"];
-[jobApplication setObject:file         forKey:@"applicantResumeFile"];
-[jobApplication saveInBackground];
+AVObject *obj = [AVObject objectWithClassName:@"Post"]
+[obj setObject:@"Joe Smit#花儿与少年# 迪拜疯狂之旅" forKey:@"content"];
+[obj setObject:file         forKey:@"attached"];
+[obj saveInBackground];
 ```
 
 重新获取该数据时，只需要调用 `AVFile` 的 `getData` 方法。
 
 ```objc
-AVFile *applicantResume = [anotherApplication objectForKey:@"applicantResumeFile"];
-NSData *resumeData = [applicantResume getData];
+AVFile *attachment = [anotherObj objectForKey:@"attached"];
+NSData *binaryData = [attachment getData];
 ```
 
 也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
@@ -1320,10 +1367,10 @@ NSData *imageData = UIImagePNGRepresentation(image);
 AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
 [imageFile save];
 
-AVObject *userPhoto = [AVObject objectWithClassName:@"UserPhoto"];
-[userPhoto setObject:@"My trip to Hawaii!" forKey:@"imageName"];
-[userPhoto setObject:imageFile             forKey:@"imageFile"];
-[userPhoto save];
+AVObject *userPost = [AVObject objectWithClassName:@"Post"];
+[userPost setObject:@"My trip to Dubai!" forKey:@"content"];
+[userPost setObject:imageFile            forKey:@"attached"];
+[userPost save];
 ```
 
 ### 进度提示
@@ -1331,7 +1378,7 @@ AVObject *userPhoto = [AVObject objectWithClassName:@"UserPhoto"];
 使用 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:` 可以获取 `AVFile` 的上传或下载进度。比如：
 
 ```objc
-NSData *data = [@"Working at AVOS is great!" dataUsingEncoding:NSUTF8StringEncoding];
+NSData *data = [@"Working at LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
 AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
   // 成功或失败处理...
@@ -1408,10 +1455,10 @@ NSError *error = nil;
 
 ```objc
 AVUser *user = [AVUser user];
-user.username = @"steve";
+user.username = @"hjiang";
 user.password =  @"f32@ds*@&dsa";
-user.email = @"steve@company.com";
-[user setObject:@"213-253-0000" forKey:@"phone"];
+user.email = @"hang@leancloud.rocks";
+[user setObject:@"186-1234-0000" forKey:@"phone"];
 
 [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
@@ -1516,10 +1563,10 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ```objc
 	AVUser *user = [AVUser user];
-	user.username = @"steve";
+	user.username = @"hjiang";
 	user.password =  @"f32@ds*@&dsa";
-	user.email = @"steve@company.com";
-	user.mobilePhoneNumber = @"13613613613";
+	user.email = @"hang@leancloud.rocks";
+	user.mobilePhoneNumber = @"18612340000";
 	NSError *error = nil;
 	[user signUp:&error];
 ```
@@ -1544,7 +1591,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 用「手机号码＋密码」来登录的方法：
 
 ```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13613613613" password:@"yourpassword" block:^(AVUser *user, NSError *error) {
+    [AVUser logInWithMobilePhoneNumberInBackground:@"18612340000" password:@"yourpassword" block:^(AVUser *user, NSError *error) {
 
     }];
 ```
@@ -1560,7 +1607,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 最后使用「短信验证码＋手机号码」进行登录：
 
 ```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13613613613" smsCode:smsCode block:^(AVUser *user, NSError *error) {
+    [AVUser logInWithMobilePhoneNumberInBackground:@"18612340000" smsCode:smsCode block:^(AVUser *user, NSError *error) {
 
     }];
 ```
@@ -1570,7 +1617,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 与使用「电子邮件地址重置密码」类似，「手机号码重置密码」使用下面的方法来获取短信验证码：
 
 ```objc
-[AVUser requestPasswordResetWithPhoneNumber:@"18812345678" block:^(BOOL succeeded, NSError *error) {
+[AVUser requestPasswordResetWithPhoneNumber:@"18612340000" block:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
 
     } else {
@@ -1629,16 +1676,16 @@ AVQuery *query = [AVUser query];
 LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。只要将 `AVGeoPoint` 添加到 `AVObject` 中，那么在查询时，即可轻松实现如找出离当前用户最近的信息或地点的功能。
 
 ### 地理位置对象
-首先要创建一个 `AVGeoPoint` 对象。例如，创建一个北纬 `40.0` 度、东经 `-30.0` 度的 `AVGeoPoint` 对象：
+首先要创建一个 `AVGeoPoint` 对象。例如，创建一个北纬 39.9 度、东经 116.4 度的 `AVGeoPoint` 对象（LeanCloud 北京办公室所在地）：
 
 ```objc
-AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:40.0 longitude:-30.0];
+AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 
 添加地理位置信息：
 
 ```objc
-[placeObject setObject:point forKey:@"location"];
+[postObject setObject:point forKey:@"location"];
 ```
 
 ### 地理查询
@@ -1648,25 +1695,25 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:40.0 longitude:-30.0];
 ```objc
 AVObject *userObject = nil;
 AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"];
-AVQuery *query = [AVQuery queryWithClassName:@"PlaceObject"];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"locaton" nearGeoPoint:userLocation];
-//获取最接近用户地点的10条数据
+//获取最接近用户地点的10条微博
 query.limit = 10;
-NSArray<AVObject *> nearPlaces = [query findObjects];
+NSArray<AVObject *> nearPosts = [query findObjects];
 ```
 
-在上面的代码中，`nearPlaces` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。
+在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。
 
 要查找指定距离范围内的数据，可使用 `whereWithinKilometers` 、 `whereWithinMiles` 或 `whereWithinRadians` 方法。
 
 要查找位于矩形范围内的信息，可使用 `whereWithinGeoBox` 来实现：
 
 ```objc
-AVGeoPoint *northeastOfSF = [AVGeoPoint geoPointWithLatitude:37.9 longitude:40.1];
-AVGeoPoint *southwestOfSF = [AVGeoPoint geoPointWithLatitude:37.8 longitude:40.04];
-AVQuery *query = [AVQuery queryWithClassName:@"PizzaPlaceObject"];
-[query whereKey:@"location" withinGeoBoxFromSouthwest:southwestOfSF toNortheast:northeastOfSF];
-NSArray<AVObject *> *pizzaPlacesInSF = [query findObjects];
+AVGeoPoint *point1 = [AVGeoPoint geoPointWithLatitude:39.99 longitude:116.33];
+AVGeoPoint *point2 = [AVGeoPoint geoPointWithLatitude:39.97 longitude:116.37];
+AVQuery *query = [AVQuery queryWithClassName:@"Post"];
+[query whereKey:@"location" withinGeoBoxFromSouthwest:point1 toNortheast:point2];
+NSArray<AVObject *> *posts = [query findObjects];
 ```
 
 ###注意事项
