@@ -35,7 +35,7 @@
     <span class="close" ng-click="closeCommentModal()">&times;</span>
   </div>
   <div class="comment-body">
-    <div class="comment-list">
+    <div class="comment-list"  ng-class="{'no-login': !currentCommentUser.username}">
       <ul>
         <li ng-repeat="comment in currentComments">
           <div class="comment-author">{{comment.author}}</div>
@@ -54,8 +54,8 @@
       </button>
     </div>
   </div>
-  <div ng-show="!currentCommentUser.username">
-    需<a class="comment-login" ng-click="loginComment()">登录 </a>后评论
+  <div class="comment-compose no-login" ng-show="!currentCommentUser.username">
+    您需要 <a class="comment-login" ng-click="loginComment()">登录</a> 后才能评论
   </div>
 </div>
 

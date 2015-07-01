@@ -892,6 +892,10 @@ blockquote{
     .comment-list {
       padding-bottom: @compose-size;
 
+      &.no-login {
+        padding-bottom: 50px;
+      }
+
       ul {
         .list-unstyled;
         margin: 0;
@@ -924,10 +928,13 @@ blockquote{
     bottom: 0;
     left: 0;
     right: 0;
-    height: @compose-size;
     padding: 15px;
     box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.1);
     background: #fff;
+
+    &.no-login {
+      // height: auto;
+    }
 
     .form-meta {
       line-height: 30px;
@@ -942,7 +949,8 @@ blockquote{
     }
 
     textarea {
-      resize: none;
+      max-height: 200px;
+      resize: vertical;
     }
   }
 
