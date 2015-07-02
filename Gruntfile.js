@@ -252,6 +252,7 @@ module.exports = function(grunt) {
       // console.log('comment task',this.files,this.filesSrc);
       var cheerio = require('cheerio');
       var crypto = require('crypto');
+      var Promise = require('q');
       var AV = require('avoscloud-sdk').AV;
       AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
       var Doc = AV.Object.extend('Doc');
