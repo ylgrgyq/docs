@@ -252,14 +252,14 @@ module.exports = function(grunt) {
       // console.log('comment task',this.files,this.filesSrc);
       var cheerio = require('cheerio');
       var crypto = require('crypto');
-      var Promise = require('q');
+      var Q = require('q');
       var AV = require('avoscloud-sdk').AV;
       AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
       var Doc = AV.Object.extend('Doc');
       var commentDoms = ['p'];
       var done = this.async();
 
-      var sequence = Promise.resolve();
+      var sequence = Q.resolve();
 
       var  allPromise = [];
 
@@ -292,7 +292,7 @@ module.exports = function(grunt) {
             //文件名，以及段落 snippet 信息更新
             doc.set('file', file.split('/').pop());
 
-            return new Promise(function(resolve1,reject1){
+            return new Q.Promise(function(resolve1,reject1){
               doc.save().then(function(){
                 resolve1();
               },function(){
@@ -300,7 +300,7 @@ module.exports = function(grunt) {
               })
             });
           },function(){
-            return Promise.resolve();
+            return Q.resolve();
           }).then(function() {
             // 在文档中添加 version 标记
             commentDoms.forEach(function(dom) {
@@ -320,12 +320,12 @@ module.exports = function(grunt) {
 
       this.filesSrc.forEach(function(filepath) {
 
-        allPromise.push(new Promise(function(resolve,reject){
+        allPromise.push(new Q.Promise(function(resolve,reject){
           initDocVersion(filepath,resolve,reject)
         }));
       });
       //保证所有文档都处理完再进行任务完成回调
-      Promise.all(allPromise).then(function(){
+      Q.all(allPromise).then(function(){
         console.log('version build allcompleted');
         done();
       },function(){
