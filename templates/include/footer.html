@@ -43,6 +43,7 @@
           <div class="comment-content">{{comment.content}}</div>
         </li>
       </ul>
+      <ul ng-show="currentComments.length<1"><li>暂无评论</li></ul>
     </div>
   </div>
   <div class="comment-compose" ng-show="currentCommentUser.username">
