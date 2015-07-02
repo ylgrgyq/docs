@@ -271,13 +271,13 @@ module.exports = function(grunt) {
 
           var docVersion = crypto.createHash('md5').update($('#content').text()).digest('hex');
           $('html').first().attr('version', docVersion);
+
+          //以 docversion 为唯一标识，当文档内容发生变化，docversion 相应变化，
           var query = new AV.Query(Doc);
           query.equalTo('version', docVersion);
-
           query.first().then(function(doc) {
             if (!doc) {
               doc = new Doc();
-              doc.set('file', file)
               doc.set('version', docVersion);
               var snippets = [];
               commentDoms.forEach(function(dom) {
@@ -287,17 +287,17 @@ module.exports = function(grunt) {
                 });
               });
               doc.set('snippets', snippets);
-              return new Promise(function(resolve,reject){
-                doc.save().then(function(){
-
-                  resolve();
-                },function(){
-                  reject();
-                })
-              });
-            }else{
-              return Promise.resolve();
             }
+            //文件名，以及段落 snippet 信息更新
+            doc.set('file', file.split('/').pop());
+
+            return new Promise(function(resolve1,reject1){
+              doc.save().then(function(){
+                resolve1();
+              },function(){
+                reject1();
+              })
+            });
           },function(){
             return Promise.resolve();
           }).then(function() {
@@ -318,11 +318,12 @@ module.exports = function(grunt) {
       }
 
       this.filesSrc.forEach(function(filepath) {
+
         allPromise.push(new Promise(function(resolve,reject){
           initDocVersion(filepath,resolve,reject)
         }));
       });
-
+      //保证所有文档都处理完再进行任务完成回调
       Promise.all(allPromise).then(function(){
         console.log('version build allcompleted');
         done();
