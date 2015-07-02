@@ -2723,7 +2723,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"appId": "{{appid}}", "jobConfig":{"sql":"select count(*) from table"}}'
+  -d '{"jobConfig":{"sql":"select count(*) from table"}}' \
   https://api.leancloud.cn/1.1/bigquery/jobs
 ```
 
@@ -2733,7 +2733,6 @@ curl -X POST \
 
 ```
 {  
-  "appId":"{{appid}}",
   "jobConfig":{  
     "sql":"select count(*) as count from table",
     "saveAs":{  
@@ -2748,7 +2747,6 @@ curl -X POST \
 
 ```
 {  
-  "appId":"{{appid}}",
   "jobConfig":{  
     "sql":"select * from table inner join tempTable on table.id=tempTable.objectId",
     "dependencyJobs":[  

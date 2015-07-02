@@ -173,7 +173,7 @@ imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback
 ```
 
 > 建立的「对话」在控制台怎么查看
-> 
+>
 > 如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** -> **存储** -> **数据** 里面会看到，_Conversation 表中增加了一条记录，新记录的 `m` 属性值为`["Tom", "Bob"]`，`attr` 属性值为`{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。
 
 ###发送消息
@@ -299,7 +299,7 @@ imClient.open(new IMClientCallback(){
 ```
 
 > 注意！
-> 
+>
 > `AVIMMessageManager.registerDefaultMessageHandler()` 一定要在 `AVIMClient.open()` 之前调用，否则可能导致服务器发回来的部分消息丢失。
 
 ### 退出登录
@@ -707,7 +707,7 @@ public class AVIMLocationMessage extends AVIMTypedMessage {
 
   public Map<String, Object> getAttrs();
   public void setAttrs(Map<String, Object> attr);
-  
+
   public AVGeoPoint getLocation();
   public void setLocation(AVGeoPoint location);
 }
@@ -852,9 +852,9 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 > 什么时候需要扩展自己的富媒体消息？
 >
 > 譬如说我有一个图像消息，只是除了文本之外，我还需要附带地理位置信息，这时候我需要扩展自己的消息类型来发送吗？其实完全没有必要，这种情况下，你使用我们在消息类中预留的 `attrs` 属性就可以保存额外的地理位置信息了。注意：｀attrs` 是所有富媒体消息都支持的。
-> 
+>
 > 只有在我们的消息类型完全无法满足你的需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面要允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 `NewsMessage` 类。
- 
+
 群组聊天
 -------------
 
@@ -974,12 +974,12 @@ conversation.addMembers(userIds, new AVIMConversationCallback() {
 ```
 
 邀请成功以后，相关方收到通知的时序是这样的：
-     
+
         操作者（管理员）                    被邀请者                        其他人
     1, 发出请求 addMembers
     2,                               收到 onInvited 通知
     3, 收到 onMemberJoined 通知      收到 onMemberJoined 通知      收到 onMemberJoined 通知
-   
+
 与加人类似，踢人的 API 声明如下：
 
 ```
@@ -1013,7 +1013,7 @@ conversation.kickMembers(userIds, new AVIMConversationCallback() {
     3, 收到 onMemberLeft 通知                             收到 onMemberLeft 通知
 
 > 注意！
-> 
+>
 > 如果邀请、踢人操作发生的时候，被邀请者/被踢者当前不在线，那么通知消息并不会被离线缓存，所以他们再上线的时候将不会收到通知。
 
 ### 退出群组
@@ -1088,7 +1088,7 @@ conversation.queryMessages(oldestMsgId,oldestMsgTimestamp, limit, new AVIMMessag
 ```
 
 > 注意：
-> 
+>
 > 翻页加载获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 msgId，起始消息的发送时间戳，需要获取的消息条数。
 
 
@@ -1224,6 +1224,8 @@ conversation.getMemberCount(new AVIMConversationMemberCountCallback(){
 签名和安全
 -------------
 为了满足开发者对权限和认证的要求，LeanCloud 还设计了操作签名的机制。我们可以在 LeanCloud 应用控制台中的「设置」->「应用选项」->「聊天推送」下面勾选「聊天服务签名认证」来启用签名（强烈推荐这样做）。启用后，所有的用户登录、对话创建/加入、邀请成员、踢出成员等操作都需要验证签名，这样开发者就可以对消息进行充分的控制。
+
+关于签名，我们假设你已经了解了[实时通信总览中的详细说明](./realtime_v2.html#权限和认证)。
 
 客户端这边究竟该如何使用呢？我们只需要实现 SignatureFactory 接口，然后在用户登录之前，把这个接口的实例赋值给 AVIMClient 即可（`AVIMClient.setSignatureFactory(factory)`）。
 
