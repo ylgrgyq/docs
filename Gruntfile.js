@@ -256,7 +256,7 @@ module.exports = function(grunt) {
       var AV = require('avoscloud-sdk').AV;
       AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
       var Doc = AV.Object.extend('Doc');
-      var commentDoms = ['p'];
+      var commentDoms = ['p','pre'];
       var done = this.async();
 
       var sequence = Q.resolve();
