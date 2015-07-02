@@ -236,7 +236,7 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-useminPrepare');
   grunt.loadNpmTasks('grunt-nunjucks');
 
-  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown","comment", "assemble",
+  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
     'uglify:generated',"usemin"]);
