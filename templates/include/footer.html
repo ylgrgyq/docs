@@ -29,21 +29,21 @@
   </div>
 </footer>
 
-<div id="comment-container">
+<div id="comment-container" ng-class="{'no-comments': currentComments.length<1}">
   <div class="comment-head">
     {{allComment[version]}}
     <span class="close" ng-click="closeCommentModal()">&times;</span>
   </div>
   <div class="comment-body">
-    <div class="comment-list"  ng-class="{'no-login': !currentCommentUser.username}">
+    <div class="comment-list" ng-class="{'no-login': !currentCommentUser.username}">
       <ul>
+        <li ng-show="currentComments.length<1">暂无评论</li>
         <li ng-repeat="comment in currentComments">
           <div class="comment-author">{{comment.author}}</div>
           <div class="comment-timestamp">{{ comment.updatedAt | date: 'yyyy-MM-dd HH:mm:ss '}}</div>
           <div class="comment-content">{{comment.content}}</div>
         </li>
       </ul>
-      <ul ng-show="currentComments.length<1"><li>暂无评论</li></ul>
     </div>
   </div>
   <div class="comment-compose" ng-show="currentCommentUser.username">
