@@ -49,14 +49,14 @@
   <div class="comment-compose" ng-show="currentCommentUser.username">
     <div class="form-group"> <textarea class="form-control comment-content" ng-model="commentContent"></textarea></div>
     <div class="form-meta">
-      您已登录为 <b>{{currentCommentUser.username}}</b>
+      <!-- 您已登录为 <b>{{currentCommentUser.username}}</b> -->
       <button class="btn btn-sm btn-default create-comment pull-right" ng-click="createComment($event)">
         <i class="icon icon-chat-bold"></i> 评论
       </button>
     </div>
   </div>
   <div class="comment-compose no-login" ng-show="!currentCommentUser.username">
-    您需要 <a class="comment-login" ng-click="loginComment()">登录</a> 后才能评论
+    您需要 <a class="comment-login" ng-click="loginComment()">授权</a> 后才能评论
   </div>
 </div>
 
