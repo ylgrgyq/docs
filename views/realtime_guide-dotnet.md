@@ -2,8 +2,6 @@
 
 {% block language %}.NET{% endblock %}
 
-{% block phoneSystem %}WP{% endblock %}
-
 {% block supportedRuntime %}
 目前我们的 .NET 实时通信支持如下运行时：
 
@@ -36,7 +34,11 @@
 例如，在 Windows 控制台的 Main 函数入口可以调用以上代码进行初始化。
 {% endblock %}
 
-{% block oneOnOneChat_send %}
+{% block demo %}
+* [WPF Demo](https://github.com/leancloud/windows-phone-sdk-demos/tree/master/LeanCloud.Demo.CSharp/LeanCloud.LeanMessage.Demo.WPF.NET45)（推荐）
+{% endblock %}
+
+{% block oneOnOneChat_sent %}
 ```c#
 public async void TomCreateConversationWithJerry()
 {
@@ -55,7 +57,7 @@ public async void TomCreateConversationWithJerry()
 ```
 {% endblock %}
 
-{% block oneOnOneChat_receive %}
+{% block oneOnOneChat_received %}
 ```c#
 public async void JerryReceiveMessageFromTom()
 {
@@ -78,7 +80,7 @@ public async void JerryReceiveMessageFromTom()
 ```
 {% endblock %}
 
-{% block groupChat_send %}
+{% block groupChat_sent %}
 ```c#
 public async void TomCreateConversationWithFriends()
 {
@@ -108,10 +110,10 @@ public async void TomCreateConversationWithFriends()
 {% endblock %}
 
 {% block createConversationAsync %}
-> 注： `AVIMClient.CreateConversationAsync()` 有多种重载方法供开发者调用，详细定义可在 Visual Studio 中进行查看。
+> 注：`AVIMClient.CreateConversationAsync()` 有多种重载方法供开发者调用，详细定义可在 Visual Studio 中进行查看。
 {% endblock %}
 
-{% block groupChat_receive %}
+{% block groupChat_received %}
 ```c#
 AVIMConversation NotifiedConversation = null;
 public async void BobReceiveMessageFromTom()
@@ -144,18 +146,18 @@ public async void BobReceiveMessageFromTom()
 ```
 {% endblock %}
 
-{% block textMessage_send_method %} `SendTextMessageAsync` {% endblock %}
+{% block textMessage_sent_method %} `SendTextMessageAsync` {% endblock %}
 
-{% block textMessage_receive_intro %}
+{% block textMessage_received_intro %}
 客户端登录后可以通过 `AVIMClient` 中的 `OnMessageReceived` 方法来接收消息，如果接收方正好加载了这个对话，那么接收方在 `AVIMConversation` 里面也会收到 `OnTextMessageReceived` 的事件响应。
 {% endblock %}
 
-{% block textMessage_receive %}
+{% block textMessage_received %}
 ```
 //Jerry 用自己的名字作为 ClientId 建立了一个 AVIMClient
 AVIMClient client = new AVIMClient("Jerry");
 
-//Jerry 登陆到系统
+//Jerry 登录到系统
 await client.ConnectAsync();
 
 string conversationId = "55117292e4b065f7ee9edd29";
@@ -176,7 +178,7 @@ conversation.OnTextMessageReceived += (s,e)=>
 ```
 {% endblock %}
 
-{% block imageMessage_local_send %}
+{% block imageMessage_local_sent %}
 ```c#
 MediaLibrary library = new MediaLibrary();//系统媒体库
 var photo = library.Pictures[0];//获取第一张照片，运行这段代码，确保手机以及虚拟机里面的媒体库至少有一张照片
@@ -191,7 +193,7 @@ await conversation.SendImageMessageAsync(imgMessage);
 ```
 {% endblock %}
 
-{% block imageMessage_url_send %}
+{% block imageMessage_url_sent %}
 
 ```c#
 public async void SendImageMessageAsync_Test()
@@ -208,11 +210,11 @@ public async void SendImageMessageAsync_Test()
 ``` 
 {% endblock %}
 
-{% block imageMessage_receive_intro %}
+{% block imageMessage_received_intro %}
 类似于第一章节中单聊中的接收消息，客户端登录后可以通过 `AVIMClient` 中的 `OnMessageReceived` 方法来接收图像，如果接收方此时正好加载了这个对话，那么接收方在 `AVIMConversation` 里面也会收到 `OnImageMessageReceived` 的事件响应：
 {% endblock %}
 
-{% block imageMessage_receive %}
+{% block imageMessage_received %}
 ```c#
 public async void ReceiveImageMessageAsync_Test()
 {
@@ -237,7 +239,7 @@ public async void ReceiveImageMessageAsync_Test()
 ```
 {% endblock %}
 
-{% block audioMessage_local_send %}
+{% block audioMessage_local_sent %}
 ```c#
 private async void SendAudioMessageAsync()
 {
@@ -251,7 +253,7 @@ private async void SendAudioMessageAsync()
 ``` 
 {% endblock %}
 
-{% block audioMessage_url_send %}
+{% block audioMessage_url_sent %}
 ```c#
 public async void SendAudioMessageAsync()
 {
@@ -266,11 +268,11 @@ public async void SendAudioMessageAsync()
 ```
 {% endblock %}
 
-{% block audioMessage_receive_intro %}
+{% block audioMessage_received_intro %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnAudioMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block videoMessage_local_send %}
+{% block videoMessage_local_sent %}
 ```c#
 private async void SendVideoMessageAsync()
 {
@@ -285,7 +287,7 @@ private async void SendVideoMessageAsync()
 ```
 {% endblock %}
 
-{% block videoMessage_url_send %}
+{% block videoMessage_url_sent %}
 
 ```c#
 public async void SendVideoMessageAsync()
@@ -301,11 +303,11 @@ public async void SendVideoMessageAsync()
 ```
 {% endblock %}
 
-{% block videoMessage_receive_intro %}
+{% block videoMessage_received_intro %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnVideoMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block fileMessage_send %}
+{% block fileMessage_sent %}
 ```c#
 public async void SendDocAsync()
 {
@@ -322,7 +324,7 @@ public async void SendDocAsync()
 ```
 {% endblock %}
 
-{% block fileMessage_receive_intro %}
+{% block fileMessage_received_intro %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
@@ -336,7 +338,7 @@ AVIMLocationMessage locationMessage = new AVIMLocationMessage(avGeoPoint);
 ```
 {% endblock %}
 
-{% block locationMessage_send %}
+{% block locationMessage_sent %}
 ```c#
 public async void SendLocationAsync()
 {
@@ -350,32 +352,32 @@ public async void SendLocationAsync()
 ```
 {% endblock %}
 
-{% block locationMessage_receive_intro %}
+{% block locationMessage_received_intro %}
 与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
 {% block attributes %}Attributes{% endblock %}
 
-{% block customMessage_send %}
+{% block customMessage_sent %}
 ```c#
 AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
 imgMessage.Attributes = new Dictionary<string, object>() 
 { 
-    {"location","San Francisco"}
+    {"location","拉萨布达拉宫"}
 };
-imgMessage.Title = "发自我的WP";
+imgMessage.Title = "这蓝天让我彻底醉了……";
 await conversation.SendImageMessageAsync(imgMessage);
 ```
 {% endblock %}
 
-{% block customMessage_receive_method %} `OnMessageReceived` {% endblock %}
+{% block customMessage_received_method %} `OnMessageReceived` {% endblock %}
 
-{% block customMessage_receive %}
+{% block customMessage_received %}
 ```
 - 初始化 ClientId = friend
 - 登录到系统
 - 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是旧金山
+- //读取的结果就是拉萨布达拉宫
 ```
 {% endblock %}
 
@@ -383,68 +385,31 @@ await conversation.SendImageMessageAsync(imgMessage);
 TODO：.NET 待补充
 {% endblock %}
 
-{% block messagePolicy_send_method %} `AVIMClient.OnMessageReceived` {% endblock %}
+{% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
-{% block messagePlicy_received_intro %}
+{% block messagePolicy_received_intro %}
 消息接收分为**两个层级**：
 
-* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_send_method %}{% endblock %}负责接收这类消息，但是它并没有针对消息的类型做区分。
+* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_sent_method %}{% endblock %}
 
-* 第二层在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
-
-以上两个层级的消息接收策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
-
-AVIMClient 接收端 | 条件① |条件② |条件③ | 条件④ |条件⑤ 
-:---|:---|:---|:---|:---|:---
-`AVIMClient.OnMessageReceived` | × | √ | √ | √ | √
-`AVIMConversation.OnMessageReceived` | × | × | √ | × | × 
-`AVIMConversation.OnTypedMessageReceived`| × | × | × | √ | × 
-`AVIMConversation.OnTextMessageReceived` | × | × | × | × | √ 
-对应条件如下：
-
-* 条件①：
-```c#
-AVIMClient.Status != Online
-``` 
-* 条件②：
-```c#
-AVIMClient.Status == Online && AVIMClient.OnMessageReceived != null
-```
-* 条件③：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-```
-* 条件④：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-&& AVIMConversation.OnTypedMessageReceived != null
-&& AVIMConversation.OnTextMessageReceived == null
-```
-
-* 条件⑤：
-```c#
-AVIMClient.Status == Online 
-&& AVIMClient.OnMessageReceived != null 
-&& AVIMConversation.OnMessageReceived != null
-&& AVIMConversation.OnTypedMessageReceived != null
-&& AVIMConversation.OnTextMessageReceived != null
-```
-
-在 `AVIMConversation` 内，接收消息的顺序为： 
-
-> `OnTextMessageReceived` > `OnTypedMessageReceived` > `OnMessageReceived`
-
-这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
-
+{% block message_sent_ack %}
+- 初始化 ClientId = Tom
+- Tom 登录
+- 打开已有对话 Id = 551260efe4b01608686c3e0f
+- 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
+- 发送
+- 系统给 Tom 返回己送达通知
 {% endblock %}
 
-{% block message_sent_ack %}{% endblock %}
-
-{% block message_received_ack %}{% endblock %}
+{% block message_received_ack %}
+- 初始化 ClientId = Jerry
+- Jerry 登录
+- 打开已有对话 Id = 551260efe4b01608686c3e0f
+- //收到 Tom 的消息："夜访蛋糕店，约吗？"
+- 系统向 Tom 发送已读回执
+- Jerry 回复 Tom："不约，最近牙疼……"
+- 发送
+{% endblock %}
 
 {% block conversation_init %}
 
@@ -623,7 +588,6 @@ public async void CountMembers_SampleCode()
 {% endblock %}
 
 {% block table_conversation_attributes_intro %}
-
 AVIMConversation 属性名 | _Conversation 字段|含义
 --- | ------------ | -------------
 `ConversationId`| `objectId` |全局唯一的 Id
@@ -634,7 +598,6 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 `LastMessageAt` | `lm` |对话最后一条消息发送的时间
 `Attributes`| `attr`|自定义属性
 `IsTransient`|`tr`|是否为聊天室（暂态对话）
-
 {% endblock %}
 
 {% block conversation_name %}
@@ -661,7 +624,7 @@ public async void UpdateConversationAsync()
 
     conversation.Name = "聪明的喵星人";//修改名称
 
-    await conversation.SaveAsync();//保存到服务端
+    await conversation.SaveAsync();//保存到云端
 }
 ```
 {% endblock %}
@@ -680,10 +643,7 @@ public async void MuteConversationAsync()
 ```
 {% endblock %}
 
-{% block conversation_unmute %}
-
-{% endblock %}
-
+{% block conversation_unmute %}可使用 `UnmuteAsync()` 方法。{% endblock %}
 
 {% block conversation_tag %}
 ```c#
@@ -698,6 +658,14 @@ public async void CreateConversationWithCustomAttributesAsync()
 ```
 {% endblock %}
 
+{% block conversation_remove %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 删除多个对话：id = [551260efe4b01608686c3e0f, 523431glfld803290dfsaf05]
+```
+{% endblock %}
+
 {% block conversation_getSingle %}
 ```c#
  public async void QueryByIdAsync()
@@ -706,6 +674,28 @@ public async void CreateConversationWithCustomAttributesAsync()
     await client.ConnectAsync();//Tom 登录客户端
     AVIMConversation conversation = await client.GetQuery().GetAsync("551260efe4b01608686c3e0f");
  }
+```
+{% endblock %}
+
+{% block conversation_messageHistoryByLimit %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 进入对话：id = 551260efe4b01608686c3e0f
+- 将其设置为静音 Mute
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
+```
+{% endblock %}
+
+{% block conversation_messageHistoryBeforeId %}
+```
+- ...//前几步与上例相同
+- Tom 登录
+- 获取消息历史，不指定 limit //  不使用 limit 默认返回 20 条消息
+- 获取这 20 条中最早的那条消息的属性
+- 按它的属性 id 和 timestamp，再获取在它之前的消息，不指定 limit // 依然默认返回 20 条消息
 ```
 {% endblock %}
 
@@ -953,14 +943,13 @@ con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 
 {% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}
 
-{% block messageReceiveMethod_audio %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_audio %}OnAudioMessageReceived{% endblock %}
 
-{% block messageReceiveMethod_video %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_video %}OnVideoMessageReceived{% endblock %}
 
-{% block messageReceiveMethod_file %}OnMessageReceived{% endblock %}
+{% block messageReceiveMethod_file %}OnFileMessageReceived{% endblock %}
 
-{% block conversation_signature %}
-`AVIMClient` 有一个属性：
+{% block conversation_security %}`AVIMClient` 有一个属性：
 
 ```c#
 /// <summary>
@@ -1094,9 +1083,4 @@ await client.ConnectAsync();//Tom 登录客户端
 ```
 {% endblock %}
 
-{% block demo %}
-## Demo
-相比阅读文档，如果你更喜欢从代码入手了解功能的具体实现，可以下载 Demo 来研究：
-
-* [WPF Demo](https://github.com/leancloud/windows-phone-sdk-demos/tree/master/LeanCloud.Demo.CSharp/LeanCloud.LeanMessage.Demo.WPF.NET45)（推荐）
-{% endblock %}
+{% block avoidCreatingDuplicateConversation %}>提示：每次调用 `CreateConversationAsync()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 conversationMembers 和 name 也是如此。因此必要时可以先使用 `AVIMConversationQuery` 进行查询，避免重复创建。{% endblock %}
