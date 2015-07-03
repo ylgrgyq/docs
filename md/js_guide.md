@@ -28,7 +28,7 @@ LeanCloud 提供了一个移动 App 的完整后端解决方案，我们的目�
 
 ### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置「JavaScript SDK 安全域名」。配置方式：进入对应的 APP，然后选择「设置」——「基本信息」——「JavaScript SDK 安全域名」。这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
+如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置`Web 安全域名`。配置方式：进入对应的 App，然后选择`设置`——`安全中心`——`Web 安全域名`。这样就可以防止其他人，通过外网其他地址盗用您的服务器资源。
 
 具体安全相关内容可以仔细阅读「[数据和安全](https://leancloud.cn/docs/data_security.html)」文档。
 
@@ -1148,6 +1148,9 @@ promise.then(function(value) {
 
 在你想要某一行数据做一系列的任务的时候，Promise链是很方便的,每一个任务都等着前
 一个任务结束.比如,假设你想要删除你的blog上的所有comment.
+
+**特别说明，下文出现在代码里的 `_.xxx` 表示引用了 [underscore.js](http://underscorejs.org/) 这个类库的方法， underscore.js
+是一个非常方便的 JS 类库，提供了很多工具方法。**
 
 ```javascript
 var query = new AV.Query("Comments");

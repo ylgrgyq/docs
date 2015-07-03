@@ -42,6 +42,35 @@ $ avoscloud
 LeanEngine Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
+{% block ping %}
+LeanEngine 中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
+
+```
+app.use(AV.Cloud);
+```
+
+或者类似于 [项目框架](https://github.com/leancloud/node-js-getting-started) 那样，有一个 [cloud.js](https://github.com/leancloud/node-js-getting-started/blob/master/cloud.js) 且最终是以 `module.exports = AV.Cloud;` 结尾，然后在 [app.js](https://github.com/leancloud/node-js-getting-started/blob/master/app.js) 中加载 `cloud.js` 也可以达到一样的效果：
+
+```
+var cloud = require('./cloud');
+
+// 加载云代码方法
+app.use(cloud);
+```
+
+如果未使用 LeanEngine 中间件，则需要自己实现该 URL 的处理，比如这样：
+
+```
+// 健康监测 router
+app.use('/__engine/1/ping', function(req, res) {
+  res.end(JSON.stringify({
+    "runtime": "nodejs-" + process.version,
+    "version": "custom"
+  }));
+});
+```
+{% endblock %}
+
 {% block others_web_framework %}
 LeanEngine 支持任意 Node.js 的 web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 Node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
 {% endblock %}

@@ -256,22 +256,3 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
 // });
 
 
-
-// $(function(){
-//     // $('#content [version]').each(function(k,v){
-//     //     var version = $(v).attr('version');
-//     //     $(v).append('<div class="toggle-comment" ng-click="showCommentDialog(\''+version+'\''+',$event)">+ <span> {{}}</span> </div>');
-//     // })
-
-//     $('#content [version]').each(function(k,v){
-//         var version = $(v).attr('version');
-//         $(v).append('<div class="inline-comment-wrap" version="'+version+'" all-comment="allComment" showDialogMethod="showCommentDialog()" lc-comment> </div>');
-//     });
-
-//     angular.element(document).ready(function() {
-
-//       angular.bootstrap(document, ['app']);
-
-//     });
-// });
-
