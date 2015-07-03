@@ -1149,6 +1149,9 @@ promise.then(function(value) {
 在你想要某一行数据做一系列的任务的时候，Promise链是很方便的,每一个任务都等着前
 一个任务结束.比如,假设你想要删除你的blog上的所有comment.
 
+**特别说明，下文出现在代码里的 `_.xxx` 表示引用了 [underscore.js](http://underscorejs.org/) 这个类库的方法， underscore.js
+是一个非常方便的 JS 类库，提供了很多工具方法。**
+
 ```javascript
 var query = new AV.Query("Comments");
 query.equalTo("post", 123);
