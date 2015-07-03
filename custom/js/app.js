@@ -55,8 +55,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         var docVersion = $('html').first().attr('version');
 
         $scope.loginComment = function(){
-            win = window.open(commentHost+'/users/login','targetWindow',
-                           'toolbar=no,location=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=400,height=300');
+            win = openWindow(commentHost+'/users/login','登录',600,500);
             return false
         }
 
