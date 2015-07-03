@@ -2,7 +2,7 @@
 
 ## 简介
 
-实时通信服务可以帮你快速实现聊天和对话管理功能，比如私聊、群聊、建聊天室、管理群组成员、查询消息历史等等。所有聊天记录都保存在云端，离线消息会通过消息推送来及时送达，推送消息文本可以灵活进行定制。
+实时通信服务可以让你一行后端代码都不用写，就能做出一个功能完备的实时聊天应用，或是一个实时对战类的游戏。所有聊天记录都保存在云端，离线消息会通过消息推送来及时送达，推送消息文本可以灵活进行定制。
 
 >在继续阅读本文档之前，请先阅读[《实时通信开发指南》](./realtime_v2.html)，了解一下实时通信的基本概念和模型。
 
@@ -11,11 +11,20 @@
 ### 文档贡献
 我们欢迎和鼓励大家对本文档的不足提出修改建议。请访问我们的 [Github 文档仓库](https://github.com/leancloud/docs) 来提交 Pull Request。
 
+## Demo
+相比阅读文档，如果你更喜欢从代码入手了解功能的具体实现，可以下载 Demo 来研究：
+
 {% block demo %}{% endblock %}
+
+我们把所有 Demo 项目放在了 [LeanCloud Demos 资源库](https://github.com/leancloud/leancloud-demos) 中，方便大家浏览和参考。
 
 ## 安装和初始化
 
+首先，请访问我们的 [官方 SDK 下载](https://leancloud.cn/docs/sdk_down.html) 页面来获取实时通信 SDK。
+
 {% block setup_init %}{% endblock %}
+
+{% block compatibility %}{% endblock %}
 
 ## 单聊
 
@@ -23,26 +32,13 @@
 
 ### 发送消息
 
-![Tom and Jerry](images/tom-and-jerry-avartar.png)
-
 Tom 想给 Jerry 发一条消息，实现代码如下：
 
-{% block oneOnOneChat_send %}{% endblock %}
+{% block oneOnOneChat_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
 - 向 Jerry 发送消息："耗子，起床！" 
-```
-
-### 接收消息
-
-要让 Jerry 收到 Tom 的消息，需要这样写：
-
-{% block oneOnOneChat_receive %}{% endblock %}
-```
-- 初始化 ClientId = Jerry 
-- Jerry 登录到系统
-- 接收到消息
 ```
 
 执行完以上代码，在 LeanCloud 网站的控制台找到指定的应用，进入 **存储** > **数据** 页面，可以看到默认表 `_Conversation` 中多了一行数据，其字段含义如下：
@@ -56,6 +52,22 @@ c|String|对话的创建者的 ClientId
 mu|Array|对话中设置了静音的成员，仅针对 iOS 以及 Windows Phone 用户有效。
 attr|Object|开发者设置的对话的自定义属性
 
+{% block avoidCreatingDuplicateConversation %}{% endblock %}
+
+### 接收消息
+
+要让 Jerry 收到 Tom 的消息，需要这样写：
+
+{% block oneOnOneChat_received %}{% endblock %}
+```
+- 初始化 ClientId = Jerry 
+- Jerry 登录到系统
+- 接收到 Tom 的消息
+```
+
+{% block oneOnOneChat_received_steps %}{% endblock %}
+
+
 ## 群聊
 
 此场景类似于微信的多人聊天群组和 QQ 的群。请注意这里的群聊是指可以**持久保存**的群组的概念，比如 QQ 群，除非群主解散该群，这个群会一直出现在 QQ 的 聊天列表中，而临时群组聊天（即聊天室）会放到后面单独介绍。
@@ -68,7 +80,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 2. 新建一个对话，把朋友们列为对话的参与人员
 3. 发送消息
 
-{% block groupChat_send %}{% endblock %}
+{% block groupChat_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -80,7 +92,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 群聊的接收消息与单聊的接收消息在代码写法上是一致的。
 
-{% block groupChat_receive %}{% endblock %}
+{% block groupChat_received %}{% endblock %}
 ```
 - 初始化 ClientId = Bob
 - Bob 登录到系统
@@ -94,39 +106,42 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 由此可以看出，**群聊和单聊本质上都是对话**，只是参与人数不同。单聊是一对一的对话，群聊是多对多的对话。
 
-用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名和密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个唯一标识作为当前用户的 `ClientId` 即可。
+用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名和密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个唯一标识作为当前用户的 `clientId` 即可。
 
-为直观起见，我们使用了 Tom、Jerry 等字符串作为 ClientId 登录聊天系统。LeanCloud 云端只要求 ClientId 在应用内唯一、不超过 64 个字符的字符串即可，具体用什么数据由应用层决定。
+为直观起见，我们使用了 Tom、Jerry 等字符串作为 clientId 登录聊天系统。LeanCloud 云端只要求 clientId 在应用内唯一、不超过 64 个字符的字符串即可，具体用什么数据由应用层决定。
+
+实时通信 SDK 在内部会为每一个 clientId 创建唯一的 `AVIMClient` 实例，也就是说多次使用相同的 clientId 创建出来的实例还是同一个。因此，如果要支持同一个客户端内多账号登录，只要使用不同的 clientId 来创建多个实例即可。我们的 SDK 也支持多账户同时登录。
 
 ## 消息
-消息是对话的主要组成部分，我们支持的消息类型有：
+消息是一个对话的基本组成部分，我们支持的消息类型有：
 
-- 文本消息　　：`AVIMTextMessage`
-- 图像消息　　：`AVIMImageMessage`
-- 音频消息　　：`AVIMAudioMessage`
-- 视频消息　　：`AVIMVideoMessage`
-- 文件消息　　：`AVIMFileMessage`
-- 地理位置消息：`AVIMLocationMessage`
+- 文本消息：`AVIMTextMessage`
+- 图像消息：`AVIMImageMessage`
+- 音频消息：`AVIMAudioMessage`
+- 视频消息：`AVIMVideoMessage`
+- 文件消息：`AVIMFileMessage`
+- 位置消息：`AVIMLocationMessage`
 
-### 消息类型
-
+### 富媒体消息
+<!--
 #### 文本消息
 
 ##### 发送文本消息
 
-文本消息是最基本的消息类型，要使用 `AVIMConversation` 的{% block textMessage_send_method %}{% endblock %}方法来发送。具体操作可参考上面 [单聊](#发送消息) 或 [群聊](#发送消息-1) 发送消息的示例。
+文本消息是最基本的消息类型，要使用 `AVIMConversation` 的{% block textMessage_sent_method %}{% endblock %}方法来发送。具体操作可参考上面 [单聊](#发送消息) 或 [群聊](#发送消息-1) 发送消息的示例。
 
 ##### 接收文本消息
 
-{% block textMessage_receive_intro %}{% endblock %}
+{% block textMessage_received_intro %}{% endblock %}
 
-{% block textMessage_receive %}{% endblock %}
+{% block textMessage_received %}{% endblock %}
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
 - 进入与 Tom 的对话 //假设 ConversationId = 55117292e4b065f7ee9edd29
 - 回复 '早起了。啥事？'
 ```
+-->
 
 #### 图像消息
 图像可以从系统提供的拍照 API 或本地媒体库中获取，也可以用有效的图像 URL。先调用 SDK  方法构造出一个 `AVIMImageMessage` 对象，然后把它当做参数交由 `AVIMConversation` 发送出去即可。
@@ -135,20 +150,20 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 【场景一】用系统自身提供的 API 去获取本地媒体库里的照片的数据流，然后构造出 `AVIMImageMessage` 来发送：
 
-{% block imageMessage_local_send %}{% endblock %}
+{% block imageMessage_local_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
 - 从系统媒体库获取第一张照片
 - 创建图像消息
 - 给图像加一个自定义属性：location = '旧金山'
-- 图像 Title：'发自我的 iPhone'
+- 图像 Title：'发自我的手机'
 - 发送
 ```
 
 【场景二】从微博上复制的一个图像链接来创建图像消息：
 
-{% block imageMessage_url_send %}{% endblock %}
+{% block imageMessage_url_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -159,15 +174,15 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ```
 以上两种场景对于 SDK 的区别为：
 
-* 场景一：SDK 获取了完整的图像数据流，先上传文件到服务端，再将文件的元数据以及 URL 等一并包装，发送出去。
+* 场景一：SDK 获取了完整的图像数据流，先上传文件到云端，再将文件的元数据以及 URL 等一并包装，发送出去。
 
-* 场景二：SDK 并没有将图像实际上传到服务端，而仅仅把 URL 包装在消息体内发送出去，这种情况下接收方是无法从消息体中获取图像的元信息数据，但开发者可以自行获取。
+* 场景二：SDK 并没有将图像实际上传到云端，而仅仅把 URL 包装在消息体内发送出去，这种情况下接收方是无法从消息体中获取图像的元信息数据，但开发者可以自行获取。
 
 ##### 接收图像消息
 
-{% block imageMessage_receive_intro %}{% endblock %}
+{% block imageMessage_received_intro %}{% endblock %}
 
-{% block imageMessage_receive %}{% endblock %}
+{% block imageMessage_received %}{% endblock %}
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
@@ -181,7 +196,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 发送音频消息的基本流程是：读取音频文件（或者录制音频）> 构建音频消息 > 消息发送。
 
-{% block audioMessage_local_send %}{% endblock %}
+{% block audioMessage_local_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -193,7 +208,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 与图像消息类似，音频消息也支持从 URL 构建：
 
-{% block audioMessage_url_send %}{% endblock %}
+{% block audioMessage_url_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -205,7 +220,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ##### 接收音频消息
 
-{% block audioMessage_receive_intro %}{% endblock %}
+{% block audioMessage_received_intro %}{% endblock %}
 
 > TODO: 音频元信息提取/列表 [messageId, file.url, size, duration, format]
 
@@ -215,7 +230,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 与发送音频消息的流程类似，视频的来源可以是手机录制，可以是系统中某一个具体的视频文件：
 
-{% block videoMessage_local_send %}{% endblock %}
+{% block videoMessage_local_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -227,7 +242,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 同样我们也支持从一个视频的 URL 创建视频消息，然后发送出去：
 
-{% block videoMessage_url_send %}{% endblock %}
+{% block videoMessage_url_sent %}{% endblock %}
 
 ```
 - 初始化 ClientId = Tom
@@ -241,19 +256,19 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ##### 接收视频消息
 
-{% block videoMessage_receive_intro %}{% endblock %}
+{% block videoMessage_received_intro %}{% endblock %}
 
 > TODO: 视频元信息提取/列表[messageId, file.url, size, duration, format]
 
 #### 通用文件消息
 
-开发者可以用它来发送带附件的消息或离线文件。对于此类消息，实时通信 SDK 内部会先把文件上传到 LeanCloud 文件存储服务器（自带 CDN 功能），然后把文件元数据（url、文件大小等）放在消息包内发送到实时通信服务端。
+开发者可以用它来发送带附件的消息或离线文件。对于此类消息，实时通信 SDK 内部会先把文件上传到 LeanCloud 文件存储服务器（自带 CDN 功能），然后把文件元数据（url、文件大小等）放在消息包内发送到实时通信云端。
 
 Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 
 ##### 发送通用文件消息
 
-{% block fileMessage_send %}{% endblock %}
+{% block fileMessage_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -264,7 +279,7 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 ```
 
 ##### 接收通用文件消息
-{% block fileMessage_receive_intro %}{% endblock %}
+{% block fileMessage_received_intro %}{% endblock %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 
 > TODO: 文件元信息提取/列表 [messageId, FileUrl, Size]
@@ -284,27 +299,103 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 ```
 ##### 发送地理位置消息
 
-{% block locationMessage_send %}{% endblock %}
+{% block locationMessage_sent %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
 - 创建与 Jerry 的对话，对话名称为「猫和老鼠」
 - 以经度和纬度为参数构建一个地理位置消息 AVIMLocationMessage(138.12454, 52.56461)
-- 加入文本：好利来新店！！
+- 加入文本："新开的蛋糕店！耗子咱有福了…"
 //开发者更可以通过具体的设备的 API 去获取设备的地理位置
 - 发送
-}
 ```
 
 ##### 接收地理位置消息
 
-{% block locationMessage_receive_intro %}{% endblock %}
+{% block locationMessage_received_intro %}{% endblock %}
 
 > TODO: 文件元信息提取 [messageId, latitude, longitude]
 
-#### 自定义消息
+{% block typedMessage_received %}{% endblock %}
 
-##### 消息类详解
+
+### 暂态消息
+
+暂态消息不会被自动保存（以后在历史消息中无法找到它），也不支持延迟接收，离线用户更不会收到推送通知，所以适合用来做控制协议。譬如聊天过程中「某某正在输入…」这样的状态信息，就适合通过暂态消息来发送。
+
+{% block transientMessage_sent %}{% endblock %}
+
+### 消息的发送策略
+
+{% block messagePolicy_sent %}{% endblock %}目前 SDK 内置的继承自 `AVIMFileMessageBase` 的消息类型包含：
+
+* 图像 `AVIMImageMessage`
+* 音频 `AVIMAudioMessage`
+* 视频 `AVIMVideoMessage`
+* 文件 `AVIMFileMessage`
+
+所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
+
+* 如果文件是从客户端 API 读取的数据流 (Stream)，步骤为： 
+
+1. 从本地构造 AVFile
+1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
+1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
+1. 发送消息
+
+* 如果文件是外部链接的 URL，则：
+
+1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
+2. 发送消息
+
+#### 启用离线消息推送
+
+不管是单聊还是群聊，当用户 A 发出消息后，如果目标对话的部分用户当前不在线，LeanCloud 云端可以提供离线推送的方式来提醒用户。
+
+>{% block offlineMessage_android %}{% endblock %}
+
+这一功能默认是关闭的，你可以在 LeanCloud 应用控制台中开启它。开启方法如下：
+
+1. 登录 LeanCloud 应用控制台，选择正确的应用进入；
+1. 选择顶部菜单 **消息**，依次点击左侧菜单 **实时消息** > **设置**；
+1. 在右侧 **iOS 用户离线时的推送内容** 下填好你要推送出去的消息内容；
+1. 保存。
+
+{% block offlineMessage %}{% endblock %}
+
+#### 消息送达回执
+
+是指消息被对方收到之后，云端会发送一个回执通知给发送方，表明消息已经送达。
+
+{% block message_sent_ack %}{% endblock %}
+- 初始化 ClientId = Tom
+- Tom 登录
+- 进入已有对话 Id = 551260efe4b01608686c3e0f
+- 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
+- 发送
+- 系统给 Tom 返回己送达通知
+
+#### 消息已读回执
+
+是指接收方告知云端消息已被接收，紧接着云端给发送方的一个回执，告知消息已经被接收方接收。
+
+>俊文表示：我们还不支持「已读回执」
+{% block message_received_ack %}{% endblock %}
+- 初始化 ClientId = Jerry
+- Jerry 登录
+- 进入已有对话 Id = 551260efe4b01608686c3e0f
+- //收到 Tom 的消息："夜访蛋糕店，约吗？"
+- 系统向 Tom 发送已读回执
+- Jerry 回复 Tom："不约，最近牙疼……"
+- 发送
+
+### 消息的接收策略
+
+{% block messagePolicy_received_intro %}{% endblock %}
+
+{% block messagePolicy_received %}{% endblock %}
+
+### 消息类详解
 
 我们所支持的文本、图像、音频、视频、文件、地理位置等富媒体消息类型都有一个共同的基类：`AVIMTypedMessage`，它们之间的关系如下图所示：
 
@@ -350,32 +441,32 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 
 >TODO: 举例说明如何使用这样的数字类型
 
-##### 消息的自定义属性
+### 自定义消息
 
 在某些场景下，开发者需要在发送消息时附带上自己业务逻辑需求的自定义属性，比如消息发送的设备名称，或是图像消息的拍摄地点、视频消息的来源等等，开发者可以通过 `AVIMMessage.{% block attributes %}{% endblock %}` 实现这一需求。
 
-【场景】发照片给朋友，告诉对方照片是在旧金山照的：
+【场景】发照片给朋友，告诉对方照片的拍摄地点：
 
-{% block customMessage_send %}{% endblock %}
+{% block customMessage_sent %}{% endblock %}
 ```
 - 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "旧金山"
-- 设置 Title = "发自我的手机";
+- 在 Attributes 中加入 location = "拉萨布达拉宫"
+- 设置 Title = "这蓝天让我彻底醉了……";
 - 发送
 ```
 
-接收时通过{% block customMessage_receive_method %}{% endblock %}可以读取这一属性：
+接收时可以读取这一属性：
 
-{% block customMessage_receive %}{% endblock %}
+{% block customMessage_received %}{% endblock %}
 ```
 - 初始化 ClientId = friend
 - 登录到系统
 - 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是旧金山
+- //读取的结果就是拉萨布达拉宫
 ```
 所有类型的消息都支持 `{% block attributes %}{% endblock %}` 这一属性。
 
-##### 创建新的消息类型
+#### 创建新的消息类型
 
 {% block customMessage_create %}{% endblock %}
 
@@ -385,69 +476,14 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 >
 >只有在我们的消息类型完全无法满足需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 NewsMessage 类。
 
-### 消息的接收和发送策略
-
-#### 发送策略
-
-{% block messagePolicy_send %}{% endblock %}目前 SDK 内置的继承自 `AVIMFileMessageBase` 的消息类型包含：
-
-* 图像 `AVIMImageMessage`
-* 音频 `AVIMAudioMessage`
-* 视频 `AVIMVideoMessage`
-* 文件 `AVIMFileMessage`
-
-所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
-
-* 如果文件是从客户端 API 读取的数据流 (Stream)，步骤为： 
-
-1. 从本地构造 AVFile
-1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
-1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
-1. 发送消息
-
-* 如果文件是外部链接的 URL，则：
-
-1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
-2. 发送消息
-
-#### 接收策略
-
-{% block messagePlicy_received_intro %}{% endblock %}
-
-
-##### 发送离线消息
-
-不管是单聊还是群聊，当用户 A 发出消息后，如果目标对话的部分用户当前不在线，LeanCloud 云端可以提供离线推送的方式来提醒用户。这一功能默认是关闭的，你可以在 LeanCloud 应用控制台中开启它。开启方法如下：
-
-1. 登录 LeanCloud 应用控制台，选择正确的应用进入；
-1. 选择顶部菜单 **消息**，依次点击左侧菜单 **实时消息**  > **设置**；
-1. 在右侧 **iOS 用户离线时的推送内容** 下填好你要推送出去的消息内容；
-1. 保存。
-
-{% block offlineMessage %}{% endblock %}
-
-##### 消息送达回执
-消息送达回执指的是服务端把消息送达给接收方之后给发送方一个回执，告知消息已经送达。
-
-{% block message_sent_ack %}{% endblock %}
-
-
-##### 消息已读回执
-消息已读回执指的是接收方告知服务端消息已被接收，紧接着服务端给发送方的一个回执，告知消息已经被接收方接收。
-{% block message_received_ack %}{% endblock %}
-
 ## 对话
 
-以上章节基本演示了实时通信 SDK 的核心概念  `AVIMConversation`。我们将单聊和群聊（包括聊天室）的消息发送和接收都依托于 `AVIMConversation` 这个统一的概念进行操作，所以开发者需要强化理解的一个概念就是：
+以上章节基本演示了实时通信 SDK 的核心概念「对话」，即 `AVIMConversation`。我们将单聊和群聊（包括聊天室）的消息发送和接收都依托于 `AVIMConversation` 这个统一的概念进行操作，所以开发者需要强化理解的一个概念就是：
 >SDK 层面不区分单聊和群聊。
 
+{% block conversation_specialnote %}{% endblock %}
+
 对话的管理包括「成员管理」和「属性管理」两个方面。
-
-### 对话的成员管理
-
-成员管理，是在对话中对成员的一个实时生效的操作，一旦操作成功则不可逆。
-
-#### 准备工作
 
 在讲解下面的内容之前，我们先来创建一个多人对话。后面的举例都要基于这个对话，所以**这一步是必须的**。请将以下代码复制到 IDE 并且执行。 
 
@@ -458,6 +494,10 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 - 创建朋友列表 friends = [Bob, Harry, William]
 - 用 friends 创建新对话
 ```
+
+### 对话的成员管理
+
+成员管理，是在对话中对成员的一个实时生效的操作，一旦操作成功则不可逆。
 
 #### 自身主动加入
 
@@ -518,6 +558,8 @@ Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这�
 
 该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节[自身主动加入](#自身主动加入)中**Tom 加入对话之后，Bob 受到的影响。**
 
+>注意：如果在进行邀请操作时，被邀请者不在线，那么通知消息并不会被离线缓存，所以等到 Ta 再次上线的时候将不会收到通知。
+
 #### 自身退出对话
 这里一定要区分**自身退出对话**的主动性，它与**自身被动被剔除**（下一小节）在逻辑上完全是不一样。
 
@@ -532,7 +574,7 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 - Tom 主动从对话中退出 //left
 ``` 
 
-#### 剔除其他成员
+#### 踢出其他成员
 
 Harry 被 William 从对话中删除。
 
@@ -549,11 +591,13 @@ Harry 被 William 从对话中删除。
 - William 把 Harry 从对话中踢出去 //RemoveMembers
 ```
 
+>注意：如果在进行踢人操作时，被踢者不在线，那么通知消息并不会被离线缓存，所以等到 Ta 再次上线的时候将不会收到通知。
+
 以上的操作可归纳为：
 
 1. 假如对话中已经有了 A 和 C
 
-B 的操作|对 B 的影响|对 C 的影响
+B 的操作|对 B 的影响|对 A、C 的影响
 ---|---|---
 B 加入| `OnConversationMembersChanged && OnJoined`|`OnConversationMembersChanged && OnMembersJoined`
 B 再离开|`OnConversationMembersChanged && OnLeft`|`OnConversationMembersChanged && OnMembersLeft`
@@ -564,8 +608,6 @@ A 对 B 的操作 | 对 B 的影响|对 C 的影响
 --- | ------------ | -------------|
 A 添加 B | `OnConversationMembersChanged && OnInvited`|`OnConversationMembersChanged && OnMembersJoined`
 A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersChanged && OnMembersLeft`
-
-> 如果邀请、踢人操作发生的时候，被邀请者/被踢者当前不在线，那么通知消息并不会被离线缓存，所以他们再上线的时候将不会收到通知。
 
 #### 查询成员数量
 {% block conversation_countMember_method %}{% endblock %}这个方法返回的是实时数据：
@@ -580,7 +622,7 @@ A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersC
 
 ### 对话的属性管理
 
-对话（AVIMConversation）与控制台中 `_Conversation` 表是一一对应的，默认提供的属性的对应关系如下：
+对话实例（AVIMConversation）与控制台中 `_Conversation` 表是一一对应的，默认提供的属性的对应关系如下：
 
 {% block table_conversation_attributes_intro %}{% endblock %}
 
@@ -605,17 +647,16 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - Black 登录
 - 进入 Tom 创建的对话「喵星人」，id = 55117292e4b065f7ee9edd29
 - 修改对话名称为「聪明的喵星人」
-- 保存到服务端
+- 保存到云端
 ```
 
 ####  成员
 
-表示是当前对话中所有成员的 `clientId`。
+是当前对话中所有成员的 `clientId`。
 
 >**强烈建议开发者切勿在控制台中对其进行修改**。所有关于成员的操作请参照上一章节中的 [对话的成员管理](#对话的成员管理) 来进行。
 
 #### 静音成员
-
 代表当前对话中所有做了静音操作的成员的 `clientId`。假如某一用户不想再收到某对话的消息提醒，但又不想直接退出对话，可以使用静音操作，即开启「免打扰模式」。
 
 比如 Tom 工作繁忙，对某个对话设置了静音：
@@ -628,13 +669,11 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 将其设置为静音 Mute
 ```
 
->设置静音之后，iOS 和 Windows Phone 的 用户就不会收到推送消息了。
+>设置静音之后，iOS 和 Windows Phone 的用户就不会收到推送消息了。
 
-此操作会修改服务端 `_Conversation` 里面的 `mu` 属性。
+与之对应的就是取消静音的操作，即取消免打扰模式，{% block conversation_unmute %}{% endblock %}
 
-与之对应的就是取消静音的操作，即取消静音/取消免打扰模式，示例代码如下：
-
-{% block conversation_unmute %}{% endblock %}
+此操作会修改云端 `_Conversation` 里面的 `mu` 属性。
 
 >**强烈建议开发者切勿在控制台中对 `mu` 随意进行修改**。
 
@@ -659,12 +698,22 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
 ```
 
->**注意**自定义属性**在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。**
+>注意：**自定义属性**在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。
 
 有关自定义属性的更多的用法，请参见 [对话的查询](#对话的查询)。
 
-### 对话的查询
+### 对话的删除
+
+Tom 将不再活跃的对话做下清理，将它们删除：
+
+{% block conversation_remove %}{% endblock %}
+
+>注意：该操作只是清除了移动端应用中的缓存，并不是从云端删除了 _Conversation 表中的相应数据。
+
+### 对话的查询 
+
 #### 基础查询
+
 ##### 根据 id 查询
 
 假如已知某一对话的 Id，可以使用它来查询该对话的详细信息：
@@ -676,6 +725,8 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 异步从服务器拉取对话：id = 551260efe4b01608686c3e0f
 ```
 
+{% block conversation_getAsync %}{% endblock %}
+
 ##### 获取对话列表
 
 用户登录进应用后，取回已经存在的所有对话（不包含暂态对话，如聊天室）：
@@ -684,10 +735,42 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 获取对话列表
+- 获取对话列表 //按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
 ```
 
+### 获取消息历史
+
+实时通信 SDK 会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。具体有两种方式：
+
+1. 获取该对话中最近的 N 条历史消息，通常在第一次进入对话时使用。
+
+{% block conversation_messageHistoryByLimit %}{% endblock %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
+```
+
+2. 获取某条消息之前的历史消息，通常用在翻页加载更多历史消息的场景中。
+
+{% block conversation_messageHistoryBeforeId %}{% endblock %}
+```
+- ...//前几步与上例相同
+- Tom 登录
+- 获取消息历史，不指定 limit //  不使用 limit 默认返回 20 条消息
+- 获取这 20 条中最早那条消息的信息
+- 再获取之前的消息，不指定 limit // 依然默认返回 20 条消息
+```
+
+翻页获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：
+
+* 起始消息的 messageId
+* 起始消息的发送时间戳
+* 需要获取的消息条数
+
 #### 条件查询
+
+>注意：针对对话的查询默认返回 10 个结果，若需要更改，请通过 limit 来设置。
 
 ##### 比较查询
 
@@ -701,7 +784,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建 attr 属性中 topic 是 movie 的查询
+- 构建查询条件：attr.topic = "movie"
 - 执行查询
 ```
 
@@ -715,17 +798,18 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建 attr 属性中 type 不等于 private 的查询
+- 构建查询条件 attr.type 不等于 private 
+- limit 设为 50 //默认为 10 个
 - 执行查询
 ```
 
-对于可以比较大小的整型、浮点等常用类型，可以参照以下示例代码进行拓展：
+对于可以比较大小的整型、浮点等常用类型，可以参照以下示例代码进行扩展：
 
 {% block conversation_query_greaterThan %}{% endblock %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建 attr 属性中 age > 18 的查询
+- 构建查询条件：attr.age > 18
 - 执行查询
 ```
 
@@ -739,19 +823,19 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建 attr.tag 是中文的查询 // 正则为 [\u4e00-\u9fa5] 
+- 构建查询条件：attr.tag 是中文的查询 // 正则为 [\u4e00-\u9fa5] 
 - 执行查询
 ```
 
 ##### 包含查询
 
-查询关键字包含「教育」的对话：
+包含查询是指方法名字包含 `Contains` 单词的方法，例如查询关键字包含「教育」的对话：
 
 {% block conversation_query_contains %}{% endblock %} 
 ``````
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建 attr.keywords 包含「教育」的查询
+- 构建查询条件：attr.keywords 包含 "教育"
 - 执行查询
 ```
 
@@ -762,13 +846,13 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 - 初始化 ClientId = Tom
 - Tom 登录
 - 构建 clientIds 列表：[Bob, Jerry]
-- 构建对话成员有 Bob 和 Jerry 的查询条件
+- 构构建查询条件：对话成员有 Bob 和 Jerry
 - 执行查询
 ```
 
 #### 组合查询
 
-组合查询的概念就是把诸多查询条件合并成一个查询，再交给 SDK 去服务端进行查询。
+组合查询的概念就是把诸多查询条件合并成一个查询，再交给 SDK 去云端进行查询。
 
 {% block conversation_query_chaining %}{% endblock %}例如，要查询年龄小于 18 岁，并且关键字包含「教育」的对话：
 
@@ -790,7 +874,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建查询条件：attr.keywords 包含「教育」、attr.age < 18
+- 构建查询条件：attr.keywords 包含 "教育"、attr.age < 18
 - 执行查询，获取符合条件的对话的数量
 ```
 
@@ -798,9 +882,10 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 聊天室本质上就是一个对话，所以上面章节提到的**所有属性、方法、操作以及管理都适用于聊天室**，它仅仅在逻辑上是一种暂态的、临时的对话，应用场景有弹幕、直播等等。
 
-聊天室与普通对话不一样的地方具体体现为：
+聊天室与普通对话或群聊不一样的地方具体体现为：
 
-* 不支持查询成员列表，但可以通过相关 API 查询在线人数；
+* 无人数限制，而普通对话最多允许 500 人加入。
+* 不支持查询成员列表，但可以通过相关 API 查询在线人数。
 * 不支持离线消息、离线推送通知等功能。
 * 没有成员加入、成员离开的通知。
 * 一个用户一次登录只能加入一个聊天室，加入新的聊天室后会自动离开原来的聊天室。
@@ -834,7 +919,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 ### 查询聊天室
 
-开发者需要注意的是，{% block chatroom_query_method %}{% endblock %}方法都是查询全部对话的，也就是说，如果想查询指定的聊天室，需要额外再调用一次{% block chatroom_query_method2 %}{% endblock %}方法：
+开发者需要注意的是，{% block chatroom_query_method %}{% endblock %}方法是查询全部对话的，也就是说，如果想查询指定的聊天室，需要额外再调用一次{% block chatroom_query_method2 %}{% endblock %}方法：
 
 比如查询主题包含《奔跑吧，兄弟》的聊天室：
 
@@ -857,7 +942,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 聊天记录一直是客户端开发的一个重点难题，QQ 和 微信的解决方案都是依托客户端做缓存，当收到一条消息时就按照自己的业务逻辑存储在客户端的文件或者是各种客户端数据库中。
 
-目前为了满足用户的需求，我们特地开放了从服务端获取聊天记录的功能：
+目前为了满足用户的需求，我们特地开放了从云端获取聊天记录的功能：
 
 {% block chatroom_query_history %}{% endblock %}
 ```
@@ -868,14 +953,38 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 以上将查询过去 24 小时内对话中所有的聊天记录。
 
-## 签名与安全
+## 客户端事件
 
-在继续阅读本文档之前，请确保你已经对 [实时通信服务开发指南—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了一定的了解。
+### 网络事件响应
+
+当网络连接出现中断、恢复等状态变化时，可以通过以下接口来处理响应：
+
+{% block networkStatus %}{% endblock %}
+>注意：网络状态在短时间内很可能会发生频繁变化，但这并不代表对话的接收与发送一定会受到影响，因此开发者在处理此类事件响应时，比如更新 UI，要适应加入更多的逻辑判断，以免影响用户的使用体验。
+
+### 退出登录
+
+要退出当前的登录状态或要切换账户，方法如下：
+
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- Tom 登出
+```
+
+{% block communicate_with_otherSDK %}
+
+## 安全与签名
+
+在继续阅读下文之前，请确保你已经对 [实时通信服务开发指南—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了充分的了解。
 
 ### 实现签名工厂
 
-{% block conversation_signature %}{% endblock %}
+为了满足开发者对权限和认证的要求，我们设计了操作签名的机制。签名启用后，所有的用户登录、对话创建/加入、邀请成员、踢出成员等操作都需要验证签名，这样开发者就对消息具有了完全的掌控。具体步骤是：
 
+我们强烈推荐启用签名，具体步骤是：进入 LeanCloud 应用控制台，选择 **设置** > **应用选项** > **聊天推送**，勾选 **聊天服务签名认证**。
+
+{% block conversation_security %}{% endblock %}
 
 ## FAQ
 Q：我只想实现两个用户的私聊，是不是每次都得重复创建对话？
