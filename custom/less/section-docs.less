@@ -10,7 +10,7 @@ body {
     line-height: 1.6;
     // Prepared for inline comment system
     position: relative;
-    padding-right: 50px;
+    // padding-right: 50px;
 
     img {
       max-width: 100%;
@@ -565,6 +565,7 @@ ul#toc,#toc li {
 // Main content
 .doc-content {
   width: 100%;
+  padding-left: 16px;
 
   @media (max-width: 640px) {
     margin-top: 20px;
@@ -824,8 +825,9 @@ blockquote{
 .inline-comment-wrap {
   position: absolute;
   top: 0;
-  right: 0;
+  right: 100%;
   cursor: pointer;
+  margin-right: 10px;
 
   &:hover,
   &:focus {
@@ -836,9 +838,51 @@ blockquote{
     opacity: 0;
     transition: opacity .2s ease;
 
+    span {
+      display: block;
+      position: relative;
+      background: #eee;
+      padding: 0 6px;
+      border-radius: 4px;
+      color: @link-color;
+      font-size: 11px;
+      line-height: 18px;
+      min-width: 20px;
+      min-height: 18px;
+
+      &:after {
+        position: absolute;
+        content: '';
+        display: block;
+        border: 6px solid rgba(0, 0, 0, 0);
+        border-top-color: #eee;
+        border-top-width: 5px;
+        border-top-style: solid;
+        border-right-width: 0px;
+        top: 18px;
+        right: 4px;
+      }
+    }
+
+    var {
+      font-size: 13px;
+    }
+
+    &.has-comments {
+
+      span {
+        background: @link-color;
+        color: #fff;
+
+        &:after {
+          border-top-color: @link-color;
+        }
+      }
+    }
+
     .doc-content p:hover &,
     .doc-content p:focus & {
-      opacity: .6;
+      opacity: 1;
     }
 
     &.has-comments,

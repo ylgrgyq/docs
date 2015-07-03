@@ -65,8 +65,8 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             getCommentsBySnipeet(snippetVersion);
             var mouseX = e.pageX;
             var mouseY = e.pageY;
-            var xoffset = -20 - 400;
-            var yoffset = 20;
+            var xoffset = 10;
+            var yoffset = 10;
 
             $('#comment-container').fadeIn(100);
             $('#comment-container').css({
@@ -238,7 +238,7 @@ angular.module('app').directive('lcComment',['$compile',function($compile){
             version:'@version',
             allComment: '=allComment'
         },
-        template:'<div class="toggle-comment" ng-class="{\'has-comments\':allComment[version]}" ng-click="f($event)"><span class="icon" ng-class="{\'icon-chat-bold\':allComment[version], \'icon-chat-alt\':!allComment[version]}"></span> <span>{{allComment[version]}}</span></div>',
+        template:'<div class="toggle-comment" ng-class="{\'has-comments\':allComment[version]}" ng-click="f($event)"><span>{{allComment[version]}}<var ng-show="!allComment[version]">+</var></span></div>',
         link: function(scope, element, attrs) {
             scope.f = function(e){
                 scope.$parent.showCommentDialog(e,scope.version);
