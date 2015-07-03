@@ -181,7 +181,6 @@ conversation.OnTextMessageReceived += (s,e)=>
 MediaLibrary library = new MediaLibrary();//系统媒体库
 var photo = library.Pictures[0];//获取第一张照片，运行这段代码，确保手机以及虚拟机里面的媒体库至少有一张照片
 
-{% block imageMessage_local_send %}
 AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
 imgMessage.Attributes = new Dictionary<string, object>() 
 { 
