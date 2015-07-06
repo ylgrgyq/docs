@@ -1,3 +1,6 @@
+{% set appid = '{{appid}}' %}
+{% set appkey = '{{appkey}}' %}
+{% set masterkey = '{{masterkey}}' %}
 #  {% block language %}{% endblock %} 实时通信开发指南
 
 ## 简介
@@ -336,23 +339,23 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 
 所有继承自 `AVIMFileMessageBase` 的消息类型的发送策略如下：
 
-* 如果文件是从客户端 API 读取的数据流 (Stream)，步骤为： 
+* 如果文件是从**客户端 API 读取的数据流 (Stream)**，步骤为： 
 
-1. 从本地构造 AVFile
-1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
-1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
-1. 发送消息
+  1. 从本地构造 AVFile
+  1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
+  1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
+  1. 发送消息
 
-* 如果文件是外部链接的 URL，则：
+* 如果文件是**外部链接的 URL**，则：
 
-1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
-2. 发送消息
+  1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
+  2. 发送消息
 
 #### 启用离线消息推送
 
 不管是单聊还是群聊，当用户 A 发出消息后，如果目标对话的部分用户当前不在线，LeanCloud 云端可以提供离线推送的方式来提醒用户。
 
->{% block offlineMessage_android %}{% endblock %}
+{% block offlineMessage_android %}{% endblock %}
 
 这一功能默认是关闭的，你可以在 LeanCloud 应用控制台中开启它。开启方法如下：
 
@@ -368,26 +371,13 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 是指消息被对方收到之后，云端会发送一个回执通知给发送方，表明消息已经送达。
 
 {% block message_sent_ack %}{% endblock %}
-- 初始化 ClientId = Tom
-- Tom 登录
-- 进入已有对话 Id = 551260efe4b01608686c3e0f
-- 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
-- 发送
-- 系统给 Tom 返回己送达通知
 
 #### 消息已读回执
 
 是指接收方告知云端消息已被接收，紧接着云端给发送方的一个回执，告知消息已经被接收方接收。
 
->俊文表示：我们还不支持「已读回执」
+>2015-07-02 俊文表示：我们还不支持「已读回执」
 {% block message_received_ack %}{% endblock %}
-- 初始化 ClientId = Jerry
-- Jerry 登录
-- 进入已有对话 Id = 551260efe4b01608686c3e0f
-- //收到 Tom 的消息："夜访蛋糕店，约吗？"
-- 系统向 Tom 发送已读回执
-- Jerry 回复 Tom："不约，最近牙疼……"
-- 发送
 
 ### 消息的接收策略
 
@@ -406,12 +396,12 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 一|`AVIMMessage`|所有消息的基类|抽象类
 二|`AVIMTypedMessage`| 富媒体消息的基类|抽象类
 三|`AVIMTextMessage`|文本消息|实例类
-三|`AVIMLocationMessage`|地理位置消息|实例类
-三|`AVIMFileMessageBase`| 所有包含了文件内容的消息的基类|抽象类
+ |`AVIMLocationMessage`|地理位置消息|实例类
+ |`AVIMFileMessageBase`| 所有包含了文件内容的消息的基类|抽象类
 四|`AVIMImageMessage`|图像消息|实例类
-四|`AVIMAudioMessage`|音频消息|实例类
-四|`AVIMVideoMessage`|视频消息|实例类
-四|`AVIMFileMessage`|通用文件消息类|实例类
+ |`AVIMAudioMessage`|音频消息|实例类
+ |`AVIMVideoMessage`|视频消息|实例类
+ |`AVIMFileMessage`|通用文件消息类|实例类
 
 实时通信 SDK 在封装时对消息做了明确的分层，开发者需要根据自己的需求去使用。
 
@@ -556,12 +546,14 @@ Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这�
 - Jerry 把 Mary 加入到对话 //AddMembers
 ```
 
-该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节[自身主动加入](#自身主动加入)中**Tom 加入对话之后，Bob 受到的影响。**
+该对话的其他成员（例如 Harry）也会受到该项操作的影响，收到事件被响应的通知，类似于第一小节 [自身主动加入](#自身主动加入) 中**Tom 加入对话之后，Bob 受到的影响。**
+
+{% block conversation_invite_events %}{% endblock %}
 
 >注意：如果在进行邀请操作时，被邀请者不在线，那么通知消息并不会被离线缓存，所以等到 Ta 再次上线的时候将不会收到通知。
 
 #### 自身退出对话
-这里一定要区分**自身退出对话**的主动性，它与**自身被动被剔除**（下一小节）在逻辑上完全是不一样。
+这里一定要区分**自身退出对话**的主动性，它与**自身被动被踢出**（下一小节）在逻辑上完全是不一样。
 
 Tom 主动从对话中退出，他需要如下代码实现需求：
 
@@ -576,11 +568,7 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 
 #### 踢出其他成员
 
-Harry 被 William 从对话中删除。
-
->注：关于 William 如何获得权限在后面的 [签名和安全](#签名和安全) 中会做详细阐述，此处不宜扩大话题范围。
-
-实现代码如下：
+Harry 被 William 从对话中删除。（关于 William 如何获得权限在后面的 [签名和安全](#签名和安全) 中会做详细阐述，此处不宜扩大话题范围。）实现代码如下：
 
 {% block conversation_kick %}{% endblock %}
 ```
@@ -593,21 +581,7 @@ Harry 被 William 从对话中删除。
 
 >注意：如果在进行踢人操作时，被踢者不在线，那么通知消息并不会被离线缓存，所以等到 Ta 再次上线的时候将不会收到通知。
 
-以上的操作可归纳为：
-
-1. 假如对话中已经有了 A 和 C
-
-B 的操作|对 B 的影响|对 A、C 的影响
----|---|---
-B 加入| `OnConversationMembersChanged && OnJoined`|`OnConversationMembersChanged && OnMembersJoined`
-B 再离开|`OnConversationMembersChanged && OnLeft`|`OnConversationMembersChanged && OnMembersLeft`
-
-2. 假如对话中已经有了 A 和 C
-
-A 对 B 的操作 | 对 B 的影响|对 C 的影响
---- | ------------ | -------------|
-A 添加 B | `OnConversationMembersChanged && OnInvited`|`OnConversationMembersChanged && OnMembersJoined`
-A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersChanged && OnMembersLeft`
+{% block conversation_kick_events %}{% endblock %}
 
 #### 查询成员数量
 {% block conversation_countMember_method %}{% endblock %}这个方法返回的是实时数据：
@@ -633,22 +607,10 @@ A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersC
 Tom 想建立一个名字叫「喵星人」 对话并且邀请了好友 Black 加入对话：
 
 {% block conversation_name %}{% endblock %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 创建对话，同时邀请 Black，对话名称为 '喵星人'
-```
 
 Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，他需要如下代码：   
 
 {% block conversation_changeName %}{% endblock %}
-```
-- 初始化 ClientId = Black
-- Black 登录
-- 进入 Tom 创建的对话「喵星人」，id = 55117292e4b065f7ee9edd29
-- 修改对话名称为「聪明的喵星人」
-- 保存到云端
-```
 
 ####  成员
 
@@ -663,19 +625,10 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 {% block conversation_mute %}{% endblock %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 进入对话：id = 551260efe4b01608686c3e0f
-- 将其设置为静音 Mute
-```
 
 >设置静音之后，iOS 和 Windows Phone 的用户就不会收到推送消息了。
 
-与之对应的就是取消静音的操作，即取消免打扰模式，{% block conversation_unmute %}{% endblock %}
-
-此操作会修改云端 `_Conversation` 里面的 `mu` 属性。
-
->**强烈建议开发者切勿在控制台中对 `mu` 随意进行修改**。
+与之对应的就是取消静音的操作，即取消免打扰模式，{% block conversation_unmute %}{% endblock %}。此操作会修改云端 `_Conversation` 里面的 `mu` 属性。**强烈建议开发者切勿在控制台中对 `mu` 随意进行修改**。
 
 #### 创建者
 
@@ -690,21 +643,12 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 典型的场景是，给某个对话加上一个值为 private 的 tag 标签，表示这个对话被标记为私有，代码如下：
 
 {% block conversation_tag %}{% endblock %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 创建属性 attr 列表对象
-- 加入 tag = "private"
-- 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
-```
 
->注意：**自定义属性**在 SDK 级别是对所有成员可见的。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。
-
-有关自定义属性的更多的用法，请参见 [对话的查询](#对话的查询)。
+**自定义属性在 SDK 级别是对所有成员可见的**。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。关于自定义属性的更多的用法，请参见 [对话的查询](#对话的查询)。
 
 ### 对话的删除
 
-Tom 将不再活跃的对话做下清理，将它们删除：
+Tom 把不再活跃的对话做下清理，将它们删除：
 
 {% block conversation_remove %}{% endblock %}
 
@@ -742,7 +686,7 @@ Tom 将不再活跃的对话做下清理，将它们删除：
 
 实时通信 SDK 会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。具体有两种方式：
 
-1. 获取该对话中最近的 N 条历史消息，通常在第一次进入对话时使用。
+获取该对话中最近的 N 条历史消息，通常在第一次进入对话时使用。
 
 {% block conversation_messageHistoryByLimit %}{% endblock %}
 ```
@@ -751,7 +695,7 @@ Tom 将不再活跃的对话做下清理，将它们删除：
 - 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
 ```
 
-2. 获取某条消息之前的历史消息，通常用在翻页加载更多历史消息的场景中。
+获取某条消息之前的历史消息，通常用在翻页加载更多历史消息的场景中。
 
 {% block conversation_messageHistoryBeforeId %}{% endblock %}
 ```
@@ -770,7 +714,7 @@ Tom 将不再活跃的对话做下清理，将它们删除：
 
 #### 条件查询
 
->注意：针对对话的查询默认返回 10 个结果，若需要更改，请通过 limit 来设置。
+针对对话的查询默认返回 10 个结果，若需要更改，请通过 limit 来设置。
 
 ##### 比较查询
 
@@ -972,7 +916,7 @@ Tom 将不再活跃的对话做下清理，将它们删除：
 - Tom 登出
 ```
 
-{% block communicate_with_otherSDK %}
+{% block communicate_with_otherSDK %}{% endblock %}
 
 ## 安全与签名
 
@@ -987,11 +931,14 @@ Tom 将不再活跃的对话做下清理，将它们删除：
 {% block conversation_security %}{% endblock %}
 
 ## FAQ
-Q：我只想实现两个用户的私聊，是不是每次都得重复创建对话？
+**Q：我只想实现两个用户的私聊，是不是每次都得重复创建对话？**
+
 A：不需要重复创建。我们推荐的方式是开发者可以用自定义属性来实现对私聊和群聊的标识，并且在进行私聊之前，需要查询当前两个参与对话的 ClientId 是否之前已经存在一个私聊的对话了。
 
-Q：某个成员退出对话之后，再加入，在他离开的这段期间内的产生的聊天记录，他还能获取么？
-A：可以的。目前聊天记录从属关系是属于对话的，也就是说，只要对话 Id 不变，不论人员如何变动，只要这个对话产生的聊天记录，当前成员都可以获取。
+**Q：某个成员退出对话之后，再加入，在他离开的这段期间内的产生的聊天记录，他还能获取么？**
 
-Q：我自己没有服务器，如何实现签名的功能？
+A：可以。目前聊天记录从属关系是属于对话的，也就是说，只要对话 Id 不变，不论人员如何变动，只要这个对话产生的聊天记录，当前成员都可以获取。
+
+**Q：我自己没有服务器，如何实现签名的功能？**
+
 A：LeanCloud 云引擎提供了托管 Python 和 Node 运行的方式，开发者可以所以用这两种语言按照签名的算法实现签名，完全可以支持开发者的自定义权限控制。

@@ -291,7 +291,7 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 这样一来，在开发者为 `TypedMessage`（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 `AVIMMessageManager.registerDefaultMessageHandler()` 中指定的 handler 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 `AVIMMessageManager.registerMessageHandler()` 中指定的 handler 被调用。
 {% endblock %}
 
-{% block offlineMessage_android %}**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
+{% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
 
 {% block attributes %} `attributes` {% endblock %}
 
@@ -424,6 +424,16 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 ```
 {% endblock %}
 
+{% block conversation_invite_events %}
+邀请成功以后，相关方收到通知的时序是这样的：
+
+No.|邀请者|被邀请者|其他人
+---|---|---|---
+1|发出请求 addMembers| | 
+2| |收到 onInvited 通知| 
+3|收到 onMemberJoined 通知| | 收到 onMemberJoined 通知
+{% endblock %}
+
 {% block conversation_left %}
 ```
 - 初始化 ClientId = Tom
@@ -442,6 +452,16 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 - 进入对话
 - William 把 Harry 从对话中踢出去 //RemoveMembers
 ```
+{% endblock %}
+
+{% block conversation_kick_events %}
+踢人时，相关方收到通知的时序如下：
+
+No.|操作者（管理员）|被踢者|其他人
+---|---|---|---
+1|发出请求 kickMembers| | 
+2| |收到 onKicked 通知| |
+3|收到 onMemberLeft 通知| |收到 onMemberLeft 通知
 {% endblock %}
 
 {% block conversation_countMember_method %} `conversation:countMembersWithCallback:` {% endblock %}

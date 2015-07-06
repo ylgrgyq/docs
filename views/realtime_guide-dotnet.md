@@ -103,7 +103,7 @@ public async void TomCreateConversationWithFriends()
     #endregion
 
     #region 第三步：发送一条消息
-    await friendConversation.SendTextMessageAsync("Hey，你们在哪里？");
+    await friendConversation.SendTextMessageAsync("你们在哪儿呢？");
     #endregion
 }
 ```
@@ -129,7 +129,7 @@ public async void BobReceiveMessageFromTom()
     {
         if (e.Message is AVIMTextMessage)
         {
-            //words 的内容就是：Hey，你们在哪里？
+            //words 的内容就是：你们在哪儿呢？
             string words = ((AVIMTextMessage)e.Message).TextContent;
 
             //AVIMClient 在接收到消息的时候，会一并提供消息所在的 AVIMConversation
@@ -390,18 +390,74 @@ TODO：.NET 待补充
 {% block messagePolicy_received_intro %}
 消息接收分为**两个层级**：
 
-* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_sent_method %}{% endblock %}
+* 第一层在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前{% block messagePolicy_send_method %}{% endblock %}负责接收这类消息，但是它并没有针对消息的类型做区分。
+
+* 第二层在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
+
+以上两个层级的消息接收策略可以用下表进行描述，假如正在接收的是 `AVIMTextMessage`：
+
+AVIMClient 接收端 | 条件① |条件② |条件③ | 条件④ |条件⑤ 
+:---|:---|:---|:---|:---|:---
+`AVIMClient.OnMessageReceived` | × | √ | √ | √ | √
+`AVIMConversation.OnMessageReceived` | × | × | √ | × | × 
+`AVIMConversation.OnTypedMessageReceived`| × | × | × | √ | × 
+`AVIMConversation.OnTextMessageReceived` | × | × | × | × | √ 
+对应条件如下：
+
+条件①：
+```c#
+AVIMClient.Status != Online
+``` 
+条件②：
+```c#
+   AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null
+```
+条件③：
+```c#
+   AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+```
+条件④：
+```c#
+   AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
+&& AVIMConversation.OnTextMessageReceived == null
+```
+
+条件⑤：
+```c#
+   AVIMClient.Status == Online 
+&& AVIMClient.OnMessageReceived != null 
+&& AVIMConversation.OnMessageReceived != null
+&& AVIMConversation.OnTypedMessageReceived != null
+&& AVIMConversation.OnTextMessageReceived != null
+```
+
+在 `AVIMConversation` 内，接收消息的顺序为： 
+
+`OnTextMessageReceived` > `OnTypedMessageReceived` > `OnMessageReceived`
+
+这是为了方便开发者在接收消息的时候有一个分层操作的空间，这一特性也适用于其他富媒体消息。
+
+{% endblock %}
 
 {% block message_sent_ack %}
+```
 - 初始化 ClientId = Tom
 - Tom 登录
 - 打开已有对话 Id = 551260efe4b01608686c3e0f
 - 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
 - 发送
 - 系统给 Tom 返回己送达通知
+```
 {% endblock %}
 
 {% block message_received_ack %}
+```
 - 初始化 ClientId = Jerry
 - Jerry 登录
 - 打开已有对话 Id = 551260efe4b01608686c3e0f
@@ -409,6 +465,7 @@ TODO：.NET 待补充
 - 系统向 Tom 发送已读回执
 - Jerry 回复 Tom："不约，最近牙疼……"
 - 发送
+```
 {% endblock %}
 
 {% block conversation_init %}
@@ -544,6 +601,16 @@ public async void InviteMaryAsync()
 ```
 {% endblock %}
 
+{% block conversation_invite_events %}
+邀请成功以后，相关方收到通知的时序是这样的：
+
+No.|操作者（管理员）|被邀请者|其他人
+---|---|---|---
+1|发出请求 addMembers| | 
+2| |收到 onInvited 通知| 
+3|收到 onMemberJoined 通知| | 收到 onMemberJoined 通知
+{% endblock %}
+
 {% block conversation_left %}
 ```c#
 public async void InitiativeLeftAsync()
@@ -570,6 +637,24 @@ public async void WilliamKickHarryOutAsync()
     await conversation.RemoveMembersAsync("Harry");//William 把 Harry 从对话中剔除
 }
 ```
+{% endblock %}
+
+{% block conversation_kick_events %}
+以上的操作可归纳为：
+
+1. 假如对话中已经有了 A 和 C
+
+B 的操作|对 B 的影响|对 A、C 的影响
+---|---|---
+B 加入| `OnConversationMembersChanged && OnJoined`|`OnConversationMembersChanged && OnMembersJoined`
+B 再离开|`OnConversationMembersChanged && OnLeft`|`OnConversationMembersChanged && OnMembersLeft`
+
+2. 假如对话中已经有了 A 和 C
+
+A 对 B 的操作 | 对 B 的影响|对 C 的影响
+--- | ------------ | -------------|
+A 添加 B | `OnConversationMembersChanged && OnInvited`|`OnConversationMembersChanged && OnMembersJoined`
+A 再踢出 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersChanged && OnMembersLeft`
 {% endblock %}
 
 {% block conversation_countMember_method %} `AVIMConversation.CountMembersAsync` {% endblock %}
@@ -939,6 +1024,12 @@ AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d422
 con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 //查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
 ```
+{% endblock %}
+
+{% block networkStatus %}
+ClientStatus.None    0   未知
+Online  1   在线
+Offline
 {% endblock %}
 
 {% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}

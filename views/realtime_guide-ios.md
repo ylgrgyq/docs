@@ -321,8 +321,18 @@
 - Jerry 登录
 - 假定对话 Id = 551260efe4b01608686c3e0f
 - 进入对话
-- Jerry 把 Mary 加入到对话 //AddMembers
+- Jerry 把 Mary 加入到对话
 ```
+{% endblock %}
+
+{% block conversation_invite_events %}
+邀请成功以后，相关方收到通知的时序是这样的：
+
+No.|邀请者|被邀请者|其他人
+---|---|---|---
+1|发出请求 addMembers| | 
+2| |收到 invitedByClientId 通知| 
+3|收到 membersAdded 通知|收到 membersAdded 通知 | 收到 membersAdded 通知
 {% endblock %}
 
 {% block conversation_left %}
@@ -343,6 +353,16 @@
 - 进入对话
 - William 把 Harry 从对话中踢出去 //RemoveMembers
 ```
+{% endblock %}
+
+{% block conversation_kick_events %}
+踢人时，相关方收到通知的时序如下：
+
+No.|邀请者|被邀请者|其他人
+---|---|---|---
+1|发出请求 removeMembers| | 
+2| |收到 kickedByClientId 通知| 
+3|收到 membersRemoved 通知| | 收到 membersRemoved 通知
 {% endblock %}
 
 {% block conversation_countMember_method %} `conversation:countMembersWithCallback:` {% endblock %}
