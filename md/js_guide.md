@@ -1,6 +1,6 @@
 # JavaScript 指南
 
-如果你还没有设置你的项目，请查看我们的 [QuickStart](./start.html)。
+如果你还没有设置你的项目，请查看文档 [快速入门](./start.html)。
 
 如果你希望从项目中学习，请前往 [JavaScript SDK Demos](https://github.com/leancloud/leancloud-demos#javascript)。
 
@@ -45,7 +45,7 @@ content: "每个 JavaScript 程序员必备的 8 个开发工具", pubUser: "Lea
 
 每一个 `AV.Object` 都是一个特定子类的实例，子类名可以来区分各种不同的数据。我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
-为了建立一个新的子类,你可以使用 `AV.Object.extend` 方法。如果你熟悉 Backbone.Model 的话，你已经明白如何使用 AV.Object 了，它本身就是设计来让两者可以相互替换的。
+为了建立一个新的子类，你可以使用 `AV.Object.extend` 方法。如果你熟悉 Backbone.Model 的话，你已经明白如何使用 AV.Object 了，它本身就是设计来让两者可以相互替换的。
 
 **注意**：`AV.Object.extend` 产生的对象需要作为全局变量保存，因为每调用
 一次，就会产生一个新的类的实例，并且和之前创建的实例形成一个链表。
@@ -216,7 +216,7 @@ LeanCloud 自动查找哪些数据被改动了，所以 SDK 这边只有 "dirty"
 
 #### fetchWhenSave
 
-如果想更新成功后，获取更新后的最新的对象属性，请设置`fetchWhenSave`:
+如果想在更新成功后获取最新的对象属性，请设置`fetchWhenSave`:
 
 ```javascript
 //假设post是已经存在的对象
@@ -237,7 +237,7 @@ post.increment("upvotes");
 post.save();
 ```
 
-另外，通过使用 `increment(key, amount)` 方法，你可以自行定义增减的幅度。
+另外，通过使用 `increment(key, amount)` 方法，你可以自行定义增减的幅度（amount 缺省值为 1）。
 
 #### 数组
 
@@ -245,7 +245,7 @@ post.save();
 
 - add: 在一个数组的末尾加入一个给定的对象
 - addUnique: 只会把原本不存在的对象加入数组，所以加入的位置没有保证
-- remove: 在一个数组中删除所有指定的所有实例
+- remove: 在一个数组中删除所有指定的实例
 
 比如，我们想在一条微博的属性 "tags" 中加入多个属性值:
 
@@ -443,7 +443,7 @@ query.find({
 var TestObject = AV.Object.extend("DataTypeTest");
 
 var number = 2014;
-var string = "famous file name is " + number;
+var string = "famous film name is " + number;
 var date = new Date();
 var array = [string, number];
 var object = { number: number, string: string };
@@ -945,7 +945,7 @@ obj.save().done(function(obj) {
 
 Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。
 如果一个 Promise 的回调会返回一个 Promise，那么第二个 then 里的 callback 在第一个 then
-的 callback 没有解决前是不会解决的，也就是所谓 `Promise Chain`。
+的 callback 没有解决前是不会解决的，也就是所谓 **Promise Chain**。
 
 ```javascript
 var query = new AV.Query("Student");
@@ -1344,7 +1344,7 @@ collection.reset([
  `AV.Object` 无法存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可
 以随意用来存储文档、视频、音乐或者任何二进制数据。
 
-在浏览器通过 JavaScript sdk 上传文件大小不能超过 10M，在 node.js 环境里没有这个限制。
+在浏览器通过 JavaScript SDK 上传文件大小不能超过 10M，在 Node.js 环境里没有这个限制。
 
 开始使用 AV.File 是很容易的，有很多种不同的方式来新建一个 file。第一个是 base64 编码的字符串表示:
 
@@ -1365,25 +1365,25 @@ var file = new AV.File("myfile.txt", bytes);
 上的文件就可以了：
 
 ```javascript
-<input type="file" id="profilePhotoFileUpload">
+<input type="file" id="photoFileUpload">
 ```
 
 然后，在一个处理 click 或其他事件的函数里，获取对那个文件的一个引用:
 
 ```javascript
-var fileUploadControl = $("#profilePhotoFileUpload")[0];
+var fileUploadControl = $("#photoFileUpload")[0];
 if (fileUploadControl.files.length > 0) {
   var file = fileUploadControl.files[0];
-  var name = "photo.jpg";
+  var name = "avatar.jpg";
 
   var avFile = new AV.File(name, file);
 }
 ```
 
-注意在这个例子里我们会给文件一个名字叫 `photo.jpg`，这里有 2 点值得注意：
+注意在这个例子里我们会给文件一个名字叫 `avatar.jpg`，这里有 2 点值得注意：
 
 - 你不需要担心文件名重复的问题。每一次上传都会有一个独一无二的标识符，所
-  以上传多个文件都叫 `photo.jpg` 是没有问题的。
+  以上传多个文件都叫 `avatar.jpg` 是没有问题的。
 - 你应该给你的文件一个扩展名。这样会让 LeanCloud 明白文件的类型，并且会按文件
   类型来进行处理。所以如果你在储存 PNG 格式的文件的话，请保证你的文件名是
   以 ".png" 为结尾的.
@@ -1394,7 +1394,7 @@ if (fileUploadControl.files.length > 0) {
 var file = new AV.File('test.txt', new Buffer('hello world'));
 ```
 
-因为 Node.js 对 IO 的读写经常都是经过 Buffer，通过支持 Buffer，我们的 SDK 也能很好地工作在 node.js 环境。
+因为 Node.js 对 IO 的读写经常都是经过 Buffer，通过支持 Buffer，我们的 SDK 也能很好地工作在 Node.js 环境。
 
 从`0.3.2`版本开始，我们还支持保存一个现有存储在其他服务上的 URL 的文件对象：
 
@@ -1430,14 +1430,14 @@ post.save();
 文件的 url。下面就是我们如何用 jQuery 将一个图片文件插入页面之中：
 
 ```javascript
-var profilePhoto = profile.get("photoFile");
-$("profileImg")[0].src = profilePhoto.url();
+var avatarPhoto = profile.get("avatarFile");
+$("avatarImg")[0].src = avatarPhoto.url();
 ```
 
 如果你想在云引擎中处理一个文件的数据， 你可以用我们的 http 网络库来获取这个文件。
 
 ```javascript
-AV.Cloud.httpRequest({ url: profilePhoto.url() }).then(function(response) {
+AV.Cloud.httpRequest({ url: avatarPhoto.url() }).then(function(response) {
   // The file contents are in response.buffer.
 });
 ```
@@ -1538,7 +1538,7 @@ user.signUp(null, {
 });
 ```
 
-这个调用会异步地在在你的应用中创建一个新的用户。在它这样做之前，它同
+这个调用会异步地在你的应用中创建一个新的用户。在它这样做之前，它同
 样会确认用户名和 email 在应用内都是唯一的。同样，为了安全我们会将密码散列
 过后存储在 LeanCloud 中，我们从不会将用户密码以明文存储，也不会用明文
 向任何客户端发送密码。
@@ -1576,17 +1576,17 @@ AV.User.logIn("myname", "mypass", {
 譬如部分功能只开放给验证过邮箱的用户使用，等等。
 
 Email 验证会在 AV.User 上加入一个 `emailVerified` 字段，当一个
-AV.User 的 email 被设定或者修改后，`emailVerfied` 会被置为 false，同时 LeanCloud 云端会
+AV.User 的 email 被设定或者修改后，`emailVerified` 会被置为 false，同时 LeanCloud 云端会
 向用户的 email 来发送一个确认链接。用户接收邮件之后，点击这个链接会设置 `emailVerified` 为 true。
 
 有三种 `emailVerified` 状态可以供参考:
 
-1. true 用户已经通过点击 LeanCloud 发过来的链接来确认邮箱地址，当用户账户新创
+1. true。 用户已经通过点击 LeanCloud 发过来的链接来确认邮箱地址，当用户账户新创
    建的时候这个值永远不应该是 true.
-2. false 在 AV.User 对象最后一次刷新的时候，用户还是没有确认他们的
+2. false。 在 AV.User 对象最后一次刷新的时候，用户还是没有确认他们的
    email 地址，如果 emailVerified 是 false 的话，你应该考虑调用 AV.User 的
    fetch 方法。
-3. missing AV.User 被创建了，但是当时的email验证功能还没有开启，或者说 AV.User 没有 email 地址.
+3. 空值。 AV.User 被创建了，但是当时的 email 验证功能还没有开启，或者说 AV.User 没有 email 地址.
 
 关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
@@ -1750,8 +1750,8 @@ AV.User 类默认就是受保护的，在 AV.User 中保存的数据只能被那
 修改。默认地，数据仍然可以被任意客户端所读取。这样就是说，有些 AV.User 对
 象被认证后是可以修改的，其他的仍然是只读的.
 
-特别的，你不能调用 save 或者 delete 方法除非 AV.User 经过了认证，就比如调用
-过了 logIn 或者 signUp 方法，这样保证只有用户自己能改动他们的数据。
+>> 特别的，你不能调用 `save` 或者 `delete` 方法，除非 AV.User 经过了认证，就比如调用
+过了 `logIn` 或者 `signUp` 方法，这样保证只有用户自己能改动他们的数据。
 
 下面的代码展示了上面说的安全策略：
 
@@ -1921,8 +1921,8 @@ AV.User.requestPasswordReset("email@example.com", {
    码
 4. 用户输入新的密码，他们的密码现在会更新为输入的新密码。
 
-注意这个流程的信息会引用你的 app 的名字，这个名字是你初始在 LeanCloud 上创建的
- app 的名字.
+注意这个流程的信息会引用你的 App 的名字，这个名字是你初始在 LeanCloud 上创建的
+ App 的名字.
 
 关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
@@ -2174,25 +2174,25 @@ var point = new AV.GeoPoint({latitude: 39.9, longitude: 116.4});
 这个点接着就在对象中被指定了:
 
 ```javascript
-placeObject.set("location", point);
+post.set("location", point);
 ```
 
 注意：现在 LeanCloud 限制了一个对象中只能有一个 AV.GeoPoint 的属性。
 
 ###地理位置查询
 
-现在你可以有一系列的对象可以做空间坐标查询了,如果能轻松地发现有哪些对
-象离一个点最近就好了.这样可以通过在AV.Query中加入一个near来做查询,
-为了获得离用户最近的10个地点列表,可以这样:
+现在你可以有一系列的对象可以做空间坐标查询了。如果想找到有哪些对
+象离一个地点最近，可以通过在 AV.Query 中加入一个 `near` 来做查询。例如，
+为了获得离用户最近的 10 条微博，可以这样：
 
 ```javascript
 // User's location
 var userGeoPoint = userObject.get("location");
 
-// Create a query for places
-var query = new AV.Query(PlaceObject);
+// Create a query for posts
+var query = new AV.Query(Post);
 
-// Interested in locations near user.
+// Interested in posts near user.
 query.near("location", userGeoPoint);
 
 // Limit what could be a lot of points.
@@ -2200,28 +2200,28 @@ query.limit(10);
 
 // Final list of objects
 query.find({
-  success: function(placesObjects) {
+  success: function(posts) {
   }
 });
 ```
 
-在这时placeObjects会返回一个按离userGeoPoint的距离排序的列表,注意如果
-一个ascending()/descending()给了查询的话,会取代按距离排序这项特性.
+在这时 posts 会返回一个按离 userGeoPoint 的距离排序的列表。注意如果
+在 AV.Query 上调用了 `ascending()`/`descending()` 的话，指定的排序属性会取代距离。
 
-为了按距离限制返回的结果,你可以使用withinMiles,withinKilometers和
-withinRadians.
+为了按距离限制返回的结果，你还可以使用 `withinMiles`、`withinKilometers` 和 
+`withinRadians`。
 
-同样,查询在特定地域的Object是可以的,为了找到用矩形表示的一块地域中的对
-象,加入 `withinGeoBox` 来在AV.Query中加入约束.
+同样地，也可以查询在特定地域的对象。为了找到用矩形表示的一块地域中的对
+象，需要在 AV.Query 中加入 `withinGeoBox` 约束条件：
 
 ```javascript
 var point1 = new AV.GeoPoint(39.99, 116.33);
 var point2 = new AV.GeoPoint(39.97, 116.37);
 
-var query = new AV.Query(PizzaPlaceObject);
+var query = new AV.Query(Post);
 query.withinGeoBox("location", point1, point2);
 query.find({
-  success: function(pizzaPlacesInSF) {
+  success: function(posts) {
     ...
   }
 });
@@ -2231,9 +2231,9 @@ query.find({
 
 在这里是有一些问题是值得留心的:
 
-1. 每一个AV.Object只能有一个键指向一个AV.GeoPoint对象
-2. Points不应该等于或者超出它的界. 纬度不应该是-90.0或者90.0,经度不应
-   该是-180.0或者180.0. 试图在GeoPoint上使用超出范围内的经度和纬度会导
+1. 每一个 AV.Object 只能有一个键指向一个 AV.GeoPoint 对象
+2. Points 不应该等于或者超出它的界. 纬度不应该是 -90.0 或者 90.0，经度不应
+   该是 -180.0 或者 180.0。试图在 GeoPoint 上使用超出范围内的经度和纬度会导
    致问题.
 
 
@@ -2246,10 +2246,10 @@ AV.View的时候,你需要包含一个jQuery库或者jQuery兼容的库(实现�
 
 ###转换 Backbone app
 
-如果你已经有一个存在的Backbone程序,你可以用我们的JavaScript SDK轻松地
+如果你已经有一个存在的Backbone程序,你可以用我们的 JavaScript SDK 轻松地
 转换.在转换过后,你就有一些静态文件但是包含了你的app的所有功能.
 
-我们的JavaScript SDK是Backbone兼容的,这意味着我们的AV.Object和
+我们的 JavaScript SDK 是 Backbone 兼容的,这意味着我们的AV.Object和
 AV.Collection都可以用Backbone.Model和Backbone.Collection加上一点点
 变化轻松地转换而来.下面就是怎样转换你的app:
 
@@ -2386,9 +2386,9 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 
 注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
 
-3、如果你是通过 WebView 来开发界面，Native 暴露本地特性的 Hybrid 方式开发你的 APP。
+3、如果你是通过 WebView 来开发界面，Native 调用本地特性的 Hybrid 方式开发你的 App。
 比较推荐的开发方式是：
-通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 在来做数据连调，
+通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 再来做数据连调，
 这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。
 这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
 
