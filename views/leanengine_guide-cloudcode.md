@@ -722,6 +722,9 @@ app.post('/upload', function(req, res){
 {% endblock %}
 
 {% block cookie_session %}
+
+### 处理用户登录和登出
+
 假设你创建了一个支持web主机功能的云代码项目，在app.js里添加下列代码：
 
 ```javascript
