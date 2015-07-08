@@ -217,7 +217,9 @@
 与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block attributes %} `attributes` {% endblock %}
+{% block attributes %} `AVIMMessage.attributes` {% endblock %}
+
+{% block attributes_property %}attributes{% endblock %}
 
 {% block customMessage_sent %}
 ```
@@ -413,6 +415,14 @@ No.|邀请者|被邀请者|其他人
 ```
 {% endblock %}
 
+{% block conversation_remove %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 删除多个对话：id = [551260efe4b01608686c3e0f, 523431glfld803290dfsaf05]
+```
+{% endblock %}
+
 {% block conversation_getSingle %}
 
 ```
@@ -435,9 +445,6 @@ No.|邀请者|被邀请者|其他人
 - 初始化 ClientId = Tom
 - Tom 登录
 - 进入对话：id = 551260efe4b01608686c3e0f
-- 将其设置为静音 Mute
-- 初始化 ClientId = Tom
-- Tom 登录
 - 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
 ```
 {% endblock %}
@@ -542,7 +549,7 @@ No.|邀请者|被邀请者|其他人
 ```
 {% endblock %}
 
-{% block chatroom_count_method %} [AVIMConversation countMembersWithCallback:]` {% endblock %}
+{% block chatroom_count_method %} `[AVIMConversation countMembersWithCallback:]` {% endblock %}
 
 {% block chatroom_count %}
 ```
@@ -574,6 +581,14 @@ No.|邀请者|被邀请者|其他人
 ```
 {% endblock %}
 
+{% block chatroom_query_list %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 查找自己加入的聊天室
+```
+{% endblock %}
+
 {% block networkStatus %}
 与网络相关的通知（网络断开、恢复等）要采用 `AVIMClientDelegate` 代理方式来实现，主要接口如下：
 
@@ -582,6 +597,14 @@ No.|邀请者|被邀请者|其他人
 * `imClientResumed:(AVIMClient *)imClient` 指网络连接恢复正常，此时聊天服务变得可用。
 
 在网络中断的情况下，所有的消息收发和对话操作都会出现问题。
+{% endblock %}
+
+{% block logout %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- Tom 登出
+```
 {% endblock %}
 
 {% block conversation_security %}
@@ -603,7 +626,7 @@ imClient.signatureDataSource = signatureDelegate;
 }];
 ```
 
-设定了 signatureDataSource 之后，对于需要鉴权的操作，LeanCloud IM SDK 与服务器端通讯的时候都会带上应用自己生成的 Signature 信息，LeanCloud 云端会使用 app 的 masterKey 来验证信息的有效性，保证聊天渠道的安全。
+设定了 signatureDataSource 之后，对于需要鉴权的操作，实时通信 SDK 与服务器端通讯的时候都会带上应用自己生成的 Signature 信息，LeanCloud 云端会使用 app 的 masterKey 来验证信息的有效性，保证聊天渠道的安全。
 
 对于 AVIMSignatureDataSource 接口，我们只需要实现这一个函数即可：
 
@@ -645,6 +668,6 @@ imClient.signatureDataSource = signatureDelegate;
 * nonce 随机字符串 nonce
 * error 签名错误信息
 
-在启用签名功能的情况下，LeanCloud IM SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。 
+在启用签名功能的情况下，实时通信 SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。 
 
 {% endblock %}

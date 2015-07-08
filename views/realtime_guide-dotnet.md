@@ -356,7 +356,9 @@ public async void SendLocationAsync()
 与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block attributes %}Attributes{% endblock %}
+{% block attributes %} `AVIMMessage.Attributes` {% endblock %}
+
+{% block attributes_property %}Attributes{% endblock %}
 
 {% block customMessage_sent %}
 ```c#
@@ -767,9 +769,6 @@ public async void CreateConversationWithCustomAttributesAsync()
 - 初始化 ClientId = Tom
 - Tom 登录
 - 进入对话：id = 551260efe4b01608686c3e0f
-- 将其设置为静音 Mute
-- 初始化 ClientId = Tom
-- Tom 登录
 - 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
 ```
 {% endblock %}
@@ -1006,14 +1005,10 @@ public async void QueryChatRoom_SampleCode()
 {% block chatroom_query_extra %}从代码上可以看出，仅仅是多了一个额外的 `WhereEqualTo("tr", true)` 的链式查询即可。{% endblock %}
 
 {% block chatroom_query_list %}
-```c#
-public async void QueryChatRoom_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery();
-    var result = await query.FindAsync();//执行查询
-}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 查找自己加入的聊天室
 ```
 {% endblock %}
 
@@ -1030,6 +1025,14 @@ con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
 ClientStatus.None    0   未知
 Online  1   在线
 Offline
+{% endblock %}
+
+{% block logout %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- Tom 登出
+```
 {% endblock %}
 
 {% block messageReceiveMethod_image %}OnImageMessageReceived{% endblock %}

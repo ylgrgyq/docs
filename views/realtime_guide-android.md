@@ -293,7 +293,9 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 
 {% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
 
-{% block attributes %} `attributes` {% endblock %}
+{% block attributes %} `AVIMMessage.attributes` {% endblock %}
+
+{% block attributes_property %}attributes{% endblock %}
 
 {% block customMessage_sent %}
 ```
@@ -534,9 +536,6 @@ No.|操作者（管理员）|被踢者|其他人
 - 初始化 ClientId = Tom
 - Tom 登录
 - 进入对话：id = 551260efe4b01608686c3e0f
-- 将其设置为静音 Mute
-- 初始化 ClientId = Tom
-- Tom 登录
 - 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
 ```
 {% endblock %}
@@ -673,6 +672,14 @@ No.|操作者（管理员）|被踢者|其他人
 ```
 {% endblock %}
 
+{% block chatroom_query_list %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- 查找自己加入的聊天室
+```
+{% endblock %}
+
 {% block networkStatus %}
 与网络相关的通知（网络断开、恢复等）会由 `AVIMClientEventHandler` 做出响应，接口函数有：
 
@@ -682,6 +689,14 @@ No.|操作者（管理员）|被踢者|其他人
 在网络中断的情况下，所有的消息收发和对话操作都会出现问题。
 
 通过 `AVIMClient.setClientEventHandler()` 可以设定全局的客户端事件响应（ClientEventHandler）。
+{% endblock %}
+
+{% block logout %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录
+- Tom 登出
+```
 {% endblock %}
 
 {% block conversation_security %}
