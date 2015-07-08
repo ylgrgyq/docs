@@ -47,7 +47,7 @@ Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://git
 
 运行命令：
 ```
-bower install leancloud-realtime -- save
+bower install leancloud-realtime --save
 ```
 安装之后，页面直接加载 bower_components/leancloud-realtime/src/AV.realtime.js 即可。
 
@@ -838,7 +838,7 @@ RealtimeObject.query(callback)
 
 返回：
 
-* {Object} 返回 realtimeObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
@@ -938,7 +938,7 @@ RealtimeObject.ping(clientIdList, callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
@@ -991,7 +991,7 @@ RealtimeObject.ping(clientId, callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
