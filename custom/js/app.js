@@ -137,20 +137,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                     $scope.allComment[snippet]=1;
                 }
                 $scope.getCommentsBySnipeet();
-                // var Snippet = AV.Object.extend('Snippet');
-                // var query =new AV.Query(Snippet);
-                // query.equalTo('snippetVersion',snippet);
-                // query.find({
-                //     success: function(results){
-                //         if(results && results.length==0){
-                //             var snippetObj = new Snippet();
-                //             snippetObj.set('snippetVersion', snippet),
-                //             snippetObj.set('content',$('[version='+snippet+']').text());
-                //             snippetObj.set('file',window.location.pathname.split('\/').pop());
-                //             snippetObj.save();
-                //         }
-                //     }
-                // })
+
             }).error(function(err){
                 if(err.status == 401){
                     // window.open(commentHost+'/users/login')
@@ -166,8 +153,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             $('p[version=' + $scope.snippetVersion + ']').removeClass('on');
             $('#comment-container').fadeOut(100);
         }
-        // AV.serverURL = '/';
-        // AV.initialize('749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb','axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib');
+
         getComments();
         getUser();
     }]);
