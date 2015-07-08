@@ -471,9 +471,7 @@ Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将�
 - Tom 主动加入到对话中
 ```
 
-该群的其他成员（比如 Bob）会根据自身客户端的状态不同会出现以下两种情况:
-
-* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
+该群的其他成员（比如 Bob）会根据自身客户端的状态不同会出现以下情况:
 
 {% block conversation_membersChanged %}{% endblock %}
 ```
@@ -485,8 +483,6 @@ Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将�
 - //开发者可以继续添加自己的业务逻辑
 - break;
 ```
-
-* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
 
 {% block conversation_memebersJoined %}{% endblock %}
 ```

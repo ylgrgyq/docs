@@ -25,12 +25,12 @@
 
 然后我们需要在 application 的 `applicationDelegate` 函数中对实时通信 SDK 进行初始化：
 
-```
+```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // 其他处理...
     ...
-    //"你的 AppId", "你的 AppKey"
+    // "你的 AppId", "你的 AppKey"
     [AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
     ...
 }
@@ -38,38 +38,126 @@
 {% endblock %}
 
 
-{% block oneOnOneChat_send %}
+## 示例代码约定
+
+在以下示例代码中，若无特殊说明，所有代码均位于下面这个类的实现文件中：
+
+```objc
+@interface TomAndJerryEpisode : NSObject
+
+@end
+
+@implementation TomAndJerryEpisode
+
+// 所有示例代码均位于此处
+
+@end
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 向 Jerry 发送消息：'耗子，起床！' 
+
+对于像 `self.prop` 这样的引用，我们约定 `prop` 属性在 `TomAndJerryEpisode` 类中已经有了正确的实现。
+
+我们也故意省略了错误处理，有时还会省略一些上下文逻辑，目的是让示例代码简明扼要。
+
+示例代码旨在做进一步阐释，而不是最佳实践，我们希望您能从示例代码中找到灵感。
+
+
+{% block oneOnOneChat_send %}
+```objc
+- (void)TomSendMessageToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"Tom and Jerry" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一条消息给 Jerry
+            [conversation sendMessage:[AVIMTextMessage messageWithText:@"耗子，起床！" attributes:nil] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block oneOnOneChat_receive %}
-```
-- 初始化 ClientId = Jerry 
-- Jerry 登录到系统
-- 设置接收消息的方法
+```objc
+- (void)JerryReceiveMessageFromTom {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // 设置 client 的 delegate，并实现 delegate 方法
+    self.client.delegate = self;
+
+    // Jerry 用自己的名字作为 ClientId 打开了 client
+    [self.client openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+// 接收消息的回调函数
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    NSLog(@"%@", message.text); // 耗子，起床！
+}
 ```
 {% endblock %}
 
 {% block groupChat_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 建立一个朋友列表 friends：[Jerry, Bob, Harry, William]
-- 新建对话，把朋友们列为对话的参与人员
-- 发送消息：'Hey，你们在哪儿？'
+```objc
+- (void)TomCreateConversationWithFriends {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与朋友们的会话
+        NSArray *friends = @[@"Jerry", @"Bob", @"Harry", @"William"];
+        [self.client createConversationWithName:@"Tom and friends" clientIds:friends callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一条消息给朋友们
+            [conversation sendMessage:[AVIMTextMessage messageWithText:@"Hey，你们在哪里？" attributes:nil] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block groupChat_receive %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录到系统
-- 设置接收消息的方法
-- Bob 收到消息后又回复了一条：@Tom, 我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？
+```objc
+- (void)BobReceiveMessageFromFriends {
+    // Bob 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // 设置 client 的 delegate，并实现 delegate 方法
+    self.client.delegate = self;
+
+    // Bob 用自己的名字作为 ClientId 打开了 client
+    [self.client openWithClientId:@"Bob" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    NSLog(@"%@", message.text); // Hey，你们在哪里？
+
+    AVIMTextMessage *reply = [AVIMTextMessage messageWithText:@"Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？" attributes:nil];
+
+    [conversation sendMessage:reply callback:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"回复成功！");
+        }
+    }];
+}
 ```
 {% endblock %}
 
@@ -83,35 +171,85 @@
 {% endblock %}
 
 {% block textMessage_receive %}
-```
-- 初始化 ClientId = Jerry
-- Jerry 登录到系统
-- 进入与 Tom 的对话 //假设 ConversationId = 55117292e4b065f7ee9edd29
-- //收到 Tom 的消息：'耗子，起床！'
-- Jerry 回复 '早起了。啥事？'
+```objc
+- (void)JerryReceiveMessageFromTom {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // 设置 client 的 delegate，并实现 delegate 方法
+    self.client.delegate = self;
+
+    // Jerry 用自己的名字作为 ClientId 打开了 client
+    [self.client openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+// 接收消息的回调函数
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    NSLog(@"%@", message.text); // 耗子，起床！
+
+    AVIMTextMessage *reply = [AVIMTextMessage messageWithText:@"早起了，啥事儿？" attributes:nil];
+
+    [conversation sendMessage:reply callback:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            NSLog(@"回复成功！");
+        }
+    }];
+}
 ```
 {% endblock %}
 
 {% block imageMessage_local_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 从系统媒体库获取第一张照片
-- 创建图像消息
-- 给图像加一个自定义属性：location = '旧金山'
-- 图像 Title：'发自我的 iPhone'
-- 发送
+```objc
+- (void)TomSendLocalImageToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"Tom and Jerry" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 创建了一个图像消息
+            NSString *filePath = [self imagePath];
+            NSDictionary *attributes = @{ @"location": @"旧金山" };
+            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"发自我的 iPhone" attachedFilePath:filePath attributes:attributes];
+
+            // Tom 将图像消息发给 Jerry
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block imageMessage_url_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称是「猫和老鼠」
-- 创建图像消息：http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif
-- 加入文本：萌妹子一枚
-- 发送
+```objc
+- (void)TomSendExternalImageToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一张图片给 Jerry
+            AVFile *file = [AVFile fileWithURL:[self imageURL]];
+            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"萌妹子一枚" file:file attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -120,33 +258,79 @@
 {% endblock %}
 
 {% block imageMessage_receive %}
-```
-- 初始化 ClientId = Jerry
-- Jerry 登录到系统
-- 获取对话 Id = 55117292e4b065f7ee9edd29
-- 收取图像，获取相关元数据 MessageId、FromClientId、URL、Size、Width、Height、Format 等
+```objc
+- (void)JerryReceiveImageMessageFromTom {
+    // Jerry 创建了一个 client
+    self.clientJerry = [[AVIMClient alloc] init];
+    self.clientJerry.delegate = self;
+
+    // Jerry 用自己的名字作为 ClientId 打开 client
+    [self.clientJerry openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    AVIMImageMessage *imageMessage = (AVIMImageMessage *)message;
+
+    // 消息的 id
+    NSString *messageId = imageMessage.messageId;
+    // 图像文件的 URL
+    NSString *imageUrl = imageMessage.file.url;
+    // 发该消息的 ClientId
+    NSString *fromClientId = message.clientId;
+}
 ```
 {% endblock %}
 
 {% block audioMessage_local_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 本地读取音频文件：'忐忑.mp3' ，创建音频消息
-- 加入文本：'听听人类的神曲~'
-- 发送
+```objc
+- (void)TomSendAudioToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一首歌曲给 Jerry
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"忐忑" ofType:@"mp3"];
+            AVFile *file = [AVFile fileWithName:@"忐忑.mp3" contentsAtPath:path];
+            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"听听人类的神曲~" file:file attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ``` 
 {% endblock %}
 
 {% block audioMessage_url_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 从外部链接创建音频消息：http://ac-lhzo7z96.clouddn.com/1427444393952
-- 创建音频消息
-- 发送
+```objc
+- (void)TomSendExternalAudioToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一首歌曲给 Jerry
+            AVFile *file = [AVFile fileWithURL:@"http://ac-lhzo7z96.clouddn.com/1427444393952"];
+            AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:@"听听人类的神曲~" file:file attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -155,29 +339,57 @@
 {% endblock %}
 
 {% block videoMessage_local_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 打开本地文件夹
-- 读取视频文件：'BBC_奶酪.mp4'，创建视频消息
-- 发送
+```objc
+- (void)TomSendVedioToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一个视频给 Jerry
+            NSString *path = [[NSBundle mainBundle] pathForResource:@"BBC_奶酪" ofType:@"mp4"];
+            AVFile *file = [AVFile fileWithName:@"BBC_奶酪.mp4" contentsAtPath:path];
+            AVIMVideoMessage *message = [AVIMVideoMessage messageWithText:nil file:file attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block videoMessage_url_send %}
 
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 从外部链接创建视频消息：http://ac-lhzo7z96.clouddn.com/1427267336319
-- 发送给 Jerry
+```objc
+- (void)TomSendExternalVedioToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一段视频给 Jerry
+            AVFile *file = [AVFile fileWithURL:@"http://ac-lhzo7z96.clouddn.com/1427267336319"];
+            AVIMVideoMessage *message = [AVIMVideoMessage messageWithText:nil file:file attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block fileMessage_send %}
-```
+```objc
 - 初始化 ClientId = Tom
 - Tom 登录到系统
 - 创建与 Jerry 的对话，对话名称为「猫和老鼠」
@@ -188,54 +400,97 @@
 {% endblock %}
 
 {% block fileMessage_receive_intro %}
-与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+与接收图像消息类似，需要使用 `conversation:didReceiveTypedMessage:` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
 {% block locationMessage_new %}
-```
-- 1.根据纬度和经度（latitude: 45.0 longitude:34.0）构建 
-  AVIMLocationMessage()
-- 2. AVGeoPoint 构建
-  AVIMLocationMessage(
-    AVGeoPoint(31.3853142377, 121.0553079844)
-  )
+```objc
+[AVIMLocationMessage messageWithText:nil latitude:45.0 longitude:34.0 attributes:nil];
 ```
 {% endblock %}
 
 {% block locationMessage_send %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 以经度和纬度为参数构建一个地理位置消息 AVIMLocationMessage(138.12454, 52.56461)
-- 加入文本：好利来新店！！
-//开发者更可以通过具体的设备的 API 去获取设备的地理位置
-- 发送
+```objc
+- (void)TomSendLocationToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 发了一个地理位置给 Jerry
+            // NOTE: 开发者更可以通过具体的设备的 API 去获取设备的地理位置
+            AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:nil latitude:45.0 longitude:34.0 attributes:nil];
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
 }
 ```
 {% endblock %}
 
 {% block locationMessage_receive_intro %}
-与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+与接收图像消息类似，需要使用 `conversation:didReceiveTypedMessage:` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
 {% block attributes %} `attributes` {% endblock %}
 
 {% block customMessage_send %}
-```
-- 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "旧金山"
-- 设置 Title = "发自我的手机";
-- 发送
+```objc
+- (void)TomSendLocalImageToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"Tom and Jerry" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 创建了一个图像消息
+            NSString *filePath = [self imagePath];
+            NSDictionary *attributes = @{ @"location": @"旧金山" };
+            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"发自我的 iPhone" attachedFilePath:filePath attributes:attributes];
+
+            // Tom 将图像消息发给 Jerry
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block customMessage_receive %}
-```
-- 初始化 ClientId = friend
-- 登录到系统
-- 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是旧金山
+```objc
+- (void)JerryReceiveMessageFromTom {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // 设置 client 的 delegate，并实现 delegate 方法
+    self.client.delegate = self;
+
+    // Jerry 用自己的名字作为 ClientId 打开了 client
+    [self.client openWithClientId:@"friend" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    if ([message isKindOfClass:[AVIMImageMessage class]]) {
+        AVIMImageMessage *imageMessage = (AVIMImageMessage *)message;
+
+        // 旧金山
+        NSString *location = imageMessage.attributes[@"location"];
+    }
+}
 {% endblock %}
 
 {% block customMessage_create %}
@@ -252,81 +507,133 @@
 {% endblock %}
 
 {% block conversation_init %}
-```
-- 初始化 ClientId = Jerry
-- Jerry 登录
-- 创建朋友列表 friends = [Bob, Harry, William]
-- 用 friends 创建新对话
+```objc
+- (void)JerryCreateConversationWithFriends {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Jerry 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        // Jerry 建立了与朋友们的会话
+        NSArray *friends = @[@"Jerry", @"Bob", @"Harry", @"William"];
+        [self.client createConversationWithName:@"Tom and friends" clientIds:friends callback:^(AVIMConversation *conversation, NSError *error) {
+            if (!error) {
+                NSLog(@"创建成功");
+            }
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_join %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 获取  id 为 551260efe4b01608686c3e0f 的对话 //获取 Jerry 创建的对话的 Id，这里是直接从控制台复制了上一节准备工作中所创建的对话的 objectId
-- Tom 主动加入到对话中
+```objc
+- (void)TomJoinConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            [conversation joinWithCallback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"加入成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
-{% block conversation_membersChanged %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break;
-
-```
-{% endblock %}
+{% block conversation_membersChanged %}{% endblock %}
 
 {% block conversation_memebersJoined %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break; 
-- ------------ 以上与上例相同 ---------------
-- 获取对话对象 Id = 551260efe4b01608686c3e0f
-- 进入对话
-- 设置 OnMembersJoined 响应
-- 获取本次加入的 ClientIds //还是只有 Tom 一人，所以这样就可以直接读取到 Tom 的 clientId
+* 对话中的其他成员（例如 Bob）将会收到新成员加入的通知:
+
+```objc
+- (void)BobNoticedTomDidJoin {
+    // Bob 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+    self.client.delegate = self;
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+- (void)conversation:(AVIMConversation *)conversation membersAdded:(NSArray *)clientIds byClientId:(NSString *)clientId {
+    NSLog(@"Tom 加入了 conversation");
+}
 
 ```
 {% endblock %}
 
 {% block conversation_invite %}
-```
-- 初始化 ClientId = Jerry
-- Jerry 登录
-- 假定对话 Id = 551260efe4b01608686c3e0f
-- 进入对话
-- Jerry 把 Mary 加入到对话 //AddMembers
+```objc
+- (void)JerryInviteMary {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Jerry 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            // Jerry 邀请 Mary 到会话中
+            [conversation addMembersWithClientIds:@[@"Mary"] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"邀请成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_left %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 假定对话 Id = 551260efe4b01608686c3e0f //由 Jerry 创建的对话
-- 进入对话
-- Tom 主动从对话中退出
+```objc
+- (void)TomQuitConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            [conversation quitWithCallback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"退出成功！");
+                }
+            }];
+        }];
+    }];
+}
 ``` 
 {% endblock %}
 
 {% block conversation_kick %}
-```
-- 初始化 ClientId = William
-- William 登录
-- 对话 Id = 551260efe4b01608686c3e0f //由 Jerry 创建的对话
-- 进入对话
-- William 把 Harry 从对话中踢出去 //RemoveMembers
+```objc
+- (void)WilliamKickHarry {
+    // William 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // William 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"William" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            [conversation removeMembersWithClientIds:@[@"Harry"] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"踢出成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -334,92 +641,207 @@
 {% block conversation_countMember_method %} `conversation:countMembersWithCallback:` {% endblock %}
 
 {% block conversation_countMember %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 获取对话列表，找到第一个对话
-- 获取该对话成员数量
+```objc
+- (void)TomCountConversationMembers {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 查看会话中成员的数量
+            NSLog(@"%ld", [conversation.members count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_name %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 创建对话，同时邀请 Black，对话名称为 '喵星人'
+```objc
+- (void)TomCreateNamedConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Black 的会话，会话名称是 "喵星人"
+        [self.client createConversationWithName:@"喵星人" clientIds:@[@"Black"] callback:^(AVIMConversation *conversation, NSError *error) {
+            if (succeeded) {
+                NSLog(@"创建成功！");
+            }
+        }];
+    }];
+}
 ```
 {% endblock %} 
 
 {% block conversation_changeName %}
-```
-- 初始化 ClientId = Black
-- Black 登录
-- 进入 Tom 创建的对话「喵星人」，id = 55117292e4b065f7ee9edd29
-- 修改对话名称为「聪明的喵星人」
-- 保存到服务端
+```objc
+- (void)BlackChangeConversationName {
+    // Black 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Black 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Black" callback:^(BOOL succeeded, NSError *error) {
+        // Black 查询 id 为 551260efe4b01608686c3e0f 的会话
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            // Black 修改 conversation 的名称
+            AVIMConversationUpdateBuilder *updateBuilder = [conversation newUpdateBuilder];
+            updateBuilder.name = @"聪明的喵星人";
+            [conversation update:[updateBuilder dictionary] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"修改成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_mute %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 进入对话：id = 551260efe4b01608686c3e0f
-- 将其设置为静音 Mute
+```objc
+- (void)TomMuteConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 查询 id 为 551260efe4b01608686c3e0f 的会话
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 将会话设置为静音
+            [conversation muteWithCallback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"修改成功！");
+                }
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_tag %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 创建属性 attr 列表对象
-- 加入 tag = "private"
-- 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
+```objc
+- (void)TomCreateConversationWithAttribute {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建名称为「猫和老鼠」的会话，并附加会话属性
+        NSDictionary *attributes = @{ @"tag": @"private" };
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] attributes:attributes options:AVIMConversationOptionNone callback:^(AVIMConversation *conversation, NSError *error) {
+            if (succeeded) {
+                NSLog(@"创建成功！");
+            }
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_getSingle %}
+```objc
+- (void)TomQueryConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
 
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 异步从服务器拉取对话：id = 551260efe4b01608686c3e0f
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 查询 id 为 551260efe4b01608686c3e0f 的会话
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            if (succeeded) {
+                NSLog(@"查询成功！");
+            }
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_getList %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 获取对话列表
+```objc
+- (void)TomQueryConversationList {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 构建一个查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 
 {% block conversation_query_equalTo %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建 attr 属性中 topic 是 movie 的查询
-- 执行查询
+```objc
+- (void)TomQueryConversationByEqualTo {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建属性中 topic 是 movie 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:@"attr.topic" equalTo:@"movie"];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"查询成功！");
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_query_notEqualTo %}
+```objc
+- (void)TomQueryConversationByNotEqualTo {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 type 不等于 private 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:@"type" notEqualTo:@"private"];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建 attr 属性中 type 不等于 private 的查询
-- 执行查询
 {% endblock %}
 
 {% block conversation_query_greaterThan %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建查询条件：attr.age > 18
-- 执行查询
+```objc
+- (void)TomQueryConversationByGreaterThan {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 attr.age 大于 18 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:AVIMAttr(@"age") greaterThan:@(18)];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -428,48 +850,104 @@
 {% endblock %}
 
 {% block conversation_query_regex %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建 attr.tag 是中文的查询 // 正则为 [\u4e00-\u9fa5] 
-- 执行查询
+```objc
+- (void)TomQueryConversationByRegExp {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 attr.tag 是中文的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:AVIMAttr(@"tag") matchesRegex:@"[\u4e00-\u9fa5]"];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_query_contains %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建 attr.keywords 包含「教育」的查询
-- 执行查询
+```objc
+- (void)TomQueryConversationByContains {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 attr.keywords 包含 「教育」的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:AVIMAttr(@"keywords") containsString:@"教育"];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %} 
 
 {% block conversation_query_findJoinedMemebers %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建 clientIds 列表：[Bob, Jerry]
-- 构建对话成员有 Bob 和 Jerry 的查询条件
-- 执行查询
+```objc
+- (void)TomQueryConversationByMembers {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建会话中有 Bob 和 Jerry 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:@"m" containedIn:@[@"Bob", @"Jerry"]];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_query_combination %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建查询条件：attr.keywords 包含「教育」、attr.age < 18
-- 执行查询
+```objc
+- (void)TomQueryConversationByCombination {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 attr.keywords 包含「教育」、attr.age < 18 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:AVIMAttr(@"keywords") containsString:@"教育"];
+        [query whereKey:AVIMAttr(@"age") greaterThan:@(18)];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_query_count %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 构建查询条件：attr.keywords 包含「教育」、attr.age < 18
-- 执行查询，获取符合条件的对话的数量
+```objc
+- (void)TomQueryConversationByCombination {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建 attr.keywords 包含「教育」、attr.age < 18 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:AVIMAttr(@"keywords") containsString:@"教育"];
+        [query whereKey:AVIMAttr(@"age") greaterThan:@(18)];
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -478,10 +956,21 @@
 {% endblock %}
 
 {% block chatroom_new %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 创建暂态对话，名称 "HelloKitty PK 加菲猫"
+```objc
+- (void)TomCreateTransientConversation {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建名称为 「HelloKitty PK 加菲猫」的会话
+        [self.client createConversationWithName:@"HelloKitty PK 加菲猫" clientIds:@[] attributes:nil options:AVIMConversationOptionTransient callback:^(AVIMConversation *conversation, NSError *error) {
+            if (succeeded) {
+                NSLog(@"创建成功！");
+            }
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -489,11 +978,21 @@
 
 
 {% block chatroom_count %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 获取对话列表中的第一个对话对象
-- 获取人数
+```objc
+- (void)TomCountFirstConversationMembers {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建一个查询会话列表的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            // Tom 查看会话列表中成员的数量
+            NSLog(@"%ld", [[objects firstObject] count]);
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -502,19 +1001,45 @@
 {% block chatroom_query_method2 %} `whereKey:` {% endblock %}
 
 {% block chatroom_query_single %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 获取对话列表中 attr.topic = "奔跑吧，兄弟"、tr = true
-- 执行查询
+```objc
+- (void)TomQueryConversationByConditions {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建属性中 topic 是 movie 的查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query whereKey:@"attr.topic" equalTo:@"movie"];
+        [query whereKey:@"tr" equalTo:@(YES)];
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"查询成功！");
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block chatroom_query_history %}
-```
-- 初始化 ClientId = Tom
-- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
-- 获取从过去 24 小时的历史聊天纪录
+```objc
+- (void)TomQueryMessages {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建查询会话的 query
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
+        [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
+            // 设置查询时间从过去 24 小时开始
+            NSTimeInterval timestamp = ([[NSDate date] timeIntervalSince1970] - 24 * 60 * 60) * 1000;
+            [conversation queryMessagesBeforeId:nil timestamp:timestamp limit:20 callback:^(NSArray *objects, NSError *error) {
+                NSLog(@"查询到 %ld 条消息！", [objects count]);
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -523,11 +1048,11 @@
 
 客户端这边究竟该如何使用呢？我们只需要实现 AVIMSignatureDataSource 协议接口，然后在用户登录之前，把这个接口赋值给 AVIMClient.signatureDataSource 即可。示例代码如下：
 
-```
+```objc
 AVIMClient *imClient = [[AVIMClient alloc] init];
 imClient.delegate = self;
 imClient.signatureDataSource = signatureDelegate;
-[imClient openWithClientId:@“Tom” callback:^(BOOL succeeded, NSError *error){
+[imClient openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error){
     if (error) {
         // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
         // 此时聊天服务不可用。
@@ -543,7 +1068,7 @@ imClient.signatureDataSource = signatureDelegate;
 
 对于 AVIMSignatureDataSource 接口，我们只需要实现这一个函数即可：
 
-```
+```objc
 /*!
  对一个操作进行签名. 注意:本调用会在后台线程被执行
  @param clientId - 操作发起人的 id
@@ -563,7 +1088,7 @@ imClient.signatureDataSource = signatureDelegate;
 
 你需要做的就是按照前文所述的签名算法实现签名，其中 `AVIMSignature` 声明如下：
 
-```
+```objc
 @interface AVIMSignature : NSObject
 
 @property (nonatomic, strong) NSString *signature;
@@ -602,7 +1127,7 @@ imClient.signatureDataSource = signatureDelegate;
 
 用户登录是通过调用`［AVIMClient openWithClientId:callback:]` 方法实现的，该方法声明如下：
 
-```
+```objc
 // 开启某个账户的聊天
 - (void)openWithClientId:(NSString *)clientId
                 callback:(AVIMBooleanResultBlock)callback;
@@ -615,10 +1140,10 @@ imClient.signatureDataSource = signatureDelegate;
 
 我们现在来实际看一下这个过程如何实现。假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统（LeanCloud 云端只要求 `clientId` 在应用内唯一即可，具体用什么数据由应用层决定）。示例代码如下：
 
-```
+```objc
 AVIMClient *imClient = [[AVIMClient alloc] init];
 imClient.delegate = self;
-[imClient openWithClientId:@“Tom” callback:^(BOOL succeeded, NSError *error){
+[imClient openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error){
     if (error) {
         // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
         // 此时聊天服务不可用。
@@ -647,7 +1172,7 @@ imClient.delegate = self;
 
 我们可以通过 `AVIMClient` 来创建一个对话，其函数声明为：
 
-```
+```objc
 //指定名字、成员，创建对话
 - (void)createConversationWithName:(NSString *)name
                          clientIds:(NSArray *)clientIds
@@ -671,7 +1196,7 @@ imClient.delegate = self;
 
 接下来我们看看实际如何创建一个对话。假定我们要跟「Bob」这个用户进行聊天，我们先创建一个对话，代码如下：
 
-```
+```objc
 // 创建一个包含 Tom、Bob 的新对话
 NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
     
@@ -706,7 +1231,7 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 
 所有消息都是 AVIMMessage 的实例。构造消息的方法如下：
 
-```
+```objc
 + (instancetype)messageWithContent:(NSString *)content
 ```
 
@@ -725,7 +1250,7 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 
 通过 `AVIMConversation` 的 `sendMessage:callback:` 族方法，可以将消息发往目标对话。方法声明如下：
 
-```
+```objc
 // 直接发送一条消息，在大多数情况下，你该调用这个方法
 - (void)sendMessage:(AVIMMessage *)message
            callback:(AVIMBooleanResultBlock)callback;
@@ -744,7 +1269,7 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 
 接下来我们试着发送一条普通文本消息。示例代码如下：
 
-```
+```objc
 AVIMMessage *message = [AVIMMessage messageWithContent:@"hello"];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -770,7 +1295,7 @@ AVIMMessage *message = [AVIMMessage messageWithContent:@"hello"];
 
 对于 Tom 发过来的消息，要显示出来，我们只需实现 `conversation:didReceiveCommonMessage:` 即可，示例代码如下：
 
-```
+```objc
 -(void)conversation:(AVIMConversation *)conversation didReceiveCommonMessage:(AVIMMessage *)message {
     // 下面的逻辑会把消息直接存入本地数据库缓存。注意：你完全可以根据自己的需要来决定实际如何处理
     [self saveMessageToDatabase:message callback:^(BOOL succeeded, NSError *error) {
@@ -781,10 +1306,10 @@ AVIMMessage *message = [AVIMMessage messageWithContent:@"hello"];
 
 2，进行初始化和登录，代码与发送端并无二致；
 
-```
+```objc
 AVIMClient *imClient = [[AVIMClient alloc] init];
 imClient.delegate = self;
-[imClient openWithClientId:@“Bob” callback:^(BOOL succeeded, NSError *error){
+[imClient openWithClientId:@"Bob" callback:^(BOOL succeeded, NSError *error){
     if (error) {
         // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
         // 此时聊天服务不可用。
@@ -849,7 +1374,7 @@ AVIMClientDelegate 的主要接口如下：
 
 作为开发者，我们实现这一代理接口，就可以处理所有 LeanCloud 云端发过来的通知和消息了。例如如下代码片断：
 
-```
+```objc
 // 前提：ConversationStore 是一个单例，用来缓存所有的消息和通知，也用来追踪网络状态变化。
 
 - (void)imClientPaused:(AVIMClient *)imClient {
@@ -921,7 +1446,7 @@ AVIMClientDelegate 的主要接口如下：
 ### 基类：AVIMTypedMessage
 我们默认支持文本、图像、语音、视频、地理位置等富媒体消息，所有这些消息类型都有一个共同的基类：AVIMTypedMessage，其声明为
 
-```
+```objc
 @interface AVIMTypedMessage : AVIMMessage
 @property(nonatomic) AVIMMessageMediaType mediaType;//消息类型，可自定义
 @property(nonatomic, strong) NSString *text;        // 消息文本
@@ -945,7 +1470,7 @@ AVIMClientDelegate 的主要接口如下：
 
 AVIMTypedMessage 子类，表示一般的文本消息，其构造函数为
 
-```
+```objc
 @interface AVIMTextMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
 + (instancetype)messageWithText:(NSString *)text
                      attributes:(NSDictionary *)attributes;
@@ -959,7 +1484,7 @@ AVIMTypedMessage 子类，表示一般的文本消息，其构造函数为
 
 发送文本消息的示例代码为：
 
-```
+```objc
 AVIMTextMessage *message = [AVIMTextMessage messageWithText:@"hello" attributes:nil];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -976,7 +1501,7 @@ AVIMTextMessage *message = [AVIMTextMessage messageWithText:@"hello" attributes:
 ### 图像消息（AVIMImageMessage）
 AVIMTypedMessage 子类，支持发送图像和附带文本的混合消息，其声明为：
 
-```
+```objc
 @interface AVIMImageMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
 + (instancetype)messageWithText:(NSString *)text
                attachedFilePath:(NSString *)attachedFilePath
@@ -998,7 +1523,7 @@ AVIMTypedMessage 子类，支持发送图像和附带文本的混合消息，其
 
 发送图像消息的示例代码为：
 
-```
+```objc
 AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"萌照" attachedFilePath:filePath attributes:attr];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -1017,7 +1542,7 @@ AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"萌照" attached
 ### 音频消息（AVIMAudioMessage）
 AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其声明为：
 
-```
+```objc
 @interface AVIMAudioMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
 + (instancetype)messageWithText:(NSString *)text
                attachedFilePath:(NSString *)attachedFilePath
@@ -1038,7 +1563,7 @@ AVIMTypedMessage 子类，支持发送语音和附带文本的混合消息，其
 
 发送音频消息的示例代码为：
 
-```
+```objc
 AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:nil attachedFilePath:filePath attributes:attr];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -1057,7 +1582,7 @@ AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:nil attachedFilePa
 ### 视频消息（AVIMVideoMessage）
 AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其声明为：
 
-```
+```objc
 @interface AVIMVideoMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
 + (instancetype)messageWithText:(NSString *)text
                attachedFilePath:(NSString *)attachedFilePath
@@ -1078,7 +1603,7 @@ AVIMTypedMessage 子类，支持发送视频和附带文本的混合消息，其
 
 发送视频消息的示例代码为：
 
-```
+```objc
 AVIMVideoMessage *message = [AVIMVideoMessage messageWithText:@"你要不要这么二" attachedFilePath:filePath attributes:attr];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -1097,7 +1622,7 @@ AVIMVideoMessage *message = [AVIMVideoMessage messageWithText:@"你要不要这�
 ### 地理位置消息（AVIMLocationMessage）
 AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合消息，其声明为：
 
-```
+```objc
 @interface AVIMLocationMessage : AVIMTypedMessage <AVIMTypedMessageSubclassing>
 + (instancetype)messageWithText:(NSString *)text
                        latitude:(float)latitude
@@ -1119,7 +1644,7 @@ AVIMTypedMessage 子类，支持发送地理位置信息和附带文本的混合
 
 发送位置消息的示例代码为：
 
-```
+```objc
 AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:@"速来！" latitude: 45.0 longitude:34.0 attributes:nil];
 [_conversation sendMessage:message callback:^(BOOL succeeded, NSError *error){
     if (error) {
@@ -1139,7 +1664,7 @@ AVIMLocationMessage *message = [AVIMLocationMessage messageWithText:@"速来！"
 
 LeanCloud IM SDK 内部封装了对富媒体消息的支持，所有富媒体消息都是从 AVIMTypedMessage 派生出来的。发送的时候可以直接调用 `[AVIMConversation sendMessage:callback:]` 函数。在接收端，我们也在 AVIMClientDelegate 中专门增加了一个回调函数：
 
-```
+```objc
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message;
 ```
 
@@ -1147,7 +1672,7 @@ LeanCloud IM SDK 内部封装了对富媒体消息的支持，所有富媒体消
 
 接收端对于富媒体消息的通知处理代码示例如下：
 
-```
+```objc
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
     if (!conversation || !message) {
         // 出现异常
@@ -1216,12 +1741,12 @@ LeanCloud IM SDK 内部封装了对富媒体消息的支持，所有富媒体消
 
 和单聊类似，建立一个多人聊天的群组也是很简单的，我们调用同一个 API，在建立群组的时候就加入成员并指定名字（注意名字是可选的）。例如：
 
-```
+```objc
 NSMutableArray *convMembers = [NSMutableArray arrayWithArray:clients];
 if (![clients containsObject:currentUserId]) {
     [convMembers addObject:currentUserId];
 }
-[imClient createConversationWithName:@“LeanCloud Fans”
+[imClient createConversationWithName:@"LeanCloud Fans"
                            clientIds:convMembers
                           attributes:@{@"type":[NSNumber numberWithInt:kConversationType_Group]}
                              options:AVIMConversationOptionNone
@@ -1250,7 +1775,7 @@ if (![clients containsObject:currentUserId]) {
 
 AVIMConversation 有一个 `joinWithCallback:` 方法，可以用来主动加入一个群组，其声明为：
 
-```
+```objc
 (void)joinWithCallback:(AVIMBooleanResultBlock)callback
 ```
 
@@ -1260,7 +1785,7 @@ AVIMConversation 有一个 `joinWithCallback:` 方法，可以用来主动加入
 
 假定用户 Jade 希望加入上面的群组，其示例代码为：
 
-```
+```objc
 // 之前是 Jade 登录的代码
 ...
 
@@ -1301,7 +1826,7 @@ AVIMConversation 有一个 `joinWithCallback:` 方法，可以用来主动加入
 在查询到聊天室成员之后，可以让用户邀请一些自己的朋友加入，作为管理员也可以剔除一些「可怕」的成员。
 加入新成员的 API 如下：
 
-```
+```objc
 - (void)addMembersWithClientIds:(NSArray *)clientIds
                        callback:(AVIMBooleanResultBlock)callback;
 ```
@@ -1313,7 +1838,7 @@ AVIMConversation 有一个 `joinWithCallback:` 方法，可以用来主动加入
 
 我们试着在刚才的对话中邀请几个人：
 
-```
+```objc
 // 假设要讲 Alex、Ben、Chad 加入对话
 NSArray* userIds = @[@"Alex", @"Ben", @"Chad"];
 [conversation addMembersWithClientIds:userIds callback:^(BOOL succeeded, NSError *error) {
@@ -1335,7 +1860,7 @@ NSArray* userIds = @[@"Alex", @"Ben", @"Chad"];
    
 相应地，踢人时的调用 API 是：
 
-```
+```objc
 - (void)removeMembersWithClientIds:(NSArray *)clientIds
                           callback:(AVIMBooleanResultBlock)callback;
 ```
@@ -1347,7 +1872,7 @@ NSArray* userIds = @[@"Alex", @"Ben", @"Chad"];
 
 我们试着把 Chad 踢出去：
 
-```
+```objc
 NSArray* userIds = @[@"Chad"];
 [conversation removeMembersWithClientIds:userIds callback:^(BOOL succeeded, NSError *error) {
     if (error) {
@@ -1373,7 +1898,7 @@ NSArray* userIds = @[@"Chad"];
 
 任何成员，都可以主动退出一个群组。AVIMConversation 有一个 quitWithCallback: 方法，其声明为：
 
-```
+```objc
 (void)quitWithCallback:(AVIMBooleanResultBlock)callback
 ```
 
@@ -1385,7 +1910,7 @@ NSArray* userIds = @[@"Chad"];
 
 假设用户 Jade 又想退出上面的群组了，其示例代码为：
 
-```
+```objc
 // 之前是 Jade 登录的代码
 
 [conversation quitWithCallback:^(BOOL succeeded, NSError *error) {
@@ -1405,14 +1930,14 @@ LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，�
 
 第一个 API 用于获取该会话中最近的 limit 条历史消息，通常在第一次进入会话时调用。
 
-```
+```objc
 - (void)queryMessagesWithLimit:(NSUInteger)limit
                       callback:(AVIMArrayResultBlock)callback;
 ```
 
 第二个 API 用于获取某条消息之前的历史消息，通常在翻页加载更多历史消息时调用。
 
-```
+```objc
 - (void)queryMessagesBeforeId:(NSString *)messageId
                     timestamp:(int64_t)timestamp
                         limit:(NSUInteger)limit
@@ -1428,7 +1953,7 @@ LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，�
 
 通过这两个 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。示例代码如下：
 
-```
+```objc
 NSString *oldestMsgId;
 int64_t oldestMsgTimestamp;
 [conversation queryMessagesBeforeId:oldestMsgId
@@ -1464,7 +1989,7 @@ int64_t oldestMsgTimestamp;
 对于发往普通的 Conversation 的普通消息，如果接收方当前不在线，LeanCloud 云端支持通过 Push Notification 的方式进行提醒。一般情况下这都是很好的，但是如果某个群组特别活跃，那离线用户就会收到过多的推送，会形成不小的干扰。
 对此 LeanCloud IM 服务也允许单个用户来关闭/打开某个对话的离线推送功能。相关 API 的声明如下：
 
-```
+```objc
 // 静音，不再接收此对话的离线推送。
 - (void)muteWithCallback:(AVIMBooleanResultBlock)callback;
 
@@ -1474,7 +1999,7 @@ int64_t oldestMsgTimestamp;
 
 其中 `callback` 是结果回调，在服务端操作结束之后调用，通知开发者成功与否。示例代码如下：
 
-```
+```objc
 if (open) {
     [_conversation muteWithCallback:^(BOOL succeeded, NSError *error) {
         if (error) {
@@ -1507,7 +2032,7 @@ if (open) {
 
 `AVIMConversationQuery` 的使用方法与 [AVQuery](./ios_os_x_guide.html#查询) 一样，例如要搜索当前登录用户参与的所有群聊对话，其代码为
 
-```
+```objc
 AVIMConversationQuery *query = [imClient conversationQuery];
 [query whereKey:kAVIMKeyMember containedIn:@[[AVUser currentUser].objectId]];
 [query whereKey:AVIMAttr(@"type") equalTo:[NSNumber numberWithInt:kConversationType_Group]];
@@ -1547,7 +2072,7 @@ AVIMConversationQuery *query = [imClient conversationQuery];
 
 和普通的群组类似，建立一个开放聊天室也是很简单的，只是在 `[imClient createConversationWithName:clientIds:attributes:options:callback:]` 中我们需要传入特定的选项 `options:AVIMConversationOptionTransient`。例如：
 
-```
+```objc
 NSMutableArray *convMembers = [NSMutableArray arrayWithArray:clients];
 if (![clients containsObject:currentUserId]) {
     [convMembers addObject:currentUserId];
@@ -1580,7 +2105,7 @@ if (![clients containsObject:currentUserId]) {
 
 对于开放聊天室来说，与普通群组有很大一点不同，就是没有了参与用户列表，取而代之的是可以查询实时在线人数。`[conversation countMembersWithCallback:]` 函数可以完成这一功能，其声明如下：
 
-```
+```objc
 -(void)countMembersWithCallback:(AVIMIntegerResultBlock)callback
 ```
 
@@ -1590,7 +2115,7 @@ if (![clients containsObject:currentUserId]) {
 
 这部分的示例代码如下：
 
-```
+```objc
 [conversation countMembersWithCallback:^(NSInteger number, NSError *error){
     if (error) {
         // 出错了:(

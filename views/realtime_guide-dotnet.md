@@ -181,7 +181,6 @@ conversation.OnTextMessageReceived += (s,e)=>
 MediaLibrary library = new MediaLibrary();//系统媒体库
 var photo = library.Pictures[0];//获取第一张照片，运行这段代码，确保手机以及虚拟机里面的媒体库至少有一张照片
 
-{% block imageMessage_local_send %}
 AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
 imgMessage.Attributes = new Dictionary<string, object>() 
 { 
@@ -485,6 +484,8 @@ public async void InitiativeJoinAsync()
 {% endblock %}
 
 {% block conversation_memebersChanged %}
+* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
+
 ```c#
 public async void BobOnTomJoined_S1()
 {
@@ -533,6 +534,8 @@ public async void BobOnTomJoined_S1()
 {% endblock %}
 
 {% block conversation_memebersJoined %}
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
+
 ```c#
 public async void BobOnTomJoined_S2()
 {
