@@ -166,6 +166,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
             $('p[version=' + $scope.snippetVersion + ']').removeClass('on');
             $('#comment-container').fadeOut(100);
         }
+        AV.serverURL = '/';
         AV.initialize('749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb','axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib');
         getComments();
         getUser();
