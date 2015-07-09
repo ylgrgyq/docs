@@ -265,7 +265,7 @@ WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
 
 ## 暂态对话
 
-标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息历史等方法，具体请了解[文档](https://leancloud.cn/docs/realtime_v2.html#暂态对话_transient_conversation_)。
+标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」中了解。
 
 具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject.conv)
 
@@ -634,8 +634,9 @@ RealtimeObject.conv(options, callback)
 
     * name {String} （可选）Conversation 的名字
 
-    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
+    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。
     **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
+    具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」
 
     * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
