@@ -137,6 +137,10 @@ $(function() {
     var a = $(v).children('a:first-child');
     a.addClass('has-subdoc-nav');
   });
+
+  setTimeout(function() {
+    updateSidebarAffixShadowWidth();
+  }, 400);
 });
 
 // If the cursor is off the sidebar, scrolls to parent active heading
