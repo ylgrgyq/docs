@@ -1610,7 +1610,7 @@ user.updatePassword('当前密码', '新密码',{
   success: function(){
     //更新成功
   },
-  error: function(err){
+  error: function(user, err){
     //更新失败
     console.dir(err);
   }
@@ -1635,7 +1635,7 @@ user.signUp(null, ……)
 
 ```javascript
 AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
-	//发送成功
+  //发送成功
 }, function(err){
    //发送失败
 });
