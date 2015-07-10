@@ -526,8 +526,9 @@ query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
 当然，你可以在你的查询操作中添加多个约束条件（这些条件是 and 关系），来查询符合你要求的数据。
 
 ```java
+DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
-query.whereGreaterThan("createAt", "2015-06-26 18:37:09");
+query.whereGreaterThan("createdAt", format.parse("2015-06-26 18:37:09"));
 ```
 
 有些时候，在数据比较多的情况下，你希望只查询符合要求的多少条数据即可，这时可以使用 `setLimit` 方法来限制查询结果的数据条数。默认情况下 Limit 的值为 100，最大 1000，在 0 到 1000 范围之外的都强制转成默认的 100。
