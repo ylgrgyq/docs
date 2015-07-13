@@ -502,7 +502,7 @@ query.notEqualTo("pubUser", "LeanCloud官方客服");
 
 ```javascript
 query.notEqualTo("pubUser", "LeanCloud官方客服");
-query.greaterThan("createdAt", "2015-06-26 18:37:09");
+query.greaterThan("createdAt", new Date("2015-06-26 18:37:09"));
 ```
 
 你可以用设定 `limit` 的方法来限定返回的结果数，默认的返回结果数是 100，但是任
