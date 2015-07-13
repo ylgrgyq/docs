@@ -109,11 +109,11 @@ content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "Le
 >**注意：以下为系统保留字段，不能作为属性名来使用。**
 
 ```
-acl			description		objectId
-ACL			error			pendingKeys
-className	fetchWhenSave	running
-code		isDataReady		updatedAt
-createdAt	keyValues		uuid
+acl        description     objectId
+ACL        error           pendingKeys
+className  fetchWhenSave   running
+code       isDataReady     updatedAt
+createdAt  keyValues       uuid
 ```
 
 每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，微博帖子这个对象可取名为 `Post`。

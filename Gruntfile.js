@@ -57,7 +57,7 @@ module.exports = function(grunt) {
       },
       html: {
         files: ["templates/**"],
-        tasks: ["clean:html", "markdown", "assemble"]
+        tasks: ["clean:html", "markdown", "assemble","comment"]
       },
       nunjucks: {
         files: ["views/**"],
@@ -129,6 +129,11 @@ module.exports = function(grunt) {
         options: {
           template: 'templates/md.jst'
         }
+      }
+    },
+    comment:{
+      md: {
+        src: 'dist/*.html'
       }
     },
     less: {
@@ -231,12 +236,106 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-useminPrepare');
   grunt.loadNpmTasks('grunt-nunjucks');
 
-  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble",
+  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
     'uglify:generated',"usemin"]);
-  grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble",
+  grunt.registerTask("localBuild",["clean", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "copy:asset"]);
   grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
 
-};
+
+
+
+
+    grunt.registerMultiTask('comment','add version info',function(){
+      // console.log('comment task',this.files,this.filesSrc);
+      var cheerio = require('cheerio');
+      var crypto = require('crypto');
+      var Q = require('q');
+      var AV = require('avoscloud-sdk').AV;
+      AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
+      var Doc = AV.Object.extend('Doc');
+      var commentDoms = ['p','pre'];
+      var done = this.async();
+
+      var sequence = Q.resolve();
+
+      var  allPromise = [];
+
+      function initDocVersion(filepath,resolve,reject){
+          var file = filepath;
+          var content = grunt.file.read(filepath);
+
+          // console.log(docVersion)
+          var $ = cheerio.load(content);
+
+          var docVersion = crypto.createHash('md5').update($('#content').text()).digest('hex');
+          $('html').first().attr('version', docVersion);
+
+          //以 docversion 为唯一标识，当文档内容发生变化，docversion 相应变化，
+          var query = new AV.Query(Doc);
+          query.equalTo('version', docVersion);
+          query.first().then(function(doc) {
+            if (!doc) {
+              doc = new Doc();
+              doc.set('version', docVersion);
+              var snippets = [];
+              commentDoms.forEach(function(dom) {
+                $('#content ' + dom).each(function() {
+                  var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+                  snippets.push({version: version});
+                });
+              });
+              doc.set('snippets', snippets);
+            }
+            //文件名，以及段落 snippet 信息更新
+            doc.set('file', file.split('/').pop());
+
+            return new Q.Promise(function(resolve1,reject1){
+              doc.save().then(function(){
+                resolve1();
+              },function(){
+                reject1();
+              })
+            });
+          },function(){
+            return Q.resolve();
+          }).then(function() {
+            // 在文档中添加 version 标记
+            commentDoms.forEach(function(dom) {
+              $('#content ' + dom).each(function() {
+                // console.log(2)
+                var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+                $(this).attr('version', version);
+              });
+            });
+            grunt.file.write(filepath, $.html());
+            resolve();
+          // done();
+        },function(){
+          reject();
+        });
+      }
+
+      this.filesSrc.forEach(function(filepath) {
+
+        allPromise.push(new Q.Promise(function(resolve,reject){
+          initDocVersion(filepath,resolve,reject)
+        }));
+      });
+      //保证所有文档都处理完再进行任务完成回调
+      Q.all(allPromise).then(function(){
+        console.log('version build allcompleted');
+        done();
+      },function(){
+        console.log('error happened');
+        done();
+      }).catch(function(){
+        console.log('error');
+        done();
+      })
+  });
+
+
+}
