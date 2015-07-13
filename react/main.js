@@ -1,8 +1,9 @@
+'use strict';
 var TmplSelect = React.createClass({
   handleChange: function(e) {
     e.preventDefault();
-    var tmpl = React.findDOMNode(this.refs.tmplSelect).value
-    if (tmpl != '') {
+    var tmpl = React.findDOMNode(this.refs.tmplSelect).value;
+    if (tmpl) {
       this.props.onTmplSelect(tmpl);
     }
   },
@@ -23,16 +24,18 @@ var TmplSelect = React.createClass({
 
 var ImplContent = React.createClass({
   handleSubmit: function(e) {
-    event.preventDefault();
+    e.preventDefault();
     this.props.onSaveContent(this.state.content);
   },
   handleChange: function(e) {
     this.setState({content: event.target.value});
   },
   componentWillReceiveProps: function(nextProps) {
-    this.setState({
-      content: nextProps.data
-    });
+    if (nextProps.data != null) {
+      this.setState({
+        content: nextProps.data
+      });
+    }
   },
   render: function() {
     if (this.state) {
@@ -40,14 +43,13 @@ var ImplContent = React.createClass({
         <div>
           <form onSubmit={this.handleSubmit}>
             <textarea rows="8" cols="160" value={this.state.content} onChange={this.handleChange}></textarea>
-            <input type="submit" value="保存" onClick={this.handleSubmit} />
+            <input type="submit" value="保存" />
           </form>
         </div>
       );
     } else {
       return (
-        <div>
-        </div>
+        <div></div>
       );
     }
   }
@@ -61,9 +63,6 @@ var TmplImpl = React.createClass({
       url: 'tmpls/' + this.props.data.currentTmpl + '/impls/' + impl + '/blocks/' + this.props.data.block,
       dataType: 'json',
       success: function(data) {
-        if (data.blockContent === undefined) {
-          data.blockContent = ''
-        }
         this.setState({
           tmpl: this.props.data.currentTmpl,
           impl: impl,
@@ -72,7 +71,7 @@ var TmplImpl = React.createClass({
         });
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        console.error(this.url, status, err.toString());
       }.bind(this)
     });
   },
@@ -89,7 +88,7 @@ var TmplImpl = React.createClass({
         });
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        console.error(this.url, status, err.toString());
       }.bind(this)
     });
   },
@@ -114,32 +113,105 @@ var TmplImpl = React.createClass({
 });
 
 var Paragraph = React.createClass({
+  handleClick: function(e) {
+    e.preventDefault();
+    this.setState({
+      edit: true,
+      content: this.props.data.paragraph
+    });
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    this.props.onParagraphSubmit(this.state.content, this.props.data.index);
+  },
+  getInitialState: function() {
+    return {
+      edit: false
+    };
+  },
+  handleChange: function(e) {
+    this.setState({content: event.target.value});
+  },
+  componentWillReceiveProps: function(nextProps) {
+    this.setState({
+      content: nextProps.data,
+      edit: false
+    });
+  },
   render: function() {
-    var content = this.props.data.paragraph;
-    var re = /{% block (.*?) %}(.*?){% endblock %}/
-    match = content.match(re);
-    if (match) {
-      var data = {currentTmpl: this.props.data.currentTmpl, impls: this.props.data.impls, block: match[1]}
+    if (this.state.edit) {
       return (
         <div>
-          {content}
-          <TmplImpl data={data} />
+          <form onSubmit={this.handleSubmit}>
+            <input type='hidden' name='index' value={this.props.data.index} />
+            <textarea rows="8" cols="160" value={this.state.content} onChange={this.handleChange}></textarea>
+            <input type="submit" value="保存" />
+          </form>
         </div>
       )
-    } else {
+    }
+    // 这里用一个取巧的办法来切分 block，
+    // 直接使用 {% endblock %} 来分割，比如下面内容:
+    // content = 'abc{% block foo %}inner{% endblock %}def 123{% block bar %}inner2{% endblock %}456';
+    // 通过 endblock 分割后变成:
+    // blocks = [
+    // [ 'abc{% block foo %}inner',
+    //   'def 123{% block bar %}inner2',
+    //   '456' ]
+    // ]
+    // 数据中每个元素再使用 /{% block (.*?) %}/ 分割，会得到：
+    // ['abc', 'foo', 'inner']
+    // 第一个为 block 前面的内容
+    // 第二个为 block 名称
+    // 第三个为 block 内部的预定义内容
+    var content = this.props.data.paragraph;
+    var blocks = content.split('{% endblock %}');
+    if(blocks.length == 1) { // 不包含变量 block
       return (
-        <div>{content}</div>
+        <div onClick={this.handleClick}>{content}</div>
       );
     }
+    var re = /{% block (.*?) %}/
+    var bs = blocks.map(function(block) {
+      var tmp = block.split(re);
+      if(tmp.length == 1) {
+        return (
+          <div>{tmp}</div>
+        );
+      }
+      var outer = tmp[0];
+      var blockName = tmp[1];
+      var inner = tmp[2]
+      var data = {
+        currentTmpl: this.props.data.currentTmpl,
+        impls: this.props.data.impls,
+        block: blockName
+      }
+      return (
+        <div>
+          <span>{outer}</span>
+          <code>{blockName}</code>
+          <TmplImpl data={data} />
+          <span>{inner}</span>
+        </div>
+      )
+    }.bind(this));
+    return (
+      <div>{bs}</div>
+    )
   }
 });
 
 var TmplContent = React.createClass({
   render: function() {
-    var ps = this.props.data.tmplContent.paragraphs.map(function(paragraph) {
-      var data = {paragraph: paragraph, currentTmpl: this.props.data.currentTmpl, impls: this.props.data.tmplImpls};
+    var ps = this.props.data.tmplContent.paragraphs.map(function(paragraph, index) {
+      var data = {
+        paragraph: paragraph,
+        index: index,
+        currentTmpl: this.props.data.currentTmpl,
+        impls: this.props.data.tmplImpls};
       return (
-        <Paragraph data={data} />
+        <Paragraph data={data} onParagraphSubmit={this.props.onParagraphSubmit} />
       );
     }.bind(this));
     return (
@@ -159,7 +231,7 @@ var TmplBox = React.createClass({
         this.setState({currentTmpl: tmpl, tmplImpls: data});
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        console.error(this.url, status, err.toString());
       }.bind(this)
     });
     
@@ -170,10 +242,24 @@ var TmplBox = React.createClass({
         this.setState({tmplContent: data});
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        console.error(this.url, status, err.toString());
       }.bind(this)
     });
-    
+  },
+  handleParagraphSubmit: function(content, index) {
+    console.log(content, index);
+    $.ajax({
+      url: 'tmpls/' + this.state.currentTmpl + '/paragraphs/' + index,
+      method: 'POST',
+      dataType: 'json',
+      data: {content: content},
+      success: function(data) {
+        this.handleTmplSelect(this.state.currentTmpl);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        console.error(this.url, status, err.toString());
+      }
+    });
   },
   getInitialState: function() {
     return {
@@ -192,7 +278,7 @@ var TmplBox = React.createClass({
         this.setState({tmpls: data});
       }.bind(this),
       error: function(xhr, status, err) {
-        console.error(this.props.url, status, err.toString());
+        console.error(this.url, status, err.toString());
       }.bind(this)
     });
   },
@@ -200,7 +286,7 @@ var TmplBox = React.createClass({
     return (
       <div className='tmplBox'>
         <TmplSelect data={this.state.tmpls} onTmplSelect={this.handleTmplSelect} />
-        <TmplContent data={this.state} />
+        <TmplContent data={this.state} onParagraphSubmit={this.handleParagraphSubmit} />
       </div>
     );
   }
