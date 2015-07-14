@@ -1,24 +1,24 @@
 # REST API 详解
 
-REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进行交互,您可以使用REST API做很多事情,比如:
+REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 进行交互，你可以使用 REST API 做很多事情，比如：
 
 * 一个移动网站可以通过 JavaScript 来获取 LeanCloud 上的数据.
 * 一个网站可以展示来自 LeanCloud 的数据。
-* 您可以上传大量的数据,之后可以被一个移动app读取。
-* 您可以下载最近的数据来进行您自定义的分析统计。
+* 你可以上传大量的数据，之后可以被一个移动 App 读取。
+* 你可以下载最近的数据来进行你自定义的分析统计。
 * 使用任何语言写的程序都可以操作 LeanCloud 上的数据。
-* 如果您不再需要使用 LeanCloud ，您可以导出您所有的数据。
+* 如果你不再需要使用 LeanCloud，你可以导出你所有的数据。
 
 ## API 版本
 
 * 1.1 版本： 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
-* 1 版本：  存在时间不准确的Bug，实际返回的Date 类型和 createdAt、updatedAt都是北京时间。不推荐再使用。
+* 1 版本：  存在时间不准确的Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
 
 ## 快速参考
 
-所有的API访问都是通过HTTPS进行的.API访问需要在 __https://leancloud.cn__ 域名下,相对路径前缀 __/1.1/__ 表明现在使用的是第 1.1 版的API。
+所有的 API 访问都是通过 HTTPS 进行的。API 访问需要在 __https://leancloud.cn__ 域名下,相对路径前缀 __/1.1/__ 表明现在使用的是第 1.1 版的 API。
 
-在线测试API，请打开[https://leancloud.cn/apionline/](https://leancloud.cn/apionline/)。
+在线测试 API，请打开[https://leancloud.cn/apionline/](https://leancloud.cn/apionline/)。
 
 ### 对象
 
@@ -370,39 +370,39 @@ REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进
 
 ### 请求格式
 
-对于POST和PUT请求,请求的主体必须是JSON格式,而且HTTP header的Content-Type需要设置为application/json.
+对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 `Content-Type` 需要设置为 `application/json`。
 
-用户验证是通过HTTP header来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个App程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定endpoint.在下面的例子中,您的app的key被包含在命令中,您可以使用下拉框来显示其他app的示例代码.
+用户验证是通过 HTTP header 来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个 App 程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
 
-对于 JavaScript 使用, LeanCloud 支持跨域资源共享,所以您可以将这些header同XMLHttpRequest一同使用。
+对于 JavaScript 使用, LeanCloud 支持跨域资源共享，所以你可以将这些 header 同 XMLHttpRequest 一同使用。
 
 
 #### 更安全的鉴权方式
 
-我们服务端目前支持一种新的API鉴权方式，用户仍然需要传递`X-AVOSCloud-Application-Id`的http头表示App id，但是不需要再传递`X-AVOSCloud-Application-Key`。
+我们服务端目前支持一种新的 API 鉴权方式，用户仍然需要传递 `X-AVOSCloud-Application-Id` 的 HTTP 头表示 App id，但是不需要再传递 `X-AVOSCloud-Application-Key`。
 
-替代地，增加了新HTTP头部——`X-AVOSCloud-Request-Sign`头，它的值要求是一个形如`sign,timestamp[,master]`的字符串，其中：
+取而代之的，增加了新 HTTP 头部——`X-AVOSCloud-Request-Sign`，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
 
-* timestamp（必须） - 客户端产生本次请求的unix时间戳，精确到毫秒。
-* sign（必须）- 将timestamp加上app key(或者master key)组成的字符串做MD5签名。
-* master （可选）- 字符串"master"，当使用master key签名请求的时候，必须加上这个后缀明确说明是使用master key。
+* timestamp（必须） - 客户端产生本次请求的 unix 时间戳，精确到毫秒。
+* sign（必须）- 将 timestamp 加上 App key(或者 master key) 组成的字符串，在对它做 MD5 签名后的结果。
+* master （可选）- 字符串 "master"，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
 
 我们举个例子来说明：假设
 
-* 应用App id为`mdx1l0uh1p08tdpsk8ffn4uxjh2bbhl86rebrk3muph08qx7`,
-* App key为`n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo`,
-* Master key为`h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2`。
+* 应用App id为 `mdx1l0uh1p08tdpsk8ffn4uxjh2bbhl86rebrk3muph08qx7`,
+* App key为 `n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo`,
+* Master key为 `h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2`。
 
 那么：
 
-* x-avoscloud-request-sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854  -- 表示请求时间戳为`1389085779854`，签名为`28ad0513f8788d58bb0f7caa0af23400`，签名是通过对`1389085779854n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo`的字符串做md5sum得到，也就是时间戳加上app key组成的字符串做MD5签名。
-* x-avoscloud-request-sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master -- 表示使用master key产生签名，时间戳仍然是`1389085779854`，签名是通过对`1389085779854h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2`做md5sum得到，最后的master告诉服务器这个签名是使用master key产生的。
+* x-avoscloud-request-sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854  -- 表示请求时间戳为 `1389085779854`，签名为 `28ad0513f8788d58bb0f7caa0af23400`，签名是通过对 `1389085779854n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo` 的字符串做 md5sum 得到，也就是时间戳加上 app key 组成的字符串做 MD5 签名。
+* x-avoscloud-request-sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master -- 表示使用 master key 产生签名，时间戳仍然是 `1389085779854`，签名是通过对 `1389085779854h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2` 做 md5sum 得到，最后的 `master` 告诉服务器这个签名是使用 master key 产生的。
 
 ### 响应格式
 
-对于所有的请求的响应格式都是一个JSON对象.
+对于所有的请求的响应格式都是一个 JSON 对象.
 
-一个请求是否成功是由HTTP状态码标明的. 一个2XX的状态码表示成功,而一个4XX表示请求失败.当一个请求失败时响应的主体仍然是一个JSON对象,但是总是会包含code和error这两个字段,您可以用它们来进行debug.举个例子,如果尝试用不允许的key来保存一个对象会得到如下信息:
+一个请求是否成功是由 HTTP 状态码标明的。一个 2XX 的状态码表示成功，而一个 4XX 表示请求失败。当一个请求失败时响应的主体仍然是一个 JSON 对象，但是总是会包含 `code` 和 `error` 这两个字段，你可以用它们来进行调试。举个例子，如果尝试用非法的属性名来保存一个对象会得到如下信息:
 
 ```json
 {
@@ -417,205 +417,225 @@ REST API可以让您用任何可以发送HTTP请求的设备来与 LeanCloud 进
 
 ###对象格式
 
-通过REST API保存数据需要将对象的数据通过JSON来编码.这个数据是无模式化的（Schema Free）,这意味着您不需要提前标注每个对象上有那些key.您只需要随意设置key-value对就可以,后端会存储它的.
-举个例子,假设您正在记录一局游戏的最高分.一个简单的对象可能包含:
+LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，每个 `AVObject` 包含若干属性值对（key-value，也称「键值对」），属性的值是与 JSON 格式兼容的数据。
+通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有那些 key，你只需要随意设置 key-value 对就可以，后端会存储它的。
+
+举个例子，假如我们要实现一个类似于微博的社交 App，主要有三类数据：账户、帖子、评论，一条微博帖子可能包含下面几个属性：
+
 ```json
 {
-  "score": 1337,
-  "playerName": "Sean Plott",
-  "cheatMode": false
+  "content": "每个Java程序员必备的8个开发工具",
+  "pubUser": "LeanCloud官方客服",
+  "pubTimestamp": 1435541999
 }
 ```
-Key必须是字母和数字组成的String,Value可以是任何可以JSON编码的东西.
-每个对象都有一个类名,您可以通过类名来区分不同的数据.例如,我们可以把游戏高分对象称之为GameScore.我们推荐您使用 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的格式为您的Key-Value命名,可以使您的代码看起来很漂亮.
-当你从 LeanCloud 中获取对象时,一些字段会被自动加上: `createdAt`, `updatedAt` 和 `objectID`. 这些字段的名字是保留的,您不能自行设置它们.我们上面设置的对象在获取时应该是下面的样子.
+
+Key（属性名）必须是字母和数字组成的 String，Value（属性值）可以是任何可以 JSON 编码的数据。
+
+每个对象都有一个类名，你可以通过类名来区分不同的数据。例如，我们可以把微博的帖子对象称之为 `Post`。我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
+
+当你从 LeanCloud 中获取对象时,一些字段会被自动加上: `createdAt`, `updatedAt` 和 `objectId`。这些字段的名字是保留的，值也不允许修改。我们上面设置的对象在获取时应该是下面的样子.
+
 ```json
 {
-  "score": 1337,
-  "playerName": "Sean Plott",
-  "cheatMode": false,
-  "createdAt": "2011-08-20T02:06:57.931Z",
-  "updatedAt": "2011-08-20T02:06:57.931Z",
-  "objectId": "51e3a334e4b0b3eb44adbe1a"
+  "content": "每个Java程序员必备的8个开发工具",
+  "pubUser": "LeanCloud官方客服",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
 }
 ```
-createdAt和updatedAt都是UTC时间戳,以ISO 8601标准和毫秒级精度储存:`YYYY-MM-DDTHH:MM:SS.MMMMZ`. objectId 是一个string,在类中唯一标明了一个对象.
-在REST API中class级的在一个资源上的操作只会根据类名来进行.例如,如果类名是GameScore,那么class的URL就是
+
+`createdAt` 和 `updatedAt` 都是 UTC 时间戳，以 ISO 8601 标准和毫秒级精度储存：`YYYY-MM-DDTHH:MM:SS.MMMMZ`。`objectId` 是一个 string，在类中可以唯一标识一个实例。
+在 REST API 中，class 级的操作都是通过一个带类名的资源路径（url）来标识的。例如，如果类名是 `Post`，那么 class 的 URL 就是：
+
 ```
-https://api.leancloud.cn/1.1/classes/GameScore
+https://api.leancloud.cn/1.1/classes/Post
 ```
-用户有一个特殊的类级的url:
+
+对于**用户账户**这种对象，有一个特殊的 url:
+
 ```
 https://api.leancloud.cn/1.1/users
 ```
-针对于一个特定的对象的操作可以通过组织一个URL来做.例如,对GameScore中的一个objectId为`51e3a334e4b0b3eb44adbe1a`的对象的操作应使用如下URL:
+
+针对于一个特定的对象的操作可以通过组织一个 URL 来做。例如，对 Post 中的一个 objectId 为 `558e20cbe4b060308e3eb36c` 的对象的操作应使用如下 URL：
+
 ```
-https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
+
 ###创建对象
-为了在 LeanCloud 上创建一个新的对象,应该向class的URL发送一个POST请求,其中应该包含对象本身.例如,要创建如上说的对象:
+为了在 LeanCloud 上创建一个新的对象,应该向 class 的 URL 发送一个 **POST** 请求，其中应该包含对象本身。例如，要创建如上说的对象：
+
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"score":1337,"playerName":"Sean Plott","cheatMode":false}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  -d '{"content": "每个Java程序员必备的8个开发工具","pubUser": "LeanCloud官方客服","pubTimestamp": 1435541999}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
-当创建成功时,HTTP的返回是201 Created,而header中的Location表示新的object的URL:
+
+当创建成功时，HTTP 的返回是 `201 Created`，而 header 中的 Location 表示新的 object 的 URL:
+
 ```sh
 Status: 201 Created
-Location: https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+Location: https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
-响应的主体是一个JSON对象,包含新的对象的objectId和createdAt时间戳.
+
+响应的主体是一个 JSON 对象，包含新的对象的 `objectId` 和 `createdAt` 时间戳.
+
 ```json
 {
-  "createdAt": "2011-08-20T02:06:57.931Z",
-  "objectId": "51e3a334e4b0b3eb44adbe1a"
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
 }
 ```
 
-** 我们对单个 class 的记录数目没有做限制，但是单个应用的总 class 数目限定为 500 个以内**
+>> 注意：** 我们对单个 class 的记录数目没有做限制，但是单个应用的总 class 数目限定为 500 个以内**。也就是说单个应用里面，对象的类别不超过 500 个，但是单个类别下的实例数量则没有限制。
 
 ###获取对象
-当你创建了一个对象时,你可以通过发送一个GET请求到返回的header的Location以获取它的内容.例如,为了得到我们上面创建的对象:
+当你创建了一个对象时，你可以通过发送一个 GET 请求到返回的 header 的 Location 以获取它的内容。例如，为了得到我们上面创建的对象:
+
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
-返回的主体是一个JSON对象包含所有用户提供的field加上createdAt,updatedAt和objectId字段:
+
+返回的主体是一个JSON对象包含所有用户提供的 field 加上 `createdAt`, `updatedAt` 和 `objectId` 字段:
+
 ```json
 {
-  "score": 1337,
-  "playerName": "Sean Plott",
-  "cheatMode": false,
-  "skills": [
-    "pwnage",
-    "flying"
-  ],
-  "createdAt": "2011-08-20T02:06:57.931Z",
-  "updatedAt": "2011-08-20T02:06:57.931Z",
-  "objectId": "51e3a334e4b0b3eb44adbe1a"
+  "content": "每个Java程序员必备的8个开发工具",
+  "pubUser": "LeanCloud官方客服",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
 }
 ```
-当获取的对象有指向其子对象的指针时,您可以加入include选项来获取这些子对象.按上面的实例,通过`game`这个key来指向一个对象:
+
+当获取的对象有指向其子对象的指针时，你可以加入 `include` 选项来获取这些子对象。假设微博记录中有一个字段 `author` 来指向发布者的账户信息，按上面的例子，可以这样来连带获取发布者完整信息:
+
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'include=game' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  --data-urlencode 'include=author' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 ###更新对象
 
-为了更改一个对象上已经有的数据,您可以发送一个PUT请求到对象相应的URL上,任何您未指定的key都不会更改,所以您可以只更新对象数据的一个子集.例如,我们来更改我们对象的一个score的字段:
+为了更改一个对象已经有的数据，你可以发送一个 PUT 请求到对象相应的 URL 上，任何你未指定的 key 都不会更改，所以你可以只更新对象数据的一个子集。例如，我们来更改我们对象的一个 content 字段:
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"score":73453}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"content": "每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/"}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 返回的JSON对象只会包含一个updatedAt字段,表明更新发生的时间:
 
 ```json
 {
-  "updatedAt": "2011-08-21T18:02:52.248Z"
+  "updatedAt": "2015-06-30T18:02:52.248Z"
 }
 ```
 
 ####计数器
 
-为了存储一个计数器类型的数据, LeanCloud 提供对任何数字字段进行原子增加(或者减少)的功能,所以我们可以让score像下面一样增加:
+为了存储一个计数器类型的数据, LeanCloud 提供对任何数字字段进行原子增加(或者减少)的功能。比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"score":{"__op":"Increment","amount":1}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"upvotes":{"__op":"Increment","amount":1}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-这样就将对象里的 `score` 分数加 1，其中 `amount` 指定递增的数字大小，如果为负数，就变成递减。
+这样就将对象里的 `upvotes`(表示被用户点赞的次数) 分数加 1，其中 `amount` 指定递增的数字大小，如果为负数，就变成递减。
 
 ####数组
 
-为了存储数组型数据, LeanCloud 提供3种操作来原子性地更改一个数组字段:
+为了存储数组型数据, LeanCloud 提供 3 种操作来原子性地更改一个数组字段:
 
-* Add 在一个数组字段的后面添加一些指定的对象(包装在一个数组内)
+* Add 在一个数组字段的后面添加一些指定的对象(包装在一个数组内)
 * AddUnique 只会在数组内原本没有这个对象的情形下才会添加入数组,插入的位置不定.
 * Remove 从一个数组内移除所有的指定的对象
 
-每一种方法都会有一个key是`objects`即被添加或删除的对象列表.举个例子,我们可以在类似于`技能`的集合里加入一些对象:
+每一种方法都会有一个 key 是 `objects` 即被添加或删除的对象列表。举个例子，我们可以为每条微博增加一个`标签`（名字 `tags`）属性，然后往里面加入一些标签值：
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"skills":{"__op":"AddUnique","objects":["flying","kungfu"]}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"tags":{"__op":"AddUnique","objects":["Frontend","JavaScript"]}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 ####关系
 
-为了更新Relation的类型, LeanCloud 提供特殊的操作来原子化地添加和删除一个关系,所以我们可以像这样添加一个关系:
+为了更新 Relation 的类型, LeanCloud 提供特殊的操作来原子地添加和删除一个关系，所以我们可以像这样添加一个关系（某个用户喜欢了这条微博）：
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"opponents":{"__op":"AddRelation","objects":[{"__type":"Pointer","className":"Player","objectId":"51c3ba67e4b0f0e851c16221"}]}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"likes":{"__op":"AddRelation","objects":[{"__type":"Pointer","className":"_User","objectId":"51c3ba67e4b0f0e851c16221"}]}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-或者可以在一个对象中删除一个关系:
+或者可以在一个对象中删除一个关系（某个用户取消喜欢了这条微博）：
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"opponents":{"__op":"RemoveRelation","objects":[{"__type":"Pointer","className":"Player","objectId":"51fa3f64e4b05df1766cfb90"}]}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"likes":{"__op":"RemoveRelation","objects":[{"__type":"Pointer","className":"_User","objectId":"51fa3f64e4b05df1766cfb90"}]}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 ###删除对象
 
-为了在 LeanCloud 上删除一个对象,可以发送一个DELETE请求到指定的对象的URL,比如:
+为了在 LeanCloud 上删除一个对象，可以发送一个 DELETE 请求到指定的对象的 URL，比如:
 
 ```sh
 curl -X DELETE \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-您可以在一个对象中删除一个字段，通过Delete操作:
+你也可以在一个对象中删除一个字段，通过 Delete 操作（注意：**这时候 HTTP Method 还是 PUT**）:
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"opponents":{"__op":"Delete"}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a
+  -d '{"downvotes":{"__op":"Delete"}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 ###批量操作
 
-为了减少网络交互的次数太多带来的时间浪费,您可以在一个请求中对多个对象进行create/update/delete操作.
+为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行 `create/update/delete` 操作.
 
-在一个批次中每一个操作都有相应的方法、路径和主体,这些参数可以代替您通常会使用的HTTP方法.这些操作会以发送过去的顺序来执行,比如我们要创建一系列的GameScore的对象:
+在一个批次中每一个操作都有相应的方法、路径和主体，这些参数可以代替你通常会使用的 HTTP 方法。这些操作会以发送过去的顺序来执行，比如我们要一次发布一系列的微博:
 
 ```sh
 curl -X POST \
@@ -626,18 +646,18 @@ curl -X POST \
         "requests": [
           {
             "method": "POST",
-            "path": "/1.1/classes/GameScore",
+            "path": "/1.1/classes/Post",
             "body": {
-              "score": 1337,
-              "playerName": "Sean Plott"
+              "content": "近期 LeanCloud 的文档已经支持评论功能，如果您有疑问、意见或是其他想法，都可以直接在我们文档中提出。",
+              "pubUser": "LeanCloud官方客服"
             }
           },
           {
             "method": "POST",
-            "path": "/1.1/classes/GameScore",
+            "path": "/1.1/classes/Post",
             "body": {
-              "score": 1338,
-              "playerName": "ZeroCool"
+              "content": "很多用户表示很喜欢我们的文档风格，我们已将 LeanCloud 所有文档的 Markdown 格式的源码开放出来。",
+              "pubUser": "LeanCloud官方客服"
             }
           }
         ]
@@ -645,18 +665,16 @@ curl -X POST \
   https://api.leancloud.cn/1.1/batch
 ```
 
-批量操作的响应会是一个列表,列表的元素数量和给定的操作数量是一致的.每一个在列表中的元素都有一个字段是"success"或者"error"."success"的值是通常是进行其他REST操作会返回的值:
+批量操作的响应会是一个列表，列表的元素数量和顺序与给定的操作请求是一致的。每一个在列表中的元素都有一个字段是 "success" 或者 "error"。"success" 的值是通常是进行其他 REST 操作会返回的值：
 
 ```json
-{
-  "success": {
-    "createdAt": "2012-06-15T16:59:11.276Z",
-    "objectId": "51c3ba67e4b0f0e851c16221"
-  }
-}
+[
+  {"success":{"createdAt":"2015-07-13T10:43:00.282Z","objectId":"55a39634e4b0ed48f0c1845b"}},
+  {"success":{"createdAt":"2015-07-13T10:43:00.293Z","objectId":"55a39634e4b0ed48f0c1845c"}}
+]
 ```
 
-"error"的值会是一个对象有返回码和"error"字符串:
+"error"的值会是一个对象有返回码和 "error" 字符串：
 
 ```json
 {
@@ -667,7 +685,7 @@ curl -X POST \
 }
 ```
 
-在batch操作中update和delete同样是有效的:
+在 batch 操作中 update 和 delete 同样是有效的:
 
 ```sh
 curl -X POST \
@@ -678,14 +696,14 @@ curl -X POST \
         "requests": [
           {
             "method": "PUT",
-            "path": "/1.1/classes/GameScore/51e3a334e4b0b3eb44adbe1a",
+            "path": "/1.1/classes/Post/55a39634e4b0ed48f0c1845b",
             "body": {
-              "score": 999999
+              "upvotes": 2
             }
           },
           {
             "method": "DELETE",
-            "path": "/1.1/classes/GameScore/51a8a4d9e4b0d034f6159a35"
+            "path": "/1.1/classes/Post/55a39634e4b0ed48f0c1845c"
           }
         ]
       }' \
@@ -694,61 +712,62 @@ curl -X POST \
 
 ###数据类型
 
-到现在为止我们只使用了可以被标准JSON编码的值,AVOS移动客户端SDK library同样支持日期,二进制数据和关系型数据.在REST API中,这些值都被编码了,同时有一个"__type"字段来标示出它们的类型,所以如果您采用正确的编码的话就可以读或者写这些字段.
+到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
 
-Date类型包含了一个"iso"字段包含了一个UTC时间戳,以ISO 8601格式和毫秒级的精度来存储时间: `YYYY-MM-DDTHH:MM:SS.MMMZ`.
+**Date** 类型包含了一个 "iso" 字段，其值是一个 UTC 时间戳，以 ISO 8601 格式和毫秒级的精度来存储的时间值（格式为：`YYYY-MM-DDTHH:MM:SS.MMMZ`）：
 
 ```json
 {
   "__type": "Date",
-  "iso": "2011-08-21T18:02:52.249Z"
+  "iso": "2015-06-21T18:02:52.249Z"
 }
 ```
 
-Date 和内置的createdAt字段和updatedAt字段相结合的时候特别有用,举个例子:为了找到在一个特殊时间创建的对象,只需要将Date编码在一个对比的query里面:
+Date 和内置的 `createdAt` 字段和 `updatedAt` 字段相结合的时候特别有用，举个例子：为了找到在一个特殊时间发布的微博，只需要将 Date 编码在一个比较的 query 里面：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"createdAt":{"$gte":{"__type":"Date","iso":"2011-08-21T18:02:52.249Z"}}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"createdAt":{"$gte":{"__type":"Date","iso":"2015-06-21T18:02:52.249Z"}}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-Byte类型包含了一个"base64"字段,这个字段是一些二进制数据编码过的"base64"字符串,base64的标准是MIME使用的标准,不包含空白符.
+**Byte** 类型包含了一个 `base64` 字段，这个字段是一些二进制数据编码过的 "base64" 字符串，base64 是 MIME 使用的标准，不包含空白符：
 
 ```json
 {
   "__type": "Bytes",
-  "base64": "VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw=="
+  "base64": "5b6I5aSa55So5oi36KGo56S65b6I5Zac5qyi5oiR5Lus55qE5paH5qGj6aOO5qC877yM5oiR5Lus5bey5bCGIExlYW5DbG91ZCDmiYDmnInmlofmoaPnmoQgTWFya2Rvd24g5qC85byP55qE5rqQ56CB5byA5pS+5Ye65p2l44CC"
 }
 ```
 
-Pointer类型是当移动代码设定 `AVObject` 作为另一个对象的值时使用的.它包含了className和objectId作为提及的值.
+**Pointer** 类型是当移动代码设定 `AVObject` 作为另一个对象的值时使用的，它包含了 `className` 和 `objectId` 两个属性值，用来提取目标对象：
 
 ```json
 {
   "__type": "Pointer",
-  "className": "GameScore",
-  "objectId": "51e3a6b5e4b0169469540546"
+  "className": "Post",
+  "objectId": "55a39634e4b0ed48f0c1845c"
 }
 ```
 
-指向用户对象的Pointer的className为`_User`,前面加一个下划线表示开发者不能定义的类名,而且所指的类是特别内置的.
+指向用户对象的 Pointer 的 className 为`_User`，前面加一个下划线表示开发者不能定义的类名，而且所指的类是 LeanCloud 平台内置的。
 
-Relation类型被用在多对多的类型上,移动端使用 `AVRelation` 作为值,它有一个className字段表示目标对象的类名.
+**Relation**类型被用在多对多的类型上，移动端使用 `AVRelation` 作为值，它有一个 className 字段表示目标对象的类名.
 
 ```json
 {
   "__type": "Relation",
-  "className": "GameScore"
+  "className": "Post"
 }
 ```
 
-当使用查询时,Relation对象的行为很像是Pointer的数组,任何操作针对于pointer的数组的(除了include)都可以对Relation起作用.
+在进行查询时，Relation 对象的行为很像是 Pointer 的数组，任何针对于 pointer 数组的操作(`include`除外)都可以对 Relation 起作用。
 
-当更多的数据类型被加入的时候,它们都会采用hashmap加上一个__type字段的形式,所以您不应该使用__type作为您自己的JSON对象的key.
+当更多的数据类型被加入的时候，它们都会采用 hashmap 加上一个 `__type` 字段的形式，所以你不应该使用`__type`作为你自己的 JSON 对象的 key.
 
 ##查询
 
