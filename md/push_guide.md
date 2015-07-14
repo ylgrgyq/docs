@@ -558,7 +558,7 @@ curl -X POST \
 
 ### 推送结果查询
 
-所有经过 `/push` 接口发出的消息的都可以在控制台的存储里的 _Notification 表看到。每次调用 `/push` 都将产生一条新的 `_Notification` 对象表示一次推送。该表的各属性含义只参考 [Notification](#Notification)。
+所有经过 `/push` 接口发出的消息的都可以在控制台的存储里的 _Notification 表看到。每次调用 `/push` 都将产生一条新的 `_Notification` 对象表示一次推送。该表的各属性含义请参考 [Notification 表详解](#Notification) 。
 
 `/push` 接口会返回新建的 `_Notification` 对象的 `objectId`，你就可以在这张表里查找消息推送的结果。
 
