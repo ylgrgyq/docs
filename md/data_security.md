@@ -248,6 +248,40 @@ result = Base64.encode64(hashme(hasher,hv))
 puts result.gsub(/\n/,'')
 ```
 
+用户残圆贡献一段 C# 语言示例代码，非常感谢：
+
+```
+        /// 根据数据字符串和自定义 salt 值，获取对应加密后的字符串
+        /// </summary>
+        /// <param name="password">数据字符串</param>
+        /// <param name="salt">自定义 salt 值</param>
+        /// <returns></returns>
+        public static string SHA512Encrypt(string password, string salt)
+        {
+            /*
+            用户密码加密算法
+            
+            1、创建 SHA-512 加密算法 hasher
+            2、使用 salt 和 password（原始密码） 调用 hasher.update
+            3、获取加密后的值 hv
+            4、重复 512 次调用 hasher.update(hv)，每次hv都更新为最新的 hasher.digest 加密值
+            5、最终的 hv 值做 base64 编码，保存为 password
+            */
+            password = salt + password;
+            byte[] bytes = System.Text.Encoding.UTF8.GetBytes(password);
+            byte[] result;
+            System.Security.Cryptography.SHA512 shaM = new System.Security.Cryptography.SHA512Managed();
+            result = shaM.ComputeHash(bytes);
+            int i = 0;
+            while (i++ < 512)
+            {
+                result = shaM.ComputeHash(result);
+            }
+            shaM.Clear();
+            return Convert.ToBase64String(result);
+        }
+```
+
 ## 安全性
 
 对于任何移动应用来说。因为客户端代码运行在一台移动设备上，因此可能会有不受信任的客户强行修改代码并发起恶意的请求。选择正确的方式来保护你的应用非常重要，但是正确的方式取决于你的应用，以及应用存储的数据。
