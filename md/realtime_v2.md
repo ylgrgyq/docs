@@ -266,7 +266,7 @@ sourceIP | 消息发送者的 IP
 
 参数 | 说明
 --- | ---
-drop | 可选，如果返回 truthy 值消息将被丢弃
+drop | 可选，如果返回真值消息将被丢弃
 content | 可选，修改后的 content，如果不提供则保留原消息
 toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
 
@@ -288,9 +288,10 @@ timestamp | 服务器收到消息的时间戳，毫秒
 
 参数 | 说明
 --- | ---
-skip | 可选，如果是 truthy 将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
+skip | 可选，如果为真将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
 offlinePeers | 可选，数组，筛选过的推送收件人
 pushMessage | 可选，推送内容，支持自定义 JSON 结构
+force | 可选，如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false
 
 ### _conversationStart
 
