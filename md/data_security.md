@@ -248,7 +248,7 @@ result = Base64.encode64(hashme(hasher,hv))
 puts result.gsub(/\n/,'')
 ```
 
-用户残月贡献一段 C# 语言示例代码，非常感谢：
+用户残圆贡献一段 C# 语言示例代码，非常感谢：
 
 ```
         /// 根据数据字符串和自定义 salt 值，获取对应加密后的字符串
