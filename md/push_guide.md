@@ -18,7 +18,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应 [数据�
 ---|---|---
 badge|iOS|呈现在应用图标右上角的红色圆形数字提示，例如待更新的应用数、未读信息数目等。
 channels| |设备订阅的频道
-deviceProfile| |在应用有多个推送证书的场景下，deviceProfile 用于指定该设备对应的证书名。
+deviceProfile|iOS|在应用有多个推送证书的场景下，deviceProfile 用于指定该设备对应的证书名。
 deviceToken|iOS|APNS 推送的唯一标识符
 deviceType| |设备类型，目前支持 "ios"、"android"、"wp"、"web"。
 ID|Windows Phone|仅对微软平台的设备（微软平板和手机）有效
