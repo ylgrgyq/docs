@@ -777,35 +777,35 @@ curl -X GET \
 
 ###基础查询
 
-你可以一次获取多个对象通过发送一个GET请求到类的URL上,不需要任何URL参数,下面就是简单地获取所有在类之中的对象:
+通过发送一个 GET 请求到类的 URL 上，不需要任何 URL 参数，你就可以一次获取多个对象。下面就是简单地获取所有微博：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  -H "Content-Type: application/json" \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-返回的值就是一个JSON对象包含了results字段,它的值就是对象的列表:
+返回的值就是一个 JSON 对象包含了 results 字段，它的值就是对象的列表:
 
 ```json
 {
   "results": [
     {
-      "playerName": "Jang Min Chul",
-      "updatedAt": "2011-08-19T02:24:17.787Z",
-      "cheatMode": false,
-      "createdAt": "2011-08-19T02:24:17.787Z",
-      "objectId": "51c3ba67e4b0f0e851c16221",
-      "score": 80075
+      "content": "近期 LeanCloud 的文档已经支持评论功能，如果您有疑问、意见或是其他想法，都可以直接在我们文档中提出。",
+      "pubUser": "LeanCloud官方客服",
+      "upvotes": 2
+      "createdAt": "2015-06-29T03:43:35.931Z",
+      "objectId": "55a39634e4b0ed48f0c1845b",
     },
     {
-      "playerName": "Sean Plott",
-      "updatedAt": "2011-08-21T18:02:52.248Z",
-      "cheatMode": false,
-      "createdAt": "2011-08-20T02:06:57.931Z",
-      "objectId": "51e3a334e4b0b3eb44adbe1a",
-      "score": 73453
+      "content": "每个Java程序员必备的8个开发工具",
+      "pubUser": "LeanCloud官方客服",
+      "pubTimestamp": 1435541999,
+      "createdAt": "2015-06-29T01:39:35.931Z",
+      "updatedAt": "2015-06-29T01:39:35.931Z",
+      "objectId": "558e20cbe4b060308e3eb36c"
     }
   ]
 }
@@ -813,18 +813,21 @@ curl -X GET \
 
 ###查询约束
 
-通过where参数的形式可以对查询对象做出约束.`where`参数的值应该是JSON编码过的.就是说,如果您查看真正被发出的URL请求,它应该是先被JSON编码过,然后又被URL编码过.最简单的使用where参数的方式就是包含应有的key的value.举例说,如果我们想要得到Sean Plott的分数,而且他不在作弊模式下,我们应该这样构造查询:
+通过 `where` 参数的形式可以对查询对象做出约束。
+
+`where` 参数的值应该是 JSON 编码过的。就是说，如果你查看真正被发出的 URL 请求，它应该是先被 JSON 编码过，然后又被 URL 编码过。最简单的使用 `where` 参数的方式就是包含应有的 key 和 value。例如，如果我们想要看到「LeanCloud官方客服」发布的所有微博，我们应该这样构造查询:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"playerName":"Sean Plott","cheatMode":false}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"pubUser":"LeanCloud官方客服"}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-where的参数的值应该支持不光是匹配还有比较的方式,除了给定一个确定的值的方式,提供一个hash中有key用于比较也可以.where参数支持下面一些选项:
+除了给定一个确定的值要求完全匹配之外，`where` 也支持比较的方式。而且，它还支持对 key 的一些 hash 操作（譬如包含）。`where`参数支持下面一些选项：
 
 <table>
   <tr><th>Key</th><th>Operation</th></tr>
@@ -841,81 +844,91 @@ where的参数的值应该支持不光是匹配还有比较的方式,除了给�
   <tr><td>$all</td><td>包括所有的给定的值</td></tr>
 </table>
 
-作为示例,为了获取在1000到3000之间的score,包含两个端点,我们应该这样请求:
+例如，为了获取在发布时间在 2015-06-29 当天的微博，我们应该这样请求：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"score":{"$gte":1000,"$lte":3000}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"createdAt":{"$gte":{"__type":"Date","iso":"2015-06-29T00:00:00.000Z"},"$lt":{"__type":"Date","iso":"2015-06-30T00:00:00.000Z"}}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-为了获得分数在10以下并且是一个奇数,我们需要这样做:
+为了获得被喜欢数在 10 以下并且是一个奇数的微博，我们需要这样做：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"score":{"$in":[1,3,5,7,9]}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"upvotes":{"$in":[1,3,5,7,9]}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-为了获取一个不在列表中的player,我们可以:
+为了获取不是「LeanCloud官方客服」发布的微博，我们可以:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"playerName":{"$nin":["Jonathan Walsh","Dario Wunsch","Shawn Simon"]}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"pubUser":{"$nin":["LeanCloud官方客服"]}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-为了获取有分数的对象,我们应该用:
+为了获取有人喜欢的微博，我们应该用:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"score":{"$exists":true}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"upvotes":{"$exists":true}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-为了获取没有分数的对象,用:
+为了获取没有被人喜欢过的微博，用：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"score":{"$exists":false}}' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'where={"upvotes":{"$exists":false}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-如果您有一个类包含运动队而您又储存了用户的家乡,您可以创建一个查询来寻找用户中的有故乡的运动队，并且赢得比赛的记录的人.查询看起来应该是这样:
+我们都知道，微博里面有用户互相关注的功能，如果我们用 `_Followee` 和 `_Follower` 这两个类来存储用户之间的关注关系(`_Follower` 记录用户的粉丝，`_Followee` 记录用户关注的人，我们的[应用内社交组件](/status_system.html)已经实现了这样的模型，这里直接使用其后台表结构)，我们可以创建一个查询来找到某个用户关注的人发布的微博（`Post`表中有一个字段`author`指向发布者），查询看起来应该是这样：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -G \
-  --data-urlencode 'where={"hometown":{"$select":{"query":{"className":"Team","where":{"winPct":{"$gt":0.5}}},"key":"city"}}}' \
-  https://api.leancloud.cn/1.1/classes/_User
+  --data-urlencode 'where={"author":{"$select":{"query":{"className":"_Followee","where":{"user":{
+  "__type": "Pointer",
+  "className": "_User",
+  "objectId": "55a39634e4b0ed48f0c1845c"
+}}, "key":"followee"}}}}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-您可以用`order`参数来指定一个字段来排序.前面加一个负号的前缀表示逆序.这样返回的score会呈升序:
+你可以用 `order` 参数来指定一个字段来排序，前面加一个负号的前缀表示逆序。这样返回的微博会按发布时间呈升序排列:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'order=score' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'order=createdAt' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
 而这样会呈降序:
@@ -925,23 +938,22 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'order=-score' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'order=-createdAt' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-您可以用多个字段进行排序,只要用一个逗号隔开的列表就可以.为了获取GameScore以score的升序和name的降序进行排序:
+你可以用多个字段进行排序，只要用一个逗号隔开的列表就可以。为了获取 Post 以 `createdAt` 的升序和 `pubUser` 的降序进行排序:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'order=score,-name' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'order=createdAt,-pubUser' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-您可以用`limit`和`skip`来做分页,limit的默认值是100,但是任何1到1000的值都是可选的，在 0 到 1000 范围之外的都强制转成默认的 100。
-,就是说,为了获取在400到600之间的对象:
+你可以用 `limit` 和 `skip` 来做分页。`limit` 的默认值是 100，任何 1 到 1000 之间的值都是可选的，在 1 到 1000 范围之外的都强制转成默认的 100。就是说，为了获取排序在 400 到 600 之间的微博:
 
 ```sh
 curl -X GET \
@@ -950,36 +962,36 @@ curl -X GET \
   -G \
   --data-urlencode 'limit=200' \
   --data-urlencode 'skip=400' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-您可以限定返回的字段通过传入 `keys` 参数和一个逗号分隔列表。为了返回对象只包含 `score` 和 `playerName` 字段(还有特殊的内置字段比如 `objectId,createdAt` 和 `updatedAt`):
+你可以限定返回的字段通过传入 `keys` 参数和一个逗号分隔列表。为了返回对象只包含 `pubUser` 和 `content` 字段(还有特殊的内置字段比如 `objectId`, `createdAt` 和 `updatedAt`):
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'keys=score,playerName' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'keys=pubUser,content' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-`keys` 还支持反向选择，也就是不返回某些字段，字段名前面加个减号即可，比如我不想查询返回 `playerName`：
+`keys` 还支持反向选择，也就是不返回某些字段，字段名前面加个减号即可，比如我不想查询返回 `author`：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'keys=-playerName' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  --data-urlencode 'keys=-author' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
 所有以上这些参数都可以和其他的组合进行使用.
 
 ###对数组的查询
 
-对于key的值是一个数组的情况,可以查找key的值中有2的对象:
+对于 key 的值是一个数组的情况，可以通过如下方式查找 key 的值中有 2 的对象:
 
 ```sh
 curl -X GET \
@@ -987,10 +999,10 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"arrayKey":2}' \
-  https://api.leancloud.cn/1.1/classes/RandomObject
+  https://api.leancloud.cn/1.1/classes/TestObject
 ```
 
-您同样可以使用"$all"操作符来找到对象的key的值中有2,3和4的:
+你同样可以使用 `$all` 操作符来找到 key 的值中有 2, 3 和 4 的对象:
 
 ```sh
 curl -X GET \
@@ -998,23 +1010,23 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"arrayKey":{"$all":[2,3,4]}}' \
-  https://api.leancloud.cn/1.1/classes/RandomObject
+  https://api.leancloud.cn/1.1/classes/TestObject
 ```
 
 ###关系查询
 
-有几种方式来查询对象之间的关系数据,如果您想获取对象，而这个对象的一个字段对应了另一个对象,您可以用一个where查询,自己构造一个Pointer,和其他数据类型一样.举例说,如果每一个Comment有一个Post对象在它的post字段上,您可以对一个POST取得所有comment:
+有几种方式来查询对象之间的关系数据。如果你想获取对象，而这个对象的一个字段对应了另一个对象，你可以用一个 `where` 查询，自己构造一个 Pointer，和其他数据类型一样。例如，每条微博都会有很多人评论，我们可以让每一个 Comment 将它对应的 Post 对象保存到 post 字段上，这样你可以取得一条微博下所有 Comment:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'where={"post":{"__type":"Pointer","className":"Post","objectId":"51e3a359e4b015ead4d95ddc"}}' \
+  --data-urlencode 'where={"post":{"__type":"Pointer","className":"Post","objectId":"558e20cbe4b060308e3eb36c"}}' \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果您想获取对象,这个对象的一个字段指向的对象是符合另一个查询的,您可以使用$inQuery操作符.注意默认的limit是100而且最大的limit是1000，这个限制同样适用于内部的查询,所以对于较大的数据集您可能需要细心地构建查询来获得期望的行为.举例说,假设您有一个Post类和一个Comment类,每个Comment都有一个指向它的Post的关系,您可以找到对于有图片的Post的Comment:
+如果你想获取对象，这个对象的一个字段指向的对象需要另一个查询来指定，你可以使用 `$inQuery` 操作符。注意 `limit` 的默认值是 100 且最大值是 1000，这个限制同样适用于内部的查询，所以对于较大的数据集你可能需要细心地构建查询来获得期望的结果。如上面的例子，假设每条微博还有一个 `image` 的字段，用来存储配图，你可以这样列出带图片的微博的评论数据:
 
 ```sh
 curl -X GET \
@@ -1025,18 +1037,18 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果您想获取作为其父对象的关系成员的对象,您可以使用$relatedTo操作符,假设您有一个Post类和一个User类,而每一个Post可以被不同的User所like.如果Post下面有一个key是Relation类型，并且叫做likes,存储了喜欢这个Post的User。您可以找到这些user,他们都like过同一个指定的post:
+如果你想获取作为其父对象的关系成员的对象,你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'where={"$relatedTo":{"object":{"__type":"Pointer","className":"Post","objectId":"51e3a359e4b015ead4d95ddc"},"key":"likes"}}' \
+  --data-urlencode 'where={"$relatedTo":{"object":{"__type":"Pointer","className":"Post","objectId":"558e20cbe4b060308e3eb36c"},"key":"likes"}}' \
   https://api.leancloud.cn/1.1/users
 ```
 
-在某些情况之下,您可能需要在一个查询之中返回多种类型,您可以通过传入字段到include参数中.比如,我们想获得最近的10篇评论,而您想同时得到它们相关的post:
+有时候，你可能需要在一个查询之中返回多种类型，你可以通过传入字段到 `include` 参数中。比如，我们想获得最近的 10 篇评论，而你想同时得到它们关联的微博:
 
 ```sh
 curl -X GET \
@@ -1049,7 +1061,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-不是作为一个Pointer表示,post字段现在已经被展开为一个完整的对象. __type被设置为Object而className同样也被提供了.举例说,一个指向Post的Pointer可能被展示为:
+不是作为一个 Pointer 表示，`post` 字段现在已经被展开为一个完整的对象：`__type` 被设置为 Object 而 `className` 同样也被提供了。例如,一个指向 Post 的 Pointer 可能被展示为:
 
 ```json
 {
@@ -1059,7 +1071,7 @@ curl -X GET \
 }
 ```
 
-当一个查询使用include参数来包含进去来取代pointer之后,可以看到pointer被展开为:
+当一个查询使用 `include` 参数来包含进去来取代 pointer 之后,可以看到 pointer 被展开为:
 
 ```json
 {
@@ -1072,7 +1084,7 @@ curl -X GET \
 }
 ```
 
-您可以同样做多层的include,这时要使用"."号.如果您要include一个comment对应的post对应的author:
+你可以同样做多层的 `include`，这时要使用 "." 号。如果你要 include 一个 Comment 对应的 Post 对应的 `author`：
 
 ```sh
 curl -X GET \
@@ -1085,52 +1097,52 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果您要构建一个查询,这个查询要include多个类,此时用逗号分隔列表即可.
+如果你要构建一个查询，这个查询要 include 多个类，此时用逗号分隔列表即可。
 
 ###对象计数
 
-如果您在使用limit,或者如果返回的结果很多,您可能想要知道到底有多少对象应该返回,而不用把它们全部获得以后再计数.此时您可以使用count参数.举个例子,如果您仅仅是关心一个特定的玩家玩过多少游戏:
+如果你在使用 `limit`，或者如果返回的结果很多，你可能想要知道到底有多少对象应该返回，而不用把它们全部获得以后再计数，此时你可以使用 `count` 参数。举个例子，如果你仅仅是关心一个某个用户发布了多少条微博:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'where={"playerName":"Jonathan Walsh"}' \
+  --data-urlencode 'where={"pubUser":"LeanCloud官方客服"}' \
   --data-urlencode 'count=1' \
   --data-urlencode 'limit=0' \
-  https://api.leancloud.cn/1.1/classes/GameScore
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-因为这个request请求了count而且把limit设为了0,返回的值里面只有计数,没有results.
+因为这个 request 请求了 `count` 而且把 `limit` 设为了 0，返回的值里面只有计数，没有 `results`：
 
 ```json
 {
   "results": [
 
   ],
-  "count": 1337
+  "count": 7
 }
 ```
 
-如果有一个非0的limit的话,既会返回results也会返回count.
+如果有一个非 0 的 `limit` 的话，则既会返回 `results` 也会返回 `count`。
 
 ###复合查询
 
-如果您想查询对象符合几种查询之一,您可以使用$or操作符,带一个JSON数组作为它的值.例如,如果您想找到player赢了很多或者赢了很少,您可以用如下的方式:
+如果你想查询对象符合几种查询之一，你可以使用 `$or` 操作符，带一个 JSON 数组作为它的值。例如，你想查询出企业官方账号和个人账号的微博，可以这样：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'where={"$or":[{"wins":{"$gt":150}},{"wins":{"$lt":5}}]}' \
-  https://api.leancloud.cn/1.1/classes/Player
+  --data-urlencode 'where={"$or":[{"pubUserCertificate":{"$gt":2}},{"pubUserCertificate":{"$lt":3}}]}' \
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-任何在查询上的其他的约束都会对返回的对象生效,所以您可以用$or对其他的查询添加约束.
+任何在查询上的其他的约束都会对返回的对象生效，所以你可以用 `$or` 对其他的查询添加约束。
 
-注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:limit skip sort include).
+注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:`limit` `skip` `sort` `include`).
 
 ### 使用 CQL 查询
 
@@ -1141,88 +1153,90 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'cql=select * from Player limit 0,100 order by name' \
+  --data-urlencode 'cql=select * from Post limit 0,100 order by pubUser' \
   https://api.leancloud.cn/1.1/cloudQuery
 ```
 
 更多请参考 [CQL 详细指南](./cql_guide.html)。
 
-CQL 还支持占位符查询，where 和 limit 子句的条件参数可以使用问号替换，然后通过 `pvalues` 数组传入：
+CQL 还支持占位符查询，`where` 和 `limit` 子句的条件参数可以使用问号替换，然后通过 `pvalues` 数组传入：
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'cql=select * from Player where name=? limit ?,? order by name' \
+  --data-urlencode 'cql=select * from Post where pubUser=? limit ?,? order by createdAt' \
    --data-urlencode 'pvalues=["dennis", 0, 100]'
   https://api.leancloud.cn/1.1/cloudQuery
 ```
 
 ##用户
 
-不仅在mobile app上,还在其他系统中,很多应用都有一个统一的登陆流程.通过REST API访问用户的账户让您可以通过 LeanCloud 使用这项功能.
+不仅在移动应用上，还在其他系统中，很多应用都有一个统一的登陆流程。通过 REST API 访问用户的账户让你可以在 LeanCloud 上简单实现这一功能。
 
-通常来说,用户这个类的功能与其他的对象是相同的,比如都没有限制模式(Schema free).User对象和其他对象不同的是一个用户必须有用户名(username)和密码(password),密码会被自动地加密和存储. LeanCloud 强制您username和email这两个字段必须是没有重复的.
+通常来说,`用户`（类名`_User`）这个类的功能与其他的对象是相同的，比如都没有限制模式(Schema free)。User 对象和其他对象不同的是一个用户必须有用户名(`username`)和密码(`password`)，密码会被自动地加密和存储。LeanCloud 强制要求 `username` 和 `email` 这两个字段必须是没有重复的.
 
 ###注册
 
-注册一个新用户与创建一个新的普通对象之间的不同点在于username和password字段都是必要的.Password字段会以和其他的字段不一样的方式处理,它在储存时会被加密而且永远不会被返回给任何来自客户端的请求.
+注册一个新用户与创建一个新的普通对象之间的不同点在于 username 和 password 字段都是必需的。password 字段会以和其他的字段不一样的方式处理，它在储存时会被加密而且永远不会被返回给任何来自客户端的请求。
 
-在您的app的设定菜单 ,您可以向 LeanCloud 来请求认证邮件地址.这项设置启用了的话,所有有email的用户的注册都会产生一个email验证地址.您可以在emailVerified字段上查看用户的email是否已经通过认证.
+在你的 App 的设定菜单，你可以让 LeanCloud 来自动帮你验证邮件地址（在应用控制台「设置」-->「应用选项」-->「邮箱」中开启「启用注册用户邮箱验证」）。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
 
-为了注册一个新的用户,需要向user路径发送一个POST请求,您可以加入一个新的字段,例如,创建一个新的用户有一个电话字段:
+为了注册一个新的用户，需要向 user 路径发送一个 POST 请求，你可以加入一个新的字段，例如，创建一个新的用户有一个电话号码:
 
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"username":"cooldude6","password":"p_n7!-e8","phone":"415-392-0202"}' \
+  -d '{"username":"hjiang","password":"f32@ds*@&dsa","phone":"18612340000"}' \
   https://api.leancloud.cn/1.1/users
 ```
 
-当创建成功时,HTTP返回为201 Created ,Location头包含了新用户的URL:
+当创建成功时，HTTP返回为201 Created ，Location 头包含了新用户的 URL：
 
 ```sh
 Status: 201 Created
-Location: https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
+Location: https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-返回的主体是一个JSON对象,包含objectId, createdAt时间戳表示创建对象时间, sessionToken可以被用来认证这名用户随后的请求.
+返回的主体是一个 JSON 对象,包含 `objectId`, `createdAt` 时间戳表示创建对象时间, `sessionToken` 可以被用来认证这名用户随后的请求：
 
-```json
+```
 {
-  "createdAt": "2011-11-07T20:58:34.448Z",
-  "objectId": "51c3ba66e4b0f0e851c1621b",
-  "sessionToken": "pnktnjyb996sj4p156gjtp4im"
+  "sessionToken":"qmdj8pdidnmyzp0c7yqil91oc",
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "objectId":"55a47496e4b05001a7732c5f"
 }
 ```
 
 ###登陆
 
-在您允许用户注册之后,在以后您需要让他们用自己的用户名和密码登陆.为了做到这一点,发送一个GET请求到/1.1/login,加上username和password作为URL编码后的参数.
+在你允许用户注册之后，在以后你需要让他们用自己的用户名和密码登陆。为了做到这一点，发送一个 GET 请求到 /1.1/login，加上 username 和 password 作为 URL 编码后的参数.
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
-  --data-urlencode 'username=cooldude6' \
-  --data-urlencode 'password=p_n7!-e8' \
+  --data-urlencode 'username=hjiang' \
+  --data-urlencode 'password=f32@ds*@&dsa' \
   https://api.leancloud.cn/1.1/login
 ```
 
-返回的主体是一个JSON对象包括所有除了password以外的自定义字段.它同样包含了createdAt,updateAt,objectId和sessionToken字段.
+返回的主体是一个 JSON 对象包括所有除了 password 以外的自定义字段。它同样包含了 `createdAt`, `updateAt`, `objectId` 和 `sessionToken` 字段.
 
 ```json
 {
-  "username": "cooldude6",
-  "phone": "415-392-0202",
-  "createdAt": "2011-11-07T20:58:34.448Z",
-  "updatedAt": "2011-11-07T20:58:34.448Z",
-  "objectId": "51c3ba66e4b0f0e851c1621b",
-  "sessionToken": "pnktnjyb996sj4p156gjtp4im"
+  "sessionToken":"qmdj8pdidnmyzp0c7yqil91oc",
+  "updatedAt":"2015-07-14T02:31:50.100Z",
+  "phone":"18612340000",
+  "objectId":"55a47496e4b05001a7732c5f",
+  "username":"hjiang",
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "emailVerified":false,
+  "mobilePhoneVerified":false
 }
 ```
 
@@ -1239,7 +1253,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/usersByMobilePhone
 ```
 
-其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode`是使用[短信验证 API](#短信验证-api-1)发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
+其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode`是使用 [短信验证 API](#短信验证-api-1) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
 
 注册或者登陆成功后，返回的应答跟登陆接口类似：
 
@@ -1247,10 +1261,10 @@ curl -X POST \
 {
   "username": "186xxxxxxxx",
   "mobilePhone": "186xxxxxxxx",
-  "createdAt": "2011-11-07T20:58:34.448Z",
-  "updatedAt": "2011-11-07T20:58:34.448Z",
-  "objectId": "51c3ba66e4b0f0e851c1621b",
-  "sessionToken": "pnktnjyb996sj4p156gjtp4im"
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "updatedAt": "2015-07-14T02:31:50.100Z",
+  "objectId": "58c38496e4b05001a7732c5f",
+  "sessionToken": "qmdj8pdidnmyzp0c7yqil91oc"
   ……其他属性
 }
 ```
@@ -1259,65 +1273,64 @@ curl -X POST \
 
 ###验证 Email
 
-设置email验证是一个app选项的一个设置,这样可以对已经确认过的email的用户提供一部分保留的体验.Email验证会在User对象中加入emailVerified字段,当一个用户的email被新设置或者修改过的话,emailVerified会被设为false.AVOSCloud会对用户填写的邮箱发送一个链接,这个链接可以把emailVerified设置为true.
+设置 email 验证是 app 设置中的一个选项，通过这个标识应用层可以对提供真实 email 的用户更好的功能或者体验。Email 验证会在 User 对象中加入 `emailVerified` 字段，当一个用户的 email 被新设置或者修改过的话，`emailVerified` 会被重置为 false。LeanCloud 后台会往用户填写的邮箱发送一个验证链接，用户点击这个链接可以让 `emailVerified` 被设置为 true。
 
-emailVerified字段有3种状态可以考虑
+emailVerified 字段有 3 种状态可以参考：
 
-1. true : 用户可以点击email中的地址来连接 LeanCloud 来验证地址.一个用户永远不会在新创建这个值的时候emailVerified为true
-2. false : User对象最后一次被刷新的时候,用户并没有确认过他的email地址,如果您看到emailVerified为false的话,您可以考虑刷新User对象
-3. null : User对象在email验证没有打开的时候就已经创建了,或者User没有email
+1. true : 用户已经点击了发送到邮箱的验证地址，邮箱被验证为真实有效。LeanCloud 保证在新创建用户的时候 `emailVerified` 一定为 false。
+2. false : User 对象最后一次被更新的时候，用户并没有确认过他的 email 地址。如果你看到 `emailVerified` 为 false 的话，你可以考虑刷新 User 对象或者再次请求验证用户邮箱。
+3. null : User对象在 email 验证没有打开的时候就已经创建了，或者 User 没有 email。
 
 关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 ### 请求验证 Email
 
-发送给用户的邮箱验证邮件在一周内失效，可以通过调用`/1.1/requestEmailVerify`来强制重新发送：
+发送给用户的邮箱验证邮件在一周内失效，你可以通过调用 `/1.1/requestEmailVerify` 来强制重新发送：
 
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"email":"coolguy@iloveapps.com"}' \
+  -d '{"email":"hang@leancloud.rocks"}' \
   https://api.leancloud.cn/1.1/requestEmailVerify
 ```
 
 ###请求密码重设
 
-您可以使用这项功能,前提是用户将email与他们的账户关联起来.如果要重设密码,发送一个POST请求到 `/1.1/requestPasswordReset` ,同时在request的body部分带上email字段.
+在用户将 email 与他们的账户关联起来之后，你可以通过邮件来重设密码。操作方法为，发送一个 POST 请求到 `/1.1/requestPasswordReset`，同时在 request 的 body 部分带上 email 字段.
 
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"email":"coolguy@iloveapps.com"}' \
+  -d '{"email":"hang@leancloud.rocks"}' \
   https://api.leancloud.cn/1.1/requestPasswordReset
 ```
 
-如果成功的话,返回的值是一个JSON对象.
+如果成功的话，返回的值是一个 JSON 对象.
 
 关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 ### 手机号码验证
 
-在应用设置的应用选项里你还可以选择开启注册手机码号验证，当注册的时候用户填写`mobilePhoneNumber`字段，  LeanCloud  将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的`mobilePhoneNumberVerified`属性将设置为`true`。
+在应用设置里你还可以选择开启注册手机码号验证功能（设置路径：在应用控制台「设置」-->「应用选项」-->「短信」中开启「验证注册用户手机号码」），当注册的时候用户填写 `mobilePhoneNumber` 字段，LeanCloud 云端将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的 `mobilePhoneNumberVerified` 属性将设置为 `true`。
 
-**请注意，每个账户只有100条免费的短信额度，超过部分每一条短信都将实时扣费，请保证账户余额充足**
+**请注意，每个账户只有100条免费的短信额度，超过后每发送一条短信都将实时扣费，请保证账户余额充足**
 
 假设你在开启注册手机号码验证选项后，注册下列用户：
-
 
 ```sh
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"username":"cooldude6","password":"p_n7!-e8","mobilePhoneNumber":"186xxxxxxxx"}' \
+  -d '{"username":"hang@leancloud.rocks","password":"whateverpassword","mobilePhoneNumber":"13613613613"}' \
   https://api.leancloud.cn/1.1/users
 ```
 
-那么在注册成功后， LeanCloud  将向`186xxxxxxxx`发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
+那么在注册成功后，LeanCloud 将向 `136xxxxxxxx` 发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
 
 ```sh
 curl -X POST \
@@ -1325,12 +1338,12 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/6位数字验证码
+  https://api.leancloud.cn/1.1/verifyMobilePhone/{{6位数字验证码}}
 ```
 
-其中 URL 中的 `code` 就是6位验证数字。
+其中 URL 中最后一部分就是6位验证数字。
 
-验证成功后 ，用户的`mobilePhoneNumberVerified`将变为true，并调用云代码的`AV.Cloud.onVerified(type, function)`方法，type设置为`sms`。
+验证成功后，用户的 `mobilePhoneNumberVerified` 将变为 true，并调用云引擎的 `AV.Cloud.onVerified(type, function)` 方法，type 设置为`sms`。
 
 ### 请求手机号码验证
 
@@ -1378,13 +1391,13 @@ curl -X GET \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
-  --data-urlencode 'password=p_n7!-e8' \
+  --data-urlencode 'password=whateverpassword' \
   https://api.leancloud.cn/1.1/login
 ```
 
 ### 使用短信验证码重置用户密码
 
-如果用户使用手机号码注册，您也许希望也能通过手机短信来实现`忘记密码`功能，通过：
+如果用户使用手机号码注册，你也许希望也能通过手机短信来实现 `重置密码` 功能，通过：
 
 ```sh
 curl -X POST \
@@ -1395,9 +1408,9 @@ curl -X POST \
   https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
 ```
 
-发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的`mobilePhoneNumber`。
+发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的 `mobilePhoneNumber`。
 
-用户收到验证码后，调用`PUT /1.1/resetPasswordBySmsCode/:code`来设置新的密码：
+用户收到验证码后，调用 `PUT /1.1/resetPasswordBySmsCode/:code` 来设置新的密码：
 
 ```sh
 curl -X PUT \
@@ -1412,65 +1425,67 @@ curl -X PUT \
 
 ###获取用户
 
-您可以发送一个GET请求到URL以获取用户的内容,返回的内容就是当创建用户时返回的内容.比如,为了获取上面创建的用户:
+你可以发送一个 GET 请求到 URL 以获取用户的账户信息，返回的内容就是当创建用户时返回的内容。比如，为了获取上面创建的用户:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://api.leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-返回的body是一个JSON对象,包含所有用户提供的字段,除了密码以外.也包括了createdAt,updatedAt和objectId字段.
+返回的 body 是一个 JSON 对象，包含所有用户提供的字段，除了密码以外，也包括了 createdAt, updatedAt 和 objectId 字段.
 
 ```json
 {
-  "username": "cooldude6",
-  "phone": "415-392-0202",
-  "createdAt": "2011-11-07T20:58:34.448Z",
-  "updatedAt": "2011-11-07T20:58:34.448Z",
-  "objectId": "51fa6886e4b0cc0b5a3792e9"
+  "updatedAt":"2015-07-14T02:31:50.100Z",
+  "phone":"18612340000",
+  "objectId":"55a47496e4b05001a7732c5f",
+  "username":"hjiang",
+  "createdAt":"2015-07-14T02:31:50.100Z",
+  "emailVerified":false,
+  "mobilePhoneVerified":false
 }
 ```
 
 ###更新用户
 
-在通常的情况下,没有人会指望一个用户被允许来改动他们自己的数据,为了让他们能认证做这件事,用户必须加入一个 `X-AVOSCloud-Session-Token` 头部来请求更新,这个session token在注册时和登录时会返回。
+在通常的情况下，没有人会允许别人来改动他们自己的数据。为了做好权限认证，确保只有用户自己可以修改个人数据，在更新用户信息的时候，必须在 HTTP 头部加入一个 `X-AVOSCloud-Session-Token` 项来请求更新，这个 session token 在注册和登录时会返回。
 
-为了改动一个用户已经有的数据,需要对这个用户的URL发送一个PUT请求.任何您没有指定过的key会保持不动,所以您可以只改动用户数据中的一部分.username和password可以改动,但是新的username不能重复.
+为了改动一个用户已经有的数据,需要对这个用户的 URL 发送一个 PUT 请求。何你没有指定的 key 会保持不动，所以你可以只改动用户数据中的一部分。username 和 password 也是可以改动的，但是新的 username 不能和既有数据重复。
 
-比如,如果我们想对 cooldude6 的电话做出一些改动:
+比如，如果我们想对 「hjiang」 的手机号码做出一些改动:
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: pnktnjyb996sj4p156gjtp4im" \
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
-  -d '{"phone":"415-369-6201"}' \
-  https://api.leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9
+  -d '{"phone":"18600001234"}' \
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-返回的body是一个JSON对象,只有一个updatedAt字段表明更新发生的时间.
+返回的 body 是一个 JSON 对象，只有一个 `updatedAt` 字段表明更新发生的时间.
 
 ```json
 {
-  "updatedAt": "2011-11-07T21:25:10.623Z"
+  "updatedAt": "2015-07-14T02:35:50.100Z"
 }
 ```
 
 ###安全地修改用户密码
 
-修改密码，可以直接使用上面的`PUT /1.1/users/:objectId`的API，但是很多开发者会希望让用户输入一次旧密码做一次认证，旧密码正确才可以修改为新密码，因此我们提供了一个单独的API `PUT /1.1/users/:objectId/updatePassword` 来安全地更新密码：
+修改密码，可以直接使用上面的`PUT /1.1/users/:objectId`的 API，但是很多开发者会希望让用户输入一次旧密码做一次认证，旧密码正确才可以修改为新密码，因此我们提供了一个单独的 API `PUT /1.1/users/:objectId/updatePassword` 来安全地更新密码：
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: pnktnjyb996sj4p156gjtp4im" \
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
-  -d '{"old_password":"the_old_pass", "new_password":"the_new_pass"}' \
-  https://api.leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9/updatePassword
+  -d '{"old_password":"the_old_password", "new_password":"the_new_password"}' \
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f/updatePassword
 ```
 
 其中：
@@ -1483,7 +1498,7 @@ curl -X PUT \
 
 ###查询
 
-您可以一次获取多个用户,只要向用户的根URL发送一个GET请求.没有任何URL参数的话,可以简单地列出所有用户:
+你可以一次获取多个用户，只要向用户的根 URL 发送一个 GET 请求。没有任何 URL 参数的话，可以简单地列出所有用户:
 
 ```sh
 curl -X GET \
@@ -1492,50 +1507,45 @@ curl -X GET \
   https://api.leancloud.cn/1.1/users
 ```
 
-返回的值是一个JSON对象包括一个results字段, 值是包含了所有对象的一个JSON数组.
+返回的值是一个 JSON 对象包括一个 `results` 字段, 值是包含了所有对象的一个 JSON 数组.
 
 ```json
 {
-  "results": [
+  "results":[
     {
-      "username": "bigglesworth",
-      "phone": "650-253-0000",
-      "createdAt": "2011-11-07T20:58:06.445Z",
-      "updatedAt": "2011-11-07T20:58:06.445Z",
-      "objectId": "51fa0ff9e4b0cc0b5a3792e1"
-    },
-    {
-      "username": "cooldude6",
-      "phone": "415-369-6201",
-      "createdAt": "2011-11-07T20:58:34.448Z",
-      "updatedAt": "2011-11-07T21:25:10.623Z",
-      "objectId": "51fa000be4b0cc0b5a3792e0"
+      "updatedAt":"2015-07-14T02:31:50.100Z",
+      "phone":"18612340000",
+      "objectId":"55a47496e4b05001a7732c5f",
+      "username":"hjiang",
+      "createdAt":"2015-07-14T02:31:50.100Z",
+      "emailVerified":false,
+      "mobilePhoneVerified":false
     }
   ]
 }
 ```
 
-所有的对普通对象的查询选项都适用于对用户对象的查询,所以可以查看 查询 部分来获取详细信息.
+所有的对普通对象的查询选项都适用于对用户对象的查询，所以可以查看 [查询](#查询) 部分来获取详细信息.
 
 ###删除用户
 
-为了在 LeanCloud 上删除一个用户,可以向它的URL上发送一个DELETE请求.您必须提供一个`X-AVOSCloud-Session-Token`在header上以便认证.例子:
+为了在 LeanCloud 上删除一个用户，可以向它的 URL 上发送一个 DELETE 请求。同样的，你必须提供一个 `X-AVOSCloud-Session-Token` 在 HTTP 头上以便认证。例如：
 
 ```sh
 curl -X DELETE \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: pnktnjyb996sj4p156gjtp4im" \
-  https://api.leancloud.cn/1.1/users/g7y9tkhB7O
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-###用户账户连接
+###连接用户账户和第三方平台
 
-AVOSCloud允许你连接你的用户到其他服务，比如新浪微博和腾讯微博(未来我们还会加入更多的第三方服务)，这样就允许您的用户直接用他们现有的帐号id来登录您的App。通过siginup或者更新的endpoint，并使用`authData`字段来提供您希望连接的服务的授权信息就可以做到。一旦关联了某个服务，authData将被存储到您的用户信息里，并通过登录即可重新获取。
+LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾讯微博，这样就允许你的用户直接用他们现有的帐号 id 来登录你的 App。通过 `siginup` 或者更新的 endpoint，并使用 `authData` 字段来提供你希望连接的服务的授权信息就可以做到。一旦关联了某个服务，`authData` 将被存储到你的用户信息里，并通过登录即可重新获取。
 
-`authData`是一个普通的JSON对象，它所要求的key根据service不同而不同，具体要求见下面。每种情况下，你都需要自己负责完成整个授权过程(一般是通过OAuth协议，1.0或者2.0)来获取授权信息，提供给连接API。
+`authData` 是一个普通的 JSON 对象，它所要求的 key 根据 service 不同而不同，具体要求见下面。每种情况下，你都需要自己负责完成整个授权过程(一般是通过 OAuth 协议，1.0 或者 2.0) 来获取授权信息，提供给连接 API。
 
-[新浪微博](http://weibo.com/)的authData内容:
+[新浪微博](http://weibo.com/) 的 authData 内容:
 
 ```json
 {
@@ -1549,7 +1559,7 @@ AVOSCloud允许你连接你的用户到其他服务，比如新浪微博和腾�
 }
 ```
 
-[腾讯微博](http://t.qq.com/)的authData内容:
+[腾讯微博](http://t.qq.com/) 的 authData 内容:
 
 ```json
 {
@@ -1563,7 +1573,7 @@ AVOSCloud允许你连接你的用户到其他服务，比如新浪微博和腾�
 }
 ```
 
-[微信](http://open.weixin.qq.com/)的authData内容:
+[微信](http://open.weixin.qq.com/) 的 authData 内容:
 
 ```json
 {
@@ -1577,7 +1587,7 @@ AVOSCloud允许你连接你的用户到其他服务，比如新浪微博和腾�
 }
 ```
 
-匿名用户(Anonymous user)的authData内容:
+匿名用户(Anonymous user)的 authData 内容:
 
 ```json
 {
@@ -1589,7 +1599,7 @@ AVOSCloud允许你连接你的用户到其他服务，比如新浪微博和腾�
 
 #### 注册和登录
 
-使用一个连接服务来注册用户并登录，同样使用POST请求users，只是需要提供authData字段。例如，使用新浪微博账户注册或者登录用户:
+使用一个连接服务来注册用户并登录，同样使用 POST 请求 users，只是需要提供 `authData` 字段。例如，使用新浪微博账户注册或者登录用户:
 
 
 ```sh
@@ -1609,22 +1619,22 @@ curl -X POST \
   https://api.leancloud.cn/1.1/users
 ```
 
-AVOSCloud会校验提供的authData是否有效，并检查是否已经有一个用户连接了这个authData服务。如果已经有用户存在并连接了同一个authData，那么返回200 OK和详细信息(包括用户的sessionToken):
+LeanCloud 会校验提供的 `authData` 是否有效，并检查是否已经有一个用户连接了这个 `authData` 服务。如果已经有用户存在并连接了同一个 `authData`，那么返回 200 OK 和详细信息(包括用户的 `sessionToken`):
 
 ```sh
 Status: 200 OK
-Location: https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
+Location: https://api.leancloud.cn/1.1/users/75a4800fe4b05001a7745c41
 ```
 
-应答的body类似:
+应答的 body 类似:
 
 ```json
 {
-  "username": "AVOSCloud",
-  "createdAt": "2012-02-28T23:49:36.353Z",
-  "updatedAt": "2012-02-28T23:49:36.353Z",
-  "objectId": "51fb1bf7e4b0cc0b5a3792f3",
-  "sessionToken": "samplei3l83eerhnln0ecxgy5",
+  "username": "LeanCloud",
+  "createdAt": "2015-06-28T23:49:36.353Z",
+  "updatedAt": "2015-06-28T23:49:36.353Z",
+  "objectId": "75a4800fe4b05001a7745c41",
+  "sessionToken": "anythingstringforsessiontoken",
   "authData": {
     "qq": {
       "openid": "0395BA18A5CD6255E5BA185E7BEBA242",
@@ -1632,36 +1642,35 @@ Location: https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
       "expires_in": 1382686496
     }
   }
-}
-```
+}```
 
-如果用户还没有连接到这个帐号，则你会收到201 Created的应答状态码，标识新的用户已经被创建:
+如果用户还没有连接到这个帐号，则你会收到 201 Created 的应答状态码，标识新的用户已经被创建:
 
 ```sh
 Status: 201 Created
-Location: https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
+Location: https://api.leancloud.cn/1.1/users/55a4800fe4b05001a7745c41
 ```
 
-应答内容包括objectId,createdAt,sessionToken以及一个自动生成的随机username，例如:
+应答内容包括 `objectId`, `createdAt`, `sessionToken` 以及一个自动生成的随机 `username`，例如:
 
 ```json
 {
-  "username": "iwz8sna7sug28v4eyu7t89fij",
-  "createdAt": "2012-02-28T23:49:36.353Z",
-  "objectId": "51fb1bf7e4b0cc0b5a3792f3",
-  "sessionToken": "samplei3l83eerhnln0ecxgy5"
+  "username":"ec9m07bo32cko6soqtvn6bko5",
+  "sessionToken":"tfrvbzmdf609nu9204v5f0tuj",
+  "createdAt":"2015-07-14T03:20:47.733Z",
+  "objectId":"55a4800fe4b05001a7745c41"
 }
 ```
 
 #### 连接
 
-连接一个现有的用户到新浪微博或者腾讯微博帐号，可以通过发送一个PUT请求附带authData字段到user endpoint做到。例如，连接一个用户到新浪微博帐号发起的请求类似这样:
+连接一个现有的用户到新浪微博或者腾讯微博帐号，可以通过发送一个 PUT 请求附带 `authData` 字段到 user endpoint 做到。例如，连接一个用户到新浪微博帐号发起的请求类似这样:
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: samplei3l83eerhnln0ecxgy5" \
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
@@ -1672,41 +1681,41 @@ curl -X PUT \
           }
         }
       }' \
-  https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-完成连接后，你可以使用匹配的authData来认证他们。
+完成连接后，你可以使用匹配的 `authData` 来认证他们。
 
 #### 断开连接
 
-断开一个现有用户到某个服务，可以发送一个PUT请求设置authData中对应的服务为null来做到。例如，取消新浪微博关联:
+断开一个现有用户到某个服务，可以发送一个PUT请求设置 `authData` 中对应的服务为 null 来做到。例如，取消新浪微博关联:
 
 ```sh
 curl -X PUT \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: samplei3l83eerhnln0ecxgy5" \
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
       "weibo" : null
     }
       }' \
-  https://api.leancloud.cn/1.1/users/51fb1bf7e4b0cc0b5a3792f3
+  https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
 
 ###安全
 
-当您用REST API key 来访问 LeanCloud 时,访问可能被ACL所限制,就像iOS和Android SDK上所做的一样.您仍然可以通过REST API来读和修改,只需要通过`ACL`的key来访问一个对象.
+当你用 REST API key 来访问 LeanCloud 时，访问可能被 ACL 所限制，就像 iOS 和 Android SDK 上所做的一样。你仍然可以通过 REST API 来读和修改，只需要通过 `ACL` 的 key 来访问一个对象。
 
-ACL按JSON对象格式来表示,JSON对象的key是objectId 或者一个特别的key——`*`(表示公共访问权限).ACL的值是"权限对象",这个JSON对象的key总是权限名,而这些key的值总是true.
+ACL 按 JSON 对象格式来表示，JSON 对象的 key 是 objectId 或者一个特别的 key ——`*`(表示公共访问权限)。ACL 的值是"权限对象"，这个 JSON 对象的 key 总是权限名，而这些 key 的值总是 true。
 
-举个例子,如果您想让一个id为"51f9d9c7e4b0cc0b5a3792da"的用户有读和写一个对象的权限,而且这个对象应该可以被公共读取,符合的ACL应该是:
+举个例子,如果你想让一个id为 "55a47496e4b05001a7732c5f" 的用户有读和写一个对象的权限，而且这个对象应该可以被公共读取，符合的 ACL 应该是:
 
 ```json
 {
-  "51f9d9c7e4b0cc0b5a3792da": {
+  "55a47496e4b05001a7732c5f": {
     "read": true,
     "write": true
   },
