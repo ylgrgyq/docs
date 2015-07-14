@@ -1,6 +1,6 @@
 # REST API 详解
 
-REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 进行交互，你可以使用 REST API 做很多事情，比如：
+REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 进行交互，你可以使用 REST API 做很多事情，比如：
 
 * 一个移动网站可以通过 JavaScript 来获取 LeanCloud 上的数据.
 * 一个网站可以展示来自 LeanCloud 的数据。
@@ -11,8 +11,10 @@ REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 
 
 ## API 版本
 
-* 1.1 版本： 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
-* 1 版本：  存在时间不准确的Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
+版本|内容
+---|---
+1.1 | 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
+1.0|存在时间不准确的 Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
 
 ## 快速参考
 
@@ -372,7 +374,7 @@ REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 
 
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 `Content-Type` 需要设置为 `application/json`。
 
-用户验证是通过 HTTP header 来进行的, __X-AVOSCloud-Application-Id__ 头标明正在运行的是哪个 App 程序, 而 __X-AVOSCloud-Application-Key__ 头用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
+用户验证是通过 HTTP header 来进行的, __X-AVOSCloud-Application-Id__ 标明正在运行的是哪个 App 程序, 而 __X-AVOSCloud-Application-Key__ 用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
 
 对于 JavaScript 使用, LeanCloud 支持跨域资源共享，所以你可以将这些 header 同 XMLHttpRequest 一同使用。
 
@@ -383,9 +385,11 @@ REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 
 
 取而代之的，增加了新 HTTP 头部——`X-AVOSCloud-Request-Sign`，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
 
-* timestamp（必须） - 客户端产生本次请求的 unix 时间戳，精确到毫秒。
-* sign（必须）- 将 timestamp 加上 App key(或者 master key) 组成的字符串，在对它做 MD5 签名后的结果。
-* master （可选）- 字符串 "master"，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
+取值|约束|描述
+---|---|---
+ timestamp|必须|客户端产生本次请求的 unix 时间戳，精确到毫秒。
+sign|必须|将 timestamp 加上 App key（或者 master key）组成的字符串，在对它做 MD5 签名后的结果。
+master | |字符串 `"master"`，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
 
 我们举个例子来说明：假设
 
@@ -418,7 +422,7 @@ REST API 可以让你用任何可以发送 HTTP 请求的设备来与 LeanCloud 
 ###对象格式
 
 LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，每个 `AVObject` 包含若干属性值对（key-value，也称「键值对」），属性的值是与 JSON 格式兼容的数据。
-通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有那些 key，你只需要随意设置 key-value 对就可以，后端会存储它的。
+通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，后端会存储它的。
 
 举个例子，假如我们要实现一个类似于微博的社交 App，主要有三类数据：账户、帖子、评论，一条微博帖子可能包含下面几个属性：
 
@@ -723,7 +727,7 @@ curl -X POST \
 }
 ```
 
-Date 和内置的 `createdAt` 字段和 `updatedAt` 字段相结合的时候特别有用，举个例子：为了找到在一个特殊时间发布的微博，只需要将 Date 编码在一个比较的 query 里面：
+Date 和内置的 `createdAt` 字段和 `updatedAt` 字段相结合的时候特别有用，举个例子：为了找到在一个特殊时间发布的微博，只需要将 Date 编码后放在使用了比较条件的查询里面：
 
 ```sh
 curl -X GET \
@@ -744,7 +748,7 @@ curl -X GET \
 }
 ```
 
-**Pointer** 类型是当移动代码设定 `AVObject` 作为另一个对象的值时使用的，它包含了 `className` 和 `objectId` 两个属性值，用来提取目标对象：
+**Pointer** 类型是用来设定 `AVObject` 作为另一个对象的值时使用的，它包含了 `className` 和 `objectId` 两个属性值，用来提取目标对象：
 
 ```json
 {
