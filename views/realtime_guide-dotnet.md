@@ -1,3 +1,4 @@
+{% extends "./realtime_guide.tmpl" %}
 
 {% block language %}.NET{% endblock %}
 
@@ -18,7 +19,7 @@
 {% endblock %}
 
 {% block setup_init %}
-为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/1.0.1.2-pre) 上下载我们的 SDK。
+为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/) 上下载我们的 SDK。
 
 导入 SDK 之后，在应用入口函数中添加如下代码：
 
@@ -34,7 +35,7 @@
 {% endblock %}
 
 {% block demo %}
-* [WPF Demo](https://github.com/leancloud/windows-phone-sdk-demos/tree/master/LeanCloud.Demo.CSharp/LeanCloud.LeanMessage.Demo.WPF.NET45)（推荐）
+* [.NET Demo](https://github.com/leancloud/windows-phone-sdk-demos)（推荐）
 {% endblock %}
 
 {% block oneOnOneChat_sent %}
@@ -400,12 +401,21 @@ public async void SendLocationAsync()
 
 {% block message_sent_ack %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 打开已有对话 Id = 551260efe4b01608686c3e0f
-- 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
-- 发送
-- 系统给 Tom 返回己送达通知
+//Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+AVIMClient client = new AVIMClient("Tom");
+
+//Tom 登陆到系统
+await client.ConnectAsync();
+
+//打开已存在的对话
+AVIMConversation conversaion = client.GetConversationById("551260efe4b01608686c3e0f");
+//设置送达回执
+conversaion.OnMessageDeliverd += (s, e) =>
+{
+//在这里可以书写消息送达之后的业务逻辑代码
+};
+//发送消息
+await conversaion.SendTextMessageAsync("夜访蛋糕店，约吗？");
 ```
 {% endblock %}
 
@@ -513,23 +523,38 @@ imgMessage.Attributes = new Dictionary<string, object>()
     {"location","拉萨布达拉宫"}
 };
 imgMessage.Title = "这蓝天让我彻底醉了……";
-await conversation.SendImageMessageAsync(imgMessage);
+await conversation.SendImageMessageAsync(imgMessage);// 假设 conversationId= conversation 并且已经在之前被实例化
 ```
 {% endblock %}
 
 {% block customMessage_received_method %} `OnMessageReceived` {% endblock %}
 
 {% block customAttributesMessage_received %}
-```
-- 初始化 ClientId = friend
-- 登录到系统
-- 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是拉萨布达拉宫
+```c#
+AVIMClient client = new AVIMClient("friend");
+await client.ConnectAsync();
+AVIMConversation conversaion = client.GetConversationById("55117292e4b065f7ee9edd29");
+await conversaion.FetchAsync();
+conversaion.OnImageMessageReceived += (s, e) =>
+{
+//图像的 url
+string url = e.Url;
+//图像的元数据
+IDictionary<string, object> metaData = e.FileMetaData;
+//图像的发送者 ClientId
+string from = e.FromClientId;
+//图像发送者为图像设定的 Title
+string title = e.Title;
+
+//一些其他的属性都可以在这里获取
+string location = e.Attributes["location"].ToString();// 读取的结果就是拉萨布达拉宫
+
+};
 ```
 {% endblock %}
 
 {% block customMessage_create %}
-TODO：.NET 待补充
+.NET 在当前版本尚不支持自定义消息子类，正在研发中。
 {% endblock %}
 
 
@@ -832,25 +857,15 @@ public async void CreateConversationWithCustomAttributesAsync()
 ```
 {% endblock %}
 
-{% block conversation_messageHistoryByLimit %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 进入对话：id = 551260efe4b01608686c3e0f
-- 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
+
+{% block conversation_query_limit %}
+```c#
+// 构建查询
+AVIMConversationQuery conversationQuery = client.GetQuery().Limit(20);
+// 查询 Tom 所在的最近 20 个活跃的对话
+var conversationList = await conversationQuery.FindAsync();
 ```
 {% endblock %}
-
-{% block conversation_messageHistoryBeforeId %}
-```
-- ...//前几步与上例相同
-- Tom 登录
-- 获取消息历史，不指定 limit //  不使用 limit 默认返回 20 条消息
-- 获取这 20 条中最早的那条消息的属性
-- 按它的属性 id 和 timestamp，再获取在它之前的消息，不指定 limit // 依然默认返回 20 条消息
-```
-{% endblock %}
-
 {% block conversation_getList %}
 ```c#
 public async void CountMembers_SampleCode()
@@ -876,7 +891,7 @@ public async void CountMembers_SampleCode()
 {% endblock %}
 
 {% block conversation_query_equalTo %}
-```
+```c#
 public async void WhereEqualTo_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
@@ -1072,20 +1087,46 @@ public async void QueryChatRoom_SampleCode()
 
 {% block chatroom_query_extra %}从代码上可以看出，仅仅是多了一个额外的 `WhereEqualTo("tr", true)` 的链式查询即可。{% endblock %}
 
-{% block chatroom_query_list %}
+
+{% block conversation_query_history %}
 ```
 - 初始化 ClientId = Tom
-- Tom 登录
-- 查找自己加入的聊天室
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取从过去 24 小时的历史聊天纪录
 ```
 {% endblock %}
 
-{% block chatroom_query_history %}
-```c#
-AVIMClient userA = new AVIMClient("UserA");
-AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d4223b");
-con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
-//查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
+{% block conversation_messageHistoryByLimit %}
+```
+//Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+AVIMClient client = new AVIMClient("Tom");
+
+//Tom 登陆到系统
+await client.ConnectAsync();
+
+//打开已存在的对话
+AVIMConversation conversaion = client.GetConversationById("551260efe4b01608686c3e0f");
+
+//查询最新的 10 条消息
+await conversaion.QueryHistoryAsync(10);
+```
+{% endblock %}
+
+{% block conversation_messageHistoryBeforeId %}
+```
+// 获取早于 messageId = grqEG2OqSL+i8FSX9j3l2g 而且时间戳早于 1436137606358 的 10 条消息
+con.QueryHistoryAsync("grqEG2OqSL+i8FSX9j3l2g", 1436137606358, 10);
+```
+{% endblock %}
+
+{% block conversation_messageHistory_pager %}
+```
+// 获取最新的 10 条消息
+IEnumerable<AVIMMessage> pageContent = await con.QueryHistoryAsync(10);
+// 以第 10 条为分界点
+AVIMMessage pager = pageContent.Last();
+// 查询第 10 条之前的 10条消息
+IEnumerable<AVIMMessage> pageContent2 = await con.QueryHistoryAsync(pager.Id, pager.ServerTimestamp, 10);
 ```
 {% endblock %}
 
@@ -1097,9 +1138,7 @@ Offline
 
 {% block logout %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录
-- Tom 登出
+client.DisconnectAsync();
 ```
 {% endblock %}
 

@@ -383,7 +383,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 #### 创建新的消息类型
 
-{% block customMessage_creat %}
+{% block customMessage_create %}
 ```
 - 新建 NewsMessage 类型
 - 初始化 NewsMessage 的实例
@@ -614,11 +614,18 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 {% endblock %}
 
-#### 条件查询
 
 针对对话的查询默认返回 10 个结果，若需要更改，请通过 limit 来设置。
 
-{% block conversation_messageHistoryByLimit %}{% endblock %}
+{% block conversation_query_limit %}
+```
+- Tom 登陆
+- Tom 查询自己所在的最近 20 个活跃的对话
+```
+{% endblock %}
+
+#### 条件查询
+条件查询分为：比较查询，正则匹配查询，包含查询。
 
 ##### 比较查询
 
@@ -797,19 +804,9 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 聊天记录一直是客户端开发的一个重点难题，QQ 和 微信的解决方案都是依托客户端做缓存，当收到一条消息时就按照自己的业务逻辑存储在客户端的文件或者是各种客户端数据库中。
 
-我们的 SDK 会将普通的对话消息自动保存在云端，开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。具体使用场景如下：
+我们的 SDK 会将普通的对话消息自动保存在云端，开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。
 
-获取过去 24 小时内一个对话中所有的聊天记录：
-
-{% block conversation_query_history %}
-```
-- 初始化 ClientId = Tom
-- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
-- 获取从过去 24 小时的历史聊天纪录
-```
-{% endblock %}
-
-获取该对话中最近的 N 条历史消息，通常在第一次进入对话时使用。
+获取该对话中最近的 N （默认 100 ，最大值 1000）条历史消息，通常在第一次进入对话时使用：
 
 {% block conversation_messageHistoryByLimit %}
 ```
@@ -820,13 +817,9 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 {% endblock %}
 
 获取某条消息之前的历史消息，通常用在翻页加载更多历史消息的场景中。
-
 {% block conversation_messageHistoryBeforeId %}
 ```
-- 初始化 ClientId = Tom
-- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
-- 获取最近的 10 条历史消息
-- 获取由新到旧的第 11 条到第 20条
+- 获取早于 messageId = grqEG2OqSL+i8FSX9j3l2g 而且时间戳早于 1436137606358 的 10 条消息
 ```
 {% endblock %}
 
@@ -835,6 +828,17 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 * 起始消息的 messageId
 * 起始消息的发送时间戳
 * 需要获取的消息条数
+
+假如每一页为 10 条信息，下面的代码将演示如何翻页：
+
+{% block conversation_messageHistory_pager %}
+```
+- 初始化 ClientId = Tom
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取最近的 10 条历史消息
+- 再根据上一步的第 10 条消息的 msgId，timestamp 和 limit 获取第二页的数据
+```
+{% endblock %}
 
 ## 客户端事件
 
