@@ -1,4 +1,5 @@
 'use strict';
+/* global React, $, document */
 var TmplSelect = React.createClass({
   handleChange: function(e) {
     e.preventDefault();
@@ -12,7 +13,7 @@ var TmplSelect = React.createClass({
       return (
         <option>{tmpl}</option>
       );
-    })
+    });
     return (
       <select ref='tmplSelect' onChange={this.handleChange}>
         <option value=''>选择模板</option>
@@ -28,10 +29,10 @@ var ImplContent = React.createClass({
     this.props.onSaveContent(this.state.content);
   },
   handleChange: function(e) {
-    this.setState({content: event.target.value});
+    this.setState({content: e.target.value});
   },
   componentWillReceiveProps: function(nextProps) {
-    if (nextProps.data != null) {
+    if (nextProps.data !== null) {
       this.setState({
         content: nextProps.data
       });
@@ -82,7 +83,7 @@ var TmplImpl = React.createClass({
       method: 'POST',
       dataType: 'json',
       data: {content: content},
-      success: function(data) {
+      success: function() {
         this.setState({
           content: content
         });
@@ -101,7 +102,7 @@ var TmplImpl = React.createClass({
     var buttons = this.props.data.impls.map(function(impl) {
       return (
         <input type='button' value={impl} onClick={this.handleClick} />
-      )
+      );
     }.bind(this));
     return (
       <div>
@@ -130,7 +131,7 @@ var Paragraph = React.createClass({
     };
   },
   handleChange: function(e) {
-    this.setState({content: event.target.value});
+    this.setState({content: e.target.value});
   },
   componentWillReceiveProps: function(nextProps) {
     this.setState({
@@ -148,7 +149,7 @@ var Paragraph = React.createClass({
             <input type="submit" value="保存" />
           </form>
         </div>
-      )
+      );
     }
     // 这里用一个取巧的办法来切分 block，
     // 直接使用 {% endblock %} 来分割，比如下面内容:
@@ -171,7 +172,7 @@ var Paragraph = React.createClass({
         <div onClick={this.handleClick}>{content}</div>
       );
     }
-    var re = /{% block (.*?) %}/
+    var re = /{% block (.*?) %}/;
     var bs = blocks.map(function(block) {
       var tmp = block.split(re);
       if(tmp.length == 1) {
@@ -181,12 +182,12 @@ var Paragraph = React.createClass({
       }
       var outer = tmp[0];
       var blockName = tmp[1];
-      var inner = tmp[2]
+      var inner = tmp[2];
       var data = {
         currentTmpl: this.props.data.currentTmpl,
         impls: this.props.data.impls,
         block: blockName
-      }
+      };
       return (
         <div>
           <span>{outer}</span>
@@ -194,11 +195,11 @@ var Paragraph = React.createClass({
           <TmplImpl data={data} />
           <span>{inner}</span>
         </div>
-      )
+      );
     }.bind(this));
     return (
       <div>{bs}</div>
-    )
+    );
   }
 });
 
@@ -253,7 +254,7 @@ var TmplBox = React.createClass({
       method: 'POST',
       dataType: 'json',
       data: {content: content},
-      success: function(data) {
+      success: function() {
         this.handleTmplSelect(this.state.currentTmpl);
       }.bind(this),
       error: function(xhr, status, err) {
