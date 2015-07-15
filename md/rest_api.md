@@ -2820,7 +2820,7 @@ Strict-Transport-Security: max-age=31536000
   '{"_method":"GET",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}"}' \
-  https://api.leancloud.cn/1.1/classes/Post/5480017de4b0e7ccfacfebbe
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 对应的输出：
 
@@ -2836,12 +2836,12 @@ Cache-Control: no-cache,no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000
 {
- "objectId":"5480017de4b0e7ccfacfebbe",
- "updatedAt":"2014-12-04T06:34:08.498Z",
- "createdAt":"2014-12-04T06:34:08.498Z",
- "cheatMode":false,
- "playerName":"Sean Plott",
- "score":1337
+  "content": "每个Java程序员必备的8个开发工具",
+  "pubUser": "LeanCloud官方客服",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
 }
 ```
 
@@ -2854,8 +2854,8 @@ curl -i -X POST \
   '{"_method":"PUT",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}",
-    "score":9999}' \
-  https://api.leancloud.cn/1.1/classes/Post/5480017de4b0e7ccfacfebbe
+    "upvotes":99}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 对应的输出：
 
@@ -2870,7 +2870,7 @@ Cache-Control: no-cache,no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000
 
-{"updatedAt":"2014-12-04T06:40:38.310Z","objectId":"5480017de4b0e7ccfacfebbe"}
+{"updatedAt":"2015-07-13T06:40:38.310Z","objectId":"558e20cbe4b060308e3eb36c"}
 ```
 
 ### DELETE
@@ -2882,7 +2882,7 @@ curl -i -X POST \
   '{"_method":  "DELETE",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}"}' \
-  https://api.leancloud.cn/1.1/classes/Post/5480017de4b0e7ccfacfebbe
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 对应的输出是：
