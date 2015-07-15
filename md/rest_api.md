@@ -1142,7 +1142,7 @@ curl -X GET \
 
 任何在查询上的其他的约束都会对返回的对象生效，所以你可以用 `$or` 对其他的查询添加约束。
 
-注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:`limit` `skip` `sort` `include`).
+注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:`limit` `skip` `order` `include`).
 
 ### 使用 CQL 查询
 
@@ -1727,9 +1727,9 @@ ACL 按 JSON 对象格式来表示，JSON 对象的 key 是 objectId 或者一�
 
 ##角色
 
-当您的app的规模和用户基数成长时,您可能发现您需要比ACL模型(针对每个用户)更加粗粒度的访问控制您的数据的方法.为了适应这种需求,AVOSCloud支持一种基于角色的权限控制方式.角色系统提供一种逻辑方法让您通过权限的方式来访问您的AVOSCloud数据.角色是一种有名称的对象,包含了用户和其他角色.任何授予一个角色的权限隐含着授予它包含着的其他的角色相应的权限.
+当你的 app 的规模和用户基数成长时，你可能发现你需要比 ACL 模型(针对每个用户)更加粗粒度的访问控制你的数据的方法。为了适应这种需求，LeanCloud 支持一种基于角色的权限控制方式。角色系统提供一种逻辑方法让你通过权限的方式来访问你的数据，角色是一种有名称的对象，包含了用户和其他角色。任何授予一个角色的权限隐含着授予它包含着的其他的角色相应的权限。
 
-例如,在您的app中管理着一些内容,您可能有一些类似于"主持人"的角色可以修改和删除其他用户创建的新的内容,您可能还有一些"管理员"有着与"主持人"相同的权限,但是还可以修改app的其他全局性设置.通过给予用户这些角色,您可以保证新的用户可以做主持人或者管理员,不需要手动地授予每个资源的权限给各个用户.
+例如,在你的app中管理着一些内容,你可能有一些类似于"主持人"的角色可以修改和删除其他用户创建的新的内容,你可能还有一些"管理员"有着与"主持人"相同的权限,但是还可以修改app的其他全局性设置.通过给予用户这些角色,你可以保证新的用户可以做主持人或者管理员,不需要手动地授予每个资源的权限给各个用户.
 
 我们提供一个特殊的角色（Role）类来表示这些用户组,为了设置权限用.角色有一些和其他对象不太一样的特殊字段.
 
@@ -1737,13 +1737,13 @@ ACL 按 JSON 对象格式来表示，JSON 对象的 key 是 objectId 或者一�
 * users : 一个指向一系列用户的关系,这些用户会继承角色的权限.
 * roles : 一个指向一系列子角色的关系,这些子关系会继承父角色所有的权限.
 
-通常来说,为了保持这些角色安全,您的移动app不应该为角色的创建和管理负责.作为替代,角色应该是通过一个不同的网页上的界面来管理,或者手工被管理员所管理.我们的REST API允许您不需要一个移动设备就能管理您的角色.
+通常来说,为了保持这些角色安全,你的移动app不应该为角色的创建和管理负责.作为替代,角色应该是通过一个不同的网页上的界面来管理,或者手工被管理员所管理.我们的REST API允许你不需要一个移动设备就能管理你的角色.
 
 ###创建角色
 
 创建一个新的角色与其他的对象不同的是name字段是必须的.角色必须指定一个ACL,这个ACL必须尽量的约束严格一些,这样可以防止错误的用户修改角色.
 
-创建一个新角色,发送一个POST请求到roles根路径:
+创建一个新角色,发送一个 POST 请求到 roles 根路径:
 
 ```sh
 curl -X POST \
@@ -1751,7 +1751,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
-        "name": "Moderators",
+        "name": "Manager",
         "ACL": {
           "*": {
             "read": true
@@ -1761,7 +1761,16 @@ curl -X POST \
   https://api.leancloud.cn/1.1/roles
 ```
 
-您可以通过加入已有的对象到roles和users关系中来创建一个有子角色和用户的角色:
+其返回值类似于：
+
+```json
+{
+  "createdAt":"2015-07-14T03:34:41.074Z",
+  "objectId":"55a48351e4b05001a774a89f"
+}
+```
+
+你可以通过加入已有的对象到 roles 和 users 关系中来创建一个有子角色和用户的角色:
 
 ```sh
 curl -X POST \
@@ -1769,7 +1778,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
-        "name": "Moderators",
+        "name": "CLevel",
         "ACL": {
           "*": {
             "read": true
@@ -1781,7 +1790,7 @@ curl -X POST \
             {
               "__type": "Pointer",
               "className": "_Role",
-              "objectId": "51fe4415e4b05df1766d0841"
+              "objectId": "55a48351e4b05001a774a89f"
             }
           ]
         },
@@ -1791,7 +1800,7 @@ curl -X POST \
             {
               "__type": "Pointer",
               "className": "_User",
-              "objectId": "51fc9241e4b074ac5c34cf0a"
+              "objectId": "55a47496e4b05001a7732c5f"
             }
           ]
         }
@@ -1803,46 +1812,46 @@ curl -X POST \
 
 ```sh
 Status: 201 Created
-Location: https://api.leancloud.cn/1.1/roles/51e3812ee4b0b3eb44adbd44
+Location: https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
 ###获取角色
 
-您可以同样通过发送一个GET请求到Location header中返回的URL来获取这个对象,比如我们想要获取上面创建的对象:
+你可以同样通过发送一个GET请求到Location header中返回的URL来获取这个对象,比如我们想要获取上面创建的对象:
 
 ```sh
 curl -X GET \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  https://api.leancloud.cn/1.1/roles/51e3812ee4b0b3eb44adbd44
+  https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
-响应的body是一个JSON对象包含角色的所有字段:
+响应的 body 是一个 JSON 对象包含角色的所有字段:
 
 ```json
 {
-  "createdAt": "2012-04-28T17:41:09.106Z",
-  "objectId": "51e3812ee4b0b3eb44adbd44",
-  "updatedAt": "2012-04-28T17:41:09.106Z",
-  "ACL": {
-    "*": {
-      "read": true
-    },
-    "role:Administrators": {
-      "write": true
-    }
+  "name":"CLevel",
+  "createdAt":"2015-07-14T03:37:20.992Z",
+  "updatedAt":"2015-07-14T03:37:20.994Z",
+  "objectId":"55a483f0e4b05001a774b837",
+  "users":{
+    "__type":"Relation",
+    "className":"_User"
   },
-  "name": "Moderators"
+  "roles":{
+    "__type":"Relation",
+    "className":"_Role"
+  }
 }
 ```
 
-注意users和roles关系无法在JSON中见到,您需要相应地用$relatedTo操作符来查询角色中的子角色和用户.
+注意 users 和 roles 关系无法在 JSON 中见到,你需要相应地用 `$relatedTo` 操作符来查询角色中的子角色和用户.
 
 ###更新角色
 
-更新一个角色通常可以像更新其他对象一样使用,但是name字段是不可以更改的.加入和删除users和roles可以通过使用`AddRelation` 和 `RemoveRelation`操作来进行.
+更新一个角色通常可以像更新其他对象一样使用，但是 name 字段是不可以更改的.加入和删除 users 和 roles 可以通过使用`AddRelation` 和 `RemoveRelation`操作来进行.
 
-举例来说,我们对"Moderators"角色加入2个用户:
+举例来说,我们对 "Manager" 角色加入 1 个用户:
 
 ```sh
 curl -X PUT \
@@ -1856,20 +1865,15 @@ curl -X PUT \
             {
               "__type": "Pointer",
               "className": "_User",
-              "objectId": "51dfb84ce4b0a918eba635d9"
-            },
-            {
-              "__type": "Pointer",
-              "className": "_User",
-              "objectId": "51dfb8bde4b0a918eba635da"
+              "objectId": "55a4800fe4b05001a7745c41"
             }
           ]
         }
       }' \
-  https://api.leancloud.cn/1.1/roles/51e3812ee4b0b3eb44adbd44
+  https://api.leancloud.cn/1.1/roles/55a48351e4b05001a774a89f
 ```
 
-相似的,我们可以删除一个"Moderrators"的子角色:
+相似的,我们可以删除一个 "Manager" 的子角色:
 
 ```sh
 curl -X PUT \
@@ -1883,58 +1887,58 @@ curl -X PUT \
             {
               "__type": "Pointer",
               "className": "_Role",
-              "objectId": "51dfb84ce4b0a918eba635d9"
+              "objectId": "55a483f0e4b05001a774b837"
             }
           ]
         }
       }' \
-  https://api.leancloud.cn/1.1/roles/51e3812ee4b0b3eb44adbd44
+  https://api.leancloud.cn/1.1/roles/55a48351e4b05001a774a89f
 ```
 
 
 ###删除对象
 
-为了从 LeanCloud 上删除一个角色,只需要发送DELETE请求到它的URL就可以了.
+为了从 LeanCloud 上删除一个角色,只需要发送 DELETE 请求到它的 URL 就可以了.
 
-我们需要传入 X-AVOSCloud-Session-Token 来通过一个有权限的用户账号来访问这个角色对象.例如:
+我们需要传入 X-AVOSCloud-Session-Token 来通过一个有权限的用户账号来访问这个角色对象，例如:
 
 ```sh
 curl -X DELETE \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: pnktnjyb996sj4p156gjtp4im" \
-  https://api.leancloud.cn/1.1/roles/51e3812ee4b0b3eb44adbd44
+  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
 ###安全性
 
-当您通过REST API key访问AVOSCloud的时候,访问同样可能被ACL所限制,就像iOS和Android SDK上一样.您仍然可以通过REST API来读和修改ACL,只用通过访问"ACL"键就可以了.
+当你通过 REST API key 访问 LeanCloud 的时候，访问同样可能被ACL所限制，就像 iOS 和 Android SDK 上一样。你仍然可以通过 REST API 来读和修改 ACL,只用通过访问 "ACL" 键就可以了。
 
-除了用户级的权限设置以外,您可以通过设置角色级的权限来限制对AVOSCloud对象的访问.取代了指定一个objectId带一个权限的方式,您可以设定一个角色的权限为它的名字在前面加上`role:`前缀作为key.您可以同时使用用户级的权限和角色级的权限来提供精细的用户访问控制.
+除了用户级的权限设置以外,你可以通过设置角色级的权限来限制对 LeanCloud 对象的访问.取代了指定一个objectId带一个权限的方式,你可以设定一个角色的权限为它的名字在前面加上`role:`前缀作为key.你可以同时使用用户级的权限和角色级的权限来提供精细的用户访问控制.
 
-比如,为了限制一个对象可以被在"Members"里的任何人读到,而且可以被它的创建者和任何有"Moderators"角色的人所修改,您应该向下面这样设置ACL:
+比如,为了限制一个对象可以被在"Staff"里的任何人读到,而且可以被它的创建者和任何有"Manager"角色的人所修改,你应该向下面这样设置ACL:
 
 ```json
 {
-  "51ff181ae4b05df1766d0b42": {
+  "55a4800fe4b05001a7745c41": {
     "write": true
   },
-  "role:Members": {
+  "role:Stuff": {
     "read": true
   },
-  "role:Moderators": {
+  "role:Manager": {
     "write": true
   }
 }
 ```
 
-您不必为创建的用户和"Moderators"指定读的权限，如果这个用户和"Moderators"本身就是"Members"的子角色和用户.因为它们都会继承授予"Members"的权限.
+你不必为创建的用户和"Manager"指定读的权限，如果这个用户和"Manager"本身就是"Stuff"的子角色和用户.因为它们都会继承授予"Stuff"的权限.
 
 ###角色继承
 
 就像上面所说的一样,一个角色可以包含另一个,可以为2个角色建立一个父-子关系.这个关系的结果就是任何被授予父角色的权限隐含地被授予子角色.
 
-这样的关系类型通常在用户管理的内容类的app上比较常见,比如论坛.有一些少数的用户是"管理员",有最高级的权限来调整程序的设置,创建新的论坛,设定全局的消息等等.另一类用户是"版主",他们有责任保证用户生成的内容是合适的.任何有管理员权限的人都应该有版主的权利.为了建立这个关系,您应该把"Administartors"的角色设置为"Moderators"的子角色,具体来说就是把"Administrators"这个角色加入"Moderators"对象的roles关系之中:
+这样的关系类型通常在用户管理的内容类的app上比较常见,比如论坛.有一些少数的用户是"管理员",有最高级的权限来调整程序的设置,创建新的论坛,设定全局的消息等等.另一类用户是"版主",他们有责任保证用户生成的内容是合适的.任何有管理员权限的人都应该有版主的权利.为了建立这个关系,你应该把"Administartors"的角色设置为"Moderators"的子角色,具体来说就是把"Administrators"这个角色加入"Moderators"对象的roles关系之中:
 
 ```sh
 curl -X PUT \
@@ -1958,7 +1962,7 @@ curl -X PUT \
 
 ##文件
 
-文件上传，我们推荐使用各个客户端的SDK进行上传，或者使用[命令行工具](./cloud_code_commandline.html)。
+对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./cloud_code_commandline.html)。
 
 **通过 REST API 上传文件受到三个限制，而使用 sdk 或者命令行上传没有这些限制**：
 
@@ -2007,7 +2011,7 @@ curl -X POST \
 
 ### 关联文件到对象
 
-一个文件上传后，您可以关联该文件到某个 AVObject 对象上：
+一个文件上传后，你可以关联该文件到某个 AVObject 对象上：
 
 ```sh
 curl -X POST \
@@ -2015,13 +2019,13 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
    -H "Content-Type: application/json" \
   -d '{
-        "name": "Andrew",
+        "name": "hjiang",
         "picture": {
           "id": "543cbaede4b07db196f50f3c",
           "__type": "File"
         }
       }' \
-  https://api.leancloud.cn/1.1/classes/Player
+  https://api.leancloud.cn/1.1/classes/Stuff
 ```
 
 其中 `id` 就是文件对象的 objectId。
@@ -2046,18 +2050,18 @@ curl -X DELETE \
 
 ###上传安装数据
 
-一个安装对象表示了一个您的在手机上被安装的app,这些对象被用来保存订阅数据的,这些数据是一个或多个通知通道订阅的.安装数据除了一些特殊字段以外都可以是模式可变的.这些字段都有特殊的类型和验证需求.
+一个安装对象表示了一个你的在手机上被安装的app,这些对象被用来保存订阅数据的,这些数据是一个或多个通知通道订阅的.安装数据除了一些特殊字段以外都可以是模式可变的.这些字段都有特殊的类型和验证需求.
 
-* deviceType 是一个必须的字段,必须被设置为"ios"或者"android",而且自这个对象生成以后就不能变化.
-* installationId 是一个AVOSCloud生成的字符串标志,而且如果deviceType是android的话是一个必填字段,如果是ios的话则可选.它只要对象被生成了就不能发生改变,而且对一个app来说是不可重复的.
+* deviceType 是一个必须的字段，必须被设置为"ios"、"android"、"wp"、"web"中的一种，而且自这个对象生成以后就不能变化。
+* installationId 是一个LeanCloud生成的字符串标志,而且如果deviceType是android的话是一个必填字段,如果是ios的话则可选.它只要对象被生成了就不能发生改变,而且对一个app来说是不可重复的.
 * deviceToken 是一个Apple生成的字符串标志,在deviceType为ios上的设备是必须的,而且自对象生成开始就不能改动,对于一个app来说也是不可重复的.
 * badge 是一个数字字段,表示最新的iOS的安装已知的application badge
 * timeZone 是一个字符串字段表示安装的这个设备的系统时区.
 * channels 是一个可选的数组,表示这个安装对象的订阅频道列表.
 
-大部分时间,安装数据是被客户端中有关push的方法所修改的.举个例子,从客户端SDK中调用subsccribeToChannel或者unsubscribeFromChannel，如果现在还没有安装对象的或者没有更新安装对象的话会创建一个对象,而从客户端SDK中调用getSubscribedChanneles会从安装对象中读取订阅数据.REST的方法可以被用来模仿这些操作.比如,如果您有一个iOS的device token您可以注册它来向设备推送通知,只需要创建一个有需要的channels的安装对象就可以了.您同样可以做一些不能通过客户端SDK进行的操作,就比如说查询所有的安装来找到一个channel的订阅者的集合.
+大部分时间,安装数据是被客户端中有关push的方法所修改的.举个例子,从客户端SDK中调用subscribeToChannel或者unsubscribeFromChannel，如果现在还没有安装对象的或者没有更新安装对象的话会创建一个对象,而从客户端SDK中调用getSubscribedChanneles会从安装对象中读取订阅数据.REST的方法可以被用来模仿这些操作.比如,如果你有一个iOS的device token你可以注册它来向设备推送通知,只需要创建一个有需要的channels的安装对象就可以了.你同样可以做一些不能通过客户端SDK进行的操作,就比如说查询所有的安装来找到一个channel的订阅者的集合.
 
-创建一个安装对象和普通的对象差不多,但是特殊的几个安装字段必须通过认证.举个例子,如果您有一个由Apple Push Notification提供的device token,而且想订阅一个广播频道,您可以如下发送请求:
+创建一个安装对象和普通的对象差不多,但是特殊的几个安装字段必须通过认证.举个例子,如果你有一个由Apple Push Notification提供的device token,而且想订阅一个广播频道,你可以如下发送请求:
 
 ```sh
 curl -X POST \
@@ -2066,7 +2070,7 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "ios",
-        "deviceToken": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "deviceToken": "abcdefghijklmnopqrstuvwzxyrandomuuidforyourdevice012345678988",
         "channels": [
           ""
         ]
@@ -2092,7 +2096,7 @@ Location: https://api.leancloud.cn/1.1/installations/51ff1808e4b074ac5c34d7fd
 
 ###获取安装对象
 
-您可以通过GET方法请求创建的时候Location表示的URL来获取Installation对象.比如,获取上面的被创建的对象:
+你可以通过GET方法请求创建的时候Location表示的URL来获取Installation对象.比如,获取上面的被创建的对象:
 
 ```sh
 curl -X GET \
@@ -2106,7 +2110,7 @@ curl -X GET \
 ```json
 {
   "deviceType": "ios",
-  "deviceToken": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "deviceToken": "abcdefghijklmnopqrstuvwzxyrandomuuidforyourdevice012345678988",
   "channels": [
     ""
   ],
@@ -2127,7 +2131,7 @@ curl -X PUT \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "ios",
-        "deviceToken": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "deviceToken": "abcdefghijklmnopqrstuvwzxyrandomuuidforyourdevice012345678988",
         "channels": [
           "",
           "foo"
@@ -2138,7 +2142,7 @@ curl -X PUT \
 
 ###查询安装对象
 
-您可以一次通过GET请求到installations的根URL来获取多个安装对象.这项功能在SDK中不可用。
+你可以一次通过GET请求到installations的根URL来获取多个安装对象.这项功能在SDK中不可用。
 
 没有任何URL参数的话,一个GET请求会列出所有安装:
 
@@ -2156,7 +2160,7 @@ curl -X GET \
   "results": [
     {
       "deviceType": "ios",
-      "deviceToken": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+      "deviceToken": "abcdefghijklmnopqrstuvwzxyrandomuuidforyourdevice012345678988",
       "channels": [
         ""
       ],
@@ -2166,7 +2170,7 @@ curl -X GET \
     },
     {
       "deviceType": "ios",
-      "deviceToken": "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210",
+      "deviceToken": "876543210fedcba9876543210fedcba9876543210fedcba9876543210fedcba9",
       "channels": [
         ""
       ],
@@ -2178,7 +2182,7 @@ curl -X GET \
 }
 ```
 
-所有对普通的对象的查询都对installatin对象起作用,所以可以查看之前的查询部分以获取详细信息.通过做channels的数组查询,您可以查找一个订阅了给定的push channel的所有设备.
+所有对普通的对象的查询都对installatin对象起作用,所以可以查看之前的查询部分以获取详细信息.通过做channels的数组查询,你可以查找一个订阅了给定的push channel的所有设备.
 
 ###删除安装对象
 
@@ -2204,11 +2208,11 @@ curl -X POST \
   https://api.leancloud.cn/1.1/functions/hello
 ```
 
-您可以查看Cloud Code Guide来查看更多的信息.
+你可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ##地理查询
 
-现在您有一系列的对象对应的地理坐标,如果能发现那些对象离指定的点近就好了.这可以通过GeoPoint数据类型加上在查询中使用`$nearSphere`做到.获取离用户最近的10个地点应该看起来像下面这个样子:
+假如在发布微博的时候，我们也支持用户加上当时的位置信息（新增一个 `location` 字段），如果想看看指定的地点附近发生的事情，可以通过 GeoPoint 数据类型加上在查询中使用 `$nearSphere` 做到。获取离当前用户最近的 10 条微博应该看起来像下面这个样子:
 
 ```sh
 curl -X GET \
@@ -2220,42 +2224,15 @@ curl -X GET \
         "location": {
           "$nearSphere": {
             "__type": "GeoPoint",
-            "latitude": 30.0,
-            "longitude": -20.0
+            "latitude": 39.9,
+            "longitude": 116.4
           }
         }
       }' \
-  https://api.leancloud.cn/1.1/classes/PlaceObject
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-这会按离纬度30.0,经度-20.0的距离排序返回一系列的结果.第一个就是最近的对象.(注意如果一个特定的order参数给了的话,它会覆盖按距离排序).例如,下面是两个上面的查询返回的结果:
-
-```json
-{
-  "results": [
-    {
-      "location": {
-        "latitude": 40.0,
-        "__type": "GeoPoint",
-        "longitude": -30.0
-      },
-      "updatedAt": "2011-12-06T22:36:04.983Z",
-      "createdAt": "2011-12-06T22:36:04.983Z",
-      "objectId": "51e3a334e4b0b3eb44adbe1a"
-    },
-    {
-      "location": {
-        "latitude": 60.0,
-        "__type": "GeoPoint",
-        "longitude": -20.0
-      },
-      "updatedAt": "2011-12-06T22:36:26.143Z",
-      "createdAt": "2011-12-06T22:36:26.143Z",
-      "objectId": "51e3a2a8e4b015ead4d95dd9"
-    }
-  ]
-}
-```
+这会按离纬度 39.9、经度 116.4 (当前用户所在位置)的距离排序返回一系列的结果.第一个就是最近的对象.(注意如果指定了 order 参数的话，它会覆盖按距离排序)。
 
 为了限定搜素的最大举例,需要加入`$maxDistanceInMiles`和`$maxDistanceInKilometers`或者`$maxDistanceInRadians`参数来限定.比如要找的半径在10英里内的话:
 
@@ -2268,16 +2245,16 @@ curl -X GET \
         "location": {
           "$nearSphere": {
             "__type": "GeoPoint",
-            "latitude": 30.0,
-            "longitude": -20.0
+            "latitude": 39.9,
+            "longitude": 116.4
           },
           "$maxDistanceInMiles": 10.0
         }
       }' \
-  https://api.leancloud.cn/1.1/classes/PlaceObject
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
-同样做查询寻找在一个特定的范围里面的对象也是可以的,为了找到在一个矩形的区域里的对象,按下面的格式加入一个约束 {"$within": {"$box": {[southwestGeoPoint, northeastGeoPoint]}}}.
+同样做查询寻找在一个特定的范围里面的对象也是可以的,为了找到在一个矩形的区域里的对象,按下面的格式加入一个约束 {"$within": {"$box": [southwestGeoPoint, northeastGeoPoint]}}.
 
 ```sh
 curl -X GET \
@@ -2290,27 +2267,27 @@ curl -X GET \
             "$box": [
               {
                 "__type": "GeoPoint",
-                "latitude": 37.71,
-                "longitude": -122.53
+                "latitude": 39.99,
+                "longitude": 116.33
               },
               {
                 "__type": "GeoPoint",
-                "latitude": 30.82,
-                "longitude": -122.37
+                "latitude": 39.97,
+                "longitude": 116.37
               }
             ]
           }
         }
       }' \
-  https://api.leancloud.cn/1.1/classes/PizzaPlaceObject
+  https://api.leancloud.cn/1.1/classes/Post
 ```
 
 ###警告
 
 这是有一些问题是值得留心的:
 
-1. 每一个AVObject类只能有一个键指向一个AVGeoPoint对象
-2. Points不应该等于或者超出它的界. 纬度不应该是-90.0或者90.0,经度不应该是-180.0或者180.0. 试图在GeoPoint上使用超出范围内的经度和纬度会导致问题.
+1. 每一个 AVObject 类只能包含一个 AVGeoPoint 对象的键值。
+2. Points 不应该等于或者超出它的界. 纬度不应该是 -90.0 或者 90.0，经度不应该是 -180.0 或者 180.0。试图在 GeoPoint 上使用超出范围内的经度和纬度会导致问题.
 
 ## 用户反馈组件 API
 
@@ -2380,15 +2357,15 @@ curl -X POST \
 
 其中 `code` 是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码。
 
-**由于运营商和渠道的限制，短信验证码发送要求间隔至少一分钟，并且每个手机号码每日少于 10 条，因此建议您在界面上提示用户**
+**由于运营商和渠道的限制，短信验证码发送要求间隔至少一分钟，并且每个手机号码每日少于 10 条，因此建议你在界面上提示用户**
 
 ## 自定义短信模板
 
 我们还支持通过 `requestSmsCode` 发送自定义模板的短信，但是**要求内容必须是验证码类或者通知类短信，不允许包含下载链接等推广信息**。模板的创建和修改都需要审核，并且要求创建或者修改的时候账户至少有 200 RMB 的非赠送余额。模板本身不扣费，短信发送才扣费。**通知类短信没有间隔和条数限制。**
 
-您可以在应用设置的短信模板里创建短信模板，创建后将自动提交审核，审核结果将通过邮件的形式发送到您的帐号邮箱。
+你可以在应用设置的短信模板里创建短信模板，创建后将自动提交审核，审核结果将通过邮件的形式发送到你的帐号邮箱。
 
-如果您创建了短信模板，可以指定 `template` 参数指定模板名称来使用您的模板，并且可以传入变量渲染模板，比如下面例子里的 `date`：
+如果你创建了短信模板，可以指定 `template` 参数指定模板名称来使用你的模板，并且可以传入变量渲染模板，比如下面例子里的 `date`：
 
 
 ```sh
@@ -2409,7 +2386,7 @@ curl -X POST \
 
 <pre ng-non-bindable ><code>
 Hi {{username}},
-欢迎注册{{name}}应用，您可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
+欢迎注册{{name}}应用，你可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
 以上。
 </code></pre>
 
@@ -2430,7 +2407,7 @@ Hi {{username}},
 
 统计API可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计数据查询API必须使用master key的签名方式鉴权，请参考 更安全的鉴权方式 一节。
 
-获取某个应用的基本信息，包括各平台的应用版本，应用发布渠道。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐您在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
+获取某个应用的基本信息，包括各平台的应用版本，应用发布渠道。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐你在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
 
 ```sh
 curl -X GET \
@@ -2748,7 +2725,7 @@ tag|N|事件属性的简写方式，等同于属性里面添加：{event: tag} �
 ### 创建分析 job API
 离线数据分析 API 可以获取一个应用的备份数据。因为应用数据的隐私敏感性，离线数据分析 API 必须使用 master key 的签名方式鉴权，请参考 [更安全的鉴权方式](#更安全的鉴权方式) 一节。
 
-创建分析 job。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐您在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
+创建分析 job。（注意：下面示例直接使用`X-AVOSCloud-Master-Key`，不过我们推荐你在实际使用中采用[新鉴权方式](https://leancloud.cn/docs/rest_api.html#%E6%9B%B4%E5%AE%89%E5%85%A8%E7%9A%84%E9%89%B4%E6%9D%83%E6%96%B9%E5%BC%8F)加密，不要明文传递Key。）
 
 ``` json
 curl -X POST \
@@ -2843,7 +2820,7 @@ Strict-Transport-Security: max-age=31536000
   '{"_method":"GET",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}"}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 对应的输出：
 
@@ -2859,12 +2836,12 @@ Cache-Control: no-cache,no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000
 {
- "objectId":"5480017de4b0e7ccfacfebbe",
- "updatedAt":"2014-12-04T06:34:08.498Z",
- "createdAt":"2014-12-04T06:34:08.498Z",
- "cheatMode":false,
- "playerName":"Sean Plott",
- "score":1337
+  "content": "每个Java程序员必备的8个开发工具",
+  "pubUser": "LeanCloud官方客服",
+  "pubTimestamp": 1435541999,
+  "createdAt": "2015-06-29T01:39:35.931Z",
+  "updatedAt": "2015-06-29T01:39:35.931Z",
+  "objectId": "558e20cbe4b060308e3eb36c"
 }
 ```
 
@@ -2877,8 +2854,8 @@ curl -i -X POST \
   '{"_method":"PUT",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}",
-    "score":9999}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+    "upvotes":99}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 对应的输出：
 
@@ -2893,7 +2870,7 @@ Cache-Control: no-cache,no-store
 Pragma: no-cache
 Strict-Transport-Security: max-age=31536000
 
-{"updatedAt":"2014-12-04T06:40:38.310Z","objectId":"5480017de4b0e7ccfacfebbe"}
+{"updatedAt":"2015-07-13T06:40:38.310Z","objectId":"558e20cbe4b060308e3eb36c"}
 ```
 
 ### DELETE
@@ -2905,7 +2882,7 @@ curl -i -X POST \
   '{"_method":  "DELETE",
     "_ApplicationId":"{{appid}}",
     "_ApplicationKey":"{{appkey}}"}' \
-  https://api.leancloud.cn/1.1/classes/GameScore/5480017de4b0e7ccfacfebbe
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
 对应的输出是：
