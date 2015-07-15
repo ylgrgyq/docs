@@ -900,9 +900,23 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 {% endblock %}
 
 {% block conversation_query_limit %}
-```
-- Tom 登陆
-- Tom 查询自己所在的最近 20 个活跃的对话
+```objc
+- (void)TomQueryConversationWithLimit {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 构建一个查询
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        // Tom 设置查询最近 10 个活跃回话
+        query.limit = 10;
+
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"查询成功！");
+        }];
+    }];
+}
 ```
 {% endblock %}
 
@@ -1153,14 +1167,6 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 ```
 {% endblock %}
 
-{% block chatroom_query_list %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 查找自己加入的聊天室
-```
-{% endblock %}
-
 {% block conversation_query_history %}
 ```objc
 - (void)TomQueryMessages {
@@ -1186,16 +1192,27 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 
 {% block conversation_messageHistoryByLimit %}
 ```
-- 初始化 ClientId = Tom
-- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
-- 获取最近的 10 条历史消息
+- (void)TomQueryMessagesWithLimit {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建查询会话的 query
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
+        [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
+            // 设置查询时间从过去 24 小时开始
+            [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
+                NSLog(@"查询成功！");
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
 
 {% block conversation_messageHistoryBeforeId %}
-```
-- 获取早于 messageId = grqEG2OqSL+i8FSX9j3l2g 而且时间戳早于 1436137606358 的 10 条消息
-```
 {% endblock %}
 
 {% block networkStatus %}
