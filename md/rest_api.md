@@ -2053,7 +2053,7 @@ curl -X DELETE \
 一个安装对象表示了一个你的在手机上被安装的app,这些对象被用来保存订阅数据的,这些数据是一个或多个通知通道订阅的.安装数据除了一些特殊字段以外都可以是模式可变的.这些字段都有特殊的类型和验证需求.
 
 * deviceType 是一个必须的字段,必须被设置为"ios"或者"android",而且自这个对象生成以后就不能变化.
-* installationId 是一个AVOSCloud生成的字符串标志,而且如果deviceType是android的话是一个必填字段,如果是ios的话则可选.它只要对象被生成了就不能发生改变,而且对一个app来说是不可重复的.
+* installationId 是一个LeanCloud生成的字符串标志,而且如果deviceType是android的话是一个必填字段,如果是ios的话则可选.它只要对象被生成了就不能发生改变,而且对一个app来说是不可重复的.
 * deviceToken 是一个Apple生成的字符串标志,在deviceType为ios上的设备是必须的,而且自对象生成开始就不能改动,对于一个app来说也是不可重复的.
 * badge 是一个数字字段,表示最新的iOS的安装已知的application badge
 * timeZone 是一个字符串字段表示安装的这个设备的系统时区.
