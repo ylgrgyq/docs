@@ -1142,7 +1142,7 @@ curl -X GET \
 
 任何在查询上的其他的约束都会对返回的对象生效，所以你可以用 `$or` 对其他的查询添加约束。
 
-注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:`limit` `skip` `sort` `include`).
+注意我们不会在组合查询的子查询中支持非过滤型的约束(例如:`limit` `skip` `order` `include`).
 
 ### 使用 CQL 查询
 
@@ -1916,7 +1916,7 @@ curl -X DELETE \
 
 除了用户级的权限设置以外,你可以通过设置角色级的权限来限制对 LeanCloud 对象的访问.取代了指定一个objectId带一个权限的方式,你可以设定一个角色的权限为它的名字在前面加上`role:`前缀作为key.你可以同时使用用户级的权限和角色级的权限来提供精细的用户访问控制.
 
-比如,为了限制一个对象可以被在"Stuff"里的任何人读到,而且可以被它的创建者和任何有"Manager"角色的人所修改,你应该向下面这样设置ACL:
+比如,为了限制一个对象可以被在"Staff"里的任何人读到,而且可以被它的创建者和任何有"Manager"角色的人所修改,你应该向下面这样设置ACL:
 
 ```json
 {
@@ -2052,14 +2052,14 @@ curl -X DELETE \
 
 一个安装对象表示了一个你的在手机上被安装的app,这些对象被用来保存订阅数据的,这些数据是一个或多个通知通道订阅的.安装数据除了一些特殊字段以外都可以是模式可变的.这些字段都有特殊的类型和验证需求.
 
-* deviceType 是一个必须的字段,必须被设置为"ios"或者"android",而且自这个对象生成以后就不能变化.
+* deviceType 是一个必须的字段，必须被设置为"ios"、"android"、"wp"、"web"中的一种，而且自这个对象生成以后就不能变化。
 * installationId 是一个LeanCloud生成的字符串标志,而且如果deviceType是android的话是一个必填字段,如果是ios的话则可选.它只要对象被生成了就不能发生改变,而且对一个app来说是不可重复的.
 * deviceToken 是一个Apple生成的字符串标志,在deviceType为ios上的设备是必须的,而且自对象生成开始就不能改动,对于一个app来说也是不可重复的.
 * badge 是一个数字字段,表示最新的iOS的安装已知的application badge
 * timeZone 是一个字符串字段表示安装的这个设备的系统时区.
 * channels 是一个可选的数组,表示这个安装对象的订阅频道列表.
 
-大部分时间,安装数据是被客户端中有关push的方法所修改的.举个例子,从客户端SDK中调用subsccribeToChannel或者unsubscribeFromChannel，如果现在还没有安装对象的或者没有更新安装对象的话会创建一个对象,而从客户端SDK中调用getSubscribedChanneles会从安装对象中读取订阅数据.REST的方法可以被用来模仿这些操作.比如,如果你有一个iOS的device token你可以注册它来向设备推送通知,只需要创建一个有需要的channels的安装对象就可以了.你同样可以做一些不能通过客户端SDK进行的操作,就比如说查询所有的安装来找到一个channel的订阅者的集合.
+大部分时间,安装数据是被客户端中有关push的方法所修改的.举个例子,从客户端SDK中调用subscribeToChannel或者unsubscribeFromChannel，如果现在还没有安装对象的或者没有更新安装对象的话会创建一个对象,而从客户端SDK中调用getSubscribedChanneles会从安装对象中读取订阅数据.REST的方法可以被用来模仿这些操作.比如,如果你有一个iOS的device token你可以注册它来向设备推送通知,只需要创建一个有需要的channels的安装对象就可以了.你同样可以做一些不能通过客户端SDK进行的操作,就比如说查询所有的安装来找到一个channel的订阅者的集合.
 
 创建一个安装对象和普通的对象差不多,但是特殊的几个安装字段必须通过认证.举个例子,如果你有一个由Apple Push Notification提供的device token,而且想订阅一个广播频道,你可以如下发送请求:
 
@@ -2208,7 +2208,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/functions/hello
 ```
 
-你可以查看Cloud Code Guide来查看更多的信息.
+你可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ##地理查询
 
@@ -2232,7 +2232,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-这会按离纬度 39.9、经度 116.4 (当前用户所在位置)的距离排序返回一系列的结果.第一个就是最近的对象.(注意如果一个特定的 order 参数给了的话，它会覆盖按距离排序)。
+这会按离纬度 39.9、经度 116.4 (当前用户所在位置)的距离排序返回一系列的结果.第一个就是最近的对象.(注意如果指定了 order 参数的话，它会覆盖按距离排序)。
 
 为了限定搜素的最大举例,需要加入`$maxDistanceInMiles`和`$maxDistanceInKilometers`或者`$maxDistanceInRadians`参数来限定.比如要找的半径在10英里内的话:
 
@@ -2254,7 +2254,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-同样做查询寻找在一个特定的范围里面的对象也是可以的,为了找到在一个矩形的区域里的对象,按下面的格式加入一个约束 {"$within": {"$box": {[southwestGeoPoint, northeastGeoPoint]}}}.
+同样做查询寻找在一个特定的范围里面的对象也是可以的,为了找到在一个矩形的区域里的对象,按下面的格式加入一个约束 {"$within": {"$box": [southwestGeoPoint, northeastGeoPoint]}}.
 
 ```sh
 curl -X GET \
