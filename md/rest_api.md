@@ -85,7 +85,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
     <tr>
       <td>/1.1/usersByMobilePhone</td>
       <td>POST</td>
-      <td>使用手机号码注册或登陆</td>
+      <td>使用手机号码注册或登录</td>
     </tr>
     <tr>
       <td>/1.1/login</td>
@@ -795,9 +795,9 @@ curl -X GET \
     {
       "content": "近期 LeanCloud 的文档已经支持评论功能，如果您有疑问、意见或是其他想法，都可以直接在我们文档中提出。",
       "pubUser": "LeanCloud官方客服",
-      "upvotes": 2
+      "upvotes": 2,
       "createdAt": "2015-06-29T03:43:35.931Z",
-      "objectId": "55a39634e4b0ed48f0c1845b",
+      "objectId": "55a39634e4b0ed48f0c1845b"
     },
     {
       "content": "每个Java程序员必备的8个开发工具",
@@ -827,7 +827,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-除了给定一个确定的值要求完全匹配之外，`where` 也支持比较的方式。而且，它还支持对 key 的一些 hash 操作（譬如包含）。`where`参数支持下面一些选项：
+除了完全匹配一个给定的值以外，`where` 也支持比较的方式。而且，它还支持对 key 的一些 hash 操作（譬如包含）。`where`参数支持下面一些选项：
 
 <table>
   <tr><th>Key</th><th>Operation</th></tr>
@@ -844,7 +844,7 @@ curl -X GET \
   <tr><td>$all</td><td>包括所有的给定的值</td></tr>
 </table>
 
-例如，为了获取在发布时间在 2015-06-29 当天的微博，我们应该这样请求：
+例如，为了获取在 2015-06-29 当天发布的微博，我们应该这样请求：
 
 ```sh
 curl -X GET \
@@ -856,7 +856,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-为了获得被喜欢数在 10 以下并且是一个奇数的微博，我们需要这样做：
+求点赞次数少于 10 次，且该次数还是奇数的微博，查询条件要这样写：
 
 ```sh
 curl -X GET \
@@ -904,7 +904,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-我们都知道，微博里面有用户互相关注的功能，如果我们用 `_Followee` 和 `_Follower` 这两个类来存储用户之间的关注关系(`_Follower` 记录用户的粉丝，`_Followee` 记录用户关注的人，我们的[应用内社交组件](/status_system.html)已经实现了这样的模型，这里直接使用其后台表结构)，我们可以创建一个查询来找到某个用户关注的人发布的微博（`Post`表中有一个字段`author`指向发布者），查询看起来应该是这样：
+我们都知道，微博里面有用户互相关注的功能，如果我们用 `_Followee` 和 `_Follower` 这两个类来存储用户之间的关注关系(`_Follower` 记录用户的粉丝，`_Followee` 记录用户关注的人，我们的[应用内社交组件](./status_system.html)已经实现了这样的模型，这里直接使用其后台表结构)，我们可以创建一个查询来找到某个用户关注的人发布的微博（`Post` 表中有一个字段 `author` 指向发布者），查询看起来应该是这样：
 
 ```sh
 curl -X GET \
@@ -1037,7 +1037,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果你想获取作为其父对象的关系成员的对象,你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户:
+如果你想获取作为其父对象的关系成员的对象，你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户:
 
 ```sh
 curl -X GET \
@@ -1078,9 +1078,9 @@ curl -X GET \
   "__type": "Object",
   "className": "Post",
   "objectId": "51e3a359e4b015ead4d95ddc",
-  "createdAt": "2011-12-06T20:59:34.428Z",
-  "updatedAt": "2011-12-06T20:59:34.428Z",
-  "otherFields": "willAlsoBeIncluded"
+  "createdAt": "2015-06-29T09:31:20.371Z",
+  "updatedAt": "2015-06-29T09:31:20.371Z",
+  "desc": "Post 的其他字段也会一同被包含进来。"
 }
 ```
 
@@ -1173,7 +1173,7 @@ curl -X GET \
 
 ##用户
 
-不仅在移动应用上，还在其他系统中，很多应用都有一个统一的登陆流程。通过 REST API 访问用户的账户让你可以在 LeanCloud 上简单实现这一功能。
+不仅在移动应用上，还在其他系统中，很多应用都有一个统一的登录流程。通过 REST API 访问用户的账户让你可以在 LeanCloud 上简单实现这一功能。
 
 通常来说,`用户`（类名`_User`）这个类的功能与其他的对象是相同的，比如都没有限制模式(Schema free)。User 对象和其他对象不同的是一个用户必须有用户名(`username`)和密码(`password`)，密码会被自动地加密和存储。LeanCloud 强制要求 `username` 和 `email` 这两个字段必须是没有重复的.
 
@@ -1181,7 +1181,7 @@ curl -X GET \
 
 注册一个新用户与创建一个新的普通对象之间的不同点在于 username 和 password 字段都是必需的。password 字段会以和其他的字段不一样的方式处理，它在储存时会被加密而且永远不会被返回给任何来自客户端的请求。
 
-在你的 App 的设定菜单，你可以让 LeanCloud 来自动帮你验证邮件地址（在应用控制台「设置」-->「应用选项」-->「邮箱」中开启「启用注册用户邮箱验证」）。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
+你可以让 LeanCloud 自动帮你验证邮件地址，做法是进入 [应用控制台](https://leancloud.cn/app.html?appid={{appid}}#/permission)，选择 **设置** > **应用选项** > **邮箱**，勾选 **启用注册用户邮箱验证**。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
 
 为了注册一个新的用户，需要向 user 路径发送一个 POST 请求，你可以加入一个新的字段，例如，创建一个新的用户有一个电话号码:
 
@@ -1201,7 +1201,7 @@ Status: 201 Created
 Location: https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-返回的主体是一个 JSON 对象,包含 `objectId`, `createdAt` 时间戳表示创建对象时间, `sessionToken` 可以被用来认证这名用户随后的请求：
+返回的主体是一个 JSON 对象，包含 `objectId`, `createdAt` 时间戳表示创建对象时间, `sessionToken` 可以被用来认证这名用户随后的请求：
 
 ```
 {
@@ -1211,9 +1211,9 @@ Location: https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 }
 ```
 
-###登陆
+###登录
 
-在你允许用户注册之后，在以后你需要让他们用自己的用户名和密码登陆。为了做到这一点，发送一个 GET 请求到 /1.1/login，加上 username 和 password 作为 URL 编码后的参数.
+在你允许用户注册之后，在以后你需要让他们用自己的用户名和密码登录。为了做到这一点，发送一个 GET 请求到 /1.1/login，加上 username 和 password 作为 URL 编码后的参数.
 
 ```sh
 curl -X GET \
@@ -1240,9 +1240,9 @@ curl -X GET \
 }
 ```
 
-###使用手机号码一键注册或登陆
+###使用手机号码一键注册或登录
 
-现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登陆，我们也提供了一个新 API `POST /usersByMobilePhone` 来处理:
+现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登录，我们也提供了一个新 API `POST /usersByMobilePhone` 来处理:
 
 ```sh
 curl -X POST \
@@ -1253,9 +1253,9 @@ curl -X POST \
   https://api.leancloud.cn/1.1/usersByMobilePhone
 ```
 
-其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode`是使用 [短信验证 API](#短信验证-api-1) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
+其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode`是使用 [短信验证 API](#短信验证_API-1) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
 
-注册或者登陆成功后，返回的应答跟登陆接口类似：
+注册或者登录成功后，返回的应答跟登录接口类似：
 
 ```json
 {
@@ -1273,7 +1273,7 @@ curl -X POST \
 
 ###验证 Email
 
-设置 email 验证是 app 设置中的一个选项，通过这个标识应用层可以对提供真实 email 的用户更好的功能或者体验。Email 验证会在 User 对象中加入 `emailVerified` 字段，当一个用户的 email 被新设置或者修改过的话，`emailVerified` 会被重置为 false。LeanCloud 后台会往用户填写的邮箱发送一个验证链接，用户点击这个链接可以让 `emailVerified` 被设置为 true。
+设置 email 验证是 app 设置中的一个选项，通过这个标识，应用层可以对提供真实 email 的用户更好的功能或者体验。Email 验证会在 User 对象中加入 `emailVerified` 字段，当一个用户的 email 被新设置或者修改过的话，`emailVerified` 会被重置为 false。LeanCloud 后台会往用户填写的邮箱发送一个验证链接，用户点击这个链接可以让 `emailVerified` 被设置为 true。
 
 emailVerified 字段有 3 种状态可以参考：
 
@@ -1281,7 +1281,7 @@ emailVerified 字段有 3 种状态可以参考：
 2. false : User 对象最后一次被更新的时候，用户并没有确认过他的 email 地址。如果你看到 `emailVerified` 为 false 的话，你可以考虑刷新 User 对象或者再次请求验证用户邮箱。
 3. null : User对象在 email 验证没有打开的时候就已经创建了，或者 User 没有 email。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接请看这篇[博客](https://blog.leancloud.cn/607/)。
 
 ### 请求验证 Email
 
@@ -1311,13 +1311,13 @@ curl -X POST \
 
 如果成功的话，返回的值是一个 JSON 对象.
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接请看这篇[博客](https://blog.leancloud.cn/607/)。
 
 ### 手机号码验证
 
 在应用设置里你还可以选择开启注册手机码号验证功能（设置路径：在应用控制台「设置」-->「应用选项」-->「短信」中开启「验证注册用户手机号码」），当注册的时候用户填写 `mobilePhoneNumber` 字段，LeanCloud 云端将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的 `mobilePhoneNumberVerified` 属性将设置为 `true`。
 
-**请注意，每个账户只有100条免费的短信额度，超过后每发送一条短信都将实时扣费，请保证账户余额充足**
+**请注意，每个账户只有100条免费的短信额度，超过后每发送一条短信都将实时扣费，请保证账户内短信余额充足**
 
 假设你在开启注册手机号码验证选项后，注册下列用户：
 
@@ -1421,7 +1421,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
 ```
 
-修改成功后，就可以用新密码登陆了。
+修改成功后，就可以用新密码登录了。
 
 ###获取用户
 
@@ -1452,7 +1452,7 @@ curl -X GET \
 
 在通常的情况下，没有人会允许别人来改动他们自己的数据。为了做好权限认证，确保只有用户自己可以修改个人数据，在更新用户信息的时候，必须在 HTTP 头部加入一个 `X-AVOSCloud-Session-Token` 项来请求更新，这个 session token 在注册和登录时会返回。
 
-为了改动一个用户已经有的数据,需要对这个用户的 URL 发送一个 PUT 请求。何你没有指定的 key 会保持不动，所以你可以只改动用户数据中的一部分。username 和 password 也是可以改动的，但是新的 username 不能和既有数据重复。
+为了改动一个用户已经有的数据,需要对这个用户的 URL 发送一个 PUT 请求。任何你没有指定的 key 都会保持不动，所以你可以只改动用户数据中的一部分。username 和 password 也是可以改动的，但是新的 username 不能和既有数据重复。
 
 比如，如果我们想对 「hjiang」 的手机号码做出一些改动:
 
@@ -1493,7 +1493,7 @@ curl -X PUT \
 * old_password 就是用户的老密码。
 * new_password 就是用户的新密码
 
-注意，仍然需要传入`X-AVOSCloud-Session-Token`，也就是登陆用户才可以修改自己的密码。
+注意，仍然需要传入`X-AVOSCloud-Session-Token`，也就是登录用户才可以修改自己的密码。
 
 
 ###查询
@@ -1541,7 +1541,7 @@ curl -X DELETE \
 
 ###连接用户账户和第三方平台
 
-LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾讯微博，这样就允许你的用户直接用他们现有的帐号 id 来登录你的 App。通过 `siginup` 或者更新的 endpoint，并使用 `authData` 字段来提供你希望连接的服务的授权信息就可以做到。一旦关联了某个服务，`authData` 将被存储到你的用户信息里，并通过登录即可重新获取。
+LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾讯微博，这样就允许你的用户直接用他们现有的帐号 id 来登录你的 App。通过 `signup` 或者更新的 endpoint，并使用 `authData` 字段来提供你希望连接的服务的授权信息就可以做到。一旦关联了某个服务，`authData` 将被存储到你的用户信息里，并通过登录即可重新获取。
 
 `authData` 是一个普通的 JSON 对象，它所要求的 key 根据 service 不同而不同，具体要求见下面。每种情况下，你都需要自己负责完成整个授权过程(一般是通过 OAuth 协议，1.0 或者 2.0) 来获取授权信息，提供给连接 API。
 
@@ -1664,7 +1664,7 @@ Location: https://api.leancloud.cn/1.1/users/55a4800fe4b05001a7745c41
 
 #### 连接
 
-连接一个现有的用户到新浪微博或者腾讯微博帐号，可以通过发送一个 PUT 请求附带 `authData` 字段到 user endpoint 做到。例如，连接一个用户到新浪微博帐号发起的请求类似这样:
+连接一个现有的用户到新浪微博或者腾讯微博帐号，可以向 user endpoint 发送一个附带 `authData` 字段的 PUT 请求来实现。例如，连接一个用户到新浪微博帐号发起的请求类似这样:
 
 ```sh
 curl -X PUT \
@@ -2335,7 +2335,7 @@ curl -X POST \
 
 在一些场景下，你可能希望用户验证手机号码后才能进行一些操作，例如充值等。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
 
-短信 API 每个  LeanCloud 帐户有 100 个免费额度，超过就即时收费。使用这些 API 需要开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）` 选项。
+短信 API 每个  LeanCloud 账户有 100 个免费额度，超过就即时收费。使用这些 API 需要开启`启用手机号码短信认证 （针对 /1.1/verifySmsCode/:code 接口）` 选项。
 
 给某个手机号码发送验证短信通过：
 
@@ -2384,7 +2384,7 @@ curl -X POST \
 
 ## 自定义短信模板
 
-我们还支持通过 `requestSmsCode` 发送自定义模板的短信，但是**要求内容必须是验证码类或者通知类短信，不允许包含下载链接等推广信息**。模板的创建和修改都需要审核，并且要求创建或者修改的时候帐户至少有 200 RMB 的非赠送余额。模板本身不扣费，短信发送才扣费。**通知类短信没有间隔和条数限制。**
+我们还支持通过 `requestSmsCode` 发送自定义模板的短信，但是**要求内容必须是验证码类或者通知类短信，不允许包含下载链接等推广信息**。模板的创建和修改都需要审核，并且要求创建或者修改的时候账户至少有 200 RMB 的非赠送余额。模板本身不扣费，短信发送才扣费。**通知类短信没有间隔和条数限制。**
 
 您可以在应用设置的短信模板里创建短信模板，创建后将自动提交审核，审核结果将通过邮件的形式发送到您的帐号邮箱。
 
