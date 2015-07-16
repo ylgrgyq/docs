@@ -823,7 +823,7 @@ public async void MuteConversationAsync()
 ```
 {% endblock %}
 
-{% block conversation_unmute %}可使用 `UnmuteAsync()` 方法。{% endblock %}
+{% block conversation_unmute %}可使用 `UnmuteAsync()` 方法{% endblock %}
 
 {% block conversation_tag %}
 ```c#

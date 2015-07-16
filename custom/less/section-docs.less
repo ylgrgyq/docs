@@ -829,7 +829,11 @@ blockquote{
   top: 0;
   right: 100%;
   cursor: pointer;
-  margin-right: 10px;
+  padding-right: 10px;
+
+  blockquote & {
+    padding-right: 35px; // 10px + 20px (padding) + 5px (border-left)
+  }
 
   &:hover,
   &:focus {
@@ -838,7 +842,7 @@ blockquote{
 
   .toggle-comment {
     opacity: 0;
-    transition: opacity .2s ease;
+    transition: opacity .4s ease;
 
     span {
       display: block;
@@ -891,6 +895,7 @@ blockquote{
     .doc-content p:hover &,
     .doc-content p:focus & {
       opacity: 1;
+      transition: none;
     }
 
     &.has-comments,

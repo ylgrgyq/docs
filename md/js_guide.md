@@ -502,7 +502,7 @@ query.notEqualTo("pubUser", "LeanCloud官方客服");
 
 ```javascript
 query.notEqualTo("pubUser", "LeanCloud官方客服");
-query.greaterThan("createdAt", "2015-06-26 18:37:09");
+query.greaterThan("createdAt", new Date("2015-06-26 18:37:09"));
 ```
 
 你可以用设定 `limit` 的方法来限定返回的结果数，默认的返回结果数是 100，但是任
@@ -1610,7 +1610,7 @@ user.updatePassword('当前密码', '新密码',{
   success: function(){
     //更新成功
   },
-  error: function(err){
+  error: function(user, err){
     //更新失败
     console.dir(err);
   }
@@ -1635,7 +1635,7 @@ user.signUp(null, ……)
 
 ```javascript
 AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
-	//发送成功
+  //发送成功
 }, function(err){
    //发送失败
 });
