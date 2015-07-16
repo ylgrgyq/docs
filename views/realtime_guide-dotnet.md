@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block setup_init %}
-为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/1.0.1.2-pre) 上下载我们的 SDK。
+为了支持实时聊天， 实时通信 SDK 依赖于几个开源的 WebSocket 的库，推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/) 上下载我们的 SDK。
 
 导入 SDK 之后，在应用入口函数中添加如下代码：
 
@@ -35,7 +35,7 @@
 {% endblock %}
 
 {% block demo %}
-* [WPF Demo](https://github.com/leancloud/windows-phone-sdk-demos/tree/master/LeanCloud.Demo.CSharp/LeanCloud.LeanMessage.Demo.WPF.NET45)（推荐）
+* [.NET Demo](https://github.com/leancloud/windows-phone-sdk-demos)（推荐）
 {% endblock %}
 
 {% block oneOnOneChat_sent %}
@@ -305,7 +305,40 @@ public async void SendVideoMessageAsync()
 
 {% block videoMessage_received_intro %}
 与接收图像消息类似，由 `AVIMConversation` 的 `OnVideoMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+
 {% endblock %}
+
+
+{% block commonFileMessage_intro %}
+#### 通用文件消息
+
+开发者可以用它来发送带附件的消息或离线文件。对于此类消息，实时通信 SDK 内部会先把文件上传到 LeanCloud 文件存储服务器（自带 CDN 功能），然后把文件元数据（url、文件大小等）放在消息包内发送到实时通信云端。
+
+Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
+
+##### 发送通用文件消息
+
+{% block fileMessage_sent %}
+```
+- 初始化 ClientId = Tom
+- Tom 登录到系统
+- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
+- 打开本地文件夹
+- 读取本地文件 leancloud.doc，构造 AVFile
+- 发送
+```
+{% endblock %}
+
+##### 接收通用文件消息
+
+{% block fileMessage_received_intro %}
+```
+- 文件元信息提取/列表 [messageId, FileUrl, Size]
+```
+{% endblock %}
+
+{% endblock %}
+
 
 {% block fileMessage_sent %}
 ```c#
@@ -356,38 +389,47 @@ public async void SendLocationAsync()
 与接收图像消息类似， 由 `AVIMConversation` 的 `OnLocationMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block attributes %} `AVIMMessage.Attributes` {% endblock %}
-
-{% block attributes_property %}Attributes{% endblock %}
-
-{% block customMessage_sent %}
-```c#
-AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
-imgMessage.Attributes = new Dictionary<string, object>() 
-{ 
-    {"location","拉萨布达拉宫"}
-};
-imgMessage.Title = "这蓝天让我彻底醉了……";
-await conversation.SendImageMessageAsync(imgMessage);
-```
+{% block typedMessage_received %}
+此处各个 SDK 平台需要详细介绍一下如何接收 TypedMessage 接收，包含文字和代码。描述风格以及代码示例请参照 iOS 版本。
 {% endblock %}
 
-{% block customMessage_received_method %} `OnMessageReceived` {% endblock %}
+{% block transientMessage_sent %}{% endblock %}
 
-{% block customMessage_received %}
-```
-- 初始化 ClientId = friend
-- 登录到系统
-- 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是拉萨布达拉宫
-```
-{% endblock %}
-
-{% block customMessage_create %}
-TODO：.NET 待补充
-{% endblock %}
+{% block messagePolicy_sent %}{% endblock %}
 
 {% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
+
+{% block message_sent_ack %}
+```
+//Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+AVIMClient client = new AVIMClient("Tom");
+
+//Tom 登陆到系统
+await client.ConnectAsync();
+
+//打开已存在的对话
+AVIMConversation conversaion = client.GetConversationById("551260efe4b01608686c3e0f");
+//设置送达回执
+conversaion.OnMessageDeliverd += (s, e) =>
+{
+//在这里可以书写消息送达之后的业务逻辑代码
+};
+//发送消息
+await conversaion.SendTextMessageAsync("夜访蛋糕店，约吗？");
+```
+{% endblock %}
+
+{% block message_received_ack %}
+```
+- 初始化 ClientId = Jerry
+- Jerry 登录
+- 打开已有对话 Id = 551260efe4b01608686c3e0f
+- //收到 Tom 的消息："夜访蛋糕店，约吗？"
+- 系统向 Tom 发送已读回执
+- Jerry 回复 Tom："不约，最近牙疼……"
+- 发送
+```
+{% endblock %}
 
 {% block messagePolicy_received_intro %}
 消息接收分为**两个层级**：
@@ -447,28 +489,76 @@ AVIMClient.Status != Online
 
 {% endblock %}
 
-{% block message_sent_ack %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 打开已有对话 Id = 551260efe4b01608686c3e0f
-- 发消息给 Jerry："夜访蛋糕店，约吗？"，需要送达和已读回执
-- 发送
-- 系统给 Tom 返回己送达通知
+{% block message_Relation_intro %}
+我们所支持的文本、图像、音频、视频、文件、地理位置等富媒体消息类型都有一个共同的基类：`AVIMTypedMessage`，它们之间的关系如下图所示：
+
+![消息的类图](http://ac-lhzo7z96.clouddn.com/1427252943504)
+
+层级|类名|说明|类型
+:---:|---|---|---
+一|`AVIMMessage`|所有消息的基类|抽象类
+二|`AVIMTypedMessage`| 富媒体消息的基类|抽象类
+三|`AVIMTextMessage`|文本消息|实例类
+ |`AVIMLocationMessage`|地理位置消息|实例类
+ |`AVIMFileMessageBase`| 所有包含了文件内容的消息的基类|抽象类
+四|`AVIMImageMessage`|图像消息|实例类
+ |`AVIMAudioMessage`|音频消息|实例类
+ |`AVIMVideoMessage`|视频消息|实例类
+ |`AVIMFileMessage`|通用文件消息类|实例类
+
+实时通信 SDK 在封装时对消息做了明确的分层，开发者需要根据自己的需求去使用。
+{% endblock %}
+
+{% block message_Properties_intro %}{% endblock %}
+
+{% block attributes %} `AVIMMessage.Attributes` {% endblock %}
+
+{% block attributes_property %}Attributes{% endblock %}
+
+{% block customAttributesMessage_sent %}
+```c#
+AVIMImageMessage imgMessage = new AVIMImageMessage(photo.Name, photo.GetImage());//构造 AVIMImageMessage
+imgMessage.Attributes = new Dictionary<string, object>() 
+{ 
+    {"location","拉萨布达拉宫"}
+};
+imgMessage.Title = "这蓝天让我彻底醉了……";
+await conversation.SendImageMessageAsync(imgMessage);// 假设 conversationId= conversation 并且已经在之前被实例化
 ```
 {% endblock %}
 
-{% block message_received_ack %}
-```
-- 初始化 ClientId = Jerry
-- Jerry 登录
-- 打开已有对话 Id = 551260efe4b01608686c3e0f
-- //收到 Tom 的消息："夜访蛋糕店，约吗？"
-- 系统向 Tom 发送已读回执
-- Jerry 回复 Tom："不约，最近牙疼……"
-- 发送
+{% block customMessage_received_method %} `OnMessageReceived` {% endblock %}
+
+{% block customAttributesMessage_received %}
+```c#
+AVIMClient client = new AVIMClient("friend");
+await client.ConnectAsync();
+AVIMConversation conversaion = client.GetConversationById("55117292e4b065f7ee9edd29");
+await conversaion.FetchAsync();
+conversaion.OnImageMessageReceived += (s, e) =>
+{
+//图像的 url
+string url = e.Url;
+//图像的元数据
+IDictionary<string, object> metaData = e.FileMetaData;
+//图像的发送者 ClientId
+string from = e.FromClientId;
+//图像发送者为图像设定的 Title
+string title = e.Title;
+
+//一些其他的属性都可以在这里获取
+string location = e.Attributes["location"].ToString();// 读取的结果就是拉萨布达拉宫
+
+};
 ```
 {% endblock %}
+
+{% block customMessage_create %}
+.NET 在当前版本尚不支持自定义消息子类，正在研发中。
+{% endblock %}
+
+
+{% block conversation_specialnote %}{% endblock %}
 
 {% block conversation_init %}
 
@@ -508,6 +598,8 @@ public async void InitiativeJoinAsync()
 {% endblock %}
 
 {% block conversation_memebersChanged %}
+* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
+
 ```c#
 public async void BobOnTomJoined_S1()
 {
@@ -556,6 +648,8 @@ public async void BobOnTomJoined_S1()
 {% endblock %}
 
 {% block conversation_memebersJoined %}
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
+
 ```c#
 public async void BobOnTomJoined_S2()
 {
@@ -680,7 +774,6 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 `ConversationId`| `objectId` |全局唯一的 Id
 `Name` |  `name` |成员共享的统一的名字
 `MemberIds`|`m` |成员列表
-`MuteMemberIds`|`mu` |静音成员列表
 `Creator` | `c` |对话创建者
 `LastMessageAt` | `lm` |对话最后一条消息发送的时间
 `Attributes`| `attr`|自定义属性
@@ -764,25 +857,15 @@ public async void CreateConversationWithCustomAttributesAsync()
 ```
 {% endblock %}
 
-{% block conversation_messageHistoryByLimit %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录
-- 进入对话：id = 551260efe4b01608686c3e0f
-- 获取最近的 10 条消息 //limit 取值范围 1~1000 之内的整数，默认为 20
+
+{% block conversation_query_limit %}
+```c#
+// 构建查询
+AVIMConversationQuery conversationQuery = client.GetQuery().Limit(20);
+// 查询 Tom 所在的最近 20 个活跃的对话
+var conversationList = await conversationQuery.FindAsync();
 ```
 {% endblock %}
-
-{% block conversation_messageHistoryBeforeId %}
-```
-- ...//前几步与上例相同
-- Tom 登录
-- 获取消息历史，不指定 limit //  不使用 limit 默认返回 20 条消息
-- 获取这 20 条中最早的那条消息的属性
-- 按它的属性 id 和 timestamp，再获取在它之前的消息，不指定 limit // 依然默认返回 20 条消息
-```
-{% endblock %}
-
 {% block conversation_getList %}
 ```c#
 public async void CountMembers_SampleCode()
@@ -808,7 +891,7 @@ public async void CountMembers_SampleCode()
 {% endblock %}
 
 {% block conversation_query_equalTo %}
-```
+```c#
 public async void WhereEqualTo_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
@@ -1004,20 +1087,46 @@ public async void QueryChatRoom_SampleCode()
 
 {% block chatroom_query_extra %}从代码上可以看出，仅仅是多了一个额外的 `WhereEqualTo("tr", true)` 的链式查询即可。{% endblock %}
 
-{% block chatroom_query_list %}
+
+{% block conversation_query_history %}
 ```
 - 初始化 ClientId = Tom
-- Tom 登录
-- 查找自己加入的聊天室
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取从过去 24 小时的历史聊天纪录
 ```
 {% endblock %}
 
-{% block chatroom_query_history %}
-```c#
-AVIMClient userA = new AVIMClient("UserA");
-AVIMConversation con = userA.GetConversationById("2f08e882f2a11ef07902eeb510d4223b");
-con.QueryHistory(DateTime.Now.AddDays(-1), 0, "UserA").Wait();
-//查询 UserA 在 ConversationId 为 `2f08e882f2a11ef07902eeb510d4223b` 中的聊天记录。
+{% block conversation_messageHistoryByLimit %}
+```
+//Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
+AVIMClient client = new AVIMClient("Tom");
+
+//Tom 登陆到系统
+await client.ConnectAsync();
+
+//打开已存在的对话
+AVIMConversation conversaion = client.GetConversationById("551260efe4b01608686c3e0f");
+
+//查询最新的 10 条消息
+await conversaion.QueryHistoryAsync(10);
+```
+{% endblock %}
+
+{% block conversation_messageHistoryBeforeId %}
+```
+// 获取早于 messageId = grqEG2OqSL+i8FSX9j3l2g 而且时间戳早于 1436137606358 的 10 条消息
+con.QueryHistoryAsync("grqEG2OqSL+i8FSX9j3l2g", 1436137606358, 10);
+```
+{% endblock %}
+
+{% block conversation_messageHistory_pager %}
+```
+// 获取最新的 10 条消息
+IEnumerable<AVIMMessage> pageContent = await con.QueryHistoryAsync(10);
+// 以第 10 条为分界点
+AVIMMessage pager = pageContent.Last();
+// 查询第 10 条之前的 10条消息
+IEnumerable<AVIMMessage> pageContent2 = await con.QueryHistoryAsync(pager.Id, pager.ServerTimestamp, 10);
 ```
 {% endblock %}
 
@@ -1029,9 +1138,7 @@ Offline
 
 {% block logout %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录
-- Tom 登出
+client.DisconnectAsync();
 ```
 {% endblock %}
 

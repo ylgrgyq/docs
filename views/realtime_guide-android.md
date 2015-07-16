@@ -1,4 +1,3 @@
-{% extends "./realtime_guide.tmpl" %}
 
 {% block language %}Android{% endblock %}
 
@@ -39,7 +38,8 @@ public class MyApplication extends Application{
    </application>
 
 </manifest>
-```{% endblock %}
+```
+{% endblock %}
 
 {% block demo %}
 * [LeanMessage](https://github.com/leancloud/LeanMessage-Demo)（推荐）
