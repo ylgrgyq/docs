@@ -1213,8 +1213,18 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 {% endblock %}
 
 {% block conversation_messageHistoryBeforeId %}
+```
+- 获取早于 messageId = grqEG2OqSL+i8FSX9j3l2g 而且时间戳早于 1436137606358 的 10 条消息
+```
 {% endblock %}
-
+{% block conversation_messageHistory_pager %}
+```
+- 初始化 ClientId = Tom
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取最近的 10 条历史消息
+- 再根据上一步的第 10 条消息的 msgId，timestamp 和 limit 获取第二页的数据
+```
+{% endblock %}
 {% block networkStatus %}
 与网络相关的通知（网络断开、恢复等）要采用 `AVIMClientDelegate` 代理方式来实现，主要接口如下：
 
