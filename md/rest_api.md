@@ -1338,7 +1338,7 @@ curl -X POST \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/{{6位数字验证码}}
+  https://api.leancloud.cn/1.1/verifyMobilePhone/{6位数字验证码}
 ```
 
 其中 URL 中最后一部分就是6位验证数字。
@@ -2684,7 +2684,7 @@ app_channel|N|应用的发布渠道
 
 字段|必选|含义
 ---|:---:|---
-id|Y|应用一次使用就产生唯一的一个 id 
+id|Y|应用一次使用就产生唯一的一个 id
 
 #### events 节点
 包含了自定义事件和预定义事件，是一个数组，其中每个元素的结构为：
