@@ -1709,8 +1709,8 @@ NSArray<AVObject *> nearPosts = [query findObjects];
 要查找位于矩形范围内的信息，可使用 `whereWithinGeoBox` 来实现：
 
 ```objc
-AVGeoPoint *point1 = [AVGeoPoint geoPointWithLatitude:39.99 longitude:116.33];
-AVGeoPoint *point2 = [AVGeoPoint geoPointWithLatitude:39.97 longitude:116.37];
+AVGeoPoint *point1 = [AVGeoPoint geoPointWithLatitude:39.97 longitude:116.33];
+AVGeoPoint *point2 = [AVGeoPoint geoPointWithLatitude:39.99 longitude:116.37];
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"location" withinGeoBoxFromSouthwest:point1 toNortheast:point2];
 NSArray<AVObject *> *posts = [query findObjects];

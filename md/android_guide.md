@@ -378,7 +378,7 @@ myComment.saveInBackground();
 myComment.put("post", AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8"));
 ```
 
-默认情况下，当你获取一个对象的时候，关联的 `AVObject` 不会被获取。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法:
+默认情况下，当你获取一个对象的时候，关联的 `AVObject` 不会被获取。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法（下面的例子假设已经通过 `AVQuery` 得到了 Comment 的实例）:
 
 ```java
 fetchedComment.getAVObject("post")
@@ -1647,8 +1647,8 @@ ArrayList<AVObject> nearPosts = query.find();
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java
-AVGeoPoint point1 = new AVGeoPoint(39.99, 116.33);
-AVGeoPoint point2 = new AVGeoPoint(39.97, 116.37);
+AVGeoPoint point1 = new AVGeoPoint(39.97, 116.33);
+AVGeoPoint point2 = new AVGeoPoint(39.99, 116.37);
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
 query.whereWithinGeoBox("location", point1, point2);
 ArrayList<AVObject> posts = query.find();
@@ -1697,7 +1697,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 
 ```java
   AVOSCloud.requestVoiceCodeInBackground("12312312312",
-				   new RequestMobileCodeCallback callback(){
+				   new RequestMobileCodeCallback(){
   				      @Override
 				      public void done(AVException e){
 				      	if(e==null){
