@@ -185,7 +185,7 @@ select * from Player where name !=(select name from GameScore where score<=80)
 select * from Player where location near [116.4, 39.9]
 ```
 
-其中 `[30.0, -20.0]` 是经纬度坐标。也可以使用 `geopoint` 函数来创建：
+其中 `[116.4, 39.9]` 是经纬度坐标。也可以使用 `geopoint` 函数来创建：
 
 ```sql
 select * from Player where location near geopoint(116.4, 39.9)
