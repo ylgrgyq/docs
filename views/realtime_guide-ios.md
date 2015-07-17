@@ -561,13 +561,13 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
 * 实现 `AVIMTypedMessageSubclassing` 协议
-* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 [YourClass registerSubclass];
+* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
 {% endblock %}
 
 {% block messagePolicy_received_method %} `conversation:didReceiveCommonMessage:` {% endblock %}
 
 {% block messagePolicy_received %}
-实时通信 SDK 内部封装了对富媒体消息的支持，所有富媒体消息都是从 AVIMTypedMessage 派生出来的。发送的时候可以直接调用 [AVIMConversation sendMessage:callback:] 函数。在接收端，我们也在 `AVIMClientDelegate` 中专门增加了一个回调函数：
+实时通信 SDK 内部封装了对富媒体消息的支持，所有富媒体消息都是从 AVIMTypedMessage 派生出来的。发送的时候可以直接调用 `[AVIMConversation sendMessage:callback:]` 函数。在接收端，我们也在 `AVIMClientDelegate` 中专门增加了一个回调函数：
 
 ```
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message;
