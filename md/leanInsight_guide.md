@@ -2,17 +2,17 @@
 
 ## 简介
 
-针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了 SQL-like 的离线数据分析功能。想要获得这项功能，开发者只需要设置 `启用离线数据分析` 这个[应用选项](/data.html?appid={{appid}}#/permission)。离线数据分析的数据来源是每日备份数据，不会对应用的线上数据产生任何影响。
+针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了部分兼容 SQL 语法的离线数据分析功能。离线数据分析的数据来源是每日备份数据，不会对应用的线上数据产生任何影响。
 
 ## 启用离线数据分析
 
-为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 联系我们的工程师。
+为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选项一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗数分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们的工程师。
 
-## SQL-like 查询分析
+## 类似 SQL 的查询分析语法
 
 LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
-### Hive 查询语法，包括：
+### Hive 查询语法包括：
 
 * SELECT
 * GROUP BY
@@ -24,90 +24,115 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 有不少用户都有过 MySQL 的使用经验，这里主要是列举几种在 MySQL 中可用而在我们的服务（基于 Spark SQL）中却**会报错的 `GROUP BY` 用法**。
 
-* SELECT * FROM table GROUP BY columnA;
-	* MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
-	* Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
+```
+SELECT * FROM table GROUP BY columnA;
+```
 
-* SELECT columnB FROM table GROUP BY columnA;
-	* MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
-	* Spark SQL：一定会报错。
+* MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
+* Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
+
+
+```
+SELECT columnB FROM table GROUP BY columnA;
+```
+
+* MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
+* Spark SQL：一定会报错。
 
 当且仅当 SELECT 后面的表达式（expressions）为聚合函数（aggregation function）或包含 `GROUP BY` 中的字段，Spark SQL 的查询才会合法。列举几个常见的合法查询：
 
-* SELECT columnA, count(columnB) as `count` FROM table GROUP BY columnA
-* SELECT columnA, count(*) as `count` FROM table GROUP BY columnA
-* SELECT columnA, columnB FROM table GROUP BY columnA, columnB
+```
+SELECT columnA, count(columnB) as `count` FROM table GROUP BY columnA
+SELECT columnA, count(*) as `count` FROM table GROUP BY columnA
+SELECT columnA, columnB FROM table GROUP BY columnA, columnB
+```
 
-### 所有 Hive 运算符，包括：
+### Hive 运算符：
 
-* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, etc）
-* 算术运算符（+, -, *, /, %, etc）
-* 逻辑运算符（AND, &&, OR, ||, etc）
-* 数学函数（sign, ln, cos, round, floor, ceil, exp, rand, sqrt, etc）
-* 字符串函数（instr, length, printf, etc）
-* 日期函数（unix_timestamp, from_unixtime, to_date, weekofyear, year, month, day, current_timestamp, etc）
+* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, ...）
+* 算术运算符（+, -, *, /, %, ...）
+* 逻辑运算符（AND, &&, OR, ||, ...）
 
-### 常用的UDF
+### 常用的 UDF
+
+#### 字符串函数
+
+函数|描述
+:---|:---
+`instr`|返回一个字符串在另一个字符串中首次出现的位置
+`length`|字符串长度
+`printf`|格式化输出
+
 #### 计算类
 
-* 取整函数: round
-* 指定精度取整函数: round
-* 向下取整函数: floor
-* 向上取整函数: ceil
-* 向上取整函数: ceiling
-* 取随机数函数: rand
-* 自然指数函数: exp
-* 以10为底对数函数: log10
-* 以2为底对数函数: log2
-* 对数函数: log
-* 幂运算函数: pow
-* 幂运算函数: power
-* 开平方函数: sqrt
-* 二进制函数: bin
-* 十六进制函数: hex
-* 反转十六进制函数: unhex
-* 进制转换函数: conv
-* 绝对值函数: abs
-* 正取余函数: pmod
-* 正弦函数: sin
-* 反正弦函数: asin
-* 余弦函数: cos
-* 反余弦函数: acos
-* positive函数: positive
-* negative函数: negative
+函数|描述
+:---|:---
+`abs`|绝对值
+`acos`|反余弦
+`asin`|反正弦
+`bin`|二进制
+`ceil`|向上取整
+`ceiling`|向上取整
+`conv`|进制转换
+`cos`|余弦
+`exp`|自然指数
+`floor`|向下取整
+`hex`|十六进制
+`ln`|自然对数
+`log`|对数
+`log10`|以 10 为底对数
+`log2`|以 2 为底对数
+`negative`|negative 
+`pmod`|正取余
+`positive`|positive 
+`pow`|幂运算
+`power`|幂运算
+`rand`|取随机数
+`round`|取整
+`sin`|正弦
+`sqrt`|开平方
+`unhex`|反转十六进制
+...|...
 
 #### 日期类
 
-* UNIX时间戳转日期函数: from_unixtime
-* 获取当前UNIX时间戳函数: unix_timestamp
-* 日期转UNIX时间戳函数: unix_timestamp
-* 指定格式日期转UNIX时间戳函数: unix_timestamp
-* 日期时间转日期函数: to_date
-* 日期转年函数: year
-* 日期转月函数: month
-* 日期转天函数: day
-* 日期转小时函数: hour
-* 日期转分钟函数: minute
-* 日期转秒函数: second
-* 日期转周函数: weekofyear
-* 日期比较函数: datediff
-* 日期增加函数: date_add
-* 日期减少函数: date_sub
+函数|描述
+:---|:---
+`date_add`|日期增加
+`date_sub`|日期减少
+`datediff`|日期比较
+`day`|日期转天
+`from_unixtime`|UNIX 时间戳转日期
+`hour`|日期转小时
+`minute`|日期转分钟
+`month`|日期转月
+`second`|日期转秒
+`to_date`|日期时间转日期
+`unix_timestamp`|获取当前 UNIX 时间戳
+`unix_timestamp`|日期转 UNIX 时间戳
+`unix_timestamp`|指定格式日期转 UNIX 时间戳
+`weekofyear`|日期转周
+`year`|日期转年
+...|...
 
 更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
 
-### 多表 Join：
+### 多表 Join
 
-* JOIN
-* {LEFT|RIGHT|FULL} OUTER JOIN
-* LEFT SEMI JOIN
-* CROSS JOIN
+```
+JOIN
+{LEFT|RIGHT|FULL} OUTER JOIN
+LEFT SEMI JOIN
+CROSS JOIN
+```
 
 ### 子查询
 
-* SELECT col FROM ( SELECT a + b AS col from t1) t2
+```
+SELECT col FROM ( SELECT a + b AS col from t1) t2
+```
 
-### 大多数 Hive 数据类型，包括：
+### Hive 数据类型：
 
 * TINYINT
 * SMALLINT
@@ -127,12 +152,12 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
 
-### 一些 SQL-like 数据分析例子
+### 数据分析举例
 
 * 简单的 SELECT 查询
 
 ```
-	select * from GameScore
+	select * from Post
 
 	select count(*) from _User
 
@@ -141,17 +166,17 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 * 复杂的 SELECT 查询
 
 ```
-	select * from GameScore where createdAt > '2014-12-10'
+	select * from Post where createdAt > '2014-12-10'
 
 	select avg(age) from _User
 
-	select GameScore.objectId from GameScore left join _User where _User.name=GameScore.name limit 10
+	select Post.objectId from Post left join _User where _User.name=Post.pubUser limit 10
 
 	select * from _User where name in (select name form OtherUser)
 
-	select sum(score) from GameScore
+	select sum(upvotes) from Post
 
-	select count(*) as `count` from GameScore group by name
+	select count(*) as `count`, pubUser from Post group by pubUser
 
 ```
 
@@ -161,7 +186,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./cloud_code_guide.html#权限说明)。**
 
-### 开始一个 Job
+### Job 启动
 
 ```js
   AV.Insight.startJob({
@@ -185,7 +210,7 @@ JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线
 任务如果能正常启动，将返回任务的 job id，后续可以拿这个 id 去查询任务状态和结果。
 
 
-### 在云引擎里监听 Job 完成
+### Job 完成
 
 在云引擎里，可以通过一个 hook 函数来监听 job 完成情况：
 
@@ -198,17 +223,19 @@ AV.Insight.on('end', function(err, result) {
 目前仅支持 `end` 事件，当 job 完成（可能成功或者失败）就通知到这个 hook 函数，结果 result 里会包含 job id 以及任务状态信息：
 
 ```
-{ id: '29f24a909074453622856528359caddc',
-  startTime: 1435569183000,
-  endTime: 1435569185000,
-  status: 'OK' }
+{  
+  "id":        "29f24a909074453622856528359caddc",
+  "startTime": 1435569183000,
+  "endTime":   1435569185000,
+  "status":    "OK"
+}
 ```
 
 如果 status 是 `OK` ，表示任务成功，其他状态包括 `RUNNING` 表示正在运行，以及 `ERROR` 表示本次任务失败，并将返回失败信息 `message`。
 
 如果任务成功，你可以拿 id 去主动查询任务结果，参见下文。
 
-### 主动查询 Job 状态和结果
+### Job 状态和结果查询
 
 在知道任务 id 的情况下（startJob 返回或者云引擎监听到任务完成），可以主动查询本次任务的结果：
 
@@ -225,13 +252,14 @@ AV.Insight.on('end', function(err, result) {
 result 是一个 JSON 对象，形如：
 
 ```js
-{ id: '976c94ef0847f4ff3a65e661bf7b809a', //任务 id
-  status: 'OK',                           //任务状态
-  totalCount: 50,                         //结果总数
-  results: [
-    ……结果数组……
+{  
+  "id":         "976c94ef0847f4ff3a65e661bf7b809a", //任务 id 
+  "status":     "OK", //任务状态 
+  "totalCount": 50, //结果总数 
+  "results":[  
+     ……结果数组……
   ]
- }
+}
 ```
 
 `AV.Insight.JobQuery` 也可以设置 `skip` 和 `limit` 做分页查询。
