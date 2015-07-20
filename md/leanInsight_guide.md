@@ -6,13 +6,13 @@
 
 ## 启用离线数据分析
 
-为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选项一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗数分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们的工程师。
+为了启用离线数据分析，开发者需要在控制台的 [应用选项](/data.html?appid={{appid}}#/permission) 中勾选 **启用离线数据分析**。该选项一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗数分钟或更多时间。如果一切顺利，你可以通过 **存储** >  **离线数据分析** 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们的工程师。
 
 ## 类似 SQL 的查询分析语法
 
 LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
-### Hive 查询语法包括：
+### Hive 查询语法
 
 * SELECT
 * GROUP BY
@@ -47,21 +47,22 @@ SELECT columnA, count(*) as `count` FROM table GROUP BY columnA
 SELECT columnA, columnB FROM table GROUP BY columnA, columnB
 ```
 
-### Hive 运算符：
+### Hive 运算符
 
-* 关系运算符（=, ⇔, ==, <>, <, >, >=, <=, ...）
-* 算术运算符（+, -, *, /, %, ...）
-* 逻辑运算符（AND, &&, OR, ||, ...）
+* 关系运算符（`= ⇔ == <> < > >= <=`  ...）
+* 算术运算符（`+ - * / %`  ...）
+* 逻辑运算符（`AND && OR ||`  ...）
 
-### 常用的 UDF
+### 常用函数
 
-#### 字符串函数
+#### 字符串类
 
 函数|描述
 :---|:---
 `instr`|返回一个字符串在另一个字符串中首次出现的位置
 `length`|字符串长度
 `printf`|格式化输出
+...|...
 
 #### 计算类
 
@@ -115,7 +116,7 @@ SELECT columnA, columnB FROM table GROUP BY columnA, columnB
 `year`|日期转年
 ...|...
 
-更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
+更详尽的 Hive 运算符和内置函数，可以参考 [Hive Language Manual - Built-in Operators](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)。
 
 ### 多表 Join
 
@@ -132,7 +133,7 @@ CROSS JOIN
 SELECT col FROM ( SELECT a + b AS col from t1) t2
 ```
 
-### Hive 数据类型：
+### Hive 数据类型
 
 * TINYINT
 * SMALLINT
@@ -148,43 +149,41 @@ SELECT col FROM ( SELECT a + b AS col from t1) t2
 * MAP<>
 * STRUCT<>
 
-详细信息请参考 [Spark SQL Supported Hive Features](http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features)
+详细信息请参考 [Spark SQL Supported Hive Features](http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features)。
 
-不支持的 Hive 功能可以参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)
+不支持的 Hive 功能，请参考 [Spark SQL Unsupported Hive Functionality](http://spark.apache.org/docs/latest/sql-programming-guide.html#unsupported-hive-functionality)。
 
 ### 数据分析举例
 
 * 简单的 SELECT 查询
 
 ```
-	select * from Post
+select * from Post
 
-	select count(*) from _User
-
+select count(*) from _User
 ```
 
 * 复杂的 SELECT 查询
 
 ```
-	select * from Post where createdAt > '2014-12-10'
+select * from Post where createdAt > '2014-12-10'
 
-	select avg(age) from _User
+select avg(age) from _User
 
-	select Post.objectId from Post left join _User where _User.name=Post.pubUser limit 10
+select Post.objectId from Post left join _User where _User.name=Post.pubUser limit 10
 
-	select * from _User where name in (select name form OtherUser)
+select * from _User where name in (select name form OtherUser)
 
-	select sum(upvotes) from Post
+select sum(upvotes) from Post
 
-	select count(*) as `count`, pubUser from Post group by pubUser
-
+select count(*) as `count`, pubUser from Post group by pubUser
 ```
 
-更多例子可以参考这篇[博客](https://blog.leancloud.cn/2559/)
+更多例子可以参考我们的博客文章[《LeanCloud 离线数据分析功能介绍》](https://blog.leancloud.cn/2559/)。
 
 ## 云引擎和 JavaScript SDK 对离线分析的支持
 
-JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./cloud_code_guide.html#权限说明)。**
+JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，请参考 [《权限说明》](./leanengine_guide-cloudcode.html#权限说明)。**
 
 ### Job 启动
 
@@ -204,8 +203,8 @@ JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线
 
 `AV.Insight.startJob` 启动一个离线分析任务，它可以指定：
 
-* sql -- 本次任务的查询的 SQL 。
-* saveAs（可选） -- 本次任务查询结果保存的参数，比如要保存的表名和数量，limit 最大为 1000。
+* **sql**：本次任务的查询的 SQL。
+* **saveAs**：（可选）本次任务查询结果保存的参数，比如要保存的表名和数量，limit 最大为 1000。
 
 任务如果能正常启动，将返回任务的 job id，后续可以拿这个 id 去查询任务状态和结果。
 
