@@ -47,6 +47,22 @@ leancloud upload_symbol \
 -k "{{appkey}}"
 ```
 
+符号文件将默认上传到中国节点。如果您的应用使用了中国之外的其他节点，例如美国节点，需要通过 `-r` 或 `--region` 选项来设置：
+
+```sh
+leancloud upload_symbol -r us \
+-f "<dSYM/xcarchive/DWARF 请按下面提示替换本路径>" \
+-i "{{appid}}" \
+-k "{{appkey}}"
+```
+
+目前支持以下节点：
+
+节点名 | 地区
+-------|----------
+cn     | 中国
+us     | 美国
+
 符号文件的存放位置，与你的发布流程有关，具体为：
 
 * 对应用进行 Archive 后会生成一个 .xcarchive 文件，在 Xcode > Window > Organizer > Archives 选项卡里可以看到它的位置。
