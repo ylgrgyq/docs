@@ -2267,12 +2267,12 @@ curl -X GET \
             "$box": [
               {
                 "__type": "GeoPoint",
-                "latitude": 39.99,
+                "latitude": 39.97,
                 "longitude": 116.33
               },
               {
                 "__type": "GeoPoint",
-                "latitude": 39.97,
+                "latitude": 39.99,
                 "longitude": 116.37
               }
             ]

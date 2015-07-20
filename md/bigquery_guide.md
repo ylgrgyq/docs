@@ -6,7 +6,7 @@
 
 ## 启用离线数据分析
 
-为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.avosapps.com) 联系我们的工程师。
+为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 联系我们的工程师。
 
 ## SQL-like 查询分析
 
@@ -79,19 +79,19 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 #### 日期类
 
 * UNIX时间戳转日期函数: from_unixtime
-* 获取当前UNIX时间戳函数: unix_timestamp 
-* 日期转UNIX时间戳函数: unix_timestamp 
-* 指定格式日期转UNIX时间戳函数: unix_timestamp 
-* 日期时间转日期函数: to_date 
-* 日期转年函数: year 
-* 日期转月函数: month 
-* 日期转天函数: day 
-* 日期转小时函数: hour 
-* 日期转分钟函数: minute 
-* 日期转秒函数: second 
-* 日期转周函数: weekofyear 
-* 日期比较函数: datediff 
-* 日期增加函数: date_add 
+* 获取当前UNIX时间戳函数: unix_timestamp
+* 日期转UNIX时间戳函数: unix_timestamp
+* 指定格式日期转UNIX时间戳函数: unix_timestamp
+* 日期时间转日期函数: to_date
+* 日期转年函数: year
+* 日期转月函数: month
+* 日期转天函数: day
+* 日期转小时函数: hour
+* 日期转分钟函数: minute
+* 日期转秒函数: second
+* 日期转周函数: weekofyear
+* 日期比较函数: datediff
+* 日期增加函数: date_add
 * 日期减少函数: date_sub
 
 更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
@@ -229,8 +229,8 @@ result 是一个 JSON 对象，形如：
   status: 'OK',                           //任务状态
   totalCount: 50,                         //结果总数
   results: [
-    ……结果数组……    
-  ]  
+    ……结果数组……
+  ]
  }
 ```
 

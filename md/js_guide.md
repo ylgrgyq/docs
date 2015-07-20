@@ -2215,8 +2215,8 @@ query.find({
 象，需要在 AV.Query 中加入 `withinGeoBox` 约束条件：
 
 ```javascript
-var point1 = new AV.GeoPoint(39.99, 116.33);
-var point2 = new AV.GeoPoint(39.97, 116.37);
+var point1 = new AV.GeoPoint(39.97, 116.33);
+var point2 = new AV.GeoPoint(39.99, 116.37);
 
 var query = new AV.Query(Post);
 query.withinGeoBox("location", point1, point2);

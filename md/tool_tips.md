@@ -27,7 +27,7 @@
 * 适当使用[查询缓存](https://leancloud.cn/docs/ios_os_x_guide.html#缓存查询)功能，可以提升查询性能，并提供离线浏览。
 * 在应用设置的**应用选项**菜单里，可以设置短信测试的手机号码，没有流量限制。
 * 实现应用 DeepLink，参考 [应用内搜索和 DeepLink 开发指南](https://leancloud.cn/docs/app_search_guide.html)。
-* 如果您想针对一个列建立唯一索引，不允许该列的数据出现重复，请提出[技术申请](https://ticket.avosapps.com)或者发邮件到 support@leancloud.rocks，说明应用、Class 和列名。
+* 如果您想针对一个列建立唯一索引，不允许该列的数据出现重复，请提出[技术申请](https://ticket.leancloud.cn)或者发邮件到 support@leancloud.rocks，说明应用、Class 和列名。
 * 想实现先验证手机号码再注册，可以用requestSMSCode，verifySMSCodeInBackground得到一个正确的手机号码再进行new AVUser()的注册。
 
 
@@ -95,7 +95,7 @@
 * 避免对象循环引用，将循环关系作为第三个对象存储。
 * 想建立一个应用网站？我们提供 [Web 主机托管](https://leancloud.cn/docs/cloud_code_guide.html#web-hosting)。
 * 想用好云代码，请先熟悉 [JavaScript SDK 开发指南](https://leancloud.cn/docs/js_guide.html)。
-* 云代码 Web 主机托管，可以绑定备案过的独立域名，请在[工单系统](https://ticket.avosapps.com)提出技术申请。
+* 云代码 Web 主机托管，可以绑定备案过的独立域名，请在[工单系统](https://ticket.leancloud.cn)提出技术申请。
 * 云代码 Web 主机托管，我们可以协助您完成域名的备案，请参考[文档](https://leancloud.cn/docs/cloud_code_guide.html#域名备案流程)
 
 ## 其他
@@ -103,7 +103,7 @@
 * [邀请朋友](https://leancloud.cn/settings.html#/setting/invite)注册 LeanCloud，获取赠送金额。
 * 修改登录邮箱，请进入 [邮箱](https://leancloud.cn/settings.html#/setting/mail) 菜单。
 * 查看[快速入门文档](https://leancloud.cn/start.html)，开始应用开发之旅。
-* 通过[工单系统](https://ticket.avosapps.com/login)提交技术支持申请，获取 LeanCloud 工程师的帮助。
+* 通过[工单系统](https://ticket.leancloud.cn/login)提交技术支持申请，获取 LeanCloud 工程师的帮助。
 * 在右上角用户名左侧的消息中心，可以看到 LeanCloud 最火热的新闻和教程。
 * 在工具栏的资源菜单里，可以找到 LeanCloud 移动客户端下载链接，在移动设备上查看应用分析数据。
 * 使用 [drop](https://drop.avosapps.com/) 或者 [fir.im](http://fir.im/) 分发测试您的应用。
