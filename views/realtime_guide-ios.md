@@ -441,7 +441,11 @@ iOS 暂不支持发送通用文件消息，已在计划中，近日发布。
 与接收图像消息类似，需要使用 `conversation:didReceiveTypedMessage:` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
 {% endblock %}
 
-{% block typedMessage_received %}{% endblock %}
+{% block typedMessage_received %}
+```
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message;
+```
+{% endblock %}
 
 {% block transientMessage_sent %}{% endblock %}
 
@@ -625,10 +629,8 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 }
 ```
 {% endblock %}
-
-{% block conversation_membersChanged %}{% endblock %}
-
-{% block conversation_memebersJoined %}
+{% block conversation_membersChanged_callBack %}
+该群的其他成员（比如 Bob）会收到该操作的事件回调:
 ```objc
 - (void)BobNoticedTomDidJoin {
     // Bob 创建了一个 client
@@ -648,6 +650,13 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 }
 
 ```
+
+{% endblock %}
+{% block conversation_membersChanged %}
+
+{% endblock %}
+
+{% block conversation_memebersJoined %}
 {% endblock %}
 
 {% block conversation_invite %}

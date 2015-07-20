@@ -597,30 +597,41 @@ public async void InitiativeJoinAsync()
 ```
 {% endblock %}
 
-{% block conversation_memebersChanged %}
-* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
+{% block conversation_membersChanged_callBack %}
 
-```c#
-public async void BobOnTomJoined_S1()
-{
-    AVIMClient client = new AVIMClient("Bob");
-    await client.ConnectAsync();
+该群的其他成员（比如 Bob）会收到该操作的事件回调:
 
-    client.OnConversationMembersChanged += (s, e) =>
-    {
-        switch (e.AffectedType)
-        {
-            case AVIMConversationEventType.MembersJoined:
-                {
-                    IList<string> joinedMemberClientIds = e.AffectedMembers;//这里就是本次加入的 ClientIds
-                    string clientId = joinedMemberClientIds.FirstOrDefault();//因为我们已知本次操作只有 Tom 一个人加入了对话，所以这样就可以直接读取到 Tom 的 clientId
-                    //开发者可以在这里添加自己的业务逻辑
-                }
-                break;
-        }
-    };
-}
+* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会激发 `AVIMClient` 层级上的回调，代码如下:
+
+{% block conversation_membersChanged %}
 ```
+- 初始化 ClientId = Bob
+- Bob 登录
+- 设置 MembersChanged 响应
+- switch:case 如果事件类型为 MembersJoined
+- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
+- //开发者可以继续添加自己的业务逻辑
+- break;
+```
+{% endblock %}
+
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会激发 `AVIMClient` 层级上的回调，也会激发 `AVIMConversation` 层级上相关回调，代码如下：
+
+{% block conversation_memebersJoined %}
+```
+- 初始化 ClientId = Bob
+- Bob 登录
+- 设置 MembersChanged 响应
+- switch:case 如果事件类型为 MembersJoined
+- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
+- //开发者可以继续添加自己的业务逻辑
+- break; 
+- ------------ 以上与上例相同 ---------------
+- 获取对话对象 Id = 551260efe4b01608686c3e0f
+- 设置 OnMembersJoined 响应
+- 获取本次加入的 ClientIds //还是只有 Tom 一人，所以这样就可以直接读取到 Tom 的 clientId
+```
+{% endblock %}
 {% endblock %}
 
 {% block conversation_membersChanged %}
@@ -648,8 +659,6 @@ public async void BobOnTomJoined_S1()
 {% endblock %}
 
 {% block conversation_memebersJoined %}
-* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
-
 ```c#
 public async void BobOnTomJoined_S2()
 {
