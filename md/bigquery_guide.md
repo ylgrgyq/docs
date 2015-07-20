@@ -6,7 +6,7 @@
 
 ## 启用离线数据分析
 
-为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.avosapps.com) 联系我们的工程师。
+为了启用离线数据分析，开发者需要在[应用选项](/data.html?appid={{appid}}#/permission)中勾选 `启用离线数据分析`。该选选一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗一分钟或更多时间。如果一切顺利，你可以通过 `存储 -> 离线数据分析` 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 联系我们的工程师。
 
 ## SQL-like 查询分析
 
@@ -79,19 +79,19 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 #### 日期类
 
 * UNIX时间戳转日期函数: from_unixtime
-* 获取当前UNIX时间戳函数: unix_timestamp 
-* 日期转UNIX时间戳函数: unix_timestamp 
-* 指定格式日期转UNIX时间戳函数: unix_timestamp 
-* 日期时间转日期函数: to_date 
-* 日期转年函数: year 
-* 日期转月函数: month 
-* 日期转天函数: day 
-* 日期转小时函数: hour 
-* 日期转分钟函数: minute 
-* 日期转秒函数: second 
-* 日期转周函数: weekofyear 
-* 日期比较函数: datediff 
-* 日期增加函数: date_add 
+* 获取当前UNIX时间戳函数: unix_timestamp
+* 日期转UNIX时间戳函数: unix_timestamp
+* 指定格式日期转UNIX时间戳函数: unix_timestamp
+* 日期时间转日期函数: to_date
+* 日期转年函数: year
+* 日期转月函数: month
+* 日期转天函数: day
+* 日期转小时函数: hour
+* 日期转分钟函数: minute
+* 日期转秒函数: second
+* 日期转周函数: weekofyear
+* 日期比较函数: datediff
+* 日期增加函数: date_add
 * 日期减少函数: date_sub
 
 更详尽的 Hive 运算符和内置函数，可以参考[这里](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)
@@ -156,3 +156,82 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 ```
 
 更多例子可以参考这篇[博客](https://blog.leancloud.cn/2559/)
+
+## 云引擎和 JavaScript SDK 对离线分析的支持
+
+JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./cloud_code_guide.html#权限说明)。**
+
+### 开始一个 Job
+
+```js
+  AV.BigQuery.startJob({
+        sql: "select * from `_User`",
+        saveAs: {
+          className: 'BigQueryResult',
+          limit:1
+        }
+   }).done(function(id) {
+      //返回 job id
+   }).catch(function(err)){
+      //发生错误
+   });
+```
+
+`AV.BigQuery.startJob` 启动一个离线分析任务，它可以指定：
+
+* sql -- 本次任务的查询的 SQL 。
+* saveAs（可选） -- 本次任务查询结果保存的参数，比如要保存的表名和数量，limit 最大为 1000。
+
+任务如果能正常启动，将返回任务的 job id，后续可以拿这个 id 去查询任务状态和结果。
+
+
+### 在云引擎里监听 Job 完成
+
+在云引擎里，可以通过一个 hook 函数来监听 job 完成情况：
+
+```js
+AV.BigQuery.on('end', function(err, result) {
+    console.dir(result);
+});
+ ```
+
+目前仅支持 `end` 事件，当 job 完成（可能成功或者失败）就通知到这个 hook 函数，结果 result 里会包含 job id 以及任务状态信息：
+
+```
+{ id: '29f24a909074453622856528359caddc',
+  startTime: 1435569183000,
+  endTime: 1435569185000,
+  status: 'OK' }
+```
+
+如果 status 是 `OK` ，表示任务成功，其他状态包括 `RUNNING` 表示正在运行，以及 `ERROR` 表示本次任务失败，并将返回失败信息 `message`。
+
+如果任务成功，你可以拿 id 去主动查询任务结果，参见下文。
+
+### 主动查询 Job 状态和结果
+
+在知道任务 id 的情况下（startJob 返回或者云引擎监听到任务完成），可以主动查询本次任务的结果：
+
+```js
+  var id = '已知任务 id';
+  var q = new AV.BigQuery.JobQuery(id);
+  q.find().then(function(result) {
+    //返回查询结果 result 对象
+  }, function(err) {
+    //查询失败
+  });
+```
+
+result 是一个 JSON 对象，形如：
+
+```js
+{ id: '976c94ef0847f4ff3a65e661bf7b809a', //任务 id
+  status: 'OK',                           //任务状态
+  totalCount: 50,                         //结果总数
+  results: [
+    ……结果数组……
+  ]
+ }
+```
+
+`AV.BigQuery.JobQuery` 也可以设置 `skip` 和 `limit` 做分页查询。

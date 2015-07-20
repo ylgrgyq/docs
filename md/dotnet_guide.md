@@ -18,6 +18,9 @@
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
+## 安装
+为了支持实时聊天，LeanCloud SDK for .NET 依赖于几个开源的库，所以推荐开发者从 [Nuget](https://www.nuget.org/packages/LeanCloud/1.0.1.2-pre) 上下载我们的 SDK。
+
 ## 介绍
 LeanCloud的 .NET SDK 依赖于微软提供的[基于任务的异步模式 (TAP)](http://msdn.microsoft.com/zh-cn/library/hh873175.aspx)的方式，所以您最好有 .NET Framework 4.5 的编程经验，或者对 .NET Framework 4.5 的新 API 有所了解。
 

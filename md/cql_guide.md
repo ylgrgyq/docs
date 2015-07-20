@@ -182,13 +182,13 @@ select * from Player where name !=(select name from GameScore where score<=80)
 可以通过 CQL 进行地理位置信息查询，比如我想查询自己附近的玩家（从近到远排序），假设 `location` 字段是 GeoPoint 类型：
 
 ```sql
-select * from Player where location near [30.0, -20.0]
+select * from Player where location near [116.4, 39.9]
 ```
 
-其中 `[30.0, -20.0]` 是经纬度坐标。也可以使用 `geopoint` 函数来创建：
+其中 `[116.4, 39.9]` 是经纬度坐标。也可以使用 `geopoint` 函数来创建：
 
 ```sql
-select * from Player where location near geopoint(30.0, -20.0)
+select * from Player where location near geopoint(116.4, 39.9)
 ```
 
 只有在地理位置信息查询里才可以使用 `[longitude, latitude]` 这样的语法。在其他查询里将被作为数组类型。
@@ -196,7 +196,7 @@ select * from Player where location near geopoint(30.0, -20.0)
 为了限定搜索的最大距离，还可以使用 `max distance`来限定，比如限定在 1 公里内：
 
 ```sql
-select * from Player where location near geopoint(30.0, -20.0) max 1 km
+select * from Player where location near geopoint(116.4, 39.9) max 1 km
 ```
 
 其他单位包括 `miles` 英里和`radians` 弧度，默认是弧度。
@@ -205,7 +205,7 @@ select * from Player where location near geopoint(30.0, -20.0) max 1 km
 如果想查询某个矩形框内的对象，可以使用`within [西南坐标] and [东北坐标]`的语法：
 
 ```sql
-select * from Player where location within [37.71,-122.53] and [30.82,-122.37]
+select * from Player where location within [116.33, 39.97] and [116.37, 39.99]
 ```
 
 
