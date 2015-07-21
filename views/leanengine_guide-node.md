@@ -1,72 +1,97 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block updateToLeanEngine%}
-### 升级到 LeanEngine
-云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
-
-* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以可以不需要任何声明而直接使用。我们认为这样会略微违反知觉,所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
-* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以 LeanEngine 默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
-* `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [TODO]()。
-* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。
-{% endblock %}
-
-{% block createProject %}
-首先请安装好 [node.js](https://nodejs.org/) 与 [npm](https://www.npmjs.com/)。
-
-**注意**： 目前 LeanEngine 的 node.js 版本为 0.12，请你最好使用此版本的 node.js 进行开发，至少不要低于 0.10 。
-
-推荐使用 node-js-getting-started 项目作为起步，这是一个简单的 Express 4 的项目。
-
-从 Github 迁出，或从 [这里](https://github.com/leancloud/node-js-getting-started/archive/master.zip) 下载并解压：
+{% block quick_start_create_project %}
+从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
 
 ```
 $ git clone git@github.com:leancloud/node-js-getting-started.git
 $ cd node-js-getting-started
 ```
 
-准备启动文件:
+然后添加应用 appId 等信息到该项目：
 
 ```
-$ cp start.sh.example start.sh
-$ chmod +x start.sh
-```
-
-将 appId 等信息更新到 `start.sh` 文件中：
-
-```
-export LC_APP_ID=<your app id>
-export LC_APP_KEY=<your app key>
-export LC_APP_MASTER_KEY=<your master key>
+$ avoscloud add <appName> <appId>
 ```
 {% endblock %}
 
+{% block demo %}
+* [node-js-getting-started](https://github.com/leancloud/node-js-getting-started)：这是一个非常简单的基于 Express 4 的项目，可以作为大家的项目模板。效果体验： http://node.avosapps.com/
+* [leanengine-todo-demo](https://github.com/leancloud/leanengine-todo-demo)：这是一个稍微复杂点的项目，是上一个项目的扩展，演示了基本的用户注册、会话管理、业务数据的增删查改、简单的 ACL 使用。这个项目可以作为初学 LeanEngine 和 [JS-SDK](https://leancloud.cn/docs/js_guide.html) 使用。效果体验：http://todo-demo.avosapps.com/
+{% endblock %}
+
+{% block runtime_env %}**注意**： 目前 LeanEngine 的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock%}
+
 {% block run_in_local_command %}
+安装依赖：
+
 ```
-$ ./start.sh
+$ npm install
+```
+
+启动应用：
+
+```
+$ avoscloud
+```
+{% endblock %}
+
+{% block cloud_func_file %}`$PROJECT_DIR/cloud.js`{% endblock %}
+
+{% block project_constraint %}
+LeanEngine Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件为整个项目的启动文件。
+{% endblock %}
+
+{% block ping %}
+LeanEngine 中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
+
+```
+app.use(AV.Cloud);
+```
+
+或者类似于 [项目框架](https://github.com/leancloud/node-js-getting-started) 那样，有一个 [cloud.js](https://github.com/leancloud/node-js-getting-started/blob/master/cloud.js) 且最终是以 `module.exports = AV.Cloud;` 结尾，然后在 [app.js](https://github.com/leancloud/node-js-getting-started/blob/master/app.js) 中加载 `cloud.js` 也可以达到一样的效果：
+
+```
+var cloud = require('./cloud');
+
+// 加载云代码方法
+app.use(cloud);
+```
+
+如果未使用 LeanEngine 中间件，则需要自己实现该 URL 的处理，比如这样：
+
+```
+// 健康监测 router
+app.use('/__engine/1/ping', function(req, res) {
+  res.end(JSON.stringify({
+    "runtime": "nodejs-" + process.version,
+    "version": "custom"
+  }));
+});
 ```
 {% endblock %}
 
 {% block others_web_framework %}
-LeanEngine 支持任意 node.js 的 web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
+LeanEngine 支持任意 Node.js 的 web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 Node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
 {% endblock %}
 
 {% block install_middleware %}
-在 Node.js 环境，使用 [leanengine-sdk](https://github.com/leancloud/leanengine-node-sdk) 来代替 [javascript-sdk](https://github.com/leancloud/javascript-sdk) 组件。前者扩展了后者，增加了云代码方法和 hook 的支持。在项目根目录下，执行：
+在 Node.js 环境，使用 [leanengine](https://github.com/leancloud/leanengine-node-sdk) 来代替 [javascript-sdk](https://github.com/leancloud/javascript-sdk) 组件。前者扩展了后者，增加了云代码方法和 hook 的支持。在项目根目录下，执行：
 
 ```
-$ npm install leanengine-sdk --save
+$ npm install leanengine --save
 ```
 
-来安装 leanengine-sdk，之后你就可以在项目中使用了。
+来安装 leanengine，之后你就可以在项目中使用了。
 {% endblock %}
 
 {% block init_middleware %}
 ```js
-var AV = require('leanengine-sdk');
+var AV = require('leanengine');
 
-var APP_ID = process.env.LC_APP_ID || 'your_app_id';
-var APP_KEY = process.env.LC_APP_KEY || 'your_app_key';
-var MASTER_KEY = process.env.LC_APP_MASTER_KEY || 'your_master_key';
+var APP_ID = process.env.LC_APP_ID || '{{appid}}'; // your app id
+var APP_KEY = process.env.LC_APP_KEY || '{{appkey}}'; // your app key
+var MASTER_KEY = process.env.LC_APP_MASTER_KEY || '{{masterkey}}'; // your app master key
 
 AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```
@@ -277,6 +302,165 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 ```
 {% endblock %}
 
+{% block http_client %}
+LeanEngine 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐您使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
+
+使用 `AV.Cloud.httpRequest` ，一个简单的 GET 请求看起来是这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当返回的 HTTP 状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
+
+### 查询参数
+
+如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: {
+    q : 'Sean Plott'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+也可以是一个原始的字符串：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.google.com/search',
+  params: 'q=Sean Plott',
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置 HTTP 头部
+
+通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+### 设置超时
+
+默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过 timeout 选项（单位毫秒）：
+
+```javascript
+AV.Cloud.httpRequest({
+  url: 'http://www.example.com/',
+  timeout: 15000,
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+上面的代码设置请求超时为15秒。
+
+### 发送 POST 请求
+
+通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: {
+    title: 'Vote for Pedro',
+    body: 'If you vote for Pedro, your wildest dreams will come true'
+  },
+  success: function(httpResponse) {
+    console.log(httpResponse.text);
+  },
+  error: function(httpResponse) {
+    console.error('Request failed with response code ' + httpResponse.status);
+  }
+});
+```
+
+当然，body可以被任何想发送出去的String对象替换。
+
+### HTTP 应答对象
+
+传给success和error函数的应答对象包括下列属性：
+
+* status - HTTP状态码
+* headers - HTTP应答头部信息
+* text - 原始的应答body内容。
+* buffer - 原始的应答Buffer对象
+* data - 解析后的应答内容，如果 LeanEngine 可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+
+如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
+
+```javascript
+AV.Cloud.httpRequest({
+  method: 'POST',
+  url: 'http://www.example.com/create_post',
+  text: false,
+  ......
+});
+```
+{% endblock %}
+
 {% block timerExample %}
 ```javascript
 AV.Cloud.define('log_timer', function(req, res){
@@ -315,3 +499,180 @@ AV.Cloud.define('Logger', function(request, response) {
 });
 ```
 {% endblock %}
+
+{% block use_framework %}
+
+LeanEngine 中可以使用 [express](http://expressjs.com/)、[connect](http://senchalabs.github.com/connect) 等 web 框架，您只要安装了 LeanEngine 提供的中间件即可正常运行。
+
+```javascript
+var express = require('express');
+var AV = require('leanengine');
+
+var app = express();
+
+app.use(AV.Cloud);
+app.listen(process.env.LC_APP_PORT);
+```
+
+{% endblock %}
+
+{% block upload_file %}
+在 LeanEngine 里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+
+```javascript
+app.use(express.bodyParser());
+```
+
+使用表单上传文件，假设文件字段名叫iconImage:
+
+```html
+<form enctype="multipart/form-data" method="post" action="/upload">
+  <input type="file" name="iconImage">
+  <input type="submit" name="submit" value="submit">
+</form>
+```
+
+上传文件使用multipart表单，并POST提交到/upload路径下。
+
+接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+
+```javascript
+var fs = require('fs');
+app.post('/upload', function(req, res){
+  var iconFile = req.files.iconImage;
+  if(iconFile){
+    fs.readFile(iconFile.path, function(err, data){
+      if(err)
+        return res.send('读取文件失败');
+      var base64Data = data.toString('base64');
+      var theFile = new AV.File(iconFile.name, {base64: base64Data});
+      theFile.save().then(function(theFile){
+        res.send('上传成功！');
+      });
+    });
+  }else
+    res.send('请选择一个文件。');
+});
+```
+{% endblock %}
+
+{% block cookie_session %}
+
+### 处理用户登录和登出
+
+要让 LeanEngine 支持 LeanCloud 用户体系的 Session，在 app.js 里添加下列代码：
+
+```javascript
+var express = require('express');
+var AV = require('leanengine');
+
+var app = express();
+// 加载 cookieSession 以支持 AV.User 的会话状态
+app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
+```
+
+使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+
+`AV.Cloud.CookieSession` 支持的选项包括：
+
+* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
+* name -- session在cookie中存储的key名称，默认为 `avos.sess`。
+* maxAge -- 设置cookie的过期时间。
+
+`httpOnly` 和 `signed` 参数我们强制设置为 true。
+
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+
+* 在云代码方法中，通过 request.user 获取用户信息。
+* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示的传递 user 对象。
+
+登录很简单：
+
+```javascript
+app.get('/login', function(req, res) {
+  // 渲染登录页面
+  res.render('login.ejs');
+});
+// 点击登录页面的提交将出发下列函数
+app.post('/login', function(req, res) {
+  AV.User.logIn(req.body.username, req.body.password).then(function() {
+    //登录成功，AV.Cloud.CookieSession 会自动将登录用户信息存储到 cookie
+    //跳转到profile页面。
+    console.log('signin successfully: %j', req.AV.user);
+    res.redirect('/profile');
+  },function(error) {
+    //登录失败，跳转到登录页面
+    res.redirect('/login');
+  });
+});
+//查看用户profile信息
+app.get('/profile', function(req, res) {
+  // 判断用户是否已经登录
+  if (req.AV.user) {
+    // 如果已经登录，发送当前登录用户信息。
+    res.send(req.AV.user);
+  } else {
+    // 没有登录，跳转到登录页面。
+    res.redirect('/login');
+  }
+});
+
+//调用此url来登出帐号
+app.get('/logout', function(req, res) {
+  // AV.Cloud.CookieSession 将自动清除登录 cookie 信息
+  AV.User.logOut();
+  res.redirect('/profile');
+});
+```
+
+登录页面大概是这样login.ejs:
+
+```html
+<html>
+    <head></head>
+    <body>
+      <form method="post" action="/login">
+        <label>Username</label>
+        <input name="username"></input>
+        <label>Password</label>
+        <input name="password" type="password"></input>
+        <input class="button" type="submit" value="登录">
+      </form>
+    </body>
+  </html>
+```
+
+注意： express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+{% endblock %}
+
+{% block custom_session %}
+
+### 自定义 session
+
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [文档](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock%} 组件可以并存。
+
+{% endblock %}
+
+{% block cookie_session_middleware %}`AV.Cloud.CookieSession`{% endblock%}
+
+{% block https_redirect %}
+```javascript
+var HttpsRedirect = AV.Cloud.HttpsRedirect;
+app.use(HttpsRedirect());
+```
+{% endblock %}
+
+{% block get_env %}
+```javascript
+var NODE_ENV = process.env.NODE_ENV || 'development';
+if (NODE_ENV === 'development') {
+  // 当前环境为「开发环境」，是由命令行工具启动的
+} else if(NODE_ENV == 'production') {
+  // 当前环境为「生产环境」，是线上正式运行的环境
+} else {
+  // 当前环境为「测试环境」
+}
+```
+{% endblock %}
+

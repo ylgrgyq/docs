@@ -2,7 +2,7 @@
 
 如果还没有安装 LeanCloud iOS SDK，请阅读 [快速入门](/start.html) 来获得该 SDK，并在 Xcode 中运行和熟悉示例代码。我们的 SDK 支持 iOS 4.3 及更高版本。
 
-如果想从项目中学习，请到我们的 GitHub 资源库中获取 [iOS SDK Demos](https://github.com/leancloud/iOS-SDK-demos) 。
+如果想从项目中学习短信验证码功能的使用方法，可参考 [LeanStorageDemo](https://github.com/leancloud/LeanStorage-Demo) 中的 [SMS](https://github.com/leancloud/LeanStorage-Demo/blob/master/LeanStorageDemo/AVSMSBasic.m) 模块。
 
 ## 介绍
 
@@ -122,14 +122,14 @@ Hi {{username}},
 
 ### 短信签名说明
 
-短信签名是指短信内容里 `【】` 括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改。**
+短信签名是指短信内容里 `【】` 括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
 
 ### 验证短信验证码
 
 验证短信验证码：
 
 ```objc
-    [AVOSCloud verifySmsCode:@"123456" callback:^(BOOL succeeded, NSError *error) {
+    [AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"13613613613" callback:^(BOOL succeeded, NSError *error) {
         //code
     }];
 ```

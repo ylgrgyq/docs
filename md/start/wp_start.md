@@ -1,6 +1,6 @@
 #### 安装 SDK
 
-如果您还没有安装 LeanCloud SDK for Windows Phone 8 ，请按照 [SDK 下载](/docs/sdk_down.html) 下载最新版的的 SDK，但是我们更推荐通过 Nuget 方式获取： [LeanCloud SDK for Windows Phone 8](https://www.nuget.org/packages/AVOSCloud.Phone/)。
+如果您还没有安装 LeanCloud SDK for Windows Phone 8 ，请按照 [SDK 下载](/docs/sdk_down.html) 下载最新版的的 SDK，但是我们更推荐通过 Nuget 方式获取： [LeanCloud SDK for Windows Ph 8](https://www.nugetone.org/packages/AVOSCloud.Phone/)。
 
 #### 配置 SDK
 

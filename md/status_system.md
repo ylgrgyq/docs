@@ -1,5 +1,6 @@
-# 事件流系统
-事件流系统在应用开发中, 出现的场景非常多, 比如常见的用户关注, 朋友圈, 私信等, 都需要事件流系统的支持.
+# 应用内社交模块
+应用内社交，又称「事件流」，在应用开发中出现的场景非常多，包括用户间关注（好友）、朋友圈（时间线）、状态、互动（点赞）、私信等常用功能。
+
 
 ## 基本概念
 
@@ -7,16 +8,16 @@
 是指一条广义上的状态,不只可以表示某个用户更新了状态, 还可以表示任意的一个事件,比如某人发布了一篇文章, 某个图片被赞等.
 
 ### Follower/Followee
-分别表示用户的粉丝和用户的关注, 在控制台中对应着两张表`_Follower`和`_Followee`.
+分别表示用户的粉丝和用户的关注，在控制台中对应着两张表 `_Follower` 和 `_Followee`。
 
 ### 特别提示
-发了一条状态, 并不代表会自动发送了一条push消息（也就是推送通知）, 开发者可以自由的实现push与否。关于消息推送请参考[消息推送开发指南](./push_guide.html)
+发了一条状态，并不代表会自动发送了一条 push 消息（也就是推送通知），开发者可以自由控制是否使用 push。关于消息推送请参考[消息推送开发指南](./push_guide.html)
 
 ## JavaScript SDK 的使用方法
 
 ### 用户关系
 
-AV.User新增两个方法`follow`和`unfollow`来建立用户关系，你可以关注某个用户：
+AV.User 新增两个方法 `follow` 和 `unfollow` 来建立用户关系，你可以关注某个用户：
 
 ```javascript
 AV.User.current().follow('52f9be45e4b035debf88b6e2').then(function(){
@@ -404,7 +405,7 @@ query.inboxType=kAVStatusTypeTimeline;
 
 ## Android SDK中的使用方法
 
- Android的事件流已经正式发布，欢迎尝试！
+ Android 的应用内社交模块已经正式发布，欢迎尝试！
 
 ### 好友关系
 
@@ -666,7 +667,7 @@ query.findInBackground(new FindCallback<AVStatus>(){
 
 ## REST API
 
-本节介绍事件流的 REST API。
+本节介绍应用内社交的 REST API。
 
 ### 用户关系 API
 

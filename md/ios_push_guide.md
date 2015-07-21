@@ -402,7 +402,7 @@ AVPush *push = [[AVPush alloc] init];
       PhotoVC *viewController = [[PhotoVC alloc] initWithPhoto:object];
       [self.navController pushViewController:viewController animated:YES];
     } else {
-      handler(UIBackgroundModeNoData);
+      handler(UIBackgroundFetchResultNoData);
     }
   }];
 }

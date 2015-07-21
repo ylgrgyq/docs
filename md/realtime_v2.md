@@ -5,11 +5,11 @@
 目前，我们提供 Android、iOS、JavaScript、Windows Phone 四个主要平台的客户端 SDK，也提供了一些 Demo 帮助您快速入门：
 
 * iOS 聊天应用：
-  * [SimpleChat iOS 版](https://github.com/leancloud/simple-chat-ios) (推荐)
+  * [LeanMessageDemo iOS 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
   * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
 
 * Android 聊天应用：
-  * [SimpleChat Android 版](https://github.com/leancloud/simple-chat-android) (推荐)
+  * [LeanMessageDemo Android 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
@@ -34,7 +34,7 @@ LeanCloud 实时通信服务的特性主要有：
 * 支持单个设备多个帐号、单个帐号多个设备同时登录，实时消息同步到所有设备；
 * 支持单聊、群聊、聊天室等不同聊天形式，并且具备完善的群组管理功能；
 * 支持文本、图片、音频、视频和地理位置等多种格式的富媒体消息，并且开发者还可方便地自定义扩展；
-* 消息在对方离线时，会自动通过消息推送（Push Notification）来及时送达对方，并且推送的消息文本可以由开发者自己控制；
+* 消息在对方离线时，会自动通过[消息推送（Push Notification）](#聊天离线时可以推送吗_)来及时送达对方，并且推送的消息文本可以由开发者自己控制；
 * **敏感词过滤**。实时消息中出现的敏感词，会自动被过滤掉；对于部分 VIP 客户，我们还允许自定义仅属于自己应用的敏感词列表。
 * 聊天记录自动保存在云端，允许开发者自由获取；
 * 第三方操作**鉴权机制**。为了保证信道的安全，也给开发者最大的控制自由，我们提供了操作鉴权的机制：开发者使用自己的服务器来充当鉴权服务器，对消息流向进行许可控制。对于消息路由过程中的重要操作（譬如登录、开启对话、邀请加入群组、从群组踢出某人，等），实时消息 SDK 在发送请求之前，会先到鉴权服务器获得操作签名，LeanCloud 云端会验证签名有效性并完全按照鉴权结果来对操作放行或拒绝。
@@ -153,13 +153,13 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 ![image](images/leanmessage_signature2.png)
 
 1. 客户端进行登录或新建对话等操作，SDK 会调用 SignatureFactory 的实现，并携带用户信息和用户行为（登录、新建对话或群组操作）请求签名；
-2. 应用自有的权限系统，或应用在 LeanCloud 云代码上的签名程序收到请求，进行权限验证，如果通过则利用**下文所述的签名算法**生成时间戳、随机字符串和签名返回给客户端；
+2. 应用自有的权限系统，或应用在 LeanCloud 云引擎上的签名程序收到请求，进行权限验证，如果通过则利用**下文所述的签名算法**生成时间戳、随机字符串和签名返回给客户端；
 3. 客户端获得签名后，编码到请求中，发给 LeanCloud 实时通信服务器；
 4. 实时通信服务器对请求的内容和签名做一遍验证，确认这个操作是被应用服务器允许的，进而执行后续的实际操作。
 
-### 云代码签名范例
+### 云引擎签名范例
 
-我们提供了一个运行在 LeanCloud [云代码](https://cn.avoscloud.com/docs/cloud_code_guide.html)上的
+我们提供了一个运行在 LeanCloud [云引擎](https://cn.avoscloud.com/docs/cloud_code_guide.html)上的
 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)
 ，它提供了基于 Web Hosting 和 Cloud Function 两种方式的签名实现，你可以根据实际情况选择自己的实现。
 
@@ -181,7 +181,7 @@ appid:clientid::timestamp:nonce
 > 注意！
 > 签名的 key 必须是应用的 **master key**，您可以在应用设置的 应用 Key 里找到，请保护好 Master Key ，不要泄露给任何无关人员。
 
-开发者可以实现自己的 SignatureFactory，调用远程服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在 LeanCloud 云代码上通过 Web Hosting 实现自己的签名接口。在移动应用中直接做签名是**非常危险**的，它可能导致你的**master key**泄漏。
+开发者可以实现自己的 SignatureFactory，调用远程服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在 LeanCloud 云引擎上通过 Web Hosting 实现自己的签名接口。在移动应用中直接做签名是**非常危险**的，它可能导致你的**master key**泄漏。
 
 ### 开启对话的签名
 
@@ -219,13 +219,13 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 ```
 
-## 云代码 Hook
+## 云引擎 Hook
 
 对于普通消息，如果发送时部分成员不在线，LeanCloud 提供了选项，支持将离线消息以 Push Notification 形式发送到客户端。但是，推送的内容开发者如果希望进行修改的话，该怎么实现呢？
 
-可以使用「云代码 Hook」！
+可以使用「云引擎 Hook」！
 
-云代码 hook 允许你通过自定义的云代码函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
+云引擎 hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
 
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
@@ -233,11 +233,11 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 * _conversationAdd 向对话添加成员，在签名校验（如果开启）之后，实际加入之前，包括主动加入和被其他用户加入两种情况
 * _conversationRemove 从对话中踢出成员，在签名校验（如果开启）之后，实际踢出之前，用户自己退出对话不会调用
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云代码 hook 要求云代码部署在云代码生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云代码 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
+关于如何定义云函数，你可以参考[云引擎部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云引擎 hook 要求云引擎部署在云引擎生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云引擎 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
 
 ### 使用场景
 
-示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云代码 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
 
 Conversation 相关的 hook 可以在应用签名之外增加额外的权限判断，控制对话是否允许被建立、某些用户是否允许被加入对话等。你可以用这个 hook 实现黑名单功能。
 
@@ -247,7 +247,7 @@ Conversation 相关的 hook 可以在应用签名之外增加额外的权限判�
 
 你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象则会执行系统默认的流程。
 
-如果你使用了 LeanCloud 默认提供的富媒体消息格式，云代码参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考[文档说明](./realtime_rest_api.html#富媒体消息格式说明)。
+如果你使用了 LeanCloud 默认提供的富媒体消息格式，云引擎参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考[文档说明](./realtime_rest_api.html#富媒体消息格式说明)。
 
 #### 参数
 
@@ -266,7 +266,7 @@ sourceIP | 消息发送者的 IP
 
 参数 | 说明
 --- | ---
-drop | 可选，如果返回 truthy 值消息将被丢弃
+drop | 可选，如果返回真值消息将被丢弃
 content | 可选，修改后的 content，如果不提供则保留原消息
 toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
 
@@ -288,9 +288,10 @@ timestamp | 服务器收到消息的时间戳，毫秒
 
 参数 | 说明
 --- | ---
-skip | 可选，如果是 truthy 将跳过推送（比如已经在云代码里触发了推送或者其他通知）
+skip | 可选，如果为真将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
 offlinePeers | 可选，数组，筛选过的推送收件人
 pushMessage | 可选，推送内容，支持自定义 JSON 结构
+force | 可选，如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false
 
 ### _conversationStart
 
@@ -368,12 +369,19 @@ reject | 是否拒绝，默认为 `false`
 
 * `0` websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
 * `1006` websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+* `4100` 应用不存在或应用禁用了实时通信服务。
 * `4103` Client Id 格式错误，超过 64 个字符。
 * `4105` Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
 * `4107` 读超时，服务器端长时间没有收到客户端的数据，切断连接。SDK 包装了心跳包的机制，出现此错误通常是网络问题。SDK 会自动重连，无需人工干预。
-* `4108` 登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以[创建工单](http://ticket.avosapps.com/)，我们会予以建议。
+* `4108` 登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以[创建工单](http://ticket.leancloud.cn/)，我们会予以建议。
 * `4109` 包过长。消息大小超过 5KB，请缩短消息或者拆分消息。
-* `4200` 服务器内部错误，如果反复出现请收集相关线索并[创建工单](http://ticket.avosapps.com/)，我们会尽快解决。
+* `4200` 服务器内部错误，如果反复出现请收集相关线索并[创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
+* `4302` 对话相关操作签名错误
+* `4303` 发送消息，或邀请等操作对应的对话不存在
+* `4304` 对话成员已满，不能再添加
+* `4305` 对话操作被应用的云引擎 hook 拒绝
+* `4306` 更新对话操作失败
+
 
 ## FAQ
 
@@ -391,22 +399,32 @@ LeanCloud 实时通信服务是完全独立的实时通信业务抽象，专注�
 
 当然，如果你想维护一套好友关系，完全可以使用你自己的逻辑，只要存储着每个用户在实时通信中的 clientId 即可。我们推荐使用 LeanCloud 的存储，这样也可以结合 LeanCloud 中的 User 相关对象简单的实现账户系统，以及账户中的相关存储，详情可以阅读对应的 SDK 开发指南。
 
-### 聊天离线时可以推送吗？
+### 聊天离线时可以推送吗
 
 当然可以。我们的 Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。消息达到后，你可以根据用户的设置来 判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。
 
-iOS 在应用退出前台后即离线，这时收到消息会触发一个 APNs 的推送。因为 APNs 有消息长度限制，且你们的消息正文可能还包含上层协议，所以 我们现在 APNs 的推送内容是让应用在控制台设置一个静态的 APNs json，如“您有新的消息” 。你可以通过上文提到的云代码 hook `_receiversOffline` 来根据消息内容、对话信息等上下文信息来自定义推送内容。推送默认使用**生产证书**，你也可以在 json 中增加一个 `_profile` 内部属性来选择实际推送的证书，如 `{"alert": "你有一条未读消息", "_profile": "dev"}`。`_profile` 属性不会实际发送到 APNs 。
+iOS 在应用退出前台后即离线，这时收到消息会触发一个 APNs 的推送。因为 APNs 有消息长度限制，且你们的消息正文可能还包含上层协议，所以 我们现在 APNs 的推送内容是让应用在控制台设置一个静态的 APNs json，如“您有新的消息” 。你可以通过上文提到的云引擎 hook `_receiversOffline` 来根据消息内容、对话信息等上下文信息来自定义推送内容。推送默认使用**生产证书**，你也可以在 json 中增加一个 `_profile` 内部属性来选择实际推送的证书，如 `{"alert": "你有一条未读消息", "_profile": "dev"}`。`_profile` 属性不会实际发送到 APNs 。
+
+注意，我们的 SDK 会在登录时自动关联设备和 Client Id，并不需要用户手动操作。
+
+另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到 `_Notification` 表中。
 
 ![image](images/realtime_ios_push.png)
+
+目前，设置界面的推送内容支持部分内置变量，你可以将上下文信息直接设置到推送内容中：
+
+* `${convId}` 推送相关的对话 ID
+* `${timestamp}` 触发推送的时间戳（Unix 时间戳）
+* `${fromClientId}` 消息发送者的 Client ID
 
 ![image](images/rtm-push.png)
 
 桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
 
-云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime.html#云代码-hook) 章节。
+云引擎 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云引擎 Hook](#云引擎_Hook) 章节。
 
 
-### 为什么我的 iPhone 收不到离线消息推送？
+### 为什么我的 iPhone 收不到离线消息推送
 
 请先看上一个 FAQ。在控制台的设置页面，填写“您有新的未读消息”后，当对方不在线的时候，便会触发一个 APNs 的推送。首先，请确保控制台能向 iOS 推送消息，也即如下图所示的推送能顺利到达 iOS 系统，请参考[消息推送指南](push_guide.html#ios消息推送)。
 
@@ -423,3 +441,7 @@ iOS 在应用退出前台后即离线，这时收到消息会触发一个 APNs �
 * 检查普通的 iOS 推送是否到达
 * 检查证书设置
 * 在控制台检查接收方是否在离线状态
+
+### 聊天记录的保存时间和条数
+
+我们暂时不限制用户应用中聊天记录的保存时间和条数。未来如有变化我们会提前通知用户，你也随时可以通过 [REST API](./realtime_rest_api.html#%E8%8E%B7%E5%8F%96%E8%81%8A%E5%A4%A9%E8%AE%B0%E5%BD%95) 将聊天记录同步到自己的服务器上。

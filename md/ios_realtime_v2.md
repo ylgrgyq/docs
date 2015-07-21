@@ -22,8 +22,8 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的 Demo 代码：
 
+* [LeanMessageDemo iOS 版](https://github.com/leancloud/LeanMessage-Demo) (推荐)
 * [LeanChat iOS 版](https://github.com/leancloud/leanchat-ios)
-* [FreeChat](https://github.com/jwfing/FreeChat)
 
 并且下载自己运行一下试试看。
 
@@ -127,7 +127,7 @@ imClient.delegate = self;
 ```
 // 创建一个包含 Tom、Bob 的新对话
 NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
-    
+
 // 我们给对话增加一个自定义属性 type，表示单聊还是群聊
 // 常量定义：
 // const int kConversationType_OneOne = 0; // 表示一对一的单聊
@@ -152,8 +152,10 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 
 
 > 新的「对话」在控制台怎么查看
-> 
+>
 > 如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** -> **存储** -> **数据** 里面会看到，_Conversation 表中增加了一条记录，新记录的 `m` 属性值为`["Tom", "Bob"]`，`attr` 属性值为`{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。具体的表结构与属性的对应关系可以参考[这里](./realtime_v2.html#对话_Conversation_)。
+
+> TIPS: 每一次调用 `createConversationWithName:` 方法，都会生成一个新的 `Conversation`，无论里面的 clientIds 是不是一样。可以用 `AVIMConversationQuery` 来查询，避免重复创建。
 
 ### 消息发送
 
@@ -278,10 +280,10 @@ AVIMClientDelegate 的主要接口如下：
 - `imClientResumed:(AVIMClient *)imClient` 指网络连接恢复正常，此时聊天服务变得可用。
 
 - `conversation:(AVIMConversation *)conversation didReceiveCommonMessage:(AVIMMessage *)message` 指接收到新的普通消息，参数说明如下：
-  - conversation 指所属对话; 
+  - conversation 指所属对话;
   - message 指具体的消息
 - `conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message` 指接收到新的富媒体消息，这是 v2 SDK 为了方便大家的使用而引入的内建消息类型：文本、图像、音频、视频、位置消息，所有这一类消息都会通过该接口进行回调。参数说明如下：
-  - conversation 指所属对话; 
+  - conversation 指所属对话;
   - message 指具体的消息
 - `conversation:(AVIMConversation *)conversation messageDelivered:(AVIMMessage *)message` 当前用户发送的消息已被对方接收时会收到这一通知，参数意义同上。
 
@@ -656,7 +658,7 @@ LeanCloud IM SDK 内部封装了对富媒体消息的支持，所有富媒体消
 > 什么时候需要扩展自己的富媒体消息？
 >
 > 譬如说我有一个图像消息，只是除了文本之外，我还需要附带地理位置信息，这时候我需要扩展自己的消息类型来发送吗？其实完全没有必要，这种情况下，你使用我们在消息类中预留的 `attributes` 属性就可以保存额外的地理位置信息了。注意：｀attributes` 是所有富媒体消息都支持的。
-> 
+>
 > 只有在我们的消息类型完全无法满足你的需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面要允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 `NewsMessage` 类。
 
 
@@ -780,12 +782,12 @@ NSArray* userIds = @[@"Alex", @"Ben", @"Chad"];
 ```
 
 邀请成功以后，通知的流程是这样的：
-     
+
         操作者（管理员）                       被邀请者                        其他人
     1, 发出请求 addMembers
     2,                              收到 invitedByClientId 通知
     3, 收到 membersAdded 通知           收到 membersAdded 通知      收到 membersAdded 通知
-   
+
 相应地，踢人时的调用 API 是：
 
 ```
@@ -854,7 +856,16 @@ NSArray* userIds = @[@"Chad"];
 
 ### 获取历史消息 ###
 
-LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 如下：
+LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，之后开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。获取历史消息的 API 有两个：
+
+第一个 API 用于获取该会话中最近的 limit 条历史消息，通常在第一次进入会话时调用。
+
+```
+- (void)queryMessagesWithLimit:(NSUInteger)limit
+                      callback:(AVIMArrayResultBlock)callback;
+```
+
+第二个 API 用于获取某条消息之前的历史消息，通常在翻页加载更多历史消息时调用。
 
 ```
 - (void)queryMessagesBeforeId:(NSString *)messageId
@@ -865,12 +876,12 @@ LeanCloud 实时通信服务会将普通的对话消息自动保存在云端，�
 
 各参数含义如下：
 
-* messageId - 本地已有的最旧一条消息的 messageId，可不填，此时默认是取当前对话的最新消息
-* timestamp － 本地已有的最旧一条消息的 timestamp，可不填，此时默认是取当前对话的最新消息
+* messageId － 本地已有的最旧一条消息的 messageId。
+* timestamp － 本地已有的最旧一条消息的 timestamp。
 * limit － 本次查询希望的结果条数，默认是 20，1-1000 之内的整数有效。
-* AVIMArrayResultBlock － 结果回调接口，在操作结束之后调用
+* AVIMArrayResultBlock － 结果回调接口，在操作结束之后调用。
 
-通过这一 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。示例代码如下：
+通过这两个 API 拿到的消息就是 AVIMMessage 或者 AVIMTypedMessage 实例数组，开发者可以像之前收到新消息通知一样处理。示例代码如下：
 
 ```
 NSString *oldestMsgId;
@@ -890,7 +901,7 @@ int64_t oldestMsgTimestamp;
 
 > 注意：
 >
-> 翻页获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 msgId，起始消息的发送时间戳，需要获取的消息条数。
+> 翻页获取历史消息的时候，LeanCloud 云端是从某条消息开始，往前查找开发者指定的 N 条消息，返回给客户端。为此，获取历史消息需要传入三个参数：起始消息的 messageId，起始消息的发送时间戳，需要获取的消息条数。
 
 
 ### 启用离线消息推送
@@ -1050,6 +1061,8 @@ if (![clients containsObject:currentUserId]) {
 -------------
 为了满足开发者对权限和认证的要求，LeanCloud 还设计了操作签名的机制。我们可以在 LeanCloud 应用控制台中的「设置」->「应用选项」->「聊天推送」下面勾选「聊天服务签名认证」来启用签名（强烈推荐这样做）。启用后，所有的用户登录、对话创建/加入、邀请成员、踢出成员等操作都需要验证签名，这样开发者就可以对消息进行充分的控制。
 
+关于签名，我们假设你已经了解了[实时通信总览中的详细说明](./realtime_v2.html#权限和认证)。
+
 客户端这边究竟该如何使用呢？我们只需要实现 AVIMSignatureDataSource 协议接口，然后在用户登录之前，把这个接口赋值给 AVIMClient.signatureDataSource 即可。示例代码如下：
 
 ```
@@ -1110,4 +1123,4 @@ imClient.signatureDataSource = signatureDelegate;
 * nonce 随机字符串 nonce
 * error 签名错误信息
 
-在启用签名功能的情况下，LeanCloud IM SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。 
+在启用签名功能的情况下，LeanCloud IM SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。

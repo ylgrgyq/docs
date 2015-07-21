@@ -1,70 +1,70 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block createProject %}
-首先请安装好 [python](https://www.python.org/) 与 [pip](https://pip.pypa.io/)。
-
-**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。
-
-创建一个叫做 `HelloLeanEngine` 的文件夹，作为项目的根目录。
-
-在你的项目根目录创建一个 requirements.txt 的文件，填入以下内容：
+{% block quick_start_create_project %}
+从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
 
 ```
-flask
+$ git clone git@github.com:leancloud/python-getting-started.git
+$ cd python-getting-started
 ```
 
-在项目根目录执行 `pip install -r requirements.txt`。这样即可将 flask 安装>至系统。
+然后添加应用 appId 等信息到该项目：
 
-**注意**： 推荐你使用 [virtualenv](https://virtualenv.pypa.io) 来将当前项>目的第三方依赖与系统全局依赖做隔离，防止不同项目之间依赖的版本冲突。
-
-创建 `app.py`：
-
-```python
-# coding: utf-8
-
-from flask import Flask
-
-app = Flask(__name__)
-
-
-@app.route('/')
-def index():
-    return 'Hello, World!'
-
-
-@app.route('/1/ping')
-def ping():
-    return 'pong'
 ```
-
-**注意**： `/1/ping` 这个页面的请求是必须的，LeanEngine 会定期去访问你的项目的此地址，检测项目可用性。
-
-创建 `wsgi.py`：
-
-```python
-# coding: utf-8
-
-from wsgiref import simple_server
-
-from app import app
-
-application = app
-
-
-if __name__ == '__main__':
-  server = simple_server.make_server('localhost', 8000, application)
-  server.serve_forever()
+$ avoscloud add <appName> <appId>
 ```
 {% endblock %}
 
+{% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock%}
+
+{% block demo %}
+* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。效果体验：http://python.avosapps.com/
+{% endblock %}
+
 {% block run_in_local_command %}
+安装依赖：
+
+```
+$ pip install -Ur requirements.txt
+```
+
+启动应用：
+
 ```
 $ python wsgi.py
 ```
 {% endblock %}
 
+{% block cloud_func_file %}`$PROJECT_DIR/cloud.py`{% endblock %}
+
+{% block ping %}
+LeanEngine 中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
+
+```python
+from leancloud import Engine
+engine = Engine(your_wsgi_app)
+```
+
+如果未使用 LeanEngine 中间件，可以自己实现该 URL 的处理，比如这样：
+
+```python
+@app.route('/__engine/1/ping')
+def ping():
+    version = sys.version_info
+    return flask.jsonify({
+        'runtime': 'cpython-{0}.{1}.{2}'.format(version.major, version.minor, version.micro),
+        'version': 'custon',
+    })
+```
+
+{% endblock %}
+
 {% block others_web_framework %}
 LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
+{% endblock %}
+
+{% block project_constraint %}
+LeanEngine Python 项目必须有 `$PROJECT_DIR/wsgi.py` 与 `$PROJECT_DIR/requirements.txt` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block install_middleware %}
@@ -85,8 +85,8 @@ import leancloud
 from flask import Flask
 
 
-APP_ID = os.environ.get('LC_APP_ID', 'your_app_id')
-MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', 'your_master_key')
+APP_ID = os.environ.get('LC_APP_ID', '{{appid}}') # your app id
+MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', '{{masterkey}}') # your app master key
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
 
@@ -290,6 +290,10 @@ def custom_error_code(**params):
 ```
 {% endblock %}
 
+{% block http_client %}
+LeanEngine 可以使用 Python 内置的 urllib，不过推荐您使用 [requests](http://docs.python-requests.org/) 等第三方模块来处理 HTTP 请求。
+{% endblock %}
+
 {% block timerExample %}
 ```python
 @engine.cloud_code
@@ -324,3 +328,65 @@ def log_something(**params):
     print params
 ```
 {% endblock %}
+
+{% block use_framework %}
+
+LeanEngine 环境中可以使用大部分 Python Web Framework，比如 [Flask](http://flask.pocoo.org/)、[web.py](http://webpy.org/)、[bottle](http://bottlepy.org/)。
+
+事实上，您只需要提供一个兼容 WSGI 标准的框架，并且安装了 LeanEngine 的中间件，就可以在 LeanEngine 上运行。您提供的 WSGI 函数对象需要放在 `$PROJECT_DIR/wsgi.py` 文件中，并且变量名需要为 `application`。
+
+```python
+from leancloud import Engine
+
+
+def wsgi_func(environ, start_response):
+    // 定义一个简单的 WSGI 函数，或者您可以直接使用框架提供的
+    start_response('200 OK', [('Content-Type', 'text/plain')])
+    return ['Hello LeanCloud']
+
+
+application = Engine(wsgi_func)
+```
+
+将这段代码放到 `wsgi.py` 中，就可以实现一个最简单的动态路由。
+
+{% endblock %}
+
+{% block upload_file %}
+TODO
+{% endblock %}
+
+{% block cookie_session %}
+{% endblock %}
+
+{% block custom_session %}
+{% endblock %}
+
+{% block cookie_session_middleware %}TODO{% endblock%}
+
+{% block https_redirect %}
+
+```python
+from leancloud import HttpsRedirectMiddleware
+
+# app 为您的 wsgi 函数
+app = HttpsRedirectMiddleware(app)
+engine = Engine(app)
+application = engine
+```
+
+{% endblock %}
+
+{% block get_env %}
+```python
+import os
+
+if os.environ.get('LC_APP_PROD') == '1':
+    # 当前为生产环境
+elif os.environ.get('LC_APP_PROD') == '0':
+    # 当前为测试环境
+else:
+    # 当前为开发环境
+```
+{% endblock %}
+

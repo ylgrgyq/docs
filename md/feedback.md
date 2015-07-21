@@ -13,29 +13,99 @@ AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代�
 
 ## iOS 反馈组件
 
-### 打开默认的用户反馈界面
+### 开源项目地址
+
+目前反馈组件从 SDK 中独立出来，开放了源码。项目地址是：[leancloud-feedback-ios](https://github.com/leancloud/leancloud-feedback-ios)。从 v3.1.3 开始，SDK 中的 feedback 组件不再维护。欢迎大家使用开源组件，相信在大家的共同维护下，开源组件会变得越来越好。
+
+### 使用默认用户反馈界面
 开发者可以使用当前的 UIViewController 打开 AVOSCloud 提供的默认反馈界面，代码如下：
 
 ```objc
 AVUserFeedbackAgent *agent = [AVUserFeedbackAgent sharedInstance];
-[agent showConversations:self title:@"feedback" contact:@"test@leancloud.cn"];
+
+/* title 传 nil 表示将第一条消息作为反馈的标题 */
+[agent showConversations:self title:nil contact:@"test@leancloud.cn"];
 ```
 ![image](images/avoscloud-ios-feedback.png)
 
 特别指出，如果要使用默认的用户反馈界面而且手动安装了 `AVOSCloud.framework`，开发者需要将 `AVOSCloud.framwork -> Resources -> AVOSCloud.bundle` 手动拖入工程项目中。
 
 ### 自定义用户反馈界面
-当然，也可以使用 `AVUserFeedbackAgent` 提供的另外两个 API 来完成用户反馈的功能。
+你也可以自定义反馈界面，`LCUserFeedbackThread` 和 `LCUserFeedbackReply` 这两个类提供了相应 API 来完成你想要的功能。
 
 ```objc
-- (void)syncFeedbackThreadsWithBlock:(NSString *)title contact:(NSString *)contact block:(AVArrayResultBlock)block;
+@interface LCUserFeedbackThread : NSObject
 
-- (void)postFeedbackThread:(NSString *)content block:(AVIdResultBlock)block;
+/*!
+ * 获取反馈，使用 contact 查询。
+ * @param contact 联系方式。
+ * @param block 结果回调。
+ */
++ (void)fetchFeedbackWithContact:(NSString*)contact withBlock:(AVIdResultBlock)block;
 
+/*!
+ * 创建反馈，并使用 content 作为标题。
+ * @param content 反馈的标题，通常，你可以将反馈的第一条消息作为标题。
+ * @param contact 联系方式。
+ * @param block 结果回调。
+ */
++ (void)feedbackWithContent:(NSString *)content contact:(NSString *)contact withBlock:(AVIdResultBlock)block;
+
+/*!
+ * 获取所有反馈中的所有消息。
+ * @param block 结果回调。
+ */
+- (void)fetchFeedbackRepliesInBackgroundWithBlock:(AVArrayResultBlock)block;
+
+/*!
+ * 发送一条消息。
+ * @param feedbackReply 反馈消息。
+ * @param block 结果回调。
+ */
+- (void)saveFeedbackReplyInBackground:(LCUserFeedbackReply *)feedbackReply withBlock:(AVIdResultBlock)block;
+
+@end
+
+@interface LCUserFeedbackReply : NSObject
+
+/*!
+ * 创建一条反馈消息。
+ * @param content 消息内容。
+ * @param type 回复的类型，比如你可以标记 @"dev" 或者 @"user"。
+ */
++ (instancetype)feedbackReplyWithContent:(NSString *)content type:(NSString *)type;
+
+@end
 ```
 
-上述代码中，第一个方法用于同步服务端的用户反馈数据，比如开发者对用户的反馈。你可以在回调函数中处理 AVUserFeedbackThread 数组。
-第二个方法则用于发送用户反馈，只需填写反馈内容。
+利用上述 API，可以实现一个完整的反馈功能。例如，你可以首先调用 API：
+
+```objc
++ (void)fetchFeedbackWithContact:(NSString*)contact withBlock:(AVIdResultBlock)block;
+```
+
+通过 `contact` 来查询之前已经创建过的反馈，如果查询不到，说明没有通过 `contact` 创建过，利用以下 API：
+
+```objc
++ (void)feedbackWithContent:(NSString *)content contact:(NSString *)contact withBlock:(AVIdResultBlock)block;
+```
+
+来创建一个反馈，`content` 将作为反馈的标题。我们推荐使用第一条消息作为反馈的标题。
+
+若查询到 `contact` 对应的反馈，则可以立即同步反馈中的消息：
+
+```objc
+- (void)fetchFeedbackRepliesInBackgroundWithBlock:(AVArrayResultBlock)block;
+```
+
+最后，若想发送一条反馈消息，可以结合以下两个 API 来实现：
+
+```objc
++ (instancetype)feedbackReplyWithContent:(NSString *)content type:(NSString *)type;
+- (void)saveFeedbackReplyInBackground:(LCUserFeedbackReply *)feedbackReply withBlock:(AVIdResultBlock)block;
+```
+
+您也可以参考 `LCUserFeedbackViewController` 类中处理反馈的逻辑。
 
 ### AVUserFeedbackThread 数据模型
 `AVUserFeedbackThread` 包含 `content` `type` `createdAt` 等属性。`content` 代表反馈内容。`type` 为反馈类型，分别为 `user` 和 `dev`。`createdAt` 为反馈内容创建时间。
