@@ -103,7 +103,7 @@ public async void TomCreateConversationWithFriends()
     #endregion
 
     #region 第三步：发送一条消息
-    await friendConversation.SendTextMessageAsync("你们在哪儿呢？");
+    await friendConversation.SendTextMessageAsync("你们在哪儿？");
     #endregion
 }
 ```
@@ -404,7 +404,7 @@ public async void SendLocationAsync()
 //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
 AVIMClient client = new AVIMClient("Tom");
 
-//Tom 登陆到系统
+//Tom 登录到系统
 await client.ConnectAsync();
 
 //打开已存在的对话
@@ -522,7 +522,7 @@ imgMessage.Attributes = new Dictionary<string, object>()
 { 
     {"location","拉萨布达拉宫"}
 };
-imgMessage.Title = "这蓝天让我彻底醉了……";
+imgMessage.Title = "这蓝天……我彻底是醉了";
 await conversation.SendImageMessageAsync(imgMessage);// 假设 conversationId= conversation 并且已经在之前被实例化
 ```
 {% endblock %}
@@ -1110,7 +1110,7 @@ public async void QueryChatRoom_SampleCode()
 //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
 AVIMClient client = new AVIMClient("Tom");
 
-//Tom 登陆到系统
+//Tom 登录到系统
 await client.ConnectAsync();
 
 //打开已存在的对话
