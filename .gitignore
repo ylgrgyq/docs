@@ -11,8 +11,13 @@ custom/css/app-docs.css
 npm-debug.log
 
 # use template
+.module-cache
 md/leanengine_guide-cloudcode.md
 md/leanengine_guide-node.md
 md/leanengine_guide-python.md
 
 .idea
+realtime_guide-android.md
+realtime_guide-dotnet.md
+realtime_guide-ios.md
+realtime_guide-js.md

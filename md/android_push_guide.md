@@ -79,7 +79,8 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 
 请确保你的 AndroidManifest.xml 包含如下内容
 ```xml
-<service android:name="com.avos.avoscloud.PushService"/>
+<service android:name="com.avos.avoscloud.PushService"
+  android:exported="true"/>
 ```
 
 同时设置了必要的权限

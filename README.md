@@ -38,17 +38,9 @@ $ npm install
 $ grunt server
 ```
 
-## 注意事项
+## 一套模板多份渲染
 
-* 所有 `.md` 格式文档需要更新到 `/md` 目录下
-* 更新文档只需要修改或创建相应的 `.md` 文件，然后提交 Pull Request 即可
-* 由于文档会采用 AngularJS 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 AngularJS 渲染
-* 图片资源放在当前 repo 的 `/images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
-* 当增加一个全新的文档，需要更新文档首页 `templates/pages/index.html`，顶部菜单 `templates/include/header.html`
-
-### 一套模板多份渲染
-
-有些文档的相似度非常高，多以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云代码 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
+有些文档的相似度非常高，所以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云代码 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
 
 * 在 `views` 目录先编写一份「模板」（以 `tmpl` 作为扩展名），将文档的主体部分完成，将文档之间不一样的部分（比如不同语言的代码片段）使用：
 
@@ -77,9 +69,9 @@ $ grunt server
   ```
 
   同样支持 `grunt server` 命令，该命令最终会执行 `watch` 插件，此时修改模板文件，或者变量文件都会自动重新生成最终的 md 文件（可能需要等待 2~4 秒）。
-* 记得将这种方式生成的 md 文件添加到 [.gitignote](https://github.com/leancloud/docs/blob/master/.gitignore) 文件中，确保这类文件不会被提交。
+* 记得将这种方式生成的 md 文件添加到 [.gitignore](https://github.com/leancloud/docs/blob/master/.gitignore) 文件中，确保这类文件不会被提交。
 
-**注意：如果在模板中需要渲染 `{{appid}}` 这样的 AngularJS 变量，则必然在模板文件的最上方先定义好一个新变量，如 `appid`，其值为 `'{{appid}}'`，例如：**
+**注意：如果在模板中需要渲染 `{{appid}}` 这样的 AngularJS 变量，则必须在模板文件的最上方先定义好一个新变量，如 `appid`，其值为 `'{{appid}}'`，例如：**
 
 ```
 {% set appid = '{{appid}}' %}
@@ -87,6 +79,38 @@ $ grunt server
 {% set masterkey = '{{masterkey}}' %}
 ```
 这样，在生成的 html 文档中，`{{appid}}` 才可以被正确渲染，否则，它会被替换为空值，原因是 nunjucks 在上下文中找不到该变量的定义。
+
+### 辅助工具
+
+「一套模板多分渲染」的不同渲染文件编写起来比较困难，需要先从主模板上找到变量在对应到渲染文件，所以开发了一个简单的工具来简化这一步骤。使用方式如下：
+
+* 安装需要的依赖，该步骤只需要执行一次：
+
+  ```
+  npm install
+  ```
+
+* 启动辅助工具的本地 webServer，使用以下命令：
+
+  ```
+  $ node server
+  ```
+* 使用浏览器打开 http://localhost:3001，将会看到一个「选择模板」的下拉列表框，该列表框里会显示 `views/<tmplName>.tmpl` 的所有模板文件，文件名的 `tmplName` 部分是下拉列表框选项的名称。选择你需要编写的模板（比如 `leanengine_guide`）。
+* 你会看到模板文件被读取，其中所有 `{% block <blockName> %}<content>{% endblock %}` 部分的下面都会有一些按钮。这些按钮表示该「模板」拥有的不同「渲染」，也就是对应的 `views/<tmplName>-<impl>.md` 文件，文件名的 `impl` 部分是按钮的名称。
+* 点击对应的按钮，即可看到「渲染」文件中对应 `block` 的内容已经读取到一个文本域中，如果为空，表明该「渲染」文件未渲染该 block，或者内容为空。
+* 在文本域中写入需要的内容，然后点击保存，编写的内容就会保存到对应的「渲染」文件的 block 中。
+* 最后建议打开「渲染」文件确认下内容，没问题即可通过 `grunt server` 查看效果。当然整个过程打开 `grunt server` 也是没问题的，它会发现「渲染」文件变动后重新加载。
+
+有问题请与 <wchen@leancloud.rocks> 联系。
+
+## 注意事项
+
+* 所有 `.md` 格式文档需要更新到 `/md` 目录下
+* 更新文档只需要修改或创建相应的 `.md` 文件，然后提交 Pull Request 即可
+* 由于文档会采用 AngularJS 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 AngularJS 渲染
+* 图片资源放在当前 repo 的 `/images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
+* 当增加一个全新的文档，需要更新文档首页 `templates/pages/index.html`，顶部菜单 `templates/include/header.html`
+
 
 ## LeanCloud 内部员工发布新文档
 

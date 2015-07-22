@@ -137,12 +137,21 @@ $(function() {
     var a = $(v).children('a:first-child');
     a.addClass('has-subdoc-nav');
   });
+
+  setTimeout(function() {
+    updateSidebarAffixShadowWidth();
+  }, 400);
 });
 
 // If the cursor is off the sidebar, scrolls to parent active heading
 $(window).scrollStopped(function() {
+  var activeToc = $("#toc > li .active").first();
+  if (activeToc.length === 0) {
+    activeToc = $("#toc > li:first-child");
+  }
+
   setTimeout(function() {
-    $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo($("#toc > li .active").first(), 800, {offset: -20});
+    $(".sidebar-affix-shadow.on.sidebar-hover-off .sidebar-wrapper").scrollTo(activeToc, 800, {offset: -20});
     // console.log("Haven't scrolled in 250ms, fired in 250ms later.");
     updateSidebarAffixShadowWidth();
     initScrollHistoryState();

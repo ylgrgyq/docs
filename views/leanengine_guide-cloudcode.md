@@ -163,6 +163,10 @@ $ avoscloud
 云代码 2.0 的项目必须有 `$PROJECT_DIR/cloud/main.js` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
+{% block ping %}
+云代码 2.0 沙箱环境内置了该 URL 的处理，所以不需要做额外操作。
+{% endblock %}
+
 {% block others_web_framework %}
 因为云代码 2.0 是运行在沙箱环境，所以不支持其他的 web 框架。只能使用预定义的 Express 3.x。
 {% endblock %}
@@ -718,6 +722,9 @@ app.post('/upload', function(req, res){
 {% endblock %}
 
 {% block cookie_session %}
+
+### 处理用户登录和登出
+
 假设你创建了一个支持web主机功能的云代码项目，在app.js里添加下列代码：
 
 ```javascript

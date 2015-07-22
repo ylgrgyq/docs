@@ -8,6 +8,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 ### 导入 SDK
 您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。
+
 <!--
 您可以从 https://github.com/leancloud/avoscloud-sdk 下载iOS的SDK。您也可以使用Podfile通过cocoapods下载我们的SDK，如:
 
@@ -15,6 +16,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 pod 'AVOSCloudSNS'
 ```
 -->
+
 ### 添加代码
 
 ```objc

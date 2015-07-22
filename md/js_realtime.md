@@ -47,7 +47,7 @@ Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://git
 
 运行命令：
 ```
-bower install leancloud-realtime -- save
+bower install leancloud-realtime --save
 ```
 安装之后，页面直接加载 bower_components/leancloud-realtime/src/AV.realtime.js 即可。
 
@@ -65,7 +65,7 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
-var appId = '9p6hyhh60av3ukkni3i9z53q1l8y';
+var appId = '{{appid}}';
 // clientId 就是实时通信中的唯一用户 id
 var clientId = 'LeanCloud01';
 var realtimeObj;
@@ -178,11 +178,19 @@ realtimeObj.on('message', function(data) {
 });
 ```
 
+如果 A 创建了一个包含 B 的 Conversation ，并向其发送消息。
+那么，B 可以通过 on 方法监听 message 事件获取此消息（可以是离线消息），即使 B 尚未主动加入该 Conversation 。
+message 事件是接收消息最底层的实现，所以即使你通过 conversationObj.receive 监听了该消息，依然会触发 message 事件。
+message 事件回调函数传入参数中的 cid 字段，即是该 Conversation 的 id 。
+通过此 id 即可创建同样的 Conversation ，然后对其回复。
+
 ## 安全
 
-### 安全域名
+### Web 安全域名
 
-如果是纯前端使用 JavaScript SDK，请务必配置「控制台」-「设置」-「基本信息」-「JavaScript 安全域名」，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+如果是纯前端使用 JavaScript SDK，请务必配置`Web 安全域名`，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+
+配置方式：进入对应的 App，然后选择`设置`——`安全中心`——`Web 安全域名`。
 
 详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
 
@@ -200,6 +208,7 @@ Web 端实现任何可以将用户输入直接输出到界面上的应用都要�
 
 ```javascript
 // 创建实时通信实例（支持单页多实例）
+var appId = '{{appid}}';
 realtimeObj = AV.realtime({
     appId: appId,
     clientId: clientId,
@@ -256,7 +265,7 @@ WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
 
 ## 暂态对话
 
-标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息历史等方法，具体请了解[文档](https://leancloud.cn/docs/realtime_v2.html#暂态对话_transient_conversation_)。
+标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」中了解。
 
 具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject.conv)
 
@@ -300,11 +309,13 @@ AV.realtime(options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appid,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123',
+   clientId: clientId,
    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
    encodeHTML: true,
    // auth 是权限校验的方法函数
@@ -365,11 +376,13 @@ RealtimeObject.open(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 真正使用时这里也无需调用，实例化 RealtimeObject 的时候 SDK 会自动调用 open 方法
@@ -401,11 +414,13 @@ RealtimeObject.close()
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 realtimeObject.close();
@@ -439,11 +454,13 @@ RealtimeObject.on(eventName, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 当新建一个 Room 的时候就会触发
@@ -481,11 +498,13 @@ RealtimeObject.once(eventName, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 当服务建立之后会被触发
@@ -523,11 +542,13 @@ RealtimeObject.emit(eventName, dataObject)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 当事件被派发的时候会触发
@@ -566,11 +587,13 @@ RealtimeObject.off(eventName, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 var eventFun = function(data) {
@@ -611,8 +634,9 @@ RealtimeObject.conv(options, callback)
 
     * name {String} （可选）Conversation 的名字
 
-    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执和历史记录。
+    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。
     **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
+    具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」
 
     * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
 
@@ -623,11 +647,13 @@ RealtimeObject.conv(options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -678,11 +704,13 @@ RealtimeObject.conv(convId, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 var convId = 'sasfalklkjdlfs123';
@@ -717,13 +745,14 @@ RealtimeObject.room(options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
-
 // 这里创建一个 room，也可以通过 room id 获取一个 room
 var room = realtimeObject.room({
     // 成员列表
@@ -770,11 +799,13 @@ RealtimeObject.room(roomId, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 var roomId = 'sasfalklkjdlfs123';
@@ -808,16 +839,18 @@ RealtimeObject.query(callback)
 
 返回：
 
-* {Object} 返回 realtimeObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 当实时通信建立成功之后
@@ -863,11 +896,13 @@ RealtimeObject.query(options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 当实时通信建立成功之后
@@ -904,16 +939,18 @@ RealtimeObject.ping(clientIdList, callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -955,16 +992,18 @@ RealtimeObject.ping(clientId, callback)
 
 返回：
 
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1011,11 +1050,13 @@ RoomObject.add(clientId, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1062,11 +1103,13 @@ RoomObject.add(clientIdList, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1111,11 +1154,13 @@ RoomObject.remove(clientId, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1162,11 +1207,13 @@ RoomObject.remove(clientIdList, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1212,11 +1259,13 @@ RoomObject.join(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1262,11 +1311,13 @@ RoomObject.leave(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1310,11 +1361,13 @@ RoomObject.list(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1357,11 +1410,13 @@ RoomObject.send(dataObject, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1419,11 +1474,13 @@ RoomObject.send(dataObject, options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1516,11 +1573,13 @@ RoomObject.receive(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1563,11 +1622,13 @@ RoomObject.receipt(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1619,11 +1680,13 @@ RoomObject.log(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1670,11 +1733,13 @@ RoomObject.log(options, callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'abc123'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
@@ -1722,11 +1787,13 @@ RoomObject.count(callback)
 例子：
 
 ```javascript
+var appId = '{{appid}}';
+var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: '9p6hyhh60av3ukkni3i9z53q1l8y',
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
-   clientId: 'LeanCloud01'
+   clientId: clientId
 });
 
 // 这里创建一个 room，也可以通过 room id 获取一个 room
