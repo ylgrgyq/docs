@@ -483,7 +483,7 @@ testDataObject.saveInBackground();
 
 ### AVObject 序列化与反序列化
 
-在 v3.4 版本之前，想要在不同的组件中间传递 `AVObject` 数据，我们比较推荐的方式是将 AVObject 的 objectId 作为数据放入 Intent 中，之后在目标的组件中通过 `AVQuery` 去解析数据。
+在 v3.4 版本之前，想要在不同的组件中间传递 `AVObject` 数据，我们比较推荐的方式是，首先将 objectId-object pair 存入全局唯一的 Map 中，然后把 objectId 通过 Intent 传递到下一个组件中，最后新组件再从全局唯一的 Map 中通过 objectId 拿到 object 实例。
 而在 v3.4 版本之后， `AVObject` 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的组件中间传递 `AVObject` 对象实例。
 同时 `AVObject` 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。
 ```java
@@ -1014,13 +1014,13 @@ Post postReference = AVObject.createWithoutData(Post.class, post.getObjectId());
 * 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`
 
 ```java
-// Armor.java
-@AVClassName("Armor")
-public class Armor extends AVObject {
-  public Armor(){
+// Post.java
+@AVClassName("Post")
+public class Post extends AVObject {
+  public Post(){
   }
   
-  public Armor(Parcle in){
+  public Post(Parcle in){
     super(in);
   }
   //此处为我们的默认实现，当然你也可以自行实现
