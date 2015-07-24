@@ -400,8 +400,8 @@ private void txbMessage_TextChanged(object sender, TextChangedEventArgs e)//在�
   //以下代码需要在整个窗体包含一个 AVIMClient 和 一个 AVIMConversation 实例，并且确保已经被初始化
 
   //以文本消息的方式发送暂态消息，其他成员在接受到此类消息时需要做特殊处理
-  await conversaion.SendTextMessageAsync("Inputing", true, false);
-  // 第一个参数 "Inputing" 表示自定义的一个字符串命令，此处开发者可以自行设置
+  await conversaion.SendTextMessageAsync("Inputting", true, false);
+  // 第一个参数 "Inputting" 表示自定义的一个字符串命令，此处开发者可以自行设置
   // 第二个参数 true 表示该条消息为暂态消息
   // 第三个参数 false 表示不要回执
 }
@@ -414,11 +414,11 @@ client.OnMessageReceieved += (s, e) =>
 {
   if (e.Message is AVIMTextMessage)
   {
-    //command 的内容就是：Inputing
+    //command 的内容就是：Inputting
     string command = ((AVIMTextMessage)e.Message).TextContent;
 
     // code 
-    // 刷新 UI 控件，显示对方正在舒服
+    // 刷新 UI 控件，显示对方正在输入……
     // code
   }
 };
