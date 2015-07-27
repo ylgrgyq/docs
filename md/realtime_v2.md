@@ -13,7 +13,7 @@
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
-  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/) (可与 SimpleChat 通信)
+  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/) (可与 iOS/Android 版 LeanMessageDemo 通信)
   * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
 
 关于这些项目的更多介绍、截图预览，可见 [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) 。
