@@ -60,9 +60,9 @@ leancloud-realtime 是标准的 node package，支持使用 browserify 进行浏
 
 ##### IE8 与 IE9
 
-IE8 与 IE9 没有实现 WebSocket，SDK 通过 Flash 插件实现对 IE8 与 IE9 的支持。
+SDK 提供插件化的、无痛兼容 IE8 与 IE9 老版本 IE 浏览器的支持方式。
 
-SDK 的 plugin/web-socket-js 目录是兼容 IE8 与 IE9 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 是兼容 IE8 与 IE9 的，可以参考其代码。
+IE8 与 IE9 没有实现 WebSocket，SDK 通过 Flash 插件实现对 IE8 与 IE9 的支持。SDK 的 plugin/web-socket-js 目录是兼容 IE8 与 IE9 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 是兼容 IE8 与 IE9 的，可以参考其代码。
 
 **具体使用方式：**
 
@@ -1874,3 +1874,11 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 ### receipt
 
 * 收到消息回执的时候会被触发
+
+## FAQ
+
+### IE 8 中使用时要注意的问题
+
+* 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
+* IE8 中的 JSON.stringify 会把中文转为 unicode 编码
+* IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，而是用 XDomainRequest 发 request，不过注意这个 request 成功回来没有 response.status
