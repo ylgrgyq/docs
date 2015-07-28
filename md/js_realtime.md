@@ -84,6 +84,8 @@ WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
 <script src="../../dist/AV.realtime.js"></script>
 ```
 
+IE8 的用户请参见 [FAQ - IE8 中使用时要注意的问题](#IE_8_中使用时要注意的问题)。
+
 ##### Android WebView
 
 如果要想在 Android WebView 中使用，请务必开启 WebSocket 支持。另外根据用户反馈，在部分 Android 机型的 WebView 中不支持 WebSocket 的安全链接，所以需要从 wss 协议转为 ws 协议，关闭 WebSocket 的 SSL，RealtimeObject 在初始化时提供 secure 选项可以关闭，详细使用方式请看 [AV.realtime](#AV_realtime) 方法。
