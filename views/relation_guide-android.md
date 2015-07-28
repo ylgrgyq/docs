@@ -150,7 +150,7 @@
 {% block relatedClassSave %}
 ```java
     // 假定我们有一个即将要加入的班级
-    AVObject cls = null;
+    AVObject cls;
 
     // 在表中创建一条记录
     AVObject memberRelation = new AVObject("MemberRelation");
