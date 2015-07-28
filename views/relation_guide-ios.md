@@ -2,238 +2,232 @@
 
 {% block pointerOneToOneSave %}
 ```objc
-AVObject *game= [AVObject objectWithClassName:@"Game"];
-[game setObject:[AVUser currentUser] forKey:@"createdBy"];
+    AVObject *post = [AVObject objectWithClassName:@"Post"];
+    [post setObject:[AVUser currentUser] forKey:@"createdBy"];
 ```
 {% endblock %}
 
 {% block pointerOneToOneQuery %}
 ```objc
-AVQuery *gameQuery = [AVQuery queryWithClassName:@"Game"];
-[gameQuery whereKey:@"createdBy" equalTo:[AVUser currentUser]];
+    AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
+    [postQuery whereKey:@"createdBy" equalTo:[AVUser currentUser]];
 ```
 {% endblock %}
 
 {% block pointerOneToOneGet %}
 ```objc
-// say we have a Game object
-AVObject *game = ...
- 
-// getting the user who created the Game
-AVUser *createdBy = [game objectForKey@"createdBy"];
+    AVUser *createdBy = [post objectForKey:@"createdBy"];
 ```
 {% endblock %}
 
 {% block avobjectArraySave %} 
 ```objc
-// let's say we have four weapons
-AVObject *scimitar = ...
-AVObject *plasmaRifle = ...
-AVObject *grenade = ...
-AVObject *bunnyRabbit = ...
- 
-// stick the objects in an array
-NSArray *weapons = @[scimitar, plasmaRifle, grenade, bunnyRabbit];
- 
-// store the weapons for the user
-[[AVUser currentUser] setObject:weapons forKey:@"weaponsList"];
+    // 假设我们有四件商品
+    AVObject *coffee;
+    AVObject *chip;
+    AVObject *beer;
+    AVObject *cookie;
+    
+    // 将商品保存在数组中
+    NSArray *products = @[coffee, chip, beer, cookie];
+    
+    // 将商品保存在用户的购物车中
+    [[AVUser currentUser] setObject:products forKey:@"cartProducts"];
 ```
 {% endblock %}
 
 {% block avobjectArrayGet %}
 ```objc
-NSArray *weapons = [[AVUser currentUser] objectForKey:@"weaponsList"];
+    NSArray *products = [[AVUser currentUser] objectForKey:@"cartProducts"];
 ```
 {% endblock %}
 
 {% block relatedClassQueryFrom %}
 ```objc
-// set up the query on the Follow table
-AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
-[query whereKey:@"from" equalTo:[AVUser currentUser]];
- 
-// execute the query
-[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-  for(AVObject *o in objects) {
-    // o is an entry in the Follow table
-    // to get the user, we get the object with the to key
-    AVUser *otherUser = [o objectForKey:@"to"];
- 
-    // to get the time when we followed this user, get the date key
-    NSDate *when = [o objectForKey:@"date"];
-  }
-}];
+    // 对 MemberRelation 表创建一个查询
+    AVQuery *query = [AVQuery queryWithClassName:@"MemberRelation"];
+    [query whereKey:@"member" equalTo:[AVUser currentUser]];
+    
+    // 执行查询
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        for(AVObject *o in objects) {
+            // o 是 MemberRelation 表的一条记录
+            // 获取当前用户所在班级
+            AVObject *cls = [o objectForKey:@"class"];
+            
+            // 获取当前用户在班级里的角色
+            NSString *role = [o objectForKey:@"role"];
+        }
+    }];
 ```
 {% endblock %}
 
 {% block avobjectArrayQueryIncludeKey %}
 ```objc
-// set up our query for a User object
-AVQuery *userQuery = [AVUser query];
- 
-// configure any constraints on your query...
-// for example, you may want users who are also playing with or against you
- 
-// tell the query to fetch all of the Weapon objects along with the user
-// get the "many" at the same time that you're getting the "one"
-[userQuery includeKey:@"weaponsList"];
- 
-// execute the query
-[userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects contains all of the User objects, and their associated Weapon objects, too
-}];
+    // 从 AVUser 对象获得 AVQuery 对象
+    AVQuery *userQuery = [AVUser query];
+    
+    // 为查询设置约束
+    // 比如，你想查询最近一个小时登录过的用户
+    
+    // 让这个查询得到用户的同时，得到他们购物车上的商品列表
+    [userQuery includeKey:@"cartProducts"];
+    
+    // 执行查询
+    [userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 包含了所有满足条件的用户，和与之关联购物车商品列表
+    }];
 ```
 {% endblock %}
 
 {% block avobjectArrayQueryContainedIn %}
 ```objc
-// add a constraint to query for whenever a specific Weapon is in an array
-[userQuery whereKey:@"weaponsList" equalTo:scimitar];
- 
-// or query using an array of Weapon objects...
-[userQuery whereKey:@"weaponsList" containedIn:arrayOfWeapons];
+    // 加上约束，查询购物车里有某个特定的商品的用户
+    [userQuery whereKey:@"cartProducts" equalTo:coffee];
+    
+    // 或者查询购物车中包含了几个商品的用户
+    [userQuery whereKey:@"cartProducts" containedIn:arrayOfProducts];
 ```
 {% endblock %}
 
 {% block avrelationSave %}
 ```objc
-// let’s say we have a few objects representing Author objects
-AVObject *authorOne = …
-AVObject *authorTwo = …
-AVObject *authorThree = …
-
-// now we create a book object
-AVObject *book= [AVObject objectWithClassName:@"Book"];
- 
-// now let’s associate the authors with the book
-// remember, we created a "authors" relation on Book
-AVRelation *relation = [book relationforKey:@"authors"];
-// make sure these objects should be saved to server before adding to relation
-[relation addObject:authorOne];
-[relation addObject:authorTwo];
-[relation addObject:authorThree];
- 
-// now save the book object
-[book saveInBackground];
+    // 假如我们用下面的对象来表示几个歌手
+    AVObject *artistOne;
+    AVObject *artistTwo;
+    AVObject *artistThree;
+    
+    // 创建一条歌曲记录
+    AVObject *song= [AVObject objectWithClassName:@"Song"];
+    
+    // 我们把歌手和歌曲关联起来，在 Song 对象中创建一个 "artists" Relation
+    AVRelation *relation = [song relationforKey:@"artists"];
+    // 请确保这些对象在关联之前已经保存到了服务器上
+    [relation addObject:artistOne];
+    [relation addObject:artistTwo];
+    [relation addObject:artistThree];
+    
+    // 保存 Song 对象
+    [song saveInBackground];
 ```
 {% endblock %}
 
 {% block avrelationQuery %}
 ```objc
-// suppose we have a book object
-AVObject *book = ...
- 
-// create a relation based on the authors key
-AVRelation *relation = [book relationforKey:@"authors"];
- 
-// generate a query based on that relation
-AVQuery *query = [relation query];
- 
-// now execute the query
+    // 假如有一个 song 对象
+    AVObject *song;
+    
+    // 在 artists 字段上得到一个 relation
+    AVRelation *relation = [song relationforKey:@"artists"];
+    
+    // 根据上面的 relation 得到一个 AVQuery 对象
+    AVQuery *query = [relation query];
+    
+    // 执行查询
 ```
 {% endblock %}
 
 {% block avrelationQueryEqualTo %}
 ```objc
-// suppose we have a author object, for which we want to get all books
-AVObject *author = ...
- 
-// first we will create a query on the Book object
-AVQuery *query = [AVQuery queryWithClassName:@"Book"];
- 
-// now we will query the authors relation to see if the author object 
-// we have is contained therein
-[query whereKey:@"authors" equalTo:author];
+    // 假如我们有一个 artist 对象，希望获得该 artist 创作的所有歌曲
+    AVObject *artist;
+    
+    // 首先，对 Song 对象创建一个查询
+    AVQuery *query = [AVQuery queryWithClassName:@"Song"];
+    
+    // 我们查询所有的 Song，看哪些 Song 的 artists 关联包含了特定的 artist
+    [query whereKey:@"artists" equalTo:artist];
 ```
 {% endblock %}
 
 {% block relatedClassSave %}
 ```objc
-// suppose we have a user we want to follow
-AVUser *otherUser = ...
- 
-// create an entry in the Follow table
-AVObject *follow = [AVObject objectWithClassName:@"Follow"];
-[follow setObject:[AVUser currentUser]  forKey:@"from"];
-[follow setObject:otherUser forKey:@"to"];
-[follow setObject:[NSDate date] forKey:@"date"];
-[follow saveInBackground];
+    // 假定我们有一个即将要加入的班级
+    AVObject *cls;
+    
+    // 在表中创建一条记录
+    AVObject *memberRelation = [AVObject objectWithClassName:@"MemberRelation"];
+    [memberRelation setObject:cls  forKey:@"class"];
+    [memberRelation setObject:[AVUser currentUser] forKey:@"member"];
+    [memberRelation setObject:@"leader" forKey:@"role"];
+    [memberRelation saveInBackground];
 ```
 {% endblock %}
 
 {% block relatedClassQueryTo %} 
 ```objc
-// set up the query on the Follow table
-AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
-[query whereKey:@"to" equalTo:[AVUser currentUser]];
- 
-// execute the query
-[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-  for(AVObject *o in objects) {
-    // o is an entry in the Follow table
-    // to get the user, we get the object with the from key
-    AVUser *otherUser = [o objectForKey:@"from"];
- 
-    // to get the time the user was followed, get the date key
-    NSDate *when = [o objectForKey:@"date"];
-  }
-}];
+    AVObject *cls;
+    
+    // 对 MemberRelation 表创建一个查询
+    AVQuery *query = [AVQuery queryWithClassName:@"MemberRelation"];
+    [query whereKey:@"class" equalTo:cls];
+    
+    // 执行查询
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        for(AVObject *o in objects) {
+            // o 是 MemberRelation 表的一条记录
+            // 获取相应的班级成员
+            AVUser *member = [o objectForKey:@"member"];
+            
+            // 获取该成员在班级里的角色
+            NSString *role = [o objectForKey:@"role"];
+        }
+    }];
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManySave %} 
 ```objc
-// let's say we have an author
-AVObject *author = ...
- 
-// and let's also say we have an book
-AVObject *book = ...
- 
-// add the author to the authors list for the book
-[book addObject:author forKey:@"authors"];
+    // 假设我们有一个歌手
+    AVObject *artist;
+    
+    // 假设我们也有一首歌曲
+    AVObject *song;
+    
+    // 把相应的歌手加到 song 的 artists 数组中
+    [song addObject:artist forKey:@"artists"];
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManyQuery %}
 ```objc
-// set up our query for the Book object
-AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
- 
-// configure any constraints on your query...
-// tell the query to fetch all of the Author objects along with the Book
-[bookQuery includeKey:@"authors"];
- 
-// execute the query
-[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects is all of the Book objects, and their associated 
-    // Author objects, too
-}];
+    // 对 Song 表创建一个查询
+    AVQuery *songQuery = [AVQuery queryWithClassName:@"Song"];
+    
+    // 设置约束
+    // 让查询同时返回每个 Song 中的 artists 列表
+    [songQuery includeKey:@"artists"];
+    
+    // 执行查询
+    [songQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 是所有 Song 对象，同时包含了关联的 Artist 对象
+    }];
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManyGet %} 
 ```objc
-NSArray *authorList = [book objectForKey@"authors"];
+    NSArray *artistList = [song objectForKey:@"artists"];
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManyQueryEqualTo %}
 ```objc
-// suppose we have an Author object
-AVObject *author = ...
- 
-// set up our query for the Book object
-AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
- 
-// configure any constraints on your query...
-[bookQuery whereKey:@"authors" equalTo:author];
- 
-// tell the query to fetch all of the Author objects along with the Book
-[bookQuery includeKey:@"authors"];
- 
-// execute the query
-[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects is all of the Book objects, and their associated Author objects, too
-}];
+    // 假如我们有一个 artist 对象
+    AVObject *artist;
+    
+    // 对 Song 表创建一个查询
+    AVQuery *songQuery = [AVQuery queryWithClassName:@"Song"];
+    
+    // 约束查询
+    [songQuery whereKey:@"artists" equalTo:artist];
+    
+    // 让查询同时返回 artists 列表
+    [songQuery includeKey:@"artists"];
+    
+    // 执行查询
+    [songQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 是所有 Song 对象，同时包含了关联的 Artist 对象
+    }];
 ```
 {% endblock %}

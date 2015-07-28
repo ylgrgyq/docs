@@ -2,70 +2,66 @@
 
 {% block pointerOneToOneSave %}
 ```java
-    AVObject game = new AVObject("Game");
-    game.put("createdBy", AVUser.getCurrentUser());
+    AVObject post = new AVObject("Post");
+    post.put("createdBy", AVUser.getCurrentUser());
 ```
 {% endblock %}
 
 {% block pointerOneToOneQuery %}
 ```java
-    AVQuery gameQuery = new AVQuery<>("Game");
-    gameQuery.whereEqualTo("createdBy", AVUser.getCurrentUser());
+    AVQuery postQuery = new AVQuery("Post");
+    postQuery.whereEqualTo("createdBy", AVUser.getCurrentUser());
 ```
 {% endblock %}
 
 {% block pointerOneToOneGet %}
 ```java
-    // say we have a Game object
-    AVObject game =...;
-    // getting the user who created the Game
-    AVUser createdBy = game.getAVUser("createdBy");
+    AVUser createdBy = post.getAVUser("createdBy");
 ```
 {% endblock %}
 
 {% block avobjectArraySave %}```java
-    // let's say we have four weapons
-    AVObject scimitar = ...
-    AVObject plasmaRifle = ...
-    AVObject grenade = ...
-    AVObject bunnyRabbit = ...
+    // 假设我们有四件商品
+    AVObject coffee;
+    AVObject chip;
+    AVObject beer;
+    AVObject cookie;
 
-    // stick the objects in an array
+    // 将商品保存在数组中
+    List<AVObject> products = new ArrayList<>();
+    products.add(coffee);
+    products.add(chip);
+    products.add(beer);
+    products.add(coffee);
 
-    List<AVObject> weapons = new ArrayList<>();
-    weapons.add(scimitar);
-    weapons.add(plasmaRifle);
-    weapons.add(grenade);
-    weapons.add(bunnyRabbit);
-
-    // store the weapons for the user
-    AVUser.getCurrentUser().put("weaponsList", weapons);
+    // 将商品保存在用户的购物车中
+    AVUser.getCurrentUser().put("cartProducts", products);
 ```{% endblock %}
 
 {% block avobjectArrayGet %}
 ```java
-    List<AVObject> weapons = AVUser.getCurrentUser().getList("weaponsList");
+    List<AVObject> products = AVUser.getCurrentUser().getList("cartProducts");
 ```
 {% endblock %}
 
 {% block relatedClassQueryFrom %}
 ```objc
-    // set up the query on the Follow table
-    AVQuery<AVObject> query = new AVQuery("Follow");
-    query.whereEqualTo("from", AVUser.getCurrentUser());
+    // 对 MemberRelation 表创建一个查询
+    AVQuery<AVObject> query = new AVQuery("MemberRelation");
+    query.whereEqualTo("member", AVUser.getCurrentUser())
 
-    // execute the query
+    // 执行查询
     query.findInBackground(new FindCallback<AVObject>() {
       @Override
       public void done(List<AVObject> list, AVException e) {
-        for(AVObject o : list) {
-          // o is an entry in the Follow table
-          // to get the user, we get the object with the to key
-          AVUser otherUser = o.getAVUser("to");
+        for (AVObject o : list) {
+          // o 是 MemberRelation 表的一条记录
+          // 获取当前用户所在班级
+          AVObject cls = o.getAVObject("class");
 
-          // to get the time when we followed this user, get the date key
-          Date when = o.getDate("date");
-        } 
+          // 获取当前用户在班级里的角色
+          String role = o.getString("role");
+        }
       }
     });
 ```
@@ -73,119 +69,113 @@
 
 {% block avobjectArrayQueryIncludeKey %}
 ```java
-    // set up our query for a User object
-    AVQuery<AVUser> userQuery =  AVUser.getQuery();
+    // 从 AVUser 对象获得 AVQuery 对象
+    AVQuery<AVUser> userQuery = AVUser.getQuery();
 
-    // configure any constraints on your query...
-    // for example, you may want users who are also playing with or against you
+    // 为查询设置约束
+    // 比如，你想查询最近一个小时登录过的用户
 
-    // tell the query to fetch all of the Weapon objects along with the user
-    // get the "many" at the same time that you're getting the "one"
-    userQuery.include("weaponsList");
+    // 让这个查询得到用户的同时，得到他们购物车上的商品列表
+    userQuery.include("cartProducts");
 
-    // execute the query
+    // 执行查询
     userQuery.findInBackground(new FindCallback<AVUser>() {
       @Override
       public void done(List<AVUser> list, AVException e) {
-        // list contains all of the User objects, and their associated Weapon objects, too
+        // objects 包含了所有满足条件的用户，和与之关联购物车商品列表
       }
     });
 ```{% endblock %}
 
 {% block avobjectArrayQueryContainedIn %}
 ```java
-    // add a constraint to query for whenever a specific Weapon is in an array
-    userQuery.whereEqualTo("weaponsList", scimitar);
+     // 加上约束，查询购物车里有某个特定的商品的用户
+    userQuery.whereEqualTo("cartProducts", coffee);
 
-    // or query using an array of Weapon objects...
-    userQuery.whereContainedIn("weaponsList", arrayOfWeapons);
+    // 或者查询购物车中包含了几个商品的用户
+    userQuery.whereContainedIn("cartProduts", arrayOfProducts);
 ```
 {% endblock %}
 
 {% block avrelationSave %}
 ```java
-    // let’s say we have a few objects representing Author objects
-    AVObject authorOne = …
-    AVObject authorTwo = …
-    AVObject authorThree = …
+    // 假如我们用下面的对象来表示几个歌手
+    AVObject artistOne;
+    AVObject artistTwo;
+    AVObject artistThree;
 
-    // now we create a book object
-    AVObject book= new AVObject("Book");
+    // 创建一条歌曲记录
+    AVObject song = new AVObject("Song");
 
-    // now let’s associate the authors with the book
-    // remember, we created a "authors" relation on Book
-    AVRelation<AVObject> relation = book.getRelation("authors");
-    // make sure these objects should be saved to server before adding to relation
-    
-    relation.add(authorOne);
-    relation.add(authorTwo);
-    relation.add(authorThree);;
+    // 我们把歌手和歌曲关联起来，在 Song 对象中创建一个 "artists" Relation
+    AVRelation relation = song.getRelation("artists");
+    // 请确保这些对象在关联之前已经保存到了服务器上
+    relation.add(artistOne);
+    relation.add(artistTwo);
+    relation.add(artistThree);
 
-    // now save the book object
-    book.saveInBackground();
+    // 保存 Song 对象
+    song.saveInBackground();
 ```
 {% endblock %}
 
 {% block avrelationQuery %}
 ```java
-    // suppose we have a book object
-    AVObject book = ...
+    // 假如有一个 song 对象
+    AVObject song;
 
-    // create a relation based on the authors key
-    AVRelation relation = book.getRelation("authors");
+    // 在 artists 字段上得到一个 relation
+    AVRelation relation = song.getRelation("artists");
 
-    // generate a query based on that relation
-    AVQuery<AVObject> query = relation.getQuery();
+    // 根据上面的 relation 得到一个 AVQuery 对象
+    AVQuery query = relation.getQuery();
 
-    // now execute the query
+    // 执行查询
 ```
 {% endblock %}
 
 {% block avrelationQueryEqualTo %}
 ```java
-    // suppose we have a author object, for which we want to get all books
-    AVObject author = ...
+    // 假如我们有一个 artist 对象，希望获得该 artist 创作的所有歌曲
+    AVObject artist;
 
-    // first we will create a query on the Book object
-    AVQuery query = new AVQuery<>("Book");
+    // 首先，对 Song 对象创建一个查询
+    AVQuery query = new AVQuery("Song");
 
-    // now we will query the authors relation to see if the author object 
-    // we have is contained therein
-    query.whereEqualTo("authors", author);
+    // 我们查询所有的 Song，看哪些 Song 的 artists 关联包含了特定的 artist
+    query.whereEqualTo("artists", artist);
 ```
 {% endblock %}
 
 {% block relatedClassSave %}
 ```java
-    // suppose we have a user we want to follow
-    AVUser otherUser = ...
+    // 假定我们有一个即将要加入的班级
+    AVObject cls = null;
 
-    // create an entry in the Follow table
-    AVObject follow = new AVObject("Follow");
-    follow.put("from", AVUser.getCurrentUser());
-    follow.put("to", otherUser);
-    follow.put("date", new Date());
-    follow.saveInBackground();
+    // 在表中创建一条记录
+    AVObject memberRelation = new AVObject("MemberRelation");
+    memberRelation.put("class", cls);
+    memberRelation.put("member", AVUser.getCurrentUser());
+    memberRelation.put("role", "leader");
+    memberRelation.saveInBackground();
 ```
 {% endblock %}
 
 {% block relatedClassQueryTo %} 
 ```java
-    // set up the query on the Follow table
-    AVQuery<AVObject> query = new AVQuery("Follow");
-    query.whereEqualTo("to", AVUser.getCurrentUser());
-
-    // execute the query
+    // 对 MemberRelation 表创建一个查询
+    AVQuery<AVObject> query = new AVQuery("MemberRelation");
+    query.whereEqualTo("class", cls);
     query.findInBackground(new FindCallback<AVObject>() {
       @Override
       public void done(List<AVObject> list, AVException e) {
-        for(AVObject o : list) {
-          // o is an entry in the Follow table
-          // to get the user, we get the object with the from key
-          AVUser otherUser = o.getAVUser("from");
+        for (AVObject o : list) {
+          // o 是 MemberRelation 表的一条记录
+          // 获取相应的班级成员
+          AVUser member = o.getAVUser("member");
 
-          // to get the time the user was followed, get the date key
-          Date when = o.getDate("date");
+          // 获取该成员在班级里的角色
+          String role = o.getString("role");
         }
       }
     });
@@ -194,32 +184,31 @@
 
 {% block avobjectArrayManyToManySave %} 
 ```java
-    // let's say we have an author
-    AVObject author = ...
+    // 假设我们有一个歌手
+    AVObject artist;
 
-    // and let's also say we have an book
-    AVObject book = ...
+    // 假设我们也有一首歌曲
+    AVObject song;
 
-    // add the author to the authors list for the book
-    book.add("authors", author);
+    // 把相应的歌手加到 song 的 artists 数组中
+    song.add("artists", artist);
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManyQuery %}
 ```java
-    // set up our query for the Book object
-    AVQuery<AVObject> bookQuery = [AVQuery queryWithClassName:@"Book"];
+    // 对 Song 表创建一个查询
+    AVQuery<AVObject> songQuery = new AVQuery("Song");
 
-    // configure any constraints on your query...
-    // tell the query to fetch all of the Author objects along with the Book
-    bookQuery.include("authors");
+    // 设置约束
+    // 让查询同时返回每个 Song 中的 artists 列表
+    songQuery.include("artists");
 
-    // execute the query
-    bookQuery.findInBackground(new FindCallback<AVObject>() {
+    // 执行查询
+    songQuery.findInBackground(new FindCallback<AVObject>() {
       @Override
       public void done(List<AVObject> list, AVException e) {
-        // list is all of the Book objects, and their associated 
-        // Author objects, too
+        // list 是所有 Song 对象，同时包含了关联的 Artist 对象
       }
     });
 ```
@@ -227,29 +216,29 @@
 
 {% block avobjectArrayManyToManyGet %} 
 ```java
-List<AVObject> authorList = book.getList("authors");
+    List<AVObject> artistList = song.getList("artists");
 ```
 {% endblock %}
 
 {% block avobjectArrayManyToManyQueryEqualTo %}
 ```java
-    // suppose we have an Author object
-    AVObject author = ...
+    // 假如我们有一个 artist 对象
+    AVObject artist;
 
-    // set up our query for the Book object
-    AVQuery<AVObject> bookQuery = new AVQuery("Book");
+    // 对 Song 表创建一个查询
+    AVQuery<AVObject> songQuery = new AVQuery("Song");
 
-    // configure any constraints on your query...
-    bookQuery.whereEqualTo("authors", author);
+    // 约束查询
+    songQuery.whereEqualTo("artists", artist);
 
-    // tell the query to fetch all of the Author objects along with the Book
-    bookQuery.include("authors");
+    // 让查询同时返回 artists 列表
+    songQuery.include("artists");
 
-    // execute the query
-    bookQuery.findInBackground(new FindCallback<AVObject>() {
+    // 执行查询
+    songQuery.findInBackground(new FindCallback<AVObject>() {
       @Override
       public void done(List<AVObject> list, AVException e) {
-        // list is all of the Book objects, and their associated Author objects, too
+        // list 是所有 Song 对象，同时包含了关联的 Artist 对象
       }
     });
 ```
