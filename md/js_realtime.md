@@ -2,20 +2,25 @@
 
 ## 简介
 
-感谢你使用 JavaScript 的实时通信 SDK，LeanCloud 的实时通信服务每天处理请求数超过百万级，安全可靠，你的明智之选。
+感谢你使用 JavaScript 实时通信 SDK，LeanCloud 的实时通信服务每天处理请求数超过百万级，安全可靠，是你的明智之选。
 
 你可以通过使用我们提供的 SDK，一行后端代码都不用写，就可以做一个功能完备的实时聊天应用、也可以做一个实时对战类的游戏，总之一切与实时通信相关的业务都可以使用 LeanCloud 提供的实时通信服务。
 
 你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
-## 兼容性
+本 SDK 实现轻量、高效、无依赖，支持浏览器与 node 运行环境。其中浏览器支持涵盖了移动终端的浏览器及各种 WebView，包括微信、PhoneGap、Cordova 的 WebView，同时 SDK 通过插件方式提供兼容 IE8 与 IE9 的方案。具体请看下面「[兼容方案](#兼容方案)」部分的说明。
 
-本 SDK 实现轻量、高效、无依赖。支持移动终端的浏览器及各种 WebView，包括可以使用在微信、PhoneGap、Cordova 的 WebView 中。 
-同时 SDK 提供插件化的、无痛兼容 IE8+ 老版本 IE 浏览器的方式，具体请看下面「[兼容 IE8+](#兼容_IE8_)」部分的说明，默认不兼容且性能最佳。
+### Demo
 
-## Demo
+在开始一切之前，你可以尝试一下[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
 
-在开始一切之前，你可以尝试一下「[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)」，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的简单实时对战游戏 [Demo](http://cutpage.sinaapp.com/)。
+### 贡献
+
+你可以通过 GitHub 报告 bug 或者提出建议。如果觉得这个文档写的不够好，也可以帮助我们完善。
+
+SDK 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
+
+本文档仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
 
 ## 概念
 
@@ -27,37 +32,81 @@
 
 如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](https://leancloud.cn/docs/realtime_rest_api.html)」。
 
-## 特别说明
+### 特别说明
 
-Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），就是几个客户端节点在通信之前要放到同一个房间中，其实这两个是一个道理，只是名字不同，SDK 中为了让大家好理解，两个名字都可以使用。如果你觉得更喜欢 Room 这个概念，那就可以使用 room 方法创建 Room，如果喜欢 Conversation，那就使用 conv 方法创建 Conversation。
+Conversation（对话）这个概念也可以理解为 Room（房间）。几个客户端节点在通信之前要放到同一个房间中，其实这两个是一个概念，只是名字不同，SDK 中两个方法都可以使用。如果你觉得更喜欢 Room 这个概念，那就可以使用 room 方法创建 Room，如果喜欢 Conversation，那就使用 conv 方法创建 Conversation。
 
 也许说到这里你已经跃跃欲试了，好的，那你可以试用一下看看了。
 
 注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
 
-## Github 仓库地址
+## 安装与配置
 
-可以直接通过 Github 仓库使用 SDK（src 目录中），也可以通过 Github 给我们提出您的建议
+### 浏览器环境
 
-Github 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github.com/leancloud/js-realtime-sdk)
+#### 通过 [bower](http://bower.io/) 安装
 
-所有的 Release 地址：[https://github.com/leancloud/js-realtime-sdk/releases](https://github.com/leancloud/js-realtime-sdk/releases)
-
-## 通过 bower 安装
-
-运行命令：
+在项目目录下运行安装命令：
 ```
 bower install leancloud-realtime --save
 ```
-安装之后，页面直接加载 bower_components/leancloud-realtime/src/AV.realtime.js 即可。
+安装之后，在页面中加载 bower_components/leancloud-realtime/dist/AV.realtime.js 后即可使用 `AV.realtime` 全局变量。
 
-[什么是 bower ?](http://bower.io/)
+#### 通过 npm 安装，使用 [browserify](http://browserify.org/) 打包
 
-## 文档贡献
+leancloud-realtime 是标准的 node package，支持使用 browserify 进行浏览器代码的打包，node 环境中的安装方法参见「[node 环境](#node_环境)」。
 
-如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
+#### 兼容方案
 
-Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
+##### IE8 与 IE9
+
+SDK 提供插件化的、无痛兼容 IE8 与 IE9 老版本 IE 浏览器的支持方式。
+
+IE8 与 IE9 没有实现 WebSocket，SDK 通过 Flash 插件实现对 IE8 与 IE9 的支持。SDK 的 plugin/web-socket-js 目录是兼容 IE8 与 IE9 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 是兼容 IE8 与 IE9 的，可以参考其代码。
+
+**具体使用方式：**
+
+在页面加载执行 AV.realtime.js 的代码前加入以下代码，路径改为你自己的路径
+
+```html
+<!-- 引入插件，兼容低 IE8 与 IE9，注意看下面的注释。如果不需要兼容，可以去掉这部分。 -->
+<!--[if lt IE 10]>
+<script type="text/javascript" src="../../plugin/web-socket-js/swfobject.js"></script>
+<script type="text/javascript" src="../../plugin/web-socket-js/web_socket.js"></script>
+<script type="text/javascript">
+// 设置变量，配置插件中 WebSocketMain.swf 的引用路径
+WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
+</script>
+<![endif]-->
+<!-- 引入插件部分结束 -->
+
+<!-- 引入 LeanCloud 实时通信 SDK -->
+<script src="../../dist/AV.realtime.js"></script>
+```
+
+##### Android WebView
+
+如果要想在 Android WebView 中使用，请务必开启 WebSocket 支持。另外根据用户反馈，在部分 Android 机型的 WebView 中不支持 WebSocket 的安全链接，所以需要从 wss 协议转为 ws 协议，关闭 WebSocket 的 SSL，RealtimeObject 在初始化时提供 secure 选项可以关闭，详细使用方式请看 [AV.realtime](#AV_realtime) 方法。
+
+### node 环境
+
+在项目目录下运行安装命令：
+```
+npm install leancloud-realtime --save
+```
+安装之后在项目中获得`realtime`方法的引用：
+```
+var realtime = require('leancloud-realtime');
+```
+由于 node 运行环境没有内置的 WebSocket 实现，在使用`realtime`方法之前需要通过`config`方法配置一个 Websocket 类，否则会抛出一个`No WebSocket implement set`错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
+```
+// 首先安装 ws：
+// npm install ws --save
+// 然后进行配置：
+realtime.config({
+  Websocket: require('ws')
+});
+```
 
 ##示例代码
 
@@ -219,49 +268,11 @@ realtimeObj = AV.realtime({
 });
 ```
 
-## 与 iOS、Android 等 SDK 通信
+## 与 iOS、Android 等客户端通信
 
-JavaScript 实时通信 SDK 可以与其他类型 SDK 通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 [roomObject.send](#RoomObject_send) 方法中详细了解。
+JavaScript 实时通信 SDK 可以与其他客户端通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 [roomObject.send](#RoomObject_send) 方法中详细了解。
 
-Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。 
-
-## 兼容
-
-### 兼容 IE8+ 
-
-JavaScript 实时通信 SDK 设计时目标是面向未来、全面支持移动端、灵活高效，所以考虑主要实现轻量、提升性能、减少流量等特性（所以都没有默认支持 Promise），但是因为国内目前浏览器市场中仍然有很大量的 IE8+ 浏览器，所以我们提供一种非常轻量的插件方式来兼容 IE8+。
-
-当你通过 Bower 或者 Github 下载 SDK，会有一个 plugin 目录，其中就是兼容 IE8+ 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 中是兼容 IE8+ 的，也可以参考代码。
-
-**具体兼容方式：**
-
-1、在页面中加入以下代码，路径改为你自己的路径
-
-```html
-<!-- 引入插件，兼容低 IE8+ 等低版本浏览器，注意看下面的注释。如果不需要兼容，可以去掉这部分。 -->
-<!--[if lt IE 10]>
-<script type="text/javascript" src="../../plugin/web-socket-js/swfobject.js"></script>
-<script type="text/javascript" src="../../plugin/web-socket-js/web_socket.js"></script>
-<script type="text/javascript">
-// 设置变量，配置插件中 WebSocketMain.swf 的引用路径
-WEB_SOCKET_SWF_LOCATION = "../../plugin/web-socket-js/WebSocketMain.swf";
-</script>
-<![endif]-->
-<!-- 引入插件部分结束 -->
-
-<!-- 引入 LeanCloud 实时通信 SDK -->
-<script src="../../src/AV.realtime.js"></script>
-```
-
-2、IE8+ 等老版本浏览器中 JavaScript 的问题，要小心
-
-* 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
-* IE8 中的 JSON.stringify 会把中文转为 unicode 编码
-* IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，而是用 XDomainRequest 发 request，不过注意这个 request 成功回来没有 response.status
-
-### 其他兼容问题
-
-如果要想在 Android WebView 中使用，请务必开启 WebSocket 支持。另外根据用户反馈，在部分 Android 机型的 WebView 中不支持 WebSocket 的安全链接，所以需要从 wss 协议转为 ws 协议，关闭 WebSocket 的 SSL，RealtimeObject 在初始化时提供 secure 选项可以关闭，详细使用方式请看 [AV.realtime](#AV_realtime) 方法。
+Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。
 
 ## 暂态对话
 
@@ -351,7 +362,7 @@ AV.realtime.version
 
 ```javascript
 // 返回版本号
-console.log('当前版本是：' + AV.realtime.version);   
+console.log('当前版本是：' + AV.realtime.version);
 ```
 
 ### RealtimeObject.open
@@ -627,7 +638,7 @@ RealtimeObject.conv(options, callback)
 参数：
 
 * options {Object} （可选）传入配置信息
-    
+
     * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
 
     * attr {Object} （可选）自定义的数据信息，如 title、image、xxx 等
@@ -726,7 +737,7 @@ realtimeObject.conv(convId, function(obj) {
     console.log('可以取到 name', conv.name);
     console.log('可以取到属性', conv.attr);
   } else {
-    console.log('服务器端不存在这个 conversation。');      
+    console.log('服务器端不存在这个 conversation。');
   }
 });
 ```
@@ -1384,7 +1395,7 @@ var room = realtimeObject.room({
 room.list(function(data) {
   console.log(data); // room 中成员 list
 });
-``` 
+```
 
 ### RoomObject.send
 
@@ -1463,7 +1474,7 @@ RoomObject.send(dataObject, options, callback)
 
     * transient {Boolean} (可选) 默认 false。是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，可以用来发送用户的输入状态（如：「正在输入。。。」的效果）
 
-    * type {String} （可选） 无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android 等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。 
+    * type {String} （可选） 无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android 等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。
 
 * callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到
 
@@ -1508,7 +1519,7 @@ room.send({
 // 当前用户所在的组，有消息时触发
 room.receipt(function(data) {
    // 已经收到的 clientId
-   console.log(data); 
+   console.log(data);
 });
 
 // 与 iOS、Android 等 SDK 通信
@@ -1596,7 +1607,7 @@ var room = realtimeObject.room({
 // 当前用户所在的组，有消息时触发
 room.receive(function(data) {
    // 接收到的信息
-   console.log(data); 
+   console.log(data);
 });
 ```
 
@@ -1722,7 +1733,7 @@ RoomObject.log(options, callback)
 
   * mid {String} （可选）message id 消息的 id，当接收到消息的时候会有这个 id，用来辅助查询，防止同一时间戳下有两条一样的消息
 
-  * limit {Number} （可选）返回消息历史的条目数量，默认是查询最近 20 条历史消息 
+  * limit {Number} （可选）返回消息历史的条目数量，默认是查询最近 20 条历史消息
 
 * callback {Function} （必须）回调函数，参数中可以取得历史消息数据
 
@@ -1746,10 +1757,10 @@ var realtimeObject = AV.realtime({
 var roomId = 'safjslakjlfkjla123';
 var room;
 realtimeObject.room(roomId, function(object) {
-    
+
     // 判断这个 room 在服务器端是否存在
     if (object) {
-     
+
       // 当前用户所在的组，有消息时触发
       room.log({
          // 时间戳，查询这个时间之前的消息
@@ -1810,7 +1821,7 @@ var room = realtimeObject.room({
 // 当前用户所在的组，有消息时触发
 room.count(function(data) {
    // 当前用户数量
-   console.log(data); 
+   console.log(data);
 });
 ```
 
@@ -1863,3 +1874,11 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 ### receipt
 
 * 收到消息回执的时候会被触发
+
+## FAQ
+
+### IE 8 中使用时要注意的问题
+
+* 要注意不能有 console.log，否则在不开启调试器的情况下 IE8 脚本会停在那个位置却不报错
+* IE8 中的 JSON.stringify 会把中文转为 unicode 编码
+* IE8 中支持 CORS 跨域请求，不需要使用 jsonp 来 hack，而是用 XDomainRequest 发 request，不过注意这个 request 成功回来没有 response.status
