@@ -108,7 +108,7 @@ var realtime = require('leancloud-realtime');
 // npm install ws --save
 // 然后进行配置：
 realtime.config({
-  Websocket: require('ws')
+  WebSocket: require('ws')
 });
 ```
 
