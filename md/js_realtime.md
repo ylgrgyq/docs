@@ -12,7 +12,7 @@
 
 ### Demo
 
-在开始一切之前，你可以尝试一下[简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
+在开始一切之前，你可以尝试一下 [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的 [源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
 
 ### 贡献
 
@@ -96,11 +96,13 @@ IE8 的用户请参见 [FAQ - IE8 中使用时要注意的问题](#IE_8_中使�
 ```
 npm install leancloud-realtime --save
 ```
-安装之后在项目中获得`realtime`方法的引用：
+
+安装之后在项目中获得 `realtime` 方法的引用：
+
 ```
 var realtime = require('leancloud-realtime');
 ```
-由于 node 运行环境没有内置的 WebSocket 实现，在使用`realtime`方法之前需要通过`config`方法配置一个 Websocket 类，否则会抛出一个`No WebSocket implement set`错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
+由于 node 运行环境没有内置的 WebSocket 实现，在使用 `realtime` 方法之前需要通过 `config` 方法配置一个 Websocket 类，否则会抛出一个 **No WebSocket implement set** 错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
 ```
 // 首先安装 ws：
 // npm install ws --save
@@ -231,7 +233,7 @@ realtimeObj.on('message', function(data) {
 
 如果 A 创建了一个包含 B 的 Conversation ，并向其发送消息。
 那么，B 可以通过 on 方法监听 message 事件获取此消息（可以是离线消息），即使 B 尚未主动加入该 Conversation 。
-message 事件是接收消息最底层的实现，所以即使你通过 conversationObj.receive 监听了该消息，依然会触发 message 事件。
+message 事件是接收消息最底层的实现，所以即使你通过 `conversationObj.receive` 监听了该消息，依然会触发 message 事件。
 message 事件回调函数传入参数中的 cid 字段，即是该 Conversation 的 id 。
 通过此 id 即可创建同样的 Conversation ，然后对其回复。
 
@@ -239,9 +241,9 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 ### Web 安全域名
 
-如果是纯前端使用 JavaScript SDK，请务必配置`Web 安全域名`，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+如果是纯前端使用 JavaScript SDK，请务必配置 **Web 安全域名**`**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
 
-配置方式：进入对应的 App，然后选择`设置`——`安全中心`——`Web 安全域名`。
+配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
 
 详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
 
@@ -264,7 +266,7 @@ realtimeObj = AV.realtime({
     appId: appId,
     clientId: clientId,
     // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-    encodeHTML: true,
+    encodeHTML: true
     // 是否开启服务器端认证
     // auth: authFun
 });
@@ -274,13 +276,20 @@ realtimeObj = AV.realtime({
 
 JavaScript 实时通信 SDK 可以与其他客户端通信。当你不仅仅只是基于 Web 来实现一个实时通信程序，也想通过使用 LeanCloud 提供的其他类型（iOS、Android、Windows Phone等）的 SDK 实现多端互通，就需要在发送数据时使用媒体类型配置项，具体要到 [roomObject.send](#RoomObject_send) 方法中详细了解。
 
-Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件）等类型。
+Web 端本身无论处理什么类型的数据，浏览器都可以自动解析并渲染，比如图片，只需要一个 img 标签。但是其他终端就不行，比如 iOS，所以你需要告知其他终端你发送的是什么类型的消息，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：
+
+- text（文本）
+- image（图片）
+- audio（声音）
+- video（视频）
+- location（地理位置）
+- file（各种类型文件）等类型。
 
 ## 暂态对话
 
 标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」中了解。
 
-具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject.conv)
+具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject_conv)。
 
 ## 方法列表
 
@@ -290,36 +299,33 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 ### AV.realtime
 
-使用:
+这是创建实时通信对象的方法，会启动实时通信的连接。自动调用 open 方法，内部与服务器匹配，并建立 WebSocket 连接。内部会自动维持与服务器的链接稳定，控制心跳数据包的频率，超时检测等，如果发生中断可以通过监听对应的事件来给用户界面上的变化提示。
+
+另外，此方法支持多实例，也就是说，你可以在一个页面中，创建多个 RealtimeObject 来实现聊天。
+
 ```javascript
 AV.realtime(options, callback)
 ```
 
-描述：
 
-* 这是创建实时通信对象的方法，会启动实时通信的连接。自动调用 open 方法，内部与服务器匹配，并建立 WebSocket 连接。内部会自动维持与服务器的链接稳定，控制心跳数据包的频率，超时检测等，如果发生中断可以通过监听对应的事件来给用户界面上的变化提示。
+#### 输入
 
-* 另外，此方法支持多实例，也就是说，你可以在一个页面中，创建多个 RealtimeObject 来实现聊天。
+参数|类型|约束|默认|说明
+---|---|---|---|---
+**options**|Object|必须||配置实时通信服务所需的必要参数。其中包括：
+&nbsp;&nbsp;&nbsp;&nbsp; appId|String|必须||应用的 appId，在 **控制台** > **设置** > **基本信息** 中可以查看。
+&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读「[权限和认证](./realtime.html#权限和认证)」相关文档，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例。
+&nbsp;&nbsp;&nbsp;&nbsp; clientId|String|必须||当前客户端的唯一 id，用来标示当前客户端。
+&nbsp;&nbsp;&nbsp;&nbsp; encodeHTML|Boolean||false|是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击）。<br/>该选项默认为关闭 false，true 为开启。
+&nbsp;&nbsp;&nbsp;&nbsp; secure|Boolean||true|是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护。<br/>默认开启 true，false 为关闭。
 
-参数：
+<!-- &nbsp; 用来维护层级，请勿去掉。-->
 
-* options {Object} （必须） 配置实时通信服务所需的必要参数。其中包括：
+#### 返回
 
-    * appId {String} （必须）应用的 AppId，在「控制台」-「设置」-「基本信息」中可以查看；
+```Object``` 返回 RealtimeObject（实时通信对象），其中有后续调用的方法，支持链式调用。
 
-    * clientId {String} （必须）当前客户端的唯一 id，用来标示当前客户端；
-
-    * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；true 为开启，false 为关闭。
-
-    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
-
-    * secure {Boolean}（可选）是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护，默认开启。true 为开启，false 为关闭。
-
-返回：
-
-* {Object} 返回 RealtimeObject（实时通信对象），其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -347,20 +353,16 @@ realtimeObject.on('open', function() {
 
 ### AV.realtime.version
 
-用法：
+获取当前 SDK 的版本信息。
+
 ```javascript
 AV.realtime.version
 ```
+#### 返回
 
-描述：
+```String``` 返回当前版本。
 
-* 获取当前 SDK 的版本信息
-
-返回：
-
-* {String} 返回当前版本
-
-例子：
+#### 示例
 
 ```javascript
 // 返回版本号
@@ -369,24 +371,23 @@ console.log('当前版本是：' + AV.realtime.version);
 
 ### RealtimeObject.open
 
-用法：
+该方法一般情况下，你不需要调用，SDK 会自动启动与服务的连接。该方法可以启动实时通信的连接，与服务器匹配建立 websocket 连接。
+
 ```javascript
 RealtimeObject.open(callback)
 ```
 
-描述：
+#### 输入
 
-* 该方法一般情况下，你不需要调用，SDK 会自动启动与服务的连接。该方法可以启动实时通信的连接，与服务器匹配建立 websocket 连接；
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|可选|创建成功并且与服务器建立连接后触发的回调，此时也会派发一个私有的事件「open」到 RealtimeObject 内部，也可以通过监听当前的 RealtimeObject 实例的 open 事件来处理连接成功的业务逻辑。
 
-参数：
+#### 返回
 
-* callback {Function}（可选）创建成功并且与服务器建立连接后触发的回调，此时也会派发一个私有的事件「open」到 RealtimeObject 内部，也可以通过监听当前的 RealtimeObject 实例的 open 事件来处理连接成功的业务逻辑；
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -411,20 +412,17 @@ realtimeObject.on('open', function() {
 
 ### RealtimeObject.close
 
-用法：
+关闭实时通信的连接，并且内部会关闭 websocket 连接。该方法没有回调，因为调用会立刻关闭 WebSocket。
+
 ```javascript
 RealtimeObject.close()
 ```
 
-描述：
+#### 返回
 
-* 关闭实时通信的连接，并且内部会关闭 websocket 连接。该方法没有回调，因为调用会立刻关闭 WebSocket。
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -445,26 +443,24 @@ realtimeObject.on('close', function() {
 
 ### RealtimeObject.on
 
-用法：
+监听 RealtimeObject 内部的事件，基于一个局部的事件中心，事件每次派发就会被触发一次。
+
 ```javascript
 RealtimeObject.on(eventName, callback)
 ```
 
-描述：
+#### 输入
 
-* 监听 RealtimeObject 内部的事件，基于一个局部的事件中心，事件每次派发就会被触发一次；
+参数|类型|约束|说明
+---|---|---|---
+eventName|String|必须|监听的事件名称
+callback|Function|必须|当事件被派发时会调用的回调
 
-参数：
+#### 返回
 
-* eventName {String} （必须）监听的事件名称
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （必须）当事件被派发时会调用的回调
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -489,26 +485,24 @@ realtimeObject.on('join', function(data) {
 
 ### RealtimeObject.once
 
-用法：
+监听 RealtimeObject 内部的事件，基于一个局部的事件中心，事件只会被触发一次。
+
 ```javascript
 RealtimeObject.once(eventName, callback)
 ```
 
-描述：
+#### 输入
 
-* 监听 RealtimeObject 内部的事件，基于一个局部的事件中心，事件只会被触发一次；
+参数|类型|约束|说明
+---|---|---|---
+eventName|String|必须|监听的事件名称
+callback|Function|必须|当事件被派发时会调用的回调
 
-参数：
+#### 返回
 
-* eventName {String} （必须）监听的事件名称
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （必须）当事件被派发时会调用的回调
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -533,26 +527,24 @@ realtimeObject.once('close', function() {
 
 ### RealtimeObject.emit
 
-用法：
+派发一个事件到 RealtimeObject 中，局部的事件中心。
+
 ```javascript
 RealtimeObject.emit(eventName, dataObject)
 ```
 
-描述：
+#### 输入
 
-* 派发一个事件到 RealtimeObject 中，局部的事件中心
+参数|类型|约束|说明
+---|---|---|---
+eventName|String|必须|派发的事件名称
+dataObject|Obejct||传递的参数，可以在监听的回调中通过第一个参数获取
 
-参数：
+#### 返回
 
-* eventName {String} （必须）派发的事件名称
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* dataObject {Obejct}（可选）传递的参数，可以在监听的回调中通过第一个参数获取
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -578,26 +570,24 @@ realtimeObject.emit('LeanCloud123', {
 
 ### RealtimeObject.off
 
-用法：
+从 RealtimeObject 中的私有的事件中心，删除一个事件对应的回调函数绑定
+
 ```javascript
 RealtimeObject.off(eventName, callback)
 ```
 
-描述：
+#### 输入
 
-* 从 RealtimeObject 中的私有的事件中心，删除一个事件对应的回调函数绑定
+参数|类型|约束|说明
+---|---|---|---
+eventName|String|必须|一个绑定过的事件名称
+callback|Function|必须|要在这个事件中移除的函数
 
-参数：
+#### 返回
 
-* eventName {String} （必须）一个绑定过的事件名称
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function}（必须）要在这个事件中移除的函数
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -628,36 +618,28 @@ realtimeObject.emit('LeanCloud123', {
 
 ### RealtimeObject.conv
 
-用法：
+创建一个 Conversation（对话），实时通信的最小单元。conv 和 room 方法实现的是同样的方法，为了保持概念上的统一，详见「[特别说明](#特别说明)」。
+
 ```javascript
 RealtimeObject.conv(options, callback)
 ```
 
-描述：
+#### 输入
 
-* 创建一个 Conversation（对话），实时通信的最小单元。conv 和 room 方法实现的是同样的方法，为了保持概念上的统一，详见「[特别说明](#特别说明)」；
+参数|类型|约束|说明
+---|---|---|---
+**options**|Object|可选|传入配置信息
+&nbsp;&nbsp;&nbsp;&nbsp; attr|Object|可选|自定义的数据信息，如 title、image、xxx 等。
+&nbsp;&nbsp;&nbsp;&nbsp; members|Array|可选|创建 conversation 时可以直接加入成员的 clientId，<br/>如 `['LeanCloud1', 'LeanCloud2']`。
+&nbsp;&nbsp;&nbsp;&nbsp; name|String|可选|Conversation 的名字
+&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+**callback**|Function|可选|创建成功后的回调函数，此时也会在 RealtimeObject <br/>内部派发一个 create 事件，可以通过 `RealtimeObject.on()` 方法来监听。
 
-参数：
+#### 返回
 
-* options {Object} （可选）传入配置信息
+```Object``` 返回 convObject，其中有后续调用的方法，支持链式调用。
 
-    * members {Array} （可选）创建 conversation 时可以直接加入成员的 clientId，如 ['LeanCloud1', 'LeanCloud2']
-
-    * attr {Object} （可选）自定义的数据信息，如 title、image、xxx 等
-
-    * name {String} （可选）Conversation 的名字
-
-    * transient {Boolean} （可选）是否为暂态的 conversation，暂态的 conversation 可以支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。
-    **普通聊天每个 conversation 最多只能支持 500 人，如果预计单个 conversation 会超过这个数字，那请开启这个选项。**
-    具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」
-
-    * callback {Function} （可选）创建成功后的回调函数，此时也会在 RealtimeObject 内部派发一个 create 事件，可以通过 RealtimeObject.on() 方法来监听；
-
-返回：
-
-* {Object} 返回 convObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -695,26 +677,24 @@ realtimeObject.on('create', function(data) {
 
 ### RealtimeObject.conv
 
-用法：
+匹配一个在服务器端已有的 Conversation（对话），并生成对应的 convObject，此时不派发任何事件。
+
 ```javascript
 RealtimeObject.conv(convId, callback)
 ```
 
-描述：
+#### 输入
 
-* 匹配一个在服务器端已有的 Conversation（对话），并生成对应的 convObject，此时不派发任何事件；
+参数|类型|约束|说明
+---|---|---|---
+convId|String|必须|传入已有 Conversation（对话） 的 id
+callback|Function|可选|创建成功后的回调函数，此时不会派发任何事件。
 
-参数：
+#### 返回
 
-* convId {String} （必须）传入已有 Conversation（对话） 的 id
+```Object``` 返回 convObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时不会派发任何事件；
-
-返回：
-
-* {Object} 返回 convObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -746,16 +726,13 @@ realtimeObject.conv(convId, function(obj) {
 
 ### RealtimeObject.room
 
-用法：
+创建一个 Room（房间），实时通信的最小单元。room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 [conv](#RealtimeObject_conv) 完全相同。
+
 ```javascript
 RealtimeObject.room(options, callback)
 ```
 
-描述：
-
-* 创建一个 Room（房间），实时通信的最小单元。room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -790,26 +767,24 @@ realtimeObject.on('create', function(data) {
 
 ### RealtimeObject.room
 
-用法：
+匹配一个在服务器端已有的 room，并生成对应的 RoomObject，此时不派发任何事件；room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
+
 ```javascript
 RealtimeObject.room(roomId, callback)
 ```
 
-描述：
+#### 输入
 
-* 匹配一个在服务器端已有的 room，并生成对应的 RoomObject，此时不派发任何事件；room 方法就是 conv 方法的一个别名，为了保持概念的统一，详见「[特别说明](#特别说明)」，使用方式和 conv 完全相同。
+参数|类型|约束|说明
+---|---|---|---
+roomId|String|必须|传入已有 Room 的 id
+callback|Function|可选|创建成功后的回调函数，此时不会派发任何事件。
 
-参数：
+#### 返回
 
-* roomId {String} （必须）传入已有 Room 的 id
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时不会派发任何事件；
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -837,24 +812,23 @@ realtimeObject.room(roomId, function(obj) {
 
 ### RealtimeObject.query
 
-用法：
+获取当前用户所在的 Room 信息。
+
 ```javascript
 RealtimeObject.query(callback)
 ```
 
-描述：
+#### 输入
 
-* 获取当前用户所在的 Room 信息
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|创建成功后的回调函数，参数中可以获取到 Room 的列表。
 
-参数：
+#### 返回
 
-* callback {Function} （必须）创建成功后的回调函数，参数中可以获取到 Room 的列表；
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -877,36 +851,29 @@ realtimeObject.on('open', function() {
 
 ### RealtimeObject.query
 
-用法：
-```javascript
+查询实时通信表中的数据。
+
+```
 RealtimeObject.query(options, callback)
 ```
 
-描述：
+#### 输入
 
-* 查询实时通信表中的数据
+参数|类型|约束|默认|说明
+---|---|---|---|---
+**options**|Object|||一些配置参数
+&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|是否要去掉内置大字段（成员列表、静音列表、当前用户静音的状态）。
+&nbsp;&nbsp;&nbsp;&nbsp; limit|Number||10|一次获取的条目数量
+&nbsp;&nbsp;&nbsp;&nbsp; skip|Number||0|跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询。
+&nbsp;&nbsp;&nbsp;&nbsp; sort|String||-lm|默认为最近对话反序，排序字段
+&nbsp;&nbsp;&nbsp;&nbsp; where|Object||{m: clientId}|默认为包含自己的查询 {m: clientId}
+**callback**|Function|必须||创建成功后的回调函数，参数中可以获取到 Room 的列表。
 
-参数：
+#### 返回
 
-* options {Object} （可选）一些配置参数
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-  * where {Object} （可选）默认为包含自己的查询 {m: clientId}
-
-  * sort {String} （可选）默认为 -lm，最近对话反序
-
-  * limit {Number} （可选）一次获取的条目数量，默认为 10
-
-  * skip {Number} （可选）跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询，默认为 0
-
-  * compact {Boolean} （可选）是否要去掉内置大字段（成员列表，静音列表和当前用户静音的状态），默认 false
-
-* callback {Function} （必须）创建成功后的回调函数，参数中可以获取到 Room 的列表
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -922,11 +889,11 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    // 各种条件查询
    realtimeObject.query({
-       where: {m: 'abc123'},
-       sort: '-lm',
-       limit: 100,
-       skip: 200,
-       compact: false
+       where   : {m: 'abc123'},
+       sort    : '-lm',  // 或者多字段：'-createdAt,c'
+       limit   : 100,
+       skip    : 200,
+       compact : false
    },function(data) {
       console.log(data);  // list
    });
@@ -935,26 +902,24 @@ realtimeObject.on('open', function() {
 
 ### RealtimeObject.ping
 
-用法：
+查询对应的 clientId 是否处于服务在线状态。
+
 ```javascript
 RealtimeObject.ping(clientIdList, callback)
 ```
 
-描述：
+#### 输入
 
-* 查询对应的 clientId 是否处于服务在线状态
+参数|类型|约束|说明
+---|---|---|---
+clientIdList|Array|必须|传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']。<br/>**注意：每次最多只能判断 20 个 clientId，超过 20 个只查询前 20 个，<br/>因为消息过长可能导致 WebSocket 包过长而被服务器断开连接。**
+callback|Function|必须|回调函数，可以在参数中获得在线的 clientIdList，<br/>比如返回 ['LeanCloud2']，则说明 LeanCloud2 在线。
 
-参数：
+#### 返回
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的数组，如 ['LeanCloud1', 'LeanCloud2']。**注意：每次最多只能判断 20 个 clientId，超过 20 个只查询前 20 个，因为消息过长可能导致 WebSocket 包过长而被服务器断开连接。**
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud2']，则说明 LeanCloud2 在线
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -988,26 +953,24 @@ realtimeObject.ping([
 
 ### RealtimeObject.ping
 
-用法：
+查询对应的 clientId 是否处于服务在线状态。
+
 ```javascript
 RealtimeObject.ping(clientId, callback)
 ```
 
-描述：
+#### 输入
 
-* 查询对应的 clientId 是否处于服务在线状态
+参数|类型|约束|说明
+---|---|---|---
+clientId|String|必须|传入已有用户的 clientId，如 'LeanCloud1'。
+callback|Function|必须|回调函数，可以在参数中获得在线的 clientIdList，<br/>比如返回 ['LeanCloud1']，则说明 LeanCloud1 在线。
 
-参数：
+#### 返回
 
-* clientId {String} （必须）传入已有用户的 clientId，如 'LeanCloud1'
+```Object``` 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （必须）回调函数，可以在参数中获得在线的 clientIdList，比如返回 ['LeanCloud1']，则说明 LeanCloud1 在线
-
-返回：
-
-* {Object} 返回 RealtimeObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1041,26 +1004,24 @@ realtimeObject.ping('LeanCloud01', function(data) {
 
 ### RoomObject.add
 
-用法：
+向当前 RoomObject 中添加一个用户。
+
 ```javascript
 RoomObject.add(clientId, callback)
 ```
 
-描述：
+#### 输入
 
-* 向当前 RoomObject 中添加一个用户
+参数|类型|约束|说明
+---|---|---|---
+clientId|String|必须|传入已有用户的 clientId。
+callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
 
-参数：
+#### 返回
 
-* clientId {String} （必须）传入已有用户的 clientId
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件；
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1083,7 +1044,7 @@ var room = realtimeObject.room({
 });
 
 room.add('LeanCloud03', function() {
-    console.log('Add success.');
+    console.log('添加成功。');
 });
 
 // 当前 Room 有新的 client 加入时触发
@@ -1094,26 +1055,24 @@ realtimeObject.on('join', function(data) {
 
 ### RoomObject.add
 
-用法：
+向当前 RoomObject 中添加多个用户。
+
 ```javascript
 RoomObject.add(clientIdList, callback)
 ```
 
-描述：
+#### 输入
 
-* 向当前 RoomObject 中添加多个用户
+参数|类型|约束|说明
+---|---|---|---
+clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
+callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
 
-参数：
+#### 返回
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的 list，每个元素是 client
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件；
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1136,7 +1095,7 @@ var room = realtimeObject.room({
 });
 
 room.add(['LeanCloud03', 'LeanCloud04'], function() {
-    console.log('Add success.');
+    console.log('添加成功。');
 });
 
 // 当前 Room 有新的 client 加入时触发
@@ -1147,24 +1106,24 @@ realtimeObject.on('join', function(data) {
 
 ### RoomObject.remove
 
-用法：
+从当前 RoomObject 中删除一个用户。
+
 ```javascript
 RoomObject.remove(clientId, callback)
 ```
 
-* 描述：从当前 RoomObject 中删除一个用户
+#### 输入
 
-参数：
+参数|类型|约束|说明
+---|---|---|---
+clientId|String|必须|传入已有用户的 clientId。
+callback|Function|可选|删除成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
 
-* clientId {String} （必须）传入已有用户的 clientId
+#### 返回
 
-* callback {Function} （可选）删除成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件；
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1187,7 +1146,7 @@ var room = realtimeObject.room({
 });
 
 room.remove('LeanCloud02', function() {
-    console.log('Remove success.');
+    console.log('成功删除。');
 });
 
 // 当前 Room 有 client 立刻时触发
@@ -1198,26 +1157,24 @@ realtimeObject.on('left', function(data) {
 
 ### RoomObject.remove
 
-用法：
+从当前 RoomObject 中删除多个用户。
+
 ```javascript
 RoomObject.remove(clientIdList, callback)
 ```
 
-描述：
+#### 输入
 
-* 从当前 RoomObject 中删除多个用户
+参数|类型|约束|说明
+---|---|---|---
+clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
+callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
 
-参数：
+#### 返回
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的 list，每个元素是 client
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件；
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1241,7 +1198,7 @@ var room = realtimeObject.room({
 });
 
 room.remove(['LeanCloud02', 'LeanCloud03'], function() {
-    console.log('Remove success.');
+    console.log('成功删除。');
 });
 
 // 当前 Room 有 client 立刻时触发
@@ -1252,24 +1209,23 @@ realtimeObject.on('left', function(data) {
 
 ### RoomObject.join
 
-用法：
+加入当前这个 Room。
+
 ```javascript
 RoomObject.join(callback)
 ```
 
-描述：
+#### 输入
 
-* 加入当前这个 Room
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|可选|加入成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
 
-参数：
+#### 返回
 
-* callback {Function} （可选）加入成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件；
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1302,26 +1258,24 @@ realtimeObject.on('join', function(data) {
 
 ### RoomObject.leave
 
-用法：
+从当前 RoomObject 中离开。
+
 ```javascript
 RoomObject.leave(callback)
 ```
 
-描述：
+#### 输入
 
-* 从当前 RoomObject 中离开
+参数|类型|约束|说明
+---|---|---|---
+clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
+callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
 
-参数：
+#### 返回
 
-* clientIdList {Array} （必须）传入已有用户的 clientId 的 list，每个元素是 client
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件；
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1354,24 +1308,23 @@ realtimeObject.on('left', function(data) {
 
 ### RoomObject.list
 
-用法：
+获取当前 RoomObject 中的成员列表。
+
 ```javascript
 RoomObject.list(callback)
 ```
 
-描述：
+#### 输入
 
-* 获取当前 RoomObject 中的成员列表
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|获取成员列表的回调函数
 
-参数：
+#### 返回
 
-* callback {Function} （必须）获取成员列表的回调函数；
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1401,26 +1354,24 @@ room.list(function(data) {
 
 ### RoomObject.send
 
-用法：
+向当前这个 RoomObject 中发送消息。
+
 ```javascript
 RoomObject.send(dataObject, callback)
 ```
 
-描述：
+#### 输入
 
-* 向当前这个 RoomObject 中发送消息
+参数|类型|约束|说明
+---|---|---|---
+dataObject|Object|必须|发送的数据内容
+callback|Function|可选|发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到。
 
-参数：
+#### 返回
 
-* dataObject {Object} （必须）发送的数据内容
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到。
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1457,34 +1408,28 @@ realtimeObject.on('message', function(data) {
 
 ### RoomObject.send
 
-用法：
+向当前这个 RoomObject 中发送消息。
+
 ```javascript
 RoomObject.send(dataObject, options, callback)
 ```
 
-描述：
+#### 输入
 
-* 向当前这个 RoomObject 中发送消息
+参数|类型|约束|默认|说明
+---|---|---|---|---
+**dataObject**|Object|必须||发送的数据内容
+**options**|Object|可选||发送消息时的配置项
+&nbsp;&nbsp;&nbsp;&nbsp; receipt|Boolean|可选|false|是否需要接收是否收到的回执信息，true 为接收，<br/>可以在 `RoomObject.receipt` 方法中接收。
+&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|false|是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，<br/>可以用来发送用户的输入状态（如：「正在输入……」的效果）。
+&nbsp;&nbsp;&nbsp;&nbsp; type|String|可选||无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android <br/>等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后<br/>会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：<br/>text（文本）、image（图片）、audio（声音）、video（视频）、<br/>location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。
+**callback**|Function|可选||发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到。
 
-参数：
+#### 返回
 
-* dataObject {Object} （必须）发送的数据内容
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* options {Object} （可选）发送消息时的配置项
-
-    * receipt {Boolean} （可选）默认 false。是否需要接收是否收到的回执信息，true 为接收，可以在 RoomObject.receipt 方法中接收
-
-    * transient {Boolean} (可选) 默认 false。是否发送的是「暂态消息」，暂态消息不会有回调，不会存在历史记录中，可以用来发送用户的输入状态（如：「正在输入。。。」的效果）
-
-    * type {String} （可选） 无默认值。该参数在多端通信中会用到，当你打算与基于 LeanCloud iOS、Android 等客户端通信时，需要使用此选项来设置不同的媒体类型，这样其他客户端接收到之后会有相应的渲染处理方式，详情请看相应 SDK 的文档。目前支持：text（文本）、image（图片）、audio（声音）、video（视频）、location（地理位置）、file（各种类型文件），具体使用方式请参考下面的例子。
-
-* callback {Function} （可选）发送到服务器成功后的回调函数，不一定对方已经接收了，但是服务器已经收到
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1566,24 +1511,23 @@ room.send({
 
 ### RoomObject.receive
 
-用法：
+接收到当前这个 RoomObject 中的消息。
+
 ```javascript
 RoomObject.receive(callback)
 ```
 
-描述：
+#### 输入
 
-* 接收到当前这个 RoomObject 中的消息
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|收到当前 Room 中信息的处理函数。
 
-参数：
+#### 返回
 
-* callback {Function} （必须）收到当前 Room 中信息的处理函数
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1615,24 +1559,23 @@ room.receive(function(data) {
 
 ### RoomObject.receipt
 
-用法：
+如果你通过 RoomObject.send 方法发送了需要有回执功能的信息，那么通过 RoomObject.receipt 可以接收当前这个房间中的所有这类回执信息；回执表示从实时通信服务本身，对方的客户端已经收到该信息。
+
 ```javascript
 RoomObject.receipt(callback)
 ```
 
-描述：
+#### 输入
 
-* 如果你通过 RoomObject.send 方法发送了需要有回执功能的信息，那么通过 RoomObject.receipt 可以接收当前这个房间中的所有这类回执信息；回执表示从实时通信服务本身，对方的客户端已经收到该信息
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|收到的回执信息
 
-参数：
+#### 返回
 
-* callback {Function} （必须）收到的回执信息
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1673,24 +1616,22 @@ room.receipt(function(data) {
 
 ### RoomObject.log
 
-用法：
+获取当前 RoomObject 中的消息历史。这个是一个简单的方式，可以获取最近 20 条历史消息。
+
 ```javascript
 RoomObject.log(callback)
 ```
 
-描述：
+#### 输入
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|回调函数，参数中可以取得历史消息数据。
 
-* 获取当前 RoomObject 中的消息历史。这个是一个简单的方式，可以获取最近 20 条历史消息。
+#### 返回
 
-参数：
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-* callback {Function} （必须）回调函数，参数中可以取得历史消息数据
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1718,32 +1659,27 @@ realtimeObject.room(roomId, function(object) {
 
 ### RoomObject.log
 
-用法：
+获取当前 RoomObject 中的消息历史。
+
 ```javascript
 RoomObject.log(options, callback)
 ```
 
-描述：
+#### 输入
 
-* 获取当前 RoomObject 中的消息历史。
+参数|类型|约束|默认|说明
+---|---|---|---|---
+**options**|Object|可选||查询历史条目的参数
+&nbsp;&nbsp;&nbsp;&nbsp; limit|Number|可选|20|返回消息历史的条目数量，默认是查询最近 20 条历史消息。
+&nbsp;&nbsp;&nbsp;&nbsp; mid|String|可选||message id 消息的 id，当接收到消息的时候会有这个 id，<br/>用来辅助查询，防止同一时间戳下有两条一样的消息。
+&nbsp;&nbsp;&nbsp;&nbsp; t|String/Number|可选||查询历史消息的时间戳，查询这个时间之前的消息。
+**callback**|Function|必须||回调函数，参数中可以取得历史消息数据。
 
-参数：
+#### 返回
 
-* options {Object} （可选）查询历史条目的参数
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-  * t {String|Number} （可选）查询历史消息的时间戳，查询这个时间之前的消息
-
-  * mid {String} （可选）message id 消息的 id，当接收到消息的时候会有这个 id，用来辅助查询，防止同一时间戳下有两条一样的消息
-
-  * limit {Number} （可选）返回消息历史的条目数量，默认是查询最近 20 条历史消息
-
-* callback {Function} （必须）回调函数，参数中可以取得历史消息数据
-
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1766,7 +1702,7 @@ realtimeObject.room(roomId, function(object) {
       // 当前用户所在的组，有消息时触发
       room.log({
          // 时间戳，查询这个时间之前的消息
-         t: 1429545834932
+         t: 1429545834932,
          // message id
          // mid: 'afsadsa_ds2w',
          // 返回条目数量
@@ -1780,24 +1716,23 @@ realtimeObject.room(roomId, function(object) {
 
 ### RoomObject.count
 
-用法：
+获取当前这个 Room（或者 Conversation）中的用户数量。
+
 ```javascript
 RoomObject.count(callback)
 ```
 
-描述：
+#### 输入
 
-* 获取当前这个 Room（或者 Conversation）中的用户数量
+参数|类型|约束|说明
+---|---|---|---
+callback|Function|必须|返回的数据中可以获取到用户数量
 
-参数：
+#### 返回
 
-* callback {Function} （必须）返回的数据中可以获取到用户数量
+```Object``` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
 
-返回：
-
-* {Object} 返回 RoomObject，其中有后续调用的方法，支持链式调用。
-
-例子：
+#### 示例
 
 ```javascript
 var appId = '{{appid}}';
@@ -1835,47 +1770,35 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 
 ### open
 
-描述：
-
-* 与服务器建立好连接之后就会被派发，包括当服务断开重新被连接上时也会被触发
+与服务器建立好连接之后就会被派发，包括当服务断开重新被连接上时也会被触发。
 
 ### close
 
-描述：
-
-* 与服务器连接断开就会被派发，包括网络中断
+与服务器连接断开就会被派发，包括网络中断。
 
 ### create
 
-描述：
-
-* 新建一个 Room 成功之后会被触发
+新建一个 Room 成功之后会被触发。
 
 ### join
 
-描述：
-
-* 当一个 Room 新增了一个成员之后会被触发
+当一个 Room 新增了一个成员之后会被触发。
 
 ### left
 
-描述：
-
-* 当一个 Room 中有成员离开之后会被触发
+当一个 Room 中有成员离开之后会被触发。
 
 ### message
 
-描述：
-
-* 当收到消息时会被触发，收到的消息是当前客户端（clientId）存在的 Room 中的信息，所有这些数据都可以在服务器端看到。
+当收到消息时会被触发，收到的消息是当前客户端（clientId）存在的 Room 中的信息，所有这些数据都可以在服务器端看到。
 
 ### reuse
 
-* 发生连接错误，可能是网络原因，SDK 在自动尝试重连。可以监听这个状态，给用户「服务器已断开，正在重新连接。。。」之类的提示。
+发生连接错误，可能是网络原因，SDK 在自动尝试重连。可以监听这个状态，给用户「服务器已断开，正在重新连接……」之类的提示。
 
 ### receipt
 
-* 收到消息回执的时候会被触发
+收到消息回执的时候会被触发。
 
 ## FAQ
 

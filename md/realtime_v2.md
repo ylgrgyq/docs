@@ -68,13 +68,13 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 
 属性名|类型|约束|说明
 :---|:---|:---:|:---
-attributes|Map/Dict|可选|自定义属性供开发者自己扩展用。
-conversationId|字符串||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
-creator|字符串||对话创建者的 clientId（只读），标识对话创建者信息
-members|数组||对话参与者，这里记录了所有的参与者
-mute|数组||将对话设为静音的参与者，这部分参与者不会收到推送。
-name|字符串|可选|对话的名字，可用来对于群组命名。
-transient|布尔值||表示对话是否为暂态对话
+attributes|Object|可选|自定义属性供开发者自己扩展用。
+conversationId|String||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
+creator|String||对话创建者的 clientId（只读），标识对话创建者信息
+members|Array||对话参与者，这里记录了所有的参与者
+mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。
+name|String|可选|对话的名字，可用来对于群组命名。
+transient|Boolean||表示对话是否为暂态对话
 
 每创建一个对话，就会在 LeanCloud 后台 _Conversation 表中增加一条记录，这可以在 LeanCloud 控制台 > **应用** > **存储** > **数据** 里面看到。各属性与 _Conversation 表中字段名的对应关系为：
 
