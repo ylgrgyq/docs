@@ -408,16 +408,16 @@ LeanCloud 会每隔 30 秒批量发送一次，消息以 JSON 数组的形式 PO
     "from": "A",
     "bin": false,
     "data": "hello, sys",
-    "ACL": {
-      "*": {
-        "write": true,
-        "read": true
-      }
+    "createdAt": {
+      "__type": "Date",
+      "iso": "2015-07-30T14:37:42.584Z"
     },
-    "objectId": "55b9c63700b075a5ca292f5e",
-    "createdAt": "2015-07-30T14:37:42.584Z",
-    "updatedAt": "2015-07-30T14:37:42.584Z"
+    "updatedAt":  {
+      "__type": "Date",
+      "iso": "2015-07-30T14:37:42.584Z"
+    }
   }
+
 ]
 ```
 
