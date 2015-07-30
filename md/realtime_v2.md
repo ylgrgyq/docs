@@ -391,6 +391,35 @@ code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整
 
 开发者可以自定义 Web Hook 来实时接收用户发给系统对话的消息，消息的数据结构与上文所述的 `_SysMessage` 一致。
 当有用户向系统对话发送消息时，我们会通过 HTTP POST 请求将 JSON 格式的数据发送到用户设置的 Web Hook 上。
+LeanCloud 会每隔 30 秒批量发送一次，消息以 JSON 数组的形式 POST 到 Web Hook。超时时间为 5 秒，当用户 hook 地址超过超时时间没有响应时我们会重试至多 3 次。
+
+发送的消息格式为：
+
+```json
+[
+  {
+    "fromIp": "121.238.214.92",
+    "conv": {
+      "__type": "Pointer",
+      "className": "_Conversation",
+      "objectId": "55b99ad700b0387b8a3d7bf0"
+    },
+    "msgId": "nYH9iBSBS_uogCEgvZwE7Q",
+    "from": "A",
+    "bin": false,
+    "data": "hello, sys",
+    "ACL": {
+      "*": {
+        "write": true,
+        "read": true
+      }
+    },
+    "objectId": "55b9c63700b075a5ca292f5e",
+    "createdAt": "2015-07-30T14:37:42.584Z",
+    "updatedAt": "2015-07-30T14:37:42.584Z"
+  }
+]
+```
 
 ### 开发者给系统对话发送消息
 
