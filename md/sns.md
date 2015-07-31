@@ -6,36 +6,33 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 ## iOS SNS 组件
 
-### 导入 SDK
-您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。
+我们已经把 SNS 组件开源了，放在 Github 的 [leancloud-social-ios](https://github.com/leancloud/leancloud-social-ios) 项目上。该项目上的 LeanCloudSocialDemo 目录下也有个相应的 Demo。也可以参考 [LeanChat](https://github.com/leancloud/leanchat-ios/blob/master/LeanChat/LeanChat/controllers/entry/CDLoginVC.m)，它使用了该 SNS 组件，这里有个[视频演示](http://ac-x3o016bx.clouddn.com/a294809feb0c6a8a.mp4)。
 
-<!--
-您可以从 https://github.com/leancloud/avoscloud-sdk 下载iOS的SDK。您也可以使用Podfile通过cocoapods下载我们的SDK，如:
+### 导入 SDK
+你可以使用 Podfile 通过 cocoapods 引入 SDK，
 
 ```sh
-pod 'AVOSCloudSNS'
-```
--->
-
-### 添加代码
-
-```objc
-[AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
-        //you code here
-    }];
+	pod 'LeanCloudSocial'
 ```
 
-就这么简单, 现在你已经拥有了用户登录功能!
+也可以在开源项目上编译 framework 加入到项目中，或者直接拖动源代码到项目中。
 
 ### SSO
-利用SSO, 可以使用户不用输入用户名密码等复杂操作, 一键登录. **目前 LeanCloudSNS 已经支持新浪微博和手机QQ, 并且不需要使用各个平台官方的SDK, 保证您的app体积最小化**. 而你需要做的也很简单,以新浪微博为例:
+利用SSO, 可以使用户不用输入用户名密码等复杂操作，一键登录。 **目前 LeanCloudSNS 已经支持新浪微博、手机 QQ 和微信, 并且不需要使用各个平台官方的 SDK, 保证你的应用体积最小化。**而你需要做的也很简单，以新浪微博为例：
 
 ```objc
 [AVOSCloudSNS setupPlatform:AVOSCloudSNSSinaWeibo withAppKey:@"Weibo APP ID" andAppSecret:@"Weibo APP KEY" andRedirectURI:@""];
 
 [AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
-        //you code here
-    } toPlatform:AVOSCloudSNSSinaWeibo];
+ 	 if (error) {
+ 	 } else {
+ 	 	NSString *accessToken = object[@"access_token"];
+      	NSString *username = object[@"username"];
+      	NSString *avatar = object[@"avatar"];
+      	NSDictionary *rawUser = object[@"raw-user"]; // 性别等第三方平台返回的用户信息
+      	//...
+ 	 }
+   } toPlatform:AVOSCloudSNSSinaWeibo];
 
 ```
 
@@ -47,18 +44,22 @@ pod 'AVOSCloudSNS'
 }
 ```
 
-这样, 代码部分就完成了. 下一步就是设置, 为你的app添加 URL Schemes: `sinaweibosso.微博appId`(注意有个点".")
+这样, 代码部分就完成了. 下一步就是设置, 为你的app添加 URL Schemes: `sinaweibosso.appId`(注意有个点".")，像这样
+
+![Url Shceme](images/sns_guide_url_scheme.png)
 
 这时如果顺利, 应该可以正常的打开新浪微博官方iOS客户端进行登录了.
 
-QQ的SSO与微博完全一致, 只是设置URL Schemes:`tencent腾讯appid`
+QQ的SSO与微博完全一致, 只是设置URL Schemes:`tencentappid`，微信则使用微信开放平台提供的 AppId，如 `wxa3eacc1c86a717bc`。
+
+`+ (void)[AVOSCloudSNS loginWithCallback:toPlatform:]` 接口当在相关应用安装的情况下，直接跳转到相关应用进行 SSO 授权，如果没有安装的话，则跳转至网页授权。网页授权需要用户输入账号、密码，体验较差，所以我们提供了 `+ (BOOL)[AVOSCloudSNS isAppInstalledForType:]`来让你检测相应的应用有没有安装，没有安装的话可以提示用户或者隐藏按钮。
 
 ### 绑定 AVUser
 
 先导入头文件:
 
 ```objc
-# import <AVOSCloudSNS/AVUser+SNS.h>
+# import <LeanCloudSocial/AVUser+SNS.h>
 ```
 
 然后在登录SNS成功回调后`loginWithAuthData:block`,这样会用当前的SNS用户来尝试登录获取AVUser信息, 如果AVUser不存在, 系统会自动创建新用户并返回,如果已经存在, 则直接返回该用户.
@@ -101,16 +102,16 @@ if (vc) {
 请注意代码提到的`ARC模式中要将vc置空`来打破retain环, 否则vc将不会被释放而浪费内存!
 
 
-更多详细使用方法, 请查看SDK API文档.
+更多详细使用方法, 请前往[开源项目](https://github.com/leancloud/leancloud-social-ios)结合 Demo 学习。
 
 ## Android SNS 组件
 
 
-AVOSCloud Android SNS 为开发人员提供了一个非常轻量的模块，使用此模块，您可以仅用少量代码便可实现社交平台用户登录的功能。
+AVOSCloud Android SNS 为开发人员提供了一个非常轻量的模块，使用此模块，你可以仅用少量代码便可实现社交平台用户登录的功能。
 
 ### 导入 SDK
 
-您可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的 jar 包加入您工程的 libs 目录。如果您还不知道如何安装 SDK，请查看[快速入门指南](/start.html)。
+你可以从 [本地下载](https://leancloud.cn/docs/sdk_down.html) Android SNS SDK（从1.4.4版本开始包括avossns的jar包），将下载的 jar 包加入你工程的 libs 目录。如果你还不知道如何安装 SDK，请查看[快速入门指南](/start.html)。
 
 ### WebView 授权
 
@@ -162,13 +163,13 @@ public class AuthActivity extends Activity{
 
 ### SSO 登录
 
-利用 SSO, 用户可以使用单点登录功能，避免反复输入用户名和密码等，您可以使用以下代码轻松实现:
+利用 SSO, 用户可以使用单点登录功能，避免反复输入用户名和密码等，你可以使用以下代码轻松实现:
 
 ``` java
 // 导入 SNS 组件
 import com.avos.sns.*;
 
-// 使用新浪微博 SNS 登录，在您的 Activity 中
+// 使用新浪微博 SNS 登录，在你的 Activity 中
 public class MyActivity extends Activity {
 
   // onCreate 中初始化，并且登录
@@ -191,7 +192,7 @@ public class MyActivity extends Activity {
   }
 
   // 当登录完成后，请调用 SNS.onActivityResult(requestCode, resultCode, data, type);
-  // 这样您的回调用将会被调用到
+  // 这样你的回调用将会被调用到
   @Override
   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
@@ -199,11 +200,11 @@ public class MyActivity extends Activity {
   }
 }
 ```
-您也可以将上述代码中的 SNSType.AVOSCloudSNSSinaWeibo 更换为 SNSType.AVOSCloudSNSQQ 便可以使用 QQ 的 SSO 登录功能。
+你也可以将上述代码中的 SNSType.AVOSCloudSNSSinaWeibo 更换为 SNSType.AVOSCloudSNSQQ 便可以使用 QQ 的 SSO 登录功能。
 
-** QQ SNS 在腾讯 SNS 授权中，由于 QQ SDK 官方对于 WebView 授权的限制，导致在 WebView 中无法完成正常的授权过程，所以 QQ SNS 只支持 SSO 登录授权。我们也会持续跟进 QQ SDK 的更新进展，同时也为对您造成的不便感到抱歉。
+** QQ SNS 在腾讯 SNS 授权中，由于 QQ SDK 官方对于 WebView 授权的限制，导致在 WebView 中无法完成正常的授权过程，所以 QQ SNS 只支持 SSO 登录授权。我们也会持续跟进 QQ SDK 的更新进展，同时也为对你造成的不便感到抱歉。
 
-***QQ SSO 注意*** 当使用 QQ SSO 登录时，请注意确保您的AndroidManifest.xml文件中包含如下内容
+***QQ SSO 注意*** 当使用 QQ SSO 登录时，请注意确保你的AndroidManifest.xml文件中包含如下内容
 
 ```xml
 <activity android:name="com.tencent.tauth.AuthActivity"
@@ -216,7 +217,7 @@ public class MyActivity extends Activity {
     </intent-filter>
 </activity>
 ```
-***微博 SSO 注意*** 当使用微博 SSO 登录时，请注意确保您的AndroidManifest.xml文件中包含如下内容，否则在没有安装微博客户端的设备上，会出现问题。
+***微博 SSO 注意*** 当使用微博 SSO 登录时，请注意确保你的AndroidManifest.xml文件中包含如下内容，否则在没有安装微博客户端的设备上，会出现问题。
 
 ```xml
 <activity
@@ -230,7 +231,7 @@ public class MyActivity extends Activity {
 
 并下载 [libs 目录](https://github.com/sinaweibosdk/weibo_android_sdk/tree/master/libs)下的三个 .so 文件，导入到自己工程。
 
-对于其他的 SSO 请确保您有如下权限
+对于其他的 SSO 请确保你有如下权限
 
 ```xml
 </application>
@@ -243,11 +244,11 @@ public class MyActivity extends Activity {
 
 ### 绑定 LeanCloud User
 
-您也可以将 SSO 登录后的帐号信息与 LeanCloud 的 User 绑定，通过绑定，您可以在两种用户体系间建立联系，方便信息的共享和使用。
+你也可以将 SSO 登录后的帐号信息与 LeanCloud 的 User 绑定，通过绑定，你可以在两种用户体系间建立联系，方便信息的共享和使用。
 
-如果您还未安装 LeanCloud Android SDK，请参阅[快速入门指南](/start.html)。
+如果你还未安装 LeanCloud Android SDK，请参阅[快速入门指南](/start.html)。
 
-SSO 登录过程与上述代码都相同，您只需要在 callback 中进行关联即可，示例代码如下
+SSO 登录过程与上述代码都相同，你只需要在 callback 中进行关联即可，示例代码如下
 
 ```java
 final SNSCallback myCallback = new SNSCallback() {
@@ -260,7 +261,7 @@ final SNSCallback myCallback = new SNSCallback() {
  };
 ```
 
-上述代码，可以将您的 SNS 帐号与已经创建的 LeanCloud User 帐号绑定。您也可以使用 `loginWithAuthData`，它将为您创建一个新的匿名用户
+上述代码，可以将你的 SNS 帐号与已经创建的 LeanCloud User 帐号绑定。你也可以使用 `loginWithAuthData`，它将为你创建一个新的匿名用户
 
 ```java
   SNS.loginWithAuthData(authData, new LogInCallback() {
@@ -277,7 +278,7 @@ final SNSCallback myCallback = new SNSCallback() {
 
 *** 注:有用户表示想要从第三方授权中获取更多的信息包括用户名等信息，我们同样可以通过 `SNSBase.authorizedData()` 方法来获取授权返回的所有字段 ***
 
-如果您不想再使用 SNS 相关的功能，您可以使用 `logout` 解除 SNS 帐号和 LeanCloud User 帐号的绑定。
+如果你不想再使用 SNS 相关的功能，你可以使用 `logout` 解除 SNS 帐号和 LeanCloud User 帐号的绑定。
 
 ```java
   SNS.logout(AVUser.getCurrentUser(), type, new SaveCallback() {
@@ -309,7 +310,7 @@ final SNSCallback myCallback = new SNSCallback() {
     AVUser.dissociateAuthData(AVUser.getCurrentUser(),AVThirdPartyUserAuth.SNS_TENCENT_WEIBO,callback);// 解除腾讯微薄的账号绑定
 ```
 
-如果您使用了 ShareSDK 来实现分享和第三方登录的功能，能也可以非常轻松的完成和 AVUser 的绑定。以新浪微博为例
+如果你使用了 ShareSDK 来实现分享和第三方登录的功能，能也可以非常轻松的完成和 AVUser 的绑定。以新浪微博为例
 
 ```java
    Platfrom plat = new SinaWeibo(getActivity());
