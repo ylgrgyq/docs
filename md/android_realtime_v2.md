@@ -97,7 +97,7 @@ public void open(final AVIMClientCallback callback)
 AVIMClient imClient = AVIMClient.getInstance("Tom");
 imClient.open(new AVIMClientCallback(){
   @Override
-  public void done(AVIMClient client, AVException e) {
+  public void done(AVIMClient client, AVIMException e) {
     if (null != e) {
       // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
       // 此时聊天服务不可用。
