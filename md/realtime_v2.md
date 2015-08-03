@@ -70,11 +70,13 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 :---|:---|:---:|:---
 attributes|Object|可选|自定义属性供开发者自己扩展用。
 conversationId|String||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
-creator|String||对话创建者的 clientId（只读），标识对话创建者信息
-members|Array||对话参与者，这里记录了所有的参与者
+creator|String||对话创建者的 clientId（只读），标识对话创建者信息。
+lastMessageAt|Date||对话最近的一条消息发送或者接受的时间
+members|Array||对话参与者，这里记录了所有的参与者。
 mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。
 name|String|可选|对话的名字，可用来对于群组命名。
 transient|Boolean||表示对话是否为暂态对话
+
 
 每创建一个对话，就会在 LeanCloud 后台 _Conversation 表中增加一条记录，这可以在 LeanCloud 控制台 > **应用** > **存储** > **数据** 里面看到。各属性与 _Conversation 表中字段名的对应关系为：
 
@@ -83,6 +85,7 @@ transient|Boolean||表示对话是否为暂态对话
 attributes|attr|Object
 conversationId|objectId|String
 creator|c|String
+lastMessageAt|lm|Date
 members|m|Array
 mute|mu|Array
 name|name|String
@@ -267,11 +270,11 @@ sourceIP | 消息发送者的 IP
 
 #### 返回
 
-参数 | 说明
---- | ---
-drop | 可选，如果返回真值消息将被丢弃
-content | 可选，修改后的 content，如果不提供则保留原消息
-toPeers | 可选，数组，修改后的收件人，如果不提供则保留原收件人
+参数 |约束| 说明
+---|---|---
+drop |可选|如果返回真值消息将被丢弃
+content |可选|修改后的 content，如果不提供则保留原消息。
+toPeers |可选|数组，修改后的收件人，如果不提供则保留原收件人。
 
 ### _receiversOffline
 
@@ -289,16 +292,16 @@ timestamp | 服务器收到消息的时间戳，毫秒
 
 #### 返回
 
-参数 | 说明
---- | ---
-skip | 可选，如果为真将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
-offlinePeers | 可选，数组，筛选过的推送收件人
-pushMessage | 可选，推送内容，支持自定义 JSON 结构
-force | 可选，如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false
+参数 |约束| 说明
+---|---|---
+skip|可选|如果为真将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
+offlinePeers|可选|数组，筛选过的推送收件人。
+pushMessage|可选|推送内容，支持自定义 JSON 结构。
+force|可选|如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false。
 
 ### _conversationStart
 
-在创建对话时调用，发生在签名验证之后、创建对话之前
+在创建对话时调用，发生在签名验证之后、创建对话之前。
 
 #### 参数
 
@@ -309,9 +312,9 @@ members | 初始成员数组，包含初始成员
 
 #### 返回
 
-参数 | 说明
---- | ---
-reject | 是否拒绝，可选，默认为 `false`
+参数 |约束| 说明
+--- | ---|---
+reject |可选|是否拒绝，默认为 `false`。
 
 ### _conversationAdd
 
