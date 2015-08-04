@@ -89,7 +89,7 @@ SDK 内部会为每一个 clientId 创建唯一的 `AVIMClient` 实例，同一�
 public void open(final AVIMClientCallback callback)
 ```
 
-`open` 函数返回的时候，会把 `AVIMClient` 实例和 `AVException` 信息（如果发生错误的话）传给 `AVIMClientCallback` 回调接口。
+`open` 函数返回的时候，会把 `AVIMClient` 实例和 `AVIMException` 信息（如果发生错误的话）传给 `AVIMClientCallback` 回调接口。
 
 好了，我们现在来实际看一下这个过程如何实现。假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统（LeanCloud 云端只要求 `clientId` 在应用内唯一即可，具体用什么数据由应用层决定），代码如下：
 
@@ -97,7 +97,7 @@ public void open(final AVIMClientCallback callback)
 AVIMClient imClient = AVIMClient.getInstance("Tom");
 imClient.open(new AVIMClientCallback(){
   @Override
-  public void done(AVIMClient client, AVException e) {
+  public void done(AVIMClient client, AVIMException e) {
     if (null != e) {
       // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
       // 此时聊天服务不可用。
@@ -161,7 +161,7 @@ attr.put("type", ConversationType_OneOne);
 
 imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
   @Override
-  public void done(AVIMConversation conversation, AVException e) {
+  public void done(AVIMConversation conversation, AVIMException e) {
     if (null != conversation) {
       // 成功了，这时候可以显示对话的 Activity 页面（假定为 ChatActivity）了。
       Intent intent = new Intent(this, ChatActivity.class);
@@ -218,7 +218,7 @@ AVIMMessage message = new AVIMMessage();
 message.setContent("hello");
 conversation.sendMessage(message, new AVIMConversationCallback() {
   @Override
-  public void done(AVException e) {
+  public void done(AVIMException e) {
     if (null != e) {
       // 出错了。。。
       e.printStackTrace();
@@ -285,7 +285,7 @@ public void onCreate(){
 AVIMClient imClient = AVIMClient.getInstance("Bob");
 imClient.open(new IMClientCallback(){
   @Override
-  public void done(AVIMClient client, AVException e) {
+  public void done(AVIMClient client, AVIMException e) {
     if (null != e) {
       // 出错了，可能是网络问题无法连接 LeanCloud 云端，请检查网络之后重试。
       // 此时聊天服务不可用。
@@ -499,7 +499,7 @@ AVIMTextMessage message = new AVIMTextMessage();
 message.setText("hello");
 conversation.sendMessage(message, new AVIMConversationCallback() {
   @Override
-  public void done(AVException e) {
+  public void done(AVIMException e) {
     if (null != e) {
       // 出错了。。。
       e.printStackTrace();
@@ -538,7 +538,7 @@ try {
   message.setText("这是你要的文档");
   conversation.sendMessage(message, new AVIMConversationCallback() {
     @Override
-    public void done(AVException e) {
+    public void done(AVIMException e) {
       if (null != e) {
         // 出错了。。。
         e.printStackTrace();
@@ -582,7 +582,7 @@ try {
   message.setText("你说我好看不？");
   conversation.sendMessage(message, new AVIMConversationCallback() {
     @Override
-    public void done(AVException e) {
+    public void done(AVIMException e) {
       if (null != e) {
         // 出错了。。。
         e.printStackTrace();
@@ -629,7 +629,7 @@ try {
   message.setText("听听我唱的小苹果：）");
   conversation.sendMessage(message, new AVIMConversationCallback() {
     @Override
-    public void done(AVException e) {
+    public void done(AVIMException e) {
       if (null != e) {
         // 出错了。。。
         e.printStackTrace();
@@ -675,7 +675,7 @@ try {
   message.setText("敢不敢跟我比一比");
   conversation.sendMessage(message, new AVIMConversationCallback() {
     @Override
-    public void done(AVException e) {
+    public void done(AVIMException e) {
       if (null != e) {
         // 出错了。。。
         e.printStackTrace();
@@ -721,7 +721,7 @@ message.setText("快点过来！");
 message.setLocation(new AVGeoPoint(15.9, 56.4));
 conversation.sendMessage(message, new AVIMConversationCallback() {
   @Override
-  public void done(AVException e) {
+  public void done(AVIMException e) {
     if (null != e) {
       // 出错了。。。
       e.printStackTrace();
@@ -869,7 +869,7 @@ Map<String, Object> attr = new HashMap<String, Object>();
 attr.put("type", ConversationType_Group);
 imClient.createConversation(clientIds, attr, new AVIMConversationCreatedCallback() {
   @Override
-  public void done(AVIMConversation conversation, AVException e) {
+  public void done(AVIMConversation conversation, AVIMException e) {
     if (null != conversation) {
       // 成功了！
       Intent intent = new Intent(currentActivity, ChatActivity.class);
@@ -903,7 +903,7 @@ void join(AVIMConversationCallback callback)
 
 conversation.join(new AVIMConversationCallback(){
   @Override
-  public void done(AVException e) {
+  public void done(AVIMException e) {
     if (null != e) {
       // 出错了:(
     } else {
@@ -961,7 +961,7 @@ userIds.add("Ben");
 userIds.add("Chad");
 conversation.addMembers(userIds, new AVIMConversationCallback() {
   @Override
-  public void done(AVException error) {
+  public void done(AVIMException error) {
     if (null != error) {
       // 加入失败，报错.
       error.printStackTrace();
@@ -993,7 +993,7 @@ List<String> userIds = new ArrayList<String>();
 userIds.add("Alex");
 conversation.kickMembers(userIds, new AVIMConversationCallback() {
   @Override
-  public void done(AVException error) {
+  public void done(AVIMException error) {
     if (null != error) {
       // 失败，报错.
       error.printStackTrace();
@@ -1037,7 +1037,7 @@ void quit(AVIMConversationCallback callback)
 
 conversation.quit(new AVIMConversationCallback(){
   @Override
-  public void done(AVException e) {
+  public void done(AVIMException e) {
     if (null != e) {
       // 出错了:(
     } else {
@@ -1077,7 +1077,7 @@ String oldestMsgId;
 long oldestMsgTimestamp;
 conversation.queryMessages(oldestMsgId,oldestMsgTimestamp, limit, new AVIMMessagesQueryCallback(){
   @Override
-  public void done(List<AVIMMessage> messages, AVException e) {
+  public void done(List<AVIMMessage> messages, AVIMException e) {
     if (null != e) {
       // 出错了:(
     } else {
@@ -1136,7 +1136,7 @@ conversationQuery.whereEqualTo("attr.type", ConversationType_Group);
 
 conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
   @Override
-  public void done(List<AVIMConversation> conversations, AVException e) {
+  public void done(List<AVIMConversation> conversations, AVIMException e) {
     if (null != e) {
       // 出错了。。。
       e.printStackTrace();
@@ -1177,7 +1177,7 @@ Map<String, Object> attr = new HashMap<String, Object>();
 attr.put("type", ConversationType_Group);
 imClient.createConversation(clientIds, name, attr, true, new AVIMConversationCreatedCallback() {
   @Override
-  public void done(AVIMConversation conversation, AVException e) {
+  public void done(AVIMConversation conversation, AVIMException e) {
     if (null != conversation) {
       // 成功了，进入聊天室
       Intent intent = new Intent(currentActivity, ChatActivity.class);
@@ -1211,7 +1211,7 @@ void getMemberCount(AVIMConversationMemberCountCallback callback)
 ```
 conversation.getMemberCount(new AVIMConversationMemberCountCallback(){
   @Override
-  public void done(Integer memberCount, AVException e) {
+  public void done(Integer memberCount, AVIMException e) {
     if (null != e) {
       // 出错了:(
     } else {
