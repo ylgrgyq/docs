@@ -1601,7 +1601,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
         });
 ```
 
-之后在用户受到重置密码的验证码之后，你可以调用这个方法来实现密码重置:
+之后在用户收到重置密码的验证码之后，你可以调用这个方法来实现密码重置:
 ```java
   AVUser.resetPasswordBySmsCodeInBackground(smsCode, newPassword, new UpdatePasswordCallback() {
       @Override
