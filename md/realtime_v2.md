@@ -131,7 +131,7 @@ LeanCloud 实时通信服务统一使用「对话」来表示这三种使用场�
 - 音频（AudioMessage）
 - 视频（VideoMessage）
 - 位置（LocationMessage）
- 
+
 这些消息类型可最大程度地简化使用步骤，能更好地满足通用需求。开发者也可以基于我们的框架，方便地扩展出自己的消息类型。
 
 这些消息类型的层次关系为：
@@ -273,6 +273,7 @@ sourceIP | 消息发送者的 IP
 参数 |约束| 说明
 ---|---|---
 drop |可选|如果返回真值消息将被丢弃
+code | 可选 | 当 drop 为 `true` 时可以下发一个应用自定义的整型错误码
 content |可选|修改后的 content，如果不提供则保留原消息。
 toPeers |可选|数组，修改后的收件人，如果不提供则保留原收件人。
 
@@ -314,7 +315,8 @@ members | 初始成员数组，包含初始成员
 
 参数 |约束| 说明
 --- | ---|---
-reject |可选|是否拒绝，默认为 `false`。
+reject |可选|是否拒绝，默认为 `false`
+code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整型错误码
 
 ### _conversationAdd
 
@@ -333,6 +335,7 @@ convId | 对话 id
 参数 | 说明
 --- | ---
 reject | 是否拒绝，默认为 `false`
+code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整型错误码
 
 ### _conversationRemove
 
@@ -352,6 +355,7 @@ convId | 对话 id
 参数 | 说明
 --- | ---
 reject | 是否拒绝，默认为 `false`
+code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整型错误码
 
 ## Android 开发指南
 
