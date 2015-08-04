@@ -766,7 +766,7 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
        signature.setNonce((String)serverSignature.get("nonce"));
        return signature;
      }
-   }catch(AVException e){
+   }catch(AVIMException e){
      throw (SignatureFactory.SignatureException) e;
    }
    return null;
@@ -790,7 +790,7 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
         signature.setNonce((String)serverSignature.get("nonce"));
         return signature;
      }
-   }catch(AVException e){
+   }catch(AVIMException e){
      throw (SignatureFactory.SignatureException) e;
    }
    return null;
