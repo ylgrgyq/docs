@@ -1696,7 +1696,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 AVObject *userObject = nil;
 AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"];
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-[query whereKey:@"locaton" nearGeoPoint:userLocation];
+[query whereKey:@"location" nearGeoPoint:userLocation];
 //获取最接近用户地点的10条微博
 query.limit = 10;
 NSArray<AVObject *> nearPosts = [query findObjects];
