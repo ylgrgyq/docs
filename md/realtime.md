@@ -130,7 +130,7 @@ SignatureFactory 的实现，并携带用户信息和用户行为（登录、关
 
 ### 云代码签名范例
 
-我们提供了一个运行在 LeanCloud [云代码](https://cn.avoscloud.com/docs/cloud_code_guide.html)上的
+我们提供了一个运行在 LeanCloud [云代码](./cloud_code_guide.html)上的
 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)
 ，他提供了基于 Web Hosting 和 Cloud Function 两种方式的签名实现，你可以根据实际情况选
 择自己的实现。
@@ -236,7 +236,7 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考 [云代码 - Cloud 函数](./cloud_code_guide.html#Cloud_函数) 部分的说明。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
 
 ### _messageReceived
 

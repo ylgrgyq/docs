@@ -1097,7 +1097,7 @@ con.QueryHistory(DateTime.Now, 0, "UserA").Wait();
 与查询类似，它提供了  limit 和 skip 操作，可以帮助开发者实现翻页等功能。
 
 ## 签名与安全
-在继续阅读本文档之前，请确保您已经对 [实时通信服务开发指南—权限和认证](https://leancloud.cn/docs/realtime_v2.html#权限和认证) 有了一定的了解。
+在继续阅读本文档之前，请确保您已经对 [实时通信服务开发指南—权限和认证](realtime_v2.html#权限和认证) 有了一定的了解。
 ### 实现签名工厂
 `AVIMClient` 有一个属性：
 
@@ -1114,7 +1114,7 @@ public ISignatureFactoryV2 SignatureFactory { get; set; }
 
 演示实例的步骤：
 
-* 首先您需要下载最新版本的[云代码实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云代码命令行工具使用详解](https://leancloud.cn/docs/cloud_code_commandline.html#)
+* 首先您需要下载最新版本的[云代码实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云代码命令行工具使用详解](cloud_code_commandline.html#)
 
 * 其次，在 Visaul Studio 中，新建一个类叫做 `SampleSignatureFactory` ，把下面这段代码拷贝到其中：
 

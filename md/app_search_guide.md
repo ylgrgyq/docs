@@ -258,7 +258,7 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
 #### Android 集成
 
 ##### 导入SDK
-您可以从 https://leancloud.cn/docs/sdk_down.html 页面下载`应用内搜索`模块,解压缩avossearch.zip压缩包，将libs下的`avossearch-v{version}.jar`包加入您的libs下面。
+您可以从 sdk_down.html 页面下载`应用内搜索`模块,解压缩avossearch.zip压缩包，将libs下的`avossearch-v{version}.jar`包加入您的libs下面。
 
 之后，您需要将res下的资源文件夹拷贝并且合并到您工程的res目录下，更改资源文件的内容并不影响SDK工作，但是请不要改动资源的文件名和文件内资源ID。
 
@@ -449,7 +449,7 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
   });
 ```
 
-更多 API 请参考 [AV.SearchQuery](https://leancloud.cn/docs/api/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](https://leancloud.cn/docs/api/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
+更多 API 请参考 [AV.SearchQuery](api/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](api/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
 
 ## 搜索 API
 

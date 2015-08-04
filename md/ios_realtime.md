@@ -136,7 +136,7 @@ session.signatureDlegate = self;
 
 ## 关注、取消关注
 
-如果应用启用了[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)，在发送消息前，你需要 watch 用户(Super peer 除外)
+如果应用启用了[签名认证](realtime.html#权限和认证)，在发送消息前，你需要 watch 用户(Super peer 除外)
 
 ```objc
 /*!
@@ -159,7 +159,7 @@ watch 和 unwatch 的结果在 callback 中处理。
 
 ## 发送消息
 
-使用如下方法构造一个AVMessage对象，注意：如果应用启用了[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)，toPeerId必须是已经关注(watch)了的，否则发送消息时将无法送达。
+使用如下方法构造一个AVMessage对象，注意：如果应用启用了[签名认证](realtime.html#权限和认证)，toPeerId 必须是已经关注（watch）了的，否则发送消息时将无法送达。
 
 ```objc
 /*!

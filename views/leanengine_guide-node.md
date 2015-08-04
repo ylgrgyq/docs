@@ -17,7 +17,7 @@ $ avoscloud add <appName> <appId>
 
 {% block demo %}
 * [node-js-getting-started](https://github.com/leancloud/node-js-getting-started)：这是一个非常简单的基于 Express 4 的项目，可以作为大家的项目模板。效果体验： http://node.avosapps.com/
-* [leanengine-todo-demo](https://github.com/leancloud/leanengine-todo-demo)：这是一个稍微复杂点的项目，是上一个项目的扩展，演示了基本的用户注册、会话管理、业务数据的增删查改、简单的 ACL 使用。这个项目可以作为初学 LeanEngine 和 [JS-SDK](https://leancloud.cn/docs/js_guide.html) 使用。效果体验：http://todo-demo.avosapps.com/
+* [leanengine-todo-demo](https://github.com/leancloud/leanengine-todo-demo)：这是一个稍微复杂点的项目，是上一个项目的扩展，演示了基本的用户注册、会话管理、业务数据的增删查改、简单的 ACL 使用。这个项目可以作为初学 LeanEngine 和 [JS-SDK](js_guide.html) 使用。效果体验：http://todo-demo.avosapps.com/
 {% endblock %}
 
 {% block runtime_env %}**注意**： 目前 LeanEngine 的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock %}
@@ -149,7 +149,7 @@ AV.Cloud.run('hello', {name: 'dennis'}, {
 ```
 {% endblock %}
 
-{% block runFuncApiLink %}[AV.Cloud.run](https://leancloud.cn/docs/api/javascript/symbols/AV.Cloud.html#.run){% endblock %}
+{% block runFuncApiLink %}[AV.Cloud.run](api/javascript/symbols/AV.Cloud.html#.run){% endblock %}
 
 {% block beforeSaveExample %}
 ```javascript

@@ -6,7 +6,7 @@
 
 你可以通过使用我们提供的 SDK，一行后端代码都不用写，就可以做一个功能完备的实时聊天应用、也可以做一个实时对战类的游戏，总之一切与实时通信相关的业务都可以使用 LeanCloud 提供的实时通信服务。
 
-你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
+你还可以通过实时通信 SDK 配合「[云代码](cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
 本 SDK 实现轻量、高效、无依赖，支持浏览器与 node 运行环境。其中浏览器支持涵盖了移动终端的浏览器及各种 WebView，包括微信、PhoneGap、Cordova 的 WebView，同时 SDK 通过插件方式提供兼容 IE8 与 IE9 的方案。具体请看下面「[兼容方案](#兼容方案)」部分的说明。
 
@@ -30,7 +30,7 @@ SDK 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
-如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](https://leancloud.cn/docs/realtime_rest_api.html)」。
+如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](realtime_rest_api.html)」。
 
 ### 特别说明
 
@@ -38,7 +38,7 @@ Conversation（对话）这个概念也可以理解为 Room（房间）。几个
 
 也许说到这里你已经跃跃欲试了，好的，那你可以试用一下看看了。
 
-注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
+注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](/start.html)」开始尝试。
 
 ## 安装与配置
 
@@ -245,13 +245,13 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
 
-详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
+详细请看「[数据和安全](data_security.html)」指南中的「Web 安全域名」部分。
 
 ### 权限和认证
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」中的 「权限和认证」部分。
+详细请看「[实时通信开发指南](realtime_v2.html)」中的 「权限和认证」部分。
 
 ### 防御 XSS
 
@@ -287,7 +287,7 @@ Web 端本身无论处理什么类型的数据，浏览器都可以自动解析�
 
 ## 暂态对话
 
-标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」中了解。
+标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](realtime_v2.html)」中了解。
 
 具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject_conv)。
 
@@ -632,7 +632,7 @@ RealtimeObject.conv(options, callback)
 &nbsp;&nbsp;&nbsp;&nbsp; attr|Object|可选|自定义的数据信息，如 title、image、xxx 等。
 &nbsp;&nbsp;&nbsp;&nbsp; members|Array|可选|创建 conversation 时可以直接加入成员的 clientId，<br/>如 `['LeanCloud1', 'LeanCloud2']`。
 &nbsp;&nbsp;&nbsp;&nbsp; name|String|可选|Conversation 的名字
-&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](realtime_v2.html)」。
 **callback**|Function|可选|创建成功后的回调函数，此时也会在 RealtimeObject <br/>内部派发一个 create 事件，可以通过 `RealtimeObject.on()` 方法来监听。
 
 #### 返回

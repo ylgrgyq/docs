@@ -2,7 +2,7 @@
 
 ## 你是 iOS 程序员？
 
-* [快速入门](https://leancloud.cn/start.html)
+* [快速入门](/start.html)
 <li><a href="ios_os_x_guide.html">iOS / OS X 指南</a></li>
 <li><a href="ios_realtime.html">iOS 实时通信指南</a></li>
 <li><a href="ios_statistics.html">iOS 统计 SDK 开发指南</a></li>
@@ -12,7 +12,7 @@
 
 ## 你是 Android 程序员？
 
-* [快速入门](https://leancloud.cn/start.html)
+* [快速入门](/start.html)
 <li><a href="android_guide.html">Android 开发指南</a></li>
 <li><a href="android_realtime.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
@@ -20,7 +20,7 @@
 
 ## 你是 Unity3D 或者 WindowsPhone 开发者？
 
-* [快速入门](https://leancloud.cn/start.html)
+* [快速入门](/start.html)
 <li><a href="unity_guide.html">Unity3D 指南</a></li>
 <li><a href="unity_statistics.html">Unity3D 统计 SDK 指南</a></li>
 <li><a href="dotnet_guide.html">.NET指南</a></li>
@@ -29,7 +29,7 @@
 
 ## 你是 JavaScript 前端开发者？
 
-* [快速入门](https://leancloud.cn/start.html)
+* [快速入门](/start.html)
 <li><a href="js_guide.html">JavaScript 指南</a></li>
 <li><a href="https://github.com/leancloud/realtime-messaging-jssdk">JavaScript 实时通信 SDK</a></li>
 <li><a href="api/javascript/index.html" target="_blank">JavaScript SDK API</a></li>

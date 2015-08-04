@@ -6,7 +6,7 @@
 
 ## 快速入门
 
-建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议您在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 版本变迁
 
@@ -89,7 +89,7 @@ dependencies {
 
 ### Eclipse 用户
 
-Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html)进行下载
+Eclipse 用户依然可以在[SDK下载](sdk_down.html)进行下载
 
 #### LeanCloud 基本存储模块
 

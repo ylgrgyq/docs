@@ -31,29 +31,29 @@ pod 'AVOSCloudSNS'
 
 您也可以从下面的地址下载最新版本 iOS 的 SDK：
 
-<p><a class="btn btn-default" href="https://leancloud.cn/docs/sdk_down.html">下载 iOS SDK</a></p>
+<p><a class="btn btn-default" href="sdk_down.html">下载 iOS SDK</a></p>
 
 下载 SDK，解压缩下载的文件，并拖拽 `AVOSCloud.framework` 目录到你的 Xcode 项目目录的 target 下：
 
 <div class="callout callout-info">确保你正在使用最新版本的 Xcode（4.6+），并且面向 iOS 4.3 或者更高版本。我们推荐 Xcode 5 和 iOS 5 或以上系统。</div>
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/1.png)
+![img](images/quick_start/ios/1.png)
 
 确保 **Copy items to destination's group folder** 选择框处于选中状态。
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/2.png)
+![img](images/quick_start/ios/2.png)
 
 做完上面这些步骤后，看起来是这样：
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/3.png)
+![img](images/quick_start/ios/3.png)
 
 点击 **Targets** - **你的 App 名称** - **Build Phases** 标签卡，展开 **Link Binary With Libraries** 可以看到：
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/4.png)
+![img](images/quick_start/ios/4.png)
 
 点击 **Link Binary With Libraries** 部分左下角的加号按钮：
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/6.png)
+![img](images/quick_start/ios/6.png)
 
 添加下列库：
 
@@ -91,7 +91,7 @@ pod 'AVOSCloudSNS'
 
 修改编译选项 **Architectures** 值为 `Standard architectures(armv7,arm64)`：
 
-![img](https://leancloud.cn/docs/images/quick_start/ios/arm64.png)
+![img](images/quick_start/ios/arm64.png)
 
 保证在你的 `.h` 头文件里包含了 SDK 库文件：
 

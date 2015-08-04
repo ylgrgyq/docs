@@ -1,4 +1,4 @@
-<p><a id="link" class="btn btn-default" href="https://leancloud.cn/docs/sdk_down.html">下载 Android SDK</a></p>
+<p><a id="link" class="btn btn-default" href="sdk_down.html">下载 Android SDK</a></p>
 
 下载 SDK，将下载后的文件解压缩后的所有 jar 文件放入 Android 项目的 **libs** 目录。如果你们的项目没有 <b>libs</b> 目录，那么就在项目的根目录下创建一个，通过右键点击项目 Project，选择 **New**，接下来点击 **Folder** 菜单即可创建新目录。
 

@@ -80,7 +80,7 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
 
 ##单聊
 
-单聊的情景相对也是比较简单的，用户可以选择向任何人发送相应的消息。如果应用开启[签名认证](https://leancloud.cn/docs/realtime.html#%E6%9D%83%E9%99%90%E5%92%8C%E8%AE%A4%E8%AF%81)，单聊前需要首先调用 watch。
+单聊的情景相对也是比较简单的，用户可以选择向任何人发送相应的消息。如果应用开启 [签名认证](./realtime.html#签名认证)，单聊前需要首先调用 watch。
 
 ###添加好友
 
@@ -199,10 +199,10 @@ public class ChatDemoMessageReceiver extends AVMessageReceiver{
 实时聊天系统已经不在是多年以前的聊天室，用户往往会通过更多更丰富的多媒体内容来进行有效的交互，比如：图片，短视频，语音，地理位置等等。开发者可以通过将AVMessage中的message当做一个相对复杂的数据结构的形势来实现这样的消息内容。比如我们使用 JSON 数据作为消息内容传输
 
 ```java
-//示范一个简单的带图片的消息{"type":"file","content":"https://cn.avoscloud.com/images/static/partner-iw.png"}
+//示范一个简单的带图片的消息{"type":"file","content":"https://leancloud.cn/images/static/partner-iw.png"}
 HashMap<String, Object> params = new HashMap<String, Object>();
 params.put("type", "file");
-params.put("content", "https://cn.avoscloud.com/images/static/partner-iw.png");
+params.put("content", "https://leancloud.cn/images/static/partner-iw.png");
 AVMessage msg = new AVMessage(JSON.toJSONString(params));
 ```
 
@@ -414,7 +414,7 @@ public class DemoGroupMessageReceiver extends AVGroupMessageReceiver{
 
 ##　权限管理
 在LeanCloud中间的权限管理与传统的 token 机制略有不同，我们通过签名服务来实现实时通信过程中间部分操作的权限管理。
-在阅读下面的代码前，你可能需要先了解一下有关 LeanCloud 权限管理的基本感念[权限和认证](https://cn.avoscloud.com/docs/realtime.html#权限和认证)。
+在阅读下面的代码前，你可能需要先了解一下有关权限管理的基本概念：[权限和认证](./realtime.html#权限和认证)。
 
 在实时聊天系统中间，很多操作是需要有权限控制才能操作成功的,比如：单聊的添加好友，群组的邀请、剔除操作等，都需要做一定权限认证。
 客户端传一些参数给自有用户系统或者云代码（统称权限管理服务器），权限管理服务器端根据一定的逻辑判断操作是否合法，如果该操作是合法的，则返回一个正确的签名；如果是非法的，就返回一个错误的签名。之后在实时通信的过程中就会将返回的签名带在通信的请求中，LeanCloud的实时通信服务器会比对自己算出来的签名与客户端传递过来的签名是否一致来获知该操作是否合法。
