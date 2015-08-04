@@ -332,9 +332,9 @@ convId | 对话 id
 
 #### 返回
 
-参数 | 说明
---- | ---
-reject | 是否拒绝，默认为 `false`
+参数 |约束| 说明
+---|---|---
+reject | 可选 | 是否拒绝，默认为 `false`
 code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整型错误码
 
 ### _conversationRemove
@@ -352,9 +352,9 @@ convId | 对话 id
 
 #### 返回
 
-参数 | 说明
---- | ---
-reject | 是否拒绝，默认为 `false`
+参数 |约束| 说明
+---|---|---
+reject | 可选 | 是否拒绝，默认为 `false`
 code | 可选 | 当 reject 为 `true` 时可以下发一个应用自定义的整型错误码
 
 ## Android 开发指南
