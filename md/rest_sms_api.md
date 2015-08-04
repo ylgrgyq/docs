@@ -190,7 +190,6 @@ LeanCloud 提供了内建的账户系统，方便开发者快速接入。我们�
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -G \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
   https://api.leancloud.cn/1.1/usersByMobilePhone
 ```
