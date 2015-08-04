@@ -228,7 +228,7 @@ AV.Cloud.run('hello', {name: 'dennis'}, {
 ```
 {% endblock %}
 
-{% block runFuncApiLink %}[AV.Cloud.run](https://leancloud.cn/docs/api/javascript/symbols/AV.Cloud.html#.run){% endblock %}
+{% block runFuncApiLink %}[AV.Cloud.run](api/javascript/symbols/AV.Cloud.html#.run){% endblock %}
 
 {% block beforeSaveExample %}
 ```javascript

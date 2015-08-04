@@ -10,7 +10,7 @@
 {% block setup_init %}
 ### 使用 CocoaPods 安装 SDK
 
-[快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
+[快速入门](/start.html) 会教你如何在一个项目中安装 SDK。
 
 [CocoaPods](http://www.cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
 
@@ -47,7 +47,7 @@ pod install
 
 ### 手动安装 SDK
 
-你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见 [快速入门](https://leancloud.cn/start.html)。
+你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见 [快速入门](/start.html)。
 
 这里要特别注意如下几点：
 

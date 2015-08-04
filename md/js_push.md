@@ -14,7 +14,7 @@ SDK 对数据进行过包装，并且会对连接产生的错误进行处理，�
 
 **如果是纯前端使用 JavaScript SDK，请务必配置 `Web 安全域名`，防止其他人盗用你的服务器资源。配置方式：进入对应的 App，然后选择`设置`——`安全中心`——`Web 安全域名`。**
 
-详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
+详细请看 [数据和安全 - Web 安全域名](data_security.html#Web_安全域名) 。
 
 ## 通过 bower 安装
 

@@ -285,7 +285,7 @@ nealGroup.Quit((sq, eq) =>
 
 ## 实现签名（可选）
 
-签名作为安全认证的一部分，阅读下面的内容之前请确保您已经阅读过本文之前所介绍[权限和认证](https://cn.avoscloud.com/docs/realtime.html#权限和认证)。
+签名作为安全认证的一部分，阅读下面的内容之前请确保您已经阅读过本文之前所介绍 [权限和认证](./realtime.html#权限和认证)。
 
 假如开发者在控制台勾选了「聊天服务签名认证」：
 
@@ -294,7 +294,7 @@ nealGroup.Quit((sq, eq) =>
 ```javascript
 session.SignatureFactory = new SampleSignatureFactory();
 ```
-其中 `SampleSignatureFactory` 是一个实现了 `ISignatureFactory` 接口的一个类，这个类的名字以及功能完全由开发者自己定义，本文给出的只是一个与云代码相结合进行签名的简单的实例，所以想通过本文的实例代码一次性联调顺利的话，开发者必须把[权限和认证](https://cn.avoscloud.com/docs/realtime.html#权限和认证)中的[云代码](https://cn.avoscloud.com/docs/cloud_code_guide.html)上的
+其中 `SampleSignatureFactory` 是一个实现了 `ISignatureFactory` 接口的一个类，这个类的名字以及功能完全由开发者自己定义，本文给出的只是一个与云代码相结合进行签名的简单的实例，所以想通过本文的实例代码一次性联调顺利的话，开发者必须把 [权限和认证](./realtime.html#权限和认证)中的 [云代码](./cloud_code_guide.html)上的
 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)部署到自己的应用当中。
 
 下面给出 `SampleSignatureFactory` 的实例代码为：

@@ -696,11 +696,11 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 
 如果是纯前端使用 JavaScript SDK，请务必配置 **控制台** - **设置** - **基本信息** - **JavaScript 安全域名**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待一下。
 
-详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
+详细请看「[数据和安全](data_security.html)」指南中的「Web 安全域名」部分。
 
 ### 权限和认证
 
-为了满足开发者对权限和认证的需求，我们设计了 [签名的概念](https://leancloud.cn/docs/realtime_v2.html#权限和认证)。
+为了满足开发者对权限和认证的需求，我们设计了 [签名的概念](realtime_v2.html#权限和认证)。
 
 ### 防御 XSS
 
@@ -759,7 +759,7 @@ AV.realtime(options, callback)
 
     * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；true 为开启，false 为关闭。
 
-    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](https://leancloud.cn/docs/realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
+    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
 
     * secure {Boolean}（可选）是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护，默认开启。true 为开启，false 为关闭。
 

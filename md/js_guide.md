@@ -27,7 +27,7 @@ LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自�
 
 如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 `Web 安全域名`。配置方式：进入对应的 app，然后选择 `设置`——`安全中心`——`Web 安全域名`。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
 
-具体安全相关内容可以仔细阅读「[数据和安全](https://leancloud.cn/docs/data_security.html)」文档。
+具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
 
 ## 对象
 
@@ -1399,7 +1399,7 @@ var file = new AV.File('test.txt', new Buffer('hello world'));
 从`0.3.2`版本开始，我们还支持保存一个现有存储在其他服务上的 URL 的文件对象：
 
 ```javascript
-var file = AV.File.withURL('test.jpg', 'https://leancloud.cn/docs/images/permission.png');
+var file = AV.File.withURL('test.jpg', 'images/permission.png');
 file.save();
 ```
 
@@ -2139,7 +2139,7 @@ AV.Push.send({
 });
 ```
 
-`AV.Push` 的更多使用信息参考 API 文档[AV.Push](https://leancloud.cn/docs/api/javascript/symbols/AV.Push.html)。
+`AV.Push` 的更多使用信息参考 API 文档 [AV.Push](api/javascript/symbols/AV.Push.html)。
 
 更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息。
 

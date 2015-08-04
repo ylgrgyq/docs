@@ -10,7 +10,7 @@
 
 ### 导入 SDK
 
-您可以从 [SDK 下载页面](https://leancloud.cn/docs/sdk_down.html) 下载iOS的SDK。
+您可以从 [SDK 下载页面](sdk_down.html) 下载iOS的SDK。
 <!--
 您也可以使用Podfile通过cocoapods下载我们的SDK，如
 

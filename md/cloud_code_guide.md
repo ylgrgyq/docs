@@ -465,7 +465,7 @@ AV.Cloud.run('hello', {name: 'dennis'}, {
 });
 ```
 
-API参数详解参见[AV.Cloud.run](https://leancloud.cn/docs/api/javascript/symbols/AV.Cloud.html#.run)。
+API参数详解参见 [AV.Cloud.run](api/javascript/symbols/AV.Cloud.html#.run)。
 
 ### 在 save 前修改对象
 

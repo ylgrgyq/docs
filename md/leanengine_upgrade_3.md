@@ -268,11 +268,11 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 ## Cloud 函数
 
-2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [Cloud 函数](https://leancloud.cn/docs/leanengine_guide-node.html#Cloud_函数)。
+2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [Cloud 函数](leanengine_guide-node.html#Cloud_函数)。
 
 3.0 项目将这样的文件命名为 `$PROJECT_DIR/cloud.js`，所以你需要将 `$PROJECT_DIR/cloud/main.js` 移动并更名为 `$PROJECT_DIR/cloud.js`。
 
-**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云代码](https://leancloud.cn/docs/leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](https://leancloud.cn/docs/leanengine_guide-node.html#项目约束)。
+**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云代码](leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](leanengine_guide-node.html#项目约束)。
 
 如果是最基本的 2.0 项目的代码，那它的内容可能是这样：
 
@@ -326,7 +326,7 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 ## 默认时区
 
-服务端 2.0 项目环境默认使用 UTC 时区，这给很多开发者带来了困惑。3.0 项目环境将默认时区改为东八区，在 [时区问题](https://leancloud.cn/docs/leanengine_guide-node.html#时区问题) 部分详细讨论这个问题。
+服务端 2.0 项目环境默认使用 UTC 时区，这给很多开发者带来了困惑。3.0 项目环境将默认时区改为东八区，在 [时区问题](leanengine_guide-node.html#时区问题) 部分详细讨论这个问题。
 
 ## cookie-session 中间件
 

@@ -7,7 +7,7 @@
 
 ## 创建 Android 工程，使用 LeanCloud 基本的统计功能
 
-您可以从 [SDK下载页面](https://leancloud.cn/docs/sdk_down.html) 下载android的SDK。
+您可以从 [SDK 下载页面](sdk_down.html) 下载 Android 的 SDK。
 
 
 ## 导入 SDK

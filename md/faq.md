@@ -85,7 +85,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### Unity 3D 支持如何
 
-请到 [SDK 下载](https://leancloud.cn/docs/sdk_down.html) 页面，下载 Unity SDK。
+请到 [SDK 下载](sdk_down.html) 页面，下载 Unity SDK。
 
 ### 开发文档有提供搜索功能吗
 
@@ -222,7 +222,7 @@ LeanCloud 依赖的 Framework 包括：
 
 ### 有没有同步 API
 
-JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](https://leancloud.cn/docs/js_guide.html#promise) 来减少 callback 嵌套过多的问题。
+JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](js_guide.html#promise) 来减少 callback 嵌套过多的问题。
 
 ## 消息推送
 
@@ -240,7 +240,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### Android 消息接收能不能自定义 Receiver 不弹出通知
 
-可以。请参考 [消息推送开发指南](/docs/push_guide.html#%E8%87%AA%E5%AE%9A%E4%B9%89-receiver)。
+可以。请参考 [消息推送开发指南](/docs/push_guide.html#消息内容_Data)。
 
 如果要自定义 receiver，必须在消息的 data 里带上自定义的 action。LeanCloud 在接收到消息后，将广播 action 为您定义的值的 intent 事件，您的 receiver 里也必须带上 `intent-filter` 来捕获该 action 值的 intent 事件。
 
@@ -280,11 +280,11 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 云代码如何上传文件
 
-请参考这篇 [博文](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [ 云代码指南](https://leancloud.cn/docs/cloud_code_guide.html#%E4%B8%8A%E4%BC%A0%E6%96%87%E4%BB%B6) 中的相关内容。
+请参考这篇博文 [《在云代码中处理上传文件》](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [云代码指南 - 上传文件](cloud_code_guide.html#上传文件) 中的相关内容。
 
 ### 云代码中如何处理用户登录和 Cookie
 
-请参考这篇 [博文](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云代码指南](https://leancloud.cn/docs/cloud_code_guide.html#%E5%A4%84%E7%90%86%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E5%92%8C%E7%99%BB%E5%87%BA) 中的相关内容。
+请参考这篇博文 [《在云代码中处理用户登录》](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云代码指南 ](cloud_code_guide.html#处理用户登录和登出) 中的相关内容。
 
 
 ### 云代码的二级域名多久生效
@@ -293,13 +293,13 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 云代码二级域名可以启用 HTTPS 吗
 
-请参考这篇 [博文](http://blog.leancloud.cn/blog/2013/12/20/wei-yun-dai-ma-tuo-guan-wang-zhan-qi-yong-https/)。
+请参考这篇博文 [《为云代码托管网站启用 HTTPS》](http://blog.leancloud.cn/blog/2013/12/20/wei-yun-dai-ma-tuo-guan-wang-zhan-qi-yong-https/)。
 
 ### 云代码 Web Hosting 备案
 
 只有网站类的才需要备案，并且在主域名已备案的情况下，二级子域名不需要备案。
 
-如果主站需要托管在我们这边，而且主站还没经过备案，请参考《云代码指南》中 [域名备案流程](/docs/cloud_code_guide.html#域名备案流程) 部分来了解具体的备案流程。
+如果主站需要托管在我们这边，而且主站还没经过备案，请参考《云代码指南》中 [域名备案流程](cloud_code_guide.html#域名备案流程) 部分来了解具体的备案流程。
 
 ## 文件
 

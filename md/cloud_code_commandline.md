@@ -227,7 +227,7 @@ Project created!
 
 avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
 
-更多关于云代码开发，请参考 [云代码开发指南](https://leancloud.cn/docs/cloud_code_guide.html) 。
+更多关于云代码开发，请参考 [云代码开发指南](./cloud_code_guide.html) 。
 
 **特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
 
@@ -500,7 +500,7 @@ avoscloud cql
 $ avoscloud search AVObject
 ```
 
-这将打开浏览器，显示[搜索结果](https://leancloud.cn/search.html?q=AVObject)。
+这将打开浏览器，显示[搜索结果](/search.html?q=AVObject)。
 
 也可以查询多个关键字，空格隔开即可：
 
