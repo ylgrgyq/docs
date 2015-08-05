@@ -2,26 +2,32 @@
 
 ## 介绍
 
-为了在服务端执行一些业务逻辑操作，你需要使用我们提供的Cloud Code功能，编写JavaScript代码，并部署到我们的平台上。通过Cloud Code，你可以拦截save请求，在save object之前或之后做一些事情。你也可以自定义业务函数，并通过SDK调用。你还可以调用部分第三方库来实现你的业务逻辑。甚至，你可以将整个网站架设在Cloud Code之上，我们提供了web hosting服务。详细介绍如下。
+为了在服务端执行一些业务逻辑操作，你需要使用我们提供的Cloud Code 功能，编写 JavaScript 代码，并部署到我们的平台上。通过 Cloud Code，你可以拦截 save 请求，在 save object 之前或之后做一些事情。你也可以自定义业务函数，并通过 SDK 调用。你还可以调用部分第三方库来实现你的业务逻辑。甚至，你可以将整个网站架设在 Cloud Code 之上，我们提供了网站托管服务。详细介绍如下。
 
-## JavaScript指南
+## JavaScript 指南
 
-云代码可以完全运行所有JavaScript SDK提供的功能，但是不提供浏览器的localStorage存储。查看[《JavaScript SDK开发指南》](./js_guide.html)。
+云代码可以完全运行所有 JavaScript SDK 提供的功能，但是不提供浏览器的 localStorage 存储。查看[《JavaScript SDK开发指南》](./js_guide.html)。
 
-## Cloud code 管理
+## Cloud Code 管理
 
-首先，请进入App的[云代码管理](/cloud.html?appid={{appid}}#/repository)界面：
+首先，请进入应用控制台的 [云代码管理](/cloud.html?appid={{appid}}#/repository) 界面：
 
 ![image](images/cloud_code_menu.png)
 
 可以看到左侧菜单：
 
-* 定义函数：Cloud Code 的简单模式，可以直接在线维护云代码方法。
-* 定时任务：可以设置一些定时任务，比如每天凌晨清理无用数据等。
-* Git 部署：用于部署 Cloud Code 到测试环境或者生产环境。
-* 日志：用于查看 Cloud Code日志
-* 统计：用于查看 Cloud Code 的一些数据统计
-* 设置：用来设置项目的源码仓库信息，包括从这里可以下载 Cloud Code 项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
+* **定义函数**  
+  Cloud Code 的简单模式，可以直接在线维护云代码方法。
+* **定时任务**  
+  可以设置一些定时任务，比如每天凌晨清理无用数据等。
+* **Git 部署**    
+  用于部署 Cloud Code 到测试环境或者生产环境。
+* **日志**  
+  用于查看 Cloud Code日志。
+* **统计**  
+  用于查看 Cloud Code 的一些数据统计
+* **设置**  
+  用来设置项目的源码仓库信息，包括从这里可以下载 Cloud Code 项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
 
 ## 在线定义函数
 
@@ -43,9 +49,9 @@
 
 有几种函数类型：
 
-* Function：对应 `AV.Cloud.define` 定义的方法。
-* Hook：对应 `AV.Cloud.beforeSave` 等回调定义的方法。
-* Global：对应全局变量，一些全局变量和公共函数可以定义在这里。
+* **Function**：对应 `AV.Cloud.define` 定义的方法。
+* **Hook**：对应 `AV.Cloud.beforeSave` 等回调定义的方法。
+* **Global**：对应全局变量，一些全局变量和公共函数可以定义在这里。
 
 这些函数的使用场景和具体细节，参见 [Cloud 函数](#Cloud_函数)
 
@@ -59,7 +65,7 @@
 
 * 函数类型
 * 函数名称
-* 数据具体的代码片段（注意，你不需要输入函数定义部分，即 `AV.Cloud.define(...)` 部分）
+* 数据具体的代码片段（注意：你不需要输入函数定义部分，即 `AV.Cloud.define(...)` 部分。）
 * 注释
 * 全部 OK 后点击「保存」，或者放弃编辑点击「关闭」
 
@@ -74,10 +80,10 @@ if (name) {
 }
 ```
 
-**注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送 HTTP 请求)」**
+**注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送 HTTP 请求)」**。
 
 
-点击保存后，Cloud Code 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
+点击保存后，Cloud Code 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：「加载代码出错: SyntaxError: Unexpected token」。
 
 ### 发布
 
@@ -109,25 +115,27 @@ if (name) {
 
 ### 删除
 
-如果你确定某个函数已经不再需要，可以在函数列表页面点击「删除」按钮将其删除。**注意**：删除后该函数和其所有历史记录都将被删除，而且不能恢复。删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
+如果你确定某个函数已经不再需要，可以在函数列表页面点击「删除」按钮将其删除。
+
+**注意**：删除后该函数和其所有历史记录都将被删除，而且不能恢复。删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
 
 ## 代码定义函数
 
-如果你希望有更强的灵活性，或者希望使用 webHosting 功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的 Cloud code。
+如果你希望有更强的灵活性，或者希望使用 webHosting 功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的 Cloud Code。
 
 ### 命令行工具
 
-推荐安装基于 node.js 的 avoscloud 命令行工具，通过该工具可以创建、部署、发布、回滚、查询云代码，并且支持多应用管理。
+推荐安装基于 Node.js 的 avoscloud 命令行工具，通过该工具可以创建、部署、发布、回滚、查询云代码，并且支持多应用管理。
 
-详细请查看 [云代码命令行工具详解](./cloud_code_commandline.html)
+详细请查看 [云代码命令行工具详解](./cloud_code_commandline.html)。
 
 ### 项目框架
 
-你可以在 云代码 -> 设置 页面下载到项目框架：
+你可以在 **云代码** > **设置** 页面下载到项目框架：
 
 ![image](images/cloud_code_skeleton.png)
 
-点击 `下载项目框架(基本版)` 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以 App 名称命名的目录，目录结构是这样：
+点击 **下载项目框架（基本版）** 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以 App 名称命名的目录，目录结构是这样：
 
 ```
 <appName>
@@ -141,7 +149,7 @@ if (name) {
 ```
 其中：
 
-* cloud 目录下有一个 `main.js`，这就是你的业务逻辑代码存放的地方，初始内容定义了一个函数，代码如下：
+* cloud 目录下有一个 main.js，这就是你的业务逻辑代码存放的地方，初始内容定义了一个函数，代码如下：
 
 ```javascript
 // Use AV.Cloud.define to define as many cloud functions as you want.
@@ -151,30 +159,31 @@ AV.Cloud.define('hello', function(request, response) {
 });
 ```
   
-  这段代码定义了一个名为`hello`的函数，它简单的返回应答`Hello world!`。
+  这段代码定义了一个名为 `hello` 的函数，它简单的返回应答「Hello world!」。
 
-* config 目录下是项目的配置文件 `global.json`，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
-* public 目录，用于存放 [Web Hosting](#web-hosting) 功能的静态资源文件，具体请看后面的介绍。
+* config 目录下是项目的配置文件 global.json，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
+* public 目录，用于存放 [Web Hosting](#web_hosting) 功能的静态资源文件，具体请看后面的介绍。
 
 ### 部署代码
 
 我们可以直接将这个初步的项目框架部署到 Cloud Code 上尝试运行一下。
 
-首先，你需要将这个项目提交到一个 git 仓库，LeanCloud并不提供源码的版本管理功能，而是借助于git这个优秀的分布式版本管理工具。我们推荐您使用[CSDN Code平台](https://code.csdn.net/)，[github](https://github.com/)或者[BitBucket](https://bitbucket.org/)这样第三方的源码
-托管网站，也可以使用您自己搭建的git仓库(比如使用[gitlab.org](http://gitlab.org/))。下面我们详细描述下怎么使用。
+首先，你需要将这个项目提交到一个 git 仓库，LeanCloud 并不提供源码的版本管理功能，而是借助于 git 这个优秀的分布式版本管理工具。我们推荐你使用 [CSDN Code 平台](https://code.csdn.net/)，[github](https://github.com/) 或者 [BitBucket](https://bitbucket.org/) 这样第三方的源码
+托管网站，也可以使用你自己搭建的 git 仓库（比如使用 [gitlab.org](http://gitlab.org/)）。下面我们详细描述下怎么使用。
 
 #### 使用 CSDN Code 托管源码
 
-CSDN CODE是国内非常优秀的源码托管平台，您可以使用CODE平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
+CSDN CODE 是国内非常优秀的源码托管平台，你可以使用 CODE 平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
 
-以下是使用CODE平台与LeanCloud云代码结合的一个例子。
-首先在CODE上创建一个项目
+以下是使用 CODE 平台与 LeanCloud 云代码结合的一个例子。
+
+首先在 CODE 上创建一个项目：
 
 ![image](images/csdn_code1.png)
 
-**提示**：在已经有项目代码的情况下，一般不推荐”使用README文件初始化项目”
+**提示**：在已经有项目代码的情况下，一般不推荐「使用 README 文件初始化项目」。
 
-接下来按照给出的提示，将源代码push到这个代码仓中
+接下来按照给出的提示，将源代码 push 到这个代码仓中：
 
 ```sh
 cd ${PROJECT_DIR}
@@ -185,16 +194,15 @@ git remote add origin git@code.csdn.net:${yourname}/test.git
 git push -u origin master
 ```
 
-我们已经将源码成功推送到CODE平台，接下来到LeanCloud云代码的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+我们已经将源码成功推送到 CODE 平台，接下来到 LeanCloud 云代码的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
 
 ![image](images/csdn_code2.png)
 
-添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
-保存到”项目设置””项目公钥”中，创建新的一项avoscloud:
+添加 deploy key 到你的 CODE 平台项目上（deploy key 是我们 LeanCloud 云端的 ssh public key），保存到 **项目设置** > **项目公钥** 中，创建新的一项 avoscloud：
 
 ![image](images/csdn_code3.png)
 
-下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 **云代码** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -203,17 +211,17 @@ git push -u origin master
 
 #### 使用 GitHub 托管源码
 
-使用BitBucket与此类似，恕不重复。
+使用 BitBucket 与此类似，恕不重复。
 
-[Github](https://github.com)是一个非常优秀的源码托管平台，您可以使用它的免费帐号，那将无法创建私有仓库(bucket可以创建私有仓库)，也可以付费成为高级用户，可以创建私有仓库。
+[Github](https://github.com) 是一个非常优秀的源码托管平台，你可以使用它的免费帐号，那将无法创建私有仓库（Bucket 可以创建私有仓库），也可以付费成为高级用户，可以创建私有仓库。
 
-首先在github上创建一个项目，比如就叫`test`:
+首先在 github 上创建一个项目，比如就叫 `test`：
 
 ![image](images/github1.png)
 
 ![image](images/github2.png)
 
-接下来按照github给出的提示，我们将源码push到这个代码仓库：
+接下来按照 github 给出的提示，我们将源码 push 到这个代码仓库：
 
 ```sh
 cd ${PROJECT_DIR}
@@ -224,47 +232,47 @@ git remote add origin git@github.com:${yourname}/test.git
 git push -u origin master
 ```
 
-到这一步我们已经将源码成功push到github，接下来到Cloud Code的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+到这一步我们已经将源码成功 push 到 github，接下来到 Cloud Code 的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
 
 ![image](images/cloud_code_4.png)
 
-并添加deploy key到你的github项目（deploy key是我们Cloud code机器的ssh public key），如果您是私有项目，需要设置deploy key，
+并添加 deploy key 到你的 github 项目（Deploy Key 是我们 Cloud Code 机器的 ssh public key），如果你是私有项目，需要设置 Deploy Key，
 
-拷贝 `设置` 菜单里的 `Deploy key` 保存到 github setting 里的deploy key，创建新的一项avoscloud:
+拷贝 **设置** 菜单里的 **deploy key** 保存到 github setting 里的 deploy key，创建新的一项 avoscloud：
 
 ![image](images/cloud_code_github_deploy_key.png)
 
-下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 **云代码** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
 部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
 
-
 ##### 自动部署
 
-为了安全考虑，我们去除了自动部署Git仓库的功能。
+为了安全考虑，我们去除了自动部署 Git 仓库的功能。
 
 ##### Gitlab 无法部署问题
 
-很多用户自己使用[Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到LeanCloud 的问题，即使设置了Deploy Key，却仍然要求输入密码。
+很多用户自己使用 [Gitlab](http://gitlab.org/) 搭建了自己的源码仓库，有朋友会遇到无法部署到 LeanCloud 的问题，即使设置了 Deploy Key，却仍然要求输入密码。
 
 可能的原因和解决办法如下：
 
-* 确保您gitlab运行所在服务器的/etc/shadow文件里的git（或者gitlab）用户一行的`!`修改为`*`，原因参考[这里](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启SSH服务`sudo service ssh restart`。
-* 在拷贝deploy key时，确保没有多余的换行符号。
-* Gitlab目前不支持有comment的deploy key。早期LeanCloud 用户生成的deploy key可能带comment，这个comment是在deploy key的末尾76个字符长度的字符串，例如下面这个deploy key:
+* 确保你的 gitlab 运行所在服务器的 /etc/shadow 文件里的 git（或者 gitlab）用户一行的 `!` 修改为 `*`，原因参考 [Stackoverflow - SSH Key asks for password](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启 SSH 服务：`sudo service ssh restart`。
+* 在拷贝 deploy key 时，确保没有多余的换行符号。
+* Gitlab 目前不支持有 comment 的 deploy key。早期 LeanCloud 用户生成的 deploy key 可能带 comment，这个 comment 是在 deploy key 的末尾 76 个字符长度的字符串，例如下面这个 deploy key:
 
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw== App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
-其中最后76个字符
+
+其中最后 76 个字符
 
 ```
 App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
 
-就是comment，删除这段字符串后的deploy key(如果没有这个字样的comment无需删除)保存到gitlab即可正常使用:
+就是comment，删除这段字符串后的 deploy key （如果没有这个字样的comment无需删除）保存到 gitlab 即可正常使用:
 
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
@@ -272,7 +280,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ### 通过 API 调用函数
 
-部署成功后，我们可以尝试调用刚才定义的`hello`函数：
+部署成功后，我们可以尝试调用刚才定义的 `hello` 函数：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
@@ -287,20 +295,20 @@ https://leancloud.cn/1.1/functions/hello
 {"result":"Hello world!"}
 ```
 
-恭喜你！你已经成功部署了Cloud Code并运行了第一个函数。
+恭喜你！你已经成功部署了 Cloud Code 并运行了第一个函数。
 
-接下来，你可以尝试修改`hello`函数的返回值，然后push到github仓库并部署，看看调用的结果是否也相应地作出改变。
+接下来，你可以尝试修改 `hello` 函数的返回值，然后 push 到 github 仓库并部署，看看调用的结果是否也相应地作出改变。
 
-在Android SDK里调用hello函数，参考[Android SDK开发指南](./android_guide.html#%E8%B0%83%E7%94%A8%E4%BA%91%E4%BB%A3%E7%A0%81)。
+在 Android SDK 里调用云代码函数，参考 [Android SDK 开发指南 - 调用云代码](./android_guide.html#调用云代码)。
 
-在iOS SDK里调用云代码函数，参考[iOS OSX SDK开发指南](./ios_os_x_guide.html#%E8%B0%83%E7%94%A8%E4%BA%91%E4%BB%A3%E7%A0%81)。
+在 iOS SDK 里调用云代码函数，参考 [iOS / OSX SDK 开发指南 - 调用云代码](./ios_os_x_guide.html#调用云代码)。
 
 
 ### 本地调试云代码
 
 **Windows 系统用户请确保在系统盘 C 盘上安装 Node.js，否则命令行工具无法正常运行。**
 
-请通过npm安装调试SDK：
+请通过 npm 安装调试 SDK：
 
 ```sh
 npm install -g avoscloud-code
@@ -308,17 +316,17 @@ npm install -g avoscloud-code
 
 在一些系统上你可能需要 `sudo` 权限： `npm install -g avoscloud-code`。
  
-如果从npm安装失败，可以从Github安装：
+如果从 npm 安装失败，可以从 Github 安装：
 
 ```sh
 npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 
-然后在云代码项目的根目录执行`avoscloud`命令，就可以启动本地模拟服务器。
+然后在云代码项目的根目录执行 `avoscloud` 命令，就可以启动本地模拟服务器。
 
-* 访问`http://localhost:3000/`即可访问到你的云主机代码，子路径按照你在`app.js`里配置的即可访问。
-* 访问`http://localhost:3000/avos`进入云代码函数和Class Hooks函数调试界面。
+* 访问 <http://localhost:3000/> 即可访问到你的云主机代码，子路径按照你在 app.js 里配置的即可访问。
+* 访问 <http://localhost:3000/avos> 进入云代码函数和 Class Hooks 函数调试界面。
 * 测试函数:
 
 ```sh
@@ -326,30 +334,31 @@ curl -X POST -H 'Content-Type:application/json' \
     -d '{ "name": "dennis"}' \
     http://localhost:3000/avos/hello
 ```
-其中hello是你通过`AV.Cloud.define`定义的函数名称。
 
-* 测试beforeSave,afterSave,afterUpdate,beforeDelete/afterDelete等:
+其中 hello 是你通过 `AV.Cloud.define` 定义的函数名称。
+
+* 测试 beforeSave、afterSave、afterUpdate、beforeDelete/afterDelete 等：
 
 ```sh
 curl -X POST -H 'Content-Type:application/json' \
      -d '{ "name": "dennis"}' \
    http://localhost:3000/avos/MyUser/beforeSave
 ```
-其中`MyUser`是className，beforeSave指定调用`MyUser`定义的beforeSave函数，其他函数类似。
 
-更多使用参考[云代码命令行工具详解](./cloud_code_commandline.html)。
+其中 `MyUser` 是 className，beforeSave 指定调用 `MyUser` 定义的 beforeSave 函数，其他函数类似。
+
+更多使用参考 [云代码命令行工具详解](./cloud_code_commandline.html)。
 
 ### 测试环境和生产环境
 
-你应该注意到了，我们在调用REST API的时候设置了特殊的HTTP头`X-AVOSCloud-Application-Production`，这个头信息用于设置
-调用的Cloud Code代码环境。
+你应该注意到了，我们在调用 REST API 的时候设置了特殊的 HTTP 头 X-AVOSCloud-Application-Production，这个头信息用于设置调用的 Cloud Code 代码环境。
 
-* 0 表示调用开发环境的代码
-* 1 表示调用生产环境的代码
+* 0 表示调用「开发环境」的代码
+* 1 表示调用「生产环境」的代码
 
-具体到SDK内的调用，请看各个平台的SDK指南。
+具体到 SDK 内的调用，请看各个平台的 SDK 指南。
 
-我们尝试将``修改为1，然后再调用：
+我们尝试将 `` 修改为 1，然后再调用：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
@@ -359,13 +368,13 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 https://leancloud.cn/1.1/functions/hello
 ```
 
-服务端返回告诉你production还没有部署：
+服务端返回告诉你 production 还没有部署：
 
 ```json
 {"code":1,"error":"The cloud code isn't deployed for prod 1."}
 ```
 
-默认自动部署都是部署到开发环境。通过点击 `Git 部署` 菜单下面的 `部署到生产环境` 框内的 `部署` 按钮，可以将开发环境的当前版本的代码部署到生产环境:
+默认自动部署都是部署到开发环境。通过点击 **Git 部署** 菜单下面的 **部署到生产环境** 框内的 **部署** 按钮，可以将开发环境的当前版本的代码部署到生产环境:
 
 ![image](images/cloud_code_deploy_prod.png)
 
@@ -374,7 +383,7 @@ https://leancloud.cn/1.1/functions/hello
 
 ## Cloud 函数
 
-让我们看一个明显更复杂的例子来展示Cloud Code的用途。在云端进行计算的一个重要理由是，你不需要将大量的数据发送到设备上做计算，而是将这些计算放到服务端，并返回结果这一点点信息就好。例如，假设你写了一个App，可以让用户对电影评分，一个评分对象大概是这样：
+让我们看一个明显更复杂的例子来展示 Cloud Code 的用途。在云端进行计算的一个重要理由是，你不需要将大量的数据发送到设备上做计算，而是将这些计算放到服务端，并返回结果这一点点信息就好。例如，假设你写了一个 App，可以让用户对电影评分，一个评分对象大概是这样：
 
 ```json
 {
@@ -384,9 +393,9 @@ https://leancloud.cn/1.1/functions/hello
 }
 ```
 
-`stars`表示评分，1-5。如果你想查找《黑客帝国》这部电影的平均分，你可以找出这部电影的所有评分，并在设备上根据这个查询结果计算平均分。但是这样一来，尽管你只是需要平均分这样一个数字，却不得不耗费大量的带宽来传输所有的评分。通过Cloud Code，我们可以简单地传入电影名称，然后返回电影的平均分。
+`stars` 表示评分，1 至 5 分。如果你想查找《黑客帝国》这部电影的平均分，你可以找出这部电影的所有评分，并在设备上根据这个查询结果计算平均分。但是这样一来，尽管你只是需要平均分这样一个数字，却不得不耗费大量的带宽来传输所有的评分。通过 Cloud Code，我们可以简单地传入电影名称，然后返回电影的平均分。
 
-Cloud函数接收JSON格式的请求对象，我们可以用它来传入电影名称。整个AVCloud JavaScript SDK都在Cloud Code运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现`averageStars`函数的代码如下:
+Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电影名称。整个 AVCloud JavaScript SDK 都在 Cloud Code 运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现 `averageStars` 函数的代码如下:
 
 ```javascript
 AV.Cloud.define('averageStars', function(request, response) {
@@ -407,13 +416,13 @@ AV.Cloud.define('averageStars', function(request, response) {
 });
 ```
 
-`averageStars`和`hello`函数的唯一区别是当我们调用函数的时候，我们必须提供参数给`request.params.movie`。继续读下去，我们将介绍如何调用Cloud函数。
+`averageStars` 和 `hello` 函数的唯一区别是当我们调用函数的时候，我们必须提供参数给 `request.params.movie`。继续读下去，我们将介绍如何调用 Cloud 函数。
 
 
 
 ### 调用一个函数
 
-Cloud函数可以被各种客户端SDK调用，也可以通过REST API调用，例如，使用一部电影的名称去调用`averageStars`函数：
+Cloud 函数可以被各种客户端 SDK 调用，也可以通过REST API调用，例如，使用一部电影的名称去调用 `averageStars` 函数：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
@@ -426,12 +435,12 @@ https://leancloud.cn/1.1/functions/averageStars
 
 有两个参数会被传入到Cloud函数：
 
-* request - 包装了请求信息的请求对象，下列这些字段将被设置到request对象内:
- * params - 客户端发送的参数对象
- * user - `AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
-* response - 应答对象，包含两个函数：
- * success - 这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的JSON对象或数组，并且可以包含`AV.Object`对象。
- * error - 如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
+* **request**：包装了请求信息的请求对象，下列这些字段将被设置到request对象内:
+ * **params** - 客户端发送的参数对象
+ * **user** - `AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
+* **response**：应答对象，包含两个函数：
+ * **success** - 这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的JSON对象或数组，并且可以包含 `AV.Object` 对象。
+ * **error** - 如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
 
 如果函数调用成功，返回给客户端的结果类似这样：
 
@@ -452,7 +461,7 @@ https://leancloud.cn/1.1/functions/averageStars
 
 #### 在云代码里调用已定义的函数
 
-使用`AV.Cloud.run`可以在云代码中调用`AV.Cloud.define`定义的云代码函数：
+使用 `AV.Cloud.run` 可以在云代码中调用 `AV.Cloud.define` 定义的云代码函数：
 
 ```javascript
 AV.Cloud.run('hello', {name: 'dennis'}, {
@@ -469,9 +478,9 @@ API参数详解参见 [AV.Cloud.run](api/javascript/symbols/AV.Cloud.html#.run)�
 
 ### 在 save 前修改对象
 
-在某些情况下，你可能不想简单地丢弃无效的数据，而是想清理一下再保存。`beforeSave`可以帮你做到这一点，你只要调用`response.success`作用到修改后的对象上。
+在某些情况下，你可能不想简单地丢弃无效的数据，而是想清理一下再保存。`beforeSave`可以帮你做到这一点，你只要调用 `response.success` 作用到修改后的对象上。
 
-在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用`beforeSave`来截断评论到140个字符：
+在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用 `beforeSave` 来截断评论到 140 个字符：
 
 ```javascript
 AV.Cloud.beforeSave('Review', function(request, response) {
@@ -492,7 +501,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 
 ### 在 save 后执行动作
 
-在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过`afterSave`函数做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
+在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条 push 通知。类似的，你可以通过 `afterSave` 函数做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
 
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {
@@ -508,11 +517,12 @@ AV.Cloud.afterSave('Comment', function(request) {
   });
 });
 ```
-如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到Cloud Code日志里。
+
+如果 `afterSave` 函数调用失败，save 请求仍然会返回成功应答给客户端。`afterSave` 发生的任何错误，都将记录到 Cloud Code 日志里。
 
 ### 在 update 更新后执行动作
 
-同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过`afterUpdate`函数做到。比如每次修改文章后简单地记录日志：
+同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过 `afterUpdate` 函数做到。比如每次修改文章后简单地记录日志：
 
 ```javascript
 AV.Cloud.afterUpdate('Article', function(request) {
@@ -522,7 +532,7 @@ AV.Cloud.afterUpdate('Article', function(request) {
 
 ### 在 delete 前执行动作
 
-很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过`beforeDelete`函数来定义一个钩子（callback）函数来做这些检查，示例代码：
+很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册（Album）前，会去检测这个相册里的图片（Photo）是不是已经都被删除了，这都可以通过 `beforeDelete` 函数来定义一个钩子（callback）函数来做这些检查，示例代码：
 
 ```javascript
 AV.Cloud.beforeDelete('Album', function(request, response) {
@@ -549,7 +559,7 @@ AV.Cloud.beforeDelete('Album', function(request, response) {
 
 ### 在 delete 后执行动作
 
-另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`afterDelete`函数来实现：
+另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在 `beforeDelete` 中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过 `afterDelete` 函数来实现：
 
 ```javascript
 AV.Cloud.afterDelete('Album', function(request) {
@@ -570,15 +580,18 @@ AV.Cloud.afterDelete('Album', function(request) {
 
 ### 用户验证通知函数
 
-很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加`AV.Cloud.onVerified`函数：
+很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加 `AV.Cloud.onVerified` 函数：
+
 ```javascript
 AV.Cloud.onVerified('sms', function(request, response) {
     console.log('onVerified: sms, user: ' + request.object);
     response.success();
 ```
-函数的第一个参数是验证类型：短信验证为`sms`，邮箱验证为`email`。另外，数据库中相关的验证字段，如`emailVerified`不需要修改，我们已经为你更新完成。
+
+函数的第一个参数是验证类型：短信验证为 `sms`，邮箱验证为 `email`。另外，数据库中相关的验证字段，如 `emailVerified` 不需要修改，我们已经为你更新完成。
 
 ### 在用户注册成功之后
+
 在用户注册成功之后如果你想做一些事情可以定义以下函数：
 
 ```javascript
@@ -616,7 +629,7 @@ AV.Cloud.onLogin(function(request, response) {
 
 ### 错误响应码
 
-有些时候你希望能自己定义错误响应码。云代码的 `response.error(err)` 回调中，如果 err 对象有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 `1`， `message` 为 `err` 对象的字符串形式。比如下列代码：
+有些时候你希望能自己定义错误响应码。云代码的 `response.error(err)` 回调中，如果 err 对象有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 1， `message` 为 `err` 对象的字符串形式。比如下列代码：
 
 ```
 AV.Cloud.define('errorCode', function(req, res) {
@@ -650,11 +663,11 @@ AV.Cloud.httpRequest({
 });
 ```
 
-当返回的 HTTP 状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
+当返回的 HTTP 状态码是成功的状态码（例如 200、201等），则 success 函数会被调用，反之，则 error 函数将被调用。
 
 ### 查询参数
 
-如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
+如果你想添加查询参数到 URL 末尾，你可以设置选项对象的 params 属性。你既可以传入一个 JSON 格式的 key-value 对象，像这样：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -670,6 +683,7 @@ AV.Cloud.httpRequest({
   }
 });
 ```
+
 也可以是一个原始的字符串：
 
 ```javascript
@@ -687,7 +701,7 @@ AV.Cloud.httpRequest({
 
 ### 设置 HTTP 头部
 
-通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
+通过设置选项对象的 header 属性，你可以发送 HTTP 头信息。假设你想设定请求的 `Content-Type`，你可以这样做：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -706,7 +720,7 @@ AV.Cloud.httpRequest({
 
 ### 设置超时
 
-默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过timeout选项：
+默认请求超时设置为 10 秒，超过这个时间没有返回的请求将被强制终止，你可以调整这个超时，通过 timeout 选项：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -723,11 +737,12 @@ AV.Cloud.httpRequest({
   }
 });
 ```
-上面的代码设置请求超时为15秒。
+
+上面的代码设置请求超时为 15 秒。
 
 ### 发送 POST 请求
 
-通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
+通过设置选项对象的 method 属性就可以发送 POST 请求。同时可以设置选项对象的 body 属性来发送数据，一个简单的例子：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -746,7 +761,7 @@ AV.Cloud.httpRequest({
 });
 ```
 
-这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
+这将会发送一个 POST 请求到 `http://www.example.com/create_post`，body 是被 URL 编码过的表单数据。 如果你想使用 JSON 编码 body，可以这样做：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -768,17 +783,19 @@ AV.Cloud.httpRequest({
 });
 ```
 
-当然，body可以被任何想发送出去的String对象替换。
+当然，body 可以被任何想发送出去的 String 对象替换。
 
 ### HTTP 应答对象
 
-传给success和error函数的应答对象包括下列属性：
+传给 success 和 error 函数的应答对象包括下列属性：
 
-* status - HTTP状态码
-* headers - HTTP应答头部信息
-* text - 原始的应答body内容。
-* buffer - 原始的应答Buffer对象
-* data - 解析后的应答内容，如果Cloud Code可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+属性|说明
+---|---
+buffer | 原始的应答 Buffer 对象
+data | 解析后的应答内容，如果 Cloud Code 可以解析返回的 Content-Type 的话（例如 JSON 格式，就可以被解析为一个 JSON 对象）。
+headers | HTTP 应答头部信息
+status | HTTP 状态码
+text | 原始的应答 body 内容
 
 如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
 
@@ -791,17 +808,15 @@ AV.Cloud.httpRequest({
 });
 ```
 
-
-
 ## 定时任务
 
-很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
+很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云代码中运行这样的任务。
 
 **我们提供的定时任务的最小时间单位是秒，正常情况下我们都能将误差控制在秒级别。**
 
-**原来提供的`AV.Cloud.setInterval`和`AV.Cloud.cronjob`都已经废弃，这两个函数的功能变成和`AV.Cloud.define`一样，已经定义的任务会自动帮您做转换并启动**
+**原来提供的 `AV.Cloud.setInterval` 和 `AV.Cloud.cronjob` 都已经废弃，这两个函数的功能变成和 `AV.Cloud.define` 一样，已经定义的任务会自动进行转换并启动。**
 
-定时任务也是普通的`AV.Cloud.define`定义的云代码函数，比如我们定义一个打印循环打印日志的任务`log_timer`：
+定时任务也是普通的 `AV.Cloud.define` 定义的云代码函数，比如我们定义一个打印循环打印日志的任务 `log_timer`：
 
 ```javascript
 AV.Cloud.define('log_timer', function(req, res){
@@ -820,10 +835,10 @@ AV.Cloud.define('log_timer', function(req, res){
 
 定时任务分为两类：
 
-* 使用标准的crontab语法调度
-* 简单的循环调度，我们这里以循环调度为例，每隔5分钟打印日志
+* 使用标准的 crontab 语法调度。
+* 简单的循环调度，我们这里以循环调度为例，每隔 5 分钟打印日志。
 
-创建后，定时任务还没有启动，您需要在定时任务列表里启动这个任务:
+创建后，定时任务还没有启动，你需要在定时任务列表里启动这个任务:
 
 ![image](images/schedule_timer3.png)
 
@@ -831,7 +846,7 @@ AV.Cloud.define('log_timer', function(req, res){
 
 ![image](images/schedule_timer4.png)
 
-我们再尝试定义一个复杂一点的任务，比如每周一早上8点准时发送推送消息给用户：
+我们再尝试定义一个复杂一点的任务，比如每周一早上 8 点准时发送推送消息给用户：
 
 ```javascript
 AV.Cloud.define('push_timer', function(req, res){
@@ -845,9 +860,9 @@ AV.Cloud.define('push_timer', function(req, res){
 });
 ```
 
-创建定时器的时候，选择cron表达式并填写为`0 0 8 ? * MON`。
+创建定时器的时候，选择 cron 表达式并填写为 `0 0 8 ? * MON`。
 
-crontab的基本语法是
+crontab 的基本语法是：
 
 ```
 秒 分钟 小时 每个月的日期（Day-of-Month）月份 星期（Day-of-Week） 年（可选）
@@ -855,51 +870,48 @@ crontab的基本语法是
 
 一些常见的例子如下：
 
-* "0 0/5 * * * ?"   每隔5分钟执行一次
-* "10 0/5 * * * ?"  每隔5分钟执行一次，每次执行都在分钟开始的10秒，例如10:00:10，然后10:05:10等等。
-* "0 30 10-13 ? * WED,FRI"  每周三和每周五的10:30, 11:30, 12:30和13:30执行。
-* "0 0/30 8-9 5,20 * ?" 每个月的5号和20号的8点和10点之间每隔30分钟执行一次，也就是8:00, 8:30, 9:00和9:30。
-
+表达式 | 说明
+---|---
+`"0 0/5 * * * ?"` | 每隔 5 分钟执行一次
+`"10 0/5 * * * ?"` | 每隔 5 分钟执行一次，每次执行都在分钟开始的 10 秒，例如 10:00:10，然后 10:05:10 等等。
+`"0 30 10-13 ? * WED,FRI"`| 每周三和每周五的 10:30、11:30、12:30 和 13:30 执行。
+`"0 0/30 8-9 5,20 * ?"` | 每个月的 5 号和 20 号的 8 点和 10 点之间每隔 30 分钟执行一次，也就是 8:00、8:30、9:00 和 9:30。
 
 ## 资源限制
-
 
 ### 权限说明
 
 云代码拥有超级权限，默认使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。
 
-如果在你的 node.js 环境里也想做到超级权限，请调用下列代码初始化 SDK:
+如果在你的 Node.js 环境里也想做到超级权限，请调用下列代码初始化 SDK:
 
 ```javascript
 AV._initialize('app id', 'app key', 'master key');
 AV.Cloud.useMasterKey();
 ```
 
-
-
 ### 定时器数量
 
-开发环境和测试环境的定时器数量都限制在3个以内，也就是说你总共最多可以创建6个定时器。
+开发环境和测试环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
 
 ### 超时
 
-Cloud函数如果超过15秒没有返回，将被强制停止。`beforeSave`和`afterSave`函数的超时时间限制在3秒内。如果`beforeSave`和`afterSave`函数被其他的Cloud函数调用，那么它们的超时时间会进一步被其他Cloud函数调用的剩余时间限制。例如，如果一个`beforeSave`函数
-是被一个已经运行了13秒的Cloud函数触发，那么`beforeSave`函数就只剩下2秒的时间来运行，而正常情况下是3秒的限制。
+Cloud 函数如果超过 15 秒没有返回，将被强制停止。`beforeSave` 和 `afterSave` 函数的超时时间限制在 3 秒内。如果 `beforeSave` 和 `afterSave` 函数被其他的 Cloud 函数调用，那么它们的超时时间会进一步被其他 Cloud 函数调用的剩余时间限制。例如，如果一个 `beforeSave` 函数
+是被一个已经运行了 13 秒的 Cloud 函数触发，那么 `beforeSave`函数就只剩下 2 秒的时间来运行，而正常情况下是 3 秒的限制。
 
-Web Hosting的动态请求超时也被限定为15秒。
+Web Hosting 的动态请求超时也被限定为 15 秒。
 
 ### 网络请求
 
-当`success`和`error`方法调用后，仍然在运行的网络请求将被取消掉。通常来说，你应该等待所有的网络请求完成，再调用`success`。对于`afterSave`函数来说，它并不需要调用`success`或者`error`，因此Cloud Code会等待所有的网络请求调用结束。
+当 `success` 和 `error` 方法调用后，仍然在运行的网络请求将被取消掉。通常来说，你应该等待所有的网络请求完成，再调用 `success`。对于 `afterSave` 函数来说，它并不需要调用 `success` 或者 `error`，因此 Cloud Code 会等待所有的网络请求调用结束。
 
 ## 日志
 
-[云代码->日志](/cloud.html?appid={{appid}}#/log)，可以查看Cloud Code的部署和运行日志，还可以选择查看的日志级别：
+**云代码** > [**日志**](/cloud.html?appid={{appid}}#/log)，可以查看 Cloud Code 的部署和运行日志，还可以选择查看的日志级别：
 
 ![image](images/cloud_code_11.png)
 
-
-如果你想打印日志到里面查看，可以使用`console.log`,`console.error`或者`console.warn`函数。`console.error`和`console.warn`都将写入error级别的日志。
+如果你想打印日志到里面查看，可以使用 `console.log`、`console.error` 或者 `console.warn`函数。`console.error` 和 `console.warn` 都将写入 error 级别的日志。
 
 ```javascript
 AV.Cloud.define('Logger', function(request, response) {
@@ -910,18 +922,19 @@ AV.Cloud.define('Logger', function(request, response) {
 
 ## Web Hosting
 
-很多时候，除了运行在移动设备的App之外，您通常也会为App架设一个网站，可能只是简单地展现App的信息并提供AppStore或者Play商店下载链接，或者展示当前热门的用户等等。您也可能建设一个后台管理系统，用来管理用户或者业务数据。
-这一切都需要您去创建一个web应用，并且从VPS厂商那里购买一个虚拟主机来运行web应用，您可能还需要去购买一个域名。
+很多时候，除了运行在移动设备的 App 之外，你通常也会为 App 架设一个网站，可能只是简单地展现 App 的信息并提供 AppStore 或者 Play 商店下载链接，或者展示当前热门的用户等等。你也可能建设一个后台管理系统，用来管理用户或者业务数据。
 
-不过现在，Cloud code为您提供了web hosting功能，可以让你设置一个App的二级域名`xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署您的web应用到该域名之下运行。同时支持静态资源和动态请求服务。
+这一切都需要你去创建一个 web 应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
+
+不过现在，Cloud Code 为你提供了 web hosting 功能，可以让你设置一个 App 的二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署你的 web 应用到该域名之下运行。同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
-首先，你需要到 云代码 -> 设置 页面找到 `Web 主机域名`，在这里填写您的域名：
+首先，你需要到 **云代码** > **设置** 页面找到 **Web 主机域名**，在这里填写你的域名：
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为 `myapp`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将 App 的二级域名设置为 **myapp**，设置之后，你应该可以马上访问 <http://myapp.avosapps.com> 或 <http://myapp.avosapps.us>（可能因为 DNS 生效延迟暂时不可访问，请耐心等待或者尝试刷新 DNS 缓存），如果还没有部署，你看到的应该是一个 404 页面。
 
 ### 绑定独立域名
 
@@ -933,13 +946,13 @@ AV.Cloud.define('Logger', function(request, response) {
 
 其他用户如果需要为 App 绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.rocks> ，或者从控制台菜单中选择 **帮助** > **技术支持** ，通过工单来提出申请 ：
 
-* 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
-* 您想要绑定的域名（必须是您名下的域名，并且您也已经将CNAME或者A记录指向了avosapps.com(国内)或avosapps.us(美国)）
-* 您的注册邮箱（必须与发送者的邮箱一致）
-* 您想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 您的域名的备案信息 （**国内必须可以在工信部查询到，美国区不需要**）
+* 你已经绑定的 avosapps.com 或 avosapps.us 二级子域名（请参考设置域名）。
+* 你想要绑定的域名（必须是你名下的域名，并且你也已经将 CNAME 或者 A 记录指向了 avosapps.com（国内）或 avosapps.us（美国）。
+* 你的注册邮箱（必须与发送者的邮箱一致）。
+* 你想要绑定的 App Id（该应用必须位于注册邮箱的用户名下）。
+* 你的域名的备案信息（**国内必须可以在工信部查询到，美国区不需要**）。
 
-我们将在3个工作日内审核，如果审核通过将为您绑定域名。
+我们将在 3 个工作日内审核，如果审核通过将为你绑定域名。
 
 #### 域名备案流程
 
@@ -949,55 +962,57 @@ AV.Cloud.define('Logger', function(request, response) {
 
 其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
 
-1. 您提供相应资料，我们来录入
-2. 我们的备案接入商给您邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商
-3. 提交备案到（公司所在地）管局（通信管理局）审核
+1. 你提供相应资料，我们来录入；
+2. 我们的备案接入商给你邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商；
+3. 提交备案到（公司所在地）管局（通信管理局）审核。
 
-请注意：**国内各地管局对备案的政策有差别，具体请查询当地管局**
+请注意：**国内各地管局对备案的政策有差别，具体请查询当地管局**。
 
-#####第一步：
+##### 第一步
 
-请提交以下资料，我们来帮您录入到系统：
+请提交以下资料，我们来帮你录入到系统：
 
-1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件
-2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、QQ号码
-3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、联系地址 （可以为单位通信地址）、QQ号码
-4. 网站名称（4个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项
+1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件；
+2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、QQ 号码；
+3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、电话（归属地为公司所在地）、联系地址（可以为单位通信地址）、QQ 号码；
+4. 网站名称（4 个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项：
    * 综合门户
    * 搜索引擎
    * 单位门户网站
    * 网络游戏
    * 网络广告
-5. 绑定独立域名所需的信息，参考上节文档  
+5. 绑定独立域名所需的信息，参考 [上节文档](#绑定独立域名)。  
 
-#####第二步：
+##### 第二步
 
-请提供您的地址，我们的备案接入商来给您邮寄幕布，因为幕布数量的关系，这里可能需要排队。
-以下资料是需要您准备好邮寄给接入商
+请提供你的地址，我们的备案接入商来给你邮寄幕布，因为幕布数量的关系，这里可能需要排队。
 
-1.  企业营业执照副本复印件，盖公章
-2.  企业法人身份证复印件，盖公章
-3.  网站负责人身份证复印件，盖公章（如果和企业法人是同一人的话，此条可忽略）
-4. 《网站备案信息真实性核验单》在最下面一栏，请网站负责人签字并盖公章。上面主办者名称和域名都需打印出来手写
+以下资料是需要你准备好邮寄给接入商：
 
-备案接入商地址：  
-> 地址：北京市东城区和平里东街15号航天物资大厦209房间  
-> 备案专员：孟南  
-> 联系电话：010-84222290转8001；18101125625  
+1.  企业营业执照副本复印件，盖公章；
+2.  企业法人身份证复印件，盖公章；
+3.  网站负责人身份证复印件，盖公章（如果和企业法人是同一人的话，此条可忽略）；
+4. 《网站备案信息真实性核验单》在最下面一栏，请网站负责人签字并盖公章。上面主办者名称和域名都需打印出来手写。
+
+备案接入商地址：
+
+> 地　　址：北京市东城区和平里东街15号航天物资大厦 209 房间  
+> 备案专员：孟南    
+> 联系电话：010-84222290 转 8001、18101125625  
   
-#####第三步：
+##### 第三步
 
 由我们和备案接入商来完成。
 
 备案完成后，我们再执行绑定操作。
 
-### 下载Web Hosting项目框架
+### 下载 Web Hosting 项目框架
 
-进入 云代码 -> 设置 菜单下载项目框架（web主机版）：
+进入 **云代码** > **设置** 菜单下载项目框架（web 主机版）：
 
 ![image](images/cloud_code_skeleton.png)
 
-下载后的代码结构类似Cloud code（基本版），只是在`Cloud`目录下多了`app.js`文件和`views`目录:
+下载后的代码结构类似 Cloud Code（基本版），只是在 Cloud 目录下多了 app.js 文件和 views 目录:
 
 ```
 <appName>
@@ -1014,47 +1029,46 @@ AV.Cloud.define('Logger', function(request, response) {
 ```
 
 
-并且`cloud/main.js`里还多了一行代码：
+并且 cloud/main.js 里还多了一行代码：
 
 ```javascript
 require('cloud/app.js');
 ```
 
-用来加载app.js
+用来加载 app.js。
 
-代码部署的过程跟Cloud code部署是一样的，具体见[上面的章节](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)。
+代码部署的过程跟Cloud code部署是一样的，具体见上面的章节 [部署代码](#部署代码)。
 
 ### 静态资源
 
-`public`目录下的资源将作为静态文件服务，例如，你在public下有个文件叫`index.html`，那么就可以通过`http://${your_app_domain}.avosapps.com/index.html`访问到这个文件。
+public 目录下的资源将作为静态文件服务，例如，你在 public 下有个文件叫 index.html，那么就可以通过 `http://${your_app_domain}.avosapps.com/index.html` 访问到这个文件。
 
-通常，你会将资源文件按照类型分目录存放，比如css文件放在`stylesheets`目录下，将图片放在`images`目录下，将javascript文件放在`js`目录下，Cloud code同样能支持这些目录的访问。
+通常，你会将资源文件按照类型分目录存放，比如 css 文件放在 stylesheets 目录下，将图片放在 images 目录下，将 JavaScript 文件放在 js 目录下，Cloud Code 同样能支持这些目录的访问。
 
-例如，`public/stylesheets/app.css`可以通过`http://${your_app_domain}.avosapps.com/stylesheets/app.css`访问到。
+例如，public/stylesheets/app.css 可以通过 `http://${your_app_domain}.avosapps.com/stylesheets/app.css` 访问到。
 
-在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在`public/index.html`下引用`app.css`：
+在你的 HTML 文件里引用这些资源文件，使用相对路径即可，比如在 public/index.html 下引用 app.css：
 
 ```html
 <link href="stylesheets/app.css" rel="stylesheet">
 ```
 
-默认静态资源的`Cache-Control`是`max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回304状态码。你还可以在`app.listen`的时候传入选项，设置静态资源的maxAge：
+默认静态资源的 Cache-Control 是 max-age=0，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回 304 状态码。你还可以在 `app.listen` 的时候传入选项，设置静态资源的 maxAge：
 
 ```javascript
 //设置7天不过期
 app.listen({'static': {maxAge: 604800000}});
 ```
 
-请注意`maxAge`的单位是毫秒，这样cache-control头会变成`max-age=604800`。更多static选项参考[static middleware](http://www.senchalabs.org/connect/static.html)。
+请注意 maxAge 的单位是毫秒，这样 cache-control 头会变成 `max-age=604800`。更多 static 选项参考 [static middleware](http://www.senchalabs.org/connect/static.html)。
 
 ### 动态请求
 
-如果只是展现静态资源，您可能使用Github Pages类似的免费服务也能做到，但是LeanCloud 提供的Web Hosting功能同时支持动态请求。这是通过编写[Node.js](http://nodejs.org)代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+如果只是展现静态资源，你可能使用Github Pages类似的免费服务也能做到，但是 LeanCloud 提供的 Web Hosting 功能同时支持动态请求。这是通过编写 [Node.js](http://nodejs.org)代码，基于 [express.js](http://expressjs.com/) 这个 web MVC 框架做到的。
 
-关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
+关于 [express.js](http://expressjs.com/) 框架，请参考官方文档来学习。
 
-在下载的项目框架`cloud/app.js`，我们可以看到一个初始代码：
-
+在下载的项目框架 cloud/app.js，我们可以看到一个初始代码：
 
 ```javascript
 // 在Cloud code里初始化express框架
@@ -1076,31 +1090,27 @@ app.get('/hello', function(req, res) {
 app.listen();
 ```
 
-我们使用`ejs`模板来渲染view，默认的模板都放在`views`目录下，比如这里`hello.ejs`:
+我们使用 ejs 模板来渲染 view，默认的模板都放在 views 目录下，比如这里 hello.ejs：
 
 ```html
 <%= message %>
 ```
 
-简单地显示message内容。你还可以选用[jade](https://github.com/visionmedia/jade)这个模板引擎：
+简单地显示 message 内容。你还可以选用 [jade](https://github.com/visionmedia/jade) 这个模板引擎：
 
 ```javascript
 app.set('view engine', 'jade');
 ```
 
-您可以参照上面的[部署文档](#%E9%83%A8%E7%BD%B2%E4%BB%A3%E7%A0%81)来部署这个框架代码，部署成功之后，直接可以访问`http://${your_app_domain}.avosapps.com/hello`将看到展示的message:
+你可以参照上面的 [部署文档](#部署文档) 来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message：「Congrats, you just set up your app!」
 
-```
-Congrats, you just set up your app!
-```
+更多复杂的路由和参数传递，请看 [express.js 框架文档](http://expressjs.com/guide.html)。
 
-更多复杂的路由和参数传递，请看[express.js框架文档](http://expressjs.com/guide.html)。
+我们还提供了一个 [在线 Demo](http://myapp.avosapps.com/)（[源码](https://github.com/killme2008/cloudcode-test)）。
 
-我们还提供了一个在线demo：[http://myapp.avosapps.com/](http://myapp.avosapps.com/)，源码在[https://github.com/killme2008/cloudcode-test](https://github.com/killme2008/cloudcode-test)，您可以作为参考。
+### 自定义 404 页面
 
-### 自定义404页面
-
-自定义404页面在云代码里比较特殊，假设我们要渲染一个404页面，必须将下列代码放在`app.listen()`之后：
+自定义 404 页面在云代码里比较特殊，假设我们要渲染一个 404 页面，必须将下列代码放在 `app.listen()` 之后：
 
 ```javascript
 // 在app.listen();之后。
@@ -1113,23 +1123,21 @@ app.use(function(req, res, next){
 
 ### 获取客户端 IP
 
-因为我们的云代码服务在 Nginx 之后，因此不能通过`req.connection.remoteAddress`这样的 API 来获取客户端的真实 IP，需要通过
+因为我们的云代码服务在 Nginx 之后，因此不能通过 `req.connection.remoteAddress` 这样的 API 来获取客户端的真实 IP，需要通过以下方式获取：
 
 ```javascript
 var ip = req.headers['x-real-ip']
 ```
 
-来获取。
-
 ### 上传文件
 
-在Cloud Code里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+在 Cloud Code 里上传文件也很容易，首先配置 App 使用 bodyParser 中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到 request.files 里：
 
 ```javascript
 app.use(express.bodyParser());
 ```
 
-使用表单上传文件，假设文件字段名叫iconImage:
+使用表单上传文件，假设文件字段名叫 iconImage：
 
 ```html
 <form enctype="multipart/form-data" method="post" action="/upload">
@@ -1138,9 +1146,9 @@ app.use(express.bodyParser());
 </form>
 ```
 
-上传文件使用multipart表单，并POST提交到/upload路径下。
+上传文件使用 multipart 表单，并 POST 提交到 /upload 路径下。
 
-接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的 fs 模块：
 
 ```javascript
 var fs = require('fs');
@@ -1161,11 +1169,11 @@ app.post('/upload', function(req, res){
 });
 ```
 
-上传成功后，即可在数据管理平台里看到您所上传的文件。
+上传成功后，即可在数据管理平台里看到你所上传的文件。
 
 ### 处理用户登录和登出
 
-假设你创建了一个支持web主机功能的云代码项目，在app.js里添加下列代码：
+假设你创建了一个支持 web 主机功能的云代码项目，在 app.js 里添加下列代码：
 
 ```javascript
 var express = require('express');
@@ -1183,13 +1191,15 @@ app.use(express.cookieParser('Your Cookie Secure'));
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}));
 ```
 
-使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+使用 `express.cookieParser` 中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个 session 存储，它会自动将 AV.User 的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
-`avos-express-cookie-session`支持的选项包括：
+`avos-express-cookie-session` 支持的选项包括：
 
-* cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
+参数 | 约束 | 说明
+---|---|---
+cookie | 可选 | 设置 cookie 属性，例如 maxAge、secure等。我们会强制将 httpOnly 和 signed 设置为 true。
+fetchUser | | **是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**<br/>如果设置为 true，每个HTTP请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。<br/>如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性，<br/>你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
+key | | session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
 
 **注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
 
@@ -1253,7 +1263,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+注意：express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession 中间件](https://gist.github.com/visionmedia/1491756)。
 
 ### 自定义 session
 
@@ -1267,34 +1277,32 @@ app.use(express.cookieSession());
 该组件和 `avos-express-cookie-session` 组件可以并存。
 
 
-### 启用HTTPS
+### 启用 HTTPS
 
 为了安全性，我们可能会为网站加上HTTPS加密传输。我们的云代码支持网站托管，同样会有这样的需求。
 
-因此我们在云代码中提供了一个新的middleware来强制让你的`{domain}.avosapps.com`的网站通过https访问，你只要这样：
+因此我们在云代码中提供了一个新的 middleware 来强制让你的 `{domain}.avosapps.com`的网站通过 https 访问，你只要这样：
 
 ```javascript
 var avosExpressHttpsRedirect = require('avos-express-https-redirect');
 app.use(avosExpressHttpsRedirect());
 ```
 
-部署并发布到生产环境之后，访问您的云代码网站二级域名都会强制通过HTTPS访问。测试环境的域名仍然不会启用HTTPS。
-
+部署并发布到生产环境之后，访问你的云代码网站二级域名都会强制通过HTTPS访问。测试环境的域名仍然不会启用HTTPS。
 
 ### 测试环境和开发环境
 
-**提示**：云代码 2.0 及以上版本可以跳过本节
+**提示**：云代码 2.0 及以上版本可以跳过本节。
 
-前面已经谈到Cloud Code的测试和生产环境之间的区别，可以通过HTTP头部`X-AVOSCloud-Application-Production`来区分。但是对于Web Hosting就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到 Cloud Code 的测试和生产环境之间的区别，可以通过 HTTP 头部 X-AVOSCloud-Application-Production 来区分。但是对于 Web Hosting 就没有办法通过这个 HTTP 头来方便的区分。
 
-因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
+因此，我们其实为每个 App 创建了两个域名，除了 xxx.avosapps.com 之外，每个 App 还有 dev.xxx.avosapps.com 域名作为测试环境的域名。
 
-部署的测试代码将运行在这个域名之上，在测试通过之后，通过`部署`菜单里的`部署到生产环境`按钮切换之后，可以在`xxx.avosapps.com`看到最新的运行结果。
+部署的测试代码将运行在这个域名之上，在测试通过之后，通过 **部署** 菜单里的 **部署到生产环境** 按钮切换之后，可以在 xxx.avosapps.com 看到最新的运行结果。
 
-注意：**dev.xxx.avosapps.com的view会同时渲染到生产环境，app.js的逻辑代码会自动隔离。因此建议测试环境和生产环境的views目录区分开，并通过全局变量__production来判断当前环境是生产环境还是测试环境，分别设置views目录**
+注意：**dev.xxx.avosapps.com 的 view 会同时渲染到生产环境，app.js 的逻辑代码会自动隔离。因此建议测试环境和生产环境的 views 目录区分开，并通过全局变量 `__production` 来判断当前环境是生产环境还是测试环境，分别设置 views 目录。**
 
-**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
-
+**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境。**
 
 ```javascript
 if(__production)
@@ -1304,7 +1312,7 @@ else
 
 ```
 
-这样，测试代码将使用`cloud/dev_views`目录作为views模板目录。
+这样，测试代码将使用 cloud/dev_views 目录作为 views 模板目录。
 
 
 ## 第三方平台接入
@@ -1313,11 +1321,11 @@ else
 
 ### 接入支付宝
 
-通过 [这个](https://github.com/leancloud/cloud-code-alipay) 示例，你可以了解到如何接入支付宝，实现「即时到账收款」的功能。
+通过 [这个示例](https://github.com/leancloud/cloud-code-alipay) ，你可以了解到如何接入支付宝，实现「即时到账收款」的功能。
 
 ### 接入微信
 
-通过 [这个](https://github.com/leancloud/cloud-code-weixin) 示例，你可以了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
+通过 [这个示例](https://github.com/leancloud/cloud-code-weixin) ，你可以了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
 
 
 ## 运行环境区分
@@ -1336,7 +1344,7 @@ if (__local) {
 
 ## 模块
 
-Cloud Code支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，Cloud Code模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+Cloud Code 支持将 JavaScript 代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，Cloud Code 模块的运作方式和 CommonJS 模块类似。当一个模块被加载的时候，JavaScript 文件首先被加载，然后执行文件内的源码，并返回全局的 export 对象。例如，假设 cloud/name.js 包含以下源码：
 
 ```javascript
 var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
@@ -1352,13 +1360,14 @@ name.isACoolName('Fred'); // 返回false
 name.isACoolName('Skippy'); // 返回true;
 name.coolNames; // 未定义.
 ```
-（提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
 
-name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的Cloud Code项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+**提示：你可以利用 console.log 来打印这几个调用的返回值到日志。**
+
+name 模块包含一个名为 `isACoolName` 的函数。`require` 接收的路径是相对于你的 Cloud Code 项目的根路径，并且只限 cloud/ 目录下的模块可以被加载。
 
 ### 可用的第三方模块
 
-因为Cloud Code 1.0运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
+因为 Cloud Code 1.0 运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
 
 ```
 qiniu
@@ -1383,10 +1392,12 @@ stripe
 sendgrid
 xml2js
 ```
-上面这些模块都可以直接require使用。
-我们还提供受限制的`fs`文件模块，仅可以读取上传文件目录下的文件。
 
-**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
+上面这些模块都可以直接 require 使用。
+
+我们还提供受限制的 fs 文件模块，仅可以读取上传文件目录下的文件。
+
+**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本。**
 
 ## 时区问题
 
@@ -1407,13 +1418,17 @@ xml2js
 解决办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
 
 另外一个场景：
+
 1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
 1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
-  * `toISOString` 2015-04-09T03:35:09.678Z
-  * `toLocaleString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-  * `toUTCString` Thu, 09 Apr 2015 03:35:09 GMT
-  * `toString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-  * `getHours` 3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
+  
+函数 | 返回结果
+---|---
+`toISOString` | 2015-04-09T03:35:09.678Z
+`toLocaleString` | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toUTCString` | Thu, 09 Apr 2015 03:35:09 GMT
+`toString` | Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`getHours` | 3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
 
 如果需要获取小时数据，解决办法是使用第三方的组件，比如 [moment-timezone](http://momentjs.com/timezone/)，通过下面的方式可以获得东八区的小时时间：
 
@@ -1422,17 +1437,18 @@ var time = moment(obj.createdAt).tz('Asia/Shanghai');
 console.log('toString', time.toString());
 console.log('getHours', time.hours())
 ```
+
 ## 云代码 2.0 版
 
-2014 年 8 月 14 号，Cloud Code 推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从 14 号开始，新创建的应用都将使用云代码2.0版本。
+2014 年 8 月 14 号，Cloud Code 推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从当天开始，新创建的应用都将使用云代码 2.0 版本。
 
 ### 升级到 2.0
 
 1. 时区问题：2.0 版解决了 1.0 中时区错误的问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
 
-  * 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+  >需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
 
-1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
+1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 Node.js 项目一样，在项目根目录添加一个 package.json 配置文件，下面是一个简单的样例：
 
 ```json
 {
@@ -1446,7 +1462,7 @@ console.log('getHours', time.hours())
 }
 ```
 
-需要注意的是，cloud-code 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
+需要注意的是，cloud-code 运行环境默认包含一些组件，如果 package.json 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
 
 ```
 nodejs: "0.10.29"
@@ -1464,14 +1480,14 @@ sendgrid: "1.0.5"
 xml2js: "0.4.4"
 ```
 
-**注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
+**注意**：express 目前只支持 3.4.x 版本，即使 package.json 指定其他版本也是无效的。
 
-在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多5分钟，平台将自动迁移完成，在5分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
+在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
 
 ### 最新特性
 
-* 有着更好的资源隔离机制，因此 `fs` 等官方模块的限制取消了。
-* 可以自由添加和使用三方类库
-* 时区问题彻底解决
-* `views` 目录不再需要分成两个目录（ `cloud/views` 和 `cloud/dev_views` ）
-* 修正：项目从代码仓库迁出有可能失败的问题
+* 有着更好的资源隔离机制，因此 fs 等官方模块的限制取消了。
+* 可以自由添加和使用三方类库。
+* 时区问题彻底解决。
+* views 目录不再需要分成两个目录（cloud/views 和 cloud/dev_views）。
+* 修正：项目从代码仓库迁出有可能失败的问题。
