@@ -2,14 +2,14 @@
 
 我们提供了标准的 OAuth2 协议，允许第三方接入我们的平台，调用开放 API 获取用户信息、应用信息、创建应用等。
 
-我们的开发者平台仍然在开发中，因此目前您需要通过帮助菜单的技术支持提出接入申请，要求提供下列信息：
+我们的开发者平台仍然在开发中，因此目前你需要通过帮助菜单的技术支持提出接入申请，要求提供下列信息：
 
 * LeanCloud 帐户邮箱
 * 申请者的详细信息：名称（个人或者公司）、地址、联系方式（手机或者电话）等。
 * 申请的第三方平台的详细信息： 名称、介绍描述、网站地址
 * 期望的接入方式： OAuth2 接入 或者 connect 方式接入，详情见下文。
 
-在申请成功后，我们会发送 client id 和 client secret 提供给您接入。
+在申请成功后，我们会发送 client id 和 client secret 提供给你接入。
 
 
 ## OAuth2 接入
@@ -69,7 +69,7 @@ GET http://exmaple.com/oauth2/callback?state={{传入的state}}&code={{code随�
 
 #### 第二步：获取令牌
 
-用户授权后，您可以这回掉中拿到授权 code ，然后使用这个 code 去 LeanCloud 请求访问令牌(access_token)。服务端直接通过 http client 调用下列URL：
+用户授权后，你可以这回掉中拿到授权 code ，然后使用这个 code 去 LeanCloud 请求访问令牌(access_token)。服务端直接通过 http client 调用下列URL：
 
 <div ng-non-bindable>
 
@@ -186,15 +186,15 @@ puts sign
 }
 ```
 
-接下来您就可以拿获取得到的 `access_token` 和 `uid` 去调用开放 API（在授权范围内）。
+接下来你就可以拿获取得到的 `access_token` 和 `uid` 去调用开放 API（在授权范围内）。
 
 ## 开放 API
 
-获取令牌后，您可以使用令牌访问 LeanCloud 平台上的开放 API。
+获取令牌后，你可以使用令牌访问 LeanCloud 平台上的开放 API。
 
 ### 综述
 
-调用下列 API 都需要传入授权得到的访问令牌 `access_token`，您可以:
+调用下列 API 都需要传入授权得到的访问令牌 `access_token`，你可以:
 
 * 在 API URL 中附加上 `access_token=xxx` 参数
 * 或者使用`Authorization: Bearer xxx`的 HTTP 头（更推荐的方式）
@@ -228,15 +228,15 @@ puts sign
 ```
 GET  /clients/:uid
 ```
-* 参数： `uid`就是用户 id，令牌返回`params`值包含了`uid`，也可以用字符串`self`指代授权用户。
+* 参数： `uid`就是用户 id，令牌返回`params` 值包含了 `uid`，也可以用字符串 `self`指代授权用户。
 * 需要权限： `client:info`
 * 应答结果：
 
 ```json
 {
-username: "xzhuang",
+username: "beyonce",
 created: "2013-10-16T21:52:31.000Z",
-email: "xzhuang@leancloud.cn",
+email: "someone@qq.com",
 id: 15
 }
 ```

@@ -1,12 +1,12 @@
 # 用户反馈组件开发指南
 
-AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个用户反馈系统，并且能够方便的在我们的移动App中查看用户的反馈。
+AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈。
 
-**您可以在应用的组件菜单里看到所有的用户反馈并回复。**
+**你可以在应用的组件菜单里看到所有的用户反馈并回复。**
 
-## LeanCloud移动App
+## LeanCloud 移动 App
 
-用户如果有新的反馈会主动推送通知到我们提供的移动App，建议您安装，并使用LeanCloud帐户登录：
+用户如果有新的反馈会主动推送通知到我们提供的移动App，建议你安装，并使用LeanCloud帐户登录：
 
 * [Android App](http://download.leancloud.cn/apk/AVOSCloudMobileApp.apk)
 * [iOS App](https://itunes.apple.com/cn/app/avos-cloud-ying-yong-tong/id854896336?mt=8&uo=4)
@@ -24,11 +24,11 @@ AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代�
 AVUserFeedbackAgent *agent = [AVUserFeedbackAgent sharedInstance];
 
 /* title 传 nil 表示将第一条消息作为反馈的标题 */
-[agent showConversations:self title:nil contact:@"test@leancloud.cn"];
+[agent showConversations:self title:nil contact:@"test@leancloud.rocks"];
 ```
 ![image](images/avoscloud-ios-feedback.png)
 
-特别指出，如果要使用默认的用户反馈界面而且手动安装了 `AVOSCloud.framework`，开发者需要将 `AVOSCloud.framwork -> Resources -> AVOSCloud.bundle` 手动拖入工程项目中。
+特别指出，如果要使用默认的用户反馈界面而且手动安装了 AVOSCloud.framework，开发者需要将 **AVOSCloud.framwork** > **Resources** > **AVOSCloud.bundle** 手动拖入工程项目中。
 
 ### 自定义用户反馈界面
 你也可以自定义反馈界面，`LCUserFeedbackThread` 和 `LCUserFeedbackReply` 这两个类提供了相应 API 来完成你想要的功能。
@@ -105,26 +105,34 @@ AVUserFeedbackAgent *agent = [AVUserFeedbackAgent sharedInstance];
 - (void)saveFeedbackReplyInBackground:(LCUserFeedbackReply *)feedbackReply withBlock:(AVIdResultBlock)block;
 ```
 
-您也可以参考 `LCUserFeedbackViewController` 类中处理反馈的逻辑。
+你也可以参考 `LCUserFeedbackViewController` 类中处理反馈的逻辑。
 
 ### AVUserFeedbackThread 数据模型
-`AVUserFeedbackThread` 包含 `content` `type` `createdAt` 等属性。`content` 代表反馈内容。`type` 为反馈类型，分别为 `user` 和 `dev`。`createdAt` 为反馈内容创建时间。
 
-## Android Feedback组件
+`AVUserFeedbackThread` 包含的属性有：
 
-### 导入SDK
- 您可以从 sdk_down.html 页面下载`用户反馈模块`，解压缩avoscloudfeedback.zip压缩包后，将libs下得的`avosfeedback-v{version}.jar`包（需要包括下载的其他基础jar包）加入您工程的libs下面。
+属性|说明
+---|---
+content | 代表反馈内容
+createdAt | 反馈内容创建时间
+type | 反馈类型，分别为 user 和 dev。
 
-之后，您需要将res下的资源文件夹拷贝并且合并到您工程的res目录下。更改资源文件的内容并不影响SDK，但是请不要改变资源的文件名和文件内资源ID。
+## Android Feedback 组件
 
-*　注： LeanCloud Feedback Android SDK的资源文件都是以avoscloud_feedback打头。*
+### 导入 SDK
+
+你可以从我们的 [SDK 下载](sdk_down.html) 页面获取 **用户反馈模块**。解压缩后，将 libs 下得的 avosfeedback-v{**version**}.jar 包（需要包括下载的其他基础 jar 包）加入你工程的 libs 下面。
+
+之后，你需要将 res 下的资源文件夹拷贝并且合并到你工程的 res 目录下。更改资源文件的内容并不影响 SDK，但是请不要改变资源的文件名和文件内资源ID。
+
+注：LeanCloud Feedback Android SDK 的资源文件都是以 avoscloud_feedback 打头。
 
 
 ### 添加代码，使用基础功能
 
 #### 配置 AndroidManifest.xml
 
-打开AndroidManifest.xml文件，在里面添加需要用到的activity和需要的权限:
+打开 AndroidManifest.xml文件，在里面添加需要用到的 activity 和需要的权限:
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET" />
@@ -137,11 +145,11 @@ AVUserFeedbackAgent *agent = [AVUserFeedbackAgent sharedInstance];
     </application>
 ```
 
-*注：由于一些UI的原因，Feedback SDK的最低API level要求是12，如您需要更低的版本支持，请参照文档中的高级定制部分进行开发。
+**由于一些 UI 的原因，Feedback SDK 的最低 API level 要求是 12，如你需要更低的版本支持，请参照文档中的高级定制部分进行开发。**
 
-如果依然遇到Actionbar相关的NPE问题，请检查Application Theme，确保ThreadActivity中的Actionbar。*
+**如果依然遇到 Actionbar 相关的 NPE 问题，请检查 Application Theme，确保 ThreadActivity 中的 Actionbar。**
 
-*注：在2.5.7以后，用户反馈中添加了图片上传功能，所以在Permission中需要添加WRITE_EXTERNAL_STORAGE权限，如果您在使用过程中遇到文件类似情况，请先检查权限设置是否有相应的更新。*
+>注：在 2.5.7 以后，用户反馈中添加了图片上传功能，所以在 Permission 中需要添加 WRITE_EXTERNAL_STORAGE 权限，如果你在使用过程中遇到文件类似情况，请先检查权限设置是否有相应的更新。
 
 
 #### 添加代码实现基础的反馈功能
@@ -157,34 +165,34 @@ agent.startDefaultThreadActivity();
 
 2.新回复通知
 
-如果您需要在用户打开App时，通知用户新的反馈回复，只需要在您的入口Activity的OnCreate方法中添加:
+如果你需要在用户打开 App 时，通知用户新的反馈回复，只需要在你的入口 Activity 的 `OnCreate` 方法中添加:
 
 ```java
 agent.sync();
 ```
 
-*注：注意: 此功能使用了Android Support Library, 所以请添加最新版本 android-support-v4.jar 到工程的libs目录下*。
+>注意：此功能使用了 Android Support Library, 所以请添加最新版本 android-support-v4.jar 到工程的libs目录下。
 
-当用户收到开发者的新回复时，就会产生一个新的消息通知。如果您需要改变通知的图标，请替换res下`avoscloud_feedback_notification.png`文件即可。
+当用户收到开发者的新回复时，就会产生一个新的消息通知。如果你需要改变通知的图标，请替换 res 下的 **avoscloud_feedback_notification.png** 文件即可。
 
-如果您不需要通知栏通知，又迫切需要在用户在打开App时同步反馈信息，您可以调用
+如果你不需要通知栏通知，又迫切需要在用户在打开 App 时同步反馈信息，你可以调用
 
 ```java
 agent.getDefaultThread().sync(SyncCallback);
 ```
 
-这里的SyncCallback是一个异步回调，其中的方法会在同步请求成功以后被调用。
+这里的 SyncCallback 是一个异步回调，其中的方法会在同步请求成功以后被调用。
 
 
 ### 高级定制指南
 
-如果我们的反馈组件UI无法满足您的需求，您可以通过Feedback SDK提供的数据模型结合自定义UI来满足您的需求。
+如果我们的反馈组件 UI 无法满足你的需求，你可以通过 Feedback SDK 提供的数据模型结合自定义 UI 来满足你的需求。
 
 
-#### Feedback数据模型
+#### Feedback 数据模型
 
-* Comment
-Comment 代表了反馈系统中间，用户或者开发者的每一次回复。不同的类型可以通过CommentType属性来指定：
+* **Comment**    
+  代表了反馈系统中间，用户或者开发者的每一次回复。不同的类型可以通过 CommentType 属性来指定：
 
 ```java
 Comment userComment = new Comment("这是一个用户反馈");//不指定CommentType类型，即为CommentType.USER
@@ -192,21 +200,18 @@ Comment anotherUserComment = new Comment("再来说一句",CommentType.USER);
 Comment devComment = new Comment("开发者回复",CommentType.DEV);
 ```
 
-* FeedbackThread
-FeedbackThread代表了用户与开发者的整个交流过程。其中有两个个属性可供设置：
-`contact`和`commentList`:
+* **FeedbackThread**  
+  代表了用户与开发者的整个交流过程。其中有两个个属性可供设置：`contact` 和 `commentList`：
 
 ```java
 FeedbackThread thread = agent.getDefaultThread();
-thread.setContact("您的邮箱或者QQ账号");
+thread.setContact("你的邮箱或者QQ账号");
 thread.add(newComment);
 //或者也可以使用thread.getCommentsList().add(newComment);
 thread.sync(syncCallback);
 ```
 
-更多的信息您可以参考我们的实现的Activity：
+更多的信息你可以参考我们的实现的 Activity：<https://github.com/leancloud/avoscloud-sdk/blob/master/android/avoscloudfeedback/src/com/avos/avoscloud/feedback/ThreadActivity.java>
 
-https://github.com/leancloud/avoscloud-sdk/blob/master/android/avoscloudfeedback/src/com/avos/avoscloud/feedback/ThreadActivity.java
-
-*注：ThreadActivity使用了ActionBar(API 11),EditText的 textCursorDrawable属性(API 12)。*
+>注：ThreadActivity 使用了 ActionBar(API 11)、EditText 的 textCursorDrawable 属性 (API 12)。
 

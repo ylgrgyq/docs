@@ -36,12 +36,12 @@ var async = require('async');
 **注意**：命令行工具部署时是不会上传 `node_modules` 目录，因为云代码服务器会根据 `package.json` 的内容自动下载三方包。所以也建议将 `node_modules` 目录添加到 `.gitignore` 中，使其不加入版本控制。
 
 ## Maximum call stack size exceeded 如何解决？
-`AV.Object.extend` 产生的对象需要作为全局变量保存（即定义在 AV.Cloud.define 方法之外）。因为每调用一次，就会产生一个新的类的实例，并且和之前创建的实例形成一个链表。调用次数过多后（几万次）就会堆栈溢出。如果你的应用时不时出现 `Maximum call stack size exceeded` 错误，请确认是否误用了 `AV.Object.extend` 方法。
+`AV.Object.extend` 产生的对象需要作为全局变量保存（即定义在 AV.Cloud.define 方法之外）。因为每调用一次，就会产生一个新的类的实例，并且和之前创建的实例形成一个链表。调用次数过多后（几万次）就会堆栈溢出。如果你的应用时不时出现 **Maximum call stack size exceeded** 错误，请确认是否误用了 `AV.Object.extend` 方法。
 
 我们在 [JavaScript 指南 - AV.Object](./js_guide.html#AV_Object) 章节中也进行了描述。
 
 ## 目前支持哪些语言？
-目前只提供了 JavaScript SDK 和运行沙箱环境，暂时只支持 Node.js。Python 语言正在准备中，未来可能会引入 PHP 等其他语言。
+我们提供了 JavaScript SDK，支持 Node.js 和 Python 环境，未来可能会引入 PHP 等其他语言。
 
 ## Web Hosting 备案如何操作？
 只有网站类的才需要备案，并且在主域名已备案的情况下，二级子域名不需要备案。 如果主站需要托管在我们这边，且还没有备案过，我们可以协助您完成备案，请参考文档 [绑定独立域名](./cloud_code_guide.html#绑定独立域名)
