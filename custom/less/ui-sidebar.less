@@ -68,6 +68,10 @@
 
 .sidebar > .sidenav {
 
+  li.disabled {
+    display: none;
+  }
+
   li > a > .label {
     margin-right: -10px;
   }
@@ -79,6 +83,11 @@
       color: @link-color;
       font-weight: bold;
     }
+  }
+
+  .icon-external {
+    opacity: .4;
+    vertical-align: -1px;
   }
 }
 

@@ -102,14 +102,107 @@ select.input-sm.cloud-stat-condition {
 }
 
 // app-cloud-log.html
+.log-container-wrap {
+  position: relative;
+}
+
+.timestamp-toggle {
+  position: absolute;
+  @s: 19px;
+  width: @s;
+  height: @s;
+  background: #fff;
+  left: 227px;
+  bottom: 18px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 2px 1px rgba(0, 0, 0, .06);
+  font-size: 10px;
+  text-align: center;
+  color: #999;
+  cursor: pointer;
+
+  &:hover,
+  &:focus {
+    color: #555;
+    will-change: transform;
+  }
+
+  .icon {
+    margin-top: 5px;
+    display: block;
+  }
+
+  .no-timestamp & {
+    left: 50px;
+
+    .icon {
+      transform: rotate(180deg);
+    }
+  }
+}
+
+.cloud-log-content {
+  height: 500px;
+  overflow: scroll;
+  font-family: @font-family-monospace;
+  line-height: 1.8;
+  margin: 15px 0;
+  box-shadow: inset 0 1px 0 0px rgba(0, 0, 0, .1), inset 0 -1px 0 0px rgba(0, 0, 0, .1);
+  overflow-x: auto;
+
+  .log-item {
+    padding: 0 1ch;
+
+    &:hover,
+    &:focus {
+      color: @link-color;
+
+      .cloud-log-output {
+        color: @link-color;
+        background: fade(@link-color, 5%);
+        border-left-color: @link-color;
+      }
+    }
+
+    &.log-item-error {
+
+      &:hover,
+      &:focus {
+        color: @brand-danger;
+
+        .cloud-log-output {
+          color: @brand-danger;
+          background: fade(@brand-danger, 5%);
+          border-left-color: @brand-danger;
+        }
+      }
+    }
+
+    &.log-item-info {
+
+      &:hover,
+      &:focus {
+        color: @link-color;
+
+        .cloud-log-output {
+          color: @link-color;
+          background: fade(@link-color, 5%);
+          border-left-color: @link-color;
+        }
+      }
+    }
+  }
+}
+
 .cloud-log-meta {
-  // Borrowed from Bootstrap pre padding
-  padding-top: ((@line-height-computed - 1) / 2);
-  padding-bottom: ((@line-height-computed - 1) / 2);
-  .text-right;
-  width: 210px;
-  padding-right: 20px;
+  // format:
+  // 2015-08-04 15:08:17
+  width: (19ch + 8ch);
   float: left;
+
+  .no-timestamp & {
+    width: 6ch;
+  }
 
   // Alternative position for medium screens
   @media (max-width: @screen-sm-max) {
@@ -119,36 +212,63 @@ select.input-sm.cloud-stat-condition {
   }
 }
 
-.cloud-log-level {
-  background: @gray-light;
-  color: #fff;
-  border-radius: 3px;
-  padding: 1px 5px;
-  font-weight: normal;
-  line-height: 1;
-  text-transform: uppercase;
-  font-size: 10px;
-}
-
-.cloud-log-level-info {
-  background: @brand-info;
-}
-
-.cloud-log-level-error {
-  background: @brand-danger;
-}
-
 .cloud-log-output {
-  // Override default <pre> behavior
-  word-wrap: normal;
-  word-break: normal;
-  width: calc(~"100% - 210px");
+  white-space: pre;
+  word-wrap: break-word;
+  word-break: break-word;
+  width: calc(~"100% - 27ch");
   float: left;
+  border-left: 1px solid #eee;
+  padding-left: 10px;
+
+  .no-timestamp & {
+    width: calc(~"100% - 6ch");
+  }
 
   @media (max-width: @screen-sm-max) {
     width: auto;
     float: none;
   }
+}
+
+.cloud-log-timestamp {
+  opacity: .6;
+
+  .no-timestamp & {
+    display: none;
+  }
+}
+
+.cloud-log-level {
+  color: @gray-light;
+  background: #fff;
+  border-radius: 3px;
+  padding: 2px 5px 1px;
+  font-weight: normal;
+  line-height: 1;
+  text-transform: uppercase;
+  font-size: 10px;
+  border: 1px solid;
+  opacity: .8;
+  width: 7ch;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.cloud-log-level-error {
+  color: @brand-danger;
+}
+
+.cloud-log-level-info {
+  color: @link-color;
+}
+
+.form-vertical-splitter {
+  margin-top: 1px;
+  border-left: 1px solid #eee;
+  padding-left: 20px;
+  margin-left: 20px;
 }
 
 // cloud-online.html
@@ -210,13 +330,13 @@ select.input-sm.cloud-stat-condition {
 
   // Used by app-team-set.html
   &.cc-func-type-team {
-    color: #fff;
-    background: #009eff;
+    color: #009eff;
+    background: #ebf7ff;
   }
 
   &.cc-func-type-user {
-    color: #fff;
-    background: #ffb42b;
+    color: #ffab11;
+    background: #fff8e9;
   }
 
   .has-type & {
@@ -371,8 +491,14 @@ select.input-sm.cloud-stat-condition {
 
   label {
     display: inline-block;
-    width: 179px;
+    width: 47%;
+    width: calc(~"50% - 15px");
     margin-right: @modal-inner-padding;
+
+    @media(max-width: @screen-xs-max) {
+      width: 90%;
+      width: calc(~"100% - 15px");
+    }
   }
 }
 
@@ -422,3 +548,4 @@ select.input-sm.cloud-stat-condition {
 
   }
 }
+

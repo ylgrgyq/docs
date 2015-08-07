@@ -26,7 +26,18 @@
     margin-top: 1px;
   }
 
-  .selected & {
+  .slick-cell.active & {
+    color: @link-color;
+    background: transparent;
+    border-color: fade(@link-color, 40%);
+
+    &:hover,
+    &:focus {
+      background: #fff;
+    }
+  }
+
+  .slick-cell.selected & {
     color: #fff;
     background: transparent;
     border-color: fade(#fff, 40%);

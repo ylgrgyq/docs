@@ -8,10 +8,10 @@
 @gray-lighter:           lighten(#000, 93.5%); // #eee
 
 @brand-primary:         #3090e4;
-@brand-success:         #69db9b;
-@brand-warning:         #ffbb5a;
-@brand-danger:          #ff6b66;
-@brand-info:            #63d2f3;
+@brand-success:         #2bb367;
+@brand-warning:         #ff8c2c;
+@brand-danger:          #ff0800;
+@brand-info:            #3bc3ec;
 
 @navbar-height:                    48px;
 
@@ -205,18 +205,25 @@
 //
 // Text Selectability
 // --------------------------------------------------
-//
+
 
 a,
 p,
 label,
 input,
 textarea,
+pre,
 pre *,
+code,
 code *,
+table,
+table *,
 .selectable-text,
 .selectable-text *,
+.callout,
 .callout *,
+.slick-wrap,
+.slick-wrap *,
 .figure,
 .user-name-text {
   user-select: text;
@@ -224,6 +231,10 @@ code *,
 
 .unselectable-text,
 .unselectable-text *,
+.flex-control-nav,
+.flex-control-nav *,
+.icon,
+.icon *,
 .footer *,
 .nav * {
   user-select: none;
@@ -314,7 +325,7 @@ code *,
   > input:last-child,
   > table:last-child,
   > textarea:last-child,
-  form .form-group:last-child,
+  form > .form-group:last-child,
   [class^="form"] .form-group:last-child,
   .tab-pane > *:last-child {
     margin-bottom: 0;
@@ -703,10 +714,19 @@ textarea {
 .popover {
   padding: 0;
   .box-shadow(0 6px 24px rgba(0, 0, 0, .06));
+  border-color: rgba(0, 0, 0, .16);
+
+  &.top {
+
+    > .arrow {
+      border-top-color: rgba(0, 0, 0, .16);
+    }
+  }
 
   &.bottom {
 
     > .arrow {
+      border-bottom-color: rgba(0, 0, 0, .16);
 
       &:after {
         border-bottom-color: @popover-title-bg;
@@ -729,11 +749,28 @@ code {
 
 pre code {
   border: none;
+  word-break: break-word;
+  word-wrap: break-word;
 }
 
 pre {
   border: none;
 }
+
+//
+// Splitter
+// --------------------------------------------------
+hr {
+
+}
+
+.hr {
+
+  &--no-margin-bottom {
+    margin-bottom: 0;
+  }
+}
+
 
 //
 // Navbar
@@ -909,6 +946,21 @@ pre {
   &:focus,
   &:hover {
     color: @brand-warning;
+  }
+
+  h4 & {
+    padding: 3px 8px;
+    vertical-align: 2px;
+    font-weight: 500;
+  }
+
+  &.plain {
+    cursor: default;
+
+    &:focus,
+    &:hover {
+      color: #bbb;
+    }
   }
 }
 
@@ -1095,142 +1147,6 @@ select.form-control {
 // }
 
 
-//
-// Labels
-// --------------------------------------------------
-// Switch Toggle (mod)
-// Author: Dominik Dąbrowski
-// URL: http://codepen.io/Murkee/pen/mudJx
-.switch {
-  position: relative;
-  margin: 20px 0;
-  overflow: auto;
-}
-
-.switch-wrap {
-  float: right;
-  position: relative;
-  display: block;
-  vertical-align: top;
-  width: 40px;
-  height: 20px;
-  padding: 3px;
-  margin-top: -3px;
-  background-color: white;
-  border-radius: 18px;
-  box-sizing: content-box;
-  // box-shadow: inset 0 -1px white, inset 0 1px 1px rgba(0, 0, 0, 0.05);
-  cursor: pointer;
-  // background-image: linear-gradient(to bottom, #eeeeee, white 25px);
-  user-select: none;
-}
-
-.switch-text {
-  position: absolute;
-  top: 0;
-  left: 0;
-  cursor: pointer;
-  right: 46px;
-  color: @gray-light;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-  .switch:hover &,
-  .switch:focus & {
-    color: #000;
-  }
-}
-
-.switch-input {
-  position: absolute;
-  top: 0;
-  right: 0;
-  opacity: 0;
-}
-
-.switch-label {
-  position: relative;
-  display: block;
-  height: inherit;
-  font-size: 10px;
-  text-transform: uppercase;
-  // background: #eceeef;
-  border: 1px solid #ccc;
-  border-radius: inherit;
-  // box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12), inset 0 0 2px rgba(0, 0, 0, 0.15);
-  transition: 0.15s ease-out;
-  transition-property: border-color opacity background;
-}
-.switch-label:before, .switch-label:after {
-  position: absolute;
-  top: 50%;
-  margin-top: -.5em;
-  line-height: 1;
-  transition: inherit;
-}
-.switch-label:before {
-  // content: attr(data-off);
-  right: 11px;
-  color: #aaa;
-  text-shadow: 0 1px rgba(255, 255, 255, 0.5);
-}
-.switch-label:after {
-  // content: attr(data-on);
-  left: 11px;
-  color: white;
-  text-shadow: 0 1px rgba(0, 0, 0, 0.2);
-  opacity: 0;
-}
-.switch-input:checked ~ .switch-label {
-  // background: #47a8d8;
-  border-color: @brand-success;
-  // box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15), inset 0 0 3px rgba(0, 0, 0, 0.2);
-}
-.switch-input:checked ~ .switch-label:before {
-  opacity: 0;
-}
-.switch-input:checked ~ .switch-label:after {
-  opacity: 1;
-}
-
-.switch-handle {
-  position: absolute;
-  top: 5px;
-  left: 5px;
-  width: 16px;
-  height: 16px;
-  background: white;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, .08);
-  // background-image: linear-gradient(to bottom, white 40%, #f0f0f0);
-  transition: 0.15s ease-out;
-  transition-property: border-color left background;
-}
-// .switch-handle:before {
-//   content: '';
-//   position: absolute;
-//   top: 50%;
-//   left: 50%;
-//   margin: -6px 0 0 -6px;
-//   width: 12px;
-//   height: 12px;
-//   background: #f9f9f9;
-//   border-radius: 6px;
-//   box-shadow: inset 0 1px rgba(0, 0, 0, 0.02);
-//   background-image: linear-gradient(to bottom, #eeeeee, white);
-// }
-.switch-input:checked ~ .switch-handle {
-  left: 25px;
-  background: @brand-success;
-  border-color: @brand-success;
-  // box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.2);
-}
-
-.switch-green > .switch-input:checked ~ .switch-label {
-  background: #4fb845;
-}
 
 //
 // WTF, forms?
@@ -1267,6 +1183,11 @@ select.form-control {
   }
 
   .custom-form-inline.no-margin & {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .no-margin & {
     margin-top: 0;
     margin-bottom: 0;
   }
