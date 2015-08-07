@@ -272,6 +272,13 @@ body {
   // Date: Oct 11, 2014, 9:57 AM
   transform: translate3d(0, 0, 0);
 
+  &.expand-all {
+
+    ol {
+      max-height: 500000px !important;
+    }
+  }
+
   &.affix {
     top: 0;
     position: fixed !important;
@@ -398,13 +405,15 @@ body {
   padding: 10px 0 20px 0;
 
   .back-to-top {
+    padding-top: 20px;
     opacity: 0;
     pointer-events: none;
     transition: opacity .2s ease;
 
     a {
+      display: inline;
       font-size: 12px;
-      border-right: none;
+      border: none !important;
       padding-left: 10px;
     }
   }

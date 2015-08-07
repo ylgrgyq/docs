@@ -108,7 +108,17 @@ var initGitHubLinks = function() {
       |\
       <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑文件</a>\
     </div>");
-  $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
+  $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href='#' class='do-expand-all'>展开所有</a> <a href=#top>返回顶部</a></li>");
+}
+
+function sidebarExpandAll() {
+  var el = $(".do-expand-all");
+  var target = $(".sidebar-wrapper");
+
+  el.on("click", function(e) {
+    target.toggleClass("expand-all");
+    e.preventDefault();
+  });
 }
 
 var initScrollHistoryState = function() {
@@ -130,6 +140,7 @@ $(function() {
   updateScrollSpy();
   addSidebarHoverListener();
   initGitHubLinks();
+  sidebarExpandAll();
   // initSmoothScroll();
 
   var arr = $('#toc ul').parents('li');
