@@ -11,15 +11,21 @@
 
 {% include 'templates/include/header.html' %}
 
-<div class="doc-content container-fluid" id="content" style="padding-bottom: 0;">
-{{body}}
+<div class="container-fluid" id="content" style="padding-bottom: 0;">
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="doc-content">
+        {{body}}
+      </div>
+      <!-- .doc-content -->
+    </div>
+    <!-- .col-sm-12 -->
+  </div>
+  <!-- .row -->
 </div>
 <!-- .container-fluid -->
 
 {% include 'templates/include/footer.html' %}
-
-
-
 
 
 </body>
