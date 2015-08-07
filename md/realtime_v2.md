@@ -71,7 +71,7 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 attributes|Object|可选|自定义属性供开发者自己扩展用。
 conversationId|String||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
 creator|String||对话创建者的 clientId（只读），标识对话创建者信息。
-lastMessageAt|Date||对话最近的一条消息发送或者接受的时间
+lastMessageAt|Date||对话最近的一条消息发送或者接收的时间
 members|Array||对话参与者，这里记录了所有的参与者。
 mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。
 name|String|可选|对话的名字，可用来对于群组命名。
