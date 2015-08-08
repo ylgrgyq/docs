@@ -198,6 +198,18 @@ try {
 * 每个 `AVObject` 对象有几个保存元数据的属性是不需要开发者指定的，包括 `objectId` 是每个成功保存的对象的唯一标识符。`createdAt` 和 `updatedAt` 是每个对象在服务器上创建和最后修改的时间。这些属性的创建和更新是由系统自动完成的，请不要在代码里使用这些属性来保存数据。
 * 在 Android 平台上，大部分的代码是在主线程上运行的，如果在主线程上进行耗时的阻塞性操作，如访问网络等，**你的代码可能会无法正常运行**，避免这个问题的方法是**把会导致阻塞的同步操作改为异步**，在一个后台线程运行，例如 `save()` 还有一个异步的版本 **`saveInBackground()`**，需要传入一个在异步操作完成后运行的回调函数。查询、更新、删除操作也都有对应的异步版本。
 
+**注意：以下为系统保留字段，不能作为属性名来使用。**
+
+```
+acl        description     objectId
+ACL        error           pendingKeys
+className  fetchWhenSave   running
+code       isDataReady     updatedAt
+createdAt  keyValues       uuid
+id
+```
+
+
 ### 数据检索
 
 使用 LeanCloud 查询数据比保存更容易。如果你已经知道某条数据的 `objectId`，可以使用 `AVQuery` 直接检索到一个完整的 `AVObject`：
@@ -283,6 +295,22 @@ post.saveInBackground(new SaveCallback() {
         }
     }
 });
+```
+
+
+**请注意，LeanCloud 上的更新对象都是针对单个对象，获得对象的 objectId 主键才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+上面的例子是先查询出对象，然后修改属性，调用 saveInBackground 保存。
+
+如果你已经知道了 objectId（例如从查询后的列表页进入一个详情页面，传入了 objectId），想要修改一个对象，也可以采用类似下面的代码来更新对象属性：
+
+```java
+// 知道 objectId，创建 AVObject
+AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8")
+//更新属性
+post.put("content","每个Java程序员必备的8个开发工具 —— http://itindex.net/detail/52950-java-%E5%BC%80%E5%8F%91-%E5%B7%A5%E5%85%B7");
+//保存
+post.saveInBackground();
 ```
 
 ### 计数器

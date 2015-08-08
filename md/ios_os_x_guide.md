@@ -106,7 +106,7 @@ content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "Le
 
 属性名（也称「键」，key），必须是由字母、数字或下划线组成的字符串；自定义的属性名，不能以 `__`（双下划线）开头。属性值，可以是字符串、数字、布尔值，或是数组和字典。
 
->**注意：以下为系统保留字段，不能作为属性名来使用。**
+**注意：以下为系统保留字段，不能作为属性名来使用。**
 
 ```
 acl        description     objectId
@@ -114,6 +114,7 @@ ACL        error           pendingKeys
 className  fetchWhenSave   running
 code       isDataReady     updatedAt
 createdAt  keyValues       uuid
+id
 ```
 
 每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，微博帖子这个对象可取名为 `Post`。
@@ -306,6 +307,23 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 ```
 
 SDK 内部会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud 云端。未更新的数据不会产生变动，这一点请不用担心。
+
+**请注意，LeanCloud 上的更新对象都是针对单个对象，获得对象的 objectId 主键才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+上面的例子是先创建对象，然后在 saveInBackgroundWithBlock 的 block 里更新对象，不过更常见的场景是你通过[查询](#查询)得到一个 AVObject 对象，这个时候更新对象也是类似上面的代码那样，修改属性，调用 saveInBackground 即可。
+
+如果你已经知道了 objectId（例如从查询后的列表页进入一个详情页面，传入了 objectId），想要修改一个对象，可以采用类似下面的代码来更新对象属性：
+
+```objc
+// 知道 objectId，创建 AVObject
+AVObject *post = [AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"];
+//更新属性
+[post setObject:@"http://tp1.sinaimg.cn/3652761852/50/5730347813/0" forKey:@"pubUserAvatar"];
+[post setObject:[NSNumber numberWithInt:4] forKey:@"pubUserCertificate"];
+//保存
+[post saveInBackground];
+```
+
 
 ### 计数器
 
