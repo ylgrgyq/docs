@@ -116,8 +116,11 @@ function sidebarExpandAll() {
   var target = $(".sidebar-wrapper");
 
   el.on("click", function(e) {
-    target.toggleClass("expand-all");
     e.preventDefault();
+    target.toggleClass("expand-all");
+    $(this).text(function(i, t) {
+      return t === '展开所有' ? '折叠所有' : '展开所有'
+    });
   });
 }
 
