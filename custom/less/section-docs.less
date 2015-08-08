@@ -300,9 +300,12 @@ body {
   &.affix,
   &.affix-bottom {
 
-    #toc .back-to-top {
-      opacity: 1;
-      pointer-events: auto;
+    #toc .sidebar-meta {
+
+      .back-to-top {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
   }
 
@@ -404,17 +407,20 @@ body {
   width: 100%;
   padding: 10px 0 20px 0;
 
-  .back-to-top {
+  .sidebar-meta {
     padding-top: 20px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease;
 
     a {
       display: inline;
       font-size: 12px;
       border: none !important;
       padding-left: 10px;
+    }
+
+    .back-to-top {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
     }
   }
 
