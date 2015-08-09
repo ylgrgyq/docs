@@ -306,7 +306,7 @@ post.saveInBackground(new SaveCallback() {
 
 ```java
 // 知道 objectId，创建 AVObject
-AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8")
+AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8");
 //更新属性
 post.put("content","每个Java程序员必备的8个开发工具 —— http://itindex.net/detail/52950-java-%E5%BC%80%E5%8F%91-%E5%B7%A5%E5%85%B7");
 //保存
