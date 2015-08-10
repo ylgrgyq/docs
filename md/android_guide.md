@@ -201,12 +201,12 @@ try {
 **注意：以下为系统保留字段，不能作为属性名来使用。**
 
 ```
-acl        description     objectId
-ACL        error           pendingKeys
-className  fetchWhenSave   running
-code       isDataReady     updatedAt
-createdAt  keyValues       uuid
-id
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
 ```
 
 

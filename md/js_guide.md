@@ -46,12 +46,12 @@ content: "每个 JavaScript 程序员必备的 8 个开发工具", pubUser: "Lea
 **注意：以下为系统保留字段，不能作为属性名来使用。**
 
 ```
-acl        description     objectId
-ACL        error           pendingKeys
-className  fetchWhenSave   running
-code       isDataReady     updatedAt
-createdAt  keyValues       uuid
-id
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
 ```
 
 每一个 `AV.Object` 都是一个特定子类的实例，子类名可以来区分各种不同的数据。我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
