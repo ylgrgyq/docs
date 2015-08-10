@@ -43,6 +43,17 @@ content: "每个 JavaScript 程序员必备的 8 个开发工具", pubUser: "Lea
 
 属性名必须是由字母、数字组成的字符串，属性值可以是字符串、数字、布尔值、JSON 数组，甚至可以嵌套其他 `AV.Object`。
 
+**注意：以下为系统保留字段，不能作为属性名来使用。**
+
+```
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
+```
+
 每一个 `AV.Object` 都是一个特定子类的实例，子类名可以来区分各种不同的数据。我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
 为了建立一个新的子类，你可以使用 `AV.Object.extend` 方法。如果你熟悉 Backbone.Model 的话，你已经明白如何使用 AV.Object 了，它本身就是设计来让两者可以相互替换的。
@@ -213,6 +224,21 @@ query.get('558e20cbe4b060308e3eb36c', {
 
 LeanCloud 自动查找哪些数据被改动了，所以 SDK 这边只有 "dirty" 的字段会被发送到 LeanCloud 云端，
 你不需要担心需要剔除你不想更新的数据。
+
+**请注意，LeanCloud 上的更新对象都是针对单个对象，获得对象的 objectId 主键才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+上面的例子是先查询出对象，然后在 get 的 callback 里更新对象。
+
+如果你已经知道了 objectId（例如从查询后的列表页进入一个详情页面，传入了 objectId），想要修改一个对象，也可以采用类似下面的代码来更新对象属性：
+
+```javascript
+// 知道 objectId，创建 AVObject
+var post = AV.Object.createWithoutData('Post', '558e20cbe4b060308e3eb36c');
+// 更改属性
+post.set('content', '每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/');
+// 保存
+post.save();
+```
 
 #### fetchWhenSave
 
