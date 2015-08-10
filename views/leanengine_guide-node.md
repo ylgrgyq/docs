@@ -597,10 +597,10 @@ app.get('/login', function(req, res) {
 });
 // 点击登录页面的提交将出发下列函数
 app.post('/login', function(req, res) {
-  AV.User.logIn(req.body.username, req.body.password).then(function() {
+  AV.User.logIn(req.body.username, req.body.password).then(function(user) {
     //登录成功，AV.Cloud.CookieSession 会自动将登录用户信息存储到 cookie
     //跳转到profile页面。
-    console.log('signin successfully: %j', req.AV.user);
+    console.log('signin successfully: %j', user);
     res.redirect('/profile');
   },function(error) {
     //登录失败，跳转到登录页面

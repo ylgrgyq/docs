@@ -1,6 +1,6 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block updateToLeanEngine%}
+{% block updateToLeanEngine %}
 ### 升级到 LeanEngine
 云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
 
@@ -572,7 +572,7 @@ AV.Cloud.useMasterKey();
 ```
 {% endblock %}
 
-{% block masterKeyInitLegacy%}
+{% block masterKeyInitLegacy %}
 **注意：**云代码 2.0 版本已经默认使用 masterKey 初始化 SDK，所以不需要额外初始化。
 {% endblock %}
 
@@ -768,10 +768,10 @@ app.get('/login', function(req, res) {
 });
 // 点击登录页面的提交将出发下列函数
 app.post('/login', function(req, res) {
-    AV.User.logIn(req.body.username, req.body.password).then(function() {
+    AV.User.logIn(req.body.username, req.body.password).then(function(user) {
       //登录成功，avosExpressCookieSession会自动将登录用户信息存储到cookie
       //跳转到profile页面。
-      console.log('signin successfully: %j', req.AV.user);
+      console.log('signin successfully: %j', user);
       res.redirect('/profile');
     },function(error) {
       //登录失败，跳转到登录页面
@@ -818,7 +818,7 @@ app.get('/logout', function(req, res) {
 注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
 {% endblock %}
 
-{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock%}
+{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}
 
 {% block https_redirect %}
 ```javascript
