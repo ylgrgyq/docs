@@ -189,7 +189,7 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 * AndroidManifest.xml 中声明你的 Receiver
 
 ```xml
-<receiver android:name="com.avos.avoscloud.PushDemo.MyCustomReceiver">
+<receiver android:name="com.avos.avoscloud.PushDemo.MyCustomReceiver" android:exported="false">
     <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.USER_PRESENT" />
