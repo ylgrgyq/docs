@@ -1370,16 +1370,16 @@ collection.reset([
  `AV.Object` 无法存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可
 以随意用来存储文档、视频、音乐或者任何二进制数据。
 
-在浏览器通过 JavaScript SDK 上传文件大小不能超过 10M，在 Node.js 环境里没有这个限制。
+在浏览器通过 JavaScript SDK 上传文件大小不能超过 10 M，在 Node.js 环境里没有这个限制。
 
-开始使用 AV.File 是很容易的，有很多种不同的方式来新建一个 file。第一个是 base64 编码的字符串表示:
+开始使用 AV.File 是很容易的，有很多种不同的方式来新建一个 file。第一个是 base64 编码的字符串表示：
 
 ```javascript
-var base64 = "V29ya2luZyBhdCBQYXJzZSBpcyBncmVhdCE=";
+var base64 = "V29ya2luZyBhdCBMZWFuQ2xvdWQgaXMgZnVuIQ==";
 var file = new AV.File("myfile.txt", { base64: base64 });
 ```
 
-另外,也可以用一个byte数组来新建一个文件.
+另外，也可以用一个 byte 数组来新建一个文件。
 
 ```javascript
 var bytes = [ 0xBE, 0xEF, 0xCA, 0xFE ];
@@ -1412,7 +1412,7 @@ if (fileUploadControl.files.length > 0) {
   以上传多个文件都叫 `avatar.jpg` 是没有问题的。
 - 你应该给你的文件一个扩展名。这样会让 LeanCloud 明白文件的类型，并且会按文件
   类型来进行处理。所以如果你在储存 PNG 格式的文件的话，请保证你的文件名是
-  以 ".png" 为结尾的.
+  以 ".png" 为结尾的。
 
 如果你是在 Node.js 里使用我们的 SDK，从 `0.3.1` 版本开始，我们也让 AV.File 的构造函数接收 [Buffer](http://nodejs.org/api/buffer.html) 作为文件存储：
 
