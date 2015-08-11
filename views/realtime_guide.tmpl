@@ -66,7 +66,7 @@ attr|Object|开发者设置的对话的自定义属性
 要让 Jerry 收到 Tom 的消息，需要这样写：
 
 {% block oneOnOneChat_received %}{% endblock %}
-
+{% block androidMessageHandler %}{% endblock %}
 ## 群聊
 
 此场景类似于微信的多人聊天群组和 QQ 的群。请注意这里的群聊是指可以**持久保存**的群组的概念，比如 QQ 群，除非群主解散该群，这个群会一直出现在 QQ 的 聊天列表中，而临时群组聊天（即聊天室）会放到后面单独介绍。
@@ -288,6 +288,8 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 - 此处各个 SDK 平台需要详细介绍一下如何接收 TypedMessage 接收，包含文字和代码。描述风格以及代码示例请参照 iOS 版本。
 ```
 {% endblock %}
+
+{% block typedMessage_received %}{% endblock %}
 
 ### 暂态消息
 
