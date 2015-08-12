@@ -15,7 +15,7 @@ $ avoscloud add <appName> <appId>
 ```
 {% endblock %}
 
-{% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock%}
+{% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
 
 {% block demo %}
 * [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。效果体验：http://python.avosapps.com/
@@ -352,9 +352,7 @@ application = Engine(wsgi_func)
 
 {% endblock %}
 
-{% block upload_file %}
-TODO
-{% endblock %}
+{% block upload_file %}{% endblock %}
 
 {% block cookie_session %}
 {% endblock %}
@@ -362,7 +360,7 @@ TODO
 {% block custom_session %}
 {% endblock %}
 
-{% block cookie_session_middleware %}TODO{% endblock%}
+{% block cookie_session_middleware %}TODO{% endblock %}
 
 {% block https_redirect %}
 
@@ -389,4 +387,3 @@ else:
     # 当前为开发环境
 ```
 {% endblock %}
-
