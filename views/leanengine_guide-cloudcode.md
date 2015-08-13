@@ -683,7 +683,8 @@ var ip = req.headers['x-real-ip']
 ```
 {% endblock %}
 
-{% block upload_file %}
+{% block upload_file %}### 上传文件
+
 在 LeanEngine 里上传文件也很容易，首先配置 app 使用 bodyParser 中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到 request.files 里：
 
 ```javascript
@@ -721,6 +722,8 @@ app.post('/upload', function(req, res){
     res.send('请选择一个文件。');
 });
 ```
+
+上传成功后，即可在数据管理平台里看到你所上传的文件。
 {% endblock %}
 
 {% block cookie_session %}
