@@ -1650,8 +1650,8 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 ```java
 AVQuery<AVUser> query = AVUser.getQuery();
 query.whereEqualTo("gender", "female");
-query.findInBackground(new FindCallback<AVObject>() {
-    public void done(List<AVObject> objects, AVException e) {
+query.findInBackground(new FindCallback<AVUser>() {
+    public void done(List<AVUser> objects, AVException e) {
         if (e == null) {
             // 查询成功
         } else {
