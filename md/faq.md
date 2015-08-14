@@ -83,13 +83,13 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 当然可以。使用我们的 SDK，可以为同一个应用开发多个平台的版本，共享后端数据。
 
 
-### Unity 3D 支持如何
+### 支持 Unity 3D 吗
 
-请到 [SDK 下载](sdk_down.html) 页面，下载 Unity SDK。
+支持。请到 [SDK 下载](sdk_down.html) 页面下载 Unity SDK。
 
 ### 开发文档有提供搜索功能吗
 
-官网 **文档** 首页右上角就有搜索框，也可以直接访问 [搜索](/search.html) 页面。
+ **官网文档** 首页右上角就有搜索框，也可以直接访问 [搜索](/search.html) 页面。
 
 ## API 相关
 
@@ -127,7 +127,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### 如何实现大小写不敏感的查询
 
-目前不提供直接支持，可采用正则表达式查询的办法，具体参考 [StackOverflow 的帖子](http://stackoverflow.com/questions/1863399/mongodb-is-it-possible-to-make-a-case-insensitive-query)。
+目前不提供直接支持，可采用正则表达式查询的办法，具体参考 [StackOverflow - MongoDB: Is it possible to make a case-insensitive query](http://stackoverflow.com/questions/1863399/mongodb-is-it-possible-to-make-a-case-insensitive-query)。
 
 使用各平台 SDK 的 AVQuery 对象提供的 `matchesRegex` 方法（Android SDK 用 `whereMatches` 方法）。
 
@@ -140,7 +140,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 我们每个月提供 100 万次的免费额度，超过的部分才收费。免费额度不会将完全免费的推送服务和统计服务计算进去。另外，对于免费版和专业版，默认情况下，每个应用都有每秒 1000 次的并发访问上限，如果需要提高上限，请与我们联系。
 
-对于从控制台或者使用 JavaScript SDK 上传文件（包括云代码内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
+对于从控制台或者使用 JavaScript SDK 上传文件（包括云引擎内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
 
 
 ## 控制台相关
@@ -164,7 +164,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### 如何在应用之间共享数据
 
-请参考这篇 [博文](http://blog.leancloud.cn/blog/2014/03/31/2014nian-3yue-di-4zhou-avos-cloud-geng-xin/)。
+请参考我们的博客文章 [《2014 年 3 月第 4 周更新日志》](http://blog.leancloud.cn/blog/2014/03/31/2014nian-3yue-di-4zhou-avos-cloud-geng-xin/)。
 
 ## iOS/OS X SDK
 
@@ -199,11 +199,11 @@ LeanCloud 依赖的 Framework 包括：
 * CoreTelephony.framework
 * CoreLocation.framework
 
-如果是 `for architecture arm64`，这是因为 Xcode 更新到 5.1 后，CocoaPods 没有及时更新对 64 位 CPU 的支持，解决方法参考 [这里](http://stackoverflow.com/questions/19213782/undefined-symbols-for-architecture-arm64)
+如果是 `for architecture arm64`，这是因为 Xcode 更新到 5.1 后，CocoaPods 没有及时更新对 64 位 CPU 的支持，解决方法参考 [《StackOverflow - Undefined symbols for architecture arm64》](http://stackoverflow.com/questions/19213782/undefined-symbols-for-architecture-arm64)
 
 ### 请求报错
 
-请查阅请求返回的错误码的 [详细说明](/docs/error_code.html)。
+请参考请求返回的错误码 [详细说明](error_code.html)。
 
 ### 地理位置查询错误
 
@@ -240,7 +240,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### Android 消息接收能不能自定义 Receiver 不弹出通知
 
-可以。请参考 [消息推送开发指南](/docs/push_guide.html#消息内容_Data)。
+可以。请参考 [消息推送开发指南](push_guide.html#消息内容_Data)。
 
 如果要自定义 receiver，必须在消息的 data 里带上自定义的 action。LeanCloud 在接收到消息后，将广播 action 为您定义的值的 intent 事件，您的 receiver 里也必须带上 `intent-filter` 来捕获该 action 值的 intent 事件。
 
@@ -266,40 +266,40 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 * 批量发送
 * 按最小间隔发送
 
-可以在 **分析** > **Android（或者iOS）统计** > **统计设置** > **数据发送策略** 的菜单里实时修改这些策略。
+可以在 **分析** > **Android（或者 iOS）统计** > **统计设置** > **数据发送策略** 的菜单里实时修改这些策略。
 
-## 云代码
+## 云引擎
 
 ### 定时器 crontab 的语法
 
 请参考 [Quartz 文档](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger)。
 
-### 云端代码为什么只支持 Node.js
+### 云端代码都支持那些语言
 
-因为我们官方目前只提供了 JavaScript SDK 和运行沙箱环境，暂时只支持 Node.js。未来可能会引入 PHP 等其他语言。
+目前支持 Node.js 和 Python 运行环境，未来可能还会引入 PHP 等其他语言。
 
-### 云代码如何上传文件
+### 云引擎如何上传文件
 
-请参考这篇博文 [《在云代码中处理上传文件》](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [云代码指南 - 上传文件](cloud_code_guide.html#上传文件) 中的相关内容。
+请参考这篇博文 [《在云代码中处理上传文件》](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [云引擎指南 - 上传文件](leanengine_guide-cloudcode.html#上传文件) 中的相关内容。
 
-### 云代码中如何处理用户登录和 Cookie
+### 云引擎中如何处理用户登录和 Cookie
 
-请参考这篇博文 [《在云代码中处理用户登录》](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云代码指南 ](cloud_code_guide.html#处理用户登录和登出) 中的相关内容。
+请参考这篇博文 [《在云代码中处理用户登录》](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云引擎指南](leanengine_guide-cloudcode.html#处理用户登录和登出) 中的相关内容。
 
 
-### 云代码的二级域名多久生效
+### 云引擎的二级域名多久生效
 
 我们设置的 TTL 是 10 秒，但是因为使用 Amazon 的 DNS 服务，因此可能国内部分地区会有一定延迟，最迟应该在 24 小时内生效。如果没有，请及时联系我们处理。
 
-### 云代码二级域名可以启用 HTTPS 吗
+### 云引擎二级域名可以启用 HTTPS 吗
 
 请参考这篇博文 [《为云代码托管网站启用 HTTPS》](http://blog.leancloud.cn/blog/2013/12/20/wei-yun-dai-ma-tuo-guan-wang-zhan-qi-yong-https/)。
 
-### 云代码 Web Hosting 备案
+### 云引擎 Web Hosting 备案
 
 只有网站类的才需要备案，并且在主域名已备案的情况下，二级子域名不需要备案。
 
-如果主站需要托管在我们这边，而且主站还没经过备案，请参考《云代码指南》中 [域名备案流程](cloud_code_guide.html#域名备案流程) 部分来了解具体的备案流程。
+如果主站需要托管在我们这边，而且主站还没经过备案，请参考文档 [云引擎指南 - 域名备案流程](leanengine_guide-cloudcode.html#域名备案流程) 部分来了解具体的备案流程。
 
 ## 文件
 

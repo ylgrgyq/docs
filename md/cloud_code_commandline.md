@@ -1,8 +1,8 @@
-# 云代码命令行工具使用详解
+# 云引擎命令行工具使用详解
 
 ## 介绍
 
-云代码命令行工具是用来管理、部署云代码项目的命令行工具，称之为`avoscloud-code`项目。通过它，你可以部署、发布、回滚云代码，并且可以对同一个云代码项目做多应用管理，还可以查看云代码日志，批量上传文件到 LeanCloud 平台上等。
+云引擎命令行工具是用来管理、部署云引擎项目的命令行工具，称之为 avoscloud-code 项目。通过它，你可以部署、发布、回滚云引擎代码，并且可以对同一个云引擎项目做多应用管理，还可以查看云引擎日志，批量上传文件到 LeanCloud 平台上等。
 
 ## 安装
 
@@ -79,7 +79,7 @@ npm install -g avoscloud-code
 
 ```
 C:\Users\wchen\workspace\cloud-code-unit-test_v2.0>avoscloud
-提示：您可以敲入 rs 命令并回车来重启本进程
+提示：你可以敲入 rs 命令并回车来重启本进程
 module.js:338
     throw err;
           ^
@@ -133,13 +133,13 @@ $ avoscloud -h
 Usage: avoscloud [选项] <命令>
 
   有效的命令列表包括:
-    deploy: 部署云代码到 LeanCloud 平台开发环境
-    undeploy: 从 LeanCloud 平台清除云代码部署，包括生产环境和开发环境
+    deploy: 部署云引擎代码到 LeanCloud 平台开发环境
+    undeploy: 从 LeanCloud 平台清除云引擎部署，包括生产环境和开发环境
     status: 查询当前部署状态
     search <keyword>: 根据关键字查询开发文档
     publish: 发布开发环境代码到生产环境
-    new: 创建云代码项目
-    logs: 查看云代码日志
+    new: 创建云引擎项目
+    logs: 查看云引擎日志
     clear: 清除本地状态，在输入 app id 或者 master key 错误的情况下使用
     upload <file-or-directory>: 导入文件到 LeanCloud 平台，如果是目录，则会将该目录下的文件递归导入。
     app [list]:  显示当前应用，deploy、status 等命令运行在当前应用上，如果加上 list ，则显示所有的应用信息。
@@ -152,13 +152,13 @@ Usage: avoscloud [选项] <命令>
 
     -h, --help                 output usage information
     -V, --version              output the version number
-    -f, --filepath <path>      本地云代码项目根路径，默认是当前目录。
-    -g, --git                  使用定义在管理平台的 git 仓库或者 -u 指定的 git 仓库部署云代码，默认使用本地代码部署。
+    -f, --filepath <path>      本地云引擎项目根路径，默认是当前目录。
+    -g, --git                  使用定义在管理平台的 git 仓库或者 -u 指定的 git 仓库部署云引擎代码，默认使用本地代码部署。
     -p, --project <app>        命令运行在指定应用上，默认运行在当前应用或者 origin 应用上。
-    -l, --local                使用本地代码部署云代码，该选项是默认选中。
+    -l, --local                使用本地代码部署云引擎代码，该选项是默认选中。
     -o, --log <log>            本次部署的提交日志，仅对从本地部署有效。
-    -n, --lines <lines>        查看多少行最新的云代码日志，默认 10 行。
-    -t, --tailf                自动刷新云代码日志，结合 logs 命令使用。
+    -n, --lines <lines>        查看多少行最新的云引擎日志，默认 10 行。
+    -t, --tailf                自动刷新云引擎日志，结合 logs 命令使用。
     -r, --revision <revision>  git 的版本号，仅对从 git 仓库部署有效。
     -P, --port <port>          指定本地调试的端口，默认 3000。
 ```
@@ -183,12 +183,12 @@ source ~/.leancloud_completion.sh
 
 重启终端 bash，或者重新加载 profile 文件，就可以让 avoscloud 命令拥有自动提示和完成功能(tab 按键提示)。
 
-**Mac 上建议通过 homebrew 安装 bash-completion**
+**Mac 上建议通过 homebrew 安装 bash-completion。**
 
 
 ## 创建项目
 
-在安装命令行工具后，除了从网站的云代码菜单下载新应用项目框架之外，你也可以通过 `new` 命令来创建一个新的云代码项目：
+在安装命令行工具后，除了从网站的云引擎菜单下载新应用项目框架之外，你也可以通过 `new` 命令来创建一个新的云引擎项目：
 
 ```sh
 $ avoscloud new
@@ -198,10 +198,10 @@ $ avoscloud new
 
 第三步选择应用类型包括两类：
 
-* Standard 标准版：输入字符 's' 或者字符串 "standard" 即可创建，标准的云代码项目，不包括 web 主机功能（网站托管）。
-* Web Hosting 版：输入字符 'w' 或者字符串 'web' 即可创建，包含 web 主机功能的云代码项目。
+* Standard 标准版：输入字符 's' 或者字符串 "standard" 即可创建，标准的云引擎项目，不包括 web 主机功能（网站托管）。
+* Web Hosting 版：输入字符 'w' 或者字符串 'web' 即可创建，包含 web 主机功能的云引擎项目。
 
-输入正确后，会自动创建一个新的云代码项目框架：
+输入正确后，会自动创建一个新的云引擎项目框架：
 
 ```sh
 Creating project...
@@ -220,23 +220,23 @@ Project created!
 
 ## 本地调试
 
-`cd new_app` 进入该目录，并执行 `avoscloud` 命令，可以在本机调试云代码。
+`cd new_app` 进入该目录，并执行 `avoscloud` 命令，可以在本机调试云引擎。
 
-* 通过浏览器打开 [http://localhost:3000/avos](http://localhost:3000/avos)，进入云代码函数和 Class Hook 函数调试界面。
+* 通过浏览器打开 [http://localhost:3000/avos](http://localhost:3000/avos)，进入云引擎函数和 Class Hook 函数调试界面。
 * 通过浏览器打开 [http://localhost:3000](http://localhost:3000)，可以看到 public 目录的 index.html 页面的内容。
 
 avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
 
-更多关于云代码开发，请参考 [云代码开发指南](./cloud_code_guide.html) 。
+更多关于云引擎开发，请参考 [云引擎开发指南](leanengine_guide-node.html) 。
 
-**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
+**以下需要特别指出，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境。**
 
 
 ## 部署
 
 ### 本地推送部署
 
-在你开发和本地测试云代码项目通过后，你可以直接将本地源码推送到 LeanCloud 云代码平台运行，只要执行 `deploy` 命令：
+在你开发和本地测试云引擎项目通过后，你可以直接将本地源码推送到 LeanCloud 云引擎平台运行，只要执行 `deploy` 命令：
 
 ```sh
 $ avoscloud deploy
@@ -268,29 +268,29 @@ Production commit log  : 'Uploaded at 2014-10-09 16:56:06'
 $ avoscloud deploy -o '测试本地推送部署'
 ```
 
-部署之后，你可以通过 curl 命令，或者访问你设置的 `xxxx.avosapps.com` 的二级域名对应的专用测试域名 `dev.xxx.avosapps.com` 测试你的云代码。
+部署之后，你可以通过 curl 命令，或者访问你设置的 `xxxx.avosapps.com` 的二级域名对应的专用测试域名 `dev.xxx.avosapps.com` 测试你的云引擎代码。
 
-### Git仓库部署
+### Git 仓库部署
 
-如果你的代码是保存在某个 Git 仓库，例如 [Github](https://github.com) 上，你也可以请求 LeanCloud 平台从 Git 仓库获取源码并自动部署，这个操作可以在云代码的部署菜单里完成，也可以在本地执行 `deploy` 命令和 `-g` 选项配合完成：
+如果你的代码是保存在某个 Git 仓库，例如 [Github](https://github.com) 上，你也可以请求 LeanCloud 平台从 Git 仓库获取源码并自动部署，这个操作可以在云引擎的部署菜单里完成，也可以在本地执行 `deploy` 命令和 `-g` 选项配合完成：
 
 ```sh
 $ avoscloud -g deploy
 ```
 
-* `-g` 选项指定要求从 Git 仓库部署，Git 仓库地址必须已经在云代码菜单里保存。
+* `-g` 选项指定要求从 Git 仓库部署，Git 仓库地址必须已经在云引擎菜单里保存。
 
 默认部署都将是 master 分支的最新代码，你可以通过 `-r <revision>` 来指定部署特定的 commit 或者 branch。
 
 ## 发布
 
-开发环境如果测试没有问题，你希望将开发环境的云代码切换到生产环境，你可以使用开发者平台的云代码部署菜单做发布，也可以直接运行 `publish` 命令：
+开发环境如果测试没有问题，你希望将开发环境的云引擎代码切换到生产环境，你可以使用开发者平台的云引擎部署菜单做发布，也可以直接运行 `publish` 命令：
 
 ```sh
 $ avoscloud publish
 ```
 
-就会将开发环境的云代码发布到生产环境。
+就会将开发环境的云引擎代码发布到生产环境。
 
 ```sh
 [INFO]: Cloud Code Project Home Directory: /Users/dennis/programming/avos/new_app/
@@ -322,7 +322,7 @@ Production commit log  : 'Uploaded at 2014-10-10 13:54:26'
 
 ```
 
-通过 `undeploy` 命令，可以将云代码彻底从 LeanCloud 平台移除（包括代码、版本信息、提交日志等）：
+通过 `undeploy` 命令，可以将云引擎代码彻底从 LeanCloud 平台移除（包括代码、版本信息、提交日志等）：
 
 ```sh
 $ avoscloud undeploy
@@ -332,7 +332,7 @@ $ avoscloud undeploy
 
 ## 查看日志
 
-使用 `logs` 命令可以查询云代码最新日志：
+使用 `logs` 命令可以查询云引擎最新日志：
 
 ```sh
 $ avoscloud logs
@@ -361,12 +361,12 @@ $ avoscloud -n 100 logs
 $ avoscloud -t logs
 ```
 
-当有新的云代码日志产生，都会自动填充到屏幕下方。
+当有新的云引擎日志产生，都会自动填充到屏幕下方。
 
 
 ## 多应用管理
 
-从 0.5.0 版本开始，我们为 avoscloud 添加了多应用管理功能，类似 git 的多分支功能。使用这个功能，允许你将同一个云代码项目部署到多个 LeanCloud 应用上，**但是仅限于云代码 2.0 项目使用**。
+从 0.5.0 版本开始，我们为 avoscloud 添加了多应用管理功能，类似 git 的多分支功能。使用这个功能，允许你将同一个云引擎项目部署到多个 LeanCloud 应用上，**但是仅限于云引擎 2.0 项目使用**。
 
 ### 查看应用状态
 
@@ -439,7 +439,7 @@ $ avoscloud app
 * other_app <应用 id>
 ```
 
-如果你想在不切换应用的情况下去部署云代码到其他应用，也可以通过 `-p` 选项来指定，例如:
+如果你想在不切换应用的情况下去部署云引擎到其他应用，也可以通过 `-p` 选项来指定，例如:
 
 ```sh
 $ avoscloud deploy -p other_app
@@ -505,7 +505,7 @@ $ avoscloud search AVObject
 也可以查询多个关键字，空格隔开即可：
 
 ```sh
-$ avoscloud search 云代码 命令行
+$ avoscloud search 云引擎 命令行
 ```
 
 

@@ -159,7 +159,7 @@ LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的�
 
 ## 云引擎和 JavaScript SDK 对离线分析的支持
 
-JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./cloud_code_guide.html#权限说明)。**
+JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，参考[《权限说明》](./leanengine_guide-node.html#权限说明)。**
 
 ### 开始一个 Job
 

@@ -476,7 +476,7 @@ await AVUser.RequestMobilePhoneVerifyAsync ("18688888888").ContinueWith(t=>
 回调认证的接口与`手机号注册`小节的第二步一样。
 
 
-验证成功后，用户的`mobilePhoneVerified`属性变为true，并且调用云代码的`AV.Cloud.onVerifed('sms', function)`方法。
+验证成功后，用户的`mobilePhoneVerified`属性变为true，并且调用云引擎的`AV.Cloud.onVerifed('sms', function)`方法。
 
 **以上只是针对_User表的一个属性mobilePhoneNumber进行验证，但是存在另一种需求，类似于支付宝在进行交易的时候会要求进行实时的短信认证，这一机制现在已经普遍存在于各种应用中进行敏感操作的首选，并不局限于注册登录这种通用功能，LeanCloud 也提供了这一机制**
 
@@ -913,10 +913,10 @@ await AVFile.GetFileWithObjectIdAsync("538ed669e4b0e335f6102809").ContinueWith(t
       file.DeleteAsync();
    });
 ```
-## 调用云代码
-云代码是 LeanCloud 提供给开发者自定义服务端逻辑的解决方案，例如想在用户注册的时候，服务端统一给用户分配随机的昵称，这一操作就可以用云代码实现。具体关于云代码的一些相关概念和操作可以先查看[云代码指南](./cloud_code_guide.html)。
+## 调用云引擎
+云引擎是 LeanCloud 提供给开发者自定义服务端逻辑的解决方案，例如想在用户注册的时候，服务端统一给用户分配随机的昵称，这一操作就可以用云引擎实现。具体关于云引擎的一些相关概念和操作可以先查看 [云引擎指南](leanengine_guide-cloudcode.html)。
 
-调用云代码在SDK中比较方便，它是 `AVCloud` 的静态方法，全局均可调用。
+调用云引擎在SDK中比较方便，它是 `AVCloud` 的静态方法，全局均可调用。
 
 ```
 var dic = new Dictionary<string, object>();
@@ -928,7 +928,7 @@ dic.Add("name", "Justin");
 var callTask = AVCloud.CallFunctionAsync<string>("TestFunctionName", dic);
 await callTask;
 ```
-只需要传入云代码中函数的名字和这个函数需要参数即可，如果是无参的函数，直接传入`null`即可。
+只需要传入云引擎中函数的名字和这个函数需要参数即可，如果是无参的函数，直接传入`null`即可。
 
 ## 自定义参数
 在控制台的[自定义参数设置](/devcomponent.html?appid={{appid}}#/component/custom_param)页面可以设置一些静态的全局共享的参数，他们都是键值对的格式，在 SDK 中提供了获取这些在线参数的方法：
