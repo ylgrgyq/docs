@@ -11,50 +11,49 @@
 
 ## 1
 * 信息 - `Internal server error. No information available.`
-* 含义 - 服务器内部错误或者参数错误，一般是因为传入了错误的参数，或者没有在本文档里明确定义的运行时错误，都会以代码1指代。
+* 含义 - 服务器内部错误或者参数错误，一般是因为传入了错误的参数，或者没有在本文档里明确定义的运行时错误，都会以代码 1 指代。
 
 ## 100
 
 * 信息 - `The connection to the AVOS servers failed.`
-* 含义 - 无法建立TCP连接到LeanCloud服务器，通常是因为网络故障，或者我们服务器故障引起的，我们的服务器状态可以查看[健康状态检查](http://status.leancloud.cn/)。
+* 含义 - 无法建立 TCP 连接到 LeanCloud 服务器，通常是因为网络故障，或者我们服务器故障引起的，我们的服务器状态可以查看 [健康状态检查](http://status.leancloud.cn/)。
 
 ## 101
 
 * 信息 - `Object doesn't exist, or has an incorrect password.`
-* 含义 - 查询的Class不存在，或者要关联的Pointer对象不存在。
+* 含义 - 查询的 Class 不存在，或者要关联的 Pointer 对象不存在。
 
 ## 103
 
 * 信息 - `Missing or invalid classname. Classnames are case-sensitive. They must start with a letter, and a-zA-Z0-9_ are the only valid characters.`
-* 含义 - 非法的class名称，class名称是大小写敏感的，并且必须以英文字母开头，有效的字符仅限在英文字母、数字以及下划线。
+* 含义 - 非法的 Class 名称，Class 名称大小写敏感，并且必须以英文字母开头，有效的字符仅限在英文字母、数字以及下划线。
 
 ## 104
 
 * 信息 - `Missing object id.`
-* 含义 - 缺少ObjectId，通常是在查询的时候没有传入objectId，或者objectId非法。objectId只能为字母、数字组成的字符串。
+* 含义 - 缺少 objectId，通常是在查询的时候没有传入 objectId，或者 objectId 非法。objectId 只能为字母、数字组成的字符串。
 
 ## 105
 
 * 信息 - `Invalid key name. Keys are case-sensitive. They must start with a letter, and a-zA-Z0-9_ are the only valid characters.`
-* 含义 - 无效的key名称，也就是class的列名无效，列名必须以英文字母开头，有效的字符仅限在英文字母、数字以及下划线。
+* 含义 - 无效的 key 名称，也就是 Class 的列名无效，列名必须以英文字母开头，有效的字符仅限在英文字母、数字以及下划线。
 
 ## 106
 
 * 信息 - `Malformed pointer. Pointers must be arrays of a classname and an object id.`
-* 含义 - 无效的Pointer格式，Pointer必须为形如`{className: 'GameScore', objectId:'xxxxxx'}`的JSON对象。
+* 含义 - 无效的 Pointer 格式，Pointer必须为形如 `{className: 'Post', objectId:'xxxxxx'}` 的 JSON 对象。
 
 ## 107
 
 * 信息 - `Malformed json object. A json dictionary is expected.`
-* 含义 - 无效的JSON对象，解析JSON数据失败。
+* 含义 - 无效的 JSON 对象，解析 JSON 数据失败。
 
 ## 108
 
 * 信息 - `Tried to access a feature only available internally.`
-* 含义 - 此API仅供内部使用。
+* 含义 - 此 API 仅供内部使用。
 
 ## 111
-
 
 * 信息 - `Field set to incorrect type.`
 * 含义 - 想要存储的值不匹配列的类型，请检查你的数据管理平台中列定义的类型，查看存储的数据是否匹配这些类型。
@@ -72,12 +71,12 @@
 ## 114
 
 * 信息 - `Invalid device token.`
-* 含义 - iOS推送存储的deviceToken无效，如何存储installation请阅读 [消息推送开发指南](./push_guide.html#iOS_消息推送)。
+* 含义 - iOS 推送存储的 deviceToken 无效，如何存储 installation 请阅读 [消息推送开发指南](./push_guide.html#iOS_消息推送)。
 
 ## 116
 
 * 信息 - `The object is too large.`
-* 含义 - 要存储的对象超过了大小限制，我们限制单个对象的最大大小在16m。
+* 含义 - 要存储的对象超过了大小限制，我们限制单个对象的最大大小在 16 M。
 
 ## 117
 
@@ -93,27 +92,27 @@
 ## 120
 
 * 信息 - `The results were not found in the cache.`
-* 含义 - 查询结果无法从缓存中找到，SDK在使用从查询缓存的时候，如果发生缓存没有命中，返回此错误。
+* 含义 - 查询结果无法从缓存中找到，SDK 在使用从查询缓存的时候，如果发生缓存没有命中，返回此错误。
 
 ## 121
 
 * 信息 - `Keys in NSDictionary values may not include '$' or '.'.`
-* 含义 - JSON对象中key的名称不能包含`$`和`.`符号。
+* 含义 - JSON 对象中 key 的名称不能包含 `$` 和 `.` 符号。
 
 ## 122
 
 * 信息 - `Invalid file name. A file name contains only a-zA-Z0-9_. characters and is between 1 and 36 characters.`
-* 含义 - 无效的文件名称，文件名称只能是英文字母、数字和下划线组成，并且名字长度限制在1到36之间。
+* 含义 - 无效的文件名称，文件名称只能是英文字母、数字和下划线组成，并且名字长度限制在 1 到 36 之间。
 
 ## 123
 
 * 信息 - `Invalid ACL. An ACL with an invalid format was saved. This should not happen if you use AVACL.`
-* 含义 - ACL格式错误，如果您是使用SDK提供的AVACL类，理论上这不应该发生，正确的ACL格式请参考 [REST API](./rest_api.html#安全性)。
+* 含义 - ACL 格式错误，如果您是使用 SDK 提供的 AVACL 类，理论上这不应该发生，正确的 ACL 格式请参考 [REST API](./rest_api.html#安全性)。
 
 ## 124
 
 * 信息 - `The request timed out on the server. Typically this indicates the request is too expensive.`
-* 含义 - 请求超时，超过一定时间（默认10秒）没有返回，通常是因为网络故障或者该操作太耗时引起的。
+* 含义 - 请求超时，超过一定时间（默认 10 秒）没有返回，通常是因为网络故障或者该操作太耗时引起的。
 
 ## 125
 
@@ -123,17 +122,17 @@
 ## 126
 
 * 信息 - `Invalid user id.`
-* 含义 - 无效的用户 Id，可能用户不存在
+* 含义 - 无效的用户 Id，可能用户不存在。
 
 ## 127
 
 * 信息 - `The mobile phone number was invalid.`
-* 含义 - 手机号码无效
+* 含义 - 手机号码无效。
 
 ## 137
 
 * 信息 - `A unique field was given a value that is already taken.`
-* 含义 - 违反class中的唯一性索引约束(unique)，尝试存储重复的值。
+* 含义 - 违反 class 中的唯一性索引约束（unique），尝试存储重复的值。
 
 ## 139
 
@@ -143,21 +142,21 @@
 ## 140
 
 * 信息 - `Exceeded an application quota. Upgrade to resolve.`
-* 含义 - 超过应用的容量限额，请升级帐户等级。
+* 含义 - 超过应用的容量限额，请升级账户等级。
 
 ## 141
 
 * 信息 - `Cloud Code script had an error.`
-* 含义 - 云代码脚本编译或者运行报错。
+* 含义 - 云引擎脚本编译或者运行报错。
 
 ## 142
 
 * 信息 - `Cloud Code validation failed.`
-* 含义 - 云代码校验错误，通常是因为beforeSave、beforeDelete等函数返回error。
+* 含义 - 云引擎校验错误，通常是因为 beforeSave、beforeDelete 等函数返回 error。
 
 ## 145
 
-* 信息 - `Payment is disabled on this device`
+* 信息 - `Payment is disabled on this device.`
 * 含义 - 本设备没有启用支付功能。
 
 ## 150
@@ -168,7 +167,7 @@
 ## 160
 
 * 信息 - `Insufficient balance.`
-* 含义 - 帐户余额不足。
+* 含义 - 账户余额不足。
 
 ## 200
 
@@ -177,37 +176,37 @@
 
 ## 201
 
-* 信息 - `Password is missing or empty`
+* 信息 - `Password is missing or empty.`
 * 含义 - 没有提供密码，或者密码为空。
 
 ## 202
 
-* 信息 - `Username has already been taken`
+* 信息 - `Username has already been taken.`
 * 含义 - 用户名已经被占用。
 
 ## 203
 
-* 信息 - `Email has already been taken`
+* 信息 - `Email has already been taken.`
 * 含义 - 电子邮箱地址已经被占用。
 
 ## 204
 
-* 信息 - `The email is missing, and must be specified`
+* 信息 - `The email is missing, and must be specified.`
 * 含义 - 没有提供电子邮箱地址。
 
 ## 205
 
-* 信息 - `A user with the specified email was not found`
+* 信息 - `A user with the specified email was not found.`
 * 含义 - 找不到电子邮箱地址对应的用户。
 
 ## 206
 
 * 信息 - `The user cannot be altered by a client without the session.`
-* 含义 - 没有提供session，无法修改用户信息，这通常是因为没有登录的用户想修改信息。修改用户信息必须登录，除非在云代码里，或者使用master key调用REST API。
+* 含义 - 没有提供 session，无法修改用户信息，这通常是因为没有登录的用户想修改信息。修改用户信息必须登录，除非在云引擎里，或者使用 master key 调用 REST API。
 
 ## 207
 
-* 信息 - `Users can only be created through sign up`
+* 信息 - `Users can only be created through sign up.`
 * 含义 - 只能通过注册创建用户，不允许第三方登录。
 
 ## 208
@@ -222,44 +221,44 @@
 
 ## 211
 
-* 信息 - `Cloud not find user`
-* 含义 - 找不到用户
+* 信息 - `Could not find user.`
+* 含义 - 找不到用户。
 
 ## 212
 
-* 信息 - `The mobile phone number is missing, and must be specified`
+* 信息 - `The mobile phone number is missing, and must be specified.`
 * 含义 - 请提供手机号码。
 
 ## 213
 
-* 信息 - `An user with the specified mobile phone number was not found`
-* 含义 - 手机号码对应的用户不存在
+* 信息 - `A user with the specified mobile phone number was not found.`
+* 含义 - 手机号码对应的用户不存在。
 
 ## 214
 
-* 信息 - `Mobile phone number has already been taken`
-* 含义 - 手机号码已经被注册
+* 信息 - `Mobile phone number has already been taken.`
+* 含义 - 手机号码已经被注册。
 
 ## 215
 
 * 信息 - `Mobile phone number isn't verified.`
-* 含义 - 未验证的手机号码
+* 含义 - 未验证的手机号码。
 
 ## 216
 
-* 信息 - `"Email address isn't verified.`
-* 含义 - 未验证的邮箱地址
+* 信息 - `Email address isn't verified.`
+* 含义 - 未验证的邮箱地址。
 
 
 ## 250
 
 * 信息 - `Linked id missing from request`
-* 含义 - 连接的第三方账户没有返回用户唯一标示id
+* 含义 - 连接的第三方账户没有返回用户唯一标示 id
 
 ## 251
 
 * 信息 - `Invalid linked session`或者`Invalid Weibo session`
-* 含义 - 无效的账户连接，一般是因为access token非法引起的。
+* 含义 - 无效的账户连接，一般是因为 access token 非法引起的。
 
 ## 300
 
@@ -279,7 +278,7 @@
 ## 401
 
 * 信息 - `Unauthorized.`
-* 含义 - 未经授权的访问，没有提供App id，或者App id和App key校验失败，请检查配置。
+* 含义 - 未经授权的访问，没有提供 App id，或者 App id 和 App key 校验失败，请检查配置。
 
 ## 403
 
@@ -288,24 +287,24 @@
 
 ## 502
 
-* 信息 - `"Server is in maintance.`
+* 信息 - `Server is in maintenance.`
 * 含义 - 服务器维护中。
 
 ## 503
 
 * 信息 - `Rate limit exceeded.`
-* 含义 - 超过流量访问限制，默认API并发1000访问每秒，通过数据管理平台每秒限制上传一个文件，并且每分钟最多上传30个文件，如需提升，请联系我们。
+* 含义 - 超过流量访问限制，默认 API 并发 1000 访问每秒，通过数据管理平台每秒限制上传一个文件，并且每分钟最多上传 30 个文件，如需提升，请联系我们。
 
 ## 600
 
 * 信息 - `Invalid SMS signature.`
-* 含义 - 无效的短信签名。短信签名是指附加在短信文本前后位置，使用中文括号【】括起来的文字，短信签名只能位于短信开头或者结束的位置，并且限制在10（包含10个字符）个字符内。
+* 含义 - 无效的短信签名。短信签名是指附加在短信文本前后位置，使用中文括号【】括起来的文字，短信签名只能位于短信开头或者结束的位置，并且限制在 10（包含 10 个字符）个字符内。
         默认发送的短信签名使用的是应用名称，应用名称可以在应用设置里修改。短信自定义模板可以在模板里自定义签名。
         
 ## 601
 
 * 信息 - `Can't send SMS too frequently.`
-* 含义 -  发送短信过于频繁。我们限制验证类短信一分钟一条，每天每个号码限制在10条左右。我们强烈建议用户使用图形验证码或者倒数计时等方式来避免用户重复发送验证码，以及可能存在的短信验证码攻击。
+* 含义 -  发送短信过于频繁。我们限制验证类短信一分钟一条，每天每个号码限制在 10 条左右。我们强烈建议用户使用图形验证码或者倒数计时等方式来避免用户重复发送验证码，以及可能存在的短信验证码攻击。
 
 ## 602
 
@@ -319,7 +318,7 @@
 
 ## 604
 
-* 信息 - `"SMS template not found.`
+* 信息 - `SMS template not found.`
 * 含义 - 找不到自定义的短信模板，请检查模板名称是否正确或者模板是否已经创建并审核通过。
 
 ## 605
