@@ -1,6 +1,6 @@
 # 用户反馈组件开发指南
 
-AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个支持文字和图片的用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈。
+LeanCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个支持文字和图片的用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈。
 
 **你可以在应用的组件菜单里看到所有的用户反馈并回复。**
 
@@ -33,7 +33,7 @@ AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代�
 	#import <LeanCloudFeedback/LeanCloudFeedback.h>
 ```
 
-开发者可以使用当前的 UIViewController 打开 AVOSCloud 提供的默认反馈界面，代码如下：
+开发者可以使用当前的 UIViewController 打开默认的反馈界面，代码如下：
 
 ```objc
     LCUserFeedbackAgent *agent = [LCUserFeedbackAgent sharedInstance];
