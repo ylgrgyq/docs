@@ -281,12 +281,37 @@ public void sendImage(String filePath){
 
 {% block imageMessage_url_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称是「猫和老鼠」
-- 创建图像消息：http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif
-- 加入文本：萌妹子一枚
-- 发送
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        new AVFile("萌妹子",
+                            "http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif", null);
+                    AVIMImageMessage m = new AVIMImageMessage(file);
+                    m.setText("萌妹子一枚");
+                    // 创建一条图片消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
@@ -298,23 +323,70 @@ public void sendImage(String filePath){
 
 {% block audioMessage_local_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 本地读取音频文件：'忐忑.mp3' ，创建音频消息
-- 加入文本：'听听人类的神曲~'
-- 发送
+ AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        AVFile.withAbsoluteLocalPath("忐忑.mp3",localFilePath);
+                    AVIMAudioMessage m = new AVIMAudioMessage(file);
+                    m.setText("听听人类的神曲~");
+                    // 创建一条音频消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 ``` 
 {% endblock %}
 
 {% block audioMessage_url_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 从外部链接创建音频消息：http://ac-lhzo7z96.clouddn.com/1427444393952
-- 创建音频消息
-- 发送
+AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        new AVFile("music", "http://ac-lhzo7z96.clouddn.com/1427444393952", null);
+                    AVIMAudioMessage m = new AVIMAudioMessage(file);
+                    // 创建一条音频消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
@@ -323,34 +395,106 @@ public void sendImage(String filePath){
 
 {% block videoMessage_local_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 打开本地文件夹
-- 读取视频文件：'BBC_奶酪.mp4'，创建视频消息
-- 发送
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        AVFile.withAbsoluteLocalPath("bbc_奶酪.mp3", localFilePath);
+                    AVIMVideoMessage m = new AVIMVideoMessage(file);
+                    // 创建一条视频消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
 {% block videoMessage_url_sent %}
 
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 从外部链接创建视频消息：http://ac-lhzo7z96.clouddn.com/1427267336319
-- 发送给 Jerry
+ AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        new AVFile("video", "http://ac-lhzo7z96.clouddn.com/1427267336319", null);
+                    AVIMVideoMessage m = new AVIMVideoMessage(file);
+                    // 创建一条视频消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
 {% block fileMessage_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 打开本地文件夹
-- 读取本地文件 leancloud.doc，构造 AVFile
-- 发送
+
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    AVFile file =
+                        AVFile.withAbsoluteLocalPath("leancloud.doc", localFilePath);
+                    AVIMFileMessage m = new AVIMFileMessage(file);
+                    // 创建一条文件消息
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
+
 ```
 {% endblock %}
 
@@ -359,24 +503,42 @@ public void sendImage(String filePath){
 
 {% block locationMessage_new %}
 ```
-- 1.根据纬度和经度（latitude: 45.0 longitude:34.0）构建 
-  AVIMLocationMessage()
-- 2. AVGeoPoint 构建
-  AVIMLocationMessage(
-    AVGeoPoint(31.3853142377, 121.0553079844)
-  )
-```
+      AVIMLocationMessage m = new AVIMLocationMessage();
+      m.setLocation(new AVGeoPoint(45.0,34.0));
+ ```
 {% endblock %}
 
 {% block locationMessage_sent %}
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 以经度和纬度为参数构建一个地理位置消息 AVIMLocationMessage(138.12454, 52.56461)
-- 加入文本：好利来新店！！
-//开发者更可以通过具体的设备的 API 去获取设备的地理位置
-- 发送
+    AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                      //创建一个地理位置信息
+                      AVIMLocationMessage m = new AVIMLocationMessage();
+                      m.setLocation(new AVGeoPoint(138.12454, 52.56461));
+                      m.setText("好利来新店");
+                    conv.sendMessage(m, new AVIMConversationCallback() {
+                      @Override
+                      public void done(AVIMException e) {
+                        if (e == null) {
+                          // 发送成功
+                        }
+                      }
+                    });
+                  }
+                }
+              });
+        }
+      }
+    });
 }
 ```
 {% endblock %}
@@ -532,10 +694,24 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 
 {% block conversation_init %}
 ```
-- 初始化 ClientId = Jerry
-- Jerry 登录
-- 创建朋友列表 friends = [Bob, Harry, William]
-- 用 friends 创建新对话
+ AVIMClient jerry = AVIMClient.getInstance("Jerry");
+    jerry.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 创建名为“猫和老鼠”的对话
+          client.createConversation(Arrays.asList("Bob", "Harry", "William"), "猫和老鼠", null,
+              new AVIMConversationCreatedCallback() {
+                @Override
+                public void done(AVIMConversation conv, AVIMException e) {
+                  if (e == null) {
+                    // 创建成功
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
