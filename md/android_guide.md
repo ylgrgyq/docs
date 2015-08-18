@@ -1509,7 +1509,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
  * 用户根据向导点击重置密码连接，打开一个特殊的页面，让他们输入一个新的密码。
  * 用户的密码已被重置为新输入的密码。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接请看博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的云代码回调函数，方便你做一些后处理。
 
@@ -1729,6 +1729,7 @@ ArrayList<AVObject> posts = query.find();
  * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
  * 地理位置的点不能超过规定的范围。纬度的范围应该是在 -90.0 到 90.0 之间。经度的范围应该是在 -180.0 到 180.0 之间。如果你添加的经纬度超出了以上范围，将导致程序错误。
 
+<!--
 ## 短信验证API
 除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
 
@@ -1789,7 +1790,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 				    }
   })
 ```
-
+-->
 ## 调用云代码
 
 ### 调用函数
@@ -1822,4 +1823,4 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 默认为 true，也就是调用生产环境云代码函数。
 
 ## 代码混淆
-为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [这里](android_faq.html#代码混淆怎么做)。
+为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [常见问题 - 代码混淆](android_faq.html#代码混淆怎么做)。
