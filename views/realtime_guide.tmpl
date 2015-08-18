@@ -41,6 +41,7 @@ Tom 想给 Jerry 发一条消息，实现代码如下：
 
 
 {% block oneOnOneChat_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -80,6 +81,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 3. 发送消息
 
 {% block groupChat_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -93,6 +95,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 群聊的接收消息与单聊的接收消息在代码写法上是一致的。
 
 {% block groupChat_received %}
+
 ```
 - 初始化 ClientId = Bob
 - Bob 登录到系统
@@ -130,6 +133,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景一】用系统自身提供的 API 去获取本地媒体库里的照片的数据流，然后构造出 `AVIMImageMessage` 来发送：
 
 {% block imageMessage_local_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -144,6 +148,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景二】从微博上复制的一个图像链接来创建图像消息：
 
 {% block imageMessage_url_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -165,6 +170,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 {% block imageMessage_received_intro %}{% endblock %}
 
 {% block imageMessage_received %}
+
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
@@ -180,6 +186,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 发送音频消息的基本流程是：读取音频文件（或者录制音频）> 构建音频消息 > 消息发送。
 
 {% block audioMessage_local_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -193,6 +200,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 与图像消息类似，音频消息也支持从 URL 构建：
 
 {% block audioMessage_url_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -206,6 +214,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 接收音频消息
 
 {% block audioMessage_received_intro %}
+
 ```
 - 音频元信息提取/列表 [messageId, file.url, size, duration, format]
 ```
@@ -218,6 +227,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 与发送音频消息的流程类似，视频的来源可以是手机录制，可以是系统中某一个具体的视频文件：
 
 {% block videoMessage_local_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -246,6 +256,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 接收视频消息
 
 {% block videoMessage_received_intro %}
+
 ```
 - 视频元信息提取/列表[messageId, file.url, size, duration, format]
 ```
@@ -258,6 +269,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 地理位置消息构建方式如下：
 
 {% block locationMessage_new %}
+
 ```
 - 1.根据纬度和经度（latitude: 45.0 longitude:34.0）构建 
   AVIMLocationMessage()
@@ -270,6 +282,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 发送地理位置消息
 
 {% block locationMessage_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -284,6 +297,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 接收地理位置消息
 
 {% block locationMessage_received_intro %}
+
 ```
 - 此处各个 SDK 平台需要详细介绍一下如何接收 TypedMessage 接收，包含文字和代码。描述风格以及代码示例请参照 iOS 版本。
 ```
@@ -296,6 +310,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 暂态消息不会被自动保存（以后在历史消息中无法找到它），也不支持延迟接收，离线用户更不会收到推送通知，所以适合用来做控制协议。譬如聊天过程中「某某正在输入…」这样的状态信息，就适合通过暂态消息来发送。
 
 {% block transientMessage_sent %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -307,6 +322,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 而对话中的其他成员在聊天界面中需要有以下代码做出响应：
 
 {% block transientMessage_received %}
+
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
@@ -361,7 +377,9 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 ### 消息的接收策略
 
-{% block messagePolicy_received_intro %}{% endblock %}
+{% block messagePolicy_received_intro %}
+消息的接收策略在不同平台有不同的实现。
+{% endblock %}
 
 {% block messagePolicy_received %}{% endblock %}
 
@@ -378,10 +396,11 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景】发照片给朋友，告诉对方照片的拍摄地点：
 
 {% block customAttributesMessage_sent %}
+
 ```
 - 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "拉萨布达拉宫" //南京路刀刀面包坊
-- 设置 Title = "这蓝天……我彻底是醉了"; //好多甜品耶……彻底醉了我
+- 在 Attributes 中加入 location = "拉萨布达拉宫" 
+- 设置 Title = "这蓝天……我彻底是醉了"; 
 - 发送
 ```
 {% endblock %}
@@ -389,6 +408,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 接收时可以读取这一属性：
 
 {% block customAttributesMessage_received %}
+
 ```
 - 初始化 ClientId = friend
 - 登录到系统
@@ -402,6 +422,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 #### 创建新的消息类型
 
 {% block customMessage_create %}
+
 ```
 - 新建 NewsMessage 类型
 - 初始化 NewsMessage 的实例
@@ -427,6 +448,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 在讲解下面的内容之前，我们先来创建一个多人对话。后面的举例都要基于这个对话，所以**这一步是必须的**。请将以下代码复制到 IDE 并且执行。 
 
 {% block conversation_init %}
+
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录
@@ -444,6 +466,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将帮助他实现这个功能：
 
 {% block conversation_join %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -460,6 +483,7 @@ Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将�
 Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这个功能：
 
 {% block conversation_invite %}
+
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录
@@ -481,6 +505,7 @@ Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这�
 Tom 主动从对话中退出，他需要如下代码实现需求：
 
 {% block conversation_left %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -495,6 +520,7 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 Harry 被 William 从对话中删除。（关于 William 如何获得权限在后面的 [签名和安全](#签名和安全) 中会做详细阐述，此处不宜扩大话题范围。）实现代码如下：
 
 {% block conversation_kick %}
+
 ```
 - 初始化 ClientId = William
 - William 登录
@@ -512,6 +538,7 @@ Harry 被 William 从对话中删除。（关于 William 如何获得权限在�
 {% block conversation_countMember_method %}{% endblock %}这个方法返回的是实时数据：
 
 {% block conversation_countMember %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -580,6 +607,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 假如已知某一对话的 Id，可以使用它来查询该对话的详细信息：
 
 {% block conversation_getSingle %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -594,6 +622,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 用户登录进应用后，取回已经存在的所有对话（不包含暂态对话，如聊天室）：
 
 {% block conversation_getList %}
+
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -604,13 +633,14 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 对话的查询默认返回 10 个结果，若要更改返回结果数量，请设置 `limit` 值。
 
 {% block conversation_query_limit %}
+
 ```
 - Tom 登录
 - Tom 查询自己所在的最近 20 个活跃的对话
 ```
 {% endblock %}
 
-<!-- #### 条件查询 -->
+#### 条件查询 
 
 条件查询分为：比较查询、正则匹配查询、包含查询。
 

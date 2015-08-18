@@ -316,9 +316,17 @@ public void sendImage(String filePath){
 {% endblock %}
 
 {% block imageMessage_received_intro %}
+
 {% endblock %}
 
 {% block imageMessage_received %}
+
+```
+- 初始化 ClientId = Jerry
+- Jerry 登录到系统
+- 获取对话 Id = 55117292e4b065f7ee9edd29
+- 收取图像，获取相关元数据 MessageId、FromClientId、URL、Size、Width、Height、Format 等
+```
 {% endblock %}
 
 {% block audioMessage_local_sent %}
@@ -623,27 +631,75 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 这样一来，在开发者为 `TypedMessage`（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 `AVIMMessageManager.registerDefaultMessageHandler()` 中指定的 handler 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 `AVIMMessageManager.registerMessageHandler()` 中指定的 handler 被调用。
 {% endblock %}
 
+{% block transientMessage_sent %}
+
+```
+- 初始化 ClientId = Tom
+- Tom 登录到系统
+- 进入与 Jerry 的对话 id = 551260efe4b01608686c3e0f
+- 在 Tom 输入的同时，向 Jerry 发送提示："Tom 正在输入……"
+```
+{% endblock %}
+
+{% block transientMessage_received %}
+
+```
+- 初始化 ClientId = Jerry
+- Jerry 登录到系统
+- 进入与 Tom 的对话 id = 551260efe4b01608686c3e0f
+- 此时收到提示："Tom 正在输入……"
+```
+{% endblock %}
+
 {% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
+
+{% block messagePolicy_received_intro %}
+
+简略的介绍一下 Android 上如何针对消息接收进行响应。
+
+{% endblock %}
+
+
+{% block message_Relation_intro %}
+- 此处解释一下消息类的继承关系，最好是有一张类图。
+
+{% endblock %}
+
+{% block message_Properties_intro %}
+- 消息的通用属性，用 Table 展示最佳。此处参照 ios 文档即可。
+{% endblock %}
 
 {% block attributes %} `AVIMMessage.attributes` {% endblock %}
 
 {% block attributes_property %}attributes{% endblock %}
 
-{% block customMessage_sent %}
+{% block customAttributesMessage_sent %}
+
 ```
 - 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "拉萨布达拉宫"
-- 设置 Title = "这蓝天让我彻底醉了……";
+- 在 Attributes 中加入 location = "拉萨布达拉宫" 
+- 设置 Title = "这蓝天……我彻底是醉了"; 
 - 发送
 ```
 {% endblock %}
 
-{% block customMessage_received %}
+{% block customAttributesMessage_received %}
+
 ```
 - 初始化 ClientId = friend
 - 登录到系统
 - 接收消息，如果是 Image，读取 Attributes[location]
 - //读取的结果就是拉萨布达拉宫
+```
+{% endblock %}
+
+{% block customMessage_create %}
+
+```
+- 构造一个 AVIMImageMessage
+- 在 Attributes 中加入 location = "拉萨布达拉宫"
+- 设置 Title = "这蓝天让我彻底醉了……";
+- 发送
 ```
 {% endblock %}
 
