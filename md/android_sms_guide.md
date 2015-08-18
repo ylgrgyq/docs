@@ -1,7 +1,7 @@
 # Android SDK 短信验证码使用指南
 
 除了用户相关的包括注册，登录等操作以外，LeanCloud 还支持额外的短信验证码服务。
-在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了`启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）`选项的前提下，使用 LeanCloud 提供的短信验证码服务。
+在实际的应用中，假如有一些相对比较敏感的操作，比如付费、删除重要资源等操作，你希望能够通过短信验证的方式来与用户进行确认，你就可以在用户验证过手机号码，应用管理平台打开了 **启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）** 选项的前提下，使用 LeanCloud 提供的短信验证码服务。
 
 下面是使用方法，也可以参考 github 上的 [sms-demo](https://github.com/leancloud/sms-demo) 项目。
 
@@ -18,7 +18,7 @@
 短信默认模板为：
 
 <pre ng-non-bindable ><code>
-你正在 {{name }}中进行 {{op}}，你的验证码是:{{code}}，请输入验证，有效期为:{{ttl}}分钟
+你正在 {{name}}中进行 {{op}}，你的验证码是:{{code}}，请输入验证，有效期为:{{ttl}}分钟
 </code></pre>
 
 ## 自定义短信模板
@@ -95,4 +95,4 @@ AVUser.signUpOrLoginByMobilePhoneInBackground("12312312312","smsCode",new LogInC
 });
 ```
 
-默认的用户名将是手机号码。
+默认的用户名为用户的手机号码。

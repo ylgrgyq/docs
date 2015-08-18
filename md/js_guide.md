@@ -1375,7 +1375,7 @@ collection.reset([
 开始使用 AV.File 是很容易的，有很多种不同的方式来新建一个 file。第一个是 base64 编码的字符串表示：
 
 ```javascript
-var base64 = "V29ya2luZyBhdCBMZWFuQ2xvdWQgaXMgZnVuIQ==";
+var base64 = "6K+077yM5L2g5Li65LuA5LmI6KaB56C06Kej5oiR77yf";
 var file = new AV.File("myfile.txt", { base64: base64 });
 ```
 

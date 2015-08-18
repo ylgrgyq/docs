@@ -517,14 +517,9 @@ app.listen(process.env.LC_APP_PORT);
 
 {% endblock %}
 
-{% block upload_file %}
-在 LeanEngine 里上传文件也很容易，首先配置app使用bodyParser中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到request.files里：
+{% block upload_file %}### 上传文件
 
-```javascript
-app.use(express.bodyParser());
-```
-
-使用表单上传文件，假设文件字段名叫iconImage:
+在 LeanEngine 里上传文件也很容易，使用表单上传文件，假设文件字段名叫 iconImage:
 
 ```html
 <form enctype="multipart/form-data" method="post" action="/upload">
@@ -533,29 +528,39 @@ app.use(express.bodyParser());
 </form>
 ```
 
-上传文件使用multipart表单，并POST提交到/upload路径下。
+然后配置 app 使用 [multiparty](https://www.npmjs.com/package/multiparty) 中间件：
 
-接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+```javascript
+var multiparty = require('multiparty');
+```
+
+接下来定义文件上传的处理函数，构建一个 Form 对象，并将 req 作为参数进行解析，会将请求中的文件保存到临时文件目录，并构造 files 对象：
 
 ```javascript
 var fs = require('fs');
 app.post('/upload', function(req, res){
-  var iconFile = req.files.iconImage;
-  if(iconFile){
-    fs.readFile(iconFile.path, function(err, data){
-      if(err)
-        return res.send('读取文件失败');
-      var base64Data = data.toString('base64');
-      var theFile = new AV.File(iconFile.name, {base64: base64Data});
-      theFile.save().then(function(theFile){
-        res.send('上传成功！');
+  var form = new multiparty.Form();
+  form.parse(req, function(err, fields, files) {
+    var iconFile = files.iconImage[0];
+    if(iconFile.size !== 0){
+      fs.readFile(iconFile.path, function(err, data){
+        if(err) {
+          return res.send('读取文件失败');
+        }
+        var base64Data = data.toString('base64');
+        var theFile = new AV.File(iconFile.originalFilename, {base64: base64Data});
+        theFile.save().then(function(theFile){
+          res.send('上传成功！');
+        });
       });
-    });
-  }else
-    res.send('请选择一个文件。');
+    } else {
+      res.send('请选择一个文件。');
+    }
+  });
 });
 ```
-{% endblock %}
+
+上传成功后，即可在数据管理平台里看到你所上传的文件。{% endblock %}
 
 {% block cookie_session %}
 

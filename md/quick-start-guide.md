@@ -38,8 +38,9 @@
 
 * [开放 REST API 文档](./rest_api.html)
 <li><a href="js_guide.html">JavaScript 指南</a></li>
-<li><a href="cloud_code_guide.html">云代码指南</a></li>
-<li><a href="cloud_code_commandline.html">云代码命令行工具</a></li>
+<li><a href="leanengine_guide-node.html">云引擎指南（Node.js）</a></li>
+<li><a href="leanengine_guide-python.html">云引擎指南（Python）</a></li>
+<li><a href="cloud_code_commandline.html">云引擎命令行工具</a></li>
 
 ## 你是 PHP 开发者？
 
@@ -87,7 +88,7 @@
 ## 你要做网站托管服务？
 
 <ul>
-<li><a href="cloud_code_guide.html#web-hosting">云代码指南</a></li>
+<li><a href="leanengine_guide-cloudcode.html#Web_Hosting">云引擎指南</a></li>
  </ul>
  
 ## 你要导入导出数据？

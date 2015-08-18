@@ -137,8 +137,9 @@ var initScrollHistoryState = function() {
 
 $(function() {
   prettyPrepare(); // prepare elements that need to be prettified
-  refactDom();//
+
   prettyPrint(updateScrollSpy);
+  refactDom();//
   glueCopy();
   updateScrollSpy();
   addSidebarHoverListener();

@@ -1,6 +1,6 @@
 # 用户反馈组件开发指南
 
-AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈。
+LeanCloud Feedback 是一个非常轻量的模块，可以用最少两行的代码来实现一个支持文字和图片的用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈。
 
 **你可以在应用的组件菜单里看到所有的用户反馈并回复。**
 
@@ -12,112 +12,101 @@ AVOSCloud Feedback 是一个非常轻量的模块，可以用最少两行的代�
 * [iOS App](https://itunes.apple.com/cn/app/avos-cloud-ying-yong-tong/id854896336?mt=8&uo=4)
 
 ## iOS 反馈组件
+		
+![image](images/avoscloud-ios-feedback.png)
 
 ### 开源项目地址
 
-目前反馈组件从 SDK 中独立出来，开放了源码。项目地址是：[leancloud-feedback-ios](https://github.com/leancloud/leancloud-feedback-ios)。从 v3.1.3 开始，SDK 中的 feedback 组件不再维护。欢迎大家使用开源组件，相信在大家的共同维护下，开源组件会变得越来越好。
+目前反馈组件从 SDK 中独立出来，开放了源码和 Demo 。项目地址是：[leancloud-feedback-ios](https://github.com/leancloud/leancloud-feedback-ios)。从 v3.1.3 开始，SDK 中的 feedback 组件不再维护。欢迎大家使用开源组件，相信在大家的共同维护下，开源组件会变得越来越好。
 
-### 使用默认用户反馈界面
-开发者可以使用当前的 UIViewController 打开 AVOSCloud 提供的默认反馈界面，代码如下：
-
-```objc
-AVUserFeedbackAgent *agent = [AVUserFeedbackAgent sharedInstance];
-
-/* title 传 nil 表示将第一条消息作为反馈的标题 */
-[agent showConversations:self title:nil contact:@"test@leancloud.rocks"];
+### 安装
+推荐使用 Cocoapods 安装，在项目的 Podfile 中加入以下声明，随后执行 `pod install` 即可，如果太慢了，请参考[这篇博客](http://www.cnblogs.com/yiqiedejuanlian/p/3698788.html)加快速度。	
 ```
-![image](images/avoscloud-ios-feedback.png)
+	pod 'LeanCloudFeedback'
+```
 
-特别指出，如果要使用默认的用户反馈界面而且手动安装了 AVOSCloud.framework，开发者需要将 **AVOSCloud.framwork** > **Resources** > **AVOSCloud.bundle** 手动拖入工程项目中。
+该开源组件和 SDK 中的 feedback 组件接口稍有不同，类名的前缀由`AV`改成了`LC`，其它无变化。
 
-### 自定义用户反馈界面
-你也可以自定义反馈界面，`LCUserFeedbackThread` 和 `LCUserFeedbackReply` 这两个类提供了相应 API 来完成你想要的功能。
+### 基本使用
+导入头文件，
+```objc
+	#import <LeanCloudFeedback/LeanCloudFeedback.h>
+```
+
+开发者可以使用当前的 UIViewController 打开默认的反馈界面，代码如下：
 
 ```objc
-@interface LCUserFeedbackThread : NSObject
+    LCUserFeedbackAgent *agent = [LCUserFeedbackAgent sharedInstance];
+    /* title 传 nil 表示将第一条消息作为反馈的标题。 contact 也可以传入 nil，由用户来填写联系方式。*/
+    [agent showConversations:self title:nil contact:@"goodman@leancloud.cn"];
+```
 
-/*!
- * 获取反馈，使用 contact 查询。
- * @param contact 联系方式。
- * @param block 结果回调。
+### 界面定制
+
+默认的反馈界面的导航栏样式和你应用的样式不一样，这时你希望能统一样式，或者想更改反馈界面的字体等，可以通过下面的接口进行界面定制，
+```objc
+typedef enum : NSUInteger {
+    LCUserFeedbackNavigationBarStyleBlue = 0,
+    LCUserFeedbackNavigationBarStyleNone,
+} LCUserFeedbackNavigationBarStyle;
+
+@interface LCUserFeedbackViewController : UIViewController
+
+/**
+ *  导航栏主题，默认是蓝色主题
  */
-+ (void)fetchFeedbackWithContact:(NSString*)contact withBlock:(AVIdResultBlock)block;
+@property(nonatomic, assign) LCUserFeedbackNavigationBarStyle navigationBarStyle;
 
-/*!
- * 创建反馈，并使用 content 作为标题。
- * @param content 反馈的标题，通常，你可以将反馈的第一条消息作为标题。
- * @param contact 联系方式。
- * @param block 结果回调。
+/**
+ *  是否隐藏联系方式表头, 默认不隐藏。假如不需要用户提供联系方式则可以隐藏。
  */
-+ (void)feedbackWithContent:(NSString *)content contact:(NSString *)contact withBlock:(AVIdResultBlock)block;
+@property(nonatomic, assign) BOOL contactHeaderHidden;
 
-/*!
- * 获取所有反馈中的所有消息。
- * @param block 结果回调。
+/**
+ *  设置字体。默认是大小为 16 的系统字体。
  */
-- (void)fetchFeedbackRepliesInBackgroundWithBlock:(AVArrayResultBlock)block;
-
-/*!
- * 发送一条消息。
- * @param feedbackReply 反馈消息。
- * @param block 结果回调。
- */
-- (void)saveFeedbackReplyInBackground:(LCUserFeedbackReply *)feedbackReply withBlock:(AVIdResultBlock)block;
-
-@end
-
-@interface LCUserFeedbackReply : NSObject
-
-/*!
- * 创建一条反馈消息。
- * @param content 消息内容。
- * @param type 回复的类型，比如你可以标记 @"dev" 或者 @"user"。
- */
-+ (instancetype)feedbackReplyWithContent:(NSString *)content type:(NSString *)type;
-
-@end
+@property(nonatomic, strong) UIFont *feedbackCellFont;
 ```
 
-利用上述 API，可以实现一个完整的反馈功能。例如，你可以首先调用 API：
+我们看一个例子，节选自 [LeanChat](https://github.com/leancloud/leanchat-ios)，
 
 ```objc
-+ (void)fetchFeedbackWithContact:(NSString*)contact withBlock:(AVIdResultBlock)block;
+    LCUserFeedbackViewController *feedbackViewController = [[LCUserFeedbackViewController alloc] init];
+    feedbackViewController.navigationBarStyle = LCUserFeedbackNavigationBarStyleNone;
+    feedbackViewController.contactHeaderHidden = YES;
+    feedbackViewController.feedbackTitle = [AVUser currentUser].username;
+    CDBaseNavC *navigationController = [[CDBaseNavC alloc] initWithRootViewController:feedbackViewController];
+    [self presentViewController:navigationController animated:YES completion: ^{
+    }];
 ```
 
-通过 `contact` 来查询之前已经创建过的反馈，如果查询不到，说明没有通过 `contact` 创建过，利用以下 API：
+这里用 LeanChat 应用统一的 `CDBaseNavC` ，于是有了统一的导航栏样式。其次隐藏了联系方式表头，并且把反馈标题设置成了用户名。前者考虑到 LeanChat 支持手机号注册，不需要额外填写联系方式，后者考虑到能在网站管理台直观地看到用户名，从而快速定位用户。
 
+### 新回复通知
+往往用户反馈放在设置页面，于是可以在用户反馈一栏增加红点提醒，代码如下，
 ```objc
-+ (void)feedbackWithContent:(NSString *)content contact:(NSString *)contact withBlock:(AVIdResultBlock)block;
+    [[LCUserFeedbackAgent sharedInstance] countUnreadFeedbackThreadsWithBlock:^(NSInteger number, NSError *error) {
+        if (error) {
+        	// 网络出错了，不设置红点
+        } else {
+        	// 根据未读数 number，设置红点，提醒用户
+        }
+    }];
 ```
 
-来创建一个反馈，`content` 将作为反馈的标题。我们推荐使用第一条消息作为反馈的标题。
+### 增加额外的数据
 
-若查询到 `contact` 对应的反馈，则可以立即同步反馈中的消息：
-
-```objc
-- (void)fetchFeedbackRepliesInBackgroundWithBlock:(AVArrayResultBlock)block;
-```
-
-最后，若想发送一条反馈消息，可以结合以下两个 API 来实现：
-
-```objc
-+ (instancetype)feedbackReplyWithContent:(NSString *)content type:(NSString *)type;
-- (void)saveFeedbackReplyInBackground:(LCUserFeedbackReply *)feedbackReply withBlock:(AVIdResultBlock)block;
-```
-
-你也可以参考 `LCUserFeedbackViewController` 类中处理反馈的逻辑。
-
-### AVUserFeedbackThread 数据模型
-
-`AVUserFeedbackThread` 包含的属性有：
+可能你需要在反馈的时候增加额外的数据，比如应用的版本号，则可以给 `AVUserFeedbackThread` 增加 `app_version` 属性，还可增加其它属性，只要不和现有的属性冲突即可。现有的属性有：
 
 属性|说明
 ---|---
 content | 代表反馈内容
 createdAt | 反馈内容创建时间
-type | 反馈类型，分别为 user 和 dev。
+type | 反馈类型，分别为 "user" 和 "dev"。
 
-## Android Feedback 组件
+更加自由的界面定制和业务逻辑修改，可能需要你阅读代码了，请前往 [feedback](https://github.com/leancloud/leancloud-feedback-ios) 项目。
+
+## Android 反馈组件
 
 ### 导入 SDK
 

@@ -501,7 +501,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 
 ### 在 save 后执行动作
 
-在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条 push 通知。类似的，你可以通过 `afterSave` 函数做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
+在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条 push 通知。类似的，你可以通过 `afterSave` 函数做到。举个例子，你想跟踪一篇博客的评论总数，你可以这样做：
 
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {

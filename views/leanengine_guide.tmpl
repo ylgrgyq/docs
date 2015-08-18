@@ -195,7 +195,7 @@ API参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 ### 在 save 后执行动作
 
-在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过`afterSave`函数做到。举个例子，你想跟踪一篇博客的评论总数字，你可以这样做：
+在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过`afterSave`函数做到。举个例子，你想跟踪一篇博客的评论总数，你可以这样做：
 
 {% block afterSaveExample %}{% endblock %}
 
@@ -678,16 +678,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip`字段获取。
 
-{#
-
-### 上传文件
-
 {% block upload_file %}{% endblock %}
-
-上传成功后，即可在数据管理平台里看到您所上传的文件。
-
-#}
-
 
 {% block cookie_session %}{% endblock %}
 

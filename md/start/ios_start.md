@@ -63,7 +63,8 @@ pod 'AVOSCloudSNS'
 - `CoreLocation.framework`
 - `libicucore.dylib`
 
-如果使用 `AVOSCloudCrashReporting` ，还需额外添加 `libc++.dylib`
+如果使用 `AVOSCloudCrashReporting` ，还需额外添加 `libc++.dylib`。
+如果使用 `AVOSCloudIM`，还需额外添加 `libsqlite3.dylib`。
 
 为 target 的 Build Settings 中，为 Other Linker Flags 增加 `-all_load` 链接选项。
 

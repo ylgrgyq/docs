@@ -10,7 +10,7 @@
 
 ## 版本变迁
 
-从 2.4.0 开始, 我们重新设计了 SDK 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包 --- 除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar, avosstatistics.jar 等都可以在用到该组件时才导入。
+从 2.4.0 开始, 我们重新设计了 SDK 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包——除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar、avosstatistics.jar 等都可以在用到该组件时才导入。
 
 ## 模块与 SDK 包
 
@@ -18,9 +18,9 @@
 
 ### Android Studio 用户
 
-从 2.6.10.3 开始, LeanCloud Android SDK可以使用gradle来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
+从 2.6.10.3 开始, LeanCloud Android SDK 可以使用 gradle 来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
 
-在Android Studio的配置中间，您首先需要在项目下的build.gradle中配置成类似：
+在 Android Studio 的配置中间，您首先需要在项目下的 build.gradle 中配置成类似：
 
 ```
 buildscript {
@@ -48,7 +48,7 @@ allprojects {
 }
 ```
 
-之后需要在app目录下的build.gradle中根据需要进行相应的配置：
+之后需要在 app 目录下的 build.gradle 中根据需要进行相应的配置：
 
 ```
 android {
@@ -89,7 +89,7 @@ dependencies {
 
 ### Eclipse 用户
 
-Eclipse 用户依然可以在[SDK下载](sdk_down.html)进行下载
+Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 
 #### LeanCloud 基本存储模块
 
@@ -126,7 +126,7 @@ LeanCloud 平台为移动应用提供了一个完整的后端解决方案，目�
 
 ## 应用程序初始化
 
-以下为 LeanCloud Android SDK 需要的所有的权限，请检查你的 `AndroidManifest.xml`。此外千万不要忘记在 `AndroidManifest.xml` 中注明 application name。过去用户反馈的很多问题都是因为这一步没有正确配置导致的。
+以下为 LeanCloud Android SDK 需要的所有的权限，请检查你的 AndroidManifest.xml。此外千万不要忘记在 AndroidManifest.xml 中注明 application name。过去用户反馈的很多问题都是因为这一步没有正确配置导致的。
 
 ```xml
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -142,7 +142,7 @@ LeanCloud 平台为移动应用提供了一个完整的后端解决方案，目�
 
 ## 数据的存储
 
-LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，每个 `AVObject` 包含若干属性，属性的值是与 JSON 格式兼容的数据。你不需要预先指定每个 `AVObject` 包含哪些属性，可以随时增加新的属性。
+LeanCloud 的数据存储服务是建立在对象——`AVObject` 基础上的，每个 `AVObject` 包含若干属性，属性的值是与 JSON 格式兼容的数据。你不需要预先指定每个 `AVObject` 包含哪些属性，可以随时增加新的属性。
 
 假如我们要实现一个类似于微博的社交 app，主要有三类数据：账户、帖子、评论。以微博的帖子为例，我们可以建立一个类名为 `Post` 的 `AVObject` 对象，包含下面几个属性：
 
@@ -168,7 +168,7 @@ try {
 }
 ```
 
-成功运行以上代码后，数据就已经保存到 LeanCloud。为确认这一点，你可以用 LeanCloud 控制台的数据浏览器查看[该应用的数据](/data.html?appid={{appid}})，找到这个对象：
+成功运行以上代码后，数据就已经保存到 LeanCloud。为确认这一点，你可以用 LeanCloud 控制台的数据浏览器查看 [该应用的数据](/data.html?appid={{appid}})，找到这个对象：
 
 ```java
 objectId: "558e20cbe4b060308e3eb36c", content: "每个Java程序员必备的8个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999,
@@ -227,7 +227,7 @@ try {
 要从检索到的 `AVObject` 实例中获取值，可以使用相应的数据类型的 `getType` 方法：
 
 ```
-int content = post.getString("content");
+String content = post.getString("content");
 String userName = post.getString("pubUser");
 int userVerified = post.getInt("pubUserCertificate");
 ```
@@ -315,7 +315,7 @@ post.saveInBackground();
 
 ### 计数器
 
-许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+许多应用都需要实现计数器功能——比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
 ```java
 AVObject post = new AVObject("Post");
@@ -380,6 +380,7 @@ AVObject.deleteAll(objects);
 对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
 
 注：LeanCloud 云端是通过 Pointer 类型来解决这种数据引用的，并不会将数据 a 在数据 b 的表中再额外存储一份，这也可以保证数据的一致性。
+
 例如：一条微博信息可能会对应多条评论。创建一条微博信息并对应一条评论信息，你可以这样写：
 
 ```java
@@ -881,8 +882,7 @@ query.deleteAll();
 ### CQL 查询
 Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套类似 SQL 查询语法的子集和变种，主要目的是降低大家学习 LeanCloud 查询的 API 的成本，可以使用传统的 SQL 语法来查询 LeanCloud 应用内的数据。
 
-这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](./cql_guide.html)。
-你可以通过一下方法来进行调用
+这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](./cql_guide.html)。你可以通过以下方法来进行调用：
 
 ```java
 AVQuery.doCloudQueryInBackground("select * from ObjectTest", new CloudQueryCallback<AVCloudQueryResult>(){
@@ -1509,7 +1509,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
  * 用户根据向导点击重置密码连接，打开一个特殊的页面，让他们输入一个新的密码。
  * 用户的密码已被重置为新输入的密码。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接请看博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的云代码回调函数，方便你做一些后处理。
 
@@ -1650,8 +1650,8 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 ```java
 AVQuery<AVUser> query = AVUser.getQuery();
 query.whereEqualTo("gender", "female");
-query.findInBackground(new FindCallback<AVObject>() {
-    public void done(List<AVObject> objects, AVException e) {
+query.findInBackground(new FindCallback<AVUser>() {
+    public void done(List<AVUser> objects, AVException e) {
         if (e == null) {
             // 查询成功
         } else {
@@ -1729,6 +1729,7 @@ ArrayList<AVObject> posts = query.find();
  * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
  * 地理位置的点不能超过规定的范围。纬度的范围应该是在 -90.0 到 90.0 之间。经度的范围应该是在 -180.0 到 180.0 之间。如果你添加的经纬度超出了以上范围，将导致程序错误。
 
+<!--
 ## 短信验证API
 除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
 
@@ -1789,7 +1790,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 				    }
   })
 ```
-
+-->
 ## 调用云代码
 
 ### 调用函数
@@ -1822,4 +1823,4 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 默认为 true，也就是调用生产环境云代码函数。
 
 ## 代码混淆
-为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [这里](android_faq.html#代码混淆怎么做)。
+为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [常见问题 - 代码混淆](android_faq.html#代码混淆怎么做)。

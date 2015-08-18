@@ -19,7 +19,7 @@ AVQuery<AVObject> query = new AVQuery<AVObject>("GameScore");
 List<AVObject> avObjects = query.find()
 ```
 
-`select`一个完整的语法形式类似这样：
+`select` 一个完整的语法形式类似这样：
 
 ```sql
 select [查询字段列表，逗号隔开] from [class 名称]
@@ -50,11 +50,11 @@ select * from GameScore order by score,+name desc
 
 ## 查询条件
 
-`where` 之后的查询条件基本跟 SQL 语法相似，比如支持 `or` 和 `and` 的复合查询，支持`=`、`!=`、`<`、`<`等比较运算符，支持子查询、in 查询等。详细解释如下。
+`where` 之后的查询条件基本跟 SQL 语法相似，比如支持 `or` 和 `and` 的复合查询，支持 `=`、`!=`、`<`、`<` 等比较运算符，支持子查询、in 查询等。详细解释如下。
 
 ### 基本查询
 
-查询指定信息的对象，用`=` 比较符：
+查询指定信息的对象，用 `=` 比较符：
 
 ```sql
 select * from GameScore where name='dennis'
@@ -66,7 +66,7 @@ select * from GameScore where name='dennis'
 select * from GameScore where name!='dennis'
 ```
 
-也可以用`<>`运算符来表示不等于。
+也可以用 `<>` 运算符来表示不等于。
 
 比较日期，使用 `date` 函数来转换，比如查询特定时间之前创建的对象：
 
@@ -88,14 +88,14 @@ date 函数接收的日期格式必须是 `2011-08-20T02:06:57.931Z` 的 UTC 时
   <tr><td>[not] like</td><td>模糊查询</td></tr>
   <tr><td>[not] regexp</td><td>正则匹配</td></tr>
   <tr><td>[not] in(子查询或者数组)</td><td>包含或者不包含</td></tr>
-  <tr><td>is [not] exists</td><td>这个Key有值或者不存在值</td></tr>
+  <tr><td>is [not] exists</td><td>这个 Key 有值或者不存在值</td></tr>
 </table>
 
 比较运算符可以用在日期、字符串、数字甚至对象上。
 
 #### 模糊查询
 
-模糊查询可以使用 `like`，比如查询名字以 dennis 开头的对象
+模糊查询可以使用 `like`，比如查询名字以 dennis 开头的对象。
 
 ```sql
 select * from GameScore where name like 'dennis%'
@@ -116,7 +116,7 @@ select * from GameScore where name not like 'dennis%'
 或者
 select * from GameScore where name not regexp 'dennis.*'
 ```
-正则匹配的效率一般，类似这种全文搜索请求，我们都推荐采用[应用内全文搜索](./app_search_guide.html)。
+正则匹配的效率一般，类似这种全文搜索请求，我们都推荐采用 [应用内全文搜索](app_search_guide.html)。
 
 ##### 值是否存在查询
 
@@ -126,7 +126,7 @@ select * from GameScore where name not regexp 'dennis.*'
 select * from GameScore where level is exists
 ```
 
-反之，使用`is not exists`。
+反之，使用 `is not exists`。
 
 
 ### 数组查询
@@ -137,7 +137,7 @@ select * from GameScore where level is exists
 select * from GameScore where scores=100
 ```
 
-如果想查找分数**只有** 两个 100 分的成绩：
+如果想查找分数**只有**两个 100 分的成绩：
 
 ```sql
 select * from GameScore where scores all (100,100)
@@ -153,7 +153,7 @@ select * from GameScore where scores all (100,100)
 select * from GameScore where name in ('dennis','catty','green')
 ```
 
-当然，如果想查询的不在列表里，那可以使用`not in`:
+当然，如果想查询的不在列表里，那可以使用 `not in`:
 
 ```sql
 select * from GameScore where name not in ('dennis','catty','green')
@@ -165,7 +165,7 @@ in 后面还可以是一个子查询，比如查询玩家信息，并且成绩�
 select * from Player where name in (select name from GameScore where score>80)
 ```
 
-注意子查询必须指定查询的字段名称是`select name`。
+注意子查询必须指定查询的字段名称是 `select name`。
 
 子查询另一种常见形式是使用 `=` 或 `!=` 跟一条查询语句：
 
@@ -174,7 +174,7 @@ select * from Player where name =(select name from GameScore where score>80)
 select * from Player where name !=(select name from GameScore where score<=80)
 ```
 
-**请注意子查询的语句也受上限 1000 条记录的限制**
+**注意：子查询的语句也受上限 1000 条记录的限制。**
 
 
 ### 地理位置信息查询
@@ -193,16 +193,16 @@ select * from Player where location near geopoint(116.4, 39.9)
 
 只有在地理位置信息查询里才可以使用 `[longitude, latitude]` 这样的语法。在其他查询里将被作为数组类型。
 
-为了限定搜索的最大距离，还可以使用 `max distance`来限定，比如限定在 1 公里内：
+为了限定搜索的最大距离，还可以使用 `max distance` 来限定，比如限定在 1 公里内：
 
 ```sql
 select * from Player where location near geopoint(116.4, 39.9) max 1 km
 ```
 
-其他单位包括 `miles` 英里和`radians` 弧度，默认是弧度。
+其他单位包括 `miles`（英里）和 `radians`（弧度），默认是**弧度**。
 
 
-如果想查询某个矩形框内的对象，可以使用`within [西南坐标] and [东北坐标]`的语法：
+如果想查询某个矩形框内的对象，可以使用 `within [西南坐标] and [东北坐标]` 的语法：
 
 ```sql
 select * from Player where location within [116.33, 39.97] and [116.37, 39.99]
@@ -217,7 +217,7 @@ select * from Player where location within [116.33, 39.97] and [116.37, 39.99]
 select count(*) from GameScore
 ```
 
-`count` 不支持`distinct`等语法。仅限`count(*)`和`count(objectId)`
+`count` 不支持 `distinct` 等语法。仅限 `count(*)` 和 `count(objectId)`。
 
 查询分数大于 60 并且小于等于 80 的成绩数目：
 
@@ -239,9 +239,9 @@ select count(*),name from GameScore
 
 ### 关系查询
 
-有几种方式来查询对象之间的关系数据, 如果您想获取对象，而这个对象的一个字段对应了另一个对象, 您可以用一个 where 查询, 自己构造一个 Pointer, 和其他数据类型一样。
+有几种方式来查询对象之间的关系数据。如果你想获取对象，而这个对象的一个字段对应了另一个对象， 你可以用一个 where 查询，自己构造一个 Pointer，和其他数据类型一样。
 
-举例说, 如果每一个 Comment 有一个 Post 对象在它的 post 字段上（Pointer 类型）, 您可以对一个 post 取得所有 comment:
+举例说，如果每一个 Comment 有一个 Post 对象在它的 post 字段上（Pointer 类型），你可以对一个 post 取得所有 comment：
 
 ```sql
 select * from Comment where post=pointer('Post','51e3a359e4b015ead4d95ddc')
@@ -249,13 +249,13 @@ select * from Comment where post=pointer('Post','51e3a359e4b015ead4d95ddc')
 
 `pointer` 函数接收 className 和 objectId。
 
-如果您想获取对象, 这个对象的一个字段指向的对象（必须是 Pointer）是符合另一个查询的, 您可以使用 in 查询。注意默认的 limit 是 100 而且最大的 limit 是 1000，这个限制同样适用于内部的查询, 所以对于较大的数据集您可能需要细心地构建查询来获得期望的行为. 举例说, 假设您有一个 Post 类和一个 Comment 类, 每个 Comment 都有一个指向它的 Post 的 Pointer, 您可以找到对于有图片的 Post 的 Comment:
+如果你想获取对象, 这个对象的一个字段指向的对象（必须是 Pointer）是符合另一个查询的， 你可以使用 in 查询。注意默认的 limit 是 100 而且最大的 limit 是 1000，这个限制同样适用于内部的查询，所以对于较大的数据集你可能需要细心地构建查询来获得期望的行为。举例说，假设你有一个 Post 类和一个 Comment 类，每个 Comment 都有一个指向它的 Post 的 Pointer，你可以找到对于有图片的 Post 的 Comment：
 
 ```sql
 select * from Comment where post in (select * from Post where image is exists)
 ```
 
-如果 Post 下面有一个 key 是 Relation 类型，并且叫做 likes, 存储了喜欢这个 Post 的 User。您可以找到这些 user, 他们都 like 过同一个指定的 post:
+如果 Post 下面有一个 key 是 Relation 类型，并且叫做 likes，存储了喜欢这个 Post 的 User。你可以找到这些 user，他们都 like 过同一个指定的 post：
 
 ```sql
 select * from _User where related likes to pointer('Post', '51e3a359e4b015ead4d95ddc')
@@ -264,19 +264,19 @@ select * from _User where related likes to pointer('Post', '51e3a359e4b015ead4d9
 基本的查询形式是 `releated <key> to <pointer>`。
 
 
-如果某个字段是 Pointer ，默认查询的时候，只会返回 `{__type: 'Pointer', objectId: 'objectId', className:'Post'}` 这些基本信息，如果希望同时将这个对象的其他信息查询下来，可以使用 include，比如查询 Comment 同时将 Post 带下来：
+如果某个字段是 Pointer，默认查询的时候，只会返回 `{__type: 'Pointer', objectId: 'objectId', className:'Post'}` 这些基本信息，如果希望同时将这个对象的其他信息查询下来，可以使用 include，比如查询 Comment 同时将 Post 带下来：
 
 ```sql
 select include post, * from Comment
 ```
 
-在 select 中采用 `include <key>` 就可以将某个 Pointer 字段关联查询出来。多个字段要多次 include:
+在 select 中采用 `include <key>` 就可以将某个 Pointer 字段关联查询出来。多个字段要多次 include：
 
 ```sql
 select include post,include author from Comment
 ```
 
-同样，还可以支持嵌套的 include 查询，比如 Post 里还有一个 Pointer 指向 Category:
+同样，还可以支持嵌套的 include 查询，比如 Post 里还有一个 Pointer 指向 Category：
 
 ```sql
 select include post.category,* from Comment
@@ -284,19 +284,19 @@ select include post.category,* from Comment
 
 ### 复合查询
 
-你可以使用 and 和 or 来做符合查询，例如查询分数在 80 到 100 之间，可以用 and:
+你可以使用 `and` 和 `or` 来做符合查询，例如查询分数在 80 到 100 之间，可以用 `and`：
 
 ```sql
 select * from GameScore where score>80 and score<=100
 ```
 
-再加个条件，或者分数为0分的：
+再加个条件，或者分数为 0 分的：
 
 ```sql
 select * from GameScore where score>80 and score<=100 or score=0
 ```
 
-and 的优先级高于 or，因此上面的查询也可以用括号来明确地表示这种优先级：
+`and` 的优先级高于 `or`，因此上面的查询也可以用括号来明确地表示这种优先级：
 
 ```sql
 select * from GameScore where (score>80 and score<=100) or score=0
@@ -318,8 +318,6 @@ select * from Comment limit 100,10
 
 这个形式跟 MySQL 是类似的。
 
-
-
 ### 占位符
 
 查询条件和 limit 子句还支持占位符，也就是可以用问号 `?` 替代值，值的列表通过 SDK 提供的方法传入，具体请参考各 SDK 用法，例如：
@@ -332,7 +330,7 @@ select * from GameScore where name=? and score>? limit ?,?
 
 ## 排序
 
-通过 `order` 语句来排序，`order` 语句只能出现在最后，不能在 where 和 limit 之前。
+通过 `order` 语句来排序，`order` 语句只能出现在最后，不能在 `where` 和 `limit` 之前。
 
 例如按照分数倒序排（分数高的前）：
 
@@ -348,7 +346,7 @@ select * from GameScore order by -score
 
 加号表示升序，减号表示降序。
 
-多个字段组合排序，例如分数高的前，名字相同的“更小”的在前（字母顺序）：
+多个字段组合排序，例如分数高的前，名字相同的「更小」的在前（字母顺序）：
 
 ```sql
 select * from GameScore order by -score,name
@@ -371,14 +369,14 @@ CQL 提供了一些内置函数来方便地创建 pointer、geopoint 等类型�
 <table>
   <tr><th>Name</th><th>Operation</th></tr>
   <tr><td>date('YYYY-MM-DDTHH:MM:SS.MMMMZ')</td><td>创建日期类型</td></tr>
-  <tr><td>pointer(className,objectId)</td><td>创建 Pointer</td></tr>
-  <tr><td>geopoint(经度，维度)</td><td>创建 GeoPoint</td></tr>
+  <tr><td>pointer(className, objectId)</td><td>创建 Pointer</td></tr>
+  <tr><td>geopoint(经度, 纬度)</td><td>创建 GeoPoint</td></tr>
   <tr><td>file(objectId)</td><td>创建 file 类型</td></tr>
   <tr><td>base64(base64编码字符串)</td><td>创建 Bytes 类型</td></tr>
   <tr><td>current_timestamp()</td><td>创建当前日期</td></tr>
 </table>
 
-如果不使用这些函数，你也使用 [REST API 文档](./rest_api.html#数据类型) 定义的 JSON 对象来创建特定类型，例如 Pointer:
+如果不使用这些函数，你也使用 [REST API 文档](./rest_api.html#数据类型) 定义的 JSON 对象来创建特定类型，例如 Pointer：
 
 ```sql
 select * from Comment where post=
@@ -387,11 +385,9 @@ select * from Comment where post=
 
 当然这样写就相对繁琐了。
 
-
-
 ## 性能和建议
 
-CQL 最终还是转换成 [REST API](./rest_api.html) 里查询部分提到的各种 where 条件，因为多了一层转换，理论上会比直接使用 where 查询慢一点。并且 CQL 对长度有所限制，要求在 4096 字节以内。
+CQL 最终还是转换成 [REST API](./rest_api.html) 里查询部分提到的各种 where 条件，因为多了一层转换，理论上会比直接使用 `where` 查询慢一点。并且 CQL 对长度有所限制，要求在 4096 字节以内。
 
 此外，我们推荐查询语句都采用占位符的方式，使用占位符的查询语句将有机会被缓存复用，避免重复解释的开销。
 

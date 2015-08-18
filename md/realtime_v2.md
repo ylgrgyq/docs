@@ -159,7 +159,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ### 云引擎签名范例
 
-我们提供了一个运行在 LeanCloud [云引擎](./cloud_code_guide.html) 上的 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)
+我们提供了一个运行在 LeanCloud [云引擎](leanengine_guide-cloudcode.html) 上的 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)
 ，它提供了基于 Web Hosting 和云函数两种方式的签名实现，你可以根据实际情况选择自己的实现。
 
 ### 用户登录的签名
@@ -238,7 +238,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:su
 * **_conversationRemove**  
   从对话中踢出成员，在签名校验（如果开启）之后，实际踢出之前，用户自己退出对话不会调用。
 
-关于如何定义云函数，你可以参考 [云引擎部分的说明](./cloud_code_guide.html#Cloud_函数)。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云引擎 hook 要求云引擎部署在云引擎生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云引擎 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
+关于如何定义云函数，你可以参考 [云引擎部分的说明](leanengine_guide-cloudcode.html#Cloud_函数)。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。需要注意的是，实时通信的云引擎 hook 要求云引擎部署在云引擎生产环境，测试环境用于开发者手动调用测试。由于缓存的原因，首次部署的云引擎 hook 需要至多三分钟的时间正式生效，后续修改会实时生效。
 
 ### 使用场景
 
