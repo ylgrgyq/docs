@@ -43,13 +43,8 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
   ```sh
   pod 'AVOSCloud'
   ```
-* 如果使用 SNS 组件（社交平台服务）的相关功能，则添加：
 
-  ```sh
-  pod 'AVOSCloudSNS'
-  ```
-
-* 执行命令 `pod install` 安装 SDK。
+* 执行命令 `pod install --verbose` 安装 SDK。如果本地安装过 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
 
@@ -133,6 +128,15 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post save];
 ```
 
+或者用下标用法：
+```objc
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+post[@"content"] = @"每个 Objective-C 程序员必备的 8 个开发工具";
+post[@"pubUser"] = @"LeanCloud官方客服";
+post[@"pubTimestamp"] = @(1435541999);
+[post save];
+```
+
 运行此代码后，要想确认保存动作是否已经生效，可以到 LeanCloud 应用管理平台的 [数据管理](/data.html?appid={{appid}}) 页面来查看数据的存储情况。
 
 如果保存成功，`Post` 的数据表中应该显示出以下记录：
@@ -160,12 +164,12 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 AVObject *post = [query getObjectWithId:@"558e20cbe4b060308e3eb36c"];
 ```
 
-接下来可以用 `objectForKey` 获取属性值：
+接下来可以用 `objectForKey:`或下标语法来获取属性值：
 
 ```objc
 int timestamp = [[post objectForKey:@"pubTimestamp"] intValue];
 NSString *userName = [post objectForKey:@"pubUser"];
-NSString *content = [post objectForKey:@"content"];
+NSString *content = post[@"content"];
 ```
 
 获取三个特殊属性：
@@ -497,6 +501,43 @@ AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"likes" ch
 
 **请阅读《[关系建模指南](./relation_guide.html)》来进一步了解关系类型。**
 
+### 批量操作
+为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行创建、更新、删除、获取。接口都在 AVObject 这个类下面：
+
+```objc
+// 批量创建、更新
++ (BOOL)saveAll:(NSArray *)objects error:(NSError **)error;
++ (void)saveAllInBackground:(NSArray *)objects
+						  block:(AVBooleanResultBlock)block; 
+
+// 批量删除
++ (BOOL)deleteAll:(NSArray *)objects error:(NSError **)error;
++ (void)deleteAllInBackground:(NSArray *)objects
+                        block:(AVBooleanResultBlock)block;
+
+// 批量获取
++ (BOOL)fetchAll:(NSArray *)objects error:(NSError **)error;
++ (void)fetchAllInBackground:(NSArray *)objects
+                       block:(AVArrayResultBlock)block;                        
+```
+
+比如 `Post` 用 `isRead` 字段来表示是否已读。获取一组微博对象之后，把这组对象标记为已读的代码如下：
+```
+// 获取了一组 posts
+NSArray *posts;
+
+for (AVObject *post in posts) {
+    post[@"isRead"] = @(YES);
+}
+[AVObject saveAllInBackground:posts block:^(BOOL succeeded, NSError *error) {
+    if (error) {
+        // 网络错误
+    } else {
+        // 保存成功
+    }
+}];
+```
+
 ### 数据类型
 
 到目前为止，我们使用过的数据类型有 `NSString`、 `NSNumber`、 `AVObject`，LeanCloud 还支持 `NSDate` 和 `NSData`。
@@ -504,6 +545,7 @@ AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"likes" ch
 此外，`NSDictionary` 和 `NSArray` 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。例如：
 
 ```objc
+NSNumber *boolean = @(YES);
 NSNumber *number = [NSNumber numberWithInt:2014];
 NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
 NSDate *date = [NSDate date];
@@ -514,6 +556,7 @@ NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"
                                                                       nil];
 
 AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
+[testObject setObject:boolean    forKey:@"testBoolean"];
 [testObject setObject:number     forKey:@"testInteger"];
 [testObject setObject:string     forKey:@"testString"];
 [testObject setObject:date       forKey:@"testDate"];
@@ -1082,11 +1125,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 **注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
 
-`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `BOOL` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。下面这个属性也是同样的情况：
-
-```objc
-@property BOOL isTeamMember;
-```
+`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
 
 你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
 
@@ -1765,3 +1804,5 @@ NSArray<AVObject *> *posts = [query findObjects];
 [AVCloud setProductionMode:NO];
 ```
 其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
+
+
