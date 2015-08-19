@@ -1150,8 +1150,6 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 ```
 
-在 3.1.3.2 版本，我们修正了子类化时 `BOOL` 类型的 `property` 保存到后端时被认为是 `Number` 类型而不是 `Boolean` 类型的问题。这个版本修复了此问题，让 `BOOL` 类型保存的时候，不再保存为`0`和`1`，而正确地保存为 `true` 和 `false`。但您的代码可能已经适应了修正前的 SDK，并且相应的字段已经是 `Number` 类型。这时再保存为 `Boolean` 类型就会报 "Expected type is number, but it is boolean" 之类的错误，如果出现此类错误且要继续保持该字段 Number 类型时，可类似地将 `@property (BOOL) isTeamMember;` 改为 `@property NSInteger isTeamMember;`。
-
 ### 针对 AVUser 子类化的特别说明
 
 假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
@@ -1806,3 +1804,5 @@ NSArray<AVObject *> *posts = [query findObjects];
 [AVCloud setProductionMode:NO];
 ```
 其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
+
+
