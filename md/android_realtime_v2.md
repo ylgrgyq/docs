@@ -781,7 +781,7 @@ class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
       break;
 
     case AVIMReservedMessageType.VideoMessageType:
-      AVIMVideoMessage videoMsg = (AVIMAudioMessage)message;
+      AVIMVideoMessage videoMsg = (AVIMVideoMessage)message;
       Logger.id("收到视频消息。msgId=" + videoMsg.getMessageId() + ", url=" + videoMsg.getFileUrl() + ", duration=" + videoMsg.getDuration());
       break;
 
