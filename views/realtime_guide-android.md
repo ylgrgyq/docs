@@ -322,10 +322,46 @@ public void sendImage(String filePath){
 {% block imageMessage_received %}
 
 ```
-- 初始化 ClientId = Jerry
-- Jerry 登录到系统
-- 获取对话 Id = 55117292e4b065f7ee9edd29
-- 收取图像，获取相关元数据 MessageId、FromClientId、URL、Size、Width、Height、Format 等
+//注册消息处理逻辑
+AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
+        new AVIMTypedMessageHandler<AVIMImageMessage>() {
+
+          @Override
+          public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
+          	//只处理 Jerry 这个客户端的消息
+          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
+            if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
+              if () {
+                String fromClientId = msg.getFrom();
+                String messageId = msg.getMessageId();
+                String url = msg.getFileUrl();
+                Map<String, Object> metaData = msg.getFileMetaData();
+                if (metaData.containsKey("size")) {
+                  int size = (Integer) metaData.get("size");
+                }
+                if (metaData.containsKey("width")) {
+                  int width = (Integer) metaData.get("width");
+                }
+                if (metaData.containsKey("height")) {
+                  int height = (Integer) metaData.get("height");
+                }
+                if (metaData.containsKey("format")) {
+                  String format = (String) metaData.get("formate");
+                }
+              }
+            }
+          }
+        });
+        
+    AVIMClient jerry = AVIMClient.getInstance("Jerry");
+    jerry.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+
+        }
+      }
+    });
 ```
 {% endblock %}
 
@@ -634,20 +670,112 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 {% block transientMessage_sent %}
 
 ```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 进入与 Jerry 的对话 id = 551260efe4b01608686c3e0f
-- 在 Tom 输入的同时，向 Jerry 发送提示："Tom 正在输入……"
+//自定义的消息类型，用于发送和接收所有的用户操作消息
+- AVIMOperationMessage.java
+ 
+//指定type类型，可以根据实际换成其他正整数
+@AVIMMessageType(type = 1)
+public class AVIMOperationMessage extends AVIMTypedMessage {
+
+  @AVIMMessageField(name = "op")
+  String op;
+
+  public String getOp() {
+    return op;
+  }
+
+  public void setOp(String op) {
+    this.op = op;
+  }
+}
+- CustomApplication.java
+public CustomApplication extends Application {
+   ...
+   //注册自定义的消息类型
+   AVIMMessageManager.registerAVIMMessageType(AVIMOperationMessage.class);
+   ...
+}
+
+- SomeActivity.java
+
+AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 登录成功
+          AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
+          AVIMOperationMessage msg = new AVIMOperationMessage();
+          msg.setOp("keyboard inputing");
+          conv.sendMessage(msg, AVIMConversation.TRANSIENT_MESSAGE_FLAG,
+              new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                  if (e == null) {
+                    // 发送成功
+                  }
+                }
+              });
+        }
+      }
+    });
+
 ```
 {% endblock %}
 
 {% block transientMessage_received %}
 
 ```
-- 初始化 ClientId = Jerry
-- Jerry 登录到系统
-- 进入与 Tom 的对话 id = 551260efe4b01608686c3e0f
-- 此时收到提示："Tom 正在输入……"
+//自定义的消息类型，用于发送和接收所有的用户操作消息
+- AVIMOperationMessage.java
+ 
+//指定type类型，可以根据实际换成其他正整数
+@AVIMMessageType(type = 1)
+public class AVIMOperationMessage extends AVIMTypedMessage {
+
+  @AVIMMessageField(name = "op")
+  String op;
+
+  public String getOp() {
+    return op;
+  }
+
+  public void setOp(String op) {
+    this.op = op;
+  }
+}
+- CustomApplication.java
+public CustomApplication extends Application {
+   ...
+   //注册自定义的消息类型
+   AVIMMessageManager.registerAVIMMessageType(AVIMOperationMessage.class);
+   ...
+}
+
+- SomeActivity.java
+ 
+  final String USER_OPERATION = "% is %";
+  AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
+        new AVIMTypedMessageHandler<AVIMOperationMessage>() {
+
+          @Override
+          public void onMessage(AVIMOperationMessage msg, AVIMConversation conv, AVIMClient client) {
+            if ("Jerry".equals(client.getClientId())
+                && "551260efe4b01608686c3e0f".equals(conv.getConversationId())) {
+              String opeartion = String.format(USER_OPERATION, msg.getFrom(), msg.getOp());
+              System.out.println(opeartion);
+            }
+          }
+        });
+    AVIMClient jerry = AVIMClient.getInstance("Jerry");
+    jerry.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          // 登录成功
+        }
+      }
+    });
 ```
 {% endblock %}
 
@@ -676,30 +804,77 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 {% block customAttributesMessage_sent %}
 
 ```
-- 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "拉萨布达拉宫" 
-- 设置 Title = "这蓝天……我彻底是醉了"; 
-- 发送
+AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
+          Map<String, Object> attributes = new HashMap<String, Object>();
+          attributes.put("location", "拉萨布达拉宫");
+          attributes.put("Title", "这蓝天……我彻底是醉了");
+          msg.setAttrs(attributes);
+          client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
+              new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                  if (e == null) {
+                    // 发送成功
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
 {% block customAttributesMessage_received %}
 
 ```
-- 初始化 ClientId = friend
-- 登录到系统
-- 接收消息，如果是 Image，读取 Attributes[location]
-- //读取的结果就是拉萨布达拉宫
+    AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
+        new AVIMTypedMessageHandler<AVIMImageMessage>() {
+          @Override
+          public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
+            //此处应该是"拉萨布达拉宫"
+            System.out.println(msg.getAttrs().get("location"));
+          }
+        });
+    AVIMClient friend = AVIMClient.getInstance("friend");
+    friend.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {}
+      }
+    });
 ```
 {% endblock %}
 
 {% block customMessage_create %}
 
 ```
-- 构造一个 AVIMImageMessage
-- 在 Attributes 中加入 location = "拉萨布达拉宫"
-- 设置 Title = "这蓝天让我彻底醉了……";
-- 发送
+AVIMClient tom = AVIMClient.getInstance("Tom");
+    tom.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
+          Map<String, Object> attributes = new HashMap<String, Object>();
+          attributes.put("location", "拉萨布达拉宫");
+          attributes.put("Title", "这蓝天……我彻底是醉了");
+          msg.setAttrs(attributes);
+          client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
+              new AVIMConversationCallback() {
+                @Override
+                public void done(AVIMException e) {
+                  if (e == null) {
+                    // 发送成功
+                  }
+                }
+              });
+        }
+      }
+    });
 ```
 {% endblock %}
 
