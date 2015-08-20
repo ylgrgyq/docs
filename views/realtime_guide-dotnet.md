@@ -539,7 +539,31 @@ AVIMClient.Status != Online
 实时通信 SDK 在封装时对消息做了明确的分层，开发者需要根据自己的需求去使用。
 {% endblock %}
 
-{% block message_Properties_intro %}{% endblock %}
+{% block message_Properties_intro %}
+
+属性|描述
+---|---
+content|消息内容
+clientId|指消息发送者的 clientId
+conversationId|消息所属对话 id
+messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+sendTimestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+deliveredTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
+status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+
+我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
+
+消息 | 类型
+--- | ---
+文本消息|-1
+图像消息|-2
+音频消息|-3
+视频消息|-4
+位置消息|-5
+文件消息|-6
+
+{% endblock %}
 
 {% block attributes %} `AVIMMessage.Attributes` {% endblock %}
 

@@ -505,7 +505,9 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
     });
 ```
 {% endblock %}
-
+{% block videoMessage_received_intro %}
+视频消息的接收与图像消息一样，它的元数据获取都可以通过 `getFileMetaData()` 来获取。
+{% endblock %}
 {% block fileMessage_sent %}
 ```
 
@@ -588,6 +590,11 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% endblock %}
 
 {% block locationMessage_received_intro %}
+
+```
+- 读取地理位置
+```
+
 {% endblock %}
 
 {% block typedMessage_received %}
@@ -781,6 +788,11 @@ public CustomApplication extends Application {
 
 {% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
 
+{% block message_sent_ack %}
+- 发送一个消息并且设置需要送达回执
+- 激发 message delevered 回调 
+{% endblock %}
+
 {% block messagePolicy_received_intro %}
 
 简略的介绍一下 Android 上如何针对消息接收进行响应。
@@ -795,6 +807,29 @@ public CustomApplication extends Application {
 
 {% block message_Properties_intro %}
 - 消息的通用属性，用 Table 展示最佳。此处参照 ios 文档即可。
+
+属性|描述
+---|---
+content|消息内容
+clientId|指消息发送者的 clientId
+conversationId|消息所属对话 id
+messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+sendTimestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+deliveredTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
+status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+
+我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
+
+消息 | 类型
+--- | ---
+文本消息|-1
+图像消息|-2
+音频消息|-3
+视频消息|-4
+位置消息|-5
+文件消息|-6
+ 
 {% endblock %}
 
 {% block attributes %} `AVIMMessage.attributes` {% endblock %}
@@ -1414,6 +1449,15 @@ bob.open(new AVIMClientCallback(){
 	  }
 	}
 });
+```
+{% endblock %}
+
+{% block conversation_messageHistory_pager %}
+```
+- 初始化 ClientId = Tom
+- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
+- 获取最近的 10 条历史消息
+- 再根据上一步的第 10 条消息的 msgId，timestamp 和 limit 获取第二页的数据
 ```
 {% endblock %}
 
