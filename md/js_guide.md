@@ -535,7 +535,7 @@ query.greaterThan("createdAt", new Date("2015-06-26 18:37:09"));
 何 1 到 1000 之间的数值都是合法的，在 0 到 1000 范围之外的都强制转成默认的 100。
 
 ```javascript
-query.limit(10); // limit to at most 10 results
+query.limit(10); // 最多返回 10 条结果
 ```
 
 如果你只想要一个结果，一个更加方便的方法可能是使用 `first`，而不是 `find` 方法.
@@ -556,16 +556,16 @@ query.first({
 你可以用 `skip` 跳过前面的结果，这可能对于分页很有用。
 
 ```javascript
-query.skip(10); // skip the first 10 results
+query.skip(10); // 跳过前 10 条结果
 ```
 
 对于可以排序的类型，比如 number 和 string，你可以控制返回结果的顺序：
 
 ```javascript
-// Sorts the results in ascending order by the score field
+// 升序
 query.ascending("pubUser");
 
-// Sorts the results in descending order by the score field
+// 降序
 query.descending("pubTimestamp");
 ```
 
