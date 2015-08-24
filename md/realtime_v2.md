@@ -64,34 +64,22 @@ LeanCloud 的通信服务允许一个 clientId 在多个不同的设备上登录
 
 用户登录之后，与其他人进行消息沟通，即为开启了一个对话（Conversation）。开始聊天之前，需要先创建或者加入一个对话，然后再邀请其他人进来，之后所有参与者在这个对话内进行交流。所有消息都是由某一个 client 发往一个「对话」。
 
-对话支持如下默认属性：
+系统每创建一个对话，就会在云端的 _Conversation 表中增加一条记录，可以进入控制台 > **应用** > **存储** > **数据** 来查看该数据。
 
-属性名|类型|约束|说明
-:---|:---|:---:|:---
-attributes|Object|可选|自定义属性供开发者自己扩展用。
-conversationId|String||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
-creator|String||对话创建者的 clientId（只读），标识对话创建者信息。
-lastMessageAt|Date||对话最近的一条消息发送或者接收的时间
-members|Array||对话参与者，这里记录了所有的参与者。
-mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。
-name|String|可选|对话的名字，可用来对于群组命名。
-transient|Boolean||表示对话是否为暂态对话
+_Conversation 表中字段名与对话的各个属性的对应关系为：
 
+_Conversation 表字段名|属性名|类型|约束|说明
+---|---|---|---|---
+attr|attributes|Object|可选|自定义属性供开发者自己扩展用。
+objectId|conversationId|String||对话 id（只读），对话创建之后由 LeanCloud 云端赋予一个全局唯一的 id。
+c|creator|String||对话创建者的 clientId（只读），标识对话创建者信息。
+lm|lastMessageAt|Date||对话最近的一条消息发送或者接收的时间
+m|members|Array||对话参与者，这里记录了所有的参与者。
+mu|mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。
+name|name|String|可选|对话的名字，可用来对于群组命名。
+tr|transient|Boolean||表示对话是否为暂态对话
 
-每创建一个对话，就会在 LeanCloud 后台 _Conversation 表中增加一条记录，这可以在 LeanCloud 控制台 > **应用** > **存储** > **数据** 里面看到。各属性与 _Conversation 表中字段名的对应关系为：
-
-属性名|_Conversation 表字段名|类型
-:---|:---|:---
-attributes|attr|Object
-conversationId|objectId|String
-creator|c|String
-lastMessageAt|lm|Date
-members|m|Array
-mute|mu|Array
-name|name|String
-transient|tr|Boolean
-
-除了在各平台的 sdk 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 `_Conversation` 表中，你可以直接通过[数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
+除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
 这里要特别讨论一下**单聊**、**群聊**、**聊天室**的概念。
 
