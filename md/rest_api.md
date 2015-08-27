@@ -370,6 +370,25 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </tbody>
 </table>
 
+### 其他 API
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/date/</td>
+      <td>GET</td>
+      <td>获得服务端当前时间</td>
+    </tr>
+  </tbody>
+</table>
+
 ### 请求格式
 
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 Content-Type 需要设置为 `application/json`。
@@ -2779,6 +2798,26 @@ tag|可选|事件属性的简写方式，等同于属性里面添加：`{event: 
 
 请参考 [搜索 API](./app_search_guide.html#搜索_api)。
 
+## 其他 API
+
+获取服务端当前日期时间可以通过 `/date` API:
+
+```
+curl -i X GET \
+    -H "X-AVOSCloud-Application-Id: {{appid}}" \
+    -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+    https://api.leancloud.cn/1.1/date
+```
+
+返回 UTC 日期:
+
+```json
+{
+  "iso": "2015-08-27T07:38:33.643Z",
+  "__type": "Date"
+}
+```
+
 ## 离线数据分析 API
 
 ### 创建分析 job API
@@ -2787,7 +2826,7 @@ tag|可选|事件属性的简写方式，等同于属性里面添加：`{event: 
 
 创建分析 job。（注意：下面示例直接使用 `X-AVOSCloud-Master-Key`，不过我们推荐你在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
 
-``` json
+``` 
 curl -X POST \
   -H "X-AVOSCloud-Application-Id: {{appid}}" \
   -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
@@ -2800,7 +2839,7 @@ curl -X POST \
 
 * 查询结果自动另存为：
 
-```
+```json
 {  
   "jobConfig":{  
     "sql":"select count(*) as count from table",
