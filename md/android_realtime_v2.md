@@ -781,7 +781,7 @@ class MsgHandler extends AVIMTypedMessageHandler<AVIMTypedMessage> {
       break;
 
     case AVIMReservedMessageType.VideoMessageType:
-      AVIMVideoMessage videoMsg = (AVIMAudioMessage)message;
+      AVIMVideoMessage videoMsg = (AVIMVideoMessage)message;
       Logger.id("收到视频消息。msgId=" + videoMsg.getMessageId() + ", url=" + videoMsg.getFileUrl() + ", duration=" + videoMsg.getDuration());
       break;
 
@@ -1118,9 +1118,9 @@ conversation.queryMessages(oldestMsgId,oldestMsgTimestamp, limit, new AVIMMessag
 * name，字符串，对话的名字，optional，可用来对于群组命名
 * attributes，Map/Dict，自定义属性，optional，供开发者自己扩展用。
 
-我们提供了专门的类，来搜索特定的群组：通过 `imClient.getQuery()` 得到一个 `AVIMConversationQuery` 实例，然后调用 `AVIMConversationQuery.whereXXX` 系列方法来增加约束条件。
+我们提供了专门的类，来搜索特定的群组：通过 `imClient.getQuery()` 得到一个 `AVIMConversationQuery` 实例，然后调用 `AVIMConversationQuery.whereXXX` 系列方法来增加约束条件。搜索默认返回 10 个结果，也可以通过 `AVIMConversationQuery.setLimit` 方法来改变这一默认数量。
 
-`AVIMConversationQuery` 的使用方法与 [AVQuery](./android_guide.html#查询) 一样，例如要搜索当前登录用户参与的所有群聊对话，其代码为
+`AVIMConversationQuery` 的使用方法与 [AVQuery](./android_guide.html#查询) 一样，例如要搜索当前登录用户参与的所有群聊对话，其代码为：
 
 ```
 // 搜索 Tom 参与的所有群组对话
@@ -1133,6 +1133,9 @@ conversationQuery.containsMember(clients);
 // const int ConversationType_OneOne = 0;
 // const int ConversationType_Group = 1;
 conversationQuery.whereEqualTo("attr.type", ConversationType_Group);
+
+//返回 20 个结果 
+conversationQuery.setLimit(20);
 
 conversationQuery.findInBackground(new AVIMConversationQueryCallback(){
   @Override
