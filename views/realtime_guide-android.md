@@ -435,6 +435,44 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% endblock %}
 
 {% block audioMessage_received_intro %}
+
+```
+AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
+        new AVIMTypedMessageHandler<AVIMAudioMessage>() {
+
+          @Override
+          public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+          	//只处理 Jerry 这个客户端的消息
+          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
+            if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
+              if () {
+                String fromClientId = msg.getFrom();
+                String messageId = msg.getMessageId();
+                String url = msg.getFileUrl();
+                Map<String, Object> metaData = msg.getFileMetaData();
+                if (metaData.containsKey("size")) {
+                  int size = (Integer) metaData.get("size");
+                }
+                  if (metaData.containsKey("format")) {
+                  String format = (String) metaData.get("formate");
+                }
+              }
+            }
+          }
+        });
+        
+    AVIMClient jerry = AVIMClient.getInstance("Jerry");
+    jerry.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+
+        }
+      }
+    });
+
+```
+
 {% endblock %}
 
 {% block videoMessage_local_sent %}
@@ -545,6 +583,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% endblock %}
 
 {% block fileMessage_received_intro %}
+文件消息的接收与图像消息一样，它的元数据获取都可以通过 `getFileMetaData()` 来获取。
 {% endblock %}
 
 {% block locationMessage_new %}
@@ -592,7 +631,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% block locationMessage_received_intro %}
 
 ```
-- 读取地理位置
+地址消息的接收与图像消息一样，它的地址信息可以通过 `getLocation` 方法来获取
 ```
 
 {% endblock %}
@@ -789,24 +828,41 @@ public CustomApplication extends Application {
 {% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
 
 {% block message_sent_ack %}
-- 发送一个消息并且设置需要送达回执
-- 激发 message delevered 回调 
+
+```
+AVIMMessageHandler handler = new AVIMMessageHandler(){
+
+    public void onMessageReceipt(AVIMMessage message, AVIMConversation conversation, AVIMClient client) {
+     //此处就是对方收到消息以后的回调
+	  Log.i("Tom & Jerry","msg received");
+  }
+}
+
+//注册对应的handler
+AVIMMessageManager.registerMessageHandler(AVIMMessage.class,handler);
+
+//发送消息
+
+AVIMClient jerry = AVIMClient.getInstance("Jeery");
+AVIMConversation conv = jerry.getConversation("551260efe4b01608686c3e0f");
+AVIMMessage msg = new AVIMMessage();
+msg.setContent("Ping");
+conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
+
+```
 {% endblock %}
 
-{% block messagePolicy_received_intro %}
-
-简略的介绍一下 Android 上如何针对消息接收进行响应。
-
-{% endblock %}
+{% block messagePolicy_received_intro %}{% endblock %}
 
 
 {% block message_Relation_intro %}
-- 此处解释一下消息类的继承关系，最好是有一张类图。
+消息类型之间的关系
+
+![消息的类图](http://ac-lhzo7z96.clouddn.com/1440485935481)
 
 {% endblock %}
 
 {% block message_Properties_intro %}
-- 消息的通用属性，用 Table 展示最佳。此处参照 ios 文档即可。
 
 属性|描述
 ---|---
@@ -814,9 +870,9 @@ content|消息内容
 clientId|指消息发送者的 clientId
 conversationId|消息所属对话 id
 messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
-sendTimestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
-deliveredTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
-status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+timestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+receiptTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
+status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusReceipt`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
 ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
 
 我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
