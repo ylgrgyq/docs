@@ -475,7 +475,35 @@ iOS 暂不支持发送通用文件消息，已在计划中，近期发布。
 
 {% block messagePolicy_received %}{% endblock %}
 
-{% block message_Relation_intro %}{% endblock %}
+{% block message_Relation_intro %}
+        
+                                                                +---------------+                                                           
+                                                                |               |                                                           
+                                                                |  AVIMMessage  |                                                           
+                                                                |               |                                                           
+                                                                +-------+-------+                                                           
+                                                                        |                                                                   
+                                                                        |                                                                   
+                                                              +---------+----------+                                                        
+                                                              |                    |                                                        
+                                                              |  AVIMTypedMessage  |                                                        
+                                                              |                    |                                                        
+                                                              +---------+----------+                                                        
+                                                                        |                                                                   
+                                                                        |                                                                   
+                                                                        |                                                                   
+             +---------------------+----------------------+-------------+---------+----------------------+------------------------+         
+             |                     |                      |                       |                      |                        |         
+             |                     |                      |                       |                      |                        |         
+             |                     |                      |                       |                      |                        |         
+    +--------+--------+   +--------+---------+   +--------+---------+   +---------+--------+   +---------+-----------+   +--------+--------+
+    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
+    | AVIMTextMessage |   | AVIMImageMessage |   | AVIMAudioMessage |   | AVIMVedioMessage |   | AVIMLocationMessage |   | AVIMFileMessage |
+    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
+    +-----------------+   +------------------+   +------------------+   +------------------+   +---------------------+   +-----------------+
+
+
+{% endblock %}
 
 {% block message_Properties_intro %}
 所有消息都是 `AVIMMessage` 的实例，每种消息实例都具备如下属性：
@@ -1137,17 +1165,20 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 
 {% block chatroom_count %}
 ```objc
-- (void)TomCountFirstConversationMembers {
+- (void)TomCountChatroomConversationMembers {
     // Tom 创建了一个 client
     self.client = [[AVIMClient alloc] init];
-
+    NSString *conversationId=@"55dd9d7200b0c86eb4fdcbaa";
     // Tom 用自己的名字作为 ClientId 打开 client
     [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
-        // Tom 创建一个查询会话列表的查询
+        // Tom 创建一个对话的查询
         AVIMConversationQuery *query = [self.client conversationQuery];
-        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
-            // Tom 查看会话列表中成员的数量
-            NSLog(@"%ld", [[objects firstObject] count]);
+        // 根据已知 Id 获取对话实例，当前实例为聊天室。
+        [query getConversationById:conversationId callback:^(AVIMConversation *conversation, NSError *error) {
+            // 查询在线人数
+            [conversation countMembersWithCallback:^(NSInteger number, NSError *error) {
+                NSLog(@"%ld",number);
+            }];
         }];
     }];
 }
@@ -1386,3 +1417,4 @@ imClient.delegate = self;
 }];
 ```
 {% endblock %}
+	

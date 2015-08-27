@@ -863,6 +863,7 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 {% endblock %}
 
 {% block message_Properties_intro %}
+消息类均包含以下属性：
 
 属性|描述
 ---|---
