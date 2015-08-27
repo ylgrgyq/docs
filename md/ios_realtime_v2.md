@@ -960,13 +960,15 @@ if (open) {
 
 * 先通过 `[imClient conversationQuery]` 得到一个 `AVIMConversationQuery` 实例，
 * 然后调用 `[AVIMConversationQuery whereKey:xxxTo:]` 系列方法来增加约束条件。
+* 搜索默认返回 10 个结果，也可以通过 `AVIMConversationQuery.limit` 属性来改变这一默认数量。
 
-`AVIMConversationQuery` 的使用方法与 [AVQuery](./ios_os_x_guide.html#查询) 一样，例如要搜索当前登录用户参与的所有群聊对话，其代码为
+`AVIMConversationQuery` 的使用方法与 [AVQuery](./ios_os_x_guide.html#查询) 一样，例如要搜索当前登录用户参与的所有群聊对话，其代码为：
 
 ```
 AVIMConversationQuery *query = [imClient conversationQuery];
 [query whereKey:kAVIMKeyMember containedIn:@[[AVUser currentUser].objectId]];
 [query whereKey:AVIMAttr(@"type") equalTo:[NSNumber numberWithInt:kConversationType_Group]];
+query.limit = 20;
 [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
     if (error) {
         UIAlertView *view = [[UIAlertView alloc] initWithTitle:@"操作失败！" message:[error description] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
