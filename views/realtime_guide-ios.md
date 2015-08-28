@@ -447,12 +447,81 @@ iOS 暂不支持发送通用文件消息，已在计划中，近期发布。
 {% endblock %}
 
 {% block typedMessage_received %}
-```
+```objc
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message;
 ```
 {% endblock %}
 
-{% block transientMessage_sent %}{% endblock %}
+{% block transientMessage_sent %}
+
+typedef NS_ENUM(NSInteger, YourCustomMessageType) {
+    YourCustomMessageTypeOperation = 1
+};
+
+```objc
+@interface YourOperationMessage : AVIMTextMessage <AVIMTypedMessageSubclassing>
+
+@end
+
+@implementation YourOperationMessage
+
++ (AVIMMessageMediaType)classMediaType {
+    return YourCustomMessageTypeOperation;
+}
+
+@end
+
+@implementation ViewController
+
++ (void)load {
+    // 自定义消息需要注册
+    [YourOperationMessage registerSubclass];
+}
+
+- (void)TomOpenConversation {
+    // Tom 创建了一个 client
+    self.tomClient = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.tomClient openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        AVIMConversationQuery *query = [self.tomClient conversationQuery];
+        // Tom 获取 id 为 551260efe4b01608686c3e0f 的会话
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+            self.tomConversation = conversation;
+        }];
+    }];
+}
+
+- (void)textFieldDidChange:(UITextField *)textField {
+    // 发送一条暂态消息给 Jerry，让 Jerry 知道 Tom 正在输入
+    YourOperationMessage *message = [YourOperationMessage messageWithText:@"Inputing" attributes:nil];
+    [self.tomConversation sendMessage:message options:AVIMMessageSendOptionTransient callback:nil];
+}
+
+@end
+```
+{% endblock %}
+
+{% block transientMessage_received %}
+
+```objc
+- (void)JerryOnline {
+    // Jerry 创建了一个 client
+    self.jerryClient = [[AVIMClient alloc] init];
+
+    // Jerry 用自己的名字作为 ClientId 打开 client
+    [self.jerryClient openWithClientId:@"Jerry" callback:^(BOOL succeeded, NSError *error) {
+        NSLog("Jerry opened client")
+    }];
+}
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    if (message.mediaType == YourCustomMessageTypeOperation) {
+        NSLog(@"Inputing...");
+    }
+}
+```
+{% endblock %}
 
 {% block messagePolicy_sent %}{% endblock %}
 
