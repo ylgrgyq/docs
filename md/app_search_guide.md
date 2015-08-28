@@ -4,7 +4,7 @@
 
 在应用内使用全文搜索是一个很常见的需求。例如我开发了一个阅读类的应用，里面有很多有价值的文章，我当然希望能提供一个搜索框给用户，用户键入任何关键字，都可以查找到应用内相关的文章，并按照评分排序。类似我直接在 Chrome 浏览器键入关键字打开 Google 搜索一样。
 
-但是应用内的搜索，跟浏览器端的搜索还不大一样，应用内的搜索结果，我希望打开的不是一个 Web 页面，更希望是应用内的一个页面，比如在我的阅读 Android 应用里，我希望用`ReadActivity`来打开搜索结果的一篇文章，就跟直接打开这篇文章一样。更进一步，我希望用户可以使用移动设备在网页或者应用里搜索关键字的时候：
+但是应用内的搜索，跟浏览器端的搜索还不大一样，应用内的搜索结果，我希望打开的不是一个 Web 页面，更希望是应用内的一个页面，比如在我的阅读 Android 应用里，我希望用 `ReadActivity` 来打开搜索结果的一篇文章，就跟直接打开这篇文章一样。更进一步，我希望用户可以使用移动设备在网页或者应用里搜索关键字的时候：
 
 * 如果用户安装了应用，就直接打开应用并跳转到正确的页面
 * 如果用户没有安装应用，我希望能显示一个应用的下载页面给用户，让用户来安装我的应用；
@@ -328,10 +328,10 @@ searchQuery.setSortBuilder(builder);
 	  search.findInBackgroud(new FindCallback<AVObject>() {
 
 		@Override
-		public void done(List<AVObject> parseObjects, AVException parseException) {
-		  if (parseException == null) {
-			 //你可以使用parseObjects来展现自己的UI
-			 for(AVObject o:parseObjects){
+		public void done(List<AVObject> objects, AVException exception) {
+		  if (exception == null) {
+			 //你可以使用 objects来展现自己的UI
+			 for(AVObject o : objects){
 				//这里可以得到搜索结果和您的应用所对应的AppUrl
 				String appUrl = o.getString(AVConstants.AVSEARCH_APP_URL);
 				//这里可以得到搜索结果对应的语法高亮
@@ -559,12 +559,12 @@ curl -X GET \
 ### 地理位置信息查询
 
 
-如果 class 里某个列是 `GeoPoint`类型，那么可以根据这个字段的地理位置远近来排序，例如假设字段 `location` 保存的是 `GeoPoint`类型，那么查询 `[-70, 40]` 附近的玩家可以通过设定 sort 为：
+如果 class 里某个列是 `GeoPoint`类型，那么可以根据这个字段的地理位置远近来排序，例如假设字段 `location` 保存的是 `GeoPoint`类型，那么查询 `[39.9, 116.4]` 附近的玩家可以通过设定 sort 为：
 
 ```json
 {
   "_geo_distance" : {
-                "location" : [-70, 40],
+                "location" : [39.9, 116.4],
                 "order" : "asc",
                 "unit" : "km",
                 "mode" : "min",
