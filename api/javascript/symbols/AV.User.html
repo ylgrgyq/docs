@@ -195,8 +195,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/AV.ACL.html">AV.ACL</a></li>
 	
-	<li><a href="../symbols/AV.BigQuery.html">AV.BigQuery</a></li>
-	
 	<li><a href="../symbols/AV.Cloud.html">AV.Cloud</a></li>
 	
 	<li><a href="../symbols/AV.Cloud.AfterSaveRequest.html">AV.Cloud.AfterSaveRequest</a></li>
@@ -253,8 +251,6 @@ ul.inheritsList
 	
 	<li><a href="../symbols/AV.Op.Unset.html">AV.Op.Unset</a></li>
 	
-	<li><a href="../symbols/AV.Promise.html">AV.Promise</a></li>
-	
 	<li><a href="../symbols/AV.Push.html">AV.Push</a></li>
 	
 	<li><a href="../symbols/AV.Query.html">AV.Query</a></li>
@@ -303,7 +299,7 @@ user specific methods, like authentication, signing up, and validation of
 uniqueness.</p>
 				
 				
-					<br /><i>Defined in: </i> <a href="../symbols/src/dist_av.js.html">av.js</a>.
+					<br /><i>Defined in: </i> <a href="../symbols/src/lib_user.js.html">user.js</a>.
 				
 			</p>
 
@@ -774,7 +770,7 @@ If verify successfully,the user mobilePhoneVerified attribute will be true.</div
 					<a name=".become"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>become</b>(sessionToken, options)
 					
 					</div>
@@ -815,7 +811,7 @@ to disk, so you can retrieve the currently logged in user using
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login completes.</dd>
 							
 							</dl>
@@ -1263,7 +1259,7 @@ either from memory or localStorage, if necessary.
 					<a name=".logIn"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>logIn</b>(username, password, options)
 					
 					</div>
@@ -1310,7 +1306,7 @@ user using <code>current</code>.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login completes.</dd>
 							
 							</dl>
@@ -1330,7 +1326,7 @@ user using <code>current</code>.
 					<a name="logIn"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<b>logIn</b>(options)
 					
 					</div>
@@ -1367,7 +1363,7 @@ so you can retrieve the currently logged in user using
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login is complete.</dd>
 							
 							</dl>
@@ -1387,7 +1383,7 @@ so you can retrieve the currently logged in user using
 					<a name=".logInWithMobilePhone"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>logInWithMobilePhone</b>(mobilePhone, password, options)
 					
 					</div>
@@ -1434,7 +1430,7 @@ user using <code>current</code>.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login completes.</dd>
 							
 							</dl>
@@ -1454,7 +1450,7 @@ user using <code>current</code>.
 					<a name=".logInWithMobilePhoneSmsCode"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>logInWithMobilePhoneSmsCode</b>(mobilePhone, smsCode, options)
 					
 					</div>
@@ -1502,7 +1498,7 @@ user using <code>current</code>.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login completes.</dd>
 							
 							</dl>
@@ -1826,7 +1822,7 @@ reset their account's password by calling AV.User.resetPasswordBySmsCode
 					<a name=".resetPasswordBySmsCode"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>resetPasswordBySmsCode</b>(code, password, options)
 					
 					</div>
@@ -1870,7 +1866,7 @@ The sms code is sent by AV.User.requestPasswordResetBySmsCode.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that will be resolved with the result
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that will be resolved with the result
 of the function.</dd>
 							
 							</dl>
@@ -2162,7 +2158,7 @@ of the function.</dd>
 					<a name=".signUp"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>signUp</b>(username, password, attrs, options)
 					
 					</div>
@@ -2216,7 +2212,7 @@ session in localStorage so that you can access the user using
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the signup completes.</dd>
 							
 							</dl>
@@ -2236,7 +2232,7 @@ session in localStorage so that you can access the user using
 					<a name="signUp"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<b>signUp</b>(attrs, options)
 					
 					</div>
@@ -2280,7 +2276,7 @@ also persist the session on disk so that you can access the user using
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled when the signup
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled when the signup
     finishes.</dd>
 							
 							</dl>
@@ -2300,7 +2296,7 @@ also persist the session on disk so that you can access the user using
 					<a name=".signUpOrlogInWithMobilePhone"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>signUpOrlogInWithMobilePhone</b>(mobilePhoneNumber, smsCode, attributes, options)
 					
 					</div>
@@ -2353,7 +2349,7 @@ logged in user using <code>current</code>.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled with the user when
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled with the user when
     the login completes.</dd>
 							
 							</dl>
@@ -2375,7 +2371,7 @@ logged in user using <code>current</code>.
 					<a name="signUpOrlogInWithMobilePhone"> </a>
 					<div class="fixedFont">
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<b>signUpOrlogInWithMobilePhone</b>(attrs, options)
 					
 					</div>
@@ -2420,7 +2416,7 @@ also persist the session on disk so that you can access the user using
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that is fulfilled when the signup
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that is fulfilled when the signup
     finishes.</dd>
 							
 							</dl>
@@ -2542,7 +2538,7 @@ also persist the session on disk so that you can access the user using
 					<a name=".verifyMobilePhone"> </a>
 					<div class="fixedFont">&lt;static&gt; 
 					
-					<span class="light">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span>
+					<span class="light">{AV.Promise}</span>
 					<span class="light">AV.User.</span><b>verifyMobilePhone</b>(code, options)
 					
 					</div>
@@ -2580,7 +2576,7 @@ If verify successfully,the user mobilePhoneVerified attribute will be true.
 							<dl class="detailList">
 							<dt class="heading">Returns:</dt>
 							
-								<dd><span class="light fixedFont">{<a href="../symbols/AV.Promise.html">AV.Promise</a>}</span> A promise that will be resolved with the result
+								<dd><span class="light fixedFont">{AV.Promise}</span> A promise that will be resolved with the result
 of the function.</dd>
 							
 							</dl>
@@ -2602,7 +2598,7 @@ of the function.</dd>
 <!-- ============================== footer ================================= -->
 		<div class="fineprint" style="clear:both">
 			
-			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Thu Jul 30 2015 14:54:12 GMT+0800 (CST)
+			Documentation generated by <a href="http://code.google.com/p/jsdoc-toolkit/" target="_blank">JsDoc Toolkit</a> 2.4.0 on Fri Aug 28 2015 11:55:10 GMT+0800 (CST)
 		</div>
 	</body>
 </html>
