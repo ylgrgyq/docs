@@ -411,8 +411,8 @@ relation.add([post1, post2, post3]);
 user.save();
 ```
 
-默认情况下，`relation` 关联的对象不会被同步获取到，你可以通过使用 `query` 方法返回的 AV.Query 
-对象来获取 AV.Object 的列表，例如：
+默认情况下，`relation` 关联的对象不会被同步获取到，你可以通过使用 `query` 方法返回的 AV.Query
+ 对象来获取 AV.Object 的列表，例如：
 
 ```javascript
 relation.query().find({
@@ -710,8 +710,8 @@ query.find({
 });
 ```
 
-如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 
-`matchesQuery` 操作。注意默认的结果条数限制 100 和最大值 1000 也同样适用于子查询，
+如果你想得到其字段中包含的子对象满足另一个查询的结果，你可以使用 `matchesQuery` 操作。
+注意默认的结果条数限制 100 和最大值 1000 也同样适用于子查询，
 所以对于大的数据集你可能需要小心构建你的查询，否则可能出现意料之外的状
 况。例如，为了找到有图片的微博的评论，你可以:
 
@@ -1900,8 +1900,8 @@ groupMessage.setACL(groupACL);
 groupMessage.save();
 ```
 
-你同样可以对所有的用户授权，只要使用 setPublicReadAccess 和 
-setPublicWriteAccess 就可以了。这样允许了在一个消息板上发评论的模式，比如我
+你同样可以对所有的用户授权，只要使用 setPublicReadAccess 和 setPublicWriteAccess 就可以了。
+这样允许了在一个消息板上发评论的模式，比如我
 们要创建一个 post 只能被它的作者修改，但是可以被所有人读取：
 
 ```javascript
@@ -1924,7 +1924,19 @@ AV.Error.OBJECT_NOT_FOUND 的错误码。为了安全起见，这样防止了客
 为了能让用户重设密码，应该要求用户提供他们的 email 地址，然后这样调用:
 
 ```javascript
+// 邮件重置
 AV.User.requestPasswordReset("email@example.com", {
+  success: function() {
+    // Password reset request was sent successfully
+  },
+  error: function(error) {
+    // Show the error message somewhere
+    alert("Error: " + error.code + " " + error.message);
+  }
+});
+
+// 短信重置
+AV.User.requestPasswordResetBySmsCode("18212346648", {
   success: function() {
     // Password reset request was sent successfully
   },
@@ -2234,8 +2246,7 @@ query.find({
 在这时 posts 会返回一个按离 userGeoPoint 的距离排序的列表。注意如果
 在 AV.Query 上调用了 `ascending()`/`descending()` 的话，指定的排序属性会取代距离。
 
-为了按距离限制返回的结果，你还可以使用 `withinMiles`、`withinKilometers` 和 
-`withinRadians`。
+为了按距离限制返回的结果，你还可以使用 `withinMiles`、`withinKilometers` 和 `withinRadians`。
 
 同样地，也可以查询在特定地域的对象。为了找到用矩形表示的一块地域中的对
 象，需要在 AV.Query 中加入 `withinGeoBox` 约束条件：
