@@ -1,4 +1,4 @@
-### 自动安装
+#### 自动安装
 
 [CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化的简化安装过程。
 
@@ -33,14 +33,14 @@ pod 'AVOSCloudCrashReportingDynamic'
 然后在项目根目录执行 `pod install` 命令，就能将 LeanCloud iOS SDK 集成到你的项目中。
 
 
-### 手动安装
+#### 手动安装
 
 你也可以手动将 LeanCloud iOS SDK 集成到项目中。
 
 iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上，使用动态库是个不错的选择。
 
 
-#### 目录结构
+##### 目录结构
 
 首先，从下面的地址下载最新版本的 iOS SDK：
 
@@ -53,7 +53,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 就像目录名描述的那样，Dynamic 目录下存放着动态库，Static 目录下存放着静态库。
 
 
-#### 安装动态库
+##### 安装动态库
 
 首先，准备好待集成的模块。将它们放入同一个目录中：
 
@@ -80,7 +80,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 这样就集成完毕了。
 
 
-#### 安装静态库
+##### 安装静态库
 
 <div class="callout callout-info">确保你正在使用最新版本的 Xcode（4.6+），并且面向 iOS 4.3 或者更高版本。我们推荐 Xcode 5 和 iOS 5 或以上系统。</div>
 
@@ -125,7 +125,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/all_load.png)
 
-### 初始化 SDK
+#### 初始化 SDK
 
 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
 
@@ -170,6 +170,6 @@ AVObject *testObject = [AVObject objectWithClassName:@"TestObject"];
 运行你的 app，一个类为 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
 
 
-### 社交组件
+#### 社交组件
 
 最后，如果希望使用社交组件功能，可以使用我们的开源组件：[leancloud-social-ios](https://github.com/leancloud/leancloud-social-ios)。
