@@ -88,6 +88,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 ```xml
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 为了让应用能在关闭的情况下也可以收到推送，你需要在`<application>`中加入：
