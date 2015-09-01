@@ -1,4 +1,6 @@
 # LeanCloud Documentation
+[![Build Status](https://travis-ci.org/leancloud/docs.svg)](https://travis-ci.org/leancloud/docs)
+[![devDependency Status](https://david-dm.org/leancloud/docs/dev-status.svg)](https://david-dm.org/leancloud/docs#info=devDependencies)
 
 LeanCloud 开发者文档
 
@@ -56,11 +58,11 @@ $ grunt server
   ```
 
   后续的内容就是用：
-  
+
   ```
   {% block <blockName> %}<不同文档之间的差异>{% endblock%}
   ```
-  
+
   来替换模板中存在的 block。可以参考 [leanengine_guide-node.tmpl](https://github.com/leancloud/docs/blob/master/views/leanengine_guide-node.md)
 * 生成文档：使用下列命令会在 md 文件夹中生成最终的 md 文件：
 
