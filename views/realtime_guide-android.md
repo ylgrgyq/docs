@@ -133,9 +133,10 @@ public void jerryReceiveMsgFromTom(){
 #### MessageHandler 的处理逻辑
 
 在 Android SDK 中接收消息的 AVIMMessageHandler 在 AVIMMessageManager 中进行注册时有两个不同的方法： `registerDefaultMessageHandler` 和 `registerMessageHandler`。
-在 `AVIMMessageManager` 中多次注册 `defaultMessageHandler` ，只有最后一次调用的才是有效的；而通过 `registerMessageHandler` 注册的 `AVIMMessageHandler`，则是可以同存的。
 
 当客户端收到一条消息的时候，会优先根据消息类型通知当前所有注册的对应类型的普通的 `messageHandler`,如果发现当前没有任何注册的普通的 `messageHandler`，才会去通知 `defaultMessageHandler`。
+
+在 `AVIMMessageManager` 中多次注册 `defaultMessageHandler` ，只有最后一次调用的才是有效的；而通过 `registerMessageHandler` 注册的 `AVIMMessageHandler`，则是可以同存的。
 
 通过在UI组件(比如 Activity)的 `onCreate` 方法中间去调用 `registerMessageHandler`,而在 `onPaused` 方法中间调用 `unregisterMessageHandler` 的组合，让对应的 `messageHandler` 处理当前页面的处理逻辑；而当没有页面时，则通过 defaultMessageHandler 去发送 `Notification`。
 
@@ -250,6 +251,7 @@ public void sendImage(String filePath){
     public void done(AVIMClient client,AVIMException e){
       if(e==null){
       //登录成功
+      // 创建对话，默认创建者是在包含在成员列表中的
       client.createConversation(Arrays.asList("Jerry"),new AVIMConversationCreatedCallback(){
       
         @Override
@@ -1429,12 +1431,30 @@ tom.open(new AVIMClientCallback(){
 	    public void done(List<AVIMConversation> convs,AVIMException e){
 	      if(e==null){
           //convs就是获取到的conversation列表
+          //注意：按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
 	      }
 	    }
 	  });	  
 	  }
 	}
 });
+```
+{% endblock %}
+
+{% block conversation_query_limit %}
+
+```
+AVIMConversationQuery query = client.getQuery();
+query.limit(10);
+query.findInBackground(new AVIMConversationQueryCallback(){
+	@Override
+	public void done(List<AVIMConversation> convs,AVIMException e){
+	if(e==null){
+    //convs就是获取到的conversation列表
+    //注意：按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
+	}
+	}
+});	
 ```
 {% endblock %}
 
@@ -1486,7 +1506,7 @@ bob.open(new AVIMClientCallback(){
 		       //返回的消息一定是时间增序排列，也就是最早的消息一定是第一个
 		       AVIMMessage oldestMessage = messages.get(0);
 		       
-		       conv.queryMessages(eldestMessage.getMessageId(),eldestMessage.getTimestamp(),20,
+		       conv.queryMessages(oldestMessage.getMessageId(), oldestMessage.getTimestamp(),20,
 		       new AVIMMessageQueryCallback(){
 		         @Override
 		         public void done(List<AVIMMessage> msgs,AVIMException e){
@@ -1508,10 +1528,24 @@ bob.open(new AVIMClientCallback(){
 
 {% block conversation_messageHistory_pager %}
 ```
-- 初始化 ClientId = Tom
-- 获取对话对象 id = 2f08e882f2a11ef07902eeb510d4223b
-- 获取最近的 10 条历史消息
-- 再根据上一步的第 10 条消息的 msgId，timestamp 和 limit 获取第二页的数据
+final int pageSize=10;
+conversation.queryMessages(pageSize,new AVIMMessagesQueryCallback() {
+@Override
+public void done(List<AVIMMessage> firstPage, AVIMException e) {
+    if(firstPage!=null && !firstPage.isEmpty()) {
+        Log.d("Tom & Jerry", "got " + firstPage.size() + " messages ");
+
+        // 获取第一页的消息里面最旧的一条消息
+        AVIMMessage pager = firstPage.get(0);
+        conversation.queryMessages(pager.getMessageId(), pager.getReceiptTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
+        @Override
+        public void done(List<AVIMMessage> secondPage, AVIMException e) {
+            // secondPage 就是第二页的数据
+        }
+        });
+    }
+    }
+});
 ```
 {% endblock %}
 
