@@ -494,7 +494,7 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 
 - (void)textFieldDidChange:(UITextField *)textField {
     // 发送一条暂态消息给 Jerry，让 Jerry 知道 Tom 正在输入
-    YourOperationMessage *message = [YourOperationMessage messageWithText:@"Inputing" attributes:nil];
+    YourOperationMessage *message = [YourOperationMessage messageWithText:@"正在输入……" attributes:nil];
     [self.tomConversation sendMessage:message options:AVIMMessageSendOptionTransient callback:nil];
 }
 
@@ -517,7 +517,7 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 
 - (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
     if (message.mediaType == YourCustomMessageTypeOperation) {
-        NSLog(@"Inputing...");
+        NSLog(@"正在输入……");
     }
 }
 ```
@@ -1234,7 +1234,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 
 {% block chatroom_count %}
 ```objc
-- (void)TomCountChatroomConversationMembers {
+- (void)tomCountsChatroomMembers{
     // Tom 创建了一个 client
     self.client = [[AVIMClient alloc] init];
     NSString *conversationId=@"55dd9d7200b0c86eb4fdcbaa";

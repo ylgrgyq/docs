@@ -112,7 +112,7 @@ public class MyApplication extends Application{
    ...
  }
 ...
-public void JerryReceiveMsgFromTom(){
+public void jerryReceiveMsgFromTom(){
   //Jerry登录
   AVIMClient jerry = AVIMClient.getInstance("Jerry");
   jerry.open(new AVIMClientCallback(){
@@ -130,7 +130,7 @@ public void JerryReceiveMsgFromTom(){
 {% endblock %}
 
 {% block androidMessageHandler %}
-#### MessageHandler的处理逻辑
+#### MessageHandler 的处理逻辑
 
 在 Android SDK 中接收消息的 AVIMMessageHandler 在 AVIMMessageManager 中进行注册时有两个不同的方法： `registerDefaultMessageHandler` 和 `registerMessageHandler`。
 在 `AVIMMessageManager` 中多次注册 `defaultMessageHandler` ，只有最后一次调用的才是有效的；而通过 `registerMessageHandler` 注册的 `AVIMMessageHandler`，则是可以同存的。
@@ -209,7 +209,7 @@ public class MyApplication extends Application{
     Log.d("Tom & Jerry",msg.getText();)//你们在哪儿?
     AVIMTextMessage reply = new AVIMTextMessage();
     reply.setText("Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
-    conversation.sendMessage(reply,new AVIMConversationCallback(){
+    conv.sendMessage(reply,new AVIMConversationCallback(){
   	   public void done(AVIMException e){
   	     if(e==null){
   	     //回复成功!
@@ -223,7 +223,7 @@ public class MyApplication extends Application{
   }
   
 - SomeActivity.java
-public void loginAsJerry(){
+public void loginAsBob(){
 	AVIMClient bob = AVIMClient.getInstance("Bob");
 	//Bob登录
 	bob.open(new AVIMClientCallback(){
@@ -331,7 +331,6 @@ AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
           	//只处理 Jerry 这个客户端的消息
           	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
             if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
-              if () {
                 String fromClientId = msg.getFrom();
                 String messageId = msg.getMessageId();
                 String url = msg.getFileUrl();
@@ -346,9 +345,8 @@ AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
                   int height = (Integer) metaData.get("height");
                 }
                 if (metaData.containsKey("format")) {
-                  String format = (String) metaData.get("formate");
+                  String format = (String) metaData.get("format");
                 }
-              }
             }
           }
         });
@@ -445,7 +443,6 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
           	//只处理 Jerry 这个客户端的消息
           	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
             if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
-              if () {
                 String fromClientId = msg.getFrom();
                 String messageId = msg.getMessageId();
                 String url = msg.getFileUrl();
@@ -454,9 +451,8 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
                   int size = (Integer) metaData.get("size");
                 }
                   if (metaData.containsKey("format")) {
-                  String format = (String) metaData.get("formate");
+                  String format = (String) metaData.get("format");
                 }
-              }
             }
           }
         });
@@ -489,7 +485,7 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
                 public void done(AVIMConversation conv, AVIMException e) {
                   if (e == null) {
                     AVFile file =
-                        AVFile.withAbsoluteLocalPath("bbc_奶酪.mp3", localFilePath);
+                        AVFile.withAbsoluteLocalPath("bbc_奶酪.mp4", localFilePath);
                     AVIMVideoMessage m = new AVIMVideoMessage(file);
                     // 创建一条视频消息
                     conv.sendMessage(m, new AVIMConversationCallback() {
@@ -865,16 +861,16 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 {% block message_Properties_intro %}
 消息类均包含以下属性：
 
-属性|描述
----|---
-content|消息内容
-clientId|指消息发送者的 clientId
-conversationId|消息所属对话 id
-messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
-timestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
-receiptTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
-status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusReceipt`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
-ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+属性|描述|类型
+---|---|---
+content|消息内容|String
+clientId|指消息发送者的 clientId |String
+conversationId|消息所属对话 id|String
+messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id |String
+timestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。|long
+receiptTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。|long
+status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusReceipt`（被接收）<br/>`AVIMMessageStatusFailed`（失败）|AVIMMessageStatus 枚举
+ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）|AVIMMessageIOType 枚举
 
 我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
 
@@ -1241,7 +1237,7 @@ No.|操作者（管理员）|被踢者|其他人
 3|收到 onMemberLeft 通知| |收到 onMemberLeft 通知
 {% endblock %}
 
-{% block conversation_countMember_method %} `conversation:countMembersWithCallback:` {% endblock %}
+{% block conversation_countMember_method %} `AVIMConversation.getMemberCount` {% endblock %}
 
 {% block conversation_countMember %}
 
@@ -1453,7 +1449,8 @@ bob.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
-	  int limit = 10;// limit 取值范围 1~1000 之内的整数，默认为 20
+	  int limit = 10;// limit 取值范围 1~1000 之内的整数
+	  // 不使用 limit 默认返回 20 条消息
 	  conv.queryMessages(limit,new AVIMMessagesQueryCallback(){
 	    @Override
 	    public void done(List<AVIMMessage> messages,AVIMException e){	   
@@ -1487,7 +1484,7 @@ bob.open(new AVIMClientCallback(){
 		       Log.d("Tom & Jerry","got "+messages.size()+" messages ");
 		       
 		       //返回的消息一定是时间增序排列，也就是最早的消息一定是第一个
-		       AVIMMessage eldestMessage = messages.get(0);
+		       AVIMMessage oldestMessage = messages.get(0);
 		       
 		       conv.queryMessages(eldestMessage.getMessageId(),eldestMessage.getTimestamp(),20,
 		       new AVIMMessageQueryCallback(){
@@ -1651,7 +1648,7 @@ tom.open(new AVIMClientCallback(){
 	  AVIMConversationQuery query = client.getQuery();
 	  
 	  //查询attr.keywords 包含 「教育」的Conversation
-	  query.whereContains("attr.tag","教育"); 
+	  query.whereContains("attr.keywords","教育"); 
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1712,8 +1709,9 @@ tom.open(new AVIMClientCallback(){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
 	  
-	  //查询对话成员有 Bob 和 Jerry的Conversation
-	  query.withMembers(Arrays.as("Bob","Jerry"));
+	  //查询 attr.keywords 包含 「教育」并且 attr.age 小于 18 的对话
+	      query.whereContains("attr.keywords", "教育");
+    query.whereLessThan("attr.age", 18);
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1811,9 +1809,9 @@ tom.open(new AVIMClientCallback(){
 ```
 {% endblock %}
 
-{% block chatroom_query_method %} `[AVIMConversationQuery whereKey:]` {% endblock %}
+{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}
 
-{% block chatroom_query_method2 %} `whereKey:` {% endblock %}
+{% block chatroom_query_method2 %} `whereEqualTo` {% endblock %}
 
 {% block chatroom_query_single %}
 
