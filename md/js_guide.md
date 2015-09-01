@@ -20,7 +20,13 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。同时，为了便于开发调试，LeanCloud 也为每一个应用提供了测试和生产两套环境。
 
-## 使用方式
+### 贡献
+
+你可以通过 GitHub 报告 bug 或者提出建议。如果觉得这个文档写的不够好，也可以帮助我们完善。
+
+SDK 仓库地址：[https://github.com/leancloud/javascript-sdk](https://github.com/leancloud/javascript-sdk)，相关 [change log](https://github.com/leancloud/javascript-sdk/blob/master/changelog.md)
+
+本文档仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
 
 ### npm 安装
 
