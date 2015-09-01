@@ -239,6 +239,8 @@ module.exports = function(grunt) {
 
   grunt.registerTask("test", ["build"]);
 
+  grunt.registerTask("default", ["build"]);
+
   grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
