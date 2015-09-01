@@ -14,14 +14,35 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 建议你在阅读本文档之前，阅读我们提供的[快速入门](./start.html)文档，获取 LeanCloud 使用配置和第一印象。
 
-
 ### 应用
 
 LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。同时，为了便于开发调试，LeanCloud 也为每一个应用提供了测试和生产两套环境。
 
-### 依赖
+## 使用方式
 
-我们的 JavaScript SDK 不需要引入其他的库，唯一的一个例外是 AV.view 类，需要你提供 jQuery 或者一个 jQuery 兼容的 `$` 方法。
+### npm 安装
+
+可以通过 npm 安装
+
+```
+$ npm install avoscloud-sdk
+```
+
+### bower 安装
+
+也支持 bower 安装
+
+```
+$ bower install leancloud-javascript-sdk
+```
+
+### CDN 加速
+
+```
+<script src="https://cdn1.lncld.net/static/js/av-mini-{版本号}.js"></script>
+// 或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-{版本号}.js"></script>
+```
 
 ### Web 安全
 
