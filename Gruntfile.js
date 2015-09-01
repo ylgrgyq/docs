@@ -237,126 +237,126 @@ module.exports = function(grunt) {
   // grunt.loadNpmTasks('grunt-useminPrepare');
   grunt.loadNpmTasks('grunt-nunjucks');
 
+  grunt.registerTask("test", ["build"]);
+
   grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
    "less:dist", "autoprefixer", "cssmin", "copy:asset",
     "useminPrepare",'concat:generated',
     'uglify:generated',"usemin"]);
+
   grunt.registerTask("localBuild",["clean", "nunjucks", "copy:md", "markdown", "assemble",
    "less:dist", "autoprefixer", "copy:asset"]);
+
   grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
 
+  grunt.registerMultiTask('comment','add version info',function(){
+    grunt.task.requires('assemble');
+    // console.log('comment task',this.files,this.filesSrc);
+    var cheerio = require('cheerio');
+    var crypto = require('crypto');
+    var _ = require('underscore');
+    var AV = require('avoscloud-sdk').AV;
+    AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
+    // test project
+    //AV.initialize("0siycem2w0l2zem2z5crxl7602zkf1r2a8qsooigq2my1al1", "4ipiwns1939nw2cgist4s49li89dvadrlrgthfvqmgzcaax5");
+    var Doc = AV.Object.extend('Doc');
+    var Snippet = AV.Object.extend('Snippet');
+    var commentDoms = ['p','pre'];
+    var done = this.async();
 
+    function initDocVersion(filepath, allSnippetsVersion){
+      var file = filepath;
+      var content = grunt.file.read(filepath);
+      var $ = cheerio.load(content);
+      var docVersion = crypto.createHash('md5').update($('#content').text()).digest('hex');
+      // console.log(docVersion)
+      $('html').first().attr('version', docVersion);
 
-
-
-    grunt.registerMultiTask('comment','add version info',function(){
-      grunt.task.requires('assemble');
-      // console.log('comment task',this.files,this.filesSrc);
-      var cheerio = require('cheerio');
-      var crypto = require('crypto');
-      var _ = require('underscore');
-      var AV = require('avoscloud-sdk').AV;
-      AV.initialize("749rqx18p5866h0ajv0etnq4kbadodokp9t0apusq98oedbb", "axxq0621v6pxkya9qm74lspo00ef2gq204m5egn7askjcbib");
-      // test project
-      //AV.initialize("0siycem2w0l2zem2z5crxl7602zkf1r2a8qsooigq2my1al1", "4ipiwns1939nw2cgist4s49li89dvadrlrgthfvqmgzcaax5");
-      var Doc = AV.Object.extend('Doc');
-      var Snippet = AV.Object.extend('Snippet');
-      var commentDoms = ['p','pre'];
-      var done = this.async();
-
-      function initDocVersion(filepath, allSnippetsVersion){
-        var file = filepath;
-        var content = grunt.file.read(filepath);
-        var $ = cheerio.load(content);
-        var docVersion = crypto.createHash('md5').update($('#content').text()).digest('hex');
-        // console.log(docVersion)
-        $('html').first().attr('version', docVersion);
-
-        //以 docversion 为唯一标识，当文档内容发生变化，docversion 相应变化，
-        var query = new AV.Query(Doc);
-        query.equalTo('version', docVersion);
-        return query.first().then(function(doc) {
-          if (doc) {
-            // 如果 doc 已经存在，则直接返回
-            return AV.Promise.as();
-          }
-          doc = new Doc();
-          doc.set('version', docVersion);
-          var snippets = [];
-          commentDoms.forEach(function(dom) {
-            $('#content ' + dom).each(function() {
-              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-              snippets.push({version: version});
-            });
-          });
-          doc.set('snippets', snippets);
-          //文件名，以及段落 snippet 信息更新
-          doc.set('file', file.split('/').pop());
-          grunt.log.writeln('save new Doc: %s', file);
-          return doc.save();
-        }).then(function() {
-          // 在文档中添加 version 标记
-          commentDoms.forEach(function(dom) {
-            $('#content ' + dom).each(function() {
-              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-              $(this).attr('version', version);
-            });
-          });
-          grunt.file.write(filepath, $.html());
+      //以 docversion 为唯一标识，当文档内容发生变化，docversion 相应变化，
+      var query = new AV.Query(Doc);
+      query.equalTo('version', docVersion);
+      return query.first().then(function(doc) {
+        if (doc) {
+          // 如果 doc 已经存在，则直接返回
           return AV.Promise.as();
-        }).then(function() {
-          var promises = [];
-          // 保存 snippet version 和 content 的关联
-          commentDoms.forEach(function(dom) {
-            $('#content ' + dom).each(function() {
-              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-              if(_.contains(allSnippetsVersion, version)) {
-                return;
-              }
-              grunt.log.writeln('save new Snippet: %s', $(this).text().substr(0, 20) + '...');
-              promises.push(new Snippet().save({
-                snippetVersion: version,
-                content: $(this).text(),
-                file: filepath.split('/').pop()
-              }));
-            });
+        }
+        doc = new Doc();
+        doc.set('version', docVersion);
+        var snippets = [];
+        commentDoms.forEach(function(dom) {
+          $('#content ' + dom).each(function() {
+            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+            snippets.push({version: version});
           });
-          return AV.Promise.all(promises);
         });
-      }
-      var self = this;
-      // 查询所有已存在的 snippet version，
-      // 用来判断哪些是新的 snipeet，然后将其 version 和 content 添加到数据库
-      var snippetsVersion = [];
-      var getSnippetsVersion = function(skip) {
-        return AV.Query.doCloudQuery('select snippetVersion from Snippet limit ?, ?', [skip, 1000]).then(function(result) {
-          if(result.results.length === 0) {
-            return AV.Promise.as();
-          }
-          _.each(result.results, function(snippet) {
-            snippetsVersion.push(snippet.get('snippetVersion'));
-          });
-          return getSnippetsVersion(snippetsVersion.length);
-        });
-      };
-      getSnippetsVersion(0).then(function() {
-        grunt.log.writeln('current snippets count:', snippetsVersion.length);
-        var allPromise = [];
-        self.filesSrc.forEach(function(filepath) {
-          allPromise.push(initDocVersion(filepath, snippetsVersion));
-        });
-        return AV.Promise.all(allPromise);
+        doc.set('snippets', snippets);
+        //文件名，以及段落 snippet 信息更新
+        doc.set('file', file.split('/').pop());
+        grunt.log.writeln('save new Doc: %s', file);
+        return doc.save();
       }).then(function() {
-        //保证所有文档都处理完再进行任务完成回调
-        grunt.log.writeln('version build allcompleted');
-        done();
-      }, function(err) {
-        grunt.log.error('err: %s', err.stack || err.message || err);
-        done();
-      }).catch(function(err){
-        grunt.log.error('err: %s', err.stack || err.message || err);
-        done();
+        // 在文档中添加 version 标记
+        commentDoms.forEach(function(dom) {
+          $('#content ' + dom).each(function() {
+            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+            $(this).attr('version', version);
+          });
+        });
+        grunt.file.write(filepath, $.html());
+        return AV.Promise.as();
+      }).then(function() {
+        var promises = [];
+        // 保存 snippet version 和 content 的关联
+        commentDoms.forEach(function(dom) {
+          $('#content ' + dom).each(function() {
+            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+            if(_.contains(allSnippetsVersion, version)) {
+              return;
+            }
+            grunt.log.writeln('save new Snippet: %s', $(this).text().substr(0, 20) + '...');
+            promises.push(new Snippet().save({
+              snippetVersion: version,
+              content: $(this).text(),
+              file: filepath.split('/').pop()
+            }));
+          });
+        });
+        return AV.Promise.all(promises);
       });
+    }
+    var self = this;
+    // 查询所有已存在的 snippet version，
+    // 用来判断哪些是新的 snipeet，然后将其 version 和 content 添加到数据库
+    var snippetsVersion = [];
+    var getSnippetsVersion = function(skip) {
+      return AV.Query.doCloudQuery('select snippetVersion from Snippet limit ?, ?', [skip, 1000]).then(function(result) {
+        if(result.results.length === 0) {
+          return AV.Promise.as();
+        }
+        _.each(result.results, function(snippet) {
+          snippetsVersion.push(snippet.get('snippetVersion'));
+        });
+        return getSnippetsVersion(snippetsVersion.length);
+      });
+    };
+    getSnippetsVersion(0).then(function() {
+      grunt.log.writeln('current snippets count:', snippetsVersion.length);
+      var allPromise = [];
+      self.filesSrc.forEach(function(filepath) {
+        allPromise.push(initDocVersion(filepath, snippetsVersion));
+      });
+      return AV.Promise.all(allPromise);
+    }).then(function() {
+      //保证所有文档都处理完再进行任务完成回调
+      grunt.log.writeln('version build allcompleted');
+      done();
+    }, function(err) {
+      grunt.log.error('err: %s', err.stack || err.message || err);
+      done();
+    }).catch(function(err){
+      grunt.log.error('err: %s', err.stack || err.message || err);
+      done();
+    });
   });
 
 
