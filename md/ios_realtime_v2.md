@@ -152,11 +152,11 @@ NSArray *clientIds = [[NSArray alloc] initWithObjects:@"Tom", @"Bob", nil];
 ```
 
 
-> 新的「对话」在控制台怎么查看
->
-> 如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** -> **存储** -> **数据** 里面会看到，_Conversation 表中增加了一条记录，新记录的 `m` 属性值为`["Tom", "Bob"]`，`attr` 属性值为`{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。具体的表结构与属性的对应关系可以参考[这里](./realtime_v2.html#对话_Conversation_)。
+> 新的「对话」数据在控制台怎么查看？
 
-> TIPS: 每一次调用 `createConversationWithName:` 方法，都会生成一个新的 `Conversation`，无论里面的 clientIds 是不是一样。可以用 `AVIMConversationQuery` 来查询，避免重复创建。
+如你所见，我们创建一个对话的时候，指定了成员（Tom 和 Bob）和一个额外的属性（{type: 0}）。这些数据保存到云端后，你在 **控制台** > **存储** > **数据** 里面会看到，**_Conversation**<!--2015-08-28 Da Li:不要去掉前面的加粗显示，否则段尾超链接不会正常显示。--> 表中增加了一条记录，新记录的 `m` 属性值为 `["Tom", "Bob"]`，`attr` 属性值为 `{"type":0}`。如你所料，`m` 属性就是对应着成员列表，`attr` 属性就是用户增加的额外属性值（以对象的形式存储）。具体的表结构与属性的对应关系请参考 [实时通信概览 - 对话（Conversation）](realtime_v2.html#对话_Conversation_)。
+
+**提示: **每次调用 `createConversationWithName:` 方法，即使采用相同的 clientId 也会生成一个新的对话。为避免重复创建对话，可以先使用 `AVIMConversationQuery` 来查询一下对话是否存在。
 
 ### 消息发送
 
