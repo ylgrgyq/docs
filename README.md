@@ -121,4 +121,4 @@ $ grunt server
 
 ## 协议
 
-[LGPL](https://www.gnu.org/licenses/lgpl.html)
+[LGPL-3.0](https://www.gnu.org/licenses/lgpl.html)
