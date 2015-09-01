@@ -5,6 +5,7 @@ node_js:
   - iojs
 before_script:
   - npm install -g grunt-cli
+  - npm dedupe
 matrix:
   fast_finish: true
   allow_failures:
