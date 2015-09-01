@@ -10,6 +10,8 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)，本指南并没有完全覆盖所有的 API 调用。
 
+该 JavaScript SDK 也可在 Nodejs 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
+
 ## 快速入门
 
 建议你在阅读本文档之前，阅读我们提供的[快速入门](./start.html)文档，获取 LeanCloud 使用配置和第一印象。
@@ -22,7 +24,9 @@ LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自�
 
 ### npm 安装
 
-可以通过 npm 安装
+可以通过 npm 安装。
+
+该 JavaScript SDK 也可在 Nodejs 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
 
 ```
 $ npm install avoscloud-sdk
