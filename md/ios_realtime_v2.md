@@ -779,6 +779,7 @@ NSArray* userIds = @[@"Alex", @"Ben", @"Chad"];
         [view show];
     } else {
         // 加入成功，此后新成员就可以看到这个对话中的所有消息了。
+    }
 }];
 ```
 
@@ -812,6 +813,7 @@ NSArray* userIds = @[@"Chad"];
         [view show];
     } else {
         // 踢出成功，此后被踢出的人就再也收不到这个对话的消息了。
+    }
 }];
 ```
 
