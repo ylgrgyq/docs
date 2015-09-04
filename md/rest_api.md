@@ -253,7 +253,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </tbody>
 </table>
 
-### Cloud 函数
+###云函数
 
 <table>
   <thead>
@@ -2255,9 +2255,9 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/installations/51fcb74ee4b074ac5c34cf85
 ```
 
-##Cloud 函数
+##云函数
 
-Cloud 函数可以通过 REST API 来使用，比如调用一个叫 hello 的 Cloud 函数：
+云函数可以通过 REST API 来使用，比如调用一个叫 hello 的云函数：
 
 ```sh
 curl -X POST \

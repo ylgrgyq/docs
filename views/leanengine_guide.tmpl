@@ -2,24 +2,24 @@
 {% set appkey = '{{appkey}}' %}
 {% set masterkey = '{{masterkey}}' %}
 
-# LeanEngine 指南
+# 云引擎指南
 
 ## 介绍
 
-为了在服务端执行一些业务逻辑操作，你可以使用我们提供的 LeanEngine，编写 JavaScript 或者 Python 代码，并部署到我们的平台上。通过 LeanEngine，你可以拦截save请求，在 save object 之前或之后做一些事情；你也可以自定义业务函数，并通过 SDK 调用；你还可以调用部分第三方库来实现你的业务逻辑；甚至，你可以将整个网站架设在 LeanEngine 之上，我们提供了web hosting 服务。
+云引擎允许你编写 JavaScript 或者 Python 代码，并部署到我们的云端，通过拦截 save 请求，在保存对象之前或之后做一些事情；你可以自定义业务函数，并通过 SDK 调用；你还可以调用部分第三方库来实现自己的业务逻辑，甚至还可以将整个网站架设在云引擎之上，我们提供了网站托管服务。
 
-现在我们将「云代码 2.0」的功能做了升级，开放性更高，并且更名为「LeanEngine」。老的云代码产品将在一段时间内继续运行并且维护下去，但是云代码上的功能都可以在 LeanEngine 实现，并且自由度更高，因此我们强烈建议你将你的项目改为 LeanEngine 实现。
+现在我们将「云代码 2.0」的功能做了升级，开放性更高，并且更名为「云引擎 - LeanEngine」。老的云代码产品将在一段时间内继续运行并且维护下去，但是云代码上的所有功能都能在云引擎上 实现，并且自由度更高，因此我们强烈建议将项目改由云引擎来实现。
 
 ### 与云代码的区别
 
-* 标准的运行环境：之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。而 LeanEngine 环境可以部署标准项目。
-* 多语言支持：目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
+* **标准的运行环境**：之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。而云引擎环境可以部署标准项目。
+* **多语言支持**：目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
 
 {% block updateToLeanEngine %}{% endblock %}
 
 ### 命令行工具
 
-使用命令行工具可以非常方便的部署、发布 LeanEngine 项目，查看项目状态，查看日志，甚至支持多应用部署。具体使用请 [参考文档](cloud_code_commandline.html)。
+使用命令行工具可以非常方便的部署、发布云引擎项目，查看项目状态，查看日志，甚至支持多应用部署。具体请参考 [命令行工具指南](cloud_code_commandline.html)。
 
 ## Demo
 
@@ -37,9 +37,9 @@
 
 {% block run_in_local_command %}{% endblock %}
 
-应用即可启动运行：[localhost:3000](http://localhost:3000)
+应用即可启动运行：<http://localhost:3000>
 
-可以通过下列命令确认 Cloud 函数工作正常，该函数定义在 {% block cloud_func_file %}{% endblock %} 文件中：
+可以通过下列命令确认云函数工作正常，该函数定义在 {% block cloud_func_file %}{% endblock %} 文件中：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
@@ -49,9 +49,9 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
        http://localhost:3000/1.1/functions/hello
 ```
 
-如果需要指定 web 服务端口，可以增加 `-P` 参数。帮助信息请使用 `-h` 参数。
+如果需要指定 web 服务端口，可以增加 `-P` 参数。获取帮助信息请使用 `-h` 参数。
 
-### 部署的到 LeanEngine
+### 部署的到云引擎
 
 部署到测试环境：
 
@@ -59,7 +59,7 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 $ avoscloud deploy
 ```
 
-如果你设置了 [二级域名](#设置域名) ，即可通过 `http://dev.${your_app_domain}.avosapps.com` 访问你应用的测试环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://dev.${your_app_domain}.avosapps.com` 访问你应用的测试环境。
 
 部署到生产环境：
 
@@ -67,9 +67,9 @@ $ avoscloud deploy
 $ avoscloud publish
 ```
 
-如果你设置了 [二级域名](#设置域名) ，即可通过 `http://${your_app_domain}.avosapps.com` 访问你应用的生产环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.avosapps.com` 访问你应用的生产环境。
 
-可以通过下列命令确认 Cloud 函数在 LeanEngine 工作正常：
+通过下列命令可以确认云函数在云引擎上工作正常：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
@@ -79,22 +79,21 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
        https://leancloud.cn/1.1/functions/hello
 ```
 
-## 使用 LeanEngine 中间件
+## 使用云引擎中间件
 
-如果你没有使用项目框架，则需要自己安装和初始化 LeanEngine 中间件。
+如果你没有使用项目框架，则需要自己安装和初始化云引擎中间件。
 
 ### 环境变量
 
-LeanEngine 上有一些平台相关的环境变量，可以在你的代码中使用。
+你可以在代码中使用以下与云引擎平台相关的环境变量：
 
-* `LC_APP_ID`: 当前应用的 App Id
-* `LC_APP_KEY`: 当前应用的 App Key
-* `LC_APP_MASTER_KEY`: 当前应用的 Master Key
-* `LC_APP_ENV`: 当前应用环境:
-  * 开发环境没有该环境变量，或值为 `development`
-  * 测试环境值为 `stage`
-  * 生产环境值为 `production`
-* `LC_APP_PORT`: 当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务
+变量名|说明
+---|---
+LC_APP_ID|当前应用的 App Id
+LC_APP_KEY|当前应用的 App Key
+LC_APP_MASTER_KEY|当前应用的 Master Key
+LC_APP_ENV|当前应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
+LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
 
 ### 安装
@@ -111,9 +110,9 @@ LeanEngine 上有一些平台相关的环境变量，可以在你的代码中使
 
 ### 使用数据存储
 
-你可以直接在 LeanEngine 上使用我们的 [数据存储](https://leancloud.cn/features/storage.html) 服务，相关功能请参考 {% block sdk_guide_link %}{% endblock %}。
+你可以直接在云引擎上使用我们的 [数据存储](https://leancloud.cn/features/storage.html) 服务，相关功能请参考 {% block sdk_guide_link %}{% endblock %}。
 
-## Cloud 函数
+##云函数
 
 当你开发移动端应用时，可能会有下列需求：
 
@@ -123,31 +122,31 @@ LeanEngine 上有一些平台相关的环境变量，可以在你的代码中使
 * 你希望能在特定操作时触发一段逻辑（我们称为 Hook 函数），比如：用户注册后对该用户增加一些信息记录用于统计；或某业务数据发生变化后希望做一些别的业务操作。这些代码不适合放在移动客户端（比如因为上面提到的几个原因）。
 * 你希望有能有定时任务，比如每天凌晨清理垃圾注册账号等等。
 
-这时，你可以使用 LeanEngine 的 Cloud 函数。Cloud 函数是一段部署在服务端的代码，编写 JavaScript 或者 Python 代码，并部署到我们的平台上，可以很好的完成上述需求。
+这时，你可以使用云引擎的云函数。云函数是一段部署在服务端的代码，编写 JavaScript 或者 Python 代码，并部署到我们的平台上，可以很好的完成上述需求。
 
-你可以使用 [在线定义函数](#在线定义函数) 或者 [项目定义函数](#项目定义函数) 来开发 Cloud 函数：前者很方便快捷，不需要涉及项目依赖、部署等问题；后者可以提供更为强大的灵活性和自主性。
+你可以使用 [在线定义函数](#在线定义函数) 或者 [项目定义函数](#项目定义函数) 来开发云函数：前者很方便快捷，不需要涉及项目依赖、部署等问题；后者可以提供更为强大的灵活性和自主性。
 
-示例项目中 {% block cloud_func_file %}{% endblock %} 文件定义了一个很简单的 `hello` Cloud 函数。现在让我们看一个明显较复杂的例子来展示 LeanEngine 的用途。在云端进行计算的一个重要理由是，你不需要将大量的数据发送到设备上做计算，而是将这些计算放到服务端，并返回结果这一点点信息就好。例如，假设你写了一个 App，可以让用户对电影评分，一个评分对象大概是这样：
+示例项目中 {% block cloud_func_file %}{% endblock %} 文件定义了一个很简单的 `hello` 云函数。现在让我们看一个明显较复杂的例子来展示云引擎的用途。在云端进行计算的一个重要理由是，你不需要将大量的数据发送到设备上做计算，而是将这些计算放到服务端，并返回结果这一点点信息就好。例如，假设你写了一个  app，可以让用户对电影评分，一个评分对象大概是这样：
 
 ```json
 {
   "movie": "The Matrix",
   "stars": 5,
-  "comment": "Too bad they never made any sequels."
+  "comment": "但愿再出续集，此生无憾矣"
 }
 ```
 
-`stars`表示评分，1-5。如果你想查找《黑客帝国》这部电影的平均分，你可以找出这部电影的所有评分，并在设备上根据这个查询结果计算平均分。但是这样一来，尽管你只是需要平均分这样一个数字，却不得不耗费大量的带宽来传输所有的评分。通过 LeanEngine，我们可以简单地传入电影名称，然后返回电影的平均分。
+`stars`表示评分，1-5。如果你想查找《黑客帝国》这部电影的平均分，你可以找出这部电影的所有评分，并在设备上根据这个查询结果计算平均分。但是这样一来，尽管你只是需要平均分这样一个数字，却不得不耗费大量的带宽来传输所有的评分。通过 云引擎，我们可以简单地传入电影名称，然后返回电影的平均分。
 
-Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电影名称。整个 {% block sdk_guide_link %}{% endblock %} 都在 LeanEngine 运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现 `averageStars` 函数的代码如下:
+云函数接收 JSON 格式的请求对象，我们可以用它来传入电影名称。整个 {% block sdk_guide_link %}{% endblock %} 都在云引擎运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现 `averageStars` 函数的代码如下:
 
 {% block cloudFuncExample %}{% endblock %}
 
-`averageStars`和`hello`函数的唯一区别是当我们调用函数的时候，我们必须提供参数给`request.params.movie`。继续读下去，我们将介绍如何调用Cloud函数。
+`averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须提供参数给 `request.params.movie`。接下来，我们将介绍如何调用云函数。
 
-### 调用一个函数
+### 调用云函数
 
-Cloud 函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云代码」部分），也可以通过 REST API 调用，例如，使用一部电影的名称去调用 `averageStars` 函数：
+云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云代码」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
@@ -160,7 +159,7 @@ https://leancloud.cn/1.1/functions/averageStars
 
 {% block cloudFuncParams %}{% endblock %}
 
-如果函数调用成功，返回给客户端的结果类似这样：
+如果函数调用成功，云端返回给客户端的结果类似这样：
 
 ```json
 {
@@ -177,25 +176,25 @@ https://leancloud.cn/1.1/functions/averageStars
 }
 ```
 
-#### 在 LeanEngine 中调用已定义的函数
+#### 调用已定义的函数
 
-在 LeanEngine 中也可以使用 {% block runFuncName %}{% endblock %} 调用 {% block defineFuncName %}{% endblock %} 定义的 Cloud 函数：
+在云引擎中也可以使用 {% block runFuncName %}{% endblock %} 调用 {% block defineFuncName %}{% endblock %} 定义的云函数：
 
 {% block runFuncExample %}{% endblock %}
 
-API参数详解参见 {% block runFuncApiLink %}{% endblock %}。
+API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
-### 在 save 前修改对象
+### Save 前执行操作
 
-在某些情况下，你可能不想简单地丢弃无效的数据，而是想清理一下再保存。`beforeSave`可以帮你做到这一点。
+在某些情况下，你可能不想简单地丢弃无效的数据，而是想先清理一下再保存，`beforeSave` 可以帮你做到这一点。
 
-在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用`beforeSave`来截断评论到140个字符：
+在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用 `beforeSave` 来截断评论到 140 个字符：
 
 {% block beforeSaveExample %}{% endblock %}
 
-### 在 save 后执行动作
+### Save 后执行操作
 
-在另一些情况下，你可能想在保存对象后做一些动作，例如发送一条push通知。类似的，你可以通过`afterSave`函数做到。举个例子，你想跟踪一篇博客的评论总数，你可以这样做：
+如果想在保存对象后做一些动作，如发送一条推送通知，则可以通过 `afterSave` 函数来实现。例如，当一条留言保存后再更新一下这篇帖子的评论总数：
 
 {% block afterSaveExample %}{% endblock %}
 
@@ -203,7 +202,7 @@ API参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block afterSaveExample2 %}{% endblock %}
 
-如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到 LeanEngine 日志里。
+如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到云引擎日志里。
 
 ### 在 update 更新后执行动作
 
@@ -253,24 +252,24 @@ API参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block http_client %}{% endblock %}
 
-## LeanEngine 管理控制台
+##云引擎管理控制台
 
-首先，请进入App的 [LeanEngine 管理](/cloud.html?appid={{appid}}#/repository) 界面：
+首先，请进入App的 [云引擎 管理](/cloud.html?appid={{appid}}#/repository) 界面：
 
 ![image](images/cloud_code_menu.png)
 
 可以看到左侧菜单：
 
-* 定义函数：LeanEngine 的简单模式，可以直接在线维护云代码方法。
+* 定义函数：云引擎 的简单模式，可以直接在线维护云代码方法。
 * 定时任务：可以设置一些定时任务，比如每天凌晨清理无用数据等。
-* Git 部署：用于部署 LeanEngine 项目到测试环境或者生产环境。
-* 日志：用于查看 LeanEngine 项目的日志
-* 统计：用于查看 LeanEngine 项目的一些数据统计
-* 设置：用来设置项目的源码仓库信息，包括从这里可以下载 LeanEngine 项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
+* Git 部署：用于部署云引擎项目到测试环境或者生产环境。
+* 日志：用于查看云引擎项目的日志
+* 统计：用于查看云引擎项目的一些数据统计
+* 设置：用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
 
 ## 在线定义函数
 
-很多人使用 LeanEngine 是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护 Cloud 函数 的功能。
+很多人使用云引擎是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护云函数 的功能。
 
 ### 提醒
 
@@ -292,7 +291,7 @@ API参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 * Hook：对应 `AV.Cloud.beforeSave` 等回调定义的方法。
 * Global：对应全局变量，一些全局变量和公共函数可以定义在这里。
 
-这些函数的使用场景和具体细节，参见 [Cloud 函数](#Cloud_函数)
+这些函数的使用场景和具体细节，参见 [云函数](#云函数)
 
 ### 创建函数
 
@@ -322,7 +321,7 @@ if (name) {
 **注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送_HTTP_请求)」**
 
 
-点击保存后，LeanEngine 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
+点击保存后，云引擎 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
 
 ### 发布
 
@@ -358,13 +357,13 @@ if (name) {
 
 ## 项目定义函数
 
-如果你希望有更强的灵活性，或者希望使用 webHosting 功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的 LeanEngine。
+如果你希望有更强的灵活性，或者希望使用 webHosting 功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的 云引擎。
 
 {% block download_skeleton %} {% endblock %}
 
 ### 项目约束
 
-你的项目需要遵循一定格式才会被 LeanEngine 识别并运行。
+你的项目需要遵循一定格式才会被云引擎识别并运行。
 
 {% block project_constraint %}{% endblock %}
 
@@ -372,7 +371,7 @@ if (name) {
 
 ### 健康监测
 
-LeanEngine 项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 `应用启动检测失败` 类型的错误信息，导致部署失败。
+云引擎 项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 `应用启动检测失败` 类型的错误信息，导致部署失败。
 
 {% block ping %}{% endblock %}
 
@@ -431,7 +430,7 @@ git push -u origin master
 
 使用BitBucket与此类似，不再赘述。
 
-[Github](https://github.com)是一个非常优秀的源码托管平台，你可以使用它的免费帐号，那将无法创建私有仓库(bucket可以创建私有仓库)，也可以付费成为高级用户，可以创建私有仓库。
+[Github](https://github.com)是一个非常优秀的源码托管平台，你可以使用它的免费账号，那将无法创建私有仓库(bucket可以创建私有仓库)，也可以付费成为高级用户，可以创建私有仓库。
 
 首先在github上创建一个项目，比如就叫`test`:
 
@@ -450,11 +449,11 @@ git remote add origin git@github.com:${yourname}/test.git
 git push -u origin master
 ```
 
-到这一步我们已经将源码成功push到github，接下来到 LeanEngine 的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+到这一步我们已经将源码成功push到github，接下来到云引擎的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
 
 ![image](images/cloud_code_4.png)
 
-并添加deploy key到你的github项目（deploy key是我们 LeanEngine 机器的ssh public key），如果你是私有项目，需要设置deploy key，
+并添加deploy key到你的github项目（deploy key是我们云引擎机器的ssh public key），如果你是私有项目，需要设置deploy key，
 
 拷贝 `设置` 菜单里的 `Deploy key` 保存到 github setting 里的deploy key，创建新的一项avoscloud:
 
@@ -493,7 +492,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ## 定时任务
 
-很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给您，让您可以在云代码中运行这样的任务。
+很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云代码中运行这样的任务。
 
 **我们提供的定时任务的最小时间单位是秒，正常情况下我们都能将误差控制在秒级别。**
 
@@ -516,7 +515,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 * 使用标准的crontab语法调度
 * 简单的循环调度，我们这里以循环调度为例，每隔5分钟打印日志
 
-创建后，定时任务还没有启动，您需要在定时任务列表里启动这个任务:
+创建后，定时任务还没有启动，你需要在定时任务列表里启动这个任务:
 
 ![image](images/schedule_timer3.png)
 
@@ -563,14 +562,14 @@ crontab的基本语法是
 
 ### 超时
 
-请求 LeanEngine 上的 Cloud 函数时会经过负载均衡设备，该设备会限制一次请求的超时时间为 15 秒，如果超过15秒没有返回，请求将被强制停止，但此时 LeanEngine 的方法可能仍在执行，但执行完毕后的响应是无意义的。所有 Hook 函数，如 `beforeSave` 和`afterSave` 的超时时间限制在3秒内。如果 Hook 函数被其他的 Cloud 函数调用（比如因为 save 对象而触发 `beforeSave` 和 `afterSave`），那么它们的超时时间会进一步被其他 Cloud 函数调用的剩余时间限制。例如，如果一个 `beforeSave` 函数
-是被一个已经运行了13秒的 Cloud 函数触发，那么 `beforeSave` 函数就只剩下 2 秒的时间来运行，而正常情况下是3秒的限制。
+请求云引擎上的云函数时会经过负载均衡设备，该设备会限制一次请求的超时时间为 15 秒，如果超过15秒没有返回，请求将被强制停止，但此时云引擎的方法可能仍在执行，但执行完毕后的响应是无意义的。所有 Hook 函数，如 `beforeSave` 和`afterSave` 的超时时间限制在3秒内。如果 Hook 函数被其他的云函数调用（比如因为 save 对象而触发 `beforeSave` 和 `afterSave`），那么它们的超时时间会进一步被其他云函数调用的剩余时间限制。例如，如果一个 `beforeSave` 函数
+是被一个已经运行了13秒的云函数触发，那么 `beforeSave` 函数就只剩下 2 秒的时间来运行，而正常情况下是3秒的限制。
 
 Web Hosting的动态请求超时也被限定为15秒。
 
 ## 日志
 
-[云代码->日志](/cloud.html?appid={{appid}}#/log)，可以查看 LeanEngine 的部署和运行日志，还可以选择查看的日志级别：
+[云代码->日志](/cloud.html?appid={{appid}}#/log)，可以查看云引擎的部署和运行日志，还可以选择查看的日志级别：
 
 ![image](images/cloud_code_11.png)
 
@@ -582,18 +581,18 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ## Web Hosting
 
-很多时候，除了运行在移动设备的 App 之外，您通常也会为 App 架设一个网站，可能只是简单地展现 App 的信息并提供 AppStore 或者 Play 商店下载链接，或者展示当前热门的用户等等。您也可能建设一个后台管理系统，用来管理用户或者业务数据。
-这一切都需要您去创建一个web应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，您可能还需要去购买一个域名。
+很多时候，除了运行在移动设备的 App 之外，你通常也会为 App 架设一个网站，可能只是简单地展现 App 的信息并提供 AppStore 或者 Play 商店下载链接，或者展示当前热门的用户等等。你也可能建设一个后台管理系统，用来管理用户或者业务数据。
+这一切都需要你去创建一个web应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
 
-不过现在，LeanEngine 为您提供了 web hosting 功能，可以让你设置一个 App 的二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署您的 web 应用到该域名之下运行。同时支持静态资源和动态请求服务。
+不过现在，云引擎 为你提供了 web hosting 功能，可以让你设置一个 App 的二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署你的 web 应用到该域名之下运行。同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
-首先，你需要到 云代码 -> 设置 页面找到 `Web 主机域名`，在这里填写您的域名：
+首先，你需要到 云代码 -> 设置 页面找到 `Web 主机域名`，在这里填写你的域名：
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为 `myapp`，设置之后，您应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，您看到的应该是一个404页面。
+上面将App的二级域名设置为 `myapp`，设置之后，你应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，你看到的应该是一个404页面。
 
 ### 绑定独立域名
 
@@ -605,11 +604,11 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 其他用户如果需要为 App 绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.rocks> ，或者从控制台菜单中选择 **帮助** > **技术支持** ，通过工单来提出申请 ：
 
-* 您已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
+* 你已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
 * 要绑定的域名（必须是你名下的域名）
-* 您的注册邮箱（必须与发送者的邮箱一致）
-* 您想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 您的域名的备案信息 （**国内必须可以在工信部查询到，美国区不需要**）
+* 你的注册邮箱（必须与发送者的邮箱一致）
+* 你想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
+* 你的域名的备案信息 （**国内必须可以在工信部查询到，美国区不需要**）
 
 我们会在 3 个工作日内完成审核，如果审核通过将为你绑定域名。请在绑定操作完成后配置 DNS：
 
@@ -623,15 +622,15 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
 
-1. 您提供相应资料，我们来录入
-2. 我们的备案接入商给您邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商
+1. 你提供相应资料，我们来录入
+2. 我们的备案接入商给你邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商
 3. 提交备案到（公司所在地）管局（通信管理局）审核
 
-**请注意：国内各地管局对备案的政策有差别，如北京地区对域名后缀有限制，陕西地区需要提交组织机构代码证，山东地区要求服务器必须托管在山东省内（所以我们无法为山东地区用户备案）等。具体请查询当地管局。**
+<div class="callout callout-info">请注意：国内各地管局对备案的政策有差别，如北京地区对域名后缀有限制，陕西地区需要提交组织机构代码证，山东地区要求服务器必须托管在山东省内（因此我们无法为山东地区用户备案）等。具体请查询当地管局。</div>
 
-#####第一步：
+#####第一步
 
-请提交以下资料，我们来帮您录入到系统：
+请提交以下资料，我们来帮你录入到系统：
 
 1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件
 2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、QQ号码
@@ -642,26 +641,26 @@ Web Hosting的动态请求超时也被限定为15秒。
    * 单位门户网站
    * 网络游戏
    * 网络广告
-5. 绑定独立域名所需的信息，参考上节文档  
+5. 绑定独立域名所需的信息，参考上节文档
 
 如果企业之前已经备案过其他网站，即备案主体已经存在，此时还应向我们提供备案密码，我们才能完成资料录入工作。
 
-#####第二步：
+#####第二步
 
-请提供您的地址，我们的备案接入商来给您邮寄幕布，因为幕布数量的关系，这里可能需要排队。
-以下资料是需要您准备好邮寄给接入商
+请提供你的地址，我们的备案接入商来给你邮寄幕布，因为幕布数量的关系，这里可能需要排队。
+以下资料是需要你准备好邮寄给接入商
 
 1.  企业营业执照副本复印件，盖公章
 2.  企业法人身份证复印件，盖公章
 3.  网站负责人身份证复印件，盖公章（如果和企业法人是同一人的话，此条可忽略）
 4. 《网站备案信息真实性核验单》在最下面一栏，请网站负责人签字并盖公章。上面主办者名称和域名都需打印出来手写
 
-备案接入商地址：  
-> 地　　址：北京市东城区和平里东街 15 号航天物资大厦 209 房间  
-> 备案专员：孟南  
-> 联系电话：010-84222290 转 8001、18101125625  
-  
-#####第三步：
+备案接入商地址：
+> 地　　址：北京市东城区和平里东街 15 号航天物资大厦 209 房间
+> 备案专员：孟南
+> 联系电话：010-84222290 转 8001、18101125625
+
+#####第三步
 
 由我们和备案接入商来完成。
 
@@ -691,17 +690,17 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 启用HTTPS
 
-为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的 LeanEngine 支持网站托管，同样会有这样的需求。
+为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
-因此我们在 LeanEngine 中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过https访问，你只要这样：
+因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过https访问，你只要这样：
 
 {% block https_redirect %}{% endblock %}
 
-部署并发布到生产环境之后，访问你的 LeanEngine 网站二级域名都会强制通过 HTTPS 访问。测试环境的域名仍然不会启用 HTTPS。
+部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过 HTTPS 访问。测试环境的域名仍然不会启用 HTTPS。
 
 ### 测试环境和开发环境
 
-前面已经谈到 LeanEngine 的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-AVOSCloud-Application-Production` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-AVOSCloud-Application-Production` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
 
 因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
 
@@ -725,7 +724,7 @@ else
 
 ## 第三方平台接入
 
-因为 LeanEngine 提供了 webHosting 功能，这相当于为你在 internet 上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
+因为云引擎提供了 webHosting 功能，这相当于为你在 internet 上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
 
 ### 接入支付宝
 
@@ -738,20 +737,20 @@ else
 
 ## 运行环境区分
 
-LeanEngine 时区分「测试环境」和「生产环境」的，两个环境使用的数据是一致的。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。
+云引擎区分「测试环境」和「生产环境」，两个环境使用的是同一数据源。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。
 
-有些时候你可能需要知道当前 LeanEngine 运行在什么环境（开发环境、测试环境或生产环境），从而做不同的处理：
+有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、测试环境或生产环境），从而做不同的处理：
 
 {% block get_env %}{% endblock %}
 
-你应该注意到了，我们在请求 LeanEngine 的时候，通过 REST API 的特殊的 HTTP 头 `X-AVOSCloud-Application-Production`，来区分调用的环境。
+你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-AVOSCloud-Application-Production`，来区分调用的环境。
 
 * 0 表示调用测试环境
 * 1 表示调用生产环境
 
 具体到SDK内的调用，请看各个平台的 SDK 指南。
 
-有些时候请求 LeanEngine 时会提示 production 还没有部署：
+有些时候请求云引擎时会提示 production 还没有部署：
 
 ```json
 {"code":1,"error":"The cloud code isn't deployed for prod 1."}
@@ -798,9 +797,9 @@ console.log('toString', time.toString());
 console.log('getHours', time.hours())
 ```
 
-### 云代码 2.0 和 LeanEngine 时区的差异
+### 云代码 2.0 和云引擎时区的差异
 
-为了方便大家的使用，更加符合通常的习惯，LeanEngine 运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
+为了方便大家的使用，更加符合通常的习惯，云引擎 运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
 
 {% block introduceCloudCodeV2 %}{% endblock %}
 

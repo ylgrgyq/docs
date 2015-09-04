@@ -180,7 +180,7 @@ function before_review_save(review):
 import leancloud
 
 
-@engine.atfer_save('Comment')  # Comment 为需要 hook 的 class 的名称
+@engine.after_save('Comment')  # Comment 为需要 hook 的 class 的名称
 def after_comment_save(comment):
 	post = leancloud.Query('Post').get(comment.id)
 	post.increment('commentCount')

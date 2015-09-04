@@ -63,7 +63,7 @@ npm install
 
 ## 增加 leanengine 依赖
 
-3.0 项目会依赖 [leanengine](https://github.com/leancloud/leanengine-node-sdk)，而不是 [avoscloud-sdk](https://github.com/leancloud/javascript-sdk)，可以认为前者是后者的增强，增加了 Cloud 函数等支持。
+3.0 项目会依赖 [leanengine](https://github.com/leancloud/leanengine-node-sdk)，而不是 [avoscloud-sdk](https://github.com/leancloud/javascript-sdk)，可以认为前者是后者的增强，增加了云函数等支持。
 
 如果是按照 [创建 package.json 文件](#创建_package_json_文件) 章节描述的操作，`package.json` 文件应该已经有 `leanengine` 的依赖了。如果没有请在 `$PROJECT_DIR` 目录下执行：
 
@@ -266,9 +266,9 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 >53 module.exports = app;
 ```
 
-## Cloud 函数
+##云函数
 
-2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [Cloud 函数](leanengine_guide-node.html#Cloud_函数)。
+2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [云函数](leanengine_guide-node.html#云函数)。
 
 3.0 项目将这样的文件命名为 `$PROJECT_DIR/cloud.js`，所以你需要将 `$PROJECT_DIR/cloud/main.js` 移动并更名为 `$PROJECT_DIR/cloud.js`。
 
@@ -299,7 +299,7 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
   9 module.exports = AV.Cloud;
 ```
 
-* 第 1 行不需要再次引入 `app.js`，取而代之是引入 `leanengine` 模块，然后就可以使用 `AV.Cloud.define` 方法来定义 Cloud 函数了。
+* 第 1 行不需要再次引入 `app.js`，取而代之是引入 `leanengine` 模块，然后就可以使用 `AV.Cloud.define` 方法来定义云函数了。
 * 最后一行记得将 `AV.Cloud` 对象 `export` 出来，使引入他的模块可以使用。
 
 因为 `AV.Cloud` 是一个 [connect](https://www.npmjs.com/package/connect) 对象，所以可以作为 Express 的中间件使用：添加到 `$PROJECT_DIR/app.js` 的 Express 中类似于这样：
@@ -368,7 +368,7 @@ error:Not Found
 
 说明我们的异常处理器起作用了。
 
-还可以打开 Cloud 函数调试页面（需要命令行工具 0.7.6 版本以上）http://localhost:3001 来测试 `$PROJECT_DIR/cloud.js` 里面定义的 `hello` Cloud 函数。
+还可以打开云函数调试页面（需要命令行工具 0.7.6 版本以上）http://localhost:3001 来测试 `$PROJECT_DIR/cloud.js` 里面定义的 `hello`云函数。
 
 ## 部署
 

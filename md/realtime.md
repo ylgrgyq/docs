@@ -236,7 +236,7 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 * _messageReceived 消息达到服务器，群组成员已解析完成之后
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考 [云引擎 - Cloud 函数](leanengine_guide-cloudcode.html#Cloud_函数) 部分的说明。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考 [云引擎 -云函数](leanengine_guide-cloudcode.html#云函数) 部分的说明。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
 
 ### _messageReceived
 
