@@ -1254,7 +1254,7 @@ tom.open(new AVIMClientCallback(){
 	  //登录成功
 	  AVIMConversationQuery query = client.getConversationQuery();
 	  query.setLimit(1);
-     query.findInBackground(new AVIMConversationQueryCallback(){
+	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
        public void done(List<AVIMConversation> convs,AVIMException e){
          if(e==null){

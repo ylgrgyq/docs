@@ -454,11 +454,11 @@ iOS 暂不支持发送通用文件消息，已在计划中，近期发布。
 
 {% block transientMessage_sent %}
 
+```objc
 typedef NS_ENUM(NSInteger, YourCustomMessageType) {
     YourCustomMessageTypeOperation = 1
 };
 
-```objc
 @interface YourOperationMessage : AVIMTextMessage <AVIMTypedMessageSubclassing>
 
 @end
@@ -577,16 +577,16 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% block message_Properties_intro %}
 所有消息都是 `AVIMMessage` 的实例，每种消息实例都具备如下属性：
 
-属性|描述
----|---
-content|消息内容
-clientId|指消息发送者的 clientId
-conversationId|消息所属对话 id
-messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
-sendTimestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
-deliveredTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
-status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
-ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+属性|类型|描述
+---|---|---
+content|NSString|消息内容
+clientId|NSString|指消息发送者的 clientId
+conversationId|NSString|消息所属对话 id
+messageId|NSString|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+sendTimestamp|int64_t|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+deliveredTimestamp|int64_t|消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
+status|AVIMMessageStatus 枚举|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
 
 我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
 
@@ -602,7 +602,7 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 <!-- >TODO: 举例说明如何使用这样的数字类型 -->
 {% endblock %}
 
-{% block attributes %} `AVIMMessage.attributes` {% endblock %}
+{% block attributes %} `AVIMTypedMessage.attributes` {% endblock %}
 
 {% block attributes_property %}attributes{% endblock %}
 
@@ -857,7 +857,10 @@ No.|邀请者|被邀请者|其他人
         AVIMConversationQuery *query = [self.client conversationQuery];
         [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
             // Tom 查看会话中成员的数量
-            NSLog(@"%ld", [conversation.members count]);
+            [conversation countMembersWithCallback:^(NSInteger number, NSError *error) {
+            // 打印成员数量
+            NSLog(@"%ld", number);
+        }];
         }];
     }];
 }
