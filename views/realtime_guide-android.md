@@ -1797,8 +1797,8 @@ tom.open(new AVIMClientCallback(){
 	  AVIMConversationQuery query = client.getQuery();
 	  
 	  //查询 attr.keywords 包含 「教育」并且 attr.age 小于 18 的对话
-	      query.whereContains("attr.keywords", "教育");
-    query.whereLessThan("attr.age", 18);
+	  query.whereContains("attr.keywords", "教育");
+	  query.whereLessThan("attr.age", 18);
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1870,7 +1870,7 @@ tom.open(new AVIMClientCallback(){
 	  AVIMConversationQuery query = client.getConversationQuery();
 	  query.setLimit(1);
 	  //获取第一个会话
-     query.findInBackground(new AVIMConversationQueryCallback(){
+	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
        public void done(List<AVIMConversation> convs,AVIMException e){
          if(e==null){
@@ -1915,7 +1915,7 @@ tom.open(new AVIMClientCallback(){
 	  query.whereEqualTo("attr.topic","奔跑吧，兄弟");
 	  query.whereEqualTo("tr",true);
 	  //获取第一个会话
-     query.findInBackground(new AVIMConversationQueryCallback(){
+	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
        public void done(List<AVIMConversation> convs,AVIMException e){
          if(e==null){
@@ -1923,7 +1923,6 @@ tom.open(new AVIMClientCallback(){
              AVIMConversation conv = convs.get(0);
              //获取第一个对话的
              conv.getMemberCount(new AVIMConversationMemberCountCallback(){
-               
                @Override
                public void done(Integer count,AVIMException e){
                if(e==null){
