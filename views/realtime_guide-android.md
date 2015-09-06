@@ -138,7 +138,7 @@ public void jerryReceiveMsgFromTom(){
 
 在 `AVIMMessageManager` 中多次注册 `defaultMessageHandler` ，只有最后一次调用的才是有效的；而通过 `registerMessageHandler` 注册的 `AVIMMessageHandler`，则是可以同存的。
 
-通过在UI组件(比如 Activity)的 `onCreate` 方法中间去调用 `registerMessageHandler`,而在 `onPaused` 方法中间调用 `unregisterMessageHandler` 的组合，让对应的 `messageHandler` 处理当前页面的处理逻辑；而当没有页面时，则通过 defaultMessageHandler 去发送 `Notification`。
+通过在 UI 组件（比如 Activity）的 `onCreate` 方法中间去调用 `registerMessageHandler`,而在 `onPaused` 方法中间调用 `unregisterMessageHandler` 的组合，让对应的 `messageHandler` 处理当前页面的处理逻辑；而当没有页面时，则通过 defaultMessageHandler 去发送 `Notification`。
 
 {% endblock %}
 
@@ -208,6 +208,7 @@ public class MyApplication extends Application{
   @Override
   public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
     Log.d("Tom & Jerry",msg.getText();)//你们在哪儿?
+    // 收到消息之后一般的做法是做 UI 展现，示例代码在此处做消息回复，仅为了演示收到消息之后的操作，仅供参考。
     AVIMTextMessage reply = new AVIMTextMessage();
     reply.setText("Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
     conv.sendMessage(reply,new AVIMConversationCallback(){
@@ -861,7 +862,7 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 {% endblock %}
 
 {% block message_Properties_intro %}
-消息类均包含以下属性：
+消息类均包含以下公用属性：
 
 属性|描述|类型
 ---|---|---
@@ -895,7 +896,7 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
+tom.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
@@ -922,7 +923,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% block customAttributesMessage_received %}
 
 ```
-    AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
+AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
         new AVIMTypedMessageHandler<AVIMImageMessage>() {
           @Override
           public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
@@ -930,13 +931,13 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
             System.out.println(msg.getAttrs().get("location"));
           }
         });
-    AVIMClient friend = AVIMClient.getInstance("friend");
-    friend.open(new AVIMClientCallback() {
+AVIMClient friend = AVIMClient.getInstance("friend");
+friend.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {}
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -944,7 +945,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
+tom.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
@@ -964,7 +965,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
               });
         }
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -1015,8 +1016,8 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 
 {% block conversation_init %}
 ```
- AVIMClient jerry = AVIMClient.getInstance("Jerry");
-    jerry.open(new AVIMClientCallback() {
+AVIMClient jerry = AVIMClient.getInstance("Jerry");
+jerry.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
@@ -1032,7 +1033,7 @@ public class AVIMTextMessage extends AVIMTypedMessage {
               });
         }
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -1278,6 +1279,19 @@ tom.open(new AVIMClientCallback(){
 ```
 {% endblock %}
 
+{% block table_conversation_attributes_intro %}
+AVIMConversation 属性名 | _Conversation 字段|含义
+--- | ------------ | -------------
+`conversationId`| `objectId` |全局唯一的 Id
+`name` |  `name` |成员共享的统一的名字
+`members`|`m` |成员列表
+`creator` | `c` |对话创建者
+`attributes`| `attr`|自定义属性
+`isTransient`|`tr`|是否为聊天室（暂态对话）
+`lastMessageAt`|`lm`|该对话最后一条消息，也可以理解为最后一次活跃时间
+
+{% endblock %}
+
 {% block conversation_name %}
 
 ```
@@ -1359,6 +1373,8 @@ tom.open(new AVIMClientCallback(){
 
 ```
 {% endblock %}
+
+{% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
 {% block conversation_tag %}
 
@@ -1445,7 +1461,7 @@ tom.open(new AVIMClientCallback(){
 
 ```
 AVIMConversationQuery query = client.getQuery();
-query.limit(10);
+query.limit(20);
 query.findInBackground(new AVIMConversationQueryCallback(){
 	@Override
 	public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1456,6 +1472,43 @@ query.findInBackground(new AVIMConversationQueryCallback(){
 	}
 });	
 ```
+{% endblock %}
+
+{% block pattern_conservation_query_default_property %}
+
+```
+// 查询对话名称为「LeanCloud 粉丝群」的对话
+conversationQuery.whereEqualTo("name", "LeanCloud 粉丝群");
+
+// 查询对话名称包含 「LeanCloud」 的对话
+conversationQuery.whereContains("name", "LeanCloud");
+
+// 查询过去24小时活跃的对话
+Calendar yesterday= Calendar.getInstance();
+yesterday.add(Calendar.DATE, -1);
+conversationQuery.whereGreaterThan("lm", yesterday);
+```
+针对默认属性的查询可以如上进行构建。
+{% endblock %}
+
+{% block pattern_conservation_query_custom_property %}
+
+```
+// 查询话题为 DOTA2 对话
+conversationQuery.whereEqualTo("attr.topic", "DOTA2");
+// 查询等级大于 5 的对话
+conversationQuery.whereGreaterThan("attr.level", 5);
+```
+
+在 Andorid SDK 中，如果在针对自定义查询的时候，不主动加上 `attr` 的前缀，SDK 会自动添加，比如上述的代码中查询话题为 DOTA2 的对话如下书写效果一致：
+
+```
+conversationQuery.whereEqualTo("topic", "DOTA2");
+```
+特别注意：
+
+> 因为 Android 会自动添加 attr 前缀进行查询构建，所以在设置自定义属性的时候，**禁止**使用以下：`name`,`lm`,`c`,`tr`,`m`,`objectId`等已被默认属性占用的 key 值。
+
 {% endblock %}
 
 {% block conversation_messageHistoryByLimit %}
@@ -1651,7 +1704,7 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  query.whereMatches("attr.tag","[\\u4e00-\\u9fa5] "); //attr.tag 是中文 
+	  query.whereMatches("attr.tag","[\\u4e00-\\u9fa5]"); //attr.tag 是中文 
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1971,7 +2024,7 @@ public class Signature {
 * nonce 随机字符串 nonce
 * signedPeerIds 放行的 clientId 列表，v2 中已经**废弃不用**
 
-下面的代码展示了基于 LeanCloud 云代码进行签名时，客户端的实现片段，你可以参考它来完成自己的逻辑实现：
+下面的代码展示了基于 LeanCloud 云引擎进行签名时，客户端的实现片段，你可以参考它来完成自己的逻辑实现：
 
 ```
 public class KeepAliveSignatureFactory implements SignatureFactory {

@@ -941,6 +941,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 }
 ```
 {% endblock %}
+{% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
 {% block conversation_tag %}
 ```objc
@@ -1028,6 +1029,41 @@ AVIMConversation 属性名 | _Conversation 字段|含义
     }];
 }
 ```
+{% endblock %}
+{% block pattern_conservation_query_default_property %}
+
+```
+// 查询对话名称为「LeanCloud 粉丝群」的对话
+[query whereKey:@"name" equalTo:@"LeanCloud 粉丝群"];
+
+// 查询对话名称包含 「LeanCloud」 的对话
+[query whereKey:@"name" containsString:@"LeanCloud"];
+
+// 查询过去24小时活跃的对话
+NSDate *today = [NSDate date];
+NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
+[query whereKey:@"lm" greaterThan:yesterday];
+```
+
+{% endblock %}
+
+{% block pattern_conservation_query_custom_property %}
+```
+// 查询话题为 DOTA2 对话
+[query whereKey:@"attr.topic" equalTo:@"DOTA2"];
+// 查询等级大于 5 的对话
+[query whereKey:@"attr.level" greaterThan:@(5)];
+```
+
+在 iOS SDK 中，针对自定义属性的查询，可以使用预定义的宏 `AVIMAttr` 为自定义属性查询添加 `attr` 前缀：
+
+```
+// 查询话题为 DOTA2 对话
+[query whereKey:AVIMAttr(@"topic") equalTo:@"DOTA2"];
+// 它与下面这行代码是一样的
+[query whereKey:@"attr.topic" equalTo:@"DOTA2"];
+```
+
 {% endblock %}
 
 {% block table_conservation_query_than %}
@@ -1269,7 +1305,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
     [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
         // Tom 创建属性中 topic 是 movie 的查询
         AVIMConversationQuery *query = [self.client conversationQuery];
-        [query whereKey:@"attr.topic" equalTo:@"movie"];
+        [query whereKey:AVIMAttr(@"topic") equalTo:@"movie"];
         [query whereKey:@"tr" equalTo:@(YES)];
         [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
             NSLog(@"查询成功！");

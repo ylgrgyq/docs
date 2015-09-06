@@ -540,17 +540,17 @@ AVIMClient.Status != Online
 {% endblock %}
 
 {% block message_Properties_intro %}
+消息类均包含以下公用属性：
 
-属性|描述
----|---
-content|消息内容
-clientId|指消息发送者的 clientId
-conversationId|消息所属对话 id
-messageId|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
-sendTimestamp|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
-deliveredTimestamp| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
-status|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
-ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+属性|类型|描述
+---|---|---
+MessageBody|String|消息内容
+FromClientId|String|指消息发送者的 clientId
+ConversationId|String|消息所属对话 id
+Id|String|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+ServerTimestamp|long|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+MessageStatus|AVIMMessageStatus 枚举|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+MessageIOType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
 
 我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
 
@@ -885,6 +885,7 @@ public async void MuteConversationAsync()
 }
 ```
 {% endblock %}
+{% block conversation_property_name %}`AVIMConversation.Creator`{% endblock %}
 
 {% block conversation_unmute %}可使用 `UnmuteAsync()` 方法{% endblock %}
 
@@ -929,6 +930,40 @@ AVIMConversationQuery conversationQuery = client.GetQuery().Limit(20);
 var conversationList = await conversationQuery.FindAsync();
 ```
 {% endblock %}
+
+{% block pattern_conservation_query_default_property %}
+```
+AVIMConversationQuery query = client.GetQuery();
+
+// 查询对话名称为「LeanCloud 粉丝群」的对话
+query.WhereEqualTo("attr.topic", "LeanCloud 粉丝群");
+
+// 查询对话名称包含 「LeanCloud」 的对话
+query.WhereContains("attr.topic", "LeanCloud");
+
+// 查询过去24小时活跃的对话
+query.WhereGreaterThan("lm", DateTime.Now.AddDays(-1));
+```
+{% endblock %}
+
+{% block pattern_conservation_query_custom_property %}
+```
+// 查询话题为 DOTA2 对话
+query.WhereEqualTo("attr.topic", "DOTA2");
+
+// 查询等级大于 5 的对话
+query.WhereGreaterThan("level".InsertAttrPrefix(), 5);
+```
+在 Dotnet SDK 中提供了 `InsertAttrPrefix` 的拓展方法，为自定义属性查询添加 `attr` 前缀：
+
+```
+// 查询话题为 DOTA2 对话
+query.WhereEqualTo("topic".InsertAttrPrefix(), "DOTA2");
+// 它与下面这行代码是一样的
+query.WhereEqualTo("attr.topic", "DOTA2");
+```
+{% endblock %}
+
 {% block conversation_getList %}
 ```c#
 public async void CountMembers_SampleCode()
