@@ -9,7 +9,7 @@
 进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。
 
 ```
-AV.initialize("{{appid}}", "{{appkey}}");
+AV.initialize('{{appid}}', '{{appkey}}');
 // 初始化 param1：应用 id、param2：应用 key
 ```
 
@@ -18,11 +18,13 @@ AV.initialize("{{appid}}", "{{appkey}}");
 开始测试。初始化后加入下面代码：
 
 ```
-var TestObject = AV.Object.extend("TestObject");
+var TestObject = AV.Object.extend('TestObject');
 var testObject = new TestObject();
-testObject.save({foo: "bar"}, {
+testObject.save({
+  foo: 'bar'
+}, {
   success: function(object) {
-  alert("LeanCloud works!");
+    alert('LeanCloud works!');
   }
 });
 ```
@@ -37,6 +39,6 @@ testObject.save({foo: "bar"}, {
 然后代码中使用 SDK：
 
 ```
-	var AV = require('avoscloud-sdk').AV;
-	AV.initialize("{{appid}}", "{{appkey}}");
+var AV = require('avoscloud-sdk').AV;
+AV.initialize('{{appid}}', '{{appkey}}');
 ```
