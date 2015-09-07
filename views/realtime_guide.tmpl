@@ -331,28 +331,32 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ```
 {% endblock %}
 
-### 消息的发送策略
+### 消息的发送
+{% block api_send_message_method_intro %}{% endblock %}
 
-{% block messagePolicy_sent %}{% endblock %}目前 SDK 内置的多媒体消息类如下：
+{% block messagePolicy_sent %}{% endblock %}
+
+#### 多媒体消息发送
+目前 SDK 内置的多媒体消息类如下：
 
 * 图像 `AVIMImageMessage`
 * 音频 `AVIMAudioMessage`
 * 视频 `AVIMVideoMessage`
 * 文件 `AVIMFileMessage`
 
-所有多媒体消息类型的发送策略如下：
+所有多媒体消息类型的发送流程如下：
 
 如果文件是从**客户端 API 读取的数据流 (Stream)**，步骤为： 
 
 1. 从本地构造 AVFile
 1. 调用 AVFile 的上传方法将文件上传到服务器，并获取文件元信息（MetaData）
 1. 把 AVFile 的 objectId、URL ，以及文件的元信息封装在消息体内
-1. 发送消息
+1. 调用接口发送消息
 
 如果文件是**外部链接的 URL**，则：
 
 1. 直接将 URL 封装在消息体内，不获取元信息，不包含 objectId
-1. 发送消息
+1. 调用接口发送消息
 
 #### 启用离线消息推送
 
@@ -378,7 +382,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 {% block message_sent_ack %}{% endblock %}
 
-### 消息的接收策略
+### 消息的接收
 
 {% block messagePolicy_received_intro %}
 消息的接收策略在不同平台有不同的实现。
