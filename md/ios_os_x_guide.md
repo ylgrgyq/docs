@@ -888,7 +888,7 @@ AVObject *result = [query getFirstObject];
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-query.cachePolicy = kPFCachePolicyNetworkElseCache;
+query.cachePolicy = kAVCachePolicyNetworkElseCache;
 
 //设置缓存有效期
 query.maxCacheAge = 24*3600;
@@ -904,15 +904,15 @@ query.maxCacheAge = 24*3600;
 ```
 LeanCloud 提供了几种不同的缓存策略：
 
-* `kPFCachePolicyIgnoreCache`
+* `kAVCachePolicyIgnoreCache`
   **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-* `kPFCachePolicyCacheOnly`
+* `kAVCachePolicyCacheOnly`
   查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。
-* `kPFCachePolicyCacheElseNetwork`
+* `kAVCachePolicyCacheElseNetwork`
   查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyNetworkElseCache`
+* `kAVCachePolicyNetworkElseCache`
   查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyCacheThenNetwork`
+* `kAVCachePolicyCacheThenNetwork`
   查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
 
 要控制缓存行为，可以使用 `AVQuery` 提供的相应方法：
