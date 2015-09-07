@@ -159,10 +159,15 @@ module.exports = function(grunt) {
         }
       }
     },
-    autoprefixer: {
+    postcss: {
       server: {
-        files: {
-          "custom/css/app-docs.css": ["custom/css/app-docs.css"]
+        src: "custom/css/app-docs.css",
+        options: {
+          processors: [
+            require("autoprefixer")({
+              browsers: "last 1 versions"
+            })
+          ]
         }
       }
     },
@@ -230,13 +235,13 @@ module.exports = function(grunt) {
 
   grunt.registerTask("build", [
     "clean", "nunjucks", "copy:md", "markdown", "assemble", "comment",
-    "less:dist", "autoprefixer", "cssmin", "copy:asset",
+    "less:dist", "postcss", "cssmin", "copy:asset",
     "useminPrepare", 'concat:generated', "uglify:generated", "usemin"
   ]);
 
   grunt.registerTask("localBuild",[
     "clean", "nunjucks", "copy:md", "markdown", "assemble",
-    "less:dist", "autoprefixer", "copy:asset"
+    "less:dist", "postcss", "copy:asset"
   ]);
 
   grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
