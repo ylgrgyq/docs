@@ -233,7 +233,7 @@ module.exports = function(grunt) {
 
   grunt.registerTask("default", ["build"]);
 
-  grunt.registerTask("build", "Save current (previously activated) theme to AMSF cache", function() {
+  grunt.registerTask("build", "Main build", function() {
     grunt.task.run([
       "clean", "nunjucks", "copy:md", "markdown", "assemble",
     ]);
@@ -251,7 +251,12 @@ module.exports = function(grunt) {
     "less:dist", "postcss", "copy:asset"
   ]);
 
-  grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
+  grunt.registerTask("serve", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
+
+  grunt.registerTask('server', function (target) {
+    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` instead.');
+    grunt.task.run([target ? ('serve:' + target) : 'serve']);
+  });
 
   grunt.registerMultiTask('comment','add version info',function(){
     grunt.task.requires('assemble');
