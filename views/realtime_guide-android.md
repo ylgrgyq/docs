@@ -1240,7 +1240,7 @@ william.open(new AVIMClientCallback(){
 No.|操作者（管理员）|被踢者|其他人
 ---|---|---|---
 1|发出请求 kickMembers| | 
-2| |收到 onKicked 通知| |
+2| |收到 onKicked 通知| 
 3|收到 onMemberLeft 通知| |收到 onMemberLeft 通知
 {% endblock %}
 
