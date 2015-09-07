@@ -6,6 +6,13 @@ var mountFolder = function(connect, dir) {
   };
 module.exports = function(grunt) {
 
+  require("jit-grunt")(grunt, {
+    configureProxies: "grunt-connect-proxy",
+    useminPrepare: "grunt-usemin"
+  });
+
+  require("time-grunt")(grunt);
+
   // Project configuration.
   grunt.initConfig({
 
@@ -217,37 +224,20 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-dom-munger');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-markdown');
-  grunt.loadNpmTasks('grunt-contrib-livereload');
-
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-connect-proxy');
-  grunt.loadNpmTasks('grunt-autoprefixer');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('assemble');
-
-  grunt.loadNpmTasks('grunt-usemin');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  // grunt.loadNpmTasks('grunt-useminPrepare');
-  grunt.loadNpmTasks('grunt-nunjucks');
-
   grunt.registerTask("test", ["build"]);
 
   grunt.registerTask("default", ["build"]);
 
-  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
-   "less:dist", "autoprefixer", "cssmin", "copy:asset",
-    "useminPrepare",'concat:generated',
-    'uglify:generated',"usemin"]);
+  grunt.registerTask("build", [
+    "clean", "nunjucks", "copy:md", "markdown", "assemble", "comment",
+    "less:dist", "autoprefixer", "cssmin", "copy:asset",
+    "useminPrepare", 'concat:generated', "uglify:generated", "usemin"
+  ]);
 
-  grunt.registerTask("localBuild",["clean", "nunjucks", "copy:md", "markdown", "assemble",
-   "less:dist", "autoprefixer", "copy:asset"]);
+  grunt.registerTask("localBuild",[
+    "clean", "nunjucks", "copy:md", "markdown", "assemble",
+    "less:dist", "autoprefixer", "copy:asset"
+  ]);
 
   grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
 
