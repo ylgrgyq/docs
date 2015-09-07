@@ -1110,7 +1110,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
     [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
         // Tom 创建 type 不等于 private 的查询
         AVIMConversationQuery *query = [self.client conversationQuery];
-        [query whereKey:@"type" notEqualTo:@"private"];
+        [query whereKey:AVIMAttr(@"type") notEqualTo:@"private"];
         // 执行查询
         [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
             NSLog(@"找到 %ld 个对话！", [objects count]);

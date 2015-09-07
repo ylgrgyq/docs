@@ -203,7 +203,7 @@ public class MyApplication extends Application{
 }
 
 - CustomMessageHandler.java
- public class CustomMessageHandler<AVIMTextMessage> implements AVTypedMessageHandler{
+public class CustomMessageHandler<AVIMTextMessage> implements AVTypedMessageHandler{
  
   @Override
   public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
@@ -219,11 +219,11 @@ public class MyApplication extends Application{
   	   }
   	 });
   }
+}
+public void onMessageReceipt(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
   
-  public void onMessageReceipt(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
-  
-  }
-  
+}
+
 - SomeActivity.java
 public void loginAsBob(){
 	AVIMClient bob = AVIMClient.getInstance("Bob");
@@ -235,7 +235,6 @@ public void loginAsBob(){
 	  	}
 	  }
 	});
-}
 }
 ```
 {% endblock %}
@@ -284,8 +283,8 @@ public void sendImage(String filePath){
 
 {% block imageMessage_url_sent %}
 ```
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
+AVIMClient tom = AVIMClient.getInstance("Tom");
+tom.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
@@ -295,9 +294,7 @@ public void sendImage(String filePath){
                 @Override
                 public void done(AVIMConversation conv, AVIMException e) {
                   if (e == null) {
-                    AVFile file =
-                        new AVFile("萌妹子",
-                            "http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif", null);
+                    AVFile file =new AVFile("萌妹子","http://pic2.zhimg.com/6c10e6053c739ed0ce676a0aff15cf1c.gif", null);
                     AVIMImageMessage m = new AVIMImageMessage(file);
                     m.setText("萌妹子一枚");
                     // 创建一条图片消息
@@ -314,7 +311,7 @@ public void sendImage(String filePath){
               });
         }
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -476,35 +473,34 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
 
 {% block videoMessage_local_sent %}
 ```
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          // 创建名为“猫和老鼠”的对话
-          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
-              new AVIMConversationCreatedCallback() {
-                @Override
-                public void done(AVIMConversation conv, AVIMException e) {
-                  if (e == null) {
-                    AVFile file =
-                        AVFile.withAbsoluteLocalPath("bbc_奶酪.mp4", localFilePath);
-                    AVIMVideoMessage m = new AVIMVideoMessage(file);
-                    // 创建一条视频消息
-                    conv.sendMessage(m, new AVIMConversationCallback() {
-                      @Override
-                      public void done(AVIMException e) {
-                        if (e == null) {
-                          // 发送成功
+  AVIMClient tom = AVIMClient.getInstance("Tom");
+  tom.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        // 创建名为“猫和老鼠”的对话
+        client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
+                new AVIMConversationCreatedCallback() {
+                  @Override
+                  public void done(AVIMConversation conv, AVIMException e) {
+                    if (e == null) {
+                      AVFile file = AVFile.withAbsoluteLocalPath("bbc_奶酪.mp4", localFilePath);
+                      AVIMVideoMessage m = new AVIMVideoMessage(file);
+                      // 创建一条视频消息
+                      conv.sendMessage(m, new AVIMConversationCallback() {
+                        @Override
+                        public void done(AVIMException e) {
+                          if (e == null) {
+                            // 发送成功
+                          }
                         }
-                      }
-                    });
+                      });
+                    }
                   }
-                }
-              });
-        }
+                });
       }
-    });
+    }
+  });
 ```
 {% endblock %}
 
@@ -543,7 +539,7 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
 ```
 {% endblock %}
 {% block videoMessage_received_intro %}
-视频消息的接收与图像消息一样，它的元数据获取都可以通过 `getFileMetaData()` 来获取。
+视频消息的接收与图像消息一样，它的元数据都可以通过 `getFileMetaData()` 来获取。
 {% endblock %}
 {% block fileMessage_sent %}
 ```
@@ -594,44 +590,13 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
 
 {% block locationMessage_sent %}
 ```
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          // 创建名为“猫和老鼠”的对话
-          client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
-              new AVIMConversationCreatedCallback() {
-                @Override
-                public void done(AVIMConversation conv, AVIMException e) {
-                  if (e == null) {
-                      //创建一个地理位置信息
-                      AVIMLocationMessage m = new AVIMLocationMessage();
-                      m.setLocation(new AVGeoPoint(138.12454, 52.56461));
-                      m.setText("好利来新店");
-                    conv.sendMessage(m, new AVIMConversationCallback() {
-                      @Override
-                      public void done(AVIMException e) {
-                        if (e == null) {
-                          // 发送成功
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-        }
-      }
-    });
-}
+
 ```
 {% endblock %}
 
 {% block locationMessage_received_intro %}
 
-```
 地址消息的接收与图像消息一样，它的地址信息可以通过 `getLocation` 方法来获取
-```
 
 {% endblock %}
 
@@ -706,10 +671,10 @@ AVIMMessageManager.registerMessageHandler(AVIMTypedMessage.class, msgHandler);
 
 SDK 内部在接收消息时的处理逻辑是这样的：
 
-* 当收到新消息时，实时通信 SDK 会先解析消息的类型，然后找到开发者为这一类型所注册的处理响应 handler，再逐一调用这些 handler 的 onMessage 函数。
+* 当收到新消息时，实时通信 SDK 会先解析消息的类型，然后找到开发者为这一类型所注册的处理响应 handler chain，再逐一调用这些 handler 的 onMessage 函数
 * 如果没有找到专门处理这一类型消息的 handler，就会转交给 defaultHandler 处理。
 
-这样一来，在开发者为 `TypedMessage`（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 `AVIMMessageManager.registerDefaultMessageHandler()` 中指定的 handler 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 `AVIMMessageManager.registerMessageHandler()` 中指定的 handler 被调用。
+这样一来，在开发者为 `AVIMTypedMessage`（及其子类） 指定了专门的 handler，也指定了全局的 defaultHandler 了的时候，如果发送端发送的是通用的 AVIMMessage 消息，那么接受端就是 `AVIMMessageManager.registerDefaultMessageHandler()` 中指定的 handler 被调用；如果发送的是 AVIMTypedMessage（及其子类）的消息，那么接受端就是 `AVIMMessageManager.registerMessageHandler()` 中指定的 handler 被调用。
 {% endblock %}
 
 {% block transientMessage_sent %}
@@ -733,6 +698,7 @@ public class AVIMOperationMessage extends AVIMTypedMessage {
     this.op = op;
   }
 }
+
 - CustomApplication.java
 public CustomApplication extends Application {
    ...
@@ -742,9 +708,8 @@ public CustomApplication extends Application {
 }
 
 - SomeActivity.java
-
 AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
+tom.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
@@ -764,7 +729,6 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
         }
       }
     });
-
 ```
 {% endblock %}
 
@@ -789,6 +753,7 @@ public class AVIMOperationMessage extends AVIMTypedMessage {
     this.op = op;
   }
 }
+
 - CustomApplication.java
 public CustomApplication extends Application {
    ...
@@ -798,29 +763,30 @@ public CustomApplication extends Application {
 }
 
 - SomeActivity.java
- 
-  final String USER_OPERATION = "% is %";
-  AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
-        new AVIMTypedMessageHandler<AVIMOperationMessage>() {
-
-          @Override
-          public void onMessage(AVIMOperationMessage msg, AVIMConversation conv, AVIMClient client) {
+final String USER_OPERATION = "% is %";
+// 设置消息接收的 Handler，接收到消息之后的将执行具体的操作
+AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
+    new AVIMTypedMessageHandler<AVIMOperationMessage>() {
+        @Override
+        public void onMessage(AVIMOperationMessage msg, AVIMConversation conv, AVIMClient client) {
             if ("Jerry".equals(client.getClientId())
                 && "551260efe4b01608686c3e0f".equals(conv.getConversationId())) {
               String opeartion = String.format(USER_OPERATION, msg.getFrom(), msg.getOp());
               System.out.println(opeartion);
             }
-          }
-        });
-    AVIMClient jerry = AVIMClient.getInstance("Jerry");
-    jerry.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
+        }
+});
+        
+// 登陆操作，建立和服务端的连接，开始接收消息
+AVIMClient jerry = AVIMClient.getInstance("Jerry");
+jerry.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
           // 登录成功
         }
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -897,26 +863,26 @@ ioType|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
 tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
-          Map<String, Object> attributes = new HashMap<String, Object>();
-          attributes.put("location", "拉萨布达拉宫");
-          attributes.put("Title", "这蓝天……我彻底是醉了");
-          msg.setAttrs(attributes);
-          client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
-              new AVIMConversationCallback() {
-                @Override
-                public void done(AVIMException e) {
-                  if (e == null) {
+            AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("location", "拉萨布达拉宫");
+            attributes.put("Title", "这蓝天……我彻底是醉了");
+            msg.setAttrs(attributes);
+            client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
+                new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVIMException e) {
+                      if (e == null) {
                     // 发送成功
-                  }
+                    }
                 }
-              });
+            });
         }
       }
-    });
+});
 ```
 {% endblock %}
 
@@ -924,19 +890,21 @@ tom.open(new AVIMClientCallback() {
 
 ```
 AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
-        new AVIMTypedMessageHandler<AVIMImageMessage>() {
-          @Override
-          public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
-            //此处应该是"拉萨布达拉宫"
-            System.out.println(msg.getAttrs().get("location"));
-          }
-        });
+    new AVIMTypedMessageHandler<AVIMImageMessage>() {
+        @Override
+            public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
+                //此处应该是"拉萨布达拉宫"
+                System.out.println(msg.getAttrs().get("location"));
+            }
+    }
+);
+
 AVIMClient friend = AVIMClient.getInstance("friend");
 friend.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
         if (e == null) {}
-      }
+    }
 });
 ```
 {% endblock %}
@@ -946,23 +914,23 @@ friend.open(new AVIMClientCallback() {
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
 tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
-          Map<String, Object> attributes = new HashMap<String, Object>();
-          attributes.put("location", "拉萨布达拉宫");
-          attributes.put("Title", "这蓝天……我彻底是醉了");
-          msg.setAttrs(attributes);
-          client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
-              new AVIMConversationCallback() {
-                @Override
-                public void done(AVIMException e) {
-                  if (e == null) {
-                    // 发送成功
-                  }
+            AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
+            Map<String, Object> attributes = new HashMap<String, Object>();
+            attributes.put("location", "拉萨布达拉宫");
+            attributes.put("Title", "这蓝天……我彻底是醉了");
+            msg.setAttrs(attributes);
+            client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
+                new AVIMConversationCallback() {
+                    @Override
+                    public void done(AVIMException e) {
+                        if (e == null) {
+                        // 发送成功
+                    }
                 }
-              });
+            });
         }
       }
 });
@@ -1018,19 +986,19 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 ```
 AVIMClient jerry = AVIMClient.getInstance("Jerry");
 jerry.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          // 创建名为“猫和老鼠”的对话
-          client.createConversation(Arrays.asList("Bob", "Harry", "William"), "猫和老鼠", null,
-              new AVIMConversationCreatedCallback() {
-                @Override
-                public void done(AVIMConversation conv, AVIMException e) {
-                  if (e == null) {
-                    // 创建成功
-                  }
-                }
-              });
+            // 创建名为“猫和老鼠”的对话
+            client.createConversation(Arrays.asList("Bob", "Harry", "William"), "猫和老鼠", null,
+                new AVIMConversationCreatedCallback() {
+                    @Override
+                        public void done(AVIMConversation conv, AVIMException e) {
+                            if (e == null) {
+                                // 创建成功
+                            }
+                    }
+             });
         }
       }
 });
@@ -1054,7 +1022,7 @@ tom.open(new AVIMClientCallback(){
 	@Override
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
-	  //登录成功
+	    //登录成功
 		AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
 		conv.join(new AVIMConversationCallback(){
 			@Override
@@ -1128,30 +1096,30 @@ public class CustomConversationEventHandler extends AVIMConversationEventHandler
 {% block conversation_invite %}
 
 ```
-AVIMClient jerry = AVIMClient.getInstance("Jerry");
-jerry.open(new AVIMClientCallback(){
+ AVIMClient jerry = AVIMClient.getInstance("Jerry");
+    jerry.open(new AVIMClientCallback() {
 
-	@Override
-	public void done(AVIMClient client,AVIMException e){
-	  if(e==null){
-	  //登录成功
-		final AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
-		conv.join(new AVIMConversationCallback(){
-			@Override
-			public void done(AVIMException e){
-			  if(e==null){
-			  //加入成功
-			  conv.addMembers(Arrays.asList("Mary"),new AVIMConversationCallback(){
-			    @Override
-			    public void done(AVIMException e){
-			    }
-			  });
-			  }
-			}
-		});
-	  }
-	}
-});
+      @Override
+      public void done(AVIMClient client, AVIMException e) {
+        if (e == null) {
+          //登录成功
+          final AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
+          conv.join(new AVIMConversationCallback() {
+            @Override
+            public void done(AVIMException e) {
+              if (e == null) {
+                //加入成功
+                conv.addMembers(Arrays.asList("Mary"), new AVIMConversationCallback() {
+                  @Override
+                  public void done(AVIMException e) {
+                  }
+                });
+              }
+            }
+          });
+        }
+      }
+    });
 
 ```
 {% endblock %}
@@ -1343,7 +1311,6 @@ black.open(new AVIMClientCallback(){
 	  }
 	}
 });
-
 ```
 {% endblock %}
 
@@ -1860,39 +1827,41 @@ tom.open(new AVIMClientCallback(){
 {% block chatroom_count %}
 
 ```
-AVIMClient tom = AVIMClient.getInstance("Tom");
-tom.open(new AVIMClientCallback(){
-
-	@Override
-	public void done(AVIMClient client,AVIMException e){
-	  if(e==null){
-	  //登录成功
-	  AVIMConversationQuery query = client.getConversationQuery();
-	  query.setLimit(1);
-	  //获取第一个会话
-	  query.findInBackground(new AVIMConversationQueryCallback(){
-       @Override
-       public void done(List<AVIMConversation> convs,AVIMException e){
-         if(e==null){
-           if(convs!=null && !convs.isEmpty()){
-             AVIMConversation conv = convs.get(0);
-             //获取第一个对话的
-             conv.getMemberCount(new AVIMConversationMemberCountCallback(){
-               
-               @Override
-               public void done(Integer count,AVIMException e){
-               if(e==null){
-               Log.d("Tom & Jerry","conversation got "+count+" members");
-				}
-               }
-             });
-           }
-         }
-       }
-     });
-	  }
-	}
-});
+private void TomQueryWithLimit() {
+  AVIMClient tom = AVIMClient.getInstance("Tom");
+  tom.open(new AVIMClientCallback() {
+    
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        //登录成功
+        AVIMConversationQuery query = tom.getConversationQuery();
+        query.setLimit(1);
+        //获取第一个会话
+        query.findInBackground(new AVIMConversationQueryCallback() {
+          @Override
+          public void done(List<AVIMConversation> convs, AVIMException e) {
+            if (e == null) {
+              if (convs != null && !convs.isEmpty()) {
+                AVIMConversation conv = convs.get(0);
+                //获取第一个对话的
+                conv.getMemberCount(new AVIMConversationMemberCountCallback() {
+                  
+                  @Override
+                  public void done(Integer count, AVIMException e) {
+                    if (e == null) {
+                      Log.d("Tom & Jerry", "conversation got " + count + " members");
+                    }
+                  }
+                });
+              }
+            }
+          }
+        });
+      }
+    }
+  });
+}
 ```
 {% endblock %}
 
