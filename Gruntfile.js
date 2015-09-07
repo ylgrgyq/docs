@@ -233,11 +233,18 @@ module.exports = function(grunt) {
 
   grunt.registerTask("default", ["build"]);
 
-  grunt.registerTask("build", [
-    "clean", "nunjucks", "copy:md", "markdown", "assemble", "comment",
-    "less:dist", "postcss", "cssmin", "copy:asset",
-    "useminPrepare", 'concat:generated', "uglify:generated", "usemin"
-  ]);
+  grunt.registerTask("build", "Save current (previously activated) theme to AMSF cache", function() {
+    grunt.task.run([
+      "clean", "nunjucks", "copy:md", "markdown", "assemble",
+    ]);
+    if (!grunt.option("no-comments")) {
+      grunt.task.run(["comment"]);
+    }
+    grunt.task.run([
+      "less:dist", "postcss", "cssmin", "copy:asset",
+      "useminPrepare", 'concat:generated', "uglify:generated", "usemin"
+    ]);
+  });
 
   grunt.registerTask("localBuild",[
     "clean", "nunjucks", "copy:md", "markdown", "assemble",

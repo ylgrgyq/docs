@@ -4,7 +4,7 @@
   "description": "LeanCloud Documentation",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test --no-comments"
   },
   "repository": {
     "type": "git",
