@@ -274,6 +274,31 @@ imClient.delegate = self;
 
 AVIMClientDelegate 是一个非常重要的接口，所有的消息和事件通知都需要通过它响应。后面我们会仔细讨论一下这个代理接口。
 
+### 未读消息
+
+iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线消息的接收机制。
+
+SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
+
+要开启未读消息，可以在 AVOSCloud 初始化语句后面加上：
+
+```objc
+[AVIMClient setUserOptions:@{
+    AVIMUserOptionUseUnread: @(YES)
+}];
+```
+
+接收未读消息数的 delegate 方法是：
+
+```objc
+/*
+ 收到未读通知。
+ @param conversation 所属会话。
+ @param unread 未读消息数量。
+ */
+- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread;
+```
+
 ### 退出登录
 
 在 app 退出的时候，或者切换用户的时候，我们需要断开与 LeanCloud 实时通信服务的长连接，这时候需要调用 `[AVIMClient closeWithCallback:]` 函数。一般情况下，这个函数都会关闭连接并立刻返回，这时候 Leancloud 实时通信服务端就会认为当前用户已经下线。
