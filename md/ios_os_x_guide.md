@@ -863,7 +863,7 @@ query.limit = [NSNumber numberWithInt:10];
 }];
 ```
 
-**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
+**使用点（`.`）操作符可以检索多层级的数据（AVObject 对象）**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
 
 ```objc
 [query includeKey:@"post.author"];
