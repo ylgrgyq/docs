@@ -48,6 +48,22 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 }
 ```
 
+### 导入模块
+
+在使用到 IM 模块的地方，应该导入该模块。
+
+在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
+
+```objc
+#import <AVOSCloudIM/AVOSCloudIM.h>
+```
+
+在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
+
+```swift
+import AVOSCloudIM
+```
+
 ### 登录
 
 用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名、密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个可唯一标识当前用户的 `clientId` 即可。
