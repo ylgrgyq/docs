@@ -296,7 +296,7 @@ LeanEngine 可以使用 Python 内置的 urllib，不过推荐您使用 [request
 
 {% block timerExample %}
 ```python
-@engine.cloud_code
+@engine.define
 def log_timer():
     print 'Log in timer.'
 ```
@@ -323,7 +323,7 @@ leancloud.init('{{appid}}', master_key='{{masterkey}}')
 
 {% block loggerExample %}
 ```python
-@engine.cloud_code
+@engine.define
 def log_something(**params):
     print params
 ```
