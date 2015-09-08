@@ -166,7 +166,7 @@ except LeanCloudError, e:
 {% block beforeSaveExample %}
 ```python
 @engine.before_save('Review')  # Review 为需要 hook 的 class 的名称
-function before_review_save(review):
+def before_review_save(review):
 	comment = review.get('comment')
 	if not comment:
 		raise leancloud.LeanEngineError(message='No comment!')
