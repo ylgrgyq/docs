@@ -75,8 +75,8 @@ iOS 设备通常使用 DeviceToken 来惟一标识一台设备。
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "ios",
@@ -94,8 +94,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "android",
@@ -115,8 +115,8 @@ curl -X POST \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "channels": [
@@ -130,8 +130,8 @@ curl -X PUT \
 
 ```
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "channels": {
@@ -148,8 +148,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "userObjectId": "<用户的 objectId>"
@@ -333,8 +333,8 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 #### 推送给所有的设备
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "data": {
@@ -350,8 +350,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
--H "X-AVOSCloud-Application-Id: {{appid}}"          \
--H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+-H "X-LC-Id: {{appid}}"          \
+-H "X-LC-Key: {{appkey}}"        \
 -H "Content-Type: application/json" \
 -d '{
       "where":{
@@ -369,8 +369,8 @@ https://leancloud.cn/1.1/push
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "channels":[ "public"],
@@ -386,8 +386,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
--H "X-AVOSCloud-Application-Id: {{appid}}"          \
--H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+-H "X-LC-Id: {{appid}}"          \
+-H "X-LC-Key: {{appkey}}"        \
 -H "Content-Type: application/json" \
 -d '{
       "where":{
@@ -404,8 +404,8 @@ https://leancloud.cn/1.1/push
 
 ```sh
 curl -X POST \
--H "X-AVOSCloud-Application-Id: {{appid}}"          \
--H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+-H "X-LC-Id: {{appid}}"          \
+-H "X-LC-Key: {{appkey}}"        \
 -H "Content-Type: application/json" \
 -d '{
       "where":{
@@ -424,8 +424,8 @@ https://leancloud.cn/1.1/push
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "where": {
@@ -444,8 +444,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "where": {
@@ -477,8 +477,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
--H "X-AVOSCloud-Application-Id: {{appid}}"          \
--H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+-H "X-LC-Id: {{appid}}"          \
+-H "X-LC-Key: {{appkey}}"        \
 -H "Content-Type: application/json" \
 -d '{
       "cql":"select * from _Installation where installationId='xxxxxxxxxxxxx'",
@@ -496,8 +496,8 @@ https://leancloud.cn/1.1/push
  过期时间，可以是绝对时间：
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "expiration_time": "2015-10-07T00:51:13Z",
@@ -511,8 +511,8 @@ curl -X POST \
 也可以是相对时间（从推送 API 调用开始算起，结合 push_time 做定期推送）:
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "push_time": "2015-06-28T00:51:13.931Z",
@@ -528,8 +528,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "channels": [
