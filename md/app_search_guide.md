@@ -460,8 +460,8 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   "https://leancloud.cn/1.1/search/select?q=dennis&limit=200&clazz=GameScore&order=-score"
 ```
 
@@ -515,8 +515,8 @@ sid: "cXVlcnlUaGVuRmV0Y2g7Mzs0NDpWX0NFUmFjY1JtMnpaRDFrNUlBcTNnOzQzOlZfQ0VSYWNjUm
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   "https://leancloud.cn/1.1/search/select?q=dennis&limit=200&clazz=GameScore&order=-score&sid=cXVlcnlUaGVuRmV0Y2g7Mzs0NDpWX0NFUmFjY1JtMnpaRDFrNUlBcTNnOzQzOlZfQ0VSYWNjUm0yelpEMWs1SUFxM2c7NDU6Vl9DRVJhY2NSbTJ6WkQxazVJQXEzZzswOw"
 ```
 直到返回结果为空。

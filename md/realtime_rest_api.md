@@ -10,8 +10,8 @@
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name":"My Private Room","m": ["BillGates", "SteveJobs"]}' \
   https://api.leancloud.cn/1.1/classes/_Conversation
@@ -23,8 +23,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name": "OpenConf","tr": true}' \
   https://api.leancloud.cn/1.1/classes/_Conversation
@@ -38,8 +38,8 @@ curl -X POST \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"AddUnique","objects":["LarryPage"]}}' \
   https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
@@ -49,8 +49,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"Remove","objects":["SteveJobs"]}}' \
   https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
@@ -62,8 +62,8 @@ curl -X PUT \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 ###获取某个对话的聊天记录
@@ -146,8 +146,8 @@ from-ip | 消息的来源 IP
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593&msgid=PESlY&timestamp=1408008498571
 ```
 
@@ -171,8 +171,8 @@ timestamp | 消息时间戳
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/messages/unread/CLIENT_ID
 ```
 
@@ -191,8 +191,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"from_peer": "1a", "message": "helloworld", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
@@ -230,8 +230,8 @@ wait | 可选|同步调用等待返回，可以获得发送的报错信息。
 
 ```
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: " \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"from_peer": "1a", "message": "{\"_lctype\":-1,\"_lctext\":\"这是一个纯文本消息\",\"_lcattrs\":{\"a\":\"_lcattrs 是用来存储用户自定义的一些键值对\"}}", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
@@ -427,8 +427,8 @@ gid | 暂态对话的 id
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/transient_group/onlines?gid=...
 ```
 
@@ -447,8 +447,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"peers": ["7u", "8b", "3h", ...]}' \
   https://leancloud.cn/1.1/rtm/online

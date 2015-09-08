@@ -61,8 +61,8 @@ URL|HTTP|功能
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -83,8 +83,8 @@ op||操作类型
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -105,8 +105,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   "https://api.leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
@@ -126,8 +126,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "917646xxxxx", "countryCode":"US"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -144,8 +144,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "template":"activity","date":"2014 年 10 月 31 号"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -189,8 +189,8 @@ LeanCloud 提供了内建的账户系统，方便开发者快速接入。我们�
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
   https://api.leancloud.cn/1.1/usersByMobilePhone
@@ -222,8 +222,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"username":"cooldude6","password":"p_n7!-e8","mobilePhoneNumber":"186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/users
@@ -233,8 +233,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
   https://api.leancloud.cn/1.1/verifyMobilePhone/:code
@@ -250,8 +250,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestMobilePhoneVerify
@@ -263,8 +263,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestLoginSmsCode
@@ -274,8 +274,8 @@ curl -X POST \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'smsCode=123456' \
@@ -286,8 +286,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'password=p_n7!-e8' \
@@ -300,8 +300,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
@@ -313,8 +313,8 @@ curl -X POST \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"password": "new password"}' \
   https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
