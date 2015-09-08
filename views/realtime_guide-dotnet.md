@@ -1166,8 +1166,9 @@ public async void CountMembers_SampleCode()
 }
 ```
 {% endblock %}
+{% block create_query_instance_method %}`AVIMClient.GetQuery()`{% endblock %}
 
-{% block chatroom_query_method %} `AVIMConversationQuery` 调用 `Where` 开头的{% endblock %}
+{% block chatroom_query_method2 %}以 `Where` 开头的{% endblock %}
 
 {% block chatroom_query_single %}
 ```c#

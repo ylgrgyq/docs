@@ -1904,7 +1904,9 @@ private void TomQueryWithLimit() {
 
 {% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}
 
-{% block chatroom_query_method2 %} `whereEqualTo` {% endblock %}
+{% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
+
+{% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
 
 {% block chatroom_query_single %}
 
