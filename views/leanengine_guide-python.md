@@ -31,7 +31,7 @@ $ pip install -Ur requirements.txt
 启动应用：
 
 ```
-$ python wsgi.py
+$ avoscloud
 ```
 {% endblock %}
 
