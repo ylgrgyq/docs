@@ -99,7 +99,7 @@ imClient.delegate = self;
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
 * transient，布尔值，表示对话是否为[暂态对话](./realtime_v2.html#暂态对话_transient_conversation_)（关于暂态对话，[后面](#开放聊天室)会详细解释）
 
-我们可以通过 `AVIMClient` 来创建一个对话，其函数声明为：
+当 `AVIMClient` 登录成功后，我们可以通过 `AVIMClient` 来创建一个对话，其函数声明为：
 
 ```
 //指定名字、成员，创建对话
