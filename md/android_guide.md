@@ -1066,7 +1066,7 @@ query.whereEqualTo("pubUser", AVUser.getCurrentUser().getUsername());
 query.findInBackground(new FindCallback<Post>() {
   @Override
   public void done(List<Post> results, AVException e) {
-    for (Armor a : results) {
+    for (Post a : results) {
       // ...
     }
   }
