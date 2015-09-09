@@ -710,6 +710,59 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 
 {% block event_invited %} `invitedByClientId` {% endblock %}
 
+{% block api_method_conversation_join %} `AVIMConversation.joinWithCallback`{% endblock %}
+
+{% block api_method_conversation_invite %} `AVIMConversation.addMembersWithClientIds`{% endblock %}
+
+{% block api_method_conversation_quit %} `AVIMConversation.quitWithCallback`{% endblock %}
+
+{% block api_method_conversation_kick %} `AVIMConversation.removeMembersWithClientIds`{% endblock %}
+
+
+{% block conversation_members_change_notice_intro %}
+在 iOS 中，开发者需要实现 `AVIMClientDelegate` 代理，并且为 AVIMClient 指定该代理的一个实例。
+
+`AVIMClientDelegate` 关于的成员变更通知的代理解释如下：
+
+```
+@protocol AVIMClientDelegate <NSObject>
+
+/*!
+ 对话中有新成员加入的通知。
+ @param conversation － 所属对话
+ @param clientIds - 加入的新成员列表
+ @param clientId - 邀请者的 id
+ @return None.
+ */
+- (void)conversation:(AVIMConversation *)conversation membersAdded:(NSArray *)clientIds byClientId:(NSString *)clientId;
+/*!
+ 对话中有成员离开的通知。
+ @param conversation － 所属对话
+ @param clientIds - 离开的成员列表
+ @param clientId - 操作者的 id
+ @return None.
+ */
+- (void)conversation:(AVIMConversation *)conversation membersRemoved:(NSArray *)clientIds byClientId:(NSString *)clientId;
+
+/*!
+ 被邀请加入对话的通知。
+ @param conversation － 所属对话
+ @param clientId - 邀请者的 id
+ @return None.
+ */
+- (void)conversation:(AVIMConversation *)conversation invitedByClientId:(NSString *)clientId;
+
+/*!
+ 从对话中被移除的通知。
+ @param conversation － 所属对话
+ @param clientId - 操作者的 id
+ @return None.
+ */
+- (void)conversation:(AVIMConversation *)conversation kickedByClientId:(NSString *)clientId;
+``` 
+
+{% endblock %}
+
 {% block conversation_join %}
 ```objc
 - (void)tomJoinConversation {
@@ -732,7 +785,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 {% endblock %}
 
 {% block conversation_membersChanged_callBack %}
-该群的其他成员（比如 Bob）会收到该操作的事件回调：
+该群的其他成员（比如 Bob）如果在线的话，会收到该操作的事件回调：
 
 ```objc
 - (void)bobNoticedTomDidJoin {
@@ -787,7 +840,7 @@ No.|加入者|其他人
     }];
 }
 ```
-Mary 在客户端登陆之后就会触发 `invitedByClientId` 的回调：
+如果 Mary 在线的话，就会收到 `invitedByClientId` 通知：
 
 ```
 -(void)maryNoticedWhenJerryInviteMary{
@@ -836,7 +889,7 @@ No.|邀请者|被邀请者|其他人
     }];
 }
 ```
-Harry 在客户端登陆之后就会触发 `membersRemoved` 回调：
+如果 Harry 在线的话，他将收到 `membersRemoved` 通知：
 
 ```
 -(void)harryNoticedWhenTomQuitConversation{
@@ -877,14 +930,14 @@ No.|退出者|其他人
         [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
             [conversation removeMembersWithClientIds:@[@"Harry"] callback:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
-                    NSLog(@"踢出成功！");
+                    NSLog(@"踢人成功！");
                 }
             }];
         }];
     }];
 }
 ```
-Harry 在客户端登陆之后就会触发 `kickedByClientId` 回调：
+如果 Harry 在线的话，会 收到 `kickedByClientId` 通知：
 
 ```
 -(void)harryNoticedWhenKickedByWilliam{

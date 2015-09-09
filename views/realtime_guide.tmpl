@@ -467,6 +467,23 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 成员管理，是在对话中对成员的一个实时生效的操作，一旦操作成功则不可逆。
 
+#### 成员变更接口
+成员变更操作接口简介如下表：
+
+操作目的|接口名
+----|---
+自身主动加入 | {% block api_method_conversation_join %}{% endblock %}
+添加其他成员 | {% block api_method_conversation_invite %}{% endblock %}
+自身主动退出 | {% block api_method_conversation_quit %}{% endblock %}
+剔除其他成员 | {% block api_method_conversation_kick %}{% endblock %}
+
+成员变动之后，所有对话成员如果在线的话，都会得到相应的通知。
+
+{% block conversation_members_change_notice_intro %}{% endblock %}
+
+
+以上是一个概要的介绍，下面将分别介绍成员变更接口的使用和对应的通知回调。
+
 #### 自身主动加入
 
 Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将帮助他实现这个功能：
@@ -521,7 +538,7 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 ``` 
 {% endblock %}
 
-#### 踢出其他成员
+#### 剔除其他成员
 
 Harry 被 William 从对话中删除。实现代码如下（关于 William 如何获得权限在后面的 [签名和安全](#签名和安全) 中会做详细阐述，此处不宜扩大话题范围。）：
 
