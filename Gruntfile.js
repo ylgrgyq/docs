@@ -294,8 +294,10 @@ module.exports = function(grunt) {
         var snippets = [];
         commentDoms.forEach(function(dom) {
           $('#content ' + dom).each(function() {
-            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-            snippets.push({version: version});
+            if($(this).text().trim().length > 0) {
+              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+              snippets.push({version: version});
+            }
           });
         });
         doc.set('snippets', snippets);
@@ -307,8 +309,10 @@ module.exports = function(grunt) {
         // 在文档中添加 version 标记
         commentDoms.forEach(function(dom) {
           $('#content ' + dom).each(function() {
-            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-            $(this).attr('version', version);
+            if($(this).text().trim().length > 0) {
+              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+              $(this).attr('version', version);
+            }
           });
         });
         grunt.file.write(filepath, $.html());
@@ -320,6 +324,9 @@ module.exports = function(grunt) {
           $('#content ' + dom).each(function() {
             var version = crypto.createHash('md5').update($(this).text()).digest('hex');
             if(_.contains(allSnippetsVersion, version)) {
+              return;
+            }
+            if($(this).text().trim().length === 0) {
               return;
             }
             grunt.log.writeln('save new Snippet: %s', $(this).text().substr(0, 20) + '...');
