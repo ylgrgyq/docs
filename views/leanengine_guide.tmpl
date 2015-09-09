@@ -95,6 +95,7 @@ LC_APP_MASTER_KEY|当前应用的 Master Key
 LC_APP_ENV|当前应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
 LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
+**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JS-SDK AV.setProduction(production)](https://leancloud.cn/docs/api/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
 
 ### 安装
 
