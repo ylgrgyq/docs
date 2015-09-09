@@ -9,7 +9,7 @@
 * `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
 * 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)
 
-请参见详细的 [升级指南](./leanengine_upgrade_3.0.html)。
+请参见详细的 [升级指南](leanengine_upgrade_3.html)。
 {% endblock %}
 
 {% block quick_start_create_project %}
