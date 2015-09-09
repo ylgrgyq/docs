@@ -637,6 +637,41 @@ public async void JerryCreateConversation()
 ```
 {% endblock %}
 
+{% block api_method_conversation_join %} `AVIMConversation.JoinAsync`{% endblock %}
+
+{% block api_method_conversation_invite %} `AVIMConversation.AddMembersAsync`{% endblock %}
+
+{% block api_method_conversation_quit %} `AVIMConversation.LeftAsync`{% endblock %}
+
+{% block api_method_conversation_kick %} `AVIMConversation.RemoveMembersAsync`{% endblock %}
+
+{% block conversation_members_change_notice_intro %}
+在 Dotnet 中，在 AVIMConversaion 定义了如下的事件，
+
+```
+//当前 Client 被其他成员邀请加入到当前对话激发的事件。
+Public event OnInvited	
+
+//当前 Client 加入到当前对话中激发的事件，区别于 OnMembersLeft，此事件有且仅在当前 Client 加入到当前对话时才响应。
+Public event OnJoined	
+
+//当前 Client 被其他成员从当前对话中剔除时激发的事件。
+Public event OnKicked	
+
+//当前 Client 离开当前对话中激发的事件，区别于 OnMembersLeft，此事件有且仅在当前 Client 离开当前对话才响应。 
+Public event OnLeft	
+
+//有其他的 Members 加入到当前对话时激发的事件。
+Public event	OnMembersJoined	
+
+//有其他的 Members 离开到当前对话时激发的事件。 
+Public event	OnMembersLeft	
+```
+
+接下来，我们将结合代码，针对各种成员变更的操作以及对应的事件响应进行详细讲解。
+
+{% endblock %}
+
 {% block conversation_join %}
 ```c#
 public async void InitiativeJoinAsync()

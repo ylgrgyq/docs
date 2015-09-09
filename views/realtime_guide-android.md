@@ -1055,6 +1055,22 @@ jerry.open(new AVIMClientCallback() {
 
 {% block event_invited %} `onInvited` {% endblock %}
 
+{% block api_method_conversation_join %} `AVIMConversation.join`{% endblock %}
+
+{% block api_method_conversation_invite %} `AVIMConversation.addMembersWithClientIds`{% endblock %}
+
+{% block api_method_conversation_quit %} `AVIMConversation.quitWithCallback`{% endblock %}
+
+{% block api_method_conversation_kick %} `AVIMConversation.removeMembersWithClientIds`{% endblock %}
+
+{% block conversation_members_change_notice_intro %}
+在 Android 中，开发者需要实现 `AVIMConversationEventHandler` 代理，并且为 `AVIMClient` 指定该代理的一个实例。
+
+`AVIMConversationEventHandler` 的实现和定义在下一节[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
+
+{% endblock %}
+
+
 {% block conversation_join %}
 
 ```

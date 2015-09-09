@@ -761,6 +761,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 - (void)conversation:(AVIMConversation *)conversation kickedByClientId:(NSString *)clientId;
 ``` 
 
+接下来，我们将结合代码，针对各种成员变更的操作以及对应的事件回调进行详细讲解。
 {% endblock %}
 
 {% block conversation_join %}
