@@ -792,7 +792,7 @@ AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
         }
 });
         
-// 登陆操作，建立和服务端的连接，开始接收消息
+// 登录操作，建立和服务端的连接，开始接收消息
 AVIMClient jerry = AVIMClient.getInstance("Jerry");
 jerry.open(new AVIMClientCallback() {
     @Override
@@ -1098,7 +1098,7 @@ tom.open(new AVIMClientCallback(){
 {% endblock %}
 
 {% block conversation_membersChanged_callBack %}
-该群的其他成员（比如 Bob）登陆之后，调用 `AVIMMessageManager.setConversationEventHandler` 设置一下回调的代理，会收到该操作的事件回调：
+该群的其他成员（比如 Bob）登录之后，调用 `AVIMMessageManager.setConversationEventHandler` 设置一下回调的代理，会收到该操作的事件回调：
 
 ```
 AVIMMessageManager.setConversationEventHandler(new CustomConversationEventHandler());

@@ -850,7 +850,7 @@ No.|加入者|其他人
     self.client.delegate = self;
     
     [self.client openWithClientId:@"Mary" callback:^(BOOL succeeded, NSError *error) {
-        // 登陆成功
+        // 登录成功
     }];
 }
 #pragma mark - AVIMClientDelegate
@@ -899,12 +899,12 @@ No.|邀请者|被邀请者|其他人
     self.client.delegate = self;
     
     [self.client openWithClientId:@"Harry" callback:^(BOOL succeeded, NSError *error) {
-        // 登陆成功
+        // 登录成功
     }];
 }
 
 #pragma mark - AVIMClientDelegate
-// Harry 登陆之后，Tom 退出了对话，在 Harry 所在的客户端就会激发以下回调
+// Harry 登录之后，Tom 退出了对话，在 Harry 所在的客户端就会激发以下回调
 -(void)conversation:(AVIMConversation *)conversation membersRemoved:(NSArray *)clientIds byClientId:(NSString *)clientId{
     NSLog(@"%@", [NSString stringWithFormat:@"%@ 离开了对话， 操作者为：%@",[clientIds objectAtIndex:0],clientId]);
 }
@@ -947,11 +947,11 @@ No.|退出者|其他人
     self.client.delegate = self;
     
     [self.client openWithClientId:@"Harry" callback:^(BOOL succeeded, NSError *error) {
-        // 登陆成功
+        // 登录成功
     }];
 }
 #pragma mark - AVIMClientDelegate
-// Harry 登陆之后，William 把 Harry 从对话中 剔除，在 Harry 所在的客户端就会触发以下回调
+// Harry 登录之后，William 把 Harry 从对话中 剔除，在 Harry 所在的客户端就会触发以下回调
 -(void)conversation:(AVIMConversation *)conversation kickedByClientId:(NSString *)clientId{
     NSLog(@"%@", [NSString stringWithFormat:@"当前 ClientId(Harry) 被提出对话， 操作者为：%@",clientId]);
 }
