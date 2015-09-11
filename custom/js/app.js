@@ -26,6 +26,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                         if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
                             $scope.appid = $scope.pageState.currentApp.app_id;
                             $scope.appkey = $scope.pageState.currentApp.app_key;
+                            $scope.masterkey = $scope.pageState.currentApp.master_key;
                         }
                     });
                     $scope.apps = data;
