@@ -143,13 +143,13 @@ GET  https://leancloud.cn/1.1/token?grant_type=authorization_code&client_id={{cl
 
 ```
 sha256_hmac("s84rvq98u8j3wnklkznguo38vsvys6vo", base_path)
-  =  0ed0e74ce6d4353e40fc3291747c7d1d2d9884b4c9a1e3c4da9d6bf8e4fe9b45
+  =  16e279d3d0cfcfb9b8dbd84cdd8f6ea66ba6120c5fca1b6371c4974fe8ffeefd
 ```
 
 最终调用的 URL 就是：
 
 ```
-https://leancloud.cn/1.1/connect?client_id=jl04l2081eczultsb7drrzxfxc5a30wh&email=test@example.com&scope=client:info app:info&timestamp=1405222829000&username=dennis&sign=0ed0e74ce6d4353e40fc3291747c7d1d2d9884b4c9a1e3c4da9d6bf8e4fe9b45
+https://leancloud.cn/1.1/connect?client_id=jl04l2081eczultsb7drrzxfxc5a30wh&email=test@example.com&scope=client:info app:info&timestamp=1405222829000&username=dennis&sign=16e279d3d0cfcfb9b8dbd84cdd8f6ea66ba6120c5fca1b6371c4974fe8ffeefd
 ```
 
 SHA256 Hmac 签名要求都是采用 16 进制编码，而非 base64 等方式。Java 平台可以参考这篇[博客
