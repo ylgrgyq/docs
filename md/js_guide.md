@@ -1305,6 +1305,23 @@ delay(100).then(function() {
 });
 ```
 
+### 兼容性 
+
+在非 node.js 环境（例如浏览器环境）下，`AV.Promise` 并不兼容 [Promises/A+](https://promisesaplus.com/) 规范，特别是错误处理这块。
+如果你想兼容，可以手工启用：
+
+```javascript
+AV.Promise.setPromisesAPlusCompliant(true);
+```
+
+在 node.js 环境下如果启用兼容 Promises/A+， 可能在一些情况下 promise 抛出的错误无法通过 `process.on('uncaughtException')` 捕捉，你可以启用额外的 debug 日志：
+
+```javascript
+AV.Promise.setDebugError(true);
+```
+
+默认日志是关闭的。
+
 ### JavaScript Promise 迷你书
 
 如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
