@@ -99,21 +99,46 @@
 ```
 {% endblock %}
 
+{% block set_acl_for_role %}
+
+```
+    // 新建一个帖子对象
+    AVObject *post = [AVObject objectWithClassName:@"Post"];
+    [post setObject:@"夏天吃什么夜宵比较爽？" forKey:@"title"];
+    [post setObject:@"求推荐啊！" forKey:@"content"];
+    
+    AVRole *administratorRole = [AVRole roleWithName:@"Administrator"];
+    [administratorRole save];
+    
+    //新建一个 ACL 实例
+    AVACL *acl = [AVACL ACL];
+    [acl setPublicReadAccess:YES];// 设置公开的「读」权限，任何人都可阅读
+    [acl setWriteAccess:YES  forRole:administratorRole];// 为 Administrator 「写」权限
+    [acl setWriteAccess:YES  forUser:[AVUser currentUser]];// 为当前用户赋予「写」权限
+    post.ACL = acl;// 将 ACL 实例赋予 Post对象
+    
+    // 以上代码的效果就是：只有 Post 作者（当前用户）和拥有 Administrator 角色的用户可以修改这条 Post，而所有人都可以读取这条 Post
+    
+    [post saveInBackground];
+```
+{% endblock %}
+
+
 {% block add_role_for_user %}
 
 ```
     AVQuery *roleQuery= [AVRole query];
-    [roleQuery whereKey:@"name" equalTo:@"Moderator"];
+    [roleQuery whereKey:@"name" equalTo:@"Administrator"];
     [roleQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         // 如果角色存在
         if ([objects count] > 0) {
-            AVRole *moderatorRole= [objects objectAtIndex:0];
+            AVRole *administrator Role= [objects objectAtIndex:0];
             [roleQuery whereKey:@"users" equalTo:[AVUser currentUser]];
             [roleQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error){
                 if ([objects count] == 0) {
                     //为用户赋予角色
-                    [[moderatorRole users ] addObject:[AVUser currentUser]];
-                    [moderatorRole saveInBackground];
+                    [[administrator users ] addObject:[AVUser currentUser]];
+                    [administrator saveInBackground];
                 } else {
                     NSLog(@"已经拥有 Moderator 角色了。");
                 }
@@ -121,9 +146,9 @@
             
         } else {
             // 角色不存在，就新建角色
-            AVRole *moderatorRole =[AVRole roleWithName:@"Moderator"];
-            [[moderatorRole users ] addObject:[AVUser currentUser]];// 赋予角色
-            [moderatorRole saveInBackground];
+            AVRole *administrator =[AVRole roleWithName:@"Administrator"];
+            [[administrator users ] addObject:[AVUser currentUser]];// 赋予角色
+            [administrator saveInBackground];
         }
     }];
 ```
@@ -158,7 +183,7 @@
     AVRole *moderator = [AVRole roleWithName:@"Moderator"];
     
     [administratorRole save];
-    [administratorRole save];
+    [moderator save];
     
     [[moderator roles] addObject:administratorRole];
     
