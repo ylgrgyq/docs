@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 
-	<title>AVIMLocationMessage Class Reference</title>
+	<title>AVIMAudioMessage Class Reference</title>
 
 	<link rel="stylesheet" href="../css/style.css">
 	<meta name="viewport" content="initial-scale=1, maximum-scale=1.4">
@@ -54,19 +54,15 @@
 	
 	<optgroup label="Properties">
 		
-		<option value="//api/name/latitude">latitude</option>
+		<option value="//api/name/duration">duration</option>
 		
-		<option value="//api/name/longitude">longitude</option>
+		<option value="//api/name/format">format</option>
+		
+		<option value="//api/name/size">size</option>
 		
 	</optgroup>
 	
 
-	
-	<optgroup label="Class Methods">
-		
-		<option value="//api/name/messageWithText:latitude:longitude:attributes:">+ messageWithText:latitude:longitude:attributes:</option>
-		
-	</optgroup>
 	
 
 	
@@ -83,7 +79,7 @@
 		<div id="overview_contents" class="container">
 			<div id="content">
 				<main role="main">
-					<h1 class="title">AVIMLocationMessage Class Reference</h1>
+					<h1 class="title">AVIMAudioMessage Class Reference</h1>
 
 					
 					<div class="section section-specification"><table cellspacing="0"><tbody>
@@ -95,7 +91,7 @@
 	<td><a href="../Protocols/AVIMTypedMessageSubclassing.html">AVIMTypedMessageSubclassing</a></td>
 </tr><tr>
 	<th>Declared in</th>
-	<td>AVIMLocationMessage.h</td>
+	<td>AVIMAudioMessage.h</td>
 </tr>
 						</tbody></table></div>
 					
@@ -113,8 +109,8 @@
 
 						<div class="task-list">
 							<div class="section-method">
-	<a name="//api/name/latitude" title="latitude"></a>
-	<h3 class="method-title"><code><a href="#//api/name/latitude">&nbsp;&nbsp;latitude</a></code>
+	<a name="//api/name/size" title="size"></a>
+	<h3 class="method-title"><code><a href="#//api/name/size">&nbsp;&nbsp;size</a></code>
 </h3>
 
 	<div class="method-info">
@@ -123,14 +119,14 @@
 		<div class="method-info-container">
 			
 
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) float latitude</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) uint64_t size</code></div>
 
 		    
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/longitude" title="longitude"></a>
-	<h3 class="method-title"><code><a href="#//api/name/longitude">&nbsp;&nbsp;longitude</a></code>
+	<a name="//api/name/duration" title="duration"></a>
+	<h3 class="method-title"><code><a href="#//api/name/duration">&nbsp;&nbsp;duration</a></code>
 </h3>
 
 	<div class="method-info">
@@ -139,14 +135,14 @@
 		<div class="method-info-container">
 			
 
-			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) float longitude</code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) float duration</code></div>
 
 		    
 		</div>
 	</div>
 </div><div class="section-method">
-	<a name="//api/name/messageWithText:latitude:longitude:attributes:" title="messageWithText:latitude:longitude:attributes:"></a>
-	<h3 class="method-title"><code><a href="#//api/name/messageWithText:latitude:longitude:attributes:">+&nbsp;messageWithText:latitude:longitude:attributes:</a></code>
+	<a name="//api/name/format" title="format"></a>
+	<h3 class="method-title"><code><a href="#//api/name/format">&nbsp;&nbsp;format</a></code>
 </h3>
 
 	<div class="method-info">
@@ -154,67 +150,10 @@
 
 		<div class="method-info-container">
 			
-			
-			<div class="method-subsection brief-description">
-				<p>创建位置消息。</p>
-			</div>
-			
-		    
 
-			<div class="method-subsection method-declaration"><code>+ (instancetype)messageWithText:(NSString *)<em>text</em> latitude:(float)<em>latitude</em> longitude:(float)<em>longitude</em> attributes:(NSDictionary *)<em>attributes</em></code></div>
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong, readonly) NSString *format</code></div>
 
 		    
-			
-			<div class="method-subsection arguments-section parameters">
-				<h4 class="method-subtitle parameter-title">Parameters</h4>
-				<table class="argument-def parameter-def">
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>text</code></th>
-						<td><p>－ 消息文本.</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>latitude</code></th>
-						<td><p>－ 纬度</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>longitude</code></th>
-						<td><p>－ 经度</p></td>
-					</tr>
-				
-					<tr>
-						<th scope="row" class="argument-name"><code>attributes</code></th>
-						<td><p>－ 用户附加属性</p></td>
-					</tr>
-				
-				</table>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection discussion-section">
-				<h4 class="method-subtitle">Discussion</h4>
-				<p>创建位置消息。</p>
-			</div>
-			
-
-			
-
-			
-
-			
-			<div class="method-subsection declared-in-section">
-				<h4 class="method-subtitle">Declared In</h4>
-				<p><code class="declared-in-ref">AVIMLocationMessage.h</code></p>
-			</div>
-			
-			
 		</div>
 	</div>
 </div>

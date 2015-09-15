@@ -58,11 +58,41 @@
 	
 	<optgroup label="Instance Methods">
 		
+		<option value="//api/name/onSessionError:withException:">- onSessionError:withException:</option>
+		
+		<option value="//api/name/onSessionMessage:message:peerId:">- onSessionMessage:message:peerId:</option>
+		
+		<option value="//api/name/onSessionMessageFailure:message:toPeerIds:">- onSessionMessageFailure:message:toPeerIds:</option>
+		
+		<option value="//api/name/onSessionMessageSent:message:toPeerIds:">- onSessionMessageSent:message:toPeerIds:</option>
+		
+		<option value="//api/name/onSessionOpen:">- onSessionOpen:</option>
+		
+		<option value="//api/name/onSessionPaused:">- onSessionPaused:</option>
+		
+		<option value="//api/name/onSessionResumed:">- onSessionResumed:</option>
+		
+		<option value="//api/name/onSessionStatusOffline:peers:">- onSessionStatusOffline:peers:</option>
+		
+		<option value="//api/name/onSessionStatusOnline:peers:">- onSessionStatusOnline:peers:</option>
+		
+		<option value="//api/name/session:didReceiveMessage:">- session:didReceiveMessage:</option>
+		
+		<option value="//api/name/session:didReceiveStatus:peerIds:">- session:didReceiveStatus:peerIds:</option>
+		
 		<option value="//api/name/session:messageArrived:">- session:messageArrived:</option>
 		
 		<option value="//api/name/session:messageSendFailed:error:">- session:messageSendFailed:error:</option>
 		
 		<option value="//api/name/session:messageSendFinished:">- session:messageSendFinished:</option>
+		
+		<option value="//api/name/sessionFailed:error:">- sessionFailed:error:</option>
+		
+		<option value="//api/name/sessionOpened:">- sessionOpened:</option>
+		
+		<option value="//api/name/sessionPaused:">- sessionPaused:</option>
+		
+		<option value="//api/name/sessionResumed:">- sessionResumed:</option>
 		
 	</optgroup>
 	
@@ -106,6 +136,102 @@
 
 						<div class="task-list">
 							<div class="section-method">
+	<a name="//api/name/sessionOpened:" title="sessionOpened:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionOpened:">&ndash;&nbsp;sessionOpened:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sessionOpened:(AVSession *)<em>session</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sessionPaused:" title="sessionPaused:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionPaused:">&ndash;&nbsp;sessionPaused:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sessionPaused:(AVSession *)<em>session</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sessionResumed:" title="sessionResumed:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionResumed:">&ndash;&nbsp;sessionResumed:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sessionResumed:(AVSession *)<em>session</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sessionFailed:error:" title="sessionFailed:error:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionFailed:error:">&ndash;&nbsp;sessionFailed:error:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sessionFailed:(AVSession *)<em>session</em> error:(NSError *)<em>error</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/session:didReceiveMessage:" title="session:didReceiveMessage:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/session:didReceiveMessage:">&ndash;&nbsp;session:didReceiveMessage:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)session:(AVSession *)<em>session</em> didReceiveMessage:(AVMessage *)<em>message</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/session:didReceiveStatus:peerIds:" title="session:didReceiveStatus:peerIds:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/session:didReceiveStatus:peerIds:">&ndash;&nbsp;session:didReceiveStatus:peerIds:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)session:(AVSession *)<em>session</em> didReceiveStatus:(AVPeerStatus)<em>status</em> peerIds:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/session:messageSendFinished:" title="session:messageSendFinished:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/session:messageSendFinished:">&ndash;&nbsp;session:messageSendFinished:</a></code>
 </h3>
@@ -247,6 +373,150 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionOpen:" title="onSessionOpen:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionOpen:">&ndash;&nbsp;onSessionOpen:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionOpen:(AVSession *)<em>session</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionPaused:" title="onSessionPaused:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionPaused:">&ndash;&nbsp;onSessionPaused:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionPaused:(AVSession *)<em>session</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionResumed:" title="onSessionResumed:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionResumed:">&ndash;&nbsp;onSessionResumed:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionResumed:(AVSession *)<em>seesion</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionMessage:message:peerId:" title="onSessionMessage:message:peerId:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionMessage:message:peerId:">&ndash;&nbsp;onSessionMessage:message:peerId:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionMessage:(AVSession *)<em>session</em> message:(NSString *)<em>message</em> peerId:(NSString *)<em>peerId</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionMessageSent:message:toPeerIds:" title="onSessionMessageSent:message:toPeerIds:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionMessageSent:message:toPeerIds:">&ndash;&nbsp;onSessionMessageSent:message:toPeerIds:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionMessageSent:(AVSession *)<em>session</em> message:(NSString *)<em>message</em> toPeerIds:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionMessageFailure:message:toPeerIds:" title="onSessionMessageFailure:message:toPeerIds:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionMessageFailure:message:toPeerIds:">&ndash;&nbsp;onSessionMessageFailure:message:toPeerIds:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionMessageFailure:(AVSession *)<em>session</em> message:(NSString *)<em>message</em> toPeerIds:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionStatusOnline:peers:" title="onSessionStatusOnline:peers:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionStatusOnline:peers:">&ndash;&nbsp;onSessionStatusOnline:peers:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionStatusOnline:(AVSession *)<em>session</em> peers:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionStatusOffline:peers:" title="onSessionStatusOffline:peers:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionStatusOffline:peers:">&ndash;&nbsp;onSessionStatusOffline:peers:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionStatusOffline:(AVSession *)<em>session</em> peers:(NSArray *)<em>peerId</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/onSessionError:withException:" title="onSessionError:withException:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/onSessionError:withException:">&ndash;&nbsp;onSessionError:withException:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)onSessionError:(AVSession *)<em>session</em> withException:(NSException *)<em>exception</em></code></div>
+
+		    
 		</div>
 	</div>
 </div>

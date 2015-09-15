@@ -52,6 +52,16 @@
 
 	
 	
+	<optgroup label="Properties">
+		
+		<option value="//api/name/delegate">delegate</option>
+		
+		<option value="//api/name/groupId">groupId</option>
+		
+		<option value="//api/name/session">session</option>
+		
+	</optgroup>
+	
 
 	
 	<optgroup label="Class Methods">
@@ -70,11 +80,15 @@
 	
 	<optgroup label="Instance Methods">
 		
+		<option value="//api/name/invite:">- invite:</option>
+		
 		<option value="//api/name/invitePeerIds:">- invitePeerIds:</option>
 		
 		<option value="//api/name/invitePeerIds:callback:">- invitePeerIds:callback:</option>
 		
 		<option value="//api/name/join">- join</option>
+		
+		<option value="//api/name/kick:">- kick:</option>
 		
 		<option value="//api/name/kickPeerIds:">- kickPeerIds:</option>
 		
@@ -83,6 +97,8 @@
 		<option value="//api/name/quit">- quit</option>
 		
 		<option value="//api/name/sendMessage:">- sendMessage:</option>
+		
+		<option value="//api/name/sendMessage:isTransient:">- sendMessage:isTransient:</option>
 		
 		<option value="//api/name/sendMessage:transient:">- sendMessage:transient:</option>
 		
@@ -128,6 +144,54 @@
 
 						<div class="task-list">
 							<div class="section-method">
+	<a name="//api/name/delegate" title="delegate"></a>
+	<h3 class="method-title"><code><a href="#//api/name/delegate">&nbsp;&nbsp;delegate</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) id&lt;AVGroupDelegate&gt; delegate</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/groupId" title="groupId"></a>
+	<h3 class="method-title"><code><a href="#//api/name/groupId">&nbsp;&nbsp;groupId</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) NSString *groupId</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/session" title="session"></a>
+	<h3 class="method-title"><code><a href="#//api/name/session">&nbsp;&nbsp;session</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) AVSession *session</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/createGroupWithSession:groupDelegate:callback:" title="createGroupWithSession:groupDelegate:callback:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/createGroupWithSession:groupDelegate:callback:">+&nbsp;createGroupWithSession:groupDelegate:callback:</a></code>
 </h3>
@@ -159,7 +223,7 @@
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>groupDelegate</code></th>
-						<td><p>group使用的delegate</p></td>
+						<td><p>group使用的<a href="#//api/name/delegate">delegate</a></p></td>
 					</tr>
 				
 					<tr>
@@ -227,7 +291,7 @@
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>groupDelegate</code></th>
-						<td><p>group使用的delegate</p></td>
+						<td><p>group使用的<a href="#//api/name/delegate">delegate</a></p></td>
 					</tr>
 				
 					<tr>
@@ -363,7 +427,7 @@
 				
 					<tr>
 						<th scope="row" class="argument-name"><code>delegate</code></th>
-						<td><p>默认的delegate</p></td>
+						<td><p>默认的<a href="#//api/name/delegate">delegate</a></p></td>
 					</tr>
 				
 				</table>
@@ -563,6 +627,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/sendMessage:isTransient:" title="sendMessage:isTransient:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendMessage:isTransient:">&ndash;&nbsp;sendMessage:isTransient:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sendMessage:(NSString *)<em>message</em> isTransient:(BOOL)<em>transient</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/kickPeerIds:" title="kickPeerIds:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/kickPeerIds:">&ndash;&nbsp;kickPeerIds:</a></code>
 </h3>
@@ -684,6 +764,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/kick:" title="kick:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/kick:">&ndash;&nbsp;kick:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)kick:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/invitePeerIds:" title="invitePeerIds:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/invitePeerIds:">&ndash;&nbsp;invitePeerIds:</a></code>
 </h3>
@@ -802,6 +898,22 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/invite:" title="invite:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/invite:">&ndash;&nbsp;invite:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)invite:(NSArray *)<em>peerIds</em></code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
