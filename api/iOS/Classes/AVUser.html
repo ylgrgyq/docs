@@ -60,6 +60,10 @@
 		
 		<option value="//api/name/isNew">isNew</option>
 		
+		<option value="//api/name/mobilePhoneNumber">mobilePhoneNumber</option>
+		
+		<option value="//api/name/mobilePhoneVerified">mobilePhoneVerified</option>
+		
 		<option value="//api/name/password">password</option>
 		
 		<option value="//api/name/sessionToken">sessionToken</option>
@@ -86,13 +90,25 @@
 		
 		<option value="//api/name/followerQuery:">+ followerQuery:</option>
 		
+		<option value="//api/name/logInWithMobilePhoneNumber:password:">+ logInWithMobilePhoneNumber:password:</option>
+		
 		<option value="//api/name/logInWithMobilePhoneNumber:password:error:">+ logInWithMobilePhoneNumber:password:error:</option>
+		
+		<option value="//api/name/logInWithMobilePhoneNumber:smsCode:">+ logInWithMobilePhoneNumber:smsCode:</option>
 		
 		<option value="//api/name/logInWithMobilePhoneNumber:smsCode:error:">+ logInWithMobilePhoneNumber:smsCode:error:</option>
 		
+		<option value="//api/name/logInWithMobilePhoneNumberInBackground:password:">+ logInWithMobilePhoneNumberInBackground:password:</option>
+		
 		<option value="//api/name/logInWithMobilePhoneNumberInBackground:password:block:">+ logInWithMobilePhoneNumberInBackground:password:block:</option>
 		
+		<option value="//api/name/logInWithMobilePhoneNumberInBackground:password:target:selector:">+ logInWithMobilePhoneNumberInBackground:password:target:selector:</option>
+		
+		<option value="//api/name/logInWithMobilePhoneNumberInBackground:smsCode:">+ logInWithMobilePhoneNumberInBackground:smsCode:</option>
+		
 		<option value="//api/name/logInWithMobilePhoneNumberInBackground:smsCode:block:">+ logInWithMobilePhoneNumberInBackground:smsCode:block:</option>
+		
+		<option value="//api/name/logInWithMobilePhoneNumberInBackground:smsCode:target:selector:">+ logInWithMobilePhoneNumberInBackground:smsCode:target:selector:</option>
 		
 		<option value="//api/name/logInWithUsername:password:">+ logInWithUsername:password:</option>
 		
@@ -739,6 +755,38 @@ the password. It is only meant to be set.</p>
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/mobilePhoneNumber" title="mobilePhoneNumber"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mobilePhoneNumber">&nbsp;&nbsp;mobilePhoneNumber</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, strong) NSString *mobilePhoneNumber</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/mobilePhoneVerified" title="mobilePhoneVerified"></a>
+	<h3 class="method-title"><code><a href="#//api/name/mobilePhoneVerified">&nbsp;&nbsp;mobilePhoneVerified</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, readonly) BOOL mobilePhoneVerified</code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
@@ -3331,6 +3379,102 @@ The selector for the callback should look like: myCallback:(AVUser *)<a href="#/
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumber:password:" title="logInWithMobilePhoneNumber:password:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumber:password:">+&nbsp;logInWithMobilePhoneNumber:password:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (instancetype)logInWithMobilePhoneNumber:(NSString *)<em>phoneNumber</em> password:(NSString *)<em>password</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumberInBackground:password:" title="logInWithMobilePhoneNumberInBackground:password:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumberInBackground:password:">+&nbsp;logInWithMobilePhoneNumberInBackground:password:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)<em>phoneNumber</em> password:(NSString *)<em>password</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumberInBackground:password:target:selector:" title="logInWithMobilePhoneNumberInBackground:password:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumberInBackground:password:target:selector:">+&nbsp;logInWithMobilePhoneNumberInBackground:password:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)<em>phoneNumber</em> password:(NSString *)<em>password</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumber:smsCode:" title="logInWithMobilePhoneNumber:smsCode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumber:smsCode:">+&nbsp;logInWithMobilePhoneNumber:smsCode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (instancetype)logInWithMobilePhoneNumber:(NSString *)<em>phoneNumber</em> smsCode:(NSString *)<em>code</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumberInBackground:smsCode:" title="logInWithMobilePhoneNumberInBackground:smsCode:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumberInBackground:smsCode:">+&nbsp;logInWithMobilePhoneNumberInBackground:smsCode:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)<em>phoneNumber</em> smsCode:(NSString *)<em>code</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/logInWithMobilePhoneNumberInBackground:smsCode:target:selector:" title="logInWithMobilePhoneNumberInBackground:smsCode:target:selector:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/logInWithMobilePhoneNumberInBackground:smsCode:target:selector:">+&nbsp;logInWithMobilePhoneNumberInBackground:smsCode:target:selector:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>+ (void)logInWithMobilePhoneNumberInBackground:(NSString *)<em>phoneNumber</em> smsCode:(NSString *)<em>code</em> target:(id)<em>target</em> selector:(SEL)<em>selector</em></code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">

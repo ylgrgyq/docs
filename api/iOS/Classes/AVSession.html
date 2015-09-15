@@ -58,6 +58,10 @@
 		
 		<option value="//api/name/peerId">peerId</option>
 		
+		<option value="//api/name/sessionDelegate">sessionDelegate</option>
+		
+		<option value="//api/name/signatureDelegate">signatureDelegate</option>
+		
 	</optgroup>
 	
 
@@ -76,15 +80,27 @@
 		
 		<option value="//api/name/close">- close</option>
 		
+		<option value="//api/name/getAllPeers">- getAllPeers</option>
+		
 		<option value="//api/name/getGroup:">- getGroup:</option>
 		
+		<option value="//api/name/getOnlinePeers">- getOnlinePeers</option>
+		
+		<option value="//api/name/getOnlinePeers:withBlock:">- getOnlinePeers:withBlock:</option>
+		
 		<option value="//api/name/getSelfPeerId">- getSelfPeerId</option>
+		
+		<option value="//api/name/isOnline:">- isOnline:</option>
 		
 		<option value="//api/name/isOpen">- isOpen</option>
 		
 		<option value="//api/name/isPaused">- isPaused</option>
 		
+		<option value="//api/name/isWatching:">- isWatching:</option>
+		
 		<option value="//api/name/onlinePeerIds">- onlinePeerIds</option>
+		
+		<option value="//api/name/open:withPeerIds:">- open:withPeerIds:</option>
 		
 		<option value="//api/name/openWithPeerId:">- openWithPeerId:</option>
 		
@@ -98,13 +114,23 @@
 		
 		<option value="//api/name/sendMessage:">- sendMessage:</option>
 		
+		<option value="//api/name/sendMessage:isTransient:toPeerIds:">- sendMessage:isTransient:toPeerIds:</option>
+		
 		<option value="//api/name/sendMessage:requestReceipt:">- sendMessage:requestReceipt:</option>
 		
 		<option value="//api/name/sendMessage:transient:">- sendMessage:transient:</option>
 		
 		<option value="//api/name/unwatchPeerIds:">- unwatchPeerIds:</option>
 		
+		<option value="//api/name/unwatchPeerIds:callback:">- unwatchPeerIds:callback:</option>
+		
+		<option value="//api/name/unwatchPeers:">- unwatchPeers:</option>
+		
 		<option value="//api/name/watchPeerIds:">- watchPeerIds:</option>
+		
+		<option value="//api/name/watchPeerIds:callback:">- watchPeerIds:callback:</option>
+		
+		<option value="//api/name/watchPeers:">- watchPeers:</option>
 		
 		<option value="//api/name/watchedPeerIds">- watchedPeerIds</option>
 		
@@ -150,6 +176,38 @@
 
 						<div class="task-list">
 							<div class="section-method">
+	<a name="//api/name/sessionDelegate" title="sessionDelegate"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sessionDelegate">&nbsp;&nbsp;sessionDelegate</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) id&lt;AVSessionDelegate&gt; sessionDelegate</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/signatureDelegate" title="signatureDelegate"></a>
+	<h3 class="method-title"><code><a href="#//api/name/signatureDelegate">&nbsp;&nbsp;signatureDelegate</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>@property (nonatomic, weak) id&lt;AVSignatureDelegate&gt; signatureDelegate</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/peerId" title="peerId"></a>
 	<h3 class="method-title"><code><a href="#//api/name/peerId">&nbsp;&nbsp;peerId</a></code>
 </h3>
@@ -494,6 +552,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/open:withPeerIds:" title="open:withPeerIds:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/open:withPeerIds:">&ndash;&nbsp;open:withPeerIds:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)open:(NSString *)<em>selfId</em> withPeerIds:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/watchPeerIds:" title="watchPeerIds:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/watchPeerIds:">&ndash;&nbsp;watchPeerIds:</a></code>
 </h3>
@@ -552,6 +626,38 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/watchPeerIds:callback:" title="watchPeerIds:callback:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/watchPeerIds:callback:">&ndash;&nbsp;watchPeerIds:callback:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)watchPeerIds:(NSArray *)<em>peerIds</em> callback:(AVBooleanResultBlock)<em>callback</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/watchPeers:" title="watchPeers:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/watchPeers:">&ndash;&nbsp;watchPeers:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)watchPeers:(NSArray *)<em>peerIds</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/unwatchPeerIds:" title="unwatchPeerIds:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/unwatchPeerIds:">&ndash;&nbsp;unwatchPeerIds:</a></code>
 </h3>
@@ -607,6 +713,38 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/unwatchPeerIds:callback:" title="unwatchPeerIds:callback:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/unwatchPeerIds:callback:">&ndash;&nbsp;unwatchPeerIds:callback:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)unwatchPeerIds:(NSArray *)<em>peerIds</em> callback:(AVBooleanResultBlock)<em>callback</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/unwatchPeers:" title="unwatchPeers:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/unwatchPeers:">&ndash;&nbsp;unwatchPeers:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)unwatchPeers:(NSArray *)<em>peerIds</em></code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
@@ -792,6 +930,22 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/sendMessage:isTransient:toPeerIds:" title="sendMessage:isTransient:toPeerIds:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/sendMessage:isTransient:toPeerIds:">&ndash;&nbsp;sendMessage:isTransient:toPeerIds:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)sendMessage:(NSString *)<em>message</em> isTransient:(BOOL)<em>transient</em> toPeerIds:(NSArray *)<em>peerIds</em></code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
@@ -1006,6 +1160,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/isOnline:" title="isOnline:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isOnline:">&ndash;&nbsp;isOnline:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isOnline:(NSString *)<em>peerId</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/peerIdIsWatching:" title="peerIdIsWatching:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/peerIdIsWatching:">&ndash;&nbsp;peerIdIsWatching:</a></code>
 </h3>
@@ -1066,6 +1236,22 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/isWatching:" title="isWatching:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/isWatching:">&ndash;&nbsp;isWatching:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (BOOL)isWatching:(NSString *)<em>peerId</em></code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
@@ -1171,6 +1357,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/getOnlinePeers" title="getOnlinePeers"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getOnlinePeers">&ndash;&nbsp;getOnlinePeers</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (NSArray *)getOnlinePeers</code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/queryOnlinePeerIdsInPeerIds:callback:" title="queryOnlinePeerIdsInPeerIds:callback:"></a>
 	<h3 class="method-title"><code><a href="#//api/name/queryOnlinePeerIdsInPeerIds:callback:">&ndash;&nbsp;queryOnlinePeerIdsInPeerIds:callback:</a></code>
 </h3>
@@ -1234,6 +1436,22 @@
 		</div>
 	</div>
 </div><div class="section-method">
+	<a name="//api/name/getOnlinePeers:withBlock:" title="getOnlinePeers:withBlock:"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getOnlinePeers:withBlock:">&ndash;&nbsp;getOnlinePeers:withBlock:</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (void)getOnlinePeers:(NSArray *)<em>peerIds</em> withBlock:(AVArrayResultBlock)<em>block</em></code></div>
+
+		    
+		</div>
+	</div>
+</div><div class="section-method">
 	<a name="//api/name/watchedPeerIds" title="watchedPeerIds"></a>
 	<h3 class="method-title"><code><a href="#//api/name/watchedPeerIds">&ndash;&nbsp;watchedPeerIds</a></code>
 </h3>
@@ -1282,6 +1500,22 @@
 			</div>
 			
 			
+		</div>
+	</div>
+</div><div class="section-method">
+	<a name="//api/name/getAllPeers" title="getAllPeers"></a>
+	<h3 class="method-title"><code><a href="#//api/name/getAllPeers">&ndash;&nbsp;getAllPeers</a></code>
+</h3>
+
+	<div class="method-info">
+		<div class="pointy-thing"></div>
+
+		<div class="method-info-container">
+			
+
+			<div class="method-subsection method-declaration"><code>- (NSArray *)getAllPeers</code></div>
+
+		    
 		</div>
 	</div>
 </div><div class="section-method">
