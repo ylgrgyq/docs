@@ -1,5 +1,4 @@
 {% extends "./acl_guide.tmpl" %}
-{% block language_version %}iOS{% endblock %}
 
 {% block create_post_set_acl_for_single_user %}
 

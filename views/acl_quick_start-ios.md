@@ -27,3 +27,5 @@ post.ACL = acl;// 将 ACL 实例赋予 Post对象
 </pre>
 
 {% endblock %}
+
+{% block link_to_acl_guide %}[LeanCloud 权限管理使用规范](/acl_guide-ios.html){% endblock %}
