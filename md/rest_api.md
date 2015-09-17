@@ -2725,8 +2725,7 @@ curl -i X POST \
     },
     {
       "event": "buy-item",
-      "attributes": {"item-category": "book"},
-      "metrics": {"amount": 9.99}
+      "attributes": {"item-category": "book"}
     },
     {
       "event": "_session.close",
@@ -2749,6 +2748,12 @@ id|必选|用户的唯一 id（系统将根据这个 id 来区分新增用户，
 platform|可选|应用的平台（例如 iOS、Android 等）
 app_version|可选|应用的版本
 app_channel|可选|应用的发布渠道
+os_version|可选|系统版本
+device_brand|可选|设备品牌
+device_model|可选|设备型号
+device_resolution|可选|设备分辨率
+network_access|可选|网络类型
+network_carrier|可选|移动网络运营商
 
 #### session 节点
 
