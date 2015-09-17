@@ -136,12 +136,15 @@ body {
     .form-group {
       position: relative;
 
-
       input {
         border: none;
         border-radius: 0;
         height: 32px;
         padding-left: 34px;
+
+        &:focus {
+          box-shadow: none;
+        }
       }
 
       // Override icon styles
