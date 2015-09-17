@@ -148,15 +148,15 @@ body {
       }
 
       // Override icon styles
-      &:after {
+      &:before {
         position: absolute;
         display: block;
         top: 8px;
         left: 15px;
-        font-family: 'LeanCloud';
+        font-family: "ui-icon";
         font-size: 16px;
         line-height: 1;
-        content: "\e626";
+        content: @icon-search;
         width: 16px;
         height: 16px;
         pointer-events: none;
