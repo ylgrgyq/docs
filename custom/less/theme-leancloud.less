@@ -259,33 +259,6 @@
 
 
 //
-// Font Icon
-// --------------------------------------------------
-
-// Align fix for grunt-webicon generated styles
-[class^="icon-"],
-[class*=" icon-"] {
-  line-height: 1;
-
-  //
-  // Avoid setting pseudo elements to middle vertical align
-  // Author: Tunghsiao Liu
-  // Date: Sep 17, 2015, 2:36 PM
-  //
-  // I know you can change generated styles via custom template, but it will be hard to keep the template update-to-date, so I'll stick to the original tempalte.
-  //
-  &:before {
-    vertical-align: baseline !important;
-  }
-
-  // Setting the actual vertical algin to parent nodes
-  & {
-    vertical-align: middle;
-  }
-}
-
-
-//
 // Text Selectability
 // --------------------------------------------------
 
