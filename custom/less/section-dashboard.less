@@ -65,9 +65,11 @@
     }
 
     .figure {
+      .font-logo;
       font-size: 26px;
-      font-weight: 300;
       line-height: 1.1;
+      color: @gray;
+      transition: color .2s ease;
     }
 
     .text-label {
@@ -199,6 +201,13 @@
     border-color: @link-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .06);
 
+    .app-item-stats {
+
+      .figure {
+        color: @link-color;
+      }
+    }
+
     .app-item-settings {
       color: @gray-light;
     }
@@ -250,7 +259,6 @@
 }
 
 .load-block {
-  font-weight: normal;
   font-size: 13px;
   color: lighten(@gray-light, 10%);
 }
