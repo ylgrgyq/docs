@@ -475,6 +475,10 @@
         border-radius: @s;
         border: 1px solid;
         cursor: pointer;
+        // TODO: fix wierd Chrome bug introduced in version 45
+        // issue: border-radius not applied
+        // date: Sep 7, 2015, 4:33 PM
+        opacity: .99;
 
         &.flex-active {
           background: @homepage-link;
@@ -530,7 +534,7 @@
           margin-top: -(@slider-nav-width * .7 / 2);
           display: block;
           font-size: (@slider-nav-width * .7);
-          font-family: "LeanCloud";
+          font-family: "ui-icon";
           text-indent: 0 !important;
 
           // Copied from plugin-slider-icon.less
@@ -1326,7 +1330,8 @@ body.ready {
     li {
       display: inline-block;
       // float: left;
-      padding: 10px 20px 20px;
+      padding: 10px 5px;
+      width: 108px;
 
       @media (max-width: @screen-xs-max) {
         padding: 10px 4px;
@@ -1339,27 +1344,15 @@ body.ready {
         height: @s;
         position: relative;
         border: none;
-
-        // &:after {
-        //   content: " ";
-        //   width: @s;
-        //   height: @s;
-        //   display: block;
-        //   position: absolute;
-        //   top: 0;
-        //   left: 0;
-        //   background: @homepage-link;
-        //   border-radius: 10px;
-        //   opacity: .2;
-        //   transition: opacity .2s ease;
-        // }
+        margin: 0 auto;
 
         img {
           width: @s;
           height: @s;
           border-radius: 12px;
           // filter: brightness(1.4) grayscale(1);
-          backface-visibility: hidden; // No more blurry edges
+          // backface-visibility: hidden; // No more blurry edges
+          background: fade(#fff, 50%);
         }
 
         &:hover,
@@ -1374,6 +1367,11 @@ body.ready {
             opacity: 0;
           }
         }
+      }
+
+      .client-app-name {
+        text-align: center;
+        margin-top: 4px;
       }
     }
   }
@@ -2989,6 +2987,55 @@ body {
   }
 }
 
+// Help page
+.help-section {
+
+  h2 {
+    text-align: center;
+    font-size: 20px;
+    margin: 0 0 20px;
+    opacity: .6;
+  }
+
+  p {
+    font-size: 18px;
+  }
+
+  .icon {
+    display: block;
+    text-align: center;
+    font-size: 56px;
+    line-height: 1;
+    margin-top: 60px;
+    margin-bottom: 6px;
+  }
+
+  .btn {
+    display: inline-block;
+  }
+
+  ul {
+    .list-unstyled;
+
+    li {
+      display: inline;
+
+      &:after {
+        padding: 0 .6vw;
+        content: " / ";
+        opacity: .3;
+      }
+
+      &:last-child {
+
+        &:after {
+          content: none;
+        }
+      }
+    }
+  }
+}
+
 // Customers page
 .homepage.black {
 
@@ -3772,8 +3819,6 @@ body.news {
 // General wrap for normal advertising campaigns, April Fools' Prank (AFP), and others
 .intro-wrap {
   color: #666;
-  font-family: "Helvetica Neue", "Lantinghei SC", STHeiti, "Microsoft Yahei", "WenQuanYi Micro Hei", Helvetica, Arial, Verdana, sans-serif;
-  font-weight: 300;
 
   .hero-headline {
     color: #000;
@@ -4919,7 +4964,7 @@ body.news {
 
     .icon {
       font-size: 54px;
-      vertical-align: middle;
+      vertical-align: -9px;
 
       @media (max-width: @screen-xs-max) {
         font-size: 48px;
@@ -4984,7 +5029,6 @@ body.news {
       width: 70%;
       // wider than slider
       width: calc(~"100% - 100px");
-      font-weight: 400;
       line-height: 1.7;
 
       @media (max-width: @screen-xs-max) {
@@ -5083,12 +5127,13 @@ body.news {
   left: 0;
   z-index: 10000;
   width: 100%;
-  background: #FFF;
+  background: fade(#fff, 80%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
   opacity: .5;
   transition: all .6s ease;
   transform: translate3d(0, 100px, 0);
+  -webkit-backdrop-filter: blur(20px);
 
   &.on {
     opacity: 1;

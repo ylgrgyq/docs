@@ -1,4 +1,8 @@
 // Sidebar
+.sidebar {
+  margin-top: -5px;
+}
+
 .sidebar.affix {
   position: static;
 }
@@ -23,7 +27,6 @@
 .sidebar .nav > .active:hover > a,
 .sidebar .nav > .active:focus > a {
   color: @link-color;
-  font-weight: bold;
   background-color: transparent;
   border-right: 1px solid @link-color;
 
@@ -81,13 +84,12 @@
 
     &.active {
       color: @link-color;
-      font-weight: bold;
     }
   }
 
   .icon-external {
     opacity: .4;
-    vertical-align: -1px;
+    vertical-align: 1px;
   }
 }
 
