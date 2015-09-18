@@ -54,8 +54,13 @@
 {% block create_role_administrator %}
 
 ```
+  // 新建一个针对角色本身的 ACL
+  AVACL roleACL=new AVACL();
+  roleACL.setPublicReadAccess(true);
+  roleACL.setWriteAccess(AVUser.getCurrentUser(),true);
+
   // 新建一个角色，并把为当前用户赋予该角色
-  AVRole administrator= new AVRole("Administrator");//新建角色
+  AVRole administrator= new AVRole("Administrator",roleACL);//新建角色
   administrator.getUsers().add(AVUser.getCurrentUser());//为当前用户赋予该角色
   administrator.saveInBackground();//保存到云端
 ```
@@ -116,26 +121,26 @@
 
 ```
   // 新建一个帖子对象
-  AVObject post = new AVObject("Post");
-  post.put("title","夏天吃什么夜宵比较爽？");
-  post.put("content","求推荐啊！");
+  final AVObject post = new AVObject("Post");
+  post.put("title", "夏天吃什么夜宵比较爽？");
+  post.put("content", "求推荐啊！");
 
-  AVRole administratorRole = new AVRole("Administrator");
-  try {
-    administratorRole.save();
-  } catch (AVException e) {
-    e.printStackTrace();
-  }
+  AVQuery<AVRole> roleQuery=new AVQuery<AVRole>("_Role");
+  // 假设上一步创建的 Administrator 角色的 objectId 为 55fc0eb700b039e44440016c
+  roleQuery.getInBackground("55fc0eb700b039e44440016c", new GetCallback<AVRole>() {
+    @Override
+    public void done(AVRole avRole, AVException e) {
+      //新建一个 ACL 实例
+      AVACL acl = new AVACL();
+      acl.setPublicReadAccess(true);// 设置公开的「读」权限，任何人都可阅读
+      acl.setRoleWriteAccess(avRole, true);// 为 Administrator 「写」权限
+      acl.setWriteAccess(AVUser.getCurrentUser(), true);// 为当前用户赋予「写」权限
 
-  //新建一个 ACL 实例
-  AVACL acl = new AVACL();
-  acl.setPublicReadAccess(true);// 设置公开的「读」权限，任何人都可阅读
-  acl.setRoleWriteAccess(administratorRole,true);// 为 Administrator 「写」权限
-  acl.setWriteAccess(AVUser.getCurrentUser(),true);// 为当前用户赋予「写」权限
-
-  // 以上代码的效果就是：只有 Post 作者（当前用户）和拥有 Administrator 角色的用户可以修改这条 Post，而所有人都可以读取这条 Post
-
-  post.saveInBackground();
+      // 以上代码的效果就是：只有 Post 作者（当前用户）和拥有 Administrator 角色的用户可以修改这条 Post，而所有人都可以读取这条 Post
+      post.setACL(acl);
+      post.saveInBackground();
+    }
+  });
 ```
 {% endblock %}
 
@@ -203,78 +208,60 @@
 {% block asign_role_to_parent %}
 
 ```
-  AVRole administratorRole = new AVRole("Administrator");
-  AVRole moderatorRole = new AVRole ("Administrator");
+  AVRole administratorRole = // 从服务端查询 Administrator 实例
+  AVRole moderatorRole = // 从服务端查询 Moderator 实例
 
-  try {
-    administratorRole.save();
-    moderatorRole.save();
-  } catch (AVException e) {
-    e.printStackTrace();
-  }
-
+  // 从 moderatorRole 的 roles（AVRelation） 中删除  administratorRole
   moderatorRole.getRoles().add(administratorRole);
   moderatorRole.saveInBackground();
-
-  /**
-   * 以上用同步方法是为了保证在调用 moderator.getRoles().add(administratorRole); 之前 administratorRole 和 moderatorRole 都已保存在服务端，当然开发者也可以调用 saveInBackground ，但是需要按照顺序逐步调用 saveInBackground
-   **/
 ```
 {% endblock %}
 
 {% block share_role %}
 
 ```
-  // 新建 3个角色实例
-  AVRole photographicRole = new AVRole("Photographic");
-  AVRole mobileRole = new AVRole("Mobile");
-  AVRole digitalRole = new AVRole("Digital");
-
-  try {
-    photographicRole.save();
-    mobileRole.save();
-  } catch (AVException e) {
-    e.printStackTrace();
-  }
-
+    // 新建 3个角色实例
+  AVRole photographicRole = // 创建或者创建 Photographic 角色
+  AVRole mobileRole = // 创建或者创建 Mobile 角色
+  AVRole digitalRole = // 创建或者创建 Digital 角色
 
   // photographicRole 和 mobileRole 继承了 digitalRole
   digitalRole.getRoles().add(photographicRole);
   digitalRole.getRoles().add(mobileRole);
 
-  try {
-    digitalRole.save();
-  } catch (AVException e) {
-    e.printStackTrace();
-  }
+  digitalRole.saveInBackground(new SaveCallback() {
+    @Override
+    public void done(AVException e) {
 
-  //新建 3 篇贴子，分别发在不同的板块上
-  AVObject photographicPost= new AVObject ("Post");
-  AVObject mobilePost = new AVObject("Post");
-  AVObject digitalPost = new AVObject("Post");
-  //.....此处省略一些具体的值设定
+      //新建 3 篇贴子，分别发在不同的板块上
+      AVObject photographicPost= new AVObject ("Post");
+      AVObject mobilePost = new AVObject("Post");
+      AVObject digitalPost = new AVObject("Post");
+      //.....此处省略一些具体的值设定
 
-  AVACL photographicACL = new AVACL();
-  photographicACL.setPublicReadAccess(true);
-  photographicACL.setRoleWriteAccess(photographicRole, true);
-  photographicPost.setACL(photographicACL);
+      AVACL photographicACL = new AVACL();
+      photographicACL.setPublicReadAccess(true);
+      photographicACL.setRoleWriteAccess(photographicRole, true);
+      photographicPost.setACL(photographicACL);
 
-  AVACL mobileACL = new AVACL();
-  mobileACL.setPublicReadAccess(true);
-  mobileACL.setRoleWriteAccess(mobileRole, true);
-  mobilePost.setACL(mobileACL);
+      AVACL mobileACL = new AVACL();
+      mobileACL.setPublicReadAccess(true);
+      mobileACL.setRoleWriteAccess(mobileRole, true);
+      mobilePost.setACL(mobileACL);
 
-  AVACL digitalACL = new AVACL();
-  digitalACL.setPublicReadAccess(true);
-  digitalACL.setRoleWriteAccess(digitalRole, true);
-  digitalPost.setACL(digitalACL);
+      AVACL digitalACL = new AVACL();
+      digitalACL.setPublicReadAccess(true);
+      digitalACL.setRoleWriteAccess(digitalRole, true);
+      digitalPost.setACL(digitalACL);
 
-  // photographicPost 只有 photographicRole 可以读写
-  // mobilePost 只有 mobileRole 可以读写
-  // 而 photographicRole，mobileRole，digitalRole 均可以对 digitalPost 进行读写
-  photographicPost.saveInBackground();
-  mobilePost.saveInBackground();
-  digitalPost.saveInBackground();
+      // photographicPost 只有 photographicRole 可以读写
+      // mobilePost 只有 mobileRole 可以读写
+      // 而 photographicRole，mobileRole，digitalRole 均可以对 digitalPost 进行读写
+      photographicPost.saveInBackground();
+      mobilePost.saveInBackground();
+      digitalPost.saveInBackground();
+    }
+  });
 ```
 
 {% endblock %}

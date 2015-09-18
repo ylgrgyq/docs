@@ -53,10 +53,15 @@
 {% block create_role_administrator %}
 
 ```
-    // 新建一个角色，并把为当前用户赋予该角色
-    AVRole *administrator =[AVRole roleWithName:@"Administrator"];//新建角色
-    [[administrator users] addObject: [AVUser currentUser]];//为当前用户赋予该角色
-    [administrator saveInBackground];//保存
+    // 设定角色本身的 ACL 
+    AVACL *roleACL = [AVACL ACL];
+    [roleACL setPublicReadAccess:YES];
+    [roleACL setWriteAccess:YES forUser:[AVUser currentUser]];
+    
+    // 创建角色，并且保存
+    AVRole *administratorRole= [AVRole roleWithName:@"Administrator"];
+    [[administratorRole users] addObject: [AVUser currentUser]];
+    [administratorRole saveInBackground];
 ```
 {% endblock %}
 
@@ -108,19 +113,23 @@
     [post setObject:@"夏天吃什么夜宵比较爽？" forKey:@"title"];
     [post setObject:@"求推荐啊！" forKey:@"content"];
     
-    AVRole *administratorRole = [AVRole roleWithName:@"Administrator"];
-    [administratorRole save];
     
-    //新建一个 ACL 实例
-    AVACL *acl = [AVACL ACL];
-    [acl setPublicReadAccess:YES];// 设置公开的「读」权限，任何人都可阅读
-    [acl setWriteAccess:YES  forRole:administratorRole];// 为 Administrator 「写」权限
-    [acl setWriteAccess:YES  forUser:[AVUser currentUser]];// 为当前用户赋予「写」权限
-    post.ACL = acl;// 将 ACL 实例赋予 Post对象
-    
-    // 以上代码的效果就是：只有 Post 作者（当前用户）和拥有 Administrator 角色的用户可以修改这条 Post，而所有人都可以读取这条 Post
-    
-    [post saveInBackground];
+     // 假设之前创建的 Administrator 角色 objectId 为 55fc0eb700b039e44440016c，我们使用
+    AVQuery *roleQuery= [AVRole query];
+    [roleQuery getObjectInBackgroundWithId:@"55fc0eb700b039e44440016c" block:^(AVObject *object, NSError *error) {
+        AVRole *administratorRole = (AVRole*) object;
+        [administratorRole saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+            //新建一个 ACL 实例
+            AVACL *acl = [AVACL ACL];
+            [acl setPublicReadAccess:YES];// 设置公开的「读」权限，任何人都可阅读
+            [acl setWriteAccess:YES  forRole:administratorRole];// 为 Administrator 「写」权限
+            [acl setWriteAccess:YES  forUser:[AVUser currentUser]];// 为当前用户赋予「写」权限
+            post.ACL = acl;// 将 ACL 实例赋予 Post对象
+            
+            // 以上代码的效果就是：只有 Post 作者（当前用户）和拥有 Administrator 角色的用户可以修改这条 Post，而所有人都可以读取这条 Post
+            [post saveInBackground];
+        }];
+    }];
 ```
 {% endblock %}
 
@@ -180,17 +189,15 @@
 {% block asign_role_to_parent %}
 
 ```
-    AVRole *administratorRole = [AVRole roleWithName:@"Administrator"];
-    AVRole *moderatorRole = [AVRole roleWithName:@"Moderator"];
+    AVRole *administratorRole = //从服务端查询出 Administrator 角色实例
+    AVRole *moderatorRole = //从服务端查询出 Moderator 角色实例
     
-    [administratorRole save];
-    [moderatorRole save];
-    
+    // 从 moderatorRole 的 roles 关系中移除 administratorRole
     [[moderatorRole roles] addObject:administratorRole];
     
-    [moderatorRole save];
+    [moderatorRole saveInBackground];
     /**
-     * 以上用同步方法是为了保证在调用 [[moderator roles] addObject:administratorRole] 之前 administratorRole 和 moderatorRole 都已保存在服务端，当然开发者也可以调用 saveInBackground ，但是需要按照顺序逐步调用 saveInBackground
+     * 以上用同步方法是为了保证在调用 [[moderator roles] addObject:administratorRole] 之前 administratorRole 和 moderator 都已保存在服务端
      **/
 ```
 {% endblock %}
@@ -199,44 +206,43 @@
 
 ```
     // 新建 3个角色实例
-    AVRole *photographicRole = [AVRole roleWithName:@"Photographic"];
-    AVRole *mobileRole = [AVRole roleWithName:@"Mobile"];
-    AVRole *digitalRole = [AVRole roleWithName:@"Digital"];
-    
-    [photographicRole save];
-    [mobileRole save];
+    AVRole *photographicRole = //创建或者从服务端查询出 Photographic 角色实例
+    AVRole *mobileRole = //创建或从服务端查询出 Mobile 角色实例
+    AVRole *digitalRole = //创建或从服务端查询出 Digital 角色实例
     
     // photographicRole 和 mobileRole 继承了 digitalRole
     [[digitalRole roles] addObject:photographicRole];
     [[digitalRole roles] addObject:mobileRole];
 
-    [digitalRole save];
- 
-    AVObject *photographicPost= [AVObject objectWithClassName:@"Post"];
-    AVObject *mobilePost = [AVObject objectWithClassName:@"Post"];
-    AVObject *digitalPost = [AVObject objectWithClassName:@"Post"];
-    //.....此处省略一些具体的值设定
-    
-    AVACL *photographicACL = [AVACL ACL];
-    [photographicACL setPublicReadAccess:YES];
-    [photographicACL setWriteAccess:YES forRole:photographicRole];
-    [photographicPost setACL:photographicACL];
-    
-    AVACL *mobileACL = [AVACL ACL];
-    [mobileACL setPublicReadAccess:YES];
-    [mobileACL setWriteAccess:YES forRole:mobileRole];
-    [mobilePost setACL:mobileACL];
-    
-    AVACL *digitalACL = [AVACL ACL];
-    [digitalPost setPublicReadAccess:YES];
-    [digitalPost setACL:digitalACL];
-    
-    // photographicPost 只有 photographicRole 可以读写
-    // mobilePost 只有 mobileRole 可以读写
-    // 而 photographicRole，mobileRole，digitalRole 均可以对 digitalPost 进行读写
-    [photographicPost save];
-    [mobilePost save];
-    [digitalPost save];
+    [digitalRole saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+       
+        AVObject *photographicPost= [AVObject objectWithClassName:@"Post"];
+        AVObject *mobilePost = [AVObject objectWithClassName:@"Post"];
+        AVObject *digitalPost = [AVObject objectWithClassName:@"Post"];
+        //.....此处省略一些具体的值设定
+        
+        AVACL *photographicACL = [AVACL ACL];
+        [photographicACL setReadAccess:YES forRole:photographicRole];
+        [photographicACL setPublicReadAccess:YES];
+        [photographicACL setWriteAccess:YES forRole:photographicRole];
+        [photographicPost setACL:photographicACL];
+        
+        AVACL *mobileACL = [AVACL ACL];
+        [mobileACL setReadAccess:YES forRole:mobileRole];
+        [mobileACL setWriteAccess:YES forRole:mobileRole];
+        [mobilePost setACL:mobileACL];
+        
+        AVACL *digitalACL = [AVACL ACL];
+        [digitalACL setReadAccess:YES forRole:digitalRole];
+        [digitalPost setACL:digitalACL];
+        
+        // photographicPost 只有 photographicRole 可以读写
+        // mobilePost 只有 mobileRole 可以读写
+        // 而 photographicRole，mobileRole，digitalRole 均可以对 digitalPost 进行读写
+        [photographicPost saveInBackground];
+        [mobilePost saveInBackground];
+        [digitalPost saveInBackground];
+    }];
 ```
 
 {% endblock %}
