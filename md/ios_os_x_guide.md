@@ -1511,9 +1511,9 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
   </dict>
 ```
 
-或者在 Target 中的 Info 中修改配置：
+或者在 Target 的 Info 标签中修改配置：
 
-![](images/ios_qiniu_http.png)
+![Info.plist Setting](images/ios_qiniu_http.png)
 
 如果是美国节点，请把上面的 `clouddn.com` 换成 `amazonaws.com`。
 
