@@ -1409,7 +1409,7 @@ AVFile *attachment = [anotherObj objectForKey:@"attached"];
 NSData *binaryData = [attachment getData];
 ```
 
-也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
+也可以像 `AVObject` 那样，使用 `getData` 的异步版本。
 
 **如果对象的某一属性是一个文件数组，那么在获取该属性的查询中，必须加上 `includeKey:` 来指定该属性名，否则，查询结果中该属性对应的值将是 `AVObject` 数组，而不是 `AVFile` 数组。**
 
@@ -1491,6 +1491,30 @@ NSError *error = nil;
 + (BOOL)clearCacheMoreThanDays:(NSInteger)numberOfDays;
 
 ```
+
+### iOS 9 适配
+
+iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文件的 getData 之外的 API 都是支持 HTTPS 访问的， 所以只需要额外配置一下该接口的访问策略。选择项目的 Info.plist，右击以 Source Code 的方式打开。在 plist -> dict 节点中加入以下文本：
+```
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>clouddn.com</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
+```
+
+如果是美国节点，请把上面的 `clouddn.com` 换成 `amazonaws.com`。
+
+也可以根据项目需要，允许所有的 HTTP 访问，更多可参考这篇[指南](https://github.com/ChenYilong/iOS9AdaptationTips)。
+
 
 ## 用户
 
