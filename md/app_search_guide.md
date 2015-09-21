@@ -374,7 +374,7 @@ query.setQuery("age:(>=10 AND < 20)");//搜索年龄在[10,20)区间内的数据
   query.setQuery("qu?c*k");//此处?代表一个字符，*代表0个或者多个字符。类似正则表达式通配符
 ```
 
-更多更详细的语法资料，您可以参考Elasticsearch文档中[Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)一节。
+更多更详细的语法资料，您可以参考 Elasticsearch 文档中 [Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)一节。
 
 #### iOS 集成
 
@@ -521,6 +521,77 @@ curl -X GET \
 ```
 直到返回结果为空。
 
+
+### q 查询语法举例
+
+q 的查询走的是 elasticsearch 的 [query string 语法](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)。建议详细阅读这个文档。这里简单做个举例说明。
+
+查询的关键字保留字符包括： `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /`，当出现这些字符的时候，请对这些保留字符做 URL Escape 转义。
+
+##### 基础查询语法
+
+* 查询某个关键字，例如`可乐`。
+* 查询多个关键字，例如`可口 可乐`，空格隔开，返回的结果默认按照文本相关性排序，排序和复杂排序参见上文和下文。
+* 查询某个短语，例如 `"lady gaga"`，注意用双引号括起来，这样才能保证查询出来的相关对象里的相关内容的关键字也是按照 `lady gaga` 的顺序出现。
+* 根据字段查询，例如根据 nickname 字段查询：`nickename:逃跑计划`
+* 复合查询，AND 或者 OR，例如 `nickname:(逃跑计划 OR 夜空中最亮的星)`
+* 根据字段查询，也可以是短语，记得加双引号在短语两侧： `nickename:"lady gaga"`
+* 假设 book 字段是 object 类型，那么可以根据内嵌字段来查询，例如 `book.name:clojure OR book.content:clojure`，也可以用通配符简写为 `book.\*:clojure`。
+* 查询没有 title 的对象： `_missing_:title`。
+* 查询有 title 字段并且不是 null 的对象： `_exists_:title`。
+
+** 上面举例根据字段查询，前提是这些字段在 class 的应用内搜索设置里启用了索引。**
+
+##### 通配符和正则查询
+
+`qu?ck bro*` 就是一个通配符查询，`?` 表示一个单个字符，而 `*` 表示 0 个或者多个字符。
+
+通配符其实是正则的简化，可以使用正则查询：
+
+```
+name:/joh?n(ath[oa]n)/
+```
+
+正则的语法参考 [正则语法](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax)。
+
+##### 模糊查询(Fuzziness)
+
+根据文本距离相似度来查询，例如 `quikc~`，默认根据 [Damerau-Levenshtein 文本距离算法](http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance)来查找最多两次变换的匹配项。
+
+例如这个查询可以匹配 `quick`、`qukic`、`qukci` 等。
+
+##### 范围查询
+
+* 数字范围 `count:[1 TO 5]`
+* 日期范围 `date:[2012-01-01 TO 2012-12-31]`
+
+`[]` 表示闭区间，`{}` 表示开区间。
+
+还可以采用比较运算符：
+
+```
+age:>10
+age:>=10
+age:<10
+age:<=10
+```
+
+##### 查询分组
+
+查询可以使用括号分组：
+
+```
+(quick OR brown) AND fox
+```
+
+##### 特殊类型字段说明
+
+* objectId 在应用内搜索的类型为 string，因此可以按照字符串查询： `objectId: 558e20cbe4b060308e3eb36c`，不过这个没有特别必要了，你可以直接走 SDK 查询，效率更好。
+* createdAt 和 updatedAt 映射为 date 类型，例如 `createdAt:["2015-07-30T00:00:00.000Z" TO "2015-08-15T00:00:00.000Z"]` 或者 `updatedAt: [2012-01-01 TO 2012-12-31]`
+* 除了createdAt 和 updatedAt之外的 Date 字段类型，需要加上 `.iso` 后缀做查询： `birthday.iso: [2012-01-01 TO 2012-12-31]`
+* Pointer 类型，可以采用 `字段名.objectId` 的方式来查询： `player.objectId: 558e20cbe4b060308e3eb36c and player.className: Player`，pointer 只有这两个属性，应用内搜索不会 include 其他属性。
+* Relation 字段的查询不支持。
+* File 字段，可以根据 url 或者 id 来查询： `avartar.url: "https://leancloud.cn/docs/app_search_guide.html#搜索_API""`，无法根据文件内容做全文搜索。
 
 ### 复杂排序
 
