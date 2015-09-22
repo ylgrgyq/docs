@@ -669,6 +669,33 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 * 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
 {% endblock %}
 
+{% block unread_message %}
+### 未读消息
+
+iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线消息的接收机制。
+
+SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
+
+要开启未读消息，可以在 AVOSCloud 初始化语句后面加上：
+
+```objc
+[AVIMClient setUserOptions:@{
+    AVIMUserOptionUseUnread: @(YES)
+}];
+```
+
+接收未读消息数的 delegate 方法是：
+
+```objc
+/*
+ 收到未读通知。
+ @param conversation 所属会话。
+ @param unread 未读消息数量。
+ */
+- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread;
+```
+{% endblock %}
+
 {% block messagePolicy_received_method %} `conversation:didReceiveCommonMessage:` {% endblock %}
 
 {% block messagePolicy_received %}
@@ -700,6 +727,53 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
     }];
 }
 ```
+{% endblock %}
+
+{% block conversation_creation_api_ios %}
+### 创建对话
+
+有两个方法可以创建对话：
+
+```objc
+/*!
+ 创建一个新的用户对话。
+ 在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表
+ @param name - 对话名称。
+ @param clientIds - 聊天参与者（发起人除外）的 clientId 列表。
+ @param callback － 对话建立之后的回调
+ @return None.
+ */
+- (void)createConversationWithName:(NSString *)name
+                         clientIds:(NSArray *)clientIds
+                          callback:(AVIMConversationResultBlock)callback;
+
+/*!
+ 创建一个新的用户对话。
+ 在单聊的场合，传入对方一个 clientId 即可；群聊的时候，支持同时传入多个 clientId 列表
+ @param name - 对话名称。
+ @param clientIds - 聊天参与者（发起人除外）的 clientId 列表。
+ @param attributes - 对话的自定义属性。
+ @param options － 可选参数，可以使用或 “|” 操作表示多个选项
+ @param callback － 对话建立之后的回调
+ @return None.
+ */
+- (void)createConversationWithName:(NSString *)name
+                         clientIds:(NSArray *)clientIds
+                        attributes:(NSDictionary *)attributes
+                           options:(AVIMConversationOption)options
+                          callback:(AVIMConversationResultBlock)callback;
+```
+
+各参数含义如下：
+
+* name － 表示对话名字，可以指定任意有意义的名字，也可不填。
+* clientIds － 表示对话初始成员，可不填。如果填写了初始成员，则 LeanCloud 云端会直接给这些成员发出邀请，省掉再专门发一次邀请请求。
+* attributes － 表示额外属性，Dictionary，支持任意的 key/value，可不填。
+* options － 对话选项，允许使用 `|` 进行组合，支持一下选项：
+    1. `AVIMConversationOptionNone`，表示普通对话；
+    2. `AVIMConversationOptionTransient`，表示聊天室，具体可以参见[后文](#创建开放聊天室)；
+    3. `AVIMConversationOptionUnique`，根据成员（clientIds）创建原子对话。如果没有这个选项，服务端会为相同的 clientIds 创建新的对话。
+* callback － 结果回调，在操作结束之后调用，通知开发者成功与否。
 {% endblock %}
 
 {% block event_memberJoin %} `membersAdded` {% endblock %}
