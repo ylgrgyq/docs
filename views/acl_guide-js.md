@@ -1,7 +1,7 @@
 {% extends "./acl_guide.tmpl" %}
 
 {% block language_version %}JavsScript{% endblock %}
-
+{% block link_to_acl_quickStart %}[权限管理以及 ACL 快速指南](/acl_quick_start-js.html){% endblock %}
 {% block create_post_set_acl_for_single_user %}
 
 ```javascript

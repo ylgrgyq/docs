@@ -49,11 +49,6 @@ AV.Cloud.beforeSave('Post', function(request, response) {
   }
 });
 ```
-Python ：
-
-```python
-
-```
 
 第二步，部署代码到云端（[如何部署](/leanengine_guide-node.html#部署)）。
 
