@@ -192,7 +192,7 @@
     AVRole *administratorRole = //从服务端查询出 Administrator 角色实例
     AVRole *moderatorRole = //从服务端查询出 Moderator 角色实例
     
-    // 从 moderatorRole 的 roles 关系中移除 administratorRole
+    // 向 moderatorRole 的 roles（AVRelation）中添加 administratorRole
     [[moderatorRole roles] addObject:administratorRole];
     
     [moderatorRole saveInBackground];

@@ -212,7 +212,7 @@
   AVRole administratorRole = // 从服务端查询 Administrator 实例
   AVRole moderatorRole = // 从服务端查询 Moderator 实例
 
-  // 从 moderatorRole 的 roles（AVRelation） 中删除  administratorRole
+  // 向 moderatorRole 的 roles（AVRelation） 中添加 administratorRole
   moderatorRole.getRoles().add(administratorRole);
   moderatorRole.saveInBackground();
 ```

@@ -35,7 +35,7 @@ AV.Cloud.beforeSave('Post', function(request, response) {
     var acl = new AV.ACL();
     acl.setPublicReadAccess(true);
     // 为了更为便捷我们直接提供了根据名字设置权限的方法
-    acl.setRoleWriteAccess('Administator',true);
+    acl.setRoleWriteAccess('Administrator',true);
     // 如果是查询出来的 AV.Role 实例可以如下书写，效果是等价的
     //  acl.setRoleWriteAccess(administratorRole,true);
       
