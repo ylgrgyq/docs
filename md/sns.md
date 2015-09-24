@@ -21,7 +21,12 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 也可以在开源项目上编译 framework 加入到项目中，或者直接拖动源代码到项目中。
 
 ### SSO
-利用SSO, 可以使用户不用输入用户名密码等复杂操作，一键登录。 **目前 LeanCloudSocial 已经支持新浪微博、手机 QQ 和微信, 并且不需要使用各个平台官方的 SDK, 保证你的应用体积最小化。**而你需要做的也很简单，以新浪微博为例：
+
+利用SSO, 可以使用户不用输入用户名密码等复杂操作，一键登录。 **目前 LeanCloudSocial 已经支持新浪微博、手机 QQ 和微信, 并且不需要使用各个平台官方的 SDK, 保证你的应用体积最小化。**
+
+#### 调用接口
+
+你需要做的也很简单，以新浪微博为例：
 
 ```objc
 [AVOSCloudSNS setupPlatform:AVOSCloudSNSSinaWeibo withAppKey:@"Weibo APP ID" andAppSecret:@"Weibo APP KEY" andRedirectURI:@""];
@@ -47,13 +52,75 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 }
 ```
 
-这样, 代码部分就完成了. 下一步就是设置, 为你的app添加 URL Schemes: `sinaweibosso.appId`(注意有个点".")，像这样
+这样, 代码部分就完成了。
+
+#### 配置 URL Schemes
+
+下一步就是设置, 为你的app添加 URL Schemes: `sinaweibosso.appId`(注意有个点".")，像这样
 
 ![Url Shceme](images/sns_guide_url_scheme.png)
 
-这时如果顺利, 应该可以正常的打开新浪微博官方iOS客户端进行登录了.
+QQ的话设置 URL Schemes 为:`tencentappid`，微信则使用微信开放平台提供的 AppId，如 `wxa3eacc1c86a717bc`。
 
-QQ的SSO与微博完全一致, 只是设置URL Schemes:`tencentappid`，微信则使用微信开放平台提供的 AppId，如 `wxa3eacc1c86a717bc`。
+#### iOS 9 适配
+
+因为 iOS 9 默认只允许 HTTPS 访问，同时加强了应用间通信的安全。需要配置一下第三方网站的访问策略以及把第三方应用的 URL Scheme 加入到白名单中，请右击以 Source Code 的方式打开项目的 Info.plist，在 plist-> dict 节点下加入以下文本：
+
+```
+    <key>LSApplicationQueriesSchemes</key>
+    <array>
+        <!-- QQ、Qzone URL Scheme 白名单-->
+        <string>mqqOpensdkSSoLogin</string>
+        
+        <!-- 微信 URL Scheme 白名单-->
+        <string>weixin</string>
+        
+        <!-- 新浪微博 URL Scheme 白名单-->
+        <string>sinaweibohdsso</string>
+        <string>sinaweibosso</string>
+    </array>
+    
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSExceptionDomains</key>
+        <dict>
+            
+            <!-- 集成新浪微博对应的HTTP白名单-->
+            <key>weibo.cn</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                <false/>
+            </dict>
+            <key>weibo.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                <false/>
+            </dict>
+            <!-- 新浪微博-->
+            
+            <!-- 集成微信、QQ、Qzone、腾讯微博授权对应的HTTP白名单-->
+            <key>qq.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+                <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                <false/>
+            </dict>
+            <!-- 腾讯授权-->
+            
+        </dict>
+    </dict>
+```
+
+这时如果顺利, 应该可以正常的打开新浪微博官方iOS客户端进行登录了.
 
 `+ (void)[AVOSCloudSNS loginWithCallback:toPlatform:]` 接口当在相关应用安装的情况下，直接跳转到相关应用进行 SSO 授权，如果没有安装的话，则跳转至网页授权。网页授权需要用户输入账号、密码，体验较差，所以我们提供了 `+ (BOOL)[AVOSCloudSNS isAppInstalledForType:]`来让你检测相应的应用有没有安装，没有安装的话可以提示用户或者隐藏按钮。
 
