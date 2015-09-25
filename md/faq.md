@@ -317,4 +317,4 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ## 短信
 
-详情请参照[短信收发常见问题一览](/rest_sms_api.html#常见问题_FAQ)
+详情请参照[短信收发常见问题一览](/docs/rest_sms_api.html#常见问题_FAQ)
