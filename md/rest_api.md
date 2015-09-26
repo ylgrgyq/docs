@@ -382,9 +382,19 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </thead>
   <tbody>
     <tr>
-      <td>/1.1/date/</td>
+      <td>/1.1/date</td>
       <td>GET</td>
       <td>获得服务端当前时间</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData</td>
+      <td>POST</td>
+      <td>请求导出应用数据</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData/&lt;id&gt;</td>
+      <td>GET</td>
+      <td>获取导出数据任务状态和结果</td>
     </tr>
   </tbody>
 </table>
@@ -2802,6 +2812,87 @@ tag|可选|事件属性的简写方式，等同于属性里面添加：`{event: 
 ## 应用内搜索 API
 
 请参考 [搜索 API](./app_search_guide.html#搜索_api)。
+
+## 数据导出 API
+
+你可以通过请求 `/exportData` 来导出应用数据：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+`exportData` 要求使用 master key 来授权。
+
+你还可以指定导出数据的起始时间：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_date":"2015-09-20", "to_date":"2015-09-25"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+还可以指定具体的 class 列表，使用逗号隔开：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"classes":"_User,GameScore,Post"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+默认导出的结果将发送到应用的创建者邮箱，你也可以指定接收邮箱：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"username@exmaple.com"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+调用结果将返回本次任务的 id 和状态：
+
+```json
+{
+  "status":"running",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+除了被动等待邮件之外，你还可以主动使用 id 去查询导出任务状态：
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://api.leancloud.cn/1.1/exportData/1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2
+```
+
+如果导出完成，将返回导出结果的下载链接：
+
+```json
+{
+  "status":"done",
+  "download_url": "https://download.leancloud.cn/export/example.tar.gz",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+如果任务还没有完成， `status` 仍然将为 `running` 状态，**请间隔一段时间后再尝试查询。**
+
 
 ## 其他 API
 
