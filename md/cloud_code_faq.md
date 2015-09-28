@@ -56,3 +56,56 @@ var async = require('async');
 是一个单独功能，可以不用使用基础包，git 等工具快速的生成和编辑云引擎。
 当然，你也可以使用基础包，自己写代码并部署项目。
 这两条路是分开的，任何一个部署，就会导致另一种方式失效掉。
+
+## 为什么查询 include 没有生效？
+
+以 JavaScript 云引擎为例子，很多时候，经常会定义一个云函数，在里面使用 `AV.Query` 查询一张表，并 include 其中一个 pointer 类型的字段，然后返回给客户端:
+
+```javascript
+AV.Cloud.define('querySomething', function(req, res) {
+  var query = new AV.Query('Something');
+  //假设 user 是 Something 表的一个 Pointer 列。
+  query.include('user');
+  //……其他条件或者逻辑……
+  query.find().then(function(results) {
+    //返回查询结果给客户端
+    res.success(results);
+  }).catch(function(err){
+    //返回错误给客户端
+  });
+});
+```
+
+你会看到返回的结果里， user 仍然是 pointer 类型，似乎 include 没有生效？
+
+```json
+{
+ result: [
+   {
+     ……Something 其他字段
+     "user": {
+       "className": "_User",
+       "__type": "Pointer",
+       "objectId": "abcdefg"
+     }
+   }
+   ……
+ ]
+}
+```
+
+这其实是因为 `res.success(results)` 会调用到 `AV.Object#toJSON` 方法，将结果序列化为 JSON 对象返回给客户端。
+而 `AV.Object#toJSON` 方法为了防止循环引用，当遇到属性是 Pointer 类型会返回 pointer 元信息，不会将 include 的其他字段添加进去。因此，你需要对结果做下处理：
+
+```javascript
+ query.find().then(function(results) {
+    //主动序列化 json 列。
+    results.forEach(function(result){
+      result.set('user', result.get('user') ?  result.get('user').toJSON() : null);
+    });
+    //再返回结果
+    res.success(results);
+  }).catch(function(err){
+    //返回错误给客户端
+  });
+```
