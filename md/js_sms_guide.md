@@ -109,4 +109,4 @@ AV.Cloud.verifySmsCode('6位数字验证码', '11 位手机号码').then(functio
 
 ## 常见问题
 
-详情请参照[短信收发常见问题一览](/rest_sms_api.html#常见问题_FAQ)
+详情请参照 [短信收发常见问题一览](rest_sms_api.html#常见问题_FAQ)。
