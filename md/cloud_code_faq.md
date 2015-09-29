@@ -95,8 +95,8 @@ AV.Cloud.define('querySomething', function(req, res) {
 ```
 
 这其实是因为 `res.success(results)` 会调用到 `AV.Object#toJSON` 方法，将结果序列化为 JSON 对象返回给客户端。
-而 `AV.Object#toJSON` 方法为了防止循环引用，当遇到属性是 Pointer 类型会返回 pointer 元信息，不会将 include 的其他字段添加进去。因此，你需要对结果做下处理：
-
+而 `AV.Object#toJSON` 方法为了防止循环引用，当遇到属性是 Pointer 类型会返回 pointer 元信息，不会将 include 的其他字段添加进去。
+因此，你需要主动将该字段进行 JSON 序列化，例如：
 ```javascript
  query.find().then(function(results) {
     //主动序列化 json 列。
