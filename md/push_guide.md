@@ -548,9 +548,9 @@ curl -X POST \
 
 ## Installation 自动过期和清理
 
-对于 iOS 设备，我们根据 Apple 推送服务的反馈，将 Installation 设置为失效，失效后推送到该设备的消息就被忽略。当失效时间超过 60 天，并且用户没有再次使用这个 Installation，我们会删除该 Installation；在 60 天内，用户如果再次使用这个 Installation，将自动启用 Installation 并设置为有效状态，并继续推送消息给该设备。
+每当用户打开应用，我们都会更新该设备的 Installation 表中的 `updatedAt` 时间戳。用户如果长期没有更新 Installation 的 `updatedAt` 时间戳，也就意味着该用户长期没有打开过应用。当超过 360 天没有打开过应用时，我们会将这个用户在 Installation 表中的记录删除。不过请不要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
 
-对于 Android 设备，每当用户打开应用，我们都会更新该设备的 Installation 的 `updatedAt` 时间戳。当用户长期没有更新 Installation 的 `updatedAt` 时间戳，换句话说，就是用户长期没有打开应用（默认是超过 60 天没有打开），这个 Installation 的 valid 将被设置为 false，往这个 Installation 发送的消息将被忽略，直到用户以后某天打开应用更新了 `updatedAt`，`valid` 将再次设置为 true。如果超过 60 天，用户仍然没有打开过应用，那么该 Installation 将被删除。不过你不需要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
+对于 iOS 设备，除了上述过期机制外还多拥有一套过期机制。当我们根据 Apple 推送服务的反馈获取到某设备的 deviceToken 已过期时，我们也会将这个设备在 Installation 表中的信息删除，并标记这个已过期的 deviceToken 为无效，丢弃后续所有发送到该 deviceToken 的消息。
 
 ## 推送问题排查
 
