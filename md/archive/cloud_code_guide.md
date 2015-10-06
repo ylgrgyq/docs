@@ -16,17 +16,17 @@
 
 可以看到左侧菜单：
 
-* **定义函数**  
+* **定义函数**
   Cloud Code 的简单模式，可以直接在线维护云代码方法。
-* **定时任务**  
+* **定时任务**
   可以设置一些定时任务，比如每天凌晨清理无用数据等。
-* **Git 部署**    
+* **Git 部署**
   用于部署 Cloud Code 到测试环境或者生产环境。
-* **日志**  
+* **日志**
   用于查看 Cloud Code日志。
-* **统计**  
+* **统计**
   用于查看 Cloud Code 的一些数据统计
-* **设置**  
+* **设置**
   用来设置项目的源码仓库信息，包括从这里可以下载 Cloud Code 项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
 
 ## 在线定义函数
@@ -158,7 +158,7 @@ AV.Cloud.define('hello', function(request, response) {
   response.success('Hello world!');
 });
 ```
-  
+
   这段代码定义了一个名为 `hello` 的函数，它简单的返回应答「Hello world!」。
 
 * config 目录下是项目的配置文件 global.json，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
@@ -284,8 +284,8 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
        -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
 https://leancloud.cn/1.1/functions/hello
 ```
@@ -315,7 +315,7 @@ npm install -g avoscloud-code
 ```
 
 在一些系统上你可能需要 `sudo` 权限： `npm install -g avoscloud-code`。
- 
+
 如果从 npm 安装失败，可以从 Github 安装：
 
 ```sh
@@ -362,8 +362,8 @@ curl -X POST -H 'Content-Type:application/json' \
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
        -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
 https://leancloud.cn/1.1/functions/hello
 ```
@@ -426,8 +426,8 @@ Cloud 函数可以被各种客户端 SDK 调用，也可以通过REST API调用�
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
-       -H "X-AVOSCloud-Application-Id: {{appid}}" \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+       -H "X-LC-Id: {{appid}}" \
+       -H "X-LC-Key: {{appkey}}" \
        -H "X-AVOSCloud-Application-Production: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
@@ -494,7 +494,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
     response.success();
   } else {
     // 不保存数据，并返回错误
-    response.error('No comment!');    
+    response.error('No comment!');
   }
 });
 ```
@@ -981,7 +981,7 @@ AV.Cloud.define('Logger', function(request, response) {
    * 单位门户网站
    * 网络游戏
    * 网络广告
-5. 绑定独立域名所需的信息，参考 [上节文档](#绑定独立域名)。  
+5. 绑定独立域名所需的信息，参考 [上节文档](#绑定独立域名)。
 
 ##### 第二步
 
@@ -996,10 +996,10 @@ AV.Cloud.define('Logger', function(request, response) {
 
 备案接入商地址：
 
-> 地　　址：北京市东城区和平里东街15号航天物资大厦 209 房间  
-> 备案专员：孟南    
-> 联系电话：010-84222290 转 8001、18101125625  
-  
+> 地　　址：北京市东城区和平里东街15号航天物资大厦 209 房间
+> 备案专员：孟南
+> 联系电话：010-84222290 转 8001、18101125625
+
 ##### 第三步
 
 由我们和备案接入商来完成。
@@ -1421,7 +1421,7 @@ xml2js
 
 1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
 1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
-  
+
 函数 | 返回结果
 ---|---
 `toISOString` | 2015-04-09T03:35:09.678Z

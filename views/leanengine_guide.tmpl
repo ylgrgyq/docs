@@ -43,8 +43,8 @@
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
        -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
        http://localhost:3000/1.1/functions/hello
 ```
@@ -73,8 +73,8 @@ $ avoscloud publish
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
        -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
        https://leancloud.cn/1.1/functions/hello
 ```
@@ -151,8 +151,8 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
-       -H "X-AVOSCloud-Application-Id: {{appid}}" \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+       -H "X-LC-Id: {{appid}}" \
+       -H "X-LC-Key: {{appkey}}" \
        -H "X-AVOSCloud-Application-Production: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
