@@ -15,6 +15,7 @@
   .email-address {
     font-size: 24px;
     font-weight: 300;
+    line-height: 1;
   }
 
   .email-verification-status {
@@ -38,14 +39,18 @@
 }
 
 .billing-stat-text {
-  font-size: 50px;
-  font-weight: 100;
+  .font-logo;
+  font-size: 38px;
   line-height: 1;
   margin-bottom: 16px;
 
   span {
     font-size: 16px;
     margin-left: 6px;
+  }
+
+  &.overdue {
+    color: @brand-danger;
   }
 }
 
@@ -55,6 +60,116 @@
 
   span {
     margin-left: 6px;
+  }
+}
+
+.billing-subheading {
+  margin-top: 24px;
+  margin-bottom: 6px;
+}
+
+.billing-support-class {
+  position: relative;
+  display: inline-block;
+  color: #515151;
+  background: #e6e6e6;
+  border: 1px solid #717171;
+  border-radius: 4px;
+  font-size: 20px;
+  .font-logo;
+  padding: 2px 14px;
+  vertical-align: middle;
+  overflow: hidden;
+  cursor: default;
+
+  + .btn {
+    margin-left: 5px;
+  }
+
+  &.has-tooltip {
+    cursor: pointer;
+  }
+
+  &.pro {
+    color: @link-color;
+    background: #eff8ff;
+    border-color: @link-color;
+  }
+
+  &.enterprise {
+    color: #f39700;
+    background: #fff6d8;
+    border-color: #f5a623;
+  }
+
+  @duration: 1.6s;
+  @offset: .05s;
+  @hl-before: 40px;
+  @hl-after: 120px;
+
+  &:before,
+  &:after {
+    content: '';
+    position: absolute;
+    width: 10px;
+    height: 60px;
+    background: #fff;
+    display: block;
+    top: 0;
+    left: -40px;
+    transform: skewX(-24deg);
+    mix-blend-mode: overlay;
+  }
+
+  &:before {
+    width: 5px;
+    margin-left: -15px;
+    animation: btn-highlight-before @duration cubic-bezier(.4, .41, .04, 1) 0s 1;
+  }
+
+  &:after {
+    animation: btn-highlight-after (@duration - @offset) cubic-bezier(.4, .41, .04, 1) 0s 1;
+  }
+
+  // define states
+  .state-before {
+    left: calc(100% + 30px);
+    width: @hl-before;
+    margin-left: -25px;
+    transition-delay: @offset;
+    transition-duration: @duration - @offset;
+  }
+
+  .state-after {
+    left: calc(100% + 30px);
+    width: @hl-after;
+  }
+
+  // hover mode
+  // &:hover:before,
+  // &:hover:after {
+  //   transition: all @duration cubic-bezier(.4, .41, .04, 1);
+  // }
+  //
+  // &:hover:before {
+  //   .state-before;
+  // }
+  //
+  // &:hover:after {
+  //   .state-after;
+  // }
+
+  // animation mode
+  @keyframes btn-highlight-before {
+    100% {
+      .state-before;
+    }
+  }
+
+  @keyframes btn-highlight-after {
+    100% {
+      .state-after;
+    }
   }
 }
 
@@ -162,7 +277,7 @@
 
   &.billing-status-balanced,
   &.billing-type-3 {
-    color: @brand-info;
+    color: @gray-light;
   }
 }
 
@@ -256,6 +371,11 @@ table > tbody > tr > td > .cursor-pointer {
     cursor: pointer;
     vertical-align: top;
     text-decoration: none;
+    border-radius: @border-radius-base;
+
+    & + .payment-method {
+      margin-left: 5px;
+    }
 
     .payment-method-radio {
       outline: none !important;
@@ -293,14 +413,28 @@ table > tbody > tr > td > .cursor-pointer {
       .payment-method-credit-balance {
         opacity: .6;
       }
+
+      &[disabled] {
+        opacity: .5;
+        cursor: not-allowed;
+      }
     }
 
     &:hover,
     &:focus {
 
-      .payment-method-image {
-        border-color: @input-border-focus;
+      .payment-method-image,
+      .payment-method-text {
+
+        &:not([disabled]) {
+          border-color: @input-border-focus;
+        }
       }
+    }
+
+    &:focus {
+      appearance: none;
+      outline: none;
     }
   }
 }
@@ -354,28 +488,84 @@ table > tbody > tr > td > .cursor-pointer {
 }
 
 // bill_invoice.html
+.request-invoice-list {
+
+  &.history {
+
+    .invoice-item {
+      line-height: 1rem;
+    }
+  }
+}
+
+.invoice-status {
+
+  &.awaiting {
+    color: @brand-warning;
+  }
+
+  &.approved {
+    color: @brand-success;
+  }
+
+  &.cancelled {
+    color: @gray-light;
+  }
+}
+
+// invoice_form.html
 .modal-invoice-request {
 
   .modal-body {
 
-    p {
-      margin-bottom: 6px;
-    }
-  }
-
-  .billing-invoice-title {
-    color: @gray-light;
-  }
-
-  p.billing-stat-text {
-    font-size: 32px;
-    margin-bottom: 20px;
-    font-weight: 300;
-
-    &.small {
-      font-size: 16px;
-      line-height: 1.4;
-      margin-bottom: 0;
-    }
   }
 }
+
+.invoice-item {
+  margin-top: 20px;
+  margin-bottom: 20px;
+
+  &:first-child {
+    margin-top: 10px;
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  > label {
+    display: block;
+  }
+
+  .date {
+    color: @gray-light;
+    margin-right: 10px;
+  }
+
+  .comment {
+  }
+
+  .amount {
+    float: right;
+  }
+}
+
+.request-invoice-total-wrap {
+  position: relative;
+
+  .request-invoice-total-btns {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+.request-invoice-total {
+
+  span {
+    font-size: 32px;
+    .font-logo;
+    line-height: 1;
+  }
+}
+

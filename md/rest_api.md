@@ -382,9 +382,19 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </thead>
   <tbody>
     <tr>
-      <td>/1.1/date/</td>
+      <td>/1.1/date</td>
       <td>GET</td>
       <td>获得服务端当前时间</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData</td>
+      <td>POST</td>
+      <td>请求导出应用数据</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData/&lt;id&gt;</td>
+      <td>GET</td>
+      <td>获取导出数据任务状态和结果</td>
     </tr>
   </tbody>
 </table>
@@ -2458,7 +2468,7 @@ Hi {{username}},
 * **ttl**：短信有效期，单位分钟，默认为 10 分钟。
 * **name**：应用名称
 
-这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 `{{var}}`。
+这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 <span ng-non-bindable>`{{var}}`</span>。
 
 短信签名，是指短信内容里用实心方括号（【】）括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
 -->
@@ -2725,8 +2735,7 @@ curl -i X POST \
     },
     {
       "event": "buy-item",
-      "attributes": {"item-category": "book"},
-      "metrics": {"amount": 9.99}
+      "attributes": {"item-category": "book"}
     },
     {
       "event": "_session.close",
@@ -2749,6 +2758,12 @@ id|必选|用户的唯一 id（系统将根据这个 id 来区分新增用户，
 platform|可选|应用的平台（例如 iOS、Android 等）
 app_version|可选|应用的版本
 app_channel|可选|应用的发布渠道
+os_version|可选|系统版本
+device_brand|可选|设备品牌
+device_model|可选|设备型号
+device_resolution|可选|设备分辨率
+network_access|可选|网络类型
+network_carrier|可选|移动网络运营商
 
 #### session 节点
 
@@ -2797,6 +2812,87 @@ tag|可选|事件属性的简写方式，等同于属性里面添加：`{event: 
 ## 应用内搜索 API
 
 请参考 [搜索 API](./app_search_guide.html#搜索_api)。
+
+## 数据导出 API
+
+你可以通过请求 `/exportData` 来导出应用数据：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+`exportData` 要求使用 master key 来授权。
+
+你还可以指定导出数据的起始时间：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_date":"2015-09-20", "to_date":"2015-09-25"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+还可以指定具体的 class 列表，使用逗号隔开：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"classes":"_User,GameScore,Post"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+默认导出的结果将发送到应用的创建者邮箱，你也可以指定接收邮箱：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"username@exmaple.com"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+调用结果将返回本次任务的 id 和状态：
+
+```json
+{
+  "status":"running",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+除了被动等待邮件之外，你还可以主动使用 id 去查询导出任务状态：
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://api.leancloud.cn/1.1/exportData/1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2
+```
+
+如果导出完成，将返回导出结果的下载链接：
+
+```json
+{
+  "status":"done",
+  "download_url": "https://download.leancloud.cn/export/example.tar.gz",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+如果任务还没有完成， `status` 仍然将为 `running` 状态，**请间隔一段时间后再尝试查询。**
+
 
 ## 其他 API
 

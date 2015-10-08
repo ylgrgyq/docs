@@ -1,7 +1,13 @@
 {% extends "./leanengine_guide.tmpl" %}
 
 {% block updateToLeanEngine %}
+## 云代码 2.0 环境已不推荐使用
+
+### 如何判断当前运行环境
+如果项目中有 `cloud/main.js` 文件，即为云代码 2.0 环境，该环境以后不会增加任何新功能，我们强烈建议你升级到 LeanEngine 环境。
+
 ### 升级到 LeanEngine
+
 云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
 
 * 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。

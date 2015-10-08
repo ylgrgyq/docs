@@ -57,7 +57,7 @@ module.exports = function(grunt) {
       },
       less: {
         files: ["custom/less/**"],
-        tasks: ["less:server", "autoprefixer", "copy:asset"]
+        tasks: ["less:server", "postcss", "copy:asset"]
       },
       jst: {
         files: ["templates/template.jst"],
