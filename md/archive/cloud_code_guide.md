@@ -286,7 +286,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
        -H "X-LC-Id: {{appid}}"          \
        -H "X-LC-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+       -H "X-LC-Prod: 0"  -d '{}' \
 https://leancloud.cn/1.1/functions/hello
 ```
 
@@ -351,7 +351,7 @@ curl -X POST -H 'Content-Type:application/json' \
 
 ### 测试环境和生产环境
 
-你应该注意到了，我们在调用 REST API 的时候设置了特殊的 HTTP 头 X-AVOSCloud-Application-Production，这个头信息用于设置调用的 Cloud Code 代码环境。
+你应该注意到了，我们在调用 REST API 的时候设置了特殊的 HTTP 头 X-LC-Prod，这个头信息用于设置调用的 Cloud Code 代码环境。
 
 * 0 表示调用「开发环境」的代码
 * 1 表示调用「生产环境」的代码
@@ -364,7 +364,7 @@ curl -X POST -H 'Content-Type:application/json' \
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
        -H "X-LC-Id: {{appid}}"          \
        -H "X-LC-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
+       -H "X-LC-Prod: 1"  -d '{}' \
 https://leancloud.cn/1.1/functions/hello
 ```
 
@@ -428,7 +428,7 @@ Cloud 函数可以被各种客户端 SDK 调用，也可以通过REST API调用�
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
        -H "X-LC-Id: {{appid}}" \
        -H "X-LC-Key: {{appkey}}" \
-       -H "X-AVOSCloud-Application-Production: 0" \
+       -H "X-LC-Prod: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
@@ -1294,7 +1294,7 @@ app.use(avosExpressHttpsRedirect());
 
 **提示**：云代码 2.0 及以上版本可以跳过本节。
 
-前面已经谈到 Cloud Code 的测试和生产环境之间的区别，可以通过 HTTP 头部 X-AVOSCloud-Application-Production 来区分。但是对于 Web Hosting 就没有办法通过这个 HTTP 头来方便的区分。
+前面已经谈到 Cloud Code 的测试和生产环境之间的区别，可以通过 HTTP 头部 X-LC-Prod 来区分。但是对于 Web Hosting 就没有办法通过这个 HTTP 头来方便的区分。
 
 因此，我们其实为每个 App 创建了两个域名，除了 xxx.avosapps.com 之外，每个 App 还有 dev.xxx.avosapps.com 域名作为测试环境的域名。
 
@@ -1338,7 +1338,7 @@ if (__local) {
 } else if(__production) {
   // 当前环境为「生产环境」，是线上正式运行的环境
 } else {
-  // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-AVOSCloud-Application-Production:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
+  // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-LC-Prod:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
 }
 ```
 
