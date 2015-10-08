@@ -43,9 +43,9 @@
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 0"  -d '{}' \
        http://localhost:3000/1.1/functions/hello
 ```
 
@@ -73,9 +73,9 @@ $ avoscloud publish
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 1"  -d '{}' \
        https://leancloud.cn/1.1/functions/hello
 ```
 
@@ -151,9 +151,9 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
-       -H "X-AVOSCloud-Application-Id: {{appid}}" \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-       -H "X-AVOSCloud-Application-Production: 0" \
+       -H "X-LC-Id: {{appid}}" \
+       -H "X-LC-Key: {{appkey}}" \
+       -H "X-LC-Prod: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
@@ -701,7 +701,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 测试环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-AVOSCloud-Application-Production` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
 
 因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
 
@@ -728,7 +728,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 {% block get_env %}{% endblock %}
 
-你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-AVOSCloud-Application-Production`，来区分调用的环境。
+你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
 
 * 0 表示调用测试环境
 * 1 表示调用生产环境
