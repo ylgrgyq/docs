@@ -236,8 +236,8 @@ public class MyCustomReceiver extends BroadcastReceiver {
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
   -H "Content-Type: application/json" \
   -d '{
         "channels":[ "public"],

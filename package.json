@@ -4,7 +4,7 @@
   "description": "LeanCloud Documentation",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test --no-comments"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   "devDependencies": {
     "assemble": "~0.4.33",
     "assemble-swig": "~0.1.0",
+    "autoprefixer": "^6.0.1",
     "avoscloud-sdk": "^0.5.4",
     "body-parser": "^1.13.1",
     "cheerio": "^0.19.0",
@@ -25,22 +26,24 @@
     "cookie-parser": "^1.3.5",
     "express": "^4.13.0",
     "grunt": "^0.4.5",
-    "grunt-autoprefixer": "~0.5.0",
     "grunt-connect-proxy": "0.1.10",
     "grunt-contrib-clean": "~0.5.0",
     "grunt-contrib-concat": "~0.5.1",
     "grunt-contrib-connect": "~0.5.0",
     "grunt-contrib-copy": "~0.4.1",
     "grunt-contrib-cssmin": "~0.7.0",
-    "grunt-contrib-less": "~0.8.3",
+    "grunt-contrib-less": "^1.0.1",
     "grunt-contrib-livereload": "~0.1.2",
     "grunt-contrib-uglify": "~0.8.0",
     "grunt-contrib-watch": "~0.6.1",
     "grunt-dom-munger": "^3.4.0",
     "grunt-markdown": "~0.7.0",
     "grunt-nunjucks": "git://github.com/sdjcw/grunt-nunjucks-render.git",
+    "grunt-postcss": "^0.6.0",
     "grunt-usemin": "~3.0.0",
+    "jit-grunt": "^0.9.1",
     "nunjucks": "^1.3.4",
+    "time-grunt": "^1.2.1",
     "underscore": "^1.8.3"
   },
   "dependencies": {}

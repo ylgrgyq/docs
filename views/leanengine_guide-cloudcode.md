@@ -1,7 +1,13 @@
 {% extends "./leanengine_guide.tmpl" %}
 
 {% block updateToLeanEngine %}
+## 云代码 2.0 环境已不推荐使用
+
+### 如何判断当前运行环境
+如果项目中有 `cloud/main.js` 文件，即为云代码 2.0 环境，该环境以后不会增加任何新功能，我们强烈建议你升级到 LeanEngine 环境。
+
 ### 升级到 LeanEngine
+
 云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
 
 * 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
@@ -9,7 +15,7 @@
 * `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
 * 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)
 
-请参见详细的 [升级指南](./leanengine_upgrade_3.0.html)。
+请参见详细的 [升级指南](leanengine_upgrade_3.html)。
 {% endblock %}
 
 {% block quick_start_create_project %}

@@ -1035,11 +1035,10 @@ Post postReference = AVObject.createWithoutData(Post.class, post.getObjectId());
 
 ### 子类的序列化与反序列化
 
-在 v3.4 版本以后，如果希望 `AVObject` 子类也支持 `Parcelable`,则需要至少满足一下几个要求：
+在 v3.4 版本以后，如果希望 AVObject 子类也支持 Parcelable，则需要至少满足以下几个要求：
 
-* 确保子类有一个 public 并且参数为 Parcel的构造函数，并且在内部调用父类的该构造函数
-
-* 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`
+* 确保子类有一个 public 并且参数为 Parcel 的构造函数，并且在内部调用父类的该构造函数。
+* 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`。
 
 ```java
 // Post.java
@@ -1048,7 +1047,7 @@ public class Post extends AVObject {
   public Post(){
   }
   
-  public Post(Parcle in){
+  public Post(Parcel in){
     super(in);
   }
   //此处为我们的默认实现，当然你也可以自行实现
@@ -1067,7 +1066,7 @@ query.whereEqualTo("pubUser", AVUser.getCurrentUser().getUsername());
 query.findInBackground(new FindCallback<Post>() {
   @Override
   public void done(List<Post> results, AVException e) {
-    for (Armor a : results) {
+    for (Post a : results) {
       // ...
     }
   }

@@ -1,12 +1,10 @@
 // Basic styles
 body {
   position: relative;
-  font-family: "Helvetica Neue", Helvetica, "Lantinghei SC", STHeiti, "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serif;
-  font-weight: 300;
+  font-size: 15px;
 }
 
 .doc-content {
-  font-size: 15px;
 
   p,
   li {
@@ -138,24 +136,27 @@ body {
     .form-group {
       position: relative;
 
-
       input {
         border: none;
         border-radius: 0;
         height: 32px;
         padding-left: 34px;
+
+        &:focus {
+          box-shadow: none;
+        }
       }
 
       // Override icon styles
-      &:after {
+      &:before {
         position: absolute;
         display: block;
         top: 8px;
         left: 15px;
-        font-family: 'LeanCloud';
+        font-family: "ui-icon";
         font-size: 16px;
         line-height: 1;
-        content: "\e626";
+        content: @icon-search;
         width: 16px;
         height: 16px;
         pointer-events: none;
@@ -572,7 +573,7 @@ ul#toc,#toc li {
   .icon {
     color: #000;
     font-size: 24px;
-    vertical-align: -5px;
+    vertical-align: -3px;
   }
 
   a {

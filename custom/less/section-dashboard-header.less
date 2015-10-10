@@ -445,12 +445,13 @@
   display: block;
   font-size: 22px;
   line-height: 20px;
-  // Icon position fix
-  margin-top: -1px;
   width: 20px;
-  // Re-add positon offset
-  height: (20px + 1px);
+  height: 20px;
   float: left;
+
+  &:before {
+    vertical-align: top;
+  }
 }
 
 // App search (filter)
@@ -469,14 +470,15 @@
   &:after {
     position: absolute;
     display: block;
-    top: 12px;
+    top: 15px;
     left: 15px;
-    font-family: 'LeanCloud';
+    font-family: "ui-icon";
     font-size: @s;
     line-height: 1;
     content: @icon-search;
     width: @s;
     height: @s;
+    color: @navbar-default-link-color;
     pointer-events: none;
     -webkit-font-smoothing: antialiased;
   }
@@ -488,5 +490,9 @@
     background: transparent;
     padding-left: (20px + @s);
     padding-right: 15px;
+
+    &:focus {
+      box-shadow: none;
+    }
   }
 }

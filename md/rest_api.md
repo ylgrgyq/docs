@@ -382,9 +382,19 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </thead>
   <tbody>
     <tr>
-      <td>/1.1/date/</td>
+      <td>/1.1/date</td>
       <td>GET</td>
       <td>获得服务端当前时间</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData</td>
+      <td>POST</td>
+      <td>请求导出应用数据</td>
+    </tr>
+    <tr>
+      <td>/1.1/exportData/&lt;id&gt;</td>
+      <td>GET</td>
+      <td>获取导出数据任务状态和结果</td>
     </tr>
   </tbody>
 </table>
@@ -393,16 +403,16 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 Content-Type 需要设置为 `application/json`。
 
-用户验证是通过 HTTP header 来进行的，__X-AVOSCloud-Application-Id__ 标明正在运行的是哪个 App 程序，而 __X-AVOSCloud-Application-Key__ 用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
+用户验证是通过 HTTP header 来进行的，__X-LC-Id__ 标明正在运行的是哪个 App 程序，而 __X-LC-Key__ 用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
 
 对于 JavaScript 使用，LeanCloud 支持跨域资源共享，所以你可以将这些 header 同 XMLHttpRequest 一同使用。
 
 
 #### 更安全的鉴权方式
 
-我们服务端目前支持一种新的 API 鉴权方式，用户仍然需要传递 X-AVOSCloud-Application-Id 的 HTTP 头表示 App id，但是不需要再传递 X-AVOSCloud-Application-Key。
+我们服务端目前支持一种新的 API 鉴权方式，用户仍然需要传递 X-LC-Id 的 HTTP 头表示 App id，但是不需要再传递 X-LC-Key。
 
-取而代之的，增加了新 HTTP 头部 X-AVOSCloud-Request-Sign，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
+取而代之的，增加了新 HTTP 头部 X-LC-Sign，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
 
 取值|约束|描述
 ---|---|---
@@ -418,11 +428,11 @@ master | |字符串 `"master"`，当使用 master key 签名请求的时候，�
 
 那么：
 
-* **x-avoscloud-request-sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854**  
+* **X-LC-Sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854**  
   表示请求时间戳为 `1389085779854`，
   签名为 `28ad0513f8788d58bb0f7caa0af23400`，
   签名是通过对 `1389085779854n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo` 的字符串做 md5sum 得到，也就是时间戳加上 app key 组成的字符串做 MD5 签名。
-* **x-avoscloud-request-sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master**    
+* **X-LC-Sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master**    
   表示使用 master key 产生签名，时间戳仍然是 `1389085779854`，
   签名是通过对 `1389085779854h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2` 做 md5sum 得到，最后的 `master` 告诉服务器这个签名是使用 master key 产生的。
 
@@ -500,8 +510,8 @@ https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"content": "每个 Java 程序员必备的 8 个开发工具","pubUser": "LeanCloud官方客服","pubTimestamp": 1435541999}' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -531,8 +541,8 @@ Location: https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
@@ -553,8 +563,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'include=author' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -566,8 +576,8 @@ curl -X GET \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"content": "每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/"}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -587,8 +597,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"upvotes":{"__op":"Increment","amount":1}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -608,8 +618,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"tags":{"__op":"AddUnique","objects":["Frontend","JavaScript"]}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -621,8 +631,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"likes":{"__op":"AddRelation","objects":[{"__type":"Pointer","className":"_User","objectId":"51c3ba67e4b0f0e851c16221"}]}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -632,8 +642,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"likes":{"__op":"RemoveRelation","objects":[{"__type":"Pointer","className":"_User","objectId":"51fa3f64e4b05df1766cfb90"}]}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -645,8 +655,8 @@ curl -X PUT \
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
@@ -654,8 +664,8 @@ curl -X DELETE \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"downvotes":{"__op":"Delete"}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
@@ -669,8 +679,8 @@ curl -X PUT \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "requests": [
@@ -723,8 +733,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "requests": [
@@ -761,8 +771,8 @@ Date 和内置的 createdAt 字段和 updatedAt  字段相结合的时候特别�
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"createdAt":{"$gte":{"__type":"Date","iso":"2015-06-21T18:02:52.249Z"}}}' \
@@ -811,8 +821,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   https://api.leancloud.cn/1.1/classes/Post
 ```
@@ -849,8 +859,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"pubUser":"LeanCloud官方客服"}' \
@@ -878,8 +888,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"createdAt":{"$gte":{"__type":"Date","iso":"2015-06-29T00:00:00.000Z"},"$lt":{"__type":"Date","iso":"2015-06-30T00:00:00.000Z"}}}' \
@@ -890,8 +900,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"upvotes":{"$in":[1,3,5,7,9]}}' \
@@ -902,8 +912,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"pubUser":{"$nin":["LeanCloud官方客服"]}}' \
@@ -914,8 +924,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"upvotes":{"$exists":true}}' \
@@ -926,8 +936,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"upvotes":{"$exists":false}}' \
@@ -938,8 +948,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'where={"author":{"$select":{"query":{"className":"_Followee","where":{"user":{
@@ -954,8 +964,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'order=createdAt' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -965,8 +975,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'order=-createdAt' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -976,8 +986,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'order=createdAt,-pubUser' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -987,8 +997,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'limit=200' \
   --data-urlencode 'skip=400' \
@@ -999,8 +1009,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'keys=pubUser,content' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -1010,8 +1020,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'keys=-author' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -1025,8 +1035,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"arrayKey":2}' \
   https://api.leancloud.cn/1.1/classes/TestObject
@@ -1036,8 +1046,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"arrayKey":{"$all":[2,3,4]}}' \
   https://api.leancloud.cn/1.1/classes/TestObject
@@ -1049,8 +1059,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"post":{"__type":"Pointer","className":"Post","objectId":"558e20cbe4b060308e3eb36c"}}' \
   https://api.leancloud.cn/1.1/classes/Comment
@@ -1062,8 +1072,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"post":{"$inQuery":{"where":{"image":{"$exists":true}},"className":"Post"}}}' \
   https://api.leancloud.cn/1.1/classes/Comment
@@ -1073,8 +1083,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"$relatedTo":{"object":{"__type":"Pointer","className":"Post","objectId":"558e20cbe4b060308e3eb36c"},"key":"likes"}}' \
   https://api.leancloud.cn/1.1/users
@@ -1084,8 +1094,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'order=-createdAt' \
   --data-urlencode 'limit=10' \
@@ -1120,8 +1130,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'order=-createdAt' \
   --data-urlencode 'limit=10' \
@@ -1137,8 +1147,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"pubUser":"LeanCloud官方客服"}' \
   --data-urlencode 'count=1' \
@@ -1165,8 +1175,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={"$or":[{"pubUserCertificate":{"$gt":2}},{"pubUserCertificate":{"$lt":3}}]}' \
   https://api.leancloud.cn/1.1/classes/Post
@@ -1182,8 +1192,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'cql=select * from Post limit 0,100 order by pubUser' \
   https://api.leancloud.cn/1.1/cloudQuery
@@ -1195,8 +1205,8 @@ CQL 还支持占位符查询，`where` 和 `limit` 子句的条件参数可以�
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'cql=select * from Post where pubUser=? limit ?,? order by createdAt' \
    --data-urlencode 'pvalues=["dennis", 0, 100]'
@@ -1219,8 +1229,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"username":"hjiang","password":"f32@ds*@&dsa","phone":"18612340000"}' \
   https://api.leancloud.cn/1.1/users
@@ -1249,8 +1259,8 @@ Location: https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'username=hjiang' \
   --data-urlencode 'password=f32@ds*@&dsa' \
@@ -1280,8 +1290,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
@@ -1325,8 +1335,8 @@ emailVerified 字段有 3 种状态可以参考：
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"email":"hang@leancloud.rocks"}' \
   https://api.leancloud.cn/1.1/requestEmailVerify
@@ -1338,8 +1348,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"email":"hang@leancloud.rocks"}' \
   https://api.leancloud.cn/1.1/requestPasswordReset
@@ -1361,8 +1371,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"username":"hang@leancloud.rocks","password":"whateverpassword","mobilePhoneNumber":"13613613613"}' \
   https://api.leancloud.cn/1.1/users
@@ -1372,8 +1382,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
   https://api.leancloud.cn/1.1/verifyMobilePhone/{6位数字验证码}
@@ -1389,8 +1399,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestMobilePhoneVerify
@@ -1402,8 +1412,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestLoginSmsCode
@@ -1413,8 +1423,8 @@ curl -X POST \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'smsCode=123456' \
@@ -1425,8 +1435,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'password=whateverpassword' \
@@ -1439,8 +1449,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
@@ -1452,8 +1462,8 @@ curl -X POST \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"password": "new password"}' \
   https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
@@ -1468,8 +1478,8 @@ curl -X PUT \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
@@ -1489,7 +1499,7 @@ curl -X GET \
 
 ###更新用户
 
-在通常的情况下，没有人会允许别人来改动他们自己的数据。为了做好权限认证，确保只有用户自己可以修改个人数据，在更新用户信息的时候，必须在 HTTP 头部加入一个 `X-AVOSCloud-Session-Token` 项来请求更新，这个 session token 在注册和登录时会返回。
+在通常的情况下，没有人会允许别人来改动他们自己的数据。为了做好权限认证，确保只有用户自己可以修改个人数据，在更新用户信息的时候，必须在 HTTP 头部加入一个 `X-LC-Session` 项来请求更新，这个 session token 在注册和登录时会返回。
 
 为了改动一个用户已经有的数据，需要对这个用户的 URL 发送一个 PUT 请求。任何你没有指定的 key 都会保持不动，所以你可以只改动用户数据中的一部分。username 和 password 也是可以改动的，但是新的 username 不能和既有数据重复。
 
@@ -1497,9 +1507,9 @@ curl -X GET \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{"phone":"18600001234"}' \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
@@ -1519,9 +1529,9 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{"old_password":"the_old_password", "new_password":"the_new_password"}' \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f/updatePassword
@@ -1530,7 +1540,7 @@ curl -X PUT \
 * **old_password**：用户的老密码
 * **new_password**：用户的新密码
 
-注意：仍然需要传入 X-AVOSCloud-Session-Token，也就是登录用户才可以修改自己的密码。
+注意：仍然需要传入 X-LC-Session，也就是登录用户才可以修改自己的密码。
 
 
 ###查询
@@ -1539,8 +1549,8 @@ curl -X PUT \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/users
 ```
 
@@ -1566,13 +1576,13 @@ curl -X GET \
 
 ###删除用户
 
-为了在 LeanCloud 上删除一个用户，可以向它的 URL 上发送一个 DELETE 请求。同样的，你必须提供一个 X-AVOSCloud-Session-Token 在 HTTP 头上以便认证。例如：
+为了在 LeanCloud 上删除一个用户，可以向它的 URL 上发送一个 DELETE 请求。同样的，你必须提供一个 X-LC-Session 在 HTTP 头上以便认证。例如：
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
@@ -1655,8 +1665,8 @@ LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾�
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
      "authData": {
@@ -1720,9 +1730,9 @@ Location: https://api.leancloud.cn/1.1/users/55a4800fe4b05001a7745c41
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
@@ -1744,9 +1754,9 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   -H "Content-Type: application/json" \
   -d '{
         "authData": {
@@ -1800,8 +1810,8 @@ roles | 一个指向一系列子角色的关系，这些子关系会继承父角
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "name": "Manager",
@@ -1827,8 +1837,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "name": "CLevel",
@@ -1874,8 +1884,8 @@ Location: https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
@@ -1908,8 +1918,8 @@ curl -X GET \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "users": {
@@ -1930,8 +1940,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "roles": {
@@ -1953,13 +1963,13 @@ curl -X PUT \
 
 为了从 LeanCloud 上删除一个角色，只需要发送 DELETE 请求到它的 URL 就可以了。
 
-我们需要传入 X-AVOSCloud-Session-Token 来通过一个有权限的用户账号来访问这个角色对象，例如：
+我们需要传入 X-LC-Session 来通过一个有权限的用户账号来访问这个角色对象，例如：
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -H "X-AVOSCloud-Session-Token: qmdj8pdidnmyzp0c7yqil91oc" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
   https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
@@ -1997,8 +2007,8 @@ curl -X DELETE \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "roles": {
@@ -2033,8 +2043,8 @@ curl -X PUT \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: text/plain" \
   -d 'Hello, World!' \
   https://api.leancloud.cn/1.1/files/hello.txt
@@ -2058,8 +2068,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: image/png" \
   --data-binary '@test.png'  \
   https://api.leancloud.cn/1.1/files/test.png
@@ -2071,8 +2081,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
    -H "Content-Type: application/json" \
   -d '{
         "name": "hjiang",
@@ -2093,8 +2103,8 @@ curl -X POST \
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/files/543cbaede4b07db196f50f3c
 ```
 
@@ -2125,8 +2135,8 @@ REST 的方法可以被用来模仿这些操作。比如，如果你有一个 iO
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "ios",
@@ -2160,8 +2170,8 @@ Location: https://api.leancloud.cn/1.1/installations/51ff1808e4b074ac5c34d7fd
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/installations/51ff1808e4b074ac5c34d7fd
 ```
 
@@ -2186,8 +2196,8 @@ curl -X GET \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "ios",
@@ -2208,8 +2218,8 @@ curl -X PUT \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/installations
 ```
 
@@ -2250,8 +2260,8 @@ curl -X GET \
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/installations/51fcb74ee4b074ac5c34cf85
 ```
 
@@ -2261,8 +2271,8 @@ curl -X DELETE \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
   https://api.leancloud.cn/1.1/functions/hello
@@ -2276,8 +2286,8 @@ curl -X POST \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'limit=10' \
   --data-urlencode 'where={
@@ -2298,8 +2308,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={
         "location": {
@@ -2318,8 +2328,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'where={
         "location": {
@@ -2355,8 +2365,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
          "status"  : "open",
@@ -2381,8 +2391,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -2394,8 +2404,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -2412,8 +2422,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   "https://api.leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
@@ -2433,8 +2443,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "template":"activity","date":"2014 年 10 月 31 号"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -2458,7 +2468,7 @@ Hi {{username}},
 * **ttl**：短信有效期，单位分钟，默认为 10 分钟。
 * **name**：应用名称
 
-这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 `{{var}}`。
+这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 <span ng-non-bindable>`{{var}}`</span>。
 
 短信签名，是指短信内容里用实心方括号（【】）括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
 -->
@@ -2473,12 +2483,12 @@ Hi {{username}},
 
 统计 API 可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计数据查询 API 必须使用 master key 的签名方式鉴权，请参考 [更安全的鉴权方式](#更安全的鉴权方式) 一节。
 
-获取某个应用的基本信息，包括各平台的应用版本，应用发布渠道。（注意：下面示例直接使用 X-AVOSCloud-Master-Key，不过我们推荐在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
+获取某个应用的基本信息，包括各平台的应用版本，应用发布渠道。（注意：下面示例直接使用带 `master` 标识的 X-LC-Key，不过我们推荐在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   https://api.leancloud.cn/1.1/stats/appinfo
 ```
 
@@ -2501,8 +2511,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   "https://api.leancloud.cn/1.1/stats/appmetrics?platform=iOS&start=20140301&end=20140315&metrics=active_user"
 ```
 
@@ -2588,8 +2598,8 @@ metrics 参数可选项解释：
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   "https://api.leancloud.cn/1.1/stats/rtmetrics?platform=iOS&metrics=current_active"
 ```
 
@@ -2634,8 +2644,8 @@ metrics参数可选项解释：
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   "https://api.leancloud.cn/1.1/stats/appmetrics?platform=iOS&start=20140301&end=20140315&metrics=new_user,retention_1"
 ```
 将返回
@@ -2680,8 +2690,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/statistics/apps/{{appid}}/sendPolicy
 ```
 
@@ -2704,8 +2714,8 @@ curl -X GET \
 ```
 curl -i X POST \
 -H "Content-Type: application/json" \
--H "X-AVOSCloud-Application-Id: {{appid}}" \
--H "X-AVOSCloud-Application-Key: {{appkey}}" \
+-H "X-LC-Id: {{appid}}" \
+-H "X-LC-Key: {{appkey}}" \
 -d \
 '{
   "client": {
@@ -2725,8 +2735,7 @@ curl -i X POST \
     },
     {
       "event": "buy-item",
-      "attributes": {"item-category": "book"},
-      "metrics": {"amount": 9.99}
+      "attributes": {"item-category": "book"}
     },
     {
       "event": "_session.close",
@@ -2749,6 +2758,12 @@ id|必选|用户的唯一 id（系统将根据这个 id 来区分新增用户，
 platform|可选|应用的平台（例如 iOS、Android 等）
 app_version|可选|应用的版本
 app_channel|可选|应用的发布渠道
+os_version|可选|系统版本
+device_brand|可选|设备品牌
+device_model|可选|设备型号
+device_resolution|可选|设备分辨率
+network_access|可选|网络类型
+network_carrier|可选|移动网络运营商
 
 #### session 节点
 
@@ -2798,14 +2813,95 @@ tag|可选|事件属性的简写方式，等同于属性里面添加：`{event: 
 
 请参考 [搜索 API](./app_search_guide.html#搜索_api)。
 
+## 数据导出 API
+
+你可以通过请求 `/exportData` 来导出应用数据：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+`exportData` 要求使用 master key 来授权。
+
+你还可以指定导出数据的起始时间：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_date":"2015-09-20", "to_date":"2015-09-25"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+还可以指定具体的 class 列表，使用逗号隔开：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"classes":"_User,GameScore,Post"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+默认导出的结果将发送到应用的创建者邮箱，你也可以指定接收邮箱：
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"username@exmaple.com"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+调用结果将返回本次任务的 id 和状态：
+
+```json
+{
+  "status":"running",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+除了被动等待邮件之外，你还可以主动使用 id 去查询导出任务状态：
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://api.leancloud.cn/1.1/exportData/1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2
+```
+
+如果导出完成，将返回导出结果的下载链接：
+
+```json
+{
+  "status":"done",
+  "download_url": "https://download.leancloud.cn/export/example.tar.gz",
+  "id":"1wugzx81LvS5R4RHsuaeMPKlJqFMFyLwYDNcx6LvCc6MEzQ2",
+  "app_id":"{{appid}}"
+}
+```
+
+如果任务还没有完成， `status` 仍然将为 `running` 状态，**请间隔一段时间后再尝试查询。**
+
+
 ## 其他 API
 
 获取服务端当前日期时间可以通过 `/date` API:
 
 ```
 curl -i X GET \
-    -H "X-AVOSCloud-Application-Id: {{appid}}" \
-    -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+    -H "X-LC-Id: {{appid}}" \
+    -H "X-LC-Key: {{appkey}}" \
     https://api.leancloud.cn/1.1/date
 ```
 
@@ -2824,12 +2920,12 @@ curl -i X GET \
 
 离线数据分析 API 可以获取一个应用的备份数据。因为应用数据的隐私敏感性，离线数据分析 API 必须使用 master key 的签名方式鉴权，请参考 [更安全的鉴权方式](#更安全的鉴权方式) 一节。
 
-创建分析 job。（注意：下面示例直接使用 `X-AVOSCloud-Master-Key`，不过我们推荐你在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
+创建分析 job。（注意：下面示例直接使用带 `master` 标识的 `X-LC-Key`，不过我们推荐你在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
 
 ``` 
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"jobConfig":{"sql":"select count(*) from table"}}' \
   https://api.leancloud.cn/1.1/bigquery/jobs
@@ -2885,8 +2981,8 @@ Strict-Transport-Security: max-age=31536000
 
 ```
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   https://api.leancloud.cn/1.1/bigquery/jobs/:jobId
 ```

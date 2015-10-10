@@ -31,7 +31,7 @@ $ pip install -Ur requirements.txt
 启动应用：
 
 ```
-$ python wsgi.py
+$ avoscloud
 ```
 {% endblock %}
 
@@ -166,7 +166,7 @@ except LeanCloudError, e:
 {% block beforeSaveExample %}
 ```python
 @engine.before_save('Review')  # Review 为需要 hook 的 class 的名称
-function before_review_save(review):
+def before_review_save(review):
 	comment = review.get('comment')
 	if not comment:
 		raise leancloud.LeanEngineError(message='No comment!')
@@ -296,7 +296,7 @@ LeanEngine 可以使用 Python 内置的 urllib，不过推荐您使用 [request
 
 {% block timerExample %}
 ```python
-@engine.cloud_code
+@engine.define
 def log_timer():
     print 'Log in timer.'
 ```
@@ -323,7 +323,7 @@ leancloud.init('{{appid}}', master_key='{{masterkey}}')
 
 {% block loggerExample %}
 ```python
-@engine.cloud_code
+@engine.define
 def log_something(**params):
     print params
 ```

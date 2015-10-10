@@ -4,6 +4,8 @@
 
 # 云引擎指南
 
+{% block updateToLeanEngine %}{% endblock %}
+
 ## 介绍
 
 云引擎允许你编写 JavaScript 或者 Python 代码，并部署到我们的云端，通过拦截 save 请求，在保存对象之前或之后做一些事情；你可以自定义业务函数，并通过 SDK 调用；你还可以调用部分第三方库来实现自己的业务逻辑，甚至还可以将整个网站架设在云引擎之上，我们提供了网站托管服务。
@@ -14,8 +16,6 @@
 
 * **标准的运行环境**：之前云代码是我们订制的一个沙箱运行环境，功能受限，并且代码只可以在云代码环境运行，难以迁移到自己搭建的后端服务器上。而云引擎环境可以部署标准项目。
 * **多语言支持**：目前支持 Node.js 与 Python，将来会支持更多的编程语言运行环境。
-
-{% block updateToLeanEngine %}{% endblock %}
 
 ### 命令行工具
 
@@ -43,9 +43,9 @@
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 0"  -d '{}' \
        http://localhost:3000/1.1/functions/hello
 ```
 
@@ -73,9 +73,9 @@ $ avoscloud publish
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 1"  -d '{}' \
        https://leancloud.cn/1.1/functions/hello
 ```
 
@@ -95,6 +95,7 @@ LC_APP_MASTER_KEY|当前应用的 Master Key
 LC_APP_ENV|当前应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
 LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
+**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JS-SDK AV.setProduction(production)](https://leancloud.cn/docs/api/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
 
 ### 安装
 
@@ -150,9 +151,9 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
-       -H "X-AVOSCloud-Application-Id: {{appid}}" \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-       -H "X-AVOSCloud-Application-Production: 0" \
+       -H "X-LC-Id: {{appid}}" \
+       -H "X-LC-Key: {{appkey}}" \
+       -H "X-LC-Prod: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
@@ -700,27 +701,11 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 测试环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-AVOSCloud-Application-Production` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
 
 因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
 
 部署的测试代码将运行在这个域名之上，在测试通过之后，通过`部署`菜单里的`部署到生产环境`按钮切换之后，可以在`xxx.avosapps.com`看到最新的运行结果。
-
-注意：**dev.xxx.avosapps.com的view会同时渲染到生产环境，app.js的逻辑代码会自动隔离。因此建议测试环境和生产环境的views目录区分开，并通过全局变量__production来判断当前环境是生产环境还是测试环境，分别设置views目录**
-
-**特别地，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境**
-
-
-```javascript
-if(__production)
-  app.set('views', 'cloud/views');
-else
-  app.set('views', 'cloud/dev_views');
-
-```
-
-这样，测试代码将使用`cloud/dev_views`目录作为views模板目录。
-
 
 ## 第三方平台接入
 
@@ -743,7 +728,7 @@ else
 
 {% block get_env %}{% endblock %}
 
-你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-AVOSCloud-Application-Production`，来区分调用的环境。
+你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
 
 * 0 表示调用测试环境
 * 1 表示调用生产环境

@@ -175,7 +175,7 @@ $ avoscloud -V
 
 ## Bash Completion
 
-下载 [avoscloud_completion.sh](https://raw.githubusercontent.com/leancloud/avoscloud-code-command/master/avoscloud_completion.sh) 保存到某个目录，例如通常保存为 `~/.leancloud_completion.sh`，然后在 `.bashrc` 或者 `.bash_profile` 文件中添加：
+下载 [avoscloud_completion.sh](https://raw.githubusercontent.com/leancloud/avoscloud-code-command/master/avoscloud_completion.sh) 保存到某个目录，例如通常保存为 `~/.leancloud_completion.sh`，然后在 `~/.bashrc` 或者 `~/.bash_profile` 文件中添加：
 
 ```sh
 source ~/.leancloud_completion.sh
@@ -228,9 +228,6 @@ Project created!
 avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
 
 更多关于云引擎开发，请参考 [云引擎开发指南](leanengine_guide-node.html) 。
-
-**以下需要特别指出，针对本地调试环境，我们从 0.6.1 版本的命令行工具开始，提供 `__local` 全局变量表示当前处于本地调试环境。**
-
 
 ## 部署
 

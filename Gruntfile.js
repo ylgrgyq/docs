@@ -6,6 +6,13 @@ var mountFolder = function(connect, dir) {
   };
 module.exports = function(grunt) {
 
+  require("jit-grunt")(grunt, {
+    configureProxies: "grunt-connect-proxy",
+    useminPrepare: "grunt-usemin"
+  });
+
+  require("time-grunt")(grunt);
+
   // Project configuration.
   grunt.initConfig({
 
@@ -50,7 +57,7 @@ module.exports = function(grunt) {
       },
       less: {
         files: ["custom/less/**"],
-        tasks: ["less:server", "autoprefixer", "copy:asset"]
+        tasks: ["less:server", "postcss", "copy:asset"]
       },
       jst: {
         files: ["templates/template.jst"],
@@ -152,10 +159,15 @@ module.exports = function(grunt) {
         }
       }
     },
-    autoprefixer: {
+    postcss: {
       server: {
-        files: {
-          "custom/css/app-docs.css": ["custom/css/app-docs.css"]
+        src: "custom/css/app-docs.css",
+        options: {
+          processors: [
+            require("autoprefixer")({
+              browsers: "last 1 versions"
+            })
+          ]
         }
       }
     },
@@ -217,39 +229,34 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.loadNpmTasks('grunt-dom-munger');
-  grunt.loadNpmTasks('grunt-contrib-watch');
-  grunt.loadNpmTasks('grunt-contrib-copy');
-  grunt.loadNpmTasks('grunt-markdown');
-  grunt.loadNpmTasks('grunt-contrib-livereload');
-
-  grunt.loadNpmTasks('grunt-contrib-clean');
-  grunt.loadNpmTasks('grunt-contrib-connect');
-  grunt.loadNpmTasks('grunt-connect-proxy');
-  grunt.loadNpmTasks('grunt-autoprefixer');
-  grunt.loadNpmTasks('grunt-contrib-less');
-  grunt.loadNpmTasks('grunt-contrib-cssmin');
-  grunt.loadNpmTasks('assemble');
-
-  grunt.loadNpmTasks('grunt-usemin');
-  grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
-  // grunt.loadNpmTasks('grunt-useminPrepare');
-  grunt.loadNpmTasks('grunt-nunjucks');
-
   grunt.registerTask("test", ["build"]);
 
   grunt.registerTask("default", ["build"]);
 
-  grunt.registerTask("build", ["clean", "nunjucks", "copy:md", "markdown", "assemble","comment",
-   "less:dist", "autoprefixer", "cssmin", "copy:asset",
-    "useminPrepare",'concat:generated',
-    'uglify:generated',"usemin"]);
+  grunt.registerTask("build", "Main build", function() {
+    grunt.task.run([
+      "clean", "nunjucks", "copy:md", "markdown", "assemble",
+    ]);
+    if (!grunt.option("no-comments")) {
+      grunt.task.run(["comment"]);
+    }
+    grunt.task.run([
+      "less:dist", "postcss", "cssmin", "copy:asset",
+      "useminPrepare", 'concat:generated', "uglify:generated", "usemin"
+    ]);
+  });
 
-  grunt.registerTask("localBuild",["clean", "nunjucks", "copy:md", "markdown", "assemble",
-   "less:dist", "autoprefixer", "copy:asset"]);
+  grunt.registerTask("localBuild",[
+    "clean", "nunjucks", "copy:md", "markdown", "assemble",
+    "less:dist", "postcss", "copy:asset"
+  ]);
 
-  grunt.registerTask("server", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
+  grunt.registerTask("serve", ["localBuild", "less:server","configureProxies", "connect:livereload", "watch"]);
+
+  grunt.registerTask('server', function (target) {
+    grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` instead.');
+    grunt.task.run([target ? ('serve:' + target) : 'serve']);
+  });
 
   grunt.registerMultiTask('comment','add version info',function(){
     grunt.task.requires('assemble');
@@ -287,8 +294,10 @@ module.exports = function(grunt) {
         var snippets = [];
         commentDoms.forEach(function(dom) {
           $('#content ' + dom).each(function() {
-            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-            snippets.push({version: version});
+            if($(this).text().trim().length > 0) {
+              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+              snippets.push({version: version});
+            }
           });
         });
         doc.set('snippets', snippets);
@@ -300,8 +309,10 @@ module.exports = function(grunt) {
         // 在文档中添加 version 标记
         commentDoms.forEach(function(dom) {
           $('#content ' + dom).each(function() {
-            var version = crypto.createHash('md5').update($(this).text()).digest('hex');
-            $(this).attr('version', version);
+            if($(this).text().trim().length > 0) {
+              var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+              $(this).attr('version', version);
+            }
           });
         });
         grunt.file.write(filepath, $.html());
@@ -313,6 +324,9 @@ module.exports = function(grunt) {
           $('#content ' + dom).each(function() {
             var version = crypto.createHash('md5').update($(this).text()).digest('hex');
             if(_.contains(allSnippetsVersion, version)) {
+              return;
+            }
+            if($(this).text().trim().length === 0) {
               return;
             }
             grunt.log.writeln('save new Snippet: %s', $(this).text().substr(0, 20) + '...');

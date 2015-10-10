@@ -48,6 +48,22 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 }
 ```
 
+### 导入模块
+
+在使用到 IM 模块的地方，应该导入该模块。
+
+在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
+
+```objc
+#import <AVOSCloudIM/AVOSCloudIM.h>
+```
+
+在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
+
+```swift
+import AVOSCloudIM
+```
+
 ### 登录
 
 用户在开始聊天之前，需要先登录 LeanCloud 云端。这个登录并不需要用户名、密码认证，只是与 LeanCloud 云端建立一个长连接，所以只需要传入一个可唯一标识当前用户的 `clientId` 即可。
@@ -99,7 +115,7 @@ imClient.delegate = self;
 * attributes，Map/Dict，自定义属性，可选，供开发者自己扩展用。
 * transient，布尔值，表示对话是否为[暂态对话](./realtime_v2.html#暂态对话_transient_conversation_)（关于暂态对话，[后面](#开放聊天室)会详细解释）
 
-我们可以通过 `AVIMClient` 来创建一个对话，其函数声明为：
+当 `AVIMClient` 登录成功后，我们可以通过 `AVIMClient` 来创建一个对话，其函数声明为：
 
 ```
 //指定名字、成员，创建对话
@@ -257,6 +273,31 @@ imClient.delegate = self;
 注意上面 `imClient.delegate = self` 这一行，这就是给 AVIMClient 的消息响应代理赋值，之后 Bob 这边才能成功收到新的消息或者通知。
 
 AVIMClientDelegate 是一个非常重要的接口，所有的消息和事件通知都需要通过它响应。后面我们会仔细讨论一下这个代理接口。
+
+### 未读消息
+
+iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线消息的接收机制。
+
+SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
+
+要开启未读消息，可以在 AVOSCloud 初始化语句后面加上：
+
+```objc
+[AVIMClient setUserOptions:@{
+    AVIMUserOptionUseUnread: @(YES)
+}];
+```
+
+接收未读消息数的 delegate 方法是：
+
+```objc
+/*
+ 收到未读通知。
+ @param conversation 所属会话。
+ @param unread 未读消息数量。
+ */
+- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread;
+```
 
 ### 退出登录
 

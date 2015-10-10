@@ -10,8 +10,8 @@
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name":"My Private Room","m": ["BillGates", "SteveJobs"]}' \
   https://api.leancloud.cn/1.1/classes/_Conversation
@@ -23,8 +23,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name": "OpenConf","tr": true}' \
   https://api.leancloud.cn/1.1/classes/_Conversation
@@ -38,8 +38,8 @@ curl -X POST \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"AddUnique","objects":["LarryPage"]}}' \
   https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
@@ -49,8 +49,8 @@ curl -X PUT \
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"Remove","objects":["SteveJobs"]}}' \
   https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
@@ -62,8 +62,8 @@ curl -X PUT \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 ###获取某个对话的聊天记录
@@ -146,8 +146,8 @@ from-ip | 消息的来源 IP
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593&msgid=PESlY&timestamp=1408008498571
 ```
 
@@ -171,8 +171,8 @@ timestamp | 消息时间戳
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/messages/unread/CLIENT_ID
 ```
 
@@ -191,8 +191,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"from_peer": "1a", "message": "helloworld", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
@@ -205,13 +205,10 @@ conv_id | |发送到对话 id
 transient | 可选|是否为暂态消息（**由于向后兼容的考虑，默认为 true**，请注意设置这个值。）
 message || 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户的客户端，设置为 true 禁用此功能。
-wait | 可选|同步调用等待返回，可以获得发送的报错信息。
 
 返回说明：
 
-默认情况下发送消息 API 使用异步的方式，调用后直接返回空结果 `{}`。当设置 wait 参数为真时，这个接口会等待后台发送结果至多 5 秒，如果遇到错误情况消息不能送达，将返回报错信息。
-错误信息包含 code 与 reason 字段，其中 code 值遵守 [实时通信指南总览 - 服务器端错误码说明](realtime_v2.html#服务器端错误码说明)。
-注意这个接口的发送成功并不表示当时客户端已经收到，但可以确认消息至少已经发送到客户端队列，即使当时客户端离线也会在下次上线时收到。
+默认情况下发送消息 API 使用异步的方式，调用后直接返回空结果 `{}`。
 
 对早期版本的实时通信，可以使用 to_peers（数组）或 group_id 参数分别发消息到用户或群组。
 
@@ -230,8 +227,8 @@ wait | 可选|同步调用等待返回，可以获得发送的报错信息。
 
 ```
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: " \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"from_peer": "1a", "message": "{\"_lctype\":-1,\"_lctext\":\"这是一个纯文本消息\",\"_lcattrs\":{\"a\":\"_lcattrs 是用来存储用户自定义的一些键值对\"}}", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
@@ -419,7 +416,7 @@ metaData | 可选|文件的元数据
 
 ## 获取暂态对话的在线人数
 
-你可以通过这个 API 获得暂态对话的在线人数。由于暂态对话没有成员列表支持，所以通常使用这个 API 获得当前的在线人数。
+你可以通过这个 API 获得暂态对话的在线人数。由于暂态对话没有成员列表支持，所以通常使用这个 API 获得当前的在线人数。出于性能的考虑，这个 API 有一定的缓存时间，仅用作粗略计数。
 
 参数 | 说明
 --- | ---
@@ -427,8 +424,8 @@ gid | 暂态对话的 id
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   https://leancloud.cn/1.1/rtm/transient_group/onlines?gid=...
 ```
 
@@ -447,8 +444,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Master-Key: {{masterkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
   -d '{"peers": ["7u", "8b", "3h", ...]}' \
   https://leancloud.cn/1.1/rtm/online

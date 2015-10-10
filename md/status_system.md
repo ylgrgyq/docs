@@ -465,8 +465,8 @@ AVQuery<AVUser> followerQuery = userA.followerQuery(AVUser.class);
 //AVQuery<AVUser> followerQuery = AVUser.followerQuery(userA.getObjectId(),AVUser.class); 也可以使用这个静态方法来获取非登陆用户的好友关系
 followerQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        // parseObjects包含了userA的粉丝列表
+    public void done(List<AVUser> avObjects, AVException avException) {
+        // avObjects包含了userA的粉丝列表
     }
 });
 
@@ -475,8 +475,8 @@ AVQuery<AVUser> followeeQuery = AVUser.followeeQuery(userB.getObjectId(), AVUser
 //AVQuery<AVUser> followeeQuery = userB.followeeQuery(AVUser.class);
 followeeQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        //parseObjects就是用户的关注用户列表
+    public void done(List<AVUser> avObjects, AVException avException) {
+        //avObjects就是用户的关注用户列表
 
     }
 });
@@ -490,8 +490,8 @@ followeeQuery.findInBackground(new FindCallback<AVUser>() {
     followerSkipQuery.skip(100);
     followerSkipQuery.findInBackground(new FindCallback<AVUser>() {
         @Override
-        public void done(List<AVUser> parseObjects, AVException parseException) {
-            // parseObjects.size() == 1
+        public void done(List<AVUser> avObjects, AVException avException) {
+            // avObjects.size() == 1
         }
     });
 }
@@ -504,8 +504,8 @@ AVQuery<AVUser> followerNameQuery = userA.followerQuery(userA.getObjectId(), AVU
 followerNameQuery.whereEqualTo("follower", userC);
 followerNameQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        // parseObjects中应当只包含userC
+    public void done(List<AVUser> avObjects, AVException avException) {
+        // avObjects中应当只包含userC
     }
 });
 ```
@@ -559,7 +559,7 @@ status.setMessage("myMessage");
 AVUser.logIn("myUserName", "myPassword");
 AVStatus.sendStatusToFollowersInBackgroud(status, new SaveCallback() {
     @Override
-    public void done(AVException parseException) {
+    public void done(AVException avException) {
         Log.i(TAG, "Send status finished.");
     }
 });
@@ -577,7 +577,7 @@ AVStatus.sendStatusToFollowersInBackgroud(status, new SaveCallback() {
 AVStatus status = AVStatus.createStatus("test image", "test message");
 AVStatus.sendPrivateStatusInBackgroud(status, "user object id", new SaveCallback() {
     @Override
-    public void done(AVException parseException) {
+    public void done(AVException avException) {
         Log.i(TAG, "Send private status finished.");
     }
 });
@@ -615,7 +615,7 @@ inboxQuery.setLimit(50);  //设置最多返回50条状态
 inboxQuery.setSinceId(0);  //查询返回的status的messageId必须大于sinceId，默认为0
 inboxQuery.findInBackground(new InboxStatusFindCallback(){
   @Override
-  public void done(final List<AVStatus> parseObjects, final AVException parseException) {
+  public void done(final List<AVStatus> avObjects, final AVException avException) {
 
   }
 });
@@ -659,7 +659,7 @@ query.setSinceId(0);   //查询返回的status的messageId必须大于sinceId，
 //query.setInboxType(AVStatus.INBOX_TYPE.TIMELINE.toString()); 此处可以通过这个方法来添加查询的状态条件，当然这里你也可以用你自己定义的状态类型，因为这里接受的其实是一个字符串类型。
 query.findInBackground(new FindCallback<AVStatus>(){
   @Override
-  public void done(final List<AVStatus> parseObjects,final AVException parseException) {
+  public void done(final List<AVStatus> avObjects,final AVException avException) {
 
   }
 });
@@ -680,15 +680,15 @@ query.findInBackground(new FindCallback<AVStatus>(){
 
 通过操作 `/users/:user_id/friendship/:target_id` 资源可以关注或者取消关注某个用户，其中：
 
-* `:user_id` 表示发起关注动作的用户的 objectId，(如果设置了`X-AVOSCloud-Session-Token`头, 可以为`self`表示当前登录用户)
+* `:user_id` 表示发起关注动作的用户的 objectId，(如果设置了`X-LC-Session`头, 可以为`self`表示当前登录用户)
 * `:target_id` 表示想要关注的目标用户的 objectId
 
 例如，让当前用户 `51fa6886e4b0cc0b5a3792e9` 关注目标用户 `51e3a334e4b0b3eb44adbe1a`：
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   https://leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9/friendship/51e3a334e4b0b3eb44adbe1a
 ```
@@ -699,8 +699,8 @@ curl -X POST \
 
 ```sh
 curl -X DELETE \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   https://leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9/friendship/51e3a334e4b0b3eb44adbe1a
 ```
@@ -709,8 +709,8 @@ curl -X DELETE \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"score": 100}' \
   https://leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9/friendship/51e3a334e4b0b3eb44adbe1a
@@ -724,8 +724,8 @@ curl -X POST \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   https://leancloud.cn/1.1/users/51fa6886e4b0cc0b5a3792e9/followers
 ```
@@ -734,8 +734,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'include=follower' \
@@ -746,8 +746,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'include=followee' \
@@ -758,8 +758,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'include=followee' \
@@ -776,8 +776,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'include=followee' \
@@ -814,8 +814,8 @@ POST /statuses
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{
          "data": {
@@ -911,8 +911,8 @@ GET /subscribe/statuses
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'owner={"__type":"Pointer","className":"_User","objectId":"dennis id"}' \
@@ -965,8 +965,8 @@ GET "/subscribe/statuses/count
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
   --data-urlencode 'owner={"__type":"Pointer","className":"_User","objectId":"dennis"}' \
@@ -983,8 +983,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -G \
    --data-urlencode 'owner={"__type":"Pointer","className":"_User","objectId":"dennis"}' \

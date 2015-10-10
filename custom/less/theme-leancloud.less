@@ -10,7 +10,7 @@
 @brand-primary:         #3090e4;
 @brand-success:         #2bb367;
 @brand-warning:         #ff8c2c;
-@brand-danger:          #ff0800;
+@brand-danger:          #f74b46;
 @brand-info:            #3bc3ec;
 
 @navbar-height:                    48px;
@@ -33,9 +33,10 @@
 @state-danger-bg:                #f2dede;
 @state-danger-border:            darken(spin(@state-danger-bg, -10), 5%);
 
-@font-family-sans-serif:  "Helvetica Neue", Helvetica, STHeiti, "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serif;
+@font-family-sans-serif:  "Helvetica Neue", Helvetica, "PingFang SC", "Microsoft Yahei", "WenQuanYi Micro Hei", Arial, Verdana, sans-serif;
 @font-family-serif:       Georgia, "Times New Roman", Times, serif;
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
+@font-weight-base:        200;
 
 @padding-base-vertical: 6px;
 @padding-base-horizontal: 10px;
@@ -57,7 +58,7 @@
 
 @btn-default-color:              #333;
 @btn-default-bg:                 #f5f5f5;
-@btn-default-border:             #e7e7e7;
+@btn-default-border:             #d0d0d0;
 
 @btn-primary-color:              #fff;
 @btn-primary-bg:                 @brand-primary;
@@ -80,6 +81,57 @@
 @btn-danger-border:              darken(@btn-danger-bg, 5%);
 
 @btn-link-disabled-color:        @gray-light;
+
+.button-variant(@color; @background; @border) {
+  color: @color;
+  background-color: @background;
+  border-color: @border;
+
+  &:hover,
+  &:focus,
+  &.focus,
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    color: @color;
+    background-color: darken(@background, 10%);
+        border-color: darken(@border, 12%);
+  }
+
+  &:active,
+  &.active,
+  .open > .dropdown-toggle& {
+    background-image: none;
+  }
+
+  &:focus {
+    .form-focus(@background, 20%);
+
+    // reset default button border (box-shadow) to @brand-primary
+    & when (@background = @btn-default-bg) {
+      .form-focus(@brand-primary, 16%);
+    }
+  }
+
+  &.disabled,
+  &[disabled],
+  fieldset[disabled] & {
+    &,
+    &:hover,
+    &:focus,
+    &.focus,
+    &:active,
+    &.active {
+      background-color: @background;
+          border-color: @border;
+    }
+  }
+
+  .badge {
+    color: @background;
+    background-color: @color;
+  }
+}
 
 .btn {
 
@@ -123,8 +175,8 @@
       &.focus,
       &:active,
       &.active {
-        color: @btn-default-color;
-        background-color: @btn-default-bg;
+        color: darken(@btn-default-border, 20%);
+        background-color: lighten(@btn-default-bg, 10%);
             border-color: @btn-default-border;
       }
     }
@@ -132,7 +184,7 @@
 
   &.disabled,
   &[disabled] {
-    opacity: .6;
+    opacity: .5;
     border-color: transparent;
     // idk why Bootstrap use pointer-events for disabled buttons, overkill.
     pointer-events: auto;
@@ -196,7 +248,11 @@
 
     .icon {
       font-size: 140%;
-      vertical-align: -4px;
+      line-height: 1;
+      display: block;
+      float: left;
+      margin-bottom: -4px;
+      margin-right: 4px;
     }
   }
 }
@@ -205,7 +261,6 @@
 //
 // Text Selectability
 // --------------------------------------------------
-
 
 a,
 p,
@@ -389,7 +444,7 @@ table *,
 .tab-pane {
 
   > form {
-    margin-top: 10px;
+    margin-top: 5px;
   }
 }
 
@@ -416,19 +471,32 @@ table *,
 //
 // Forms
 // --------------------------------------------------
+.form-focus(@echeme: @brand-primary, @fade: 10%) {
+  box-shadow+: 0 0 0 3px fade(@echeme, @fade);
+}
+
 @input-border: @btn-default-border;
 @input-bg-disabled: #fff;
 @input-group-addon-bg: #fff;
-
 .form-control {
   box-shadow: none;
   background: #fafafa;
-  border-color: #e7e7e7;
+  border-color: #d0d0d0;
   transition: background .2s ease, border .2s ease, opacity .2s ease, color .2s ease;
 
   &:focus {
-    box-shadow: none;
+    .form-focus();
     background-color: #fff;
+  }
+
+  &[readonly],
+  &.readonly,
+  &[disabled],
+  &.disabled {
+    color: @gray-light;
+    border-color: #d0d0d0;
+    box-shadow: none;
+    cursor: not-allowed;
   }
 }
 
@@ -451,7 +519,12 @@ textarea {
 }
 
 label {
-  font-weight: normal;
+
+  &,
+  .radio &,
+  .checkbox & {
+    font-weight: @font-weight-base;
+  }
 }
 
 .has-success,
@@ -612,6 +685,7 @@ textarea {
   > li > a,
   > li > button {
     border-color: transparent;
+    font-weight: @font-weight-base;
 
     &:hover,
     &:focus {
@@ -741,6 +815,8 @@ textarea {
 
 code {
   font-size: 96%;
+  word-break: break-word;
+  word-wrap: break-word;
 
   &.bstooltip {
     text-decoration: underline;
@@ -749,8 +825,6 @@ code {
 
 pre code {
   border: none;
-  word-break: break-word;
-  word-wrap: break-word;
 }
 
 pre {
@@ -760,6 +834,7 @@ pre {
 //
 // Splitter
 // --------------------------------------------------
+
 hr {
 
 }
@@ -782,6 +857,25 @@ hr {
 
     > a {
       cursor: pointer;
+    }
+  }
+}
+
+
+//
+// Text
+// --------------------------------------------------
+
+.text-muted {
+
+  &.text-slide-down {
+    max-height: 0;
+    overflow: hidden;
+    transition: all .2s ease;
+
+    &.on {
+      max-height: 60px;
+      padding-bottom: 12px;
     }
   }
 }
@@ -914,7 +1008,7 @@ hr {
   font-size: 85%;
   border: 1px solid;
   background: transparent;
-  font-weight: normal;
+  font-weight: @font-weight-base;
   padding: .2em .6em .2em;
   border-radius: @border-radius-base;
 }
@@ -962,6 +1056,10 @@ hr {
       color: #bbb;
     }
   }
+
+  a& {
+    cursor: pointer;
+  }
 }
 
 
@@ -999,6 +1097,14 @@ hr {
     }
   }
 
+  td {
+
+    .btn {
+      margin-top: -2px;
+      margin-bottom: -2px;
+    }
+  }
+
   &.table-vanity-head {
 
     thead {
@@ -1029,6 +1135,11 @@ hr {
       }
     }
   }
+}
+
+.content-top {
+  // reset RHS content top margin to fit the sidebar margin value
+  margin-top: -7px;
 }
 
 .table-striped {
@@ -1081,6 +1192,7 @@ select.form-control {
   &:focus {
     background-color: #fafafa;
     border-color: @input-border-focus;
+    .form-focus();
   }
 
   &.disabled,
@@ -1196,11 +1308,6 @@ select.form-control {
     padding-left: 0;
   }
 
-  th &,
-  td & {
-    margin: 0;
-  }
-
   input[type="checkbox"],
   input[type="radio"] {
     position: absolute !important;
@@ -1298,6 +1405,9 @@ select.form-control {
 .checkbox input.active ~ .control-indicator {
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgOCA4IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA4IDgiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTYuNCwxTDUuNywxLjdMMi45LDQuNUwyLjEsMy43TDEuNCwzTDAsNC40bDAuNywwLjdsMS41LDEuNWwwLjcsMC43bDAuNy0wLjdsMy41LTMuNWwwLjctMC43TDYuNCwxTDYuNCwxeiINCgkvPg0KPC9zdmc+DQo=);
 }
+.checkbox input:focus ~ .control-indicator {
+  .form-focus(@brand-primary, 15%);
+}
 
 // Radio modifiers
 .radio .control-indicator {
@@ -1306,6 +1416,9 @@ select.form-control {
 .radio input:checked ~ .control-indicator,
 .radio input.active ~ .control-indicator {
   background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4NCjwhLS0gR2VuZXJhdG9yOiBBZG9iZSBJbGx1c3RyYXRvciAxNy4xLjAsIFNWRyBFeHBvcnQgUGx1Zy1JbiAuIFNWRyBWZXJzaW9uOiA2LjAwIEJ1aWxkIDApICAtLT4NCjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DQo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4Ig0KCSB2aWV3Qm94PSIwIDAgOCA4IiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA4IDgiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTQsMUMyLjMsMSwxLDIuMywxLDRzMS4zLDMsMywzczMtMS4zLDMtM1M1LjcsMSw0LDF6Ii8+DQo8L3N2Zz4NCg==);
+}
+.radio input:focus ~ .control-indicator {
+  .form-focus(@brand-primary, 15%);
 }
 [class^=icon-].glyphicon, [class*=" icon-"].glyphicon{
   font-family: 'Glyphicons Halflings';

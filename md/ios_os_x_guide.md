@@ -863,7 +863,7 @@ query.limit = [NSNumber numberWithInt:10];
 }];
 ```
 
-**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
+**使用点（`.`）操作符可以检索多层级的数据（AVObject 对象）**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
 
 ```objc
 [query includeKey:@"post.author"];
@@ -888,7 +888,7 @@ AVObject *result = [query getFirstObject];
 
 ```objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-query.cachePolicy = kPFCachePolicyNetworkElseCache;
+query.cachePolicy = kAVCachePolicyNetworkElseCache;
 
 //设置缓存有效期
 query.maxCacheAge = 24*3600;
@@ -904,15 +904,15 @@ query.maxCacheAge = 24*3600;
 ```
 LeanCloud 提供了几种不同的缓存策略：
 
-* `kPFCachePolicyIgnoreCache`
+* `kAVCachePolicyIgnoreCache`
   **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-* `kPFCachePolicyCacheOnly`
+* `kAVCachePolicyCacheOnly`
   查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。
-* `kPFCachePolicyCacheElseNetwork`
+* `kAVCachePolicyCacheElseNetwork`
   查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyNetworkElseCache`
+* `kAVCachePolicyNetworkElseCache`
   查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyCacheThenNetwork`
+* `kAVCachePolicyCacheThenNetwork`
   查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
 
 要控制缓存行为，可以使用 `AVQuery` 提供的相应方法：
@@ -1128,6 +1128,8 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 `NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
 
 你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
+
+**注意** 子类中，对于 `BOOL` 类型的字段，SDK 在 3.1.3.2 之前会将其保存为 Number 类型，3.1.3.2 之后将其正确保存为 Bool 类型。详情请参考[这里](https://leancloud.cn/docs/ios_os_x_faq.html#为什么升级到_3_1_3_2_以上的版本时_BOOL_类型数据保存错误_)。
 
 注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
 
@@ -1409,7 +1411,7 @@ AVFile *attachment = [anotherObj objectForKey:@"attached"];
 NSData *binaryData = [attachment getData];
 ```
 
-也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
+也可以像 `AVObject` 那样，使用 `getData` 的异步版本。
 
 **如果对象的某一属性是一个文件数组，那么在获取该属性的查询中，必须加上 `includeKey:` 来指定该属性名，否则，查询结果中该属性对应的值将是 `AVObject` 数组，而不是 `AVFile` 数组。**
 
@@ -1491,6 +1493,34 @@ NSError *error = nil;
 + (BOOL)clearCacheMoreThanDays:(NSInteger)numberOfDays;
 
 ```
+
+### iOS 9 适配
+
+iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文件的 getData 之外的 API 都是支持 HTTPS 访问的， 所以只需要额外配置一下该接口的访问策略。选择项目的 Info.plist，右击以 Source Code 的方式打开。在 plist -> dict 节点中加入以下文本：
+```
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>clouddn.com</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
+```
+
+或者在 Target 的 Info 标签中修改配置：
+
+![Info.plist Setting](images/ios_qiniu_http.png)
+
+如果是美国节点，请把上面的 `clouddn.com` 换成 `amazonaws.com`。
+
+也可以根据项目需要，允许所有的 HTTP 访问，更多可参考这篇[指南](https://github.com/ChenYilong/iOS9AdaptationTips)。
+
 
 ## 用户
 
