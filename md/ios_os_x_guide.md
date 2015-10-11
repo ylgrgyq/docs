@@ -1398,7 +1398,7 @@ AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 最终当文件存储完成后，你可以象操作其他数据那样，将 `AVFile` 关联到 `AVObject` 上。
 
 ```objc
-AVObject *obj = [AVObject objectWithClassName:@"Post"]
+AVObject *obj = [AVObject objectWithClassName:@"Post"];
 [obj setObject:@"Joe Smit#花儿与少年# 迪拜疯狂之旅" forKey:@"content"];
 [obj setObject:file         forKey:@"attached"];
 [obj saveInBackground];
