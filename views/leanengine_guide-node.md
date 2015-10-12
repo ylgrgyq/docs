@@ -578,21 +578,22 @@ var app = express();
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
-使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将 AV.User 的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `AV.Cloud.CookieSession` 支持的选项包括：
 
-* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* name -- session在cookie中存储的key名称，默认为 `avos.sess`。
-* maxAge -- 设置cookie的过期时间。
+* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**  
+  如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性（即 _User 表记录的 ObjectId），你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
+* **name**：session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
+* **maxAge**：设置 cookie 的过期时间。
 
 `httpOnly` 和 `signed` 参数我们强制设置为 true。
 
-**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
 
 * 在云代码方法中，通过 request.user 获取用户信息。
 * 在 webHosting 中，通过 req.AV.user 获取用户信息。
-* 在后续的方法调用显示的传递 user 对象。
+* 在后续的方法调用显示传递 user 对象。
 
 登录很简单：
 
@@ -633,7 +634,7 @@ app.get('/logout', function(req, res) {
 });
 ```
 
-登录页面大概是这样login.ejs:
+登录页面大概是这样 login.ejs:
 
 ```html
 <html>
@@ -650,7 +651,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+注意：express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession 中间件](https://gist.github.com/visionmedia/1491756)。
 {% endblock %}
 
 {% block custom_session %}
