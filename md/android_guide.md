@@ -4,8 +4,8 @@
 
 如果你希望从项目里学习，请前往 [Android SDK Demos](https://github.com/leancloud/leancloud-demos#android) 。其中，我们推荐与本指南配套的 [LeanStorageDemo-Android](https://github.com/leancloud/LeanStorageDemo-Android) 项目。
 
-## 快速入门
-
+## 快速入门~~
+~~
 建议您在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 版本变迁
@@ -1643,6 +1643,8 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 
 ### 查询
+
+**请注意，新创建应用的 _User 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，参考[数据与安全](https://leancloud.cn/docs/data_security.html#Class_级别的权限)。**
 
 查询用户，你需要使用特殊的用户查询对象来完成：
 
