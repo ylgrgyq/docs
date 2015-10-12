@@ -1523,9 +1523,9 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 如果是美国节点，请把上面的 `clouddn.com` 换成 `amazonaws.com`。
 
-也可以根据项目需要，允许所有的 HTTP 访问，更多可参考这篇[指南](https://github.com/ChenYilong/iOS9AdaptationTips)。
+也可以根据项目需要，允许所有的 HTTP 访问，更多可参考 [iOS 9 适配系列教程](https://github.com/ChenYilong/iOS9AdaptationTips)。
 
-#### 勾选「启用文件 SSL 域名」
+#### 启用文件 SSL 域名
 
 另外一种方法是在网站控制台中进入相关的应用，点击上方的设置选项卡，勾选「启用文件 SSL 域名（对应 _File 中存储的文件）」选项。这样便启用了文件 SSL 域名，支持 HTTPS 访问。如图所示：
 
