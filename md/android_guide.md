@@ -4,8 +4,8 @@
 
 如果你希望从项目里学习，请前往 [Android SDK Demos](https://github.com/leancloud/leancloud-demos#android) 。其中，我们推荐与本指南配套的 [LeanStorageDemo-Android](https://github.com/leancloud/LeanStorageDemo-Android) 项目。
 
-## 快速入门~~
-~~
+## 快速入门
+
 建议您在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ## 版本变迁
