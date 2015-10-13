@@ -75,6 +75,22 @@ pod install
     ...
 }
 ```
+
+### 导入模块
+
+在使用到 IM 模块的地方，应该导入该模块。
+
+在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
+
+```objc
+#import <AVOSCloudIM/AVOSCloudIM.h>
+```
+
+在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
+
+```swift
+import AVOSCloudIM
+```
 {% endblock %}
 
 {% block compatibility %}
@@ -729,7 +745,7 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 ```
 {% endblock %}
 
-{% block conversation_creation_api_ios %}
+{% block conversation_creation_api %}
 ### 创建对话
 
 有两个方法可以创建对话：
