@@ -2852,6 +2852,20 @@ curl -X POST \
   https://api.leancloud.cn/1.1/exportData
 ```
 
+
+增加 `only-schema` 选项就可以只导出 schema:
+
+```
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"only-schema":"true"}' \
+  https://api.leancloud.cn/1.1/exportData
+```
+
+导出的 Schema 文件同样可以使用数据导入功能来导入到其他应用。
+
 默认导出的结果将发送到应用的创建者邮箱，你也可以指定接收邮箱：
 
 ```
