@@ -1079,7 +1079,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果你想获取作为其父对象的关系成员的对象，你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户：
+如果你想获取作为其父对象的关系成员的对象，你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户（**请注意，新创建应用的 _User 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**）：
 
 ```sh
 curl -X GET \
@@ -1544,6 +1544,8 @@ curl -X PUT \
 
 
 ###查询
+
+**请注意，新创建应用的 _User 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
 
 你可以一次获取多个用户，只要向用户的根 URL 发送一个 GET 请求。没有任何 URL 参数的话，可以简单地列出所有用户：
 
