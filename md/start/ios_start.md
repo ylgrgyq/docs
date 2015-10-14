@@ -90,7 +90,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/all_frameworks.png)
 
-请注意，所有 frameworks 都是 Static 目录下面的，确保它们都是动态库。
+请注意，所有 frameworks 都是 Static 目录下面的，确保它们都是静态库。
 
 然后，将这个目录拖入你的项目中：
 
@@ -133,7 +133,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 打开 AppDelegate.m 文件，添加下列导入语句到头部：
 
 ```
-#import <AVOSCloud/AVOSCloud.h>;
+#import <AVOSCloud/AVOSCloud.h>
 ```
 
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
@@ -159,7 +159,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 保证在你的 **.h** 头文件里包含了 SDK 库文件：
 
 ```
-#import <AVOSCloud/AVOSCloud.h>;
+#import <AVOSCloud/AVOSCloud.h>
 ```
 
 将下面的代码拷贝到你的 app 里，比如在 `viewDidLoad` 方法（或者其他在运行 app 时会调用到的方法）：
