@@ -58,9 +58,12 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
   * MobileCoreServices.framework
   * CoreTelephony.framework
   * CoreLocation.framework
-  * libicucore.dylib
-* 如果使用 AVOSCloudCrashReporting ，还需额外添加 `libc++.dylib`
-* 在 target 的 Build Settings 中，为 `Other Linker Flags` 增加 `-all_load` 链接选项。
+* 手动添加 Other Linker Flags：
+  * `-lz`
+  * `-licucore`
+  * `-ObjC`
+  * `-lc++` （Crash Reporting 模块需要）
+  * `-lsqlite3` （IM 模块需要）
 
 ## 应用
 
