@@ -2,12 +2,12 @@
 
 ## 介绍
 
-LeanCache 使用 Redis 来提供高性能、高可用的 Key-Value 内存存储。主要用作持久化数据的存储，也可以用作缓存数据的存储。
+LeanCache 使用 Redis 来提供高性能、高可用的 Key-Value 内存存储。主要用作缓存数据的存储，也可以用作持久化数据的存储。
 
 ## 主要特性
 
-* 高性能：接近 7万 的 QPS
-* 高可用：Master-Slave 热备，AOF 持久化
+* 高性能：接近 7 万的 QPS
+* 高可用：基于 AOF 持久化的 Master-Slave 热备份
 * 在线扩容：在线调整容量，数据平滑迁移
 * 多节点：满足更大容量或更高性能的需求
 
@@ -17,13 +17,13 @@ LeanCache 使用 Redis 来提供高性能、高可用的 Key-Value 内存存储�
 
 创建实例时可选参数：
 
-* 实例名称：不填则为随即字符串。**注意**：每个应用下 LeanCache 实例名称必须唯一。
-* 最大容量：可选 32MB，64MB，128MB 等，最大 8GB。
-* 删除策略：当内存满时对 key 的删除策略，默认是 'noeviction'，如果实例作为缓存使用，可以选择 'volatile-lru'，详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)。**注意**：该属性后期不可修改。
+* 实例名称：不填则为随机字符串。**注意**：每个开发者账户下 LeanCache 实例名称必须唯一。
+* 最大容量：可选 128MB, 256MB, 512MB, 1GB, 2GB, 4GB，最大 8GB。
+* 删除策略：当内存满时对 key 的删除策略，默认是 'volatile-lru'，详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)。**注意**：LeanCache 节点生成后，该属性不可修改。
 
 ## 使用
 
-LeanCache 目前支持 LeanEngine 访问。实例创建完毕后，LeanEngine 应用就可以从环境变量中获取 `REDIS_URL_<实例名称>` 的 Redis 连接字符串，通过该信息连接并使用 Redis。
+LeanCache 目前支持通过 LeanEngine 访问。实例创建完毕后，LeanEngine 应用就可以从环境变量中获取 `REDIS_URL_<实例名称>` 的 Redis 连接字符串，通过该信息连接并使用 Redis。
 
 LeanCache 不提供外网直接访问。如果需要简单的数据操作或状态查看，可以使用 [命令行工具](cloud_code_commandline.html)。
 
@@ -34,7 +34,7 @@ LeanCache 不提供外网直接访问。如果需要简单的数据操作或状�
 ```
 "dependencies": {
   ...
-  "redis": "0.12.x",
+  "redis": "2.2.x",
   ...
 }
 ```
@@ -84,7 +84,7 @@ avoscloud redis <实例名称>
 
 ## 性能
 
-下面是使用 redis-benchmark 测试一个典型的容量为 512MB 的 LeanCache 实例的性能表现：
+下面是使用 redis-benchmark 测试一个典型的容量为 2GB 的 LeanCache 实例的性能表现：
 
 ```
 $ redis-benchmark -n 100000 -q
@@ -107,7 +107,7 @@ MSET (10 keys): 60096.15 requests per second
 
 ## 可靠性
 
-LeanCache 实例使用 Redis Master-Slave 主从热备。有多个观察节点每隔几秒钟观察一次主节点的状态，如果过半观察节点发现主节点失效，则自动将从节点切换为主节点，并会有新的从节点启动重新组成主从热备。这个过程对 LeanEngine 应用完全透明，不需要修改连接字符串或者重启应用，整个切换过程应用只有几秒钟 Redis 不可用。
+LeanCache 实例使用 Redis Master-Slave 主从热备。有多个观察节点每隔 1 秒钟观察一次主节点的状态，如果主节点最后一次有效响应在 5 秒之前，则该观察节点认为主节点失效。如果超过总数一半的观察节点发现主节点失效，则自动将从节点切换为主节点，并会有新的从节点启动重新组成主从热备。这个过程对 LeanEngine 应用完全透明，不需要修改连接字符串或者重启应用，整个切换过程应用只有几秒钟 Redis 不可用。
 
 于此同时，从节点还将数据以 AOF 的方式持久化到可靠的中央文件存储，每秒刷新一次。如果很不巧主从节点同时失效，则马上会有新的 Redis 节点启动，并从 AOF 文件恢复，完成后即可再次提供服务，并且会有新的从节点与之构成主从热备。
 
@@ -132,7 +132,15 @@ LeanCache 实例使用 Redis Master-Slave 主从热备。有多个观察节点�
 
 ## 价格方案
 
-LeanCache 不同容量节点的价格详见 TODO。
+LeanCache 不同容量节点一个月（30 天）的价格：
+
+* 128MB 25 元
+* 256MB 40 元
+* 512MB 80 元
+* 1GB 150 元
+* 2GB 300 元
+* 4GB 600 元
+* 8GB 1300 元
 
 **注意**：LeanCache 实例是按照「最大容量」收费，而不是「实际使用容量」。
 
