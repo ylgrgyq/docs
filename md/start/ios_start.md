@@ -119,7 +119,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
   * MobileCoreServices.framework
   * CoreTelephony.framework
   * CoreLocation.framework
-* 手动添加 Other Linker Flags：
+* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
   * `-lz`
   * `-licucore`
   * `-ObjC`

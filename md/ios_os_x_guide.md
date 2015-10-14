@@ -58,7 +58,7 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
   * MobileCoreServices.framework
   * CoreTelephony.framework
   * CoreLocation.framework
-* 手动添加 Other Linker Flags：
+* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
   * `-lz`
   * `-licucore`
   * `-ObjC`
