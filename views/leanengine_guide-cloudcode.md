@@ -289,6 +289,10 @@ AV.Cloud.afterSave('_User', function(request) {
 ```
 {% endblock %}
 
+{% block beforeUpdate %}
+云代码 2.0 没有支持这个 Hook, 你需要升级到 LeanEngine 来使用它，请参见详细的 [升级指南](leanengine_upgrade_3.html)。
+{% endblock %}
+
 {% block afterUpdateExample %}
 ```javascript
 AV.Cloud.afterUpdate('Article', function(request) {
