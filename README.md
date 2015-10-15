@@ -40,6 +40,11 @@ $ npm install
 $ grunt server
 ```
 
+## 版本更新
+
+- 请通过 `grunt release` 命令自动 bump `package.json`、自动打标签，请不要手动更新
+- 请按照 `CONVENTIONS.md` 的格式书写有意义的 commits，`CHANGELOG.md` 会被自动生成，请不要手动修改
+
 ## 一套模板多份渲染
 
 有些文档的相似度非常高，所以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云代码 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
