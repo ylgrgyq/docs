@@ -9,7 +9,7 @@ module.exports = function(grunt) {
 
   require("jit-grunt")(grunt, {
     configureProxies: "grunt-connect-proxy",
-    useminPrepare: "grunt-usemin"
+    useminPrepare: "grunt-usemin",
     "npm-contributors": "grunt-npm"
   });
 
