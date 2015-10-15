@@ -12,13 +12,22 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 从 3.1.3 开始，我们将不再维护 AVOSCloudSNS.framework，而改为维护开源的 LeanCloudSocial.framework。升级也特别容易，将 `pod 'AVOSCloudSNS'` 改为 `pod 'LeanCloudSocial'`，然后全局替换一下`<AVOSCloudSNS/` 为 `<LeanCloudSocial/` 即可。接口都没有更改。LeanCloudSocial 需要的基础库的版本是 3.1，如果你的主项目还在使用 3.1 以下的版本，推荐更新到最新的 3.1 以上的版本。
 
 ### 导入 SDK
-你可以使用 Podfile 通过 cocoapods 引入 SDK，
+
+你可以通过 cocoapods 引入 SDK，在 Podfile 中加入
 
 ```sh
-	pod 'LeanCloudSocial'
+  pod 'LeanCloudSocial'  # 静态库方式引入，依赖 AVOSCloud 库
 ```
 
-也可以在开源项目上编译 framework 加入到项目中，或者直接拖动源代码到项目中。
+或者使用动态库的方式引入 SDK，
+
+```sh
+  pod 'LeanCloudSocialDynamic'  # 动态库方式引入，依赖 AVOSCloudDynamic 库
+```
+
+动态库最低支持 iOS 8。如果你的项目是 Swift 项目或者仅支持 iOS 8.0 以上，推荐使用动态库。
+
+也可以在开源项目上编译该组件加入到项目中，在根目录下执行 `./build-framework.sh` 即可。或者直接拖动源代码到项目中，源代码在 `Classes` 目录。
 
 ### SSO
 
@@ -113,6 +122,20 @@ QQ的话设置 URL Schemes 为:`tencentappid`，微信则使用微信开放平�
                 <true/>
                 <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
                 <false/>
+            </dict>
+            <key>idqqimg.com</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
+            </dict>
+            <key>gtimg.cn</key>
+            <dict>
+                <key>NSIncludesSubdomains</key>
+                <true/>
+                <key>NSThirdPartyExceptionAllowsInsecureHTTPLoads</key>
+                <true/>
             </dict>
             <!-- 腾讯授权-->
             
