@@ -90,7 +90,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/all_frameworks.png)
 
-请注意，所有 frameworks 都是 Static 目录下面的，确保它们都是动态库。
+请注意，所有 frameworks 都是 Static 目录下面的，确保它们都是静态库。
 
 然后，将这个目录拖入你的项目中：
 
@@ -112,19 +112,19 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/6.png)
 
-添加下列库：
+添加下列 framework 以及连接选项：
 
-- SystemConfiguration.framework
-- MobileCoreServices.framework
-- CoreTelephony.framework
-- CoreLocation.framework
-- libicucore.dylib
-
-如果使用了 AVOSCloudCrashReporting 模块，还需额外添加 **libc++.dylib**。
-
-如果使用了 AVOSCloudIM 模块，还需额外添加 **libsqlite3.dylib**。
-
-在 Targets 的 **Build Settings** 中，为 **Other Linker Flags** 增加 **-all_load** 和 **-ObjC** 链接选项。
+* 手动添加下列依赖库：
+  * SystemConfiguration.framework
+  * MobileCoreServices.framework
+  * CoreTelephony.framework
+  * CoreLocation.framework
+* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
+  * `-lz`
+  * `-licucore`
+  * `-ObjC`
+  * `-lc++` （Crash Reporting 模块需要）
+  * `-lsqlite3` （IM 模块需要）
 
 ![img](images/quick_start/ios/all_load.png)
 
@@ -133,7 +133,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 打开 AppDelegate.m 文件，添加下列导入语句到头部：
 
 ```
-#import <AVOSCloud/AVOSCloud.h>;
+#import <AVOSCloud/AVOSCloud.h>
 ```
 
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
@@ -159,7 +159,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 保证在你的 **.h** 头文件里包含了 SDK 库文件：
 
 ```
-#import <AVOSCloud/AVOSCloud.h>;
+#import <AVOSCloud/AVOSCloud.h>
 ```
 
 将下面的代码拷贝到你的 app 里，比如在 `viewDidLoad` 方法（或者其他在运行 app 时会调用到的方法）：
