@@ -9,7 +9,8 @@ module.exports = function(grunt) {
 
   require("jit-grunt")(grunt, {
     configureProxies: "grunt-connect-proxy",
-    useminPrepare: "grunt-usemin"
+    useminPrepare: "grunt-usemin",
+    "npm-contributors": "grunt-npm"
   });
 
   require("time-grunt")(grunt);
@@ -227,6 +228,33 @@ module.exports = function(grunt) {
         src: 'views/*.md',
         destDir: 'md'
       }
+    },
+
+    conventionalChangelog: {
+      options: {
+        changelogOpts: {
+          preset: "angular"
+        }
+      },
+      dist: {
+        src: "CHANGELOG.md"
+      }
+    },
+
+    bump: {
+      options: {
+        files: ["package.json"],
+        commitMessage: 'chore: release v%VERSION%',
+        commitFiles: ["-a"],
+        tagMessage: 'chore: create tag %VERSION%',
+        push: false
+      }
+    },
+
+    'npm-contributors': {
+      options: {
+        commitMessage: 'chore: update contributors'
+      }
     }
   });
 
@@ -257,6 +285,15 @@ module.exports = function(grunt) {
   grunt.registerTask('server', function (target) {
     grunt.log.warn('The `server` task has been deprecated. Use `grunt serve` instead.');
     grunt.task.run([target ? ('serve:' + target) : 'serve']);
+  });
+
+  grunt.registerTask('release', 'bump, changelog and release', function(type) {
+    grunt.task.run([
+      'npm-contributors',
+      'bump:' + (type || 'patch') + ':bump-only',
+      'conventionalChangelog',
+      'bump-commit'
+    ]);
   });
 
   grunt.registerMultiTask('comment','add version info',function(){
