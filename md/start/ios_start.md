@@ -112,19 +112,19 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/6.png)
 
-添加下列库：
+添加下列 framework 以及连接选项：
 
-- SystemConfiguration.framework
-- MobileCoreServices.framework
-- CoreTelephony.framework
-- CoreLocation.framework
-- libicucore.dylib
-
-如果使用了 AVOSCloudCrashReporting 模块，还需额外添加 **libc++.dylib**。
-
-如果使用了 AVOSCloudIM 模块，还需额外添加 **libsqlite3.dylib**。
-
-在 Targets 的 **Build Settings** 中，为 **Other Linker Flags** 增加 **-all_load** 和 **-ObjC** 链接选项。
+* 手动添加下列依赖库：
+  * SystemConfiguration.framework
+  * MobileCoreServices.framework
+  * CoreTelephony.framework
+  * CoreLocation.framework
+* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
+  * `-lz`
+  * `-licucore`
+  * `-ObjC`
+  * `-lc++` （Crash Reporting 模块需要）
+  * `-lsqlite3` （IM 模块需要）
 
 ![img](images/quick_start/ios/all_load.png)
 
