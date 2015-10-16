@@ -239,13 +239,10 @@ query.find().then(function(statuses){
 
 当前登陆用户可以关注某人：
 
-    NSString *userObjectId  =@"XXXXXX";
+    NSString *userObjectId = @"XXXXXX";
 
     //关注
     [[AVUser currentUser] follow:userObjectId andCallback:^(BOOL succeeded, NSError *error) {
-        if (error.code==kAVErrorDuplicateValue) {
-            //重复关注
-        }
 
     }];
 
