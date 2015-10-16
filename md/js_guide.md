@@ -1785,7 +1785,7 @@ user.signUpOrlogInWithMobilePhone({
   success:function(user){
     //注册或者登录成功
   },
-  error: function(err){
+  error: function(user, err){
     //失败
     console.dir(err);
   }
