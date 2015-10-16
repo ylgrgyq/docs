@@ -1322,7 +1322,7 @@ file.saveInBackground(new SaveCallback() {
 
 ```java
 AVFile avFile = avObject.getAVFile("attached");
-AVFile.getDataInBackground(new GetDataCallback(){
+avFile.getDataInBackground(new GetDataCallback(){
   public void done(byte[] data, AVException e){
     //process data or exception.
   }
