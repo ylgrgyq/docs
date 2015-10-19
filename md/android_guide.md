@@ -94,7 +94,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 #### LeanCloud 基本存储模块
 
 * avoscloud-<版本号>.jar
-* android-async-http-1.4.6.jar
+* okhttp-2.5.0.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
@@ -115,7 +115,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 * weibo.sdk.android.sso.jar
 * qq.sdk.1.6.1.jar
 
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
+我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
 
 **注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
 
