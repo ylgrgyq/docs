@@ -2304,9 +2304,9 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-这会按离纬度 39.9、经度 116.4 (当前用户所在位置)的距离排序返回一系列的结果.第一个就是最近的对象.(注意如果指定了 order 参数的话，它会覆盖按距离排序)。
+这会按照距离纬度 39.9、经度 116.4（当前用户所在位置）的远近排序返回一系列结果，第一个就是最近的对象。(注意：**如果指定了 order 参数的话，它会覆盖按距离排序。**）
 
-为了限定搜素的最大举例，需要加入 `$maxDistanceInMiles` 和 `$maxDistanceInKilometers`或者 `$maxDistanceInRadians` 参数来限定。比如要找的半径在 10 英里内的话：
+为了限定搜索的最大距离，需要加入 `$maxDistanceInMiles` 和 `$maxDistanceInKilometers`或者 `$maxDistanceInRadians` 参数来限定。比如要找的半径在 10 英里内的话：
 
 ```sh
 curl -X GET \
