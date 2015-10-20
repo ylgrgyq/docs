@@ -30,7 +30,18 @@ curl -X POST \
   https://api.leancloud.cn/1.1/classes/_Conversation
 ```
 
-### 增删对话成员
+系统对话通常也需要通过 REST API 预先创建，创建时需要设置关键的 `sys` 属性：
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Notification Channel","sys": true}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation
+```
+
+### 增删普通对话成员
 
 你可以通过 REST API 操作对话数据的 **m** 字段来实现成员的增删。m  字段是一个数组字段，使用数组的操作符进行修改。
 
