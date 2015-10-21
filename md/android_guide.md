@@ -869,7 +869,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy...`，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
 
 ### 删除查询结果
 
