@@ -4,7 +4,7 @@
 从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
 
 ```
-$ git clone git@github.com:leancloud/python-getting-started.git
+$ git clone https://github.com/leancloud/python-getting-started.git
 $ cd python-getting-started
 ```
 
