@@ -253,7 +253,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </tbody>
 </table>
 
-###云函数
+### 云函数
 
 <table>
   <thead>
@@ -267,7 +267,12 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
     <tr>
       <td>/1.1/functions</td>
       <td>POST</td>
-      <td>调用Cloud Code函数</td>
+      <td>调用云函数</td>
+    </tr>
+    <tr>
+      <td>/1.1/call</td>
+      <td>POST</td>
+      <td>调用云函数，支持 AVObject 作为参数和结果</td>
     </tr>
   </tbody>
 </table>
@@ -2267,7 +2272,7 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/installations/51fcb74ee4b074ac5c34cf85
 ```
 
-##云函数
+## 云函数
 
 云函数可以通过 REST API 来使用，比如调用一个叫 hello 的云函数：
 
@@ -2280,7 +2285,32 @@ curl -X POST \
   https://api.leancloud.cn/1.1/functions/hello
 ```
 
-你可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
+通过 `POST /functions/:name` 这个 API 调用时，参数和结果都是 JSON 格式，不会对其中的 AVObject 进行特殊处理。
+
+因此我们在新版云引擎 SDK 中增加了 `POST /1.1/call/:name` 这个 API，参数中的 AVObject 会在云引擎中被自动转换为对应的类，结果中的 AVObject 会携带用于客户端 SDK 识别的元信息：
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"__type": "Object", "className": "Post", "pubUser": "LeanCloud官方客服"}' \
+  https://api.leancloud.cn/1.1/call/hello
+```
+
+响应：
+
+```json
+{
+  "__type": "Object",
+  "className": "Post",
+  "pubUser": "LeanCloud官方客服"
+}
+```
+
+**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的 leanengine**
+
+你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ##地理查询
 
@@ -2938,7 +2968,7 @@ curl -i X GET \
 
 创建分析 job。（注意：下面示例直接使用带 `master` 标识的 `X-LC-Key`，不过我们推荐你在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
 
-``` 
+```
 curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
