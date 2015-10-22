@@ -12,17 +12,17 @@
 
 [快速入门](/start.html) 会教你如何在一个项目中安装 SDK。
 
-[CocoaPods](http://www.cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
+[CocoaPods](https://cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
 
-首先确保开发环境中已经安装了 Ruby。一般安装了 XCode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](http://ruby.taobao.org/)，在终端执行下列命令：
+首先确保开发环境中已经安装了 Ruby。一般安装了 Xcode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](https://ruby.taobao.org/)，在终端执行下列命令：
 
 ```sh
-$ gem sources --remove https://rubygems.org/
-$ gem sources -a http://ruby.taobao.org/
+$ gem sources -r https://rubygems.org/
+$ gem sources -a https://ruby.taobao.org/
 # 请确保下列命令的输出只有 ruby.taobao.org
 $ gem sources -l
 *** CURRENT SOURCES ***
-http://ruby.taobao.org
+https://ruby.taobao.org
 ```
 
 通过下列命令，安装或更新 CocoaPods（可能需要输入登录密码）：
