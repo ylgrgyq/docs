@@ -1182,7 +1182,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
     }];
 ```
 
-同样需要调用 `Student.registerSubclass()`，确保在其它地方得到的对象是 Student，而非 AVUser 。
+同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
 
 ### 初始化子类
 
