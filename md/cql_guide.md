@@ -201,6 +201,17 @@ select * from Player where location near geopoint(116.4, 39.9) max 1 km
 
 其他单位包括 `miles`（英里）和 `radians`（弧度），默认是**弧度**。
 
+通过 `min distance` 还可以限定最小距离：
+
+```sql
+select * from Player where location near geopoint(116.4, 39.9) min 0.5 km
+```
+
+`min` 和 `max` 同时限定的时候，`min` 必须在 `max` 之前：
+
+```sql
+select * from Player where location near geopoint(116.4, 39.9) min 0.5 km max 1 km
+```
 
 如果想查询某个矩形框内的对象，可以使用 `within [西南坐标] and [东北坐标]` 的语法：
 
