@@ -43,13 +43,13 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 [AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
  	 if (error) {
  	 } else {
- 	 	NSString *accessToken = object[@"access_token"];
+        NSString *accessToken = object[@"access_token"];
       	NSString *username = object[@"username"];
       	NSString *avatar = object[@"avatar"];
       	NSDictionary *rawUser = object[@"raw-user"]; // 性别等第三方平台返回的用户信息
       	//...
  	 }
-   } toPlatform:AVOSCloudSNSSinaWeibo];
+} toPlatform:AVOSCloudSNSSinaWeibo];
 
 ```
 
@@ -155,19 +155,64 @@ QQ的话设置 URL Schemes 为:`tencentappid`，微信则使用微信开放平�
 # import <LeanCloudSocial/AVUser+SNS.h>
 ```
 
-然后在登录SNS成功回调后`loginWithAuthData:block`,这样会用当前的SNS用户来尝试登录获取AVUser信息, 如果AVUser不存在, 系统会自动创建新用户并返回,如果已经存在, 则直接返回该用户.
+然后在登录 SNS 成功回调后`loginWithAuthData:platform:block`，这样会用当前的 SNS 用户来尝试登录获取 AVUser 信息，如果 AVUser 不存在， 系统会自动创建新用户并返回，如果已经存在，则直接返回该用户。像这样：
 
 ```objc
-[AVUser loginWithAuthData:object block:^(AVUser *user, NSError *error) {
-     //返回AVUser
+[AVUser loginWithAuthData:authData block:^(AVUser *user, NSError *error) {
+    if (error) {
+        // 登录失败，可能为网络问题或 authData 无效
+    } else {
+        // 登录成功
+    }
 }];
 ```
 
-如果需要为AVUser,可以用`addAuthData:block:`方法,比如:
+这里的 authData 有两种格式，其中一种带有 `platform` 的值，形如，
+
+```
+{
+    "platform": 1, 
+    "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE", 
+    "id": "123456789", 
+    "expires_at": "2015-07-30 08:38:24 +0000"  // NSDate
+}
+```
+
+这是调用 -[AVOSCloudSNS loginWithCallback:toPlatform:] 方法得到的。该方法之后，可以紧接着调用 -[AVUser loginWithAutaData:platform:block] 来登录 LeanCloud 账号。这很方便，但局限于当前仅支持微博、QQ、微信登录。还可以用其它平台的 SDK 获取到 authData，比如 Facebook SDK，然后用这个 authData 来登录 LeanCloud 账号。此时 authData 应符合如下规范，
+
+```
+{
+    "uid": "在第三方平台上的唯一用户id字符串",
+    "access_token": "在第三方平台的 access token",
+    ……其他可选属性
+}
+```
+
+更多可参考 REST API 文档中的[连接用户账户和第三方平台](./rest_api.html#连接用户账户和第三方平台)小节。
+
+如果需要为 AVUser 增加 authData，可以用`addAuthData:platform:block:` 方法，比如：
 
 ```objc
-[user addAuthData:object block:^(AVUser *user, NSError *error) {
-     //返回AVUser
+[user addAuthData:authData platform:AVOSCloudSNSPlatformWeiXin block:^(AVUser *user, NSError *error) {
+    if (error) {
+        // 登录失败，可能为网络问题或 authData 无效
+    } else {
+        // 登录成功
+    }
+}];
+```
+
+增加这些 authData 绑定之后，便可以用相应平台来登录账号。
+
+如果需要为 AVUser 移除 authData，可以用 `deleteAuthData:platform:block` 方法，比如：
+
+```objc
+[user deleteAuthDataForPlatform:AVOSCloudSNSPlatformWeiXin block:^(AVUser *user, NSError *error) {
+    if (error) {
+       // 解除失败，多数为网络问题
+    } else {
+       // 解除成功
+    }
 }];
 ```
 

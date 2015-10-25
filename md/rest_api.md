@@ -253,7 +253,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </tbody>
 </table>
 
-###云函数
+### 云函数
 
 <table>
   <thead>
@@ -267,7 +267,12 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
     <tr>
       <td>/1.1/functions</td>
       <td>POST</td>
-      <td>调用Cloud Code函数</td>
+      <td>调用云函数</td>
+    </tr>
+    <tr>
+      <td>/1.1/call</td>
+      <td>POST</td>
+      <td>调用云函数，支持 AVObject 作为参数和结果</td>
     </tr>
   </tbody>
 </table>
@@ -1472,7 +1477,7 @@ curl -X PUT \
 修改成功后，就可以用新密码登录了。
 -->
 
-###获取用户
+### 获取用户
 
 你可以发送一个 GET 请求到 URL 以获取用户的账户信息，返回的内容就是当创建用户时返回的内容。比如，为了获取上面创建的用户:
 
@@ -1497,7 +1502,7 @@ curl -X GET \
 }
 ```
 
-###更新用户
+### 更新用户
 
 在通常的情况下，没有人会允许别人来改动他们自己的数据。为了做好权限认证，确保只有用户自己可以修改个人数据，在更新用户信息的时候，必须在 HTTP 头部加入一个 `X-LC-Session` 项来请求更新，这个 session token 在注册和登录时会返回。
 
@@ -1523,7 +1528,7 @@ curl -X PUT \
 }
 ```
 
-###安全地修改用户密码
+### 安全地修改用户密码
 
 修改密码，可以直接使用上面的`PUT /1.1/users/:objectId`的 API，但是很多开发者会希望让用户输入一次旧密码做一次认证，旧密码正确才可以修改为新密码，因此我们提供了一个单独的 API `PUT /1.1/users/:objectId/updatePassword` 来安全地更新密码：
 
@@ -1543,7 +1548,7 @@ curl -X PUT \
 注意：仍然需要传入 X-LC-Session，也就是登录用户才可以修改自己的密码。
 
 
-###查询
+### 查询
 
 **请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
 
@@ -1576,7 +1581,7 @@ curl -X GET \
 
 所有的对普通对象的查询选项都适用于对用户对象的查询，所以可以查看 [查询](#查询) 部分来获取详细信息。
 
-###删除用户
+### 删除用户
 
 为了在 LeanCloud 上删除一个用户，可以向它的 URL 上发送一个 DELETE 请求。同样的，你必须提供一个 X-LC-Session 在 HTTP 头上以便认证。例如：
 
@@ -1588,7 +1593,7 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-###连接用户账户和第三方平台
+### 连接用户账户和第三方平台
 
 LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾讯微博，这样就允许你的用户直接用他们现有的账号 id 来登录你的 App。通过 `signup` 或者更新的 endpoint，并使用 `authData` 字段来提供你希望连接的服务的授权信息就可以做到。一旦关联了某个服务，`authData` 将被存储到你的用户信息里，并通过登录即可重新获取。
 
@@ -1768,7 +1773,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 ```
 
-###安全
+### 安全
 
 当你用 REST API key 来访问 LeanCloud 时，访问可能被 ACL 所限制，就像 iOS 和 Android SDK 上所做的一样。你仍然可以通过 REST API 来读和修改，只需要通过 `ACL` 的 key 来访问一个对象。
 
@@ -1788,7 +1793,7 @@ ACL 按 JSON 对象格式来表示，JSON 对象的 key 是 objectId 或者一�
 }
 ```
 
-##角色
+## 角色
 
 当你的 app 的规模和用户基数成长时，你可能发现你需要比 ACL 模型(针对每个用户)更加粗粒度的访问控制你的数据的方法。为了适应这种需求，LeanCloud 支持一种基于角色的权限控制方式。角色系统提供一种逻辑方法让你通过权限的方式来访问你的数据，角色是一种有名称的对象，包含了用户和其他角色。任何授予一个角色的权限隐含着授予它包含着的其他的角色相应的权限。
 
@@ -2267,7 +2272,7 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/installations/51fcb74ee4b074ac5c34cf85
 ```
 
-##云函数
+## 云函数
 
 云函数可以通过 REST API 来使用，比如调用一个叫 hello 的云函数：
 
@@ -2280,7 +2285,32 @@ curl -X POST \
   https://api.leancloud.cn/1.1/functions/hello
 ```
 
-你可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
+通过 `POST /functions/:name` 这个 API 调用时，参数和结果都是 JSON 格式，不会对其中的 AVObject 进行特殊处理。
+
+因此我们在新版云引擎 SDK 中增加了 `POST /1.1/call/:name` 这个 API，参数中的 AVObject 会在云引擎中被自动转换为对应的类，结果中的 AVObject 会携带用于客户端 SDK 识别的元信息：
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"__type": "Object", "className": "Post", "pubUser": "LeanCloud官方客服"}' \
+  https://api.leancloud.cn/1.1/call/hello
+```
+
+响应：
+
+```json
+{
+  "__type": "Object",
+  "className": "Post",
+  "pubUser": "LeanCloud官方客服"
+}
+```
+
+**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的 leanengine**
+
+你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ##地理查询
 
@@ -2938,7 +2968,7 @@ curl -i X GET \
 
 创建分析 job。（注意：下面示例直接使用带 `master` 标识的 `X-LC-Key`，不过我们推荐你在实际使用中采用 [新鉴权方式](rest_api.html#更安全的鉴权方式) 加密，不要明文传递 Key。）
 
-``` 
+```
 curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \

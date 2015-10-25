@@ -42,7 +42,7 @@
     "grunt-markdown": "~0.7.0",
     "grunt-npm": "0.0.2",
     "grunt-nunjucks": "git://github.com/sdjcw/grunt-nunjucks-render.git",
-    "grunt-postcss": "^0.6.0",
+    "grunt-postcss": "^0.7.0",
     "grunt-usemin": "~3.1.1",
     "jit-grunt": "^0.9.1",
     "nunjucks": "^2.1.0",

@@ -95,6 +95,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 
 * avoscloud-<版本号>.jar
 * okhttp-2.5.0.jar
+* okio-1.6.0.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
