@@ -12,7 +12,9 @@
 
 ### Demo
 
-在开始一切之前，你可以尝试一下 [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的 [源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
+- [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)
+- [LeanMessage Demo](http://leancloud.github.io/leanmessage-demo)，[源码](https://github.com/leancloud/leanmessage-demo/tree/master/Web)
+- 热心用户提供的 [实时对战游戏 Demo](http://cutpage.sinaapp.com/)
 
 ### 贡献
 
@@ -104,13 +106,13 @@ npm install leancloud-realtime --save
 ```
 var realtime = require('leancloud-realtime');
 ```
-由于 node 运行环境没有内置的 WebSocket 实现，在使用 `realtime` 方法之前需要通过 `config` 方法配置一个 Websocket 类，否则会抛出一个 **No WebSocket implement set** 错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
+SDK 在 node 环境下使用 [ws](https://www.npmjs.com/package/ws) 作为内置的 WebSocket 实现，你也可以在使用 `realtime` 方法之前通过 `config` 方法配置一个 Websocket 类，这里以 [websocket](https://www.npmjs.com/package/websocket) package 为例进行配置：
 ```
-// 首先安装 ws：
-// npm install ws --save
+// 首先安装 websocket：
+// npm install websocket --save
 // 然后进行配置：
 realtime.config({
-  WebSocket: require('ws')
+  WebSocket: require('websocket').w3cwebsocket
 });
 ```
 
