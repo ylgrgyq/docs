@@ -4,7 +4,9 @@
   "description": "LeanCloud Documentation",
   "main": "index.js",
   "scripts": {
-    "test": "grunt test --no-comments"
+    "test": "grunt test --no-comments",
+    "postinstall": "grunt build --no-comments",
+    "start": "static dist -p $PORT -a 0.0.0.0"
   },
   "repository": {
     "type": "git",
@@ -14,6 +16,9 @@
   "license": "LGPL-3.0",
   "gitHead": "c3733ba8e4b896eeb9813582f28429c095ddd66c",
   "readmeFilename": "README.md",
+  "greenkeeper": {
+    "email": false
+  },
   "devDependencies": {
     "assemble": "~0.4.33",
     "assemble-swig": "~0.1.0",
@@ -27,6 +32,7 @@
     "express": "^4.13.0",
     "grunt": "^0.4.5",
     "grunt-bump": "^0.6.0",
+    "grunt-cli": "^0.1.13",
     "grunt-connect-proxy": "0.2.0",
     "grunt-contrib-clean": "~0.6.0",
     "grunt-contrib-concat": "~0.5.1",
@@ -50,7 +56,9 @@
     "time-grunt": "^1.2.1",
     "underscore": "^1.8.3"
   },
-  "dependencies": {},
+  "dependencies": {
+    "node-static": "^0.7.7"
+  },
   "contributors": [
     "dennis zhuang <killme2008@gmail.com>",
     "Tunghsiao Liu <t@sparanoid.com>",
