@@ -18,7 +18,7 @@
   "readmeFilename": "README.md",
   "greenkeeper": {
     "email": false
-   }
+  },
   "devDependencies": {
     "assemble": "~0.4.33",
     "assemble-swig": "~0.1.0",
