@@ -16,6 +16,9 @@
   "license": "LGPL-3.0",
   "gitHead": "c3733ba8e4b896eeb9813582f28429c095ddd66c",
   "readmeFilename": "README.md",
+  "greenkeeper": {
+    "email": false
+   }
   "devDependencies": {
     "assemble": "~0.4.33",
     "assemble-swig": "~0.1.0",
