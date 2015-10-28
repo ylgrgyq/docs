@@ -64,6 +64,8 @@ SDK 提供插件化的、无痛兼容 IE8 与 IE9 老版本 IE 浏览器的支�
 
 IE8 与 IE9 没有实现 WebSocket，SDK 通过 Flash 插件实现对 IE8 与 IE9 的支持。SDK 的 plugin/web-socket-js 目录是兼容 IE8 与 IE9 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 是兼容 IE8 与 IE9 的，可以参考其代码。
 
+另外，如果在 IE8、IE9 下启用了 HTTPS 协议，那么在实例化 AV.realtime 的时候，`secure` 要设置为 true。因为 IE8、IE9 中，只支持 HTTP 协议发送 HTTP 的请求，HTTPS 发送 HTTPS 的请求，不支持混用，就是 HTTPS 的站点无法发送 HTTP 的请求，但是新版 IE 已经支持。
+
 **具体使用方式：**
 
 在页面加载执行 AV.realtime.js 的代码前加入以下代码，路径改为你自己的路径

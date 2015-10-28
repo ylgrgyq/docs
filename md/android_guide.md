@@ -94,7 +94,8 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 #### LeanCloud 基本存储模块
 
 * avoscloud-<版本号>.jar
-* android-async-http-1.4.6.jar
+* okhttp-2.5.0.jar
+* okio-1.6.0.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
@@ -115,7 +116,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
 * weibo.sdk.android.sso.jar
 * qq.sdk.1.6.1.jar
 
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
+我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
 
 **注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
 
@@ -869,7 +870,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`...，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
 
 ### 删除查询结果
 
@@ -1322,7 +1323,7 @@ file.saveInBackground(new SaveCallback() {
 
 ```java
 AVFile avFile = avObject.getAVFile("attached");
-AVFile.getDataInBackground(new GetDataCallback(){
+avFile.getDataInBackground(new GetDataCallback(){
   public void done(byte[] data, AVException e){
     //process data or exception.
   }
@@ -1644,6 +1645,8 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 ### 查询
 
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+
 查询用户，你需要使用特殊的用户查询对象来完成：
 
 ```java
@@ -1709,8 +1712,10 @@ query.setLimit(10);            //获取最接近用户地点的10条微博
 ArrayList<AVObject> nearPosts = query.find();
 ```
 
-在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
+在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending()` 或 `orderByDescending()` 方法，则按距离排序会被新排序覆盖。**
+
 要限制查询指定距离范围的数据可以使用 `whereWithinKilometers`、`whereWithinMiles` 或 `whereWithinRadians` 方法。
+
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java

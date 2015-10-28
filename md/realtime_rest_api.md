@@ -30,7 +30,18 @@ curl -X POST \
   https://api.leancloud.cn/1.1/classes/_Conversation
 ```
 
-### 增删对话成员
+系统对话通常也需要通过 REST API 预先创建，创建时需要设置关键的 `sys` 属性：
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Notification Channel","sys": true}' \
+  https://api.leancloud.cn/1.1/classes/_Conversation
+```
+
+### 增删普通对话成员
 
 你可以通过 REST API 操作对话数据的 **m** 字段来实现成员的增删。m  字段是一个数组字段，使用数组的操作符进行修改。
 
@@ -205,13 +216,10 @@ conv_id | |发送到对话 id
 transient | 可选|是否为暂态消息（**由于向后兼容的考虑，默认为 true**，请注意设置这个值。）
 message || 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户的客户端，设置为 true 禁用此功能。
-wait | 可选|同步调用等待返回，可以获得发送的报错信息。
 
 返回说明：
 
-默认情况下发送消息 API 使用异步的方式，调用后直接返回空结果 `{}`。当设置 wait 参数为真时，这个接口会等待后台发送结果至多 5 秒，如果遇到错误情况消息不能送达，将返回报错信息。
-错误信息包含 code 与 reason 字段，其中 code 值遵守 [实时通信指南总览 - 服务器端错误码说明](realtime_v2.html#服务器端错误码说明)。
-注意这个接口的发送成功并不表示当时客户端已经收到，但可以确认消息至少已经发送到客户端队列，即使当时客户端离线也会在下次上线时收到。
+默认情况下发送消息 API 使用异步的方式，调用后直接返回空结果 `{}`。
 
 对早期版本的实时通信，可以使用 to_peers（数组）或 group_id 参数分别发消息到用户或群组。
 

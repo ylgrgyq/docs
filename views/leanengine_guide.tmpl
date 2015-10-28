@@ -43,9 +43,9 @@
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 0"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 0"  -d '{}' \
        http://localhost:3000/1.1/functions/hello
 ```
 
@@ -73,9 +73,9 @@ $ avoscloud publish
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
-       -H "X-AVOSCloud-Application-Id: {{appid}}"          \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}"        \
-       -H "X-AVOSCloud-Application-Production: 1"  -d '{}' \
+       -H "X-LC-Id: {{appid}}"          \
+       -H "X-LC-Key: {{appkey}}"        \
+       -H "X-LC-Prod: 1"  -d '{}' \
        https://leancloud.cn/1.1/functions/hello
 ```
 
@@ -151,9 +151,9 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
-       -H "X-AVOSCloud-Application-Id: {{appid}}" \
-       -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-       -H "X-AVOSCloud-Application-Production: 0" \
+       -H "X-LC-Id: {{appid}}" \
+       -H "X-LC-Key: {{appkey}}" \
+       -H "X-LC-Prod: 0" \
        -d '{"movie":"The Matrix"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
@@ -205,13 +205,21 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到云引擎日志里。
 
+### 在 update 更新前执行操作
+
+{% block beforeUpdate %}
+同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象前执行特定的动作，这是通过 `beforeUpdate` 函数实现的，你可以在这个 Hook 中知道哪些字段被修改了，还可以在特定情况下拒绝这次修改：
+
+{% block beforeUpdateExample %}{% endblock %}
+
+**注意**：传入的对象是一个尚未保存到数据库的临时对象，并不保证与最终储存到数据库的对象完全相同，这是因为修改中可能包含自增、数组增改、关系增改等原子操作。
+{% endblock %}
+
 ### 在 update 更新后执行动作
 
-同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过`afterUpdate`函数做到。比如每次修改文章后简单地记录日志：
+你还可以在在更新对象后执行特定的动作，这是通过 `afterUpdate` 函数实现的。比如每次修改文章后简单地记录日志：
 
 {% block afterUpdateExample %}{% endblock %}
-
-**注意**：云代码没有 beforeUpate 函数。
 
 ### 在 delete 前执行动作
 
@@ -701,7 +709,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 测试环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-AVOSCloud-Application-Production` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
 
 因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
 
@@ -728,7 +736,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 {% block get_env %}{% endblock %}
 
-你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-AVOSCloud-Application-Production`，来区分调用的环境。
+你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
 
 * 0 表示调用测试环境
 * 1 表示调用生产环境

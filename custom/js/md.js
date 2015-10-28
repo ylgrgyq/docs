@@ -104,9 +104,11 @@ var initGitHubLinks = function() {
   var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
   $("#content").prepend("<div class=docs-meta>\
       <span class='icon icon-github'></span>\
-      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>查看文件</a>\
+      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>查看</a>\
       |\
-      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑文件</a>\
+      <a href='http://github.com/leancloud/docs/commits/master/md/" + currentPath + ".md'>历史</a>\
+      |\
+      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑</a>\
     </div>");
   $(".sidebar-wrapper #toc").append("<li class=sidebar-meta><a href='#' class=do-expand-all>展开所有</a> <a href='#top' class=back-to-top>返回顶部</a></li>");
 }

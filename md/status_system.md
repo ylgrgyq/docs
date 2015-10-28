@@ -5,7 +5,11 @@
 ## 基本概念
 
 ### Status
-是指一条广义上的状态,不只可以表示某个用户更新了状态, 还可以表示任意的一个事件,比如某人发布了一篇文章, 某个图片被赞等.
+Status 是指一条广义上的「状态」，它不仅可以表示某个用户更新了状态，还可以表示任意的一个事件，比如某人发布了一篇文章，某个图片被赞等等。在控制台中对应的表名称为 _Status。
+
+需要注意，**存入 _Status 表中的数据无法修改，任何对已存在记录的更新操作都会报错。**就像微博、微信朋友圈之类的系统不允许对已发布的内容进行修改一样，我们对 _Status 表中的记录也应用了同样的逻辑，即如需修改，只能删除老记录，添加新记录。
+
+如果业务的确要求状态的内容可以更改，请将可变的内容/字段放入自建的表中维护，并通过 _Status 表记录的 objectId 来建立关联。
 
 ### Follower/Followee
 分别表示用户的粉丝和用户的关注，在控制台中对应着两张表 `_Follower` 和 `_Followee`。
@@ -239,13 +243,10 @@ query.find().then(function(statuses){
 
 当前登陆用户可以关注某人：
 
-    NSString *userObjectId  =@"XXXXXX";
+    NSString *userObjectId = @"XXXXXX";
 
     //关注
     [[AVUser currentUser] follow:userObjectId andCallback:^(BOOL succeeded, NSError *error) {
-        if (error.code==kAVErrorDuplicateValue) {
-            //重复关注
-        }
 
     }];
 
@@ -465,8 +466,8 @@ AVQuery<AVUser> followerQuery = userA.followerQuery(AVUser.class);
 //AVQuery<AVUser> followerQuery = AVUser.followerQuery(userA.getObjectId(),AVUser.class); 也可以使用这个静态方法来获取非登陆用户的好友关系
 followerQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        // parseObjects包含了userA的粉丝列表
+    public void done(List<AVUser> avObjects, AVException avException) {
+        // avObjects包含了userA的粉丝列表
     }
 });
 
@@ -475,8 +476,8 @@ AVQuery<AVUser> followeeQuery = AVUser.followeeQuery(userB.getObjectId(), AVUser
 //AVQuery<AVUser> followeeQuery = userB.followeeQuery(AVUser.class);
 followeeQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        //parseObjects就是用户的关注用户列表
+    public void done(List<AVUser> avObjects, AVException avException) {
+        //avObjects就是用户的关注用户列表
 
     }
 });
@@ -490,8 +491,8 @@ followeeQuery.findInBackground(new FindCallback<AVUser>() {
     followerSkipQuery.skip(100);
     followerSkipQuery.findInBackground(new FindCallback<AVUser>() {
         @Override
-        public void done(List<AVUser> parseObjects, AVException parseException) {
-            // parseObjects.size() == 1
+        public void done(List<AVUser> avObjects, AVException avException) {
+            // avObjects.size() == 1
         }
     });
 }
@@ -504,8 +505,8 @@ AVQuery<AVUser> followerNameQuery = userA.followerQuery(userA.getObjectId(), AVU
 followerNameQuery.whereEqualTo("follower", userC);
 followerNameQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
-    public void done(List<AVUser> parseObjects, AVException parseException) {
-        // parseObjects中应当只包含userC
+    public void done(List<AVUser> avObjects, AVException avException) {
+        // avObjects中应当只包含userC
     }
 });
 ```
@@ -559,7 +560,7 @@ status.setMessage("myMessage");
 AVUser.logIn("myUserName", "myPassword");
 AVStatus.sendStatusToFollowersInBackgroud(status, new SaveCallback() {
     @Override
-    public void done(AVException parseException) {
+    public void done(AVException avException) {
         Log.i(TAG, "Send status finished.");
     }
 });
@@ -577,7 +578,7 @@ AVStatus.sendStatusToFollowersInBackgroud(status, new SaveCallback() {
 AVStatus status = AVStatus.createStatus("test image", "test message");
 AVStatus.sendPrivateStatusInBackgroud(status, "user object id", new SaveCallback() {
     @Override
-    public void done(AVException parseException) {
+    public void done(AVException avException) {
         Log.i(TAG, "Send private status finished.");
     }
 });
@@ -615,7 +616,7 @@ inboxQuery.setLimit(50);  //设置最多返回50条状态
 inboxQuery.setSinceId(0);  //查询返回的status的messageId必须大于sinceId，默认为0
 inboxQuery.findInBackground(new InboxStatusFindCallback(){
   @Override
-  public void done(final List<AVStatus> parseObjects, final AVException parseException) {
+  public void done(final List<AVStatus> avObjects, final AVException avException) {
 
   }
 });
@@ -659,7 +660,7 @@ query.setSinceId(0);   //查询返回的status的messageId必须大于sinceId，
 //query.setInboxType(AVStatus.INBOX_TYPE.TIMELINE.toString()); 此处可以通过这个方法来添加查询的状态条件，当然这里你也可以用你自己定义的状态类型，因为这里接受的其实是一个字符串类型。
 query.findInBackground(new FindCallback<AVStatus>(){
   @Override
-  public void done(final List<AVStatus> parseObjects,final AVException parseException) {
+  public void done(final List<AVStatus> avObjects,final AVException avException) {
 
   }
 });
