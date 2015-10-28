@@ -220,12 +220,12 @@ realtimeObj.on('create', function(data) {
 });
 
 // 监听所有用户加入的情况
-realtimeObj.on('join', function(data) {
+realtimeObj.on('membersjoined', function(data) {
     console.log('有用户加入某个当前用户在的 Conversation：', data);
 });
 
 // 监听所有用户离开的情况
-realtimeObj.on('left', function(data) {
+realtimeObj.on('membersleft', function(data) {
     console.log('有用户离开某个当前用户在的 Conversation：', data);
 });
 
@@ -482,7 +482,7 @@ realtimeObject.on('create', function(data) {
 });
 
 // 有人加入 Room 的时候会被触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1019,7 +1019,7 @@ RoomObject.add(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1052,7 +1052,7 @@ room.add('LeanCloud03', function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1070,7 +1070,7 @@ RoomObject.add(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1103,7 +1103,7 @@ room.add(['LeanCloud03', 'LeanCloud04'], function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1121,7 +1121,7 @@ RoomObject.remove(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|删除成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1153,8 +1153,8 @@ room.remove('LeanCloud02', function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1172,7 +1172,7 @@ RoomObject.remove(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1205,8 +1205,8 @@ room.remove(['LeanCloud02', 'LeanCloud03'], function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1223,7 +1223,7 @@ RoomObject.join(callback)
 
 参数|类型|约束|说明
 ---|---|---|---
-callback|Function|可选|加入成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|加入成功后的回调函数。
 
 #### 返回
 
@@ -1254,8 +1254,7 @@ realtimeObject.room(roomId, function(object) {
     }
 });
 
-// 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('invited', function(data) {
    console.log(data);
 });
 ```
@@ -1273,7 +1272,7 @@ RoomObject.leave(callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|成功后的回调函数。
 
 #### 返回
 
@@ -1304,8 +1303,7 @@ var room = realtimeObject.room({
 
 room.leave();
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+realtimeObject.on('kicked', function(data) {
    console.log(data);
 });
 ```
@@ -1784,12 +1782,53 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 
 新建一个 Room 成功之后会被触发。
 
+### invited & membersjoined
+当一个 Room 中有成员加入时，该成员收到 `invited` 事件，Room 中的其他成员收到 `membersjoined` 事件。
+
+A 将 B 加入到会话中时，各方收到事件的时序是这样的：
+
+|邀请者(A)|被邀请者(B)|其他人(C)
+---|:---:|:---:|:---:
+1|发出请求 add| |
+2| |invited|
+3|membersjoined|membersjoined|membersjoined
+
+如果是 A 主动加入会话：
+
+|加入者(A)|其他人(C)
+---|:---:|:---:
+1|发出请求 join|
+2|invited|
+3|membersjoined|membersjoined
+
+### kicked & membersleft
+当一个 Room 中有成员离开时，该成员收到 `kicked` 事件，Room 中的其他成员收到 `membersleft` 事件。
+
+A 将 B 移出会话中时，各方收到事件的时序是这样的：
+
+|A|B|C
+---|:---:|:---:|:---:
+1|发出请求 remove| |
+2| |kicked|
+3|membersleft||membersleft
+
+如果是 A 主动退出会话：
+
+|A|C
+---|:---:|:---:
+1|发出请求 left|
+2|kicked|
+3||membersleft
+
+
 ### join
 
+不赞成使用，已被 `invited`、`membersjoined` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 新增了一个成员之后会被触发。
 
 ### left
 
+不赞成使用，已被 `kicked`、`membersleft` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 中有成员离开之后会被触发。
 
 ### message
