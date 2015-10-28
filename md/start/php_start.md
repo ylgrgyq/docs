@@ -83,7 +83,7 @@ $obj->increment("age", 1);
 // add values to array field
 $obj->add("colors", array("blue", "magenta"));
 // add values uniquely
-$obj->addUnique("colors", array("blue"));
+$obj->addUnique("colors", array("orange"));
 // remove values from array field
 $obj->remove("colors", array("blue"));
 
