@@ -95,7 +95,9 @@
 
 
 	<div class="description">
-	<p>(Immutable) Operation Interface</p>
+	<p>Set operation</p>
+
+<p>Set field to value</p>
 	</div>
 
 	<dl class="tree">
@@ -121,7 +123,7 @@
 		<b>Namespace:</b> <a href="namespace-LeanCloud.html">LeanCloud</a>\<a href="namespace-LeanCloud.Operation.html">Operation</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-LeanCloud.Operation.SetOperation.html#6-70" title="Go to source code">LeanCloud/Operation/SetOperation.php</a>
+			<b>Located at</b> <a href="source-class-LeanCloud.Operation.SetOperation.html#7-84" title="Go to source code">LeanCloud/Operation/SetOperation.php</a>
 		<br>
 	</div>
 
@@ -141,16 +143,23 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#19-22" title="Go to source code">__construct</a>( <span> <var>$key</var></span>, <span> <var>$val</var></span> )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#27-36" title="Go to source code">__construct</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
 
 		<div class="description short">
-			
+			<p>Initialize operation</p>
 		</div>
 
 		<div class="description detailed hidden">
-			
+			<p>Initialize operation</p>
 
 
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd></dd>
+					<dt><var>$val</var></dt>
+					<dd></dd>
+				</dl></div>
 
 
 
@@ -171,14 +180,14 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getKey">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#24-31" title="Go to source code">getKey</a>( )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#38-45" title="Go to source code">getKey</a>( )</code>
 
 		<div class="description short">
-			<p>Get key of field the operation applies to.</p>
+			<p>Get key of field the operation applies to</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Get key of field the operation applies to.</p>
+			<p>Get key of field the operation applies to</p>
 
 
 
@@ -205,7 +214,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getValue">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#33-40" title="Go to source code">getValue</a>( )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#47-54" title="Go to source code">getValue</a>( )</code>
 
 		<div class="description short">
 			<p>Get value of operation</p>
@@ -232,27 +241,27 @@
 		<td class="attributes"><code>
 			 public 
 
-			string
+			array
 			
 			</code>
 		</td>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_encode">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#42-49" title="Go to source code">encode</a>( )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#56-63" title="Go to source code">encode</a>( )</code>
 
 		<div class="description short">
-			<p>Encode to json represented operation.</p>
+			<p>Encode to JSON represented operation</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Encode to json represented operation.</p>
+			<p>Encode to JSON represented operation</p>
 
 
 
 				<h4>Returns</h4>
 				<div class="list">
-					string<br>json represented string
+					array
 				</div>
 
 
@@ -275,14 +284,14 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_applyOn">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#51-59" title="Go to source code">applyOn</a>( <span>mixed <var>$oldval</var></span> )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#65-73" title="Go to source code">applyOn</a>( <span>mixed <var>$oldval</var></span> )</code>
 
 		<div class="description short">
-			<p>Apply this operation on old value.</p>
+			<p>Apply operation on old value and returns new one</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Apply this operation on old value.</p>
+			<p>Apply operation on old value and returns new one</p>
 
 
 				<h4>Parameters</h4>
@@ -293,7 +302,7 @@
 
 				<h4>Returns</h4>
 				<div class="list">
-					mixed<br>new value
+					mixed
 				</div>
 
 
@@ -316,14 +325,14 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mergeWith">#</a>
-		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#61-69" title="Go to source code">mergeWith</a>( <span><code><a href="class-LeanCloud.Operation.IOperation.html">LeanCloud\Operation\IOperation</a></code> <var>$prevOp</var></span> )</code>
+		<code><a href="source-class-LeanCloud.Operation.SetOperation.html#75-83" title="Go to source code">mergeWith</a>( <span><code><a href="class-LeanCloud.Operation.IOperation.html">LeanCloud\Operation\IOperation</a></code> <var>$prevOp</var></span> )</code>
 
 		<div class="description short">
-			<p>Merge this operation with (previous) operation.</p>
+			<p>Merge this operation with (previous) operation</p>
 		</div>
 
 		<div class="description detailed hidden">
-			<p>Merge this operation with (previous) operation.</p>
+			<p>Merge this operation with (previous) operation</p>
 
 
 				<h4>Parameters</h4>
