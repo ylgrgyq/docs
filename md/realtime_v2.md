@@ -507,7 +507,7 @@ _profile 属性不会实际发送到 APNs。
 
 ![image](images/rtm-push.png)
 
-桌面图标也会有相应的红点 badge，清除 badge 的操作请参考 [iOS 推送指南 - 清除 badge](./push_guide.html#清除_badge)。
+桌面图标也会有相应的红点 badge，清除 badge 的操作请参考 [iOS 推送指南 - 清除 badge](ios_push_guide.html#清除_Badge)。
 
 云引擎 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考 [云引擎 Hook](#云引擎_Hook) 章节。
 
