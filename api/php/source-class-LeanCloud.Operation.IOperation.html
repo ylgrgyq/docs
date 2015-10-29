@@ -110,26 +110,26 @@
 </span><span id="2" class="l"><span class="php-keyword1">namespace</span> LeanCloud\Operation;
 </span><span id="3" class="l">
 </span><span id="4" class="l"><span class="php-comment">/**
-</span></span><span id="5" class="l"><span class="php-comment"> * (Immutable) Operation Interface
+</span></span><span id="5" class="l"><span class="php-comment"> * Operation Interface
 </span></span><span id="6" class="l"><span class="php-comment"> */</span>
 </span><span id="7" class="l"><span class="php-keyword1">interface</span> IOperation {
 </span><span id="8" class="l">    <span class="php-comment">/**
-</span></span><span id="9" class="l"><span class="php-comment">     * Encode to json represented operation.
+</span></span><span id="9" class="l"><span class="php-comment">     * Encode to JSON represented operation
 </span></span><span id="10" class="l"><span class="php-comment">     *
-</span></span><span id="11" class="l"><span class="php-comment">     * @return string json represented string
+</span></span><span id="11" class="l"><span class="php-comment">     * @return array
 </span></span><span id="12" class="l"><span class="php-comment">     */</span>
 </span><span id="13" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> encode();
 </span><span id="14" class="l">
 </span><span id="15" class="l">    <span class="php-comment">/**
-</span></span><span id="16" class="l"><span class="php-comment">     * Apply this operation on an old value.
+</span></span><span id="16" class="l"><span class="php-comment">     * Apply this operation on an old value
 </span></span><span id="17" class="l"><span class="php-comment">     *
 </span></span><span id="18" class="l"><span class="php-comment">     * @param mixed $oldval
-</span></span><span id="19" class="l"><span class="php-comment">     * @return mixed new value
+</span></span><span id="19" class="l"><span class="php-comment">     * @return mixed
 </span></span><span id="20" class="l"><span class="php-comment">     */</span>
 </span><span id="21" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> applyOn(<span class="php-var">$oldval</span>);
 </span><span id="22" class="l">
 </span><span id="23" class="l">    <span class="php-comment">/**
-</span></span><span id="24" class="l"><span class="php-comment">     * Merge this operation into a (previous) operation.
+</span></span><span id="24" class="l"><span class="php-comment">     * Merge this operation into a (previous) operation
 </span></span><span id="25" class="l"><span class="php-comment">     *
 </span></span><span id="26" class="l"><span class="php-comment">     * @param IOperation $prevOp
 </span></span><span id="27" class="l"><span class="php-comment">     * @return IOperation

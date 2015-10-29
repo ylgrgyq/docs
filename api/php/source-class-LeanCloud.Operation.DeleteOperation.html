@@ -111,14 +111,14 @@
 </span><span id="3" class="l">
 </span><span id="4" class="l"><span class="php-keyword1">class</span> DeleteOperation <span class="php-keyword1">implements</span> IOperation {
 </span><span id="5" class="l">    <span class="php-comment">/**
-</span></span><span id="6" class="l"><span class="php-comment">     * The key of field the operation is about to apply.
+</span></span><span id="6" class="l"><span class="php-comment">     * The key of field the operation is about to apply
 </span></span><span id="7" class="l"><span class="php-comment">     *
 </span></span><span id="8" class="l"><span class="php-comment">     * @var string
 </span></span><span id="9" class="l"><span class="php-comment">     */</span>
 </span><span id="10" class="l">    <span class="php-keyword1">private</span> <span class="php-var">$key</span>;
 </span><span id="11" class="l">
 </span><span id="12" class="l">    <span class="php-comment">/**
-</span></span><span id="13" class="l"><span class="php-comment">     * Initialize operation.
+</span></span><span id="13" class="l"><span class="php-comment">     * Initialize operation
 </span></span><span id="14" class="l"><span class="php-comment">     *
 </span></span><span id="15" class="l"><span class="php-comment">     * @param string $key Key of field to delete.
 </span></span><span id="16" class="l"><span class="php-comment">     */</span>
@@ -136,9 +136,9 @@
 </span><span id="28" class="l">    }
 </span><span id="29" class="l">
 </span><span id="30" class="l">    <span class="php-comment">/**
-</span></span><span id="31" class="l"><span class="php-comment">     * Encode to json represented operation.
+</span></span><span id="31" class="l"><span class="php-comment">     * Encode to JSON represented operation
 </span></span><span id="32" class="l"><span class="php-comment">     *
-</span></span><span id="33" class="l"><span class="php-comment">     * @return array json represented string
+</span></span><span id="33" class="l"><span class="php-comment">     * @return array
 </span></span><span id="34" class="l"><span class="php-comment">     */</span>
 </span><span id="35" class="l">    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> encode() {
 </span><span id="36" class="l">        <span class="php-keyword1">return</span> <span class="php-keyword1">array</span>(<span class="php-quote">&quot;__op&quot;</span> =&gt; <span class="php-quote">&quot;Delete&quot;</span>);
