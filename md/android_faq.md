@@ -44,6 +44,12 @@
 -dontwarn com.loopj.**
 -keep class com.loopj.** { *;}
 
+-dontwarn com.squareup.okhttp.**
+-keep class com.squareup.okhttp.** { *;}
+-keep interface com.squareup.okhttp.** { *; }
+
+-dontwarn okio.**
+
 -dontwarn org.xbill.**
 -keep class org.xbill.** { *;}
 

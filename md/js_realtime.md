@@ -1764,6 +1764,38 @@ room.count(function(data) {
 });
 ```
 
+### RoomObject.update
+
+更新 Room（或者 Conversation）的名字与自定义属性。
+
+```javascript
+RealtimeObject.update(data, callback);
+```
+
+#### 输入
+
+参数|类型|约束|说明
+---|---|---|---
+data|object|必须|要修改的 key-value
+callback|Function|可选|修改成功的回调函数
+
+#### 返回
+
+`Object` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+#### 示例
+
+```javascript
+room.update({
+  // 新的 room name
+  name: 'New Name',
+  // 新的自定义的数据
+  attr: {}
+}, function() {
+  console.log('update succeeded.');
+});
+```
+
 ## 全局事件
 
 SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被派发（注意：RoomObject 内部默认不会派发任何事件），你可以通过监听这些事件来完成你的操作。这些事件往往都是脱离 Room（或者 Conversation）的，你可以监听到其他 Room 中的相关信息。
