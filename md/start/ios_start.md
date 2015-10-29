@@ -1,5 +1,3 @@
-目前 SDK 暂时不支持 Xcode 7 中的 bitcode 特性，集成 SDK 时需要将 `ENABLE_BITCODE` 编译选项关闭。我们很快会提供对 bitcode 的支持。
-
 #### 自动安装
 
 [CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化的简化安装过程。

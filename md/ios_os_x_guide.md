@@ -1177,10 +1177,12 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 ```objc
 [Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
-        Student *student = [AVUser currentUser];
+        Student *student = [Student currentUser];
         studen.displayName = @"YOUR_DISPLAY_NAME";
     }];
 ```
+
+同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
 
 ### 初始化子类
 
@@ -1808,7 +1810,7 @@ query.limit = 10;
 NSArray<AVObject *> nearPosts = [query findObjects];
 ```
 
-在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。
+在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
 
 要查找指定距离范围内的数据，可使用 `whereWithinKilometers` 、 `whereWithinMiles` 或 `whereWithinRadians` 方法。
 

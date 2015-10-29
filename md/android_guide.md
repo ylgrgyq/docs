@@ -870,7 +870,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`...，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
 
 ### 删除查询结果
 
@@ -1712,8 +1712,10 @@ query.setLimit(10);            //获取最接近用户地点的10条微博
 ArrayList<AVObject> nearPosts = query.find();
 ```
 
-在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
+在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending()` 或 `orderByDescending()` 方法，则按距离排序会被新排序覆盖。**
+
 要限制查询指定距离范围的数据可以使用 `whereWithinKilometers`、`whereWithinMiles` 或 `whereWithinRadians` 方法。
+
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java

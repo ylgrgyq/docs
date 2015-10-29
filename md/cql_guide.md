@@ -193,14 +193,25 @@ select * from Player where location near geopoint(116.4, 39.9)
 
 只有在地理位置信息查询里才可以使用 `[longitude, latitude]` 这样的语法。在其他查询里将被作为数组类型。
 
-为了限定搜索的最大距离，还可以使用 `max distance` 来限定，比如限定在 1 公里内：
+为了限定搜索的最大距离，还可以使用 `max [距离]` 来限定，比如限定在 1 公里内：
 
 ```sql
 select * from Player where location near geopoint(116.4, 39.9) max 1 km
 ```
 
-其他单位包括 `miles`（英里）和 `radians`（弧度），默认是**弧度**。
+距离长度的其他单位包括 `miles`（英里）和 `radians`（弧度），如果不提供明确的单位，默认是**弧度**。
 
+通过 `min [距离]` 还可以限定最小距离：
+
+```sql
+select * from Player where location near geopoint(116.4, 39.9) min 0.5 km
+```
+
+`min` 和 `max` 同时限定的时候，`min` 必须出现在 `max` 之前：
+
+```sql
+select * from Player where location near geopoint(116.4, 39.9) min 0.5 km max 1 km
+```
 
 如果想查询某个矩形框内的对象，可以使用 `within [西南坐标] and [东北坐标]` 的语法：
 
