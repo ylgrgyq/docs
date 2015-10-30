@@ -1,3 +1,22 @@
+<a name="0.0.2"></a>
+## [0.0.2](https://github.com/leancloud/docs/compare/v0.0.1...v0.0.2) (2015-10-30)
+
+
+### Bug Fixes
+
+* **package:** missing comma ([fc649fb](https://github.com/leancloud/docs/commit/fc649fb))
+
+### Features
+
+* **docs:** add git commit guidelines [ci skip] ([b3a2ac7](https://github.com/leancloud/docs/commit/b3a2ac7))
+* **docs:** add Gitter support ([e01bbb6](https://github.com/leancloud/docs/commit/e01bbb6))
+* **docs:** add Issue Stats badges ([3944880](https://github.com/leancloud/docs/commit/3944880))
+* **docs:** update readme [ci skip] ([be44ac5](https://github.com/leancloud/docs/commit/be44ac5))
+* **package:** disable greenkeeper email notification ([ec66c4a](https://github.com/leancloud/docs/commit/ec66c4a))
+* **template:** add ability to view commit histroy, ref https://github.com/leancloud/docs/issues ([0c4b955](https://github.com/leancloud/docs/commit/0c4b955))
+
+
+
 <a name="0.0.1"></a>
 ## 0.0.1 (2015-10-15)
 
