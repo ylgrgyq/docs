@@ -90,7 +90,7 @@ $obj->save();
 $obj->removeIn("colors", "blue");
 $obj->save();
 
-// destroy it on cloud
+// 在云存储上删除它
 $obj->destroy();
 ```
 
