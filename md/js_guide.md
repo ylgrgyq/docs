@@ -735,7 +735,7 @@ var query = new AV.Query(Post);
 query.startsWith("pubUser", "LeanCloud");
 ```
 
-###关系查询
+### 关系查询
 
 对于查询关系型数据来说有几种不同的方式，如果你想要获取的对象中有某个属性包含一个特定的 AV.Object，你可以使用 `equalTo`，就像对于别的数据类型一样。
 
@@ -827,7 +827,7 @@ query.include(["post.author"]);
 你可以多次使用 `include` 来构建一个有多个字段的查询，这项功能同样适用于
 AV.Query 的 helper 函数，例如 `first` 和 `get` 等.
 
-###对象计数
+### 对象计数
 
 如果你只是想查询满足一个 query 的结果集到底有多少对象，但是你不需要得到它们，你可以使用 `count` 来取代 `find`。比如，计算一下某位用户一共发布了多少条微博：
 
@@ -849,7 +849,7 @@ query.count({
 返回超时错误，或者只是返回一个近似正确的值。这样的话你应该更合理地规划你
 程序的结构来避免这种情况。
 
-###组合查询
+### 组合查询
 
 如果你想要查找满足一系列查询的对象，你可以使用 `AV.Query.or` 方法来构建
 查询，这样得到的结果是所有查询的并集。例如，你想查询出企业官方账号和个人账号的微博，可以这样:
@@ -953,12 +953,12 @@ AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? li
 
 `AV.Query.doCloudQuery` 返回的也是下面提到的 `AV.Promise` 对象。
 
-##Promise
+## Promise
 
 除了回调函数之外，每一个在 LeanCloud JavaScript SDK 中的异步方法都会返回一个
  `Promise`。使用 `Promise`，你的代码可以比原来的嵌套 callback 的方法看起来优雅得多。
 
-###then 方法
+### then 方法
 
 每一个 Promise 都有一个叫 `then` 的方法，这个方法接受一对 callback。第一个 callback 在 promise 被解决（`resolved`，也就是正常运行）的时候调用，第二个会在 promise 被拒绝（`rejected`，也就是遇到错误）的时候调用。
 
@@ -1006,7 +1006,7 @@ obj.save().done(function(obj) {
 });
 ```
 
-###将 Promise 组织在一起
+### 将 Promise 组织在一起
 
 Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求代码的调用顺序问题。如果一个 Promise 的回调会返回一个 Promise，那么第二个 then 里的 callback 在第一个 then
 的 callback 没有解决前是不会解决的，也就是所谓 **Promise Chain**。
@@ -1031,7 +1031,7 @@ query.find().then(function(students) {
 });
 ```
 
-###错误处理
+### 错误处理
 
 如果任意一个在链中的 Promise 返回一个错误的话，所有的成功的 callback 在接下
 来都会被跳过直到遇到一个处理错误的 callback。
@@ -1099,7 +1099,7 @@ query.find().try(function(students) {
 });
 ```
 
-###创建 Promise
+### 创建 Promise
 
 在开始阶段,你可以只用系统（譬如 find 和 save 方法等）返回的 promise。但是，在更高级
 的场景下，你可能需要创建自己的 promise。在创建了 Promise 之后，你需要调用 `resolve` 或者 `reject` 来触发它的 callback.
@@ -1152,7 +1152,7 @@ promise.then(function(value) {
 });
 ```
 
-###顺序的 Promise
+### 顺序的 Promise
 
 在你想要某一行数据做一系列的任务的时候，Promise 链是很方便的，每一个任务都等着前
 一个任务结束。比如，假设你想要删除你的博客上的所有评论：
@@ -1180,7 +1180,7 @@ query.find().then(function(results) {
 });
 ```
 
-###并行的 Promise
+### 并行的 Promise
 
 你也可以用 Promise 来并行的进行多个任务，这时需要使用 when 方法，你可以一次同时开始几个操作。使用 `AV.Promise.when` 来创建一个新的 promise，它会在所有输入的 `Promise` 被 resolve 之后才被 resolve。即便一些输入的 promise 失败了，其他的 Promise 也会被成功执行。你可以在 callback 的参数部分检查每一个 promise 的结果。并行地进行操作会比顺序进行更快，但是也会消耗更多的系统资源和带宽。
 
@@ -1289,7 +1289,7 @@ Promise.race([p1, p2, p3]).then(function (value) {
 ```
 
 
-###创建异步方法
+### 创建异步方法
 
 有了上面这些工具以后，就很容易创建你自己的异步方法来返回 promise 了。譬如，你可以创建一个有 promise 版本的 setTimeout：
 
@@ -1328,7 +1328,7 @@ AV.Promise.setDebugError(true);
 
 如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
 
-##Collection
+## Collection
 
 一个 `AV.Collection` 就是一个 `AV.Objects` 的有序集合，它和
  `Backbone.Collection` 是兼容的，有相同的特性和功能，你可以通过用一个模型类
@@ -1355,7 +1355,7 @@ query.greaterThan("degreesF", 100);
 var collection = query.collection();
 ```
 
-###获取 Collection
+### 获取 Collection
 
 使用 fetch 方法来获取一个 collection 里的所有元素：
 
@@ -1373,7 +1373,7 @@ collection.fetch({
 });
 ```
 
-###Collection 排序
+### Collection 排序
 
 你可以设定一个 comparator 来对 collection 中的元素进行排序：
 
@@ -1384,7 +1384,7 @@ collection.comparator = function(object) {
 };
 ```
 
-###修改一个 Collection
+### 修改一个 Collection
 
 Collection 是可变的，你可以访问所有元素，增加或者删除元素：
 
@@ -1412,9 +1412,9 @@ collection.reset([
 ]);
 ```
 
-##文件
+## 文件
 
-###新建一个 AV.File
+### 新建一个 AV.File
 
 `AV.File` 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 `AV.Object` 无法存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可以随意用来存储文档、视频、音乐或者任何二进制数据。
 
@@ -1493,7 +1493,7 @@ post.set("image", file);
 post.save();
 ```
 
-###获取文件的内容
+### 获取文件的内容
 
 怎样才能更好地获取你的应用数据取决于你的应用环境。因为跨域请求
 的问题，最好你可以让浏览器代替你做这项事情。通常，这意味着在 DOM 中渲染这个
@@ -1564,13 +1564,13 @@ file.destroy().then(function(){
 });
 ```
 
-##用户
+## 用户
 
 在许多应用中，都有一个用户账户的概念。用户账户让用户可以用安全的方式访问他们自己的信息，LeanCloud 提供了一个特殊的用户类叫 `AV.User` 来自动处理有关用户的账户管理的功能。
 
 `AV.User` 是 `AV.Object` 的一个子类，而且有 AV.Object 一样的功能，比如可变的模式、自动的持久化，还有键值对接口。所有对 AV.Object 有用的方法同样可以作用于 AV.User。AV.User 的不同之处在于它对于用户的账户有一些特定的功能。
 
-###属性
+### 属性
 
 AV.User 默认有一些与 AV.Object 不一样的字段:
 
@@ -1581,7 +1581,7 @@ AV.User 默认有一些与 AV.Object 不一样的字段:
 
 我们会在下面的用例中详细介绍细节。
 
-###注册
+### 注册
 
 通常你的 app 第一件要做的事情就是让用户进行注册，下面的代码展示了怎样进行通常的注册过程：
 
@@ -1613,7 +1613,7 @@ user.signUp(null, {
 
 你也可以使用 email 来作为用户名，只要求你的用户输入他们的 email 但是同时自动填充好 username 属性就可以了，AV.User 会跟原来一样工作。我们会在下面的重设密码环节再次说明这个细节。
 
-###登录
+### 登录
 
 在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可以使用 logIn 方法来进行登录：
 
@@ -1628,7 +1628,7 @@ AV.User.logIn("myname", "mypass", {
 });
 ```
 
-###验证 Email
+### 验证 Email
 
 在应用设置的应用选项中中启用 email 验证可以让你的应用给最终用户一些更安全的使用体验，譬如部分功能只开放给验证过邮箱的用户使用，等等。
 
@@ -1775,7 +1775,7 @@ user.signUpOrlogInWithMobilePhone({
 如果是注册，属性里其他属性将作为新用户的属性保存，如果是登录，这些属性将覆盖服务端的属性。如果不提供 `username`，默认为手机号码。
 
 
-###当前用户
+### 当前用户
 
 如果用户每次打开 app 的时候都要求登录无疑是令人感到厌烦的，你可以通过缓存当前的 AV.User 对象来避免这个问题。
 
@@ -1798,7 +1798,7 @@ AV.User.logOut();
 var currentUser = AV.User.current();  // this will now be null
 ```
 
-###用户对象的安全
+### 用户对象的安全
 
 AV.User 类默认就是受保护的，在 AV.User 中保存的数据只能被创建它的用户所修改，但可以被任意客户端所读取。
 
@@ -1880,7 +1880,7 @@ user._linkWith("weibo", {
 })
 ```
 
-###其他对象的安全
+### 其他对象的安全
 
 和 AV.User 相同的安全模型也使用于其他对象。对于任何对象来说，你可以指定哪些用户会被允许读取该对象，哪些用户被允许修改该对象。为了支持这种安全机制，每一个对象都有一个允许访问列表(ACL)，是被 AV.ACL 类所实现的。
 
@@ -1927,7 +1927,7 @@ publicPost.save();
 
 比如说删除一个对象，但是你没有写的权限这种操作是禁止的。这样会返回一个 AV.Error.OBJECT_NOT_FOUND 的错误码。为了安全起见，这样防止了客户端区分出到底有哪些对象被创建了但是无法读取还是根本不存在。
 
-###重设密码
+### 重设密码
 
 在现实中只要你引入了密码系统，总会有用户会忘掉他们的密码。在这种情形下，我们的库提供一个让他们安全地重设密码的功能。
 
@@ -1971,7 +1971,7 @@ AV.User.requestPasswordResetBySmsCode("18212346648", {
 
 关于自定义邮件模板和验证链接请看博文 [自定义应用内用户重设密码和邮箱验证页面](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
-###查询
+### 查询
 
 **请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
 
@@ -1987,7 +1987,7 @@ query.find({
 });
 ```
 
-###关联
+### 关联
 
 关联一个 AV.User 的对象可以很快就见效。比如说，假设你有一个 blog 程序，为了保存一个用户的新 post 还有读取他们所有的 post：
 
@@ -2012,11 +2012,11 @@ post.save(null, {
 });
 ```
 
-###在后台查看 User
+### 在后台查看 User
 
 在后台的数据查看中，你可以看到 User 类保存了用户的信息.
 
-##角色
+## 角色
 
 随着你的 App 规模和用户基数的成长，你可能发现你需要比设定用户级的权限更加宽泛的权限设置。LeanCloud 提供一种基于角色的权限管理方案来满足这种需求。角色提供了一种逻辑的方式来将用户分组并给与相同的权限。角色是一种有名字的对象，包含了用户和其他的角色。任何授予一个角色的权限会被它包含的所有用户和子角色所继承。
 
@@ -2025,7 +2025,7 @@ post.save(null, {
 我们提供一个特殊的类称为 AV.Role 在客户端代码中表示这种角色对象，AV.Role 是一个AV.Object 的子类，而且有所有的特性，比如没有固定模式、自动持久化和 key value 接口等。所有的在 AV.Object 上有用的方法在 AV.Role 上依然有作用。不同之处是 AV.Role 有一些普通对象没有的特殊属
 性和方法。
 
-###属性
+### 属性
 
 AV.Role 有一些属性与普通的 AV.Object 不同：
 
@@ -2033,7 +2033,7 @@ AV.Role 有一些属性与普通的 AV.Object 不同：
 - **users**：一个关系,包含了会继承角色权限的 User。
 - **roles**：一个关系,包含了会继承角色权限的子角色。
 
-###角色对象的安全性
+### 角色对象的安全性
 
 AV.Role 使用和其他 LeanCloud 对象一样的 ACL 权限策略，除开它需要 ACL 被显式地设置以外。通常来说，只有用户有极大的权限（比如管理员）才应该被允许创建或者更改 Role。所以你应该按这种标准来设定 Role 的 ACL。请注意，如果你给了用户一个 AV.Role 一个写权限，这个用户有可能会在这个权限中加入另一个 user，或者甚至直接把角色删除掉。
 
@@ -2062,7 +2062,7 @@ role.save();
 
 请非常注意一点，注册角色的ACL的时候，它们只能被应该有权限修改它的人修改。
 
-###其他对象的安全性
+### 其他对象的安全性
 
 现在你应该已经创建了在你的程序中要使用的一系列的角色，你可以用ACL来定义他们的用户可以拥有的权限。每一个 AV.Object 都可以指定一个 AV.ACL，这样提供了哪些用户或者角色应该有权限来读或者写这个对象。
 
@@ -2087,7 +2087,7 @@ wallPost.setACL(postACL);
 wallPost.save();
 ```
 
-###角色继承
+### 角色继承
 
 就像上面所描述的一样，一个角色可能包含其他的角色，表示两个角色之间的「父子」关系，这样做的结果就是任何被授予一个角色的权限都会被隐式地授予这个角色的所有子角色。
 
@@ -2100,7 +2100,7 @@ moderators.getRoles().add(administrators);
 moderators.save();
 ```
 
-##云引擎函数
+## 云引擎函数
 
 云引擎 函数应该用 AV.Cloud.run 函数来进行调用，比如，调用云引擎中的函数 `hello` 应该这样：
 
@@ -2116,7 +2116,7 @@ AV.Cloud.run('hello', {}, {
 
 你可以参考我们的 [云函数指南](leanengine_guide-node.html#云函数) 来进一步了解这部分功能。
 
-##Push 通知
+## Push 通知
 
 通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。
 
@@ -2176,11 +2176,11 @@ AV.Push.send({
 
 `dev` 表示测试证书，`prod` 表示生产证书，默认生产证书。
 
-##地理位置
+## 地理位置
 
 LeanCloud 允许你能够将真实世界的经度和纬度坐标放入对象之中。在 AV.Object 中加入一个 AV.GeoPoint 可以让你查询一个对象离一个参考点的相对位置，这允许你轻松的发现一个用户周围最近的用户，或者离一个用户最近的地点。
 
-###AV.GeoPoint
+### AV.GeoPoint
 
 为了将一个对象联系到一个点上,你需要先创建一个AV.GeoPoint。举例来说，创建一个北纬 39.9 度、东经 116.4 度的 `AV.GeoPoint` 对象（LeanCloud 北京办公室所在地）：
 
@@ -2196,7 +2196,7 @@ post.set("location", point);
 
 注意：现在 LeanCloud 限制了一个对象中只能有一个 AV.GeoPoint 的属性。
 
-###地理位置查询
+### 地理位置查询
 
 现在你可以有一系列的对象可以做空间坐标查询了。如果想找到有哪些对象离一个地点最近，可以通过在 AV.Query 中加入一个 `near` 来做查询。例如，为了获得离用户最近的 10 条微博，可以这样：
 
@@ -2239,18 +2239,18 @@ query.find({
 });
 ```
 
-###警告
+### 警告
 
 在这里有一些问题值得留意：
 
 1. 每一个 AV.Object 只能有一个键指向一个 AV.GeoPoint 对象。
 2. Points 不应该等于或者超出它的界. 纬度不应该是 -90.0 或者 90.0，经度不应该是 -180.0 或者 180.0。试图在 GeoPoint 上使用超出范围内的经度和纬度会导致问题。
 
-###View
+### View
 
 我们引入的 AV.View 只是一个 Backbone.View 的简单复制，你可以随意拿它来建立视图，你可以查看 Backbone.View 的 API 来查看详细信息，注意当你使用了 AV.View 的时候，你需要包含一个 jQuery 库或者 jQuery 兼容的库（实现了$方法）。
 
-###转换 Backbone app
+### 转换 Backbone app
 
 如果你已经有一个存在的Backbone程序，你可以用我们的 JavaScript SDK 轻松地转换。在转换过后，你就有一些静态文件但是包含了你的 app 的所有功能。
 
@@ -2291,7 +2291,7 @@ todos.fetch();
 
 这样就结束了，你的 App 应该已经就绪并使用 LeanCloud 作为后端。
 
-##错误处理
+## 错误处理
 
 大部分 LeanCloud JavaScript 函数会通过一个有 callback 的对象来报告它们是否成功了，与 Backbone 的 options 对象类似。主要的两个 callback 是 success 和 error。
 
@@ -2349,11 +2349,11 @@ query.get("thisObjectIdDoesntExist", {
 因此，我们还提供了 [应用内搜索功能](./app_search_guide.html)，基于搜索引擎构建，提供更强大的搜索功能。
 
 
-##WebView 中使用
+## WebView 中使用
 
 JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 LeanCloud 的「云引擎」中。
 
-###Android 中使用
+### Android 中使用
 
 如果是 Android WebView，在 Native 代码创建 WebView 的时候你需要打开几个选项，
 这些选项生成 WebView 的时候默认并不会被打开，需要配置：
