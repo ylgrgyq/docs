@@ -301,9 +301,9 @@ post.save();
 
 为了帮你存储数组类数据，LeanCloud 提供了三种操作让你可以原子地改动一个数组的值（当然，他们都需要一个给定的 key）:
 
-- add: 在一个数组的末尾加入一个给定的对象
-- addUnique: 只会把原本不存在的对象加入数组，所以加入的位置没有保证
-- remove: 在一个数组中删除所有指定的实例
+- **add**：在一个数组的末尾加入一个给定的对象
+- **addUnique**：只会把原本不存在的对象加入数组，所以加入的位置没有保证
+- **remove**：在一个数组中删除所有指定的实例
 
 比如，我们想在一条微博的属性 "tags" 中加入多个属性值:
 
@@ -2359,21 +2359,18 @@ JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 Lea
 这些选项生成 WebView 的时候默认并不会被打开，需要配置：
 
 1. 因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 WebView 的 localStorage；设置方式：
-
-```java
-yourWebView.getSettings().setDomStorageEnabled(true);
-```
-
+  
+  ```java
+  yourWebView.getSettings().setDomStorageEnabled(true);
+  ```
 2. 如果你希望直接调试手机中的 WebView，也同样需要在生成 WebView 的时候设置远程调试，具体使用方式请参考 [Google 官方文档](https://developer.chrome.com/devtools/docs/remote-debugging)。
-
-```java
-if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-    yourWebView.setWebContentsDebuggingEnabled(true);
-}
-```
-
-注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
-
+  
+  ```java
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      yourWebView.setWebContentsDebuggingEnabled(true);
+  }
+  ```
+  
+  注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
 3. 如果你是通过 WebView 来开发界面，Native 调用本地特性的 Hybrid 方式开发你的 App。比较推荐的开发方式是：通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 再来做数据连调，这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
-
 4. 为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2 以后的系统中间，WebView 中间只能访问通过 [@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html) 标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 **Uncaught TypeError**。
