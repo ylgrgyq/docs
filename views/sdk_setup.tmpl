@@ -42,17 +42,17 @@ PING api.leancloud.cn (120.132.49.239): 56 data bytes
 
 {% block save_a_hello_world %}{% endblock %}
 
-然后回到，打开[**控制台** > **存储** > **TestObject**](https://leancloud.cn/data.html?appid={{appid}}#/TestObject)
+然后打开[**控制台** > **存储** > **TestObject**](https://leancloud.cn/data.html?appid={{appid}}#/TestObject)
 如果看到如下内容，说明 SDK 已经正确地执行了上述代码，安装完毕。
 
 ![testobject_saved](images/testobject_saved.png)
 
-如果控制台没有发现对应的数据，请看下节的[问题排查](#问题排查)
+如果控制台没有发现对应的数据，请看下节的[问题排查](#问题排查)。
 
 ## 问题排查
 
 ### App ID 或者 App Key 有误
-如果 SDK 抛出 401 异常或者查看本地网络访问日志存在
+如果 SDK 抛出 401 异常或者查看本地网络访问日志存在：
 
 ```
 {

@@ -87,3 +87,8 @@
     }];
 ```
 {% endblock %}
+
+{% block sms_demo %}
+### Demo
+为了方便开发者理解短信服务流程，我们特地开发了专门针对短信服务的 [leancloud-smsdemo-ios](https://github.com/leancloud/leancloud-smsdemo-ios) ，开发者可以通过代码学习和了解。
+{% endblock %}
