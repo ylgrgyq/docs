@@ -66,33 +66,29 @@ $obj = new LeanObject("TestObject");
 $obj->set("name", "alice");
 $obj->set("height", 60.0);
 $obj->set("weight", 4.5);
-$obj->set("birthdate", new DateTime());
+$obj->set("birthdate", new \DateTime());
 try {
     $obj->save();
 } catch (CloudException $ex) {
-    // it throws CloudException if save to cloud failed
+    // CloudException 会被抛出，如果保存失败
 }
 
-// get fields
+// 获取字段值
 $obj->get("name");
 $obj->get("height");
 $obj->get("birthdate");
 
-// atomatically increment field
+// 原子增加一个数
 $obj->increment("age", 1);
-// add values to array field
-$obj->add("colors", array("blue", "magenta"));
-// add values uniquely
-$obj->addUnique("colors", array("orange"));
-// remove values from array field
-$obj->remove("colors", array("blue"));
 
-// save changes to cloud
-try {
-    $obj->save();
-} catche (CloudException $ex) {
-    // ...
-}
+// 在数组字段中添加，添加唯一，删除
+// 注意: 由于API限制，不同数组操作之间必须保存，否则会报错
+$obj->addIn("colors", "blue");
+$obj->save();
+$obj->addUniqueIn("colors", "orange");
+$obj->save();
+$obj->removeIn("colors", "blue");
+$obj->save();
 
 // destroy it on cloud
 $obj->destroy();
