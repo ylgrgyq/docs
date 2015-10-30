@@ -1418,8 +1418,6 @@ collection.reset([
 
 `AV.File` 让你可以在 LeanCloud 中保存应用的文件，这样可以解决用一个 `AV.Object` 无法存太大或者太难处理的问题。最常见的用例就是存储图片，但是你可以随意用来存储文档、视频、音乐或者任何二进制数据。
 
-在浏览器通过 JavaScript SDK 上传文件大小不能超过 10 M，在 Node.js 环境里没有这个限制。
-
 开始使用 AV.File 是很容易的，有很多种不同的方式来新建一个 file。第一个是 base64 编码的字符串表示：
 
 ```javascript
