@@ -205,13 +205,21 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到云引擎日志里。
 
+### 在 update 更新前执行操作
+
+{% block beforeUpdate %}
+同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象前执行特定的动作，这是通过 `beforeUpdate` 函数实现的，你可以在这个 Hook 中知道哪些字段被修改了，还可以在特定情况下拒绝这次修改：
+
+{% block beforeUpdateExample %}{% endblock %}
+
+**注意**：传入的对象是一个尚未保存到数据库的临时对象，并不保证与最终储存到数据库的对象完全相同，这是因为修改中可能包含自增、数组增改、关系增改等原子操作。
+{% endblock %}
+
 ### 在 update 更新后执行动作
 
-同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象后执行特定的动作，这是通过`afterUpdate`函数做到。比如每次修改文章后简单地记录日志：
+你还可以在在更新对象后执行特定的动作，这是通过 `afterUpdate` 函数实现的。比如每次修改文章后简单地记录日志：
 
 {% block afterUpdateExample %}{% endblock %}
-
-**注意**：云代码没有 beforeUpate 函数。
 
 ### 在 delete 前执行动作
 

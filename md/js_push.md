@@ -21,7 +21,7 @@ SDK 对数据进行过包装，并且会对连接产生的错误进行处理，�
 [什么是 bower ?](http://bower.io/)
 
 ```
-bower install leancloud-push -- save
+bower install leancloud-push --save
 ```
 
 安装之后，页面直接加载 bower_components/leancloud-push/src/AV.push.js 即可。

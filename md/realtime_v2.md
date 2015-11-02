@@ -449,10 +449,12 @@ data | 消息内容
 
 实时通信的错误码会以 SDK 异常或 WebSocket 关闭状态码的形式返回给客户端。当出现异常情况时，SDK 会输出状态码到日志里，以下是对部分状态码的简单说明：
 
+<!--2015-10-27 Da Li: add <code style="white-space:nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
+
 代码|消息|说明
 ---|---|---
 `0`| |websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
-`1006`| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+<code style="white-space:nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
 `4100`|`APP_NOT_AVAILABLE`|应用不存在或应用禁用了实时通信服务
 `4103`|`INVALID_LOGIN`|Client Id 格式错误，超过 64 个字符。
 `4105`|`SESSION_REQUIRED`|Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
@@ -462,7 +464,7 @@ data | 消息内容
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
 `4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
-`4302`|`CONVERSATION_SIGNATURE_FAILED`|对话相关操作签名错误
+`4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
 `4305`|`CONVERSATION_REJECTED_BY_APP`|对话操作被应用的云引擎 Hook 拒绝
@@ -505,7 +507,7 @@ _profile 属性不会实际发送到 APNs。
 
 ![image](images/rtm-push.png)
 
-桌面图标也会有相应的红点 badge，清除 badge 的操作请参考 [iOS 推送指南 - 清除 badge](./push_guide.html#清除_badge)。
+桌面图标也会有相应的红点 badge，清除 badge 的操作请参考 [iOS 推送指南 - 清除 badge](ios_push_guide.html#清除_Badge)。
 
 云引擎 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考 [云引擎 Hook](#云引擎_Hook) 章节。
 

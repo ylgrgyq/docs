@@ -205,6 +205,26 @@ AV.Cloud.afterSave('_User', function(request) {
 ```
 {% endblock %}
 
+{% block beforeUpdateExample %}
+```javascript
+AV.Cloud.beforeUpdate('Review', function(request, response) {
+  // 如果 comment 字段被修改了，检查该字段的长度
+  if (request.object.updatedKeys.indexOf('comment') != -1) {
+    if (request.object.get('comment').length <= 140) {
+      response.success();
+    } else {
+      // 拒绝过长的修改
+      response.error('commit 长度不得超过 140 字符');
+    }
+  } else {
+    response.success();
+  }
+});
+```
+
+**注意**：你对 `request.object` 的修改不会被保存到数据库，所以你不应该修改它，但可以用 `response.error` 返回一个错误拒绝这次修改。
+{% endblock %}
+
 {% block afterUpdateExample %}
 ```javascript
 AV.Cloud.afterUpdate('Article', function(request) {

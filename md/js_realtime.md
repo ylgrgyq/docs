@@ -12,7 +12,9 @@
 
 ### Demo
 
-在开始一切之前，你可以尝试一下 [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的 [源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
+- [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)
+- [LeanMessage Demo](http://leancloud.github.io/leanmessage-demo)，[源码](https://github.com/leancloud/leanmessage-demo/tree/master/Web)
+- 热心用户提供的 [实时对战游戏 Demo](http://cutpage.sinaapp.com/)
 
 ### 贡献
 
@@ -104,13 +106,13 @@ npm install leancloud-realtime --save
 ```
 var realtime = require('leancloud-realtime');
 ```
-由于 node 运行环境没有内置的 WebSocket 实现，在使用 `realtime` 方法之前需要通过 `config` 方法配置一个 Websocket 类，否则会抛出一个 **No WebSocket implement set** 错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
+SDK 在 node 环境下使用 [ws](https://www.npmjs.com/package/ws) 作为内置的 WebSocket 实现，你也可以在使用 `realtime` 方法之前通过 `config` 方法配置一个 Websocket 类，这里以 [websocket](https://www.npmjs.com/package/websocket) package 为例进行配置：
 ```
-// 首先安装 ws：
-// npm install ws --save
+// 首先安装 websocket：
+// npm install websocket --save
 // 然后进行配置：
 realtime.config({
-  WebSocket: require('ws')
+  WebSocket: require('websocket').w3cwebsocket
 });
 ```
 
@@ -218,12 +220,12 @@ realtimeObj.on('create', function(data) {
 });
 
 // 监听所有用户加入的情况
-realtimeObj.on('join', function(data) {
+realtimeObj.on('membersjoined', function(data) {
     console.log('有用户加入某个当前用户在的 Conversation：', data);
 });
 
 // 监听所有用户离开的情况
-realtimeObj.on('left', function(data) {
+realtimeObj.on('membersleft', function(data) {
     console.log('有用户离开某个当前用户在的 Conversation：', data);
 });
 
@@ -480,7 +482,7 @@ realtimeObject.on('create', function(data) {
 });
 
 // 有人加入 Room 的时候会被触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1017,7 +1019,7 @@ RoomObject.add(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1050,7 +1052,7 @@ room.add('LeanCloud03', function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1068,7 +1070,7 @@ RoomObject.add(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1101,7 +1103,7 @@ room.add(['LeanCloud03', 'LeanCloud04'], function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1119,7 +1121,7 @@ RoomObject.remove(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|删除成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1151,8 +1153,8 @@ room.remove('LeanCloud02', function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1170,7 +1172,7 @@ RoomObject.remove(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1203,8 +1205,8 @@ room.remove(['LeanCloud02', 'LeanCloud03'], function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1221,7 +1223,7 @@ RoomObject.join(callback)
 
 参数|类型|约束|说明
 ---|---|---|---
-callback|Function|可选|加入成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|加入成功后的回调函数。
 
 #### 返回
 
@@ -1252,8 +1254,7 @@ realtimeObject.room(roomId, function(object) {
     }
 });
 
-// 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('invited', function(data) {
    console.log(data);
 });
 ```
@@ -1271,7 +1272,7 @@ RoomObject.leave(callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|成功后的回调函数。
 
 #### 返回
 
@@ -1302,8 +1303,7 @@ var room = realtimeObject.room({
 
 room.leave();
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+realtimeObject.on('kicked', function(data) {
    console.log(data);
 });
 ```
@@ -1764,6 +1764,38 @@ room.count(function(data) {
 });
 ```
 
+### RoomObject.update
+
+更新 Room（或者 Conversation）的名字与自定义属性。
+
+```javascript
+RealtimeObject.update(data, callback);
+```
+
+#### 输入
+
+参数|类型|约束|说明
+---|---|---|---
+data|object|必须|要修改的 key-value
+callback|Function|可选|修改成功的回调函数
+
+#### 返回
+
+`Object` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+#### 示例
+
+```javascript
+room.update({
+  // 新的 room name
+  name: 'New Name',
+  // 新的自定义的数据
+  attr: {}
+}, function() {
+  console.log('update succeeded.');
+});
+```
+
 ## 全局事件
 
 SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被派发（注意：RoomObject 内部默认不会派发任何事件），你可以通过监听这些事件来完成你的操作。这些事件往往都是脱离 Room（或者 Conversation）的，你可以监听到其他 Room 中的相关信息。
@@ -1782,12 +1814,53 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 
 新建一个 Room 成功之后会被触发。
 
+### invited & membersjoined
+当一个 Room 中有成员加入时，该成员收到 `invited` 事件，Room 中的其他成员收到 `membersjoined` 事件。
+
+A 将 B 加入到会话中时，各方收到事件的时序是这样的：
+
+|邀请者(A)|被邀请者(B)|其他人(C)
+---|:---:|:---:|:---:
+1|发出请求 add| |
+2| |invited|
+3|membersjoined|membersjoined|membersjoined
+
+如果是 A 主动加入会话：
+
+|加入者(A)|其他人(C)
+---|:---:|:---:
+1|发出请求 join|
+2|invited|
+3|membersjoined|membersjoined
+
+### kicked & membersleft
+当一个 Room 中有成员离开时，该成员收到 `kicked` 事件，Room 中的其他成员收到 `membersleft` 事件。
+
+A 将 B 移出会话中时，各方收到事件的时序是这样的：
+
+|A|B|C
+---|:---:|:---:|:---:
+1|发出请求 remove| |
+2| |kicked|
+3|membersleft||membersleft
+
+如果是 A 主动退出会话：
+
+|A|C
+---|:---:|:---:
+1|发出请求 left|
+2|kicked|
+3||membersleft
+
+
 ### join
 
+不赞成使用，已被 `invited`、`membersjoined` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 新增了一个成员之后会被触发。
 
 ### left
 
+不赞成使用，已被 `kicked`、`membersleft` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 中有成员离开之后会被触发。
 
 ### message

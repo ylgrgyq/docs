@@ -2043,6 +2043,16 @@ tom.open(new AVIMClientCallback(){
 
   /**
    * 实现AVIMConversation相关的签名计算
+   * 
+   * @param conversationId
+   * @param clientId
+   * @param targetIds - 此次操作的member的clientIds
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
+   * @return
+   * @throws SignatureException 如果签名计算中间发生任何问题请抛出本异常
+   */  /**
+   * 实现AVIMConversation相关的签名计算
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
    */
   public Signature createConversationSignature(String conversationId, String clientId,
       List<String> targetIds, String action) throws SignatureException;
@@ -2104,13 +2114,13 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
   @Override
   public Signature createConversationSignature(String convId, String peerId, List<String> targetPeerIds,String action){
    Map<String,Object> params = new HashMap<String,Object>();
-   params.put("self_id",peerId);
-   params.put("group_id",convId);
-   params.put("group_peer_ids",targetPeerIds);
+   params.put("client_id",peerId);
+   params.put("conv_id",convId);
+   params.put("members",targetPeerIds);
    params.put("action",action);
 
    try{
-     Object result = AVCloud.callFunction("group_sign",params);
+     Object result = AVCloud.callFunction("sign2",params);
      if(result instanceof Map){
         Map<String,Object> serverSignature = (Map<String,Object>) result;
         Signature signature = new Signature();
