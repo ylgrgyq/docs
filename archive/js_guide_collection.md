@@ -1328,6 +1328,90 @@ AV.Promise.setDebugError(true);
 
 如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
 
+## Collection
+
+一个 `AV.Collection` 就是一个 `AV.Objects` 的有序集合，它和
+ `Backbone.Collection` 是兼容的，有相同的特性和功能，你可以通过用一个模型类
+或者一个特定的 `AV.Query` 来创建一个新的子类。
+
+```javascript
+// A Collection containing all instances of TestObject.
+var TestCollection = AV.Collection.extend({
+  model: TestObject
+});
+var collection = new TestCollection();
+
+// A Collection of TestObjects whose temperature is "hot".
+var HotCollection = AV.Collection.extend({
+  model: TestObject,
+  query: (new AV.Query(TestObject)).equalTo("temperature", "hot")
+});
+var collection = new HotCollection();
+
+// The Collection of TestObjects that match a complex query.
+var query = new AV.Query(TestObject);
+query.equalTo("temperature", "hot");
+query.greaterThan("degreesF", 100);
+var collection = query.collection();
+```
+
+### 获取 Collection
+
+使用 fetch 方法来获取一个 collection 里的所有元素：
+
+```javascript
+var collection = new TestCollection();
+collection.fetch({
+  success: function(collection) {
+    collection.each(function(object) {
+      console.warn(object);
+    });
+  },
+  error: function(collection, error) {
+    // The collection could not be retrieved.
+  }
+});
+```
+
+### Collection 排序
+
+你可以设定一个 comparator 来对 collection 中的元素进行排序：
+
+```javascript
+var collection = new TestCollection();
+collection.comparator = function(object) {
+  return object.get("temperature");
+};
+```
+
+### 修改一个 Collection
+
+Collection 是可变的，你可以访问所有元素，增加或者删除元素：
+
+```javascript
+var collection = new TestCollection();
+
+collection.add([
+  {"name": "张三"},
+  {"name": "李四"}
+]);
+
+// Get the "张三" AV.Object by its sorted position.
+var model = collection.at(0);
+
+// Or you can get it by LeanCloud objectId.
+var modelAgain = collection.get(model.id);
+
+// Remove "张三" from the collection.
+collection.remove(model);
+
+// Completely replace all items in the collection.
+collection.reset([
+  {"name": "李雷"},
+  {"name": "韩梅梅"}
+]);
+```
+
 ## 文件
 
 ### 新建一个 AV.File
