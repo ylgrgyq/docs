@@ -1,5 +1,5 @@
 {% extends "./sms_guide.tmpl" %}
-{% block language %}iOS{% endblock %}
+{% block language %}iOS / OS X{% endblock %}
 {% block avuser_signup_send_sms %}
 
 ```objc

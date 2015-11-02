@@ -1,100 +1,45 @@
 
 {% extends "./sdk_setup.tmpl" %}
 
-{% block language %}Android{% endblock %} 
+{% block language %}iOS / OS X{% endblock %} 
 
 {% block libs_tool_automatic %}
 
-#### Gradle
-Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android Studio 进行开发的时候，它会自动的在新建的项目里面包含一个自带的 `gradlew` 的命令行工具，并且我们推荐开发者使用自带的命令行工具，因为 Gradle 版本兼容的问题，很多开发者在即使是在正确配置了 Gradle 脚本之后，**错误**使用了最新版本或者是不兼容的版本到底无法正确地加载依赖包。
+#### CocoaPods
+[CocoaPods](http://www.cocoapods.org/) 是开发 OS X 和 iOS 应用程序的一个第三方库的依赖管理工具。利用 [CocoaPods](http://www.cocoapods.org/)，可以定义自己的依赖关系 (称作 pods)，并且随着时间的变化，以及在整个开发环境中对第三方库的版本管理非常方便。
 
-##### Android Studio
-使用 Android Studio 创建一个新的项目的时候，它的目录结构如下：
+首先确保开发环境中已经安装了 Ruby（一般安装了 XCode，Ruby 会被自动安装上），如果没有安装请执行以下命令行：
 
-```
-.
-├── app            // 应用源代码
-    ├── ...
-    ├── build.gradle // 应用 Gradle 构建脚本
-    ├── ...
-├── builde.gradle    // 项目 Gradle 构建脚本
-├── YOUR-APP-NAME.iml   
-├── gradle                   
-└── settings.gradle      
+```sh
+$ sudo gem install cocoapods
 ```
 
-首先打开 `./build.gradle` ，按照如下进行标准配置，请注意：这一步我们修改的是根目录下的 `build.gradle`:
+如果遇到网络问题无法从国外主站上直接下载，我们推荐一个国内的镜像：[RubyGems 镜像](http://ruby.taobao.org/)，具体操作步骤如下：
 
-```
-buildscript {
-    repositories {
-        jcenter()
-    //这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-    //这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-    }
-}
+```sh
+$ gem sources --remove https://rubygems.org/
+$ gem sources -a https://ruby.taobao.org/
+# 请确保下列命令的输出只有 ruby.taobao.org
+$ gem sources -l
+*** CURRENT SOURCES ***
+https://ruby.taobao.org
 ```
 
-然后打开 `./app/build.gradle`，按照如下进行标准配置，请注意：这一步我们修改的是 `app` 目录下的 `build.gradle` :
+然后再安装 CocoaPods，
 
-```
-android {
-    //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-
-    //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
-
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-
-    //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+'
-
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
-
-    //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-
-    //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'    
-}
+```sh
+$ sudo gem install cocoapods
 ```
 
-我们已经提供了官方的 [maven 仓库](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
+在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
-#### Eclipse 
-Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可以按照下一章节中的手动安装步骤导入到项目里。
+  ```sh
+  pod 'AVOSCloud'
+  ```
 
+执行命令 `pod install --verbose` 安装 SDK。如果本地安装过 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
+
+相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
 
 {% endblock %}
 
@@ -102,126 +47,67 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可�
 
 {% block import_sdk %}
 
-下载成功之后将获得如下几个 lib 包:
+下载成功之后将获得如下几个压缩包:
 
 ```
-├── avoscloud-feedback-{version-number}.zip     // LeanCloud 用户反馈模块
-├── avoscloud-push-{version-number}.jar         // LeanCloud 推送模块和实时聊天模块
-├── avoscloud-sdk-{version-number}.jar          // LeanCloud 基本存储模块
-├── avoscloud-search-{version-number}.zip       // LeanCloud 应用内搜索模块
-├── avoscloud-sns-{version-number}.zip          // LeanCloud SNS 模块
-├── avoscloud-statistics-{version-number}.jar   // LeanCloud 统计模块
-├── fastjson.jar                                // LeanCloud 基本存储模块
-├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
-├── Java-WebSocket-1.2.0-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
-├── okhttp-2.5.0.jar                            // LeanCloud 基本存储模块
-├── okio-1.6.0.jar                              // LeanCloud 基本存储模块
-├── qq.sdk.1.6.1.jar                            // LeanCloud SNS 模块
-└── weibo.sdk.android.sso.3.0.1-leancloud.jar   // LeanCloud SNS 模块
+├── AVOSCloud.zip                  // LeanCloud 核心组件，包含数据存储，推送，统计等
+├── AVOSCloudIM.zip                // LeanCloud 实时消息模块                          
+└── AVOSCloudCrashReporting.zip    // LeanCloud 崩溃报告
 ```
-
 根据上述包极其对应的功能模块，开发者可以自行根据需求导入对应的模块。
 
-##### LeanCloud 基本存储模块
+手动导入项目的过程请参考[快速入门](/start.html) 。
 
-* avoscloud-<版本号>.jar
-* okhttp-2.5.0.jar
-* okio-1.6.0.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
+这里要特别注意如下几点：
 
-##### LeanCloud 推送模块和实时聊天模块
-
-* LeanCloud 基础存储模块
-* avospush-版本号.jar
-* Java-WebSocket-1.2.0-leancloud.jar
-
-##### LeanCloud 统计模块
-
-* LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
-
-##### LeanCloud SNS 模块
-
-* LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
-
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
-
-**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
-
-#### Android Studio 
-首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
-
-1. 打开 `File` > `Project Structure` > `Modules` 对话框，点击 `Dependencies`
-2. 点击下方的小 `+` 号，选择你要导入的 SDK 包(xxxx.jar)，记得 `Scope` 选为 `Compile`
-3. 重复第 2 步，直到所有需要的包均已正确导入
-
-完成。
-
-Eclipse 的导入与一般的 jar 导入无本质区别，不做熬述。
+* 手动添加下列依赖库：
+  * SystemConfiguration.framework
+  * MobileCoreServices.framework
+  * CoreTelephony.framework
+  * CoreLocation.framework
+* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
+  * `-lz`
+  * `-licucore`
+  * `-ObjC`
+  * `-lc++` （Crash Reporting 模块需要）
+  * `-lsqlite3` （IM 模块需要）
 
 {% endblock %}
 
 {% block init_with_app_keys %}
 
-然后新建一个 `Java Class` ，名字叫做 `MyLeanCloudApp`,让它继承自 `Application` 类，实例代码如下:
+打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
 
 ```
-public class MyLeanCloudApp extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        AVOSCloud.initialize(this,"App ID","App Key");
-    }
-}
+#import <AVOSCloud/AVOSCloud.h>;
 ```
-将上述代码中的 App ID 以及 App Key 替换成从控制台复制粘贴的对应的数据即可。
 
-然后打开 `AndroidManifest.xml` 文件来配置 SDK 所需要的手机的访问权限以及声明刚才我们创建的 `MyLeanCloudApp` 类：
+然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
 
 ```
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+[AVOSCloud setApplicationId:@"YOUR App ID"
+              clientKey:@"YOUR App KEY"];
+```
 
-<application ...
-  android:name=".MyLeanCloudApp"
-  ... />
+如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
+
+```
+[AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 ```
 
 {% endblock %}
 
 {% block save_a_hello_world %}
-在 `MainActivity.java` 中的 `onCreate` 方法添加如下代码：
 
-```java
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        ...
-        // 测试 SDK 是否正常工作的代码
-        AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello,World!");
-        testObject.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if(e == null){
-                    Log.d("saved","success!");
-                }
-            }
-        });
-        
-        ...
-
+```
+AVObject *post = [AVObject objectWithClassName:@"TestObject"];
+[post setObject:@"words" forKey:@"Hello,World!"];
+[post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+      // 保存成功了！
     }
+}];
 ```
 
 然后，点击 `Run` 运行调试，真机和虚拟机均可。
