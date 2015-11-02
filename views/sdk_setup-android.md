@@ -98,7 +98,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可�
 
 {% endblock %}
 
-{% block sdk_download_link %}sdk_down.html{% endblock %}
+{% block sdk_download_link %}[SDK下载](sdk_down.html){% endblock %}
 
 {% block import_sdk %}
 
