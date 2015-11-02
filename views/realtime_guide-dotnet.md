@@ -1423,3 +1423,11 @@ await client.ConnectAsync();//Tom 登录客户端
 {% endblock %}
 
 {% block avoidCreatingDuplicateConversation %}>提示：每次调用 `CreateConversationAsync()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 conversationMembers 和 name 也是如此。因此必要时可以先使用 `AVIMConversationQuery` 进行查询，避免重复创建。{% endblock %}
+
+
+{% block connect_with_tag %}
+
+{% endblock %}
+
+{% block disconneted_by_server_with_sanme_tag %}
+{% endblock %}

@@ -1742,3 +1742,9 @@ imClient.delegate = self;
 ```
 {% endblock %}
 	
+{% block connect_with_tag %}
+
+{% endblock %}
+
+{% block disconneted_by_server_with_sanme_tag %}
+{% endblock %}
