@@ -6,7 +6,7 @@
 {% block libs_tool_automatic %}
 
 #### CocoaPods
-[CocoaPods](http://www.cocoapods.org/) 是开发 OS X 和 iOS 应用程序的一个第三方库的依赖管理工具。利用 [CocoaPods](http://www.cocoapods.org/)，可以定义自己的依赖关系 (称作 pods)，并且随着时间的变化，以及在整个开发环境中对第三方库的版本管理非常方便。
+[CocoaPods](http://www.cocoapods.org/) 是开发 OS X 和 iOS 应用程序的一个第三方库的依赖管理工具。利用 [CocoaPods](http://www.cocoapods.org/)，可以定义自己的依赖关系 (称作 pods)，并且随着时间的推移，它会让整个开发环境中对第三方库的版本管理变得非常方便。
 
 首先确保开发环境中已经安装了 Ruby（一般安装了 XCode，Ruby 会被自动安装上），如果没有安装请执行以下命令行：
 
@@ -43,18 +43,18 @@ $ sudo gem install cocoapods
 
 {% endblock %}
 
-{% block sdk_download_link %}[SDK下载](sdk_down.html){% endblock %}
+{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
 
 {% block import_sdk %}
 
-下载成功之后将获得如下几个压缩包:
+下载并解压成功之后将获得如下几个压缩包:
 
 ```
 ├── AVOSCloud.zip                  // LeanCloud 核心组件，包含数据存储，推送，统计等
 ├── AVOSCloudIM.zip                // LeanCloud 实时消息模块                          
 └── AVOSCloudCrashReporting.zip    // LeanCloud 崩溃报告
 ```
-根据上述包极其对应的功能模块，开发者可以自行根据需求导入对应的模块。
+根据上述包及其对应的功能模块，开发者可以根据需求自行导入对应的模块。
 
 手动导入项目的过程请参考[快速入门](/start.html) 。
 
@@ -65,7 +65,7 @@ $ sudo gem install cocoapods
   * MobileCoreServices.framework
   * CoreTelephony.framework
   * CoreLocation.framework
-* 在 Target 的 *Build Settings* 中，为 *Other Linker Flags* 增加：
+* 在 Target 的 **Build Settings** 中，为 **Other Linker Flags** 增加：
   * `-lz`
   * `-licucore`
   * `-ObjC`
@@ -86,6 +86,7 @@ $ sudo gem install cocoapods
 
 ```
 //如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+// applicationId 即 App Id，clientKey 是 App Key。
 [AVOSCloud setApplicationId:@"YOUR App ID"
               clientKey:@"YOUR App KEY"];
 ```

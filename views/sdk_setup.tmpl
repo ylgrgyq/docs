@@ -8,17 +8,19 @@
 {% block libs_tool_automatic %}{% endblock %}
 
 ### 手动安装
-下载最新版本的 {% block language %}{% endblock %} SDK 请点击:{% block sdk_download_link %}{% endblock %}
+请访问 {% block sdk_download_link %}{% endblock %} 来获取 {% block language %}{% endblock %} 最新版本的 SDK。
 
 {% block import_sdk %}{% endblock %}
 
 
 ## 初始化
+首先来获取App ID以及App Key。
+
 打开[**设置** > **应用 Key**](https://leancloud.cn/app.html?appid={{appid}}#/key)，如下图：
 
 ![setting_app_key](images/setting_app_key.png)
 
-获取 `App ID` 以及 `App Key`。
+获取 `App ID` 以及 `App Key`
 
 {% block init_with_app_keys %}{% endblock %}
 

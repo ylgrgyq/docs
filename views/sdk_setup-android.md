@@ -6,19 +6,19 @@
 {% block libs_tool_automatic %}
 
 #### Gradle
-Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android Studio 进行开发的时候，它会自动的在新建的项目里面包含一个自带的 `gradlew` 的命令行工具，并且我们推荐开发者使用自带的命令行工具，因为 Gradle 版本兼容的问题，很多开发者在即使是在正确配置了 Gradle 脚本之后，**错误**使用了最新版本或者是不兼容的版本到底无法正确地加载依赖包。
+Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android Studio 进行开发的时候，它会自动在新建的项目中包含一个自带的命令行工具 **gradlew**。我们推荐开发者使用这个自带的命令行工具，这是因为 Gradle 存在版本兼容的问题，很多开发者即使正确配置了 Gradle 脚本，但由于使用了最新版本或不兼容的 Gradle 版本而仍然无法成功加载依赖包。
 
 ##### Android Studio
 使用 Android Studio 创建一个新的项目的时候，它的目录结构如下：
 
 ```
 .
-├── app            // 应用源代码
+├── app                 // 应用源代码
     ├── ...
-    ├── build.gradle // 应用 Gradle 构建脚本
+    ├── build.gradle    // 应用 Gradle 构建脚本
     ├── ...
-├── builde.gradle    // 项目 Gradle 构建脚本
-├── YOUR-APP-NAME.iml   
+├── build.gradle        // 项目 Gradle 构建脚本
+├── YOUR-APP-NAME.iml   // YOUR-APP-NAME 为你的应用名称
 ├── gradle                   
 └── settings.gradle      
 ```
@@ -29,7 +29,7 @@ Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android
 buildscript {
     repositories {
         jcenter()
-    //这里是 LeanCloud 的包仓库
+        //这里是 LeanCloud 的包仓库
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
         }
@@ -43,7 +43,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-    //这里是 LeanCloud 的包仓库
+        //这里是 LeanCloud 的包仓库
         maven {
             url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
         }
@@ -81,7 +81,7 @@ dependencies {
     //avoscloud-feedback 为 LeanCloud 用户反馈包
     compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
 
-    //avoscloud-sns 为 LeanCloud 第三方登陆包
+    //avoscloud-sns 为 LeanCloud 第三方登录包
     compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 
@@ -93,8 +93,7 @@ dependencies {
 我们已经提供了官方的 [maven 仓库](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
 
 #### Eclipse 
-Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可以按照下一章节中的手动安装步骤导入到项目里。
-
+Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步骤](#手动安装) 将 SDK 导入到项目里。
 
 {% endblock %}
 
@@ -120,7 +119,7 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可�
 └── weibo.sdk.android.sso.3.0.1-leancloud.jar   // LeanCloud SNS 模块
 ```
 
-根据上述包极其对应的功能模块，开发者可以自行根据需求导入对应的模块。
+根据上述包及其对应的功能模块，开发者可以根据需求自行导入对应的模块。
 
 ##### LeanCloud 基本存储模块
 
@@ -133,13 +132,13 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可�
 ##### LeanCloud 推送模块和实时聊天模块
 
 * LeanCloud 基础存储模块
-* avospush-版本号.jar
+* avospush-<版本号>.jar
 * Java-WebSocket-1.2.0-leancloud.jar
 
 ##### LeanCloud 统计模块
 
 * LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
+* avosstatistics-<版本号>.jar
 
 ##### LeanCloud SNS 模块
 
@@ -149,24 +148,22 @@ Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载,然后可�
 
 我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
 
-**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
+**注意：如果需要使用美国站点，并且 SDK 版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，需要下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)，将其拷贝到项目的 `res/raw/` 之下。**
 
 #### Android Studio 
 首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
 
-1. 打开 `File` > `Project Structure` > `Modules` 对话框，点击 `Dependencies`
-2. 点击下方的小 `+` 号，选择你要导入的 SDK 包(xxxx.jar)，记得 `Scope` 选为 `Compile`
-3. 重复第 2 步，直到所有需要的包均已正确导入
+1. 打开 **File** > **Project Structure** > **Modules** 对话框，点击 **Dependencies**；
+2. 点击下方的**小 + 号**，选择要导入的 SDK 包（xxxx.jar），记得 **Scope** 选为 **Compile**；
+3. 重复第 2 步，直到所有需要的包均已正确导入。
 
-完成。
-
-Eclipse 的导入与一般的 jar 导入无本质区别，不做熬述。
+Eclipse 的导入与一般的 jar 导入无本质区别，不做赘述。
 
 {% endblock %}
 
 {% block init_with_app_keys %}
 
-然后新建一个 `Java Class` ，名字叫做 `MyLeanCloudApp`,让它继承自 `Application` 类，实例代码如下:
+然后新建一个 Java Class ，名字叫做 **MyLeanCloudApp**,让它继承自 **Application** 类，实例代码如下:
 
 ```
 public class MyLeanCloudApp extends Application {
@@ -175,6 +172,7 @@ public class MyLeanCloudApp extends Application {
     public void onCreate() {
         super.onCreate();
 
+        // 初始化参数依次为 this, AppId, AppKey
         AVOSCloud.initialize(this,"App ID","App Key");
     }
 }

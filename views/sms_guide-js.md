@@ -44,7 +44,7 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 ```
 {% endblock %}
 
-{% block opration_request_sms_code %}
+{% block operation_request_sms_code %}
 
 ```javascript
 AV.Cloud.requestSmsCode({
@@ -67,7 +67,7 @@ AV.Cloud.requestSmsCode({
 
 {% endblock %}
 
-{% block opration_verify_sms_code %}
+{% block operation_verify_sms_code %}
 
 ```javascript
 AV.Cloud.verifySmsCode('6位数字验证码', '11 位手机号码').then(function(){

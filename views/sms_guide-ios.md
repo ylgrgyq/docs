@@ -44,7 +44,7 @@
 ```
 {% endblock %}
 
-{% block opration_request_sms_code %}
+{% block operation_request_sms_code %}
 
 ```objc
     [AVOSCloud requestSmsCodeWithPhoneNumber:@"13613613613"
@@ -61,7 +61,7 @@
 ```
 {% endblock %}
 
-{% block opration_verify_sms_code %}
+{% block operation_verify_sms_code %}
 
 ```objc
 [AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"18612345678" callback:^(BOOL succeeded, NSError *error) {

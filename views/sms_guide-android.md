@@ -71,7 +71,7 @@
 ```
 {% endblock %}
 
-{% block opration_request_sms_code %}
+{% block operation_request_sms_code %}
 
 ```java
         AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(), "某应用", "具体操作名称", 10, new RequestMobileCodeCallback() {
@@ -87,7 +87,7 @@
 ```
 {% endblock %}
 
-{% block opration_verify_sms_code %}
+{% block operation_verify_sms_code %}
 
 ```java
         AVOSCloud.verifyCodeInBackground("777777", "13888888888", new AVMobilePhoneVerifyCallback() {

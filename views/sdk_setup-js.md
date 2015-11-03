@@ -6,17 +6,17 @@
 
 #### npm 安装
 
-LeanCloud JavaScript SDK 也可在 Nodejs 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
+LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用云引擎 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
 
 ```
-// 存储服务
+# 存储服务
 $ npm install avoscloud-sdk
-// 实时消息服务
+# 实时消息服务
 $ npm install leancloud-realtime
 ```
 如果因为网络原因，无法通过官方的 npm 站点下载，推荐可以通过 [CNPM](https://cnpmjs.org/) 来下载，操作步骤如下：
 
-首先执行命令：
+首先，在本地安装 cnpm 工具，执行如下命令：
 
 ```
 $ npm install -g cnpm --registry=http://r.cnpmjs.org
@@ -26,9 +26,9 @@ $ npm install -g cnpm --registry=http://r.cnpmjs.org
 然后执行：
 
 ```
-// 存储服务
+# 存储服务
 $ cnpm install -g avoscloud-sdk 
-// 实时消息服务
+# 实时消息服务
 $ cnpm install leancloud-realtime
 ```
 
@@ -43,19 +43,19 @@ $ bower install leancloud-javascript-sdk
 #### CDN 加速
 
 ```
-<script src="https://cdn1.lncld.net/static/js/av-mini-{版本号}.js"></script>
+<script src="https://cdn1.lncld.net/static/js/av-mini-<版本号>.js"></script>
 // 或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{版本号}.js"></script>
+<script src="https://cdn1.lncld.net/static/js/av-core-mini-<版本号>.js"></script>
 ```
 
 #### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 `Web 安全域名`。配置方式：进入对应的 app，然后选择 `设置`——`安全中心`——`Web 安全域名`。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
+如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**，配置方式为：进入控制台，选择应用，再选择 **设置** > **安全中心** > **Web 安全域名**。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
 
 具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
 {% endblock %}
 
-{% block sdk_download_link %}[SDK下载](sdk_down.html){% endblock %}
+{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
 
 {% block import_sdk %}
 
@@ -80,11 +80,9 @@ LeanCloud JavaScript SDK 是分模块使用的，可根据下列表格对应选�
 {% block init_with_app_keys %}
 如果是在前端项目里面使用 LeanCloud JavaScript SDK，那么可以在页面加载的时候调用一下初始化的函数：
 
+```化参数依次为 AppId, AppKey
+AV.initialize('YOUR APP ID', 'YOUR APP KEY');
 ```
-AV.initialize('NdfnuwEOgDswF9Lic86vFehT', 'XuxMjOgq5L2dN3dtCwhej7oC');
-```
-
-
 
 {% endblock %}
 
