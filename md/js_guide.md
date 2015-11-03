@@ -16,9 +16,9 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 建议你在阅读本文档之前，阅读我们提供的[快速入门](./start.html)文档，获取 LeanCloud 使用配置和第一印象。
 
-### 应用
+## SDK 安装
+我们提供了一个针对 JavaScript SDK 详细的安装指南：[LeanCloud JavaScript SDK 安装指南](sdk_setup-js.html)
 
-LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。同时，为了便于开发调试，LeanCloud 也为每一个应用提供了测试和生产两套环境。
 
 ### 贡献
 
@@ -27,38 +27,6 @@ LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自�
 SDK 仓库地址：[https://github.com/leancloud/javascript-sdk](https://github.com/leancloud/javascript-sdk)，相关 [change log](https://github.com/leancloud/javascript-sdk/blob/master/changelog.md)
 
 本文档仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
-### npm 安装
-
-可以通过 npm 安装。
-
-该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
-
-```
-$ npm install avoscloud-sdk
-```
-
-### bower 安装
-
-也支持 bower 安装
-
-```
-$ bower install leancloud-javascript-sdk
-```
-
-### CDN 加速
-
-```
-<script src="https://cdn1.lncld.net/static/js/av-mini-{版本号}.js"></script>
-// 或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{版本号}.js"></script>
-```
-
-### Web 安全
-
-如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**。配置方式：进入对应的 app，然后选择 **设置 > 安全中心 > Web 安全域名**。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
-
-具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
 
 ## 对象
 
