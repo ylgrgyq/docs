@@ -115,7 +115,8 @@ var initGitHubLinks = function() {
 
 // Init GitHub contributors
 function getGitHubContributors() {
-  var url = "https://api.github.com/repos/leancloud/docs/commits?path=md/" + window.location.pathname.match(/.*\/(.+).html/i)[1] + ".md"
+  var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
+  var url = "https://api.github.com/repos/leancloud/docs/commits?path=md/" + currentPath + ".md&per_page=10000000"
   var contributors = [];
   var appendTarget = $("#content h1");
   $.getJSON(url, function(data) {
