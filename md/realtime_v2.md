@@ -386,9 +386,13 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 
 参考 [实时通信 REST API](./realtime_rest_api.html)。
 
-## 系统对话消息结构
+## 系统对话
 
-### _SysMessage
+系统对话可以用于实现机器人自动回复、公众号、服务账号等功能。在我们的 [官方聊天 Demo](http://leancloud.github.io/leanmessage-demo/) 中就有一个使用系统对话 hook 实现的机器人 MathBot，它能计算用户发送来的数学表达式并返回结果，[其服务端源码](https://github.com/leancloud/leanmessage-demo/tree/master/server) 可以从 GitHub 上获取。
+
+### 系统对话消息结构
+
+#### _SysMessage
 
 用户发给系统对话的消息会存储在 _SysMessage 表中，各字段含义如下：
 
@@ -400,7 +404,7 @@ from | 发消息用户的 Client ID
 fromIp | 发消息用户的 IP
 data | 消息内容
 
-### Web Hook
+#### Web Hook
 
 开发者可以自定义 Web Hook 来实时接收用户发给系统对话的消息，消息的数据结构与上文所述的 _SysMessage 一致。
 
