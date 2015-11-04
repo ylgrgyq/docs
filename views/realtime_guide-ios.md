@@ -1767,4 +1767,4 @@ imClient.delegate = self;
     }];
 ```
 
-各种查询缓存策略的行为可以参考[ AVQuery 缓存查询](./ios_os_x_guide.html#缓存查询)一节。{% endblock %}
+各种查询缓存策略的行为可以参考 [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}
