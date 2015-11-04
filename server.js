@@ -1,5 +1,5 @@
 require('coffee-script/register')
-var app = require('./app');
+var app = require('./app.coffee');
 
 var PORT = parseInt(process.env.PORT || 3001);
 var server = app.listen(PORT, function () {
