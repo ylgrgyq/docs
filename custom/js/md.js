@@ -143,23 +143,28 @@ function getGitHubContributors() {
       contributors.push(uniqArr[key]);
     }
 
-    $("<ul />", {
-      "class": "github-contributors"
-    }).insertAfter(appendTarget);
+    if($.isEmptyObject(contributors)) {
+      return;
+    }
+    else {
+      $("<ul />", {
+        "class": "github-contributors"
+      }).insertAfter(appendTarget);
 
-    $.each(contributors, function(index, item) {
-      $("<li />").append(
-        $("<a />", {
-          "href": item.url,
-          "title": item.handle
-        }).append(
-          $("<img />", {
-            "src": item.avatar,
-            "alt": item.handle
-          })
-        )
-      ).appendTo($(".github-contributors"));
-    })
+      $.each(contributors, function(index, item) {
+        $("<li />").append(
+          $("<a />", {
+            "href": item.url,
+            "title": item.handle
+          }).append(
+            $("<img />", {
+              "src": item.avatar,
+              "alt": item.handle
+            })
+          )
+        ).appendTo($(".github-contributors"));
+      })
+    }
 
     console.log("fetch contributors success");
   })
