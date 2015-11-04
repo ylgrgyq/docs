@@ -1173,7 +1173,7 @@ student.name = @"小明";
 ``` objc
 [Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
         Student *student = [Student currentUser];
-        studen.displayName = @"YOUR_DISPLAY_NAME";
+        student.displayName = @"YOUR_DISPLAY_NAME";
     }];
 ```
 
