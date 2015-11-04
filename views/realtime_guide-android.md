@@ -538,9 +538,11 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
     });
 ```
 {% endblock %}
+
 {% block videoMessage_received_intro %}
 视频消息的接收与图像消息一样，它的元数据都可以通过 `getFileMetaData()` 来获取。
 {% endblock %}
+
 {% block fileMessage_sent %}
 ```
 
@@ -834,7 +836,6 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
-
 {% block message_Relation_intro %}
 消息类型之间的关系
 
@@ -989,6 +990,7 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 }
 ```
 {% endblock %}
+
 {% block api_send_message_method_intro %}
 #### 消息发送接口
 在 Android SDK 中，发送消息的方法是：`AVIMConversation.sendMessage`，它最核心的一个重载声明如下：
@@ -1018,6 +1020,7 @@ public void sendMessage(AVIMMessage message, AVIMConversationCallback callback)
 其实本质上，调用 `sendMessage(message, callback)` 就等价于调用 `sendMessage(message,1, callback)` ，因为一般情况下消息存在的形式多以**非暂态**消息为主
 
 {% endblock %}
+
 {% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
 {% block messagePolicy_received_method %}{% endblock %}
@@ -1099,7 +1102,6 @@ jerry.open(new AVIMClientCallback() {
 `AVIMConversationEventHandler` 的实现和定义在下一节[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
 
 {% endblock %}
-
 
 {% block conversation_join %}
 
@@ -1866,7 +1868,6 @@ tom.open(new AVIMClientCallback(){
 ```
 {% endblock %}
 
-
 {% block conversation_query_count %}
 ```
 - 初始化 ClientId = Tom
@@ -1948,7 +1949,8 @@ private void TomQueryWithLimit() {
 ```
 {% endblock %}
 
-{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}对话
+{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}
+
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
 {% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
@@ -2137,3 +2139,28 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
 }
 ```
 {% endblock %}
+
+{% block conversation_query_cache %}#### 缓存查询
+
+通常，将查询结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。或者为了节省用户流量，在应用打开的第一次查询走网络，之后的查询可优先走本地缓存。
+
+值得注意的是，默认的策略是先走本地缓存的再走网络的，缓存时间是一小时。AVIMConversationQuery 中有如下方法：
+```java
+  // 设置 AVIMConversationQuery的查询策略
+  public void setQueryPolicy(AVQuery.CachePolicy policy);
+```
+
+有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
+
+```java
+    AVIMConversationQuery query = client.getQuery();
+    query.setQueryPolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+    query.findInBackground(new AVIMConversationQueryCallback() {
+      @Override
+      public void done(List<AVIMConversation> conversations, AVIMException e) {
+        
+      }
+    });
+```
+
+各种查询缓存策略的行为可以参考[ AVQuery 缓存查询](./android_guide.html#缓存查询)一节。{% endblock %}
