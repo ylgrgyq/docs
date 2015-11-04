@@ -1,8 +1,7 @@
 {% extends "./sms_guide.tmpl" %}
 {% block language %}Android{% endblock %}
 {% block avuser_signup_send_sms %}
-
-```java
+  ```java
         AVUser user = new AVUser();
         user.setUsername("hjiang");
         user.setPassword("f32@ds*@&dsa");
@@ -20,12 +19,11 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
-
-```java
+  ```java
         AVUser.verifyMobilePhoneInBackground("123456", new AVMobilePhoneVerifyCallback() {
             @Override
             public void done(AVException e) {
@@ -36,12 +34,11 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block avuser_request_sms_code %}
-
-```java
+  ```java
         AVUser.requestMobilePhoneVerifyInBackground("13800000000", new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
@@ -52,12 +49,11 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block avuser_verify_sms_code %}
-
-```java
+  ```java
         AVUser.verifyMobilePhoneInBackground("654321", new AVMobilePhoneVerifyCallback() {
             @Override
             public void done(AVException e) {
@@ -68,12 +64,11 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block operation_request_sms_code %}
-
-```java
+  ```java
         AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(), "某应用", "具体操作名称", 10, new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
@@ -84,12 +79,11 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block operation_verify_sms_code %}
-
-```java
+  ```java
         AVOSCloud.verifyCodeInBackground("777777", "13888888888", new AVMobilePhoneVerifyCallback() {
             @Override
             public void done(AVException e) {
@@ -100,17 +94,16 @@
                 }
             }
         });
-```
+  ```
 {% endblock %}
 
 {% block send_sms_by_template %}
-
 ```java
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("service_name", "月度周刊");
         parameters.put("order_id", "7623432424540");
         AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(),
-                "MyNoticeTemplate",
+                "Notice_Template",
                 parameters,
                 new RequestMobileCodeCallback() {
                     @Override
@@ -126,6 +119,7 @@
 {% endblock %}
 
 {% block sms_demo %}
-### Demo
-为了方便开发者理解短信服务流程，我们特地开发了专门针对短信服务的 [LeanCloud SMS Demo](https://github.com/wujun4code/LeanCloud_SMS_Tutorial) ，开发者可以通过代码学习和了解。
+## Demo
+
+为了方便开发者理解短信服务流程，我们特地开发了专门针对短信服务的 [LeanCloud SMS Demo](https://github.com/wujun4code/LeanCloud_SMS_Tutorial)，开发者可以通过代码学习和了解。
 {% endblock %}
