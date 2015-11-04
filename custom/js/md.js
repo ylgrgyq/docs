@@ -151,19 +151,23 @@ function getGitHubContributors() {
         "class": "github-contributors"
       }).insertAfter(appendTarget);
 
+      var wrap = $(".github-contributors");
+
       $.each(contributors, function(index, item) {
         $("<li />").append(
           $("<a />", {
             "href": item.url,
-            "title": item.handle
+            "data-title": item.handle
           }).append(
             $("<img />", {
               "src": item.avatar,
               "alt": item.handle
             })
           )
-        ).appendTo($(".github-contributors"));
-      })
+        ).appendTo(wrap);
+      });
+
+      $(wrap).find("a").tooltip();
     }
 
     console.log("fetch contributors success");
