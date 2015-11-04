@@ -71,7 +71,7 @@
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:@"月度周刊" forKey:@"serviceName"];
     [dict setObject:@"7623432424540" forKey:@"orderId"];
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"template_notice" variables:dict callback:^(BOOL succeeded, NSError *error) {
+    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Notice_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             //操作成功
         } else {
