@@ -30,3 +30,11 @@ md/acl_guide-python.md
 md/acl_quick_start-android.md
 md/acl_quick_start-ios.md
 md/acl_quick_start-js.md
+
+md/sdk_setup-android.md
+md/sdk_setup-ios.md
+md/sdk_setup-js.md
+
+md/sms_guide-android.md
+md/sms_guide-ios.md
+md/sms_guide-js.md
