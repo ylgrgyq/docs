@@ -113,6 +113,59 @@ var initGitHubLinks = function() {
   $(".sidebar-wrapper #toc").append("<li class=sidebar-meta><a href='#' class=do-expand-all>展开所有</a> <a href='#top' class=back-to-top>返回顶部</a></li>");
 }
 
+// Init GitHub contributors
+function getGitHubContributors() {
+  var url = "https://api.github.com/repos/leancloud/docs/commits?path=md/" + window.location.pathname.match(/.*\/(.+).html/i)[1] + ".md"
+  var contributors = [];
+  var appendTarget = $("#content h1");
+  $.getJSON(url, function(data) {
+    $.each(data, function(index, item) {
+      if(item.author) {
+        contributors.push({
+          handle: item.author.login,
+          url: item.author.html_url,
+          avatar: item.author.avatar_url
+        });
+      }
+    });
+  })
+  .done(function() {
+    // Make contributor array of objects unique
+    var uniqArr = {};
+    for ( var i=0, n=contributors.length; i < n; i++ ) {
+      var item = contributors[i];
+      uniqArr[item.handle] = item;
+    }
+
+    contributors = new Array();
+    for ( var key in uniqArr ) {
+      contributors.push(uniqArr[key]);
+    }
+
+    $("<ul />", {
+      "class": "github-contributors"
+    }).insertAfter(appendTarget);
+
+    $.each(contributors, function(index, item) {
+      $("<li />").append(
+        $("<a />", {
+          "href": item.url,
+          "title": item.handle
+        }).append(
+          $("<img />", {
+            "src": item.avatar,
+            "alt": item.handle
+          })
+        )
+      ).appendTo($(".github-contributors"));
+    })
+
+    console.log("fetch contributors success");
+  })
+  .fail(function() { console.log("fetch contributors error"); })
+  .always(function() { console.log("fetch contributors complete"); });
+}
+
 function sidebarExpandAll() {
   var el = $(".do-expand-all");
   var target = $(".sidebar-wrapper");
@@ -147,6 +200,7 @@ $(function() {
   addSidebarHoverListener();
   initGitHubLinks();
   sidebarExpandAll();
+  getGitHubContributors();
   // initSmoothScroll();
 
   var arr = $('#toc ul').parents('li');
