@@ -91,7 +91,7 @@ public class MyApplication extends Application{
 
 ```
 public class MyApplication extends Application{
- public static class CustomMessageHandler extends AVIMMessageHandler{
+ public static class CustomMessageHandler implements AVIMMessageHandler{
    //接收到消息后的处理逻辑 
    @Override
    public void onMessage(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
