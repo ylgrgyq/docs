@@ -116,9 +116,9 @@ realtime.config({
 });
 ```
 
-##示例代码
+## 示例代码
 
-如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
+如果你觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
@@ -174,7 +174,7 @@ realtimeObj.on('reuse', function() {
     console.log('正在重新连接。。。');
 });
 
-// 当 Conversation 被创建时触发，当然您可以使用回调函数来处理，不一定要监听这个事件
+// 当 Conversation 被创建时触发，当然你可以使用回调函数来处理，不一定要监听这个事件
 realtimeObj.on('create', function(data) {
 
     // 向这个 Conversation 添加新的用户
@@ -245,17 +245,15 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 ### Web 安全域名
 
-如果是纯前端使用 JavaScript SDK，请务必配置 **Web 安全域名**`**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+如果是纯前端使用 JavaScript SDK，请务必配置 **Web 安全域名**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
 
-配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
-
-详细请看「[数据和安全](data_security.html)」指南中的「Web 安全域名」部分。
+详细请看[《数据和安全 - Web 安全域名》](data_security.html#Web_安全域名)。
 
 ### 权限和认证
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看「[实时通信开发指南](realtime_v2.html)」中的 「权限和认证」部分。
+详细请看《[实时通信开发指南 - 权限和认证](realtime_v2.html#权限和认证)》。
 
 ### 防御 XSS
 
