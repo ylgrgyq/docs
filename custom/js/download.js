@@ -16,7 +16,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
         });
     });
 
-    $scope.getDownSize = function(type){
+    $scope.getDownSize = function(type, subType){
         var size = 0;
         if($scope.download[type]){
             angular.forEach($scope.download[type].required,function(v,k){
@@ -29,6 +29,10 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
                     size += v.size;
                 }
             });
+        }
+        if (subType == 'Dynamic') {
+          // 动态库大小大约是静态库的一半
+          size /= 2;
         }
         return prettyBytes(size);
 
@@ -45,7 +49,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
         }
         iframe.src = url;
     };
-    $scope.download = function (type){
+    $scope.download = function (type, subType){
         var components = [];
         angular.forEach($scope.download[type].required,function(v,k){
             if($scope.downselect[type][v.name]){
@@ -57,8 +61,12 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
                 components.push(v.name);
             }
         });
-        var url = "//download.avoscloud.com/1/downloadSDK?type="+type+"&components="+components.join(",")+"&version=v"+$scope.sdkversion[type];
-        downloadURL(url)
+        if (!subType) {
+          subType = '';
+        }
+        var url = "//download.avoscloud.com/1/downloadSDK?type="+type+"&components="+components.join(",")+"&version=v"+$scope.sdkversion[type]+"&subType="+subType;
+        console.log(url);
+        //downloadURL(url)
     }
 }]);
 

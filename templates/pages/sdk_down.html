@@ -35,9 +35,13 @@
 
           <hr>
 
-          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios')">
-      下载 <span>- {{getDownSize('ios')}}</span>
-      </a>
+          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Static')">
+          下载静态库<span>- {{getDownSize('ios', 'Static')}}</span>
+          </a>
+
+          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Dynamic')">
+          下载动态库<span>- {{getDownSize('ios', 'Dynamic')}}</span>
+          </a>
 
           <ul class="list-inline">
             <li>
