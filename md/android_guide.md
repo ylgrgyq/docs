@@ -830,7 +830,7 @@ post.setPubUserCertificate(3);
 创建一个 `AVObject` 的子类很简单：
 
 * 首先声明一个子类继承自 `AVobject`。
-* 添加`@AVClassName`注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
+* 添加 `@AVClassName` 注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
 * 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 `AVObject` 的字段。
 * 在你的应用初始化的地方，在调用 `AVOSCloud.initialize()` 之前注册子类 `AVObject.registerSubclass(YourClass.class)`。
 
@@ -860,7 +860,7 @@ public class App extends Application {
 }
 ```
 
-### 访问器，修改器和方法
+### 访问器、修改器和方法
 
 添加方法到 `AVObject` 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
 
@@ -947,7 +947,7 @@ query.findInBackground(new FindCallback<Post>() {
 
 ### AVUser 的子类化
 
-`AVUser` 作为 `AVObject` 的子类，同样允许子类化，你可以定义自己的 `User` 对象，不过比起 `AVObject` 子类化会更简单一些，只要继承 `AVUser` 就可以了：
+`AVUser` 作为 `AVObject` 的子类，同样允许子类化，你可以定义自己的 User 对象，不过比起 `AVObject` 子类化会更简单一些，只要继承 `AVUser` 就可以了：
 
 ```java
 import com.avos.avoscloud.AVObject;
@@ -964,9 +964,15 @@ public class MyUser extends AVUser {
 }
 ```
 
-不需要添加 `@AVClassname` 注解，所有 `AVUser` 的子类的类名都是内建的`_User`。同样也不需要注册 `MyUser`。
+不需要添加 `@AVClassname` 注解，所有 `AVUser` 的子类的类名都是内建的 `_User`。同样也不需要注册 `MyUser`。
 
-注册跟普通的 `AVUser` 对象没有什么不同，但是登陆如果希望返回自定义的子类，必须这样：
+当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 `AVOSCloud.initialize()` 之前添加：
+
+```
+AVUser.alwaysUseSubUserClass(subUser.class);
+```
+
+注册跟普通的 `AVUser` 对象没有什么不同，但是登录如果希望返回自定义的子类，必须这样：
 
 ```java
 MyUser cloudUser = AVUser.logIn(username, password,
@@ -1511,7 +1517,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       }
     });
 ```
-修改成功以后，用户就可以使用新密码登陆了
+修改成功以后，用户就可以使用新密码登录了。
 
 
 ### 查询
