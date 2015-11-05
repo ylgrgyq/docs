@@ -8,137 +8,9 @@
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
-## 版本变迁
+## SDK 安装
 
-从 2.4.0 开始, 我们重新设计了 SDK 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包——除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar、avosstatistics.jar 等都可以在用到该组件时才导入。
-
-## 模块与 SDK 包
-
-我们已经提供了官方的 maven 仓库：[http://mvn.leancloud.cn/nexus/](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
-
-### Android Studio 用户
-
-从 2.6.10.3 开始, LeanCloud Android SDK 可以使用 gradle 来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
-
-在 Android Studio 的配置中间，您首先需要在项目下的 build.gradle 中配置成类似：
-
-```
-buildscript {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-    }
-}
-```
-
-之后需要在 app 目录下的 build.gradle 中根据需要进行相应的配置：
-
-```
-android {
-    //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-
-    //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
-
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-    
-    //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+@aar'
-
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
-
-    //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-
-    //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'    
-}
-```
-
-### Eclipse 用户
-
-Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
-
-#### LeanCloud 基本存储模块
-
-* avoscloud-<版本号>.jar
-* android-async-http-1.4.6.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
-
-#### LeanCloud 推送模块和实时聊天模块
-
-* LeanCloud 基础存储模块
-* avospush-版本号.jar
-
-#### LeanCloud 统计模块
-
-* LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
-* Java-WebSocket-1.2.0-leancloud.jar
-
-#### LeanCloud SNS 模块
-
-* LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
-
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
-
-**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
-
-
-## 简介
-
-LeanCloud 平台为移动应用提供了一个完整的后端解决方案，目标是让开发者不需要再编写和维护传统的服务器代码。我们提供的 SDK 开发包也非常轻量，让开发者用最简单的方式使用 LeanCloud 平台的服务。
-
-## 应用程序初始化
-
-以下为 LeanCloud Android SDK 需要的所有的权限，请检查你的 AndroidManifest.xml。此外千万不要忘记在 AndroidManifest.xml 中注明 application name。过去用户反馈的很多问题都是因为这一步没有正确配置导致的。
-
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-```
-
-在 LeanCloud 平台注册后，你创建的每个应用都有自己的 ID 和 Key，在你的代码中将凭此 ID 和 Key 来访问 LeanCloud 的服务。你可以在一个帐号中创建多个应用。
-
-在你的应用访问 LeanCloud 之前，你需要使用上述的 ID 和 Key 在代码中对 LeanCloud SDK 进行初始化。你需要继承 [`Application`](http://developer.android.com/reference/android/app/Application.html) 类，并且在 `onCreate()` 方法中调用 `AVOSCloud.initialize(this, '<AppId>', '<AppKey>')` 来进行初始化。
+我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
 
 ## 数据的存储
 
@@ -869,7 +741,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`...，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
 
 ### 删除查询结果
 
@@ -1322,7 +1194,7 @@ file.saveInBackground(new SaveCallback() {
 
 ```java
 AVFile avFile = avObject.getAVFile("attached");
-AVFile.getDataInBackground(new GetDataCallback(){
+avFile.getDataInBackground(new GetDataCallback(){
   public void done(byte[] data, AVException e){
     //process data or exception.
   }
@@ -1644,6 +1516,8 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 ### 查询
 
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+
 查询用户，你需要使用特殊的用户查询对象来完成：
 
 ```java
@@ -1709,8 +1583,10 @@ query.setLimit(10);            //获取最接近用户地点的10条微博
 ArrayList<AVObject> nearPosts = query.find();
 ```
 
-在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
+在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending()` 或 `orderByDescending()` 方法，则按距离排序会被新排序覆盖。**
+
 要限制查询指定距离范围的数据可以使用 `whereWithinKilometers`、`whereWithinMiles` 或 `whereWithinRadians` 方法。
+
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java

@@ -77,7 +77,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 
 ### 配置
 
-请确保你的 AndroidManifest.xml 包含如下内容
+请确保你的 AndroidManifest.xml 的`<application>`中包含如下内容
 ```xml
 <service android:name="com.avos.avoscloud.PushService"
   android:exported="true"/>
@@ -98,6 +98,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
     <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED" />
         <action android:name="android.intent.action.USER_PRESENT" />
+        <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
     </intent-filter>
 </receiver>
 ```

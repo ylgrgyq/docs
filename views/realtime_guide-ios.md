@@ -12,17 +12,17 @@
 
 [快速入门](/start.html) 会教你如何在一个项目中安装 SDK。
 
-[CocoaPods](http://www.cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
+[CocoaPods](https://cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
 
-首先确保开发环境中已经安装了 Ruby。一般安装了 XCode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](http://ruby.taobao.org/)，在终端执行下列命令：
+首先确保开发环境中已经安装了 Ruby。一般安装了 Xcode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](https://ruby.taobao.org/)，在终端执行下列命令：
 
 ```sh
-$ gem sources --remove https://rubygems.org/
-$ gem sources -a http://ruby.taobao.org/
+$ gem sources -r https://rubygems.org/
+$ gem sources -a https://ruby.taobao.org/
 # 请确保下列命令的输出只有 ruby.taobao.org
 $ gem sources -l
 *** CURRENT SOURCES ***
-http://ruby.taobao.org
+https://ruby.taobao.org
 ```
 
 通过下列命令，安装或更新 CocoaPods（可能需要输入登录密码）：
@@ -74,6 +74,22 @@ pod install
     [AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
     ...
 }
+```
+
+### 导入模块
+
+在使用到 IM 模块的地方，应该导入该模块。
+
+在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
+
+```objc
+#import <AVOSCloudIM/AVOSCloudIM.h>
+```
+
+在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
+
+```swift
+import AVOSCloudIM
 ```
 {% endblock %}
 
@@ -729,7 +745,7 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 ```
 {% endblock %}
 
-{% block conversation_creation_api_ios %}
+{% block conversation_creation_api %}
 ### 创建对话
 
 有两个方法可以创建对话：
@@ -791,7 +807,6 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 {% block api_method_conversation_quit %} `AVIMConversation.quitWithCallback`{% endblock %}
 
 {% block api_method_conversation_kick %} `AVIMConversation.removeMembersWithClientIds`{% endblock %}
-
 
 {% block conversation_members_change_notice_intro %}
 在 iOS 中，开发者需要实现 `AVIMClientDelegate` 代理，并且为 AVIMClient 指定该代理的一个实例。
@@ -1143,6 +1158,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 }
 ```
 {% endblock %}
+
 {% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
 {% block conversation_tag %}
@@ -1232,6 +1248,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 }
 ```
 {% endblock %}
+
 {% block pattern_conservation_query_default_property %}
 
 ```
@@ -1493,6 +1510,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 {% endblock %}
 
 {% block chatroom_query_method %} `[AVIMConversationQuery whereKey:]` {% endblock %}
+
 {% block create_query_instance_method %}`[AVIMClient conversationQuery]`{% endblock %}
 
 {% block chatroom_query_method2 %} `whereKey:` {% endblock %}
@@ -1725,4 +1743,28 @@ imClient.delegate = self;
 }];
 ```
 {% endblock %}
-	
+
+{% block conversation_query_cache %}#### 缓存查询
+
+通常，将查询结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。或者为了节省用户流量，在应用打开的第一次查询走网络，之后的查询可优先走本地缓存。
+
+值得注意的是，默认的策略是先走本地缓存的再走网络的。AVIMConversationQuery 中有如下属性：
+```objc
+// 设置缓存策略，默认是 kAVCachePolicyCacheElseNetwork
+@property (nonatomic) AVCachePolicy cachePolicy;
+
+// 设置缓存的过期时间，默认是 1 小时（1 * 60 * 60）
+@property (nonatomic) NSTimeInterval cacheMaxAge;
+```
+
+有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
+
+```objc
+    AVIMConversationQuery *query = [[AVIMClient defaultClient] conversationQuery];
+    query.cachePolicy = kAVCachePolicyNetworkElseCache;
+    [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+        
+    }];
+```
+
+各种查询缓存策略的行为可以参考 [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}

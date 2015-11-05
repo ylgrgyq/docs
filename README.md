@@ -1,6 +1,10 @@
 # LeanCloud Documentation
 [![Build Status](https://travis-ci.org/leancloud/docs.svg)](https://travis-ci.org/leancloud/docs)
 [![devDependency Status](https://david-dm.org/leancloud/docs/dev-status.svg)](https://david-dm.org/leancloud/docs#info=devDependencies)
+[![Issue Stats](http://issuestats.com/github/leancloud/docs/badge/pr?style=flat)](http://issuestats.com/github/leancloud/docs)
+[![Issue Stats](http://issuestats.com/github/leancloud/docs/badge/issue?style=flat)](http://issuestats.com/github/leancloud/docs)
+
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/leancloud/docs?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 
 LeanCloud 开发者文档
 
@@ -39,6 +43,11 @@ $ npm install
 ```bash
 $ grunt server
 ```
+
+## 版本更新
+
+- 请通过 `grunt release` 命令自动 bump `package.json`、自动打标签，请不要手动更新
+- 请按照 `CONVENTIONS.md` 的格式书写有意义的 commits，`CHANGELOG.md` 会被自动生成，请不要手动修改
 
 ## 一套模板多份渲染
 

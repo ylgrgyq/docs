@@ -58,7 +58,7 @@ public class MyApplication extends Application{
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          // 创建与Jerry之间的会话
+          // 创建与Jerry之间的对话
           client.createConversation(Arrays.asList("Jerry"), "Tom & Jerry", null,
               new AVIMConversationCreatedCallback() {
 
@@ -161,7 +161,7 @@ public void jerryReceiveMsgFromTom(){
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          // 创建与 Jerry，Bob,Harry,William 之间的会话
+          // 创建与 Jerry，Bob,Harry,William 之间的对话
           client.createConversation(Arrays.asList("Jerry","Bob","Harry","William"), "Tom & Jerry & friedns", null,
               new AVIMConversationCreatedCallback() {
 
@@ -538,9 +538,11 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
     });
 ```
 {% endblock %}
+
 {% block videoMessage_received_intro %}
 视频消息的接收与图像消息一样，它的元数据都可以通过 `getFileMetaData()` 来获取。
 {% endblock %}
+
 {% block fileMessage_sent %}
 ```
 
@@ -834,7 +836,6 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
-
 {% block message_Relation_intro %}
 消息类型之间的关系
 
@@ -989,6 +990,7 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 }
 ```
 {% endblock %}
+
 {% block api_send_message_method_intro %}
 #### 消息发送接口
 在 Android SDK 中，发送消息的方法是：`AVIMConversation.sendMessage`，它最核心的一个重载声明如下：
@@ -1018,6 +1020,7 @@ public void sendMessage(AVIMMessage message, AVIMConversationCallback callback)
 其实本质上，调用 `sendMessage(message, callback)` 就等价于调用 `sendMessage(message,1, callback)` ，因为一般情况下消息存在的形式多以**非暂态**消息为主
 
 {% endblock %}
+
 {% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
 {% block messagePolicy_received_method %}{% endblock %}
@@ -1047,6 +1050,36 @@ jerry.open(new AVIMClientCallback() {
 ```
 {% endblock %}
 
+{% block conversation_creation_api %}
+### 创建对话
+创建对话的接口在 `AVIMClient` 中共有 4 个方法重写，下面我们以参数最详尽的这个重写来说明其中每个参数的意义。
+
+```
+  /**
+   * 创建或查询一个已有 conversation
+   *
+   * @param members 对话的成员
+   * @param name 对话的名字
+   * @param attributes 对话的额外属性
+   * @param isTransient 是否是暂态对话
+   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
+   *                 为 false 时，则一直为创建新的对话
+   *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
+   *                 为 true 时，仅 members 为有效查询条件
+   * @param callback
+   */
+  public void createConversation(final List<String> members, final String name,
+      final Map<String, Object> attributes, final boolean isTransient, final boolean isUnique,
+      final AVIMConversationCreatedCallback callback)
+```
+各个参数的含义如下：
+* members - 表示对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知
+* name - 表示对话的名字，主要是用于标记对话，让用户更好地识别对话
+* attributes - 表示额外属性
+* isTransient - 用于标注是否是临时对话
+* isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则才创建新的对话，在 createConversation的多个重写中，没有 isUnique 参数的情况下，该值默认为 false
+{% endblock %}
+
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
 
 {% block event_memberLeft %} `onMemberLeft` {% endblock %}
@@ -1069,7 +1102,6 @@ jerry.open(new AVIMClientCallback() {
 `AVIMConversationEventHandler` 的实现和定义在下一节[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
 
 {% endblock %}
-
 
 {% block conversation_join %}
 
@@ -1836,7 +1868,6 @@ tom.open(new AVIMClientCallback(){
 ```
 {% endblock %}
 
-
 {% block conversation_query_count %}
 ```
 - 初始化 ClientId = Tom
@@ -1890,7 +1921,7 @@ private void TomQueryWithLimit() {
         //登录成功
         AVIMConversationQuery query = tom.getConversationQuery();
         query.setLimit(1);
-        //获取第一个会话
+        //获取第一个对话
         query.findInBackground(new AVIMConversationQueryCallback() {
           @Override
           public void done(List<AVIMConversation> convs, AVIMException e) {
@@ -1938,7 +1969,7 @@ private void TomQueryWithLimit() {
         AVIMConversationQuery query = client.getConversationQuery();
         query.whereEqualTo("attr.topic", "奔跑吧，兄弟");
         query.whereEqualTo("tr", true);
-        //获取第一个会话
+        //获取第一个对话
         query.findInBackground(new AVIMConversationQueryCallback() {
           @Override
           public void done(List<AVIMConversation> convs, AVIMException e) {
@@ -2014,6 +2045,16 @@ tom.open(new AVIMClientCallback(){
 
   /**
    * 实现AVIMConversation相关的签名计算
+   * 
+   * @param conversationId
+   * @param clientId
+   * @param targetIds - 此次操作的member的clientIds
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
+   * @return
+   * @throws SignatureException 如果签名计算中间发生任何问题请抛出本异常
+   */  /**
+   * 实现AVIMConversation相关的签名计算
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
    */
   public Signature createConversationSignature(String conversationId, String clientId,
       List<String> targetIds, String action) throws SignatureException;
@@ -2075,13 +2116,13 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
   @Override
   public Signature createConversationSignature(String convId, String peerId, List<String> targetPeerIds,String action){
    Map<String,Object> params = new HashMap<String,Object>();
-   params.put("self_id",peerId);
-   params.put("group_id",convId);
-   params.put("group_peer_ids",targetPeerIds);
+   params.put("client_id",peerId);
+   params.put("conv_id",convId);
+   params.put("members",targetPeerIds);
    params.put("action",action);
 
    try{
-     Object result = AVCloud.callFunction("group_sign",params);
+     Object result = AVCloud.callFunction("sign2",params);
      if(result instanceof Map){
         Map<String,Object> serverSignature = (Map<String,Object>) result;
         Signature signature = new Signature();
@@ -2098,3 +2139,28 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
 }
 ```
 {% endblock %}
+
+{% block conversation_query_cache %}#### 缓存查询
+
+通常，将查询结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。或者为了节省用户流量，在应用打开的第一次查询走网络，之后的查询可优先走本地缓存。
+
+值得注意的是，默认的策略是先走本地缓存的再走网络的，缓存时间是一小时。AVIMConversationQuery 中有如下方法：
+```java
+  // 设置 AVIMConversationQuery的查询策略
+  public void setQueryPolicy(AVQuery.CachePolicy policy);
+```
+
+有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
+
+```java
+    AVIMConversationQuery query = client.getQuery();
+    query.setQueryPolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+    query.findInBackground(new AVIMConversationQueryCallback() {
+      @Override
+      public void done(List<AVIMConversation> conversations, AVIMException e) {
+        
+      }
+    });
+```
+
+各种查询缓存策略的行为可以参考 [存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。{% endblock %}
