@@ -35,11 +35,11 @@
 
           <hr>
 
-          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Static')">
+          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Static')" title="静态库最低支持 iOS 6.0，推荐在 Objective-C 项目中使用">
           下载静态库<span>- {{getDownSize('ios', 'Static')}}</span>
           </a>
 
-          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Dynamic')">
+          <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('ios', 'Dynamic')" title="动态库最低支持 iOS 8.0, 推荐在 Swift 项目中使用">
           下载动态库<span>- {{getDownSize('ios', 'Dynamic')}}</span>
           </a>
 
