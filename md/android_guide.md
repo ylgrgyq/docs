@@ -440,7 +440,7 @@ try {
 query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
 ```
 
-当然，你可以在你的查询操作中添加多个约束条件（这些条件是 and 关系），来查询符合你要求的数据。
+当然，你可以在查询操作中添加多个约束条件，来过滤符合要求的数据。这些条件之间是 and 关系，即 `where a == b and c == d`。若想用 or 关系来组织约束条件，要使用 [复合查询](#复合查询)。
 
 ```java
 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -483,14 +483,14 @@ query.whereGreaterThan("pubUserCertificate", 4);
 query.whereGreaterThanOrEqualTo("pubUserCertificate", 4);
 ```
 
-如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」 三个账号的微博时，你可以使用whereContainedIn（类似SQL中的in查询）方法来实现。
+如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」、「LeanCloud江宏」、「滚滚艾买提」 三个账号的微博时，你可以使用 `whereContainedIn`（类似 SQL 中的 in 查询）方法来实现。
 
 ```java
 String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"};
 query.whereContainedIn("pubUser", Arrays.asList(names));
 ```
 
-相反，你想查询排除「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
+相反，你想查询排除「LeanCloud官方客服」、「LeanCloud江宏」、「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用 
 `whereNotContainedIn` 方法来实现。
 
 ```java
@@ -498,8 +498,17 @@ String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"}
 query.whereNotContainedIn("pubUser", Arrays.asList(names));
 ```
 
-对字符串值的查询
-查询包含字符串的值，有几种方法。你可以使用任何正确的正则表达式来检索相匹配的值，使用 `whereMatches` 方法：
+### 查询字符串值
+
+使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
+
+```java
+//查找出所有 username 以 LeanCloud 开头的用户
+AVQuery<AVObject> query = AVQuery.getQuery("_User");
+query.whereStartsWith("username", "LeanCloud");
+```
+
+`whereMatches` 方法允许使用正则表达式来检索相匹配的值：
 
 ```java
 // 比较用户名字段的值是以大写字母和数字开头
@@ -528,7 +537,8 @@ query.whereStartsWith("pubUser", "LeanCloud");
 AVQuery query = new AVQuery("Post");
 query.whereEndsWith("pubUser", "LeanCloud");
 ```
-### 数组值的查询
+
+### 查询数组值
 
 如果一个 Key 对应的值是一个数组，你可以查询 Key 的数组包含了数字 208 的所有对象，通过：
 
@@ -546,16 +556,6 @@ numbers.add(2);
 numbers.add(3);
 numbers.add(4);
 query.whereContainsAll("arrayKey", numbers);
-```
-
-### 字符串的查询
-
-使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
-
-```java
-//查找出所有 username 以 LeanCloud 开头的用户
-AVQuery<AVObject> query = AVQuery.getQuery("_User");
-query.whereStartsWith("username", "LeanCloud");
 ```
 
 ### 查询对象个数
@@ -581,8 +581,8 @@ query.countInBackground(new CountCallback() {
 
 对于超过 1000 个对象的查询，这种计数请求可能被超时限制。他们可能遇到超时错误或者返回一个近似的值。因此，请仔细设计你的应用架构来避免依赖这种计数查询。
 
-
 ### 关系查询
+
 有好几种方式可以发起关系数据的查询。如果你想获取某个字段匹配特定 `AVObject` 的实例列表，你可以像查询其他数据类型那样使用 `whereEqualTo` 来查询。例如，如果每个 `Comment` 对象都包含一个 `Post` 对象（在 `post` 字段上），你可以获取特定 `Post` 的所有 `Comment` 列表：
 
 ```java
@@ -647,14 +647,13 @@ query.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-你可以使用 `dot`（英语句号）操作符来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
+你可以使用点操作符（半角句号）来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
 
 ```java
 query.include("post.pubUser");
 ```
 
 `AVQuery` 的 `include` 方法可以被多次调用，每次调用的字段可以不一样。同样，上面所述的这些方法也可以作用在`AVQuery` 的其他方法，例如 `getFirst` 和 `getInBackground` 上。
-
 
 ### 缓存查询
 
@@ -714,7 +713,7 @@ query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
 在网络请求中间 `Last-Modified` 一般是标注在 http 响应中，用来表示该资源在服务器端的最后修改时间。在 LeanCloud 中间，我们也提供了这个选项来提升缓存的准确性、提高网络效率。
 当你通过 `AVOSCloud.setLastModifyEnabled(boolean enable)`来激活这个选项时，所有的对象和它们所对应的 `Last-Modified` 时间都会被缓存起来。
 当某个 `AVObject` 对象再次被发起一个 get 请求时，请求中就会带着 `Last-Modified` 信息，服务器端则会校验双方的 `Last-Modified` 信息。如果双方的 `Last-Modified` 时间一致，则说明自上次 get 请求之后，服务器端的数据并没有被修改，所以服务器不再需要将对象重新返回，客户端直接取缓存内对象返回即可，从而节省了网络资源。反之，则与平时一样，服务器返回该对象数据和对应的 `Last-Modified` 信息，由客户端更新缓存内容并返回，从而保证了缓存的正确性。
-** 注：该功能现在正处于 beta 阶段，请谨慎使用 **
+** 注：该功能现在正处于 beta 阶段，请谨慎使用**。
 
 ### 复合查询
 
@@ -741,7 +740,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`、`skip`、`orderBy`、`include` 等。
 
 ### 删除查询结果
 
