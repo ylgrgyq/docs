@@ -65,9 +65,10 @@
   }
 }
 
-.copybtn {
+.copybtn, .playbtn {
   -webkit-appearance: none;
   border: 0;
+  padding: 3px 6px;
   color: #c29218;
   background: transparent;
   border-radius: 4px;
@@ -76,8 +77,9 @@
   line-height: 1;
   text-transform: uppercase;
 
-  &.zeroclipboard-is-hover {
+  &:hover {
     color: #f9b813;
+    text-decoration: none;
   }
 
   .icon {
