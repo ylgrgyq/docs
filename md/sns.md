@@ -1,8 +1,6 @@
 # 第三方平台账号登录组件（SNS）开发指南
 
-
 AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可以实现社交平台用户登录.
-
 
 ## iOS SNS 组件
 
@@ -45,7 +43,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 你需要做的很简单，以新浪微博为例：
 
 ```objc
-[AVOSCloudSNS setupPlatform:AVOSCloudSNSSinaWeibo withAppKey:@"Weibo APP ID" andAppSecret:@"Weibo APP KEY" andRedirectURI:@""];
+[AVOSCloudSNS setupPlatform:AVOSCloudSNSSinaWeibo withAppKey:@"<WEIBO-APP-ID>" andAppSecret:@"<WEIBO-APP-KEY>" andRedirectURI:@""];
 
 [AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
    if (error) {
@@ -72,7 +70,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 #### 配置 URL Schemes
 
-下一步就是设置，为你的 app 添加 URL Schemes：`sinaweibosso.appId`（注意中间有个点儿），像这样：
+下一步就是设置，为你的应用添加 URL Schemes：`sinaweibosso.appId`（注意中间有个点儿）：
 
 ![Url Shceme](images/sns_guide_url_scheme.png)
 
@@ -152,7 +150,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 这时如果一切顺利，就应该可以正常打开新浪微博官方 iOS 客户端进行登录了。
 
-`+ (void)[AVOSCloudSNS loginWithCallback:toPlatform:]` 接口当在相关应用安装的情况下，直接跳转到相关应用进行 SSO 授权，如果没有安装的话，则跳转至网页授权。网页授权需要用户输入账号、密码，体验较差，所以我们提供了 `+ (BOOL)[AVOSCloudSNS isAppInstalledForType:]`来让你检测相应的应用有没有安装，没有安装的话可以提示用户或者隐藏按钮。
+在相关应用已安装的情况下，调用 `+ (void)[AVOSCloudSNS loginWithCallback:toPlatform:]` 接口的效果是直接跳转到该应用进行 SSO 授权；如果该应用没有安装，则跳转至网页授权。网页授权需要用户输入账号、密码，体验较差，所以我们提供了 `+ (BOOL)[AVOSCloudSNS isAppInstalledForType:]` 来让你检测相应的应用有没有安装，没有安装的话可以提示用户或者隐藏按钮。
 
 ### 绑定 AVUser
 
@@ -162,10 +160,11 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 # import <LeanCloudSocial/AVUser+SNS.h>
 ```
 
-然后在登录 SNS 成功回调后 `loginWithAuthData:platform:block`，这样会用当前的 SNS 用户来尝试登录获取 AVUser 信息，如果 AVUser 不存在， 系统会自动创建新用户并返回，如果已经存在，则直接返回该用户。例如：
+在登录 SNS 成功回调后，使用 `loginWithAuthData:platform:block`（platform
+ 为可选参数）就用当前的 SNS 用户来尝试登录获取 AVUser 信息，如果 AVUser 不存在，系统会自动创建新用户并返回，如果已经存在，则直接返回该用户。例如：
 
 ```objc
-[AVUser loginWithAuthData:authData block:^(AVUser *user, NSError *error) {
+[AVUser loginWithAuthData:authData platform:AVOSCloudSNSPlatformWeiXin block:^(AVUser *user, NSError *error) {
     if (error) {
         // 登录失败，可能为网络问题或 authData 无效
     } else {
@@ -174,7 +173,9 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 }];
 ```
 
-这里的 authData 有两种格式，其中一种带有 `platform` 的值，形如：
+这里的 authData 可以有两种格式，区别在于是否包含 `platform` 这个键值对。
+
+调用 `-[AVOSCloudSNS loginWithCallback:toPlatform:]` 会得到包含 `platform` 数据的 authData，如：
 
 ```
 {
@@ -185,7 +186,11 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 }
 ```
 
-这是调用 `-[AVOSCloudSNS loginWithCallback:toPlatform:]` 方法得到的。该方法之后，可以紧接着调用 `-[AVUser loginWithAuthData:platform:block]` 来登录 LeanCloud 账号。这很方便，但局限是当前**仅支持微博、QQ、微信**登录。还可以用其他平台的 SDK 获取到 authData，比如 Facebook SDK，然后用这个 authData 来登录 LeanCloud 账号。此时 authData 应符合如下规范：
+这样在该方法之后，可以紧接着调用 `-[AVUser loginWithAuthData:block]`（此时不需要加 platform 参数，因为 authData 中已包含了 platform 数据）来登录 LeanCloud 账号。这样实现起来非常方便，局限是目前**仅支持微博、QQ、微信**登录。
+
+使用其他平台的 SDK（如 Facebook SDK）获取到的 authData 中，如果不包含 platform 键值对，就要在调用 `-[AVUser loginWithAuthData:platform:block]` 时加上 platform 这个参数，来登录 LeanCloud 账号。
+
+从其他平台的 SDK 获取到的 authData 数据应符合如下规范：
 
 ```
 {
@@ -211,7 +216,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 增加这些 authData 绑定之后，便可以用相应平台来登录账号。
 
-如果需要为 AVUser 移除 authData，可以用 `deleteAuthData:platform:block` 方法，比如：
+如果需要为 AVUser 移除 authData，可以用 `deleteAuthDataForPlatform:block` 方法，比如：
 
 ```objc
 [user deleteAuthDataForPlatform:AVOSCloudSNSPlatformWeiXin block:^(AVUser *user, NSError *error) {
@@ -476,7 +481,7 @@ final SNSCallback myCallback = new SNSCallback() {
             @Override
             public void done(AVUser user, AVException e) {
               if (e == null) {
-              //恭喜你，已经和我们的AVUser绑定成功
+              //恭喜你，已经和我们的 AVUser 绑定成功
               } else {
                 e.printStackTrace();
               }
