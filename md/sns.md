@@ -185,7 +185,7 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 }
 ```
 
-这是调用 `-[AVOSCloudSNS loginWithCallback:toPlatform:]` 方法得到的。该方法之后，可以紧接着调用 `-[AVUser loginWithAutaData:platform:block]` 来登录 LeanCloud 账号。这很方便，但局限是当前**仅支持微博、QQ、微信**登录。还可以用其他平台的 SDK 获取到 authData，比如 Facebook SDK，然后用这个 authData 来登录 LeanCloud 账号。此时 authData 应符合如下规范：
+这是调用 `-[AVOSCloudSNS loginWithCallback:toPlatform:]` 方法得到的。该方法之后，可以紧接着调用 `-[AVUser loginWithAuthData:platform:block]` 来登录 LeanCloud 账号。这很方便，但局限是当前**仅支持微博、QQ、微信**登录。还可以用其他平台的 SDK 获取到 authData，比如 Facebook SDK，然后用这个 authData 来登录 LeanCloud 账号。此时 authData 应符合如下规范：
 
 ```
 {
