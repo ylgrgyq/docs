@@ -16,7 +16,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
         });
     });
 
-    $scope.getDownSize = function(type, subType){
+    $scope.getDownSize = function(type){
         var size = 0;
         if($scope.download[type]){
             angular.forEach($scope.download[type].required,function(v,k){
