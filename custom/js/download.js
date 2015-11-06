@@ -30,12 +30,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
                 }
             });
         }
-        if (subType == 'Dynamic') {
-          // 动态库大小大约是静态库的一半
-          size /= 2;
-        }
         return prettyBytes(size);
-
     }
 
     var downloadURL = function downloadURL(url) {
