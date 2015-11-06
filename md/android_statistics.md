@@ -69,6 +69,7 @@
 ```java
 
 AVAnalytics.setAppChannel("SomeChannel");
+// 参数依次为 context, AppId, AppKey
 AVOSCloud.initialize(getContext(),"{{appid}}","{{appKey}}");
 
 ```
