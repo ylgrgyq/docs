@@ -65,8 +65,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
           subType = '';
         }
         var url = "//download.avoscloud.com/1/downloadSDK?type="+type+"&components="+components.join(",")+"&version=v"+$scope.sdkversion[type]+"&subType="+subType;
-        console.log(url);
-        //downloadURL(url)
+        downloadURL(url);
     }
 }]);
 
