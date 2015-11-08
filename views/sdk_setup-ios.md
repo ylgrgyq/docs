@@ -84,8 +84,7 @@ $ sudo gem install cocoapods
 
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
 
-```
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+```objc
 // applicationId 即 App Id，clientKey 是 App Key。
 [AVOSCloud setApplicationId:@"YOUR App ID"
               clientKey:@"YOUR App KEY"];
@@ -93,10 +92,21 @@ $ sudo gem install cocoapods
 
 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
 
-```
+```objc
 [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 ```
 
+{% endblock %}
+
+{% block sdk_using_north_america_node %}
+
+```
+// applicationId 即 App Id，clientKey 是 App Key。
+[AVOSCloud setApplicationId:@"YOUR App ID"
+              clientKey:@"YOUR App KEY"];
+//如果使用美国站点，请加上这行代码 
+[AVOSCloud useAVCloudUS];
+```
 {% endblock %}
 
 {% block save_a_hello_world %}
