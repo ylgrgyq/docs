@@ -1191,7 +1191,7 @@ student.name = @"小明";
 
 ``` objc
   AVQuery *query = [Student query];
-  [query whereKey:@"age" lessThanOrEqualTo:@"21"];
+  [query whereKey:@"age" lessThanOrEqualTo:@(21)];
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
       Student *stu1 = [objects objectAtIndex:0];

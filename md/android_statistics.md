@@ -64,6 +64,16 @@
 </application>
 ```
 
+当然你也可以通过代码来指定发布渠道。但是代码设置的渠道优先级没有 `AndroidManifest.xml` 中的配置高，同时出现时优先取 `AndroidManifest.xml` 中的配置。
+
+```java
+
+AVAnalytics.setAppChannel("SomeChannel");
+// 参数依次为 context, AppId, AppKey
+AVOSCloud.initialize(getContext(),"{{appid}}","{{appKey}}");
+
+```
+
 ## 添加使用代码
 
 添加引用:
