@@ -222,7 +222,11 @@ AV.Cloud.beforeUpdate('Review', function(request, response) {
 });
 ```
 
-**注意**：你对 `request.object` 的修改不会被保存到数据库，所以你不应该修改它，但可以用 `response.error` 返回一个错误拒绝这次修改。
+请注意：
+
+* 需要将 `leanengine` 中间件升级至 0.2.0 版本以上才能使用这个功能。
+* 不要修改 `request.object`，因为对它的改动并不会保存到数据库，但可以用 `response.error` 返回一个错误，拒绝这次修改。
+
 {% endblock %}
 
 {% block afterUpdateExample %}

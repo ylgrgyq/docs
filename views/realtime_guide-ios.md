@@ -1571,7 +1571,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
         AVIMConversationQuery *query = [self.client conversationQuery];
         // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
         [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
-            // 设置查询时间从过去 24 小时开始
+            // 查询对话中最后 10 条消息
             [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
                 NSLog(@"查询成功！");
             }];
@@ -1593,7 +1593,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
         AVIMConversationQuery *query = [self.client conversationQuery];
         // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
         [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
-            // 设置查询时间从过去 24 小时开始
+            // 从指定的某条消息（id 为 grqEG2OqSL+i8FSX9j3l2g，时间戳为 1436137606358）开始查询
             [conversation queryMessagesBeforeId:@"grqEG2OqSL+i8FSX9j3l2g" timestamp:1436137606358 limit:10 callback:^(NSArray *objects, NSError *error) {
                 NSLog(@"查询成功！");
             }];
