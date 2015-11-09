@@ -294,7 +294,7 @@ AVObject *post = [AVObject objectWithoutDataWithClassName:@"Post" objectId:@"559
 
 ### 计数器
 
-许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+许多应用都需要实现计数器功能。比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准，这时可以用 `incrementKey:` 以原子操作方式来实现计数：
 
 ``` objc
 AVObject *post = [AVObject objectWithClassName:@"Post"];
@@ -309,11 +309,9 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 }];
 ```
 
-也可以使用 `incrementKey:byAmount:` 来给字段累加一个特定数值。
+也可以使用 `incrementKey:byAmount:` 来给 Number 类型字段累加一个特定数值。
 
-那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了
-
-`fetchWhenSave` 属性，当设置为 `true` 时，SDK 会在保存操作发生时，自动返回当前计数器的最新数值。
+能不能不用特意去做 `fetch`，就马上得到计数器当前在后端的最新数据呢？这就需要使用 `fetchWhenSave` 属性。当它被设置为 `true` 时，SDK 会在保存操作发生时，自动返回当前计数器的最新数值。
 
 ``` objc
 post.fetchWhenSave = YES;
@@ -327,19 +325,17 @@ post.fetchWhenSave = YES;
 
 为了更好地存储数组类型的数据，LeanCloud 提供了三种不同的操作来自动更新数组字段：
 
-* `addObject:forKey:` 和 `addObjectsFromArray:forKey:`
-  
+* `addObject:forKey:`<br>
+  `addObjectsFromArray:forKey:`<br>
   将指定对象附加到数组末尾。
-  
-* `addUniqueObject:forKey:` 和 `addUniqueObjectsFromArray:forKey:`
-  
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。
-  
-* `removeObject:forKey:` 和 `removeObjectsInArray:forKey:`
-  
+* `addUniqueObject:forKey:`<br>
+  `addUniqueObjectsFromArray:forKey:`<br>
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
+* `removeObject:forKey:`<br>
+  `removeObjectsInArray:forKey:`<br>
   从数组字段中删除指定对象的所有实例。
 
-例如，给微博帖子添加 `tags` 字段：
+例如，给微博帖子添加 tags 字段：
 
 ``` objc
 [post addUniqueObjectsFromArray:[NSArray arrayWithObjects:@"编程", @"开发工具", nil] forKey:@"tags"];
@@ -1589,7 +1585,7 @@ user.email = @"hang@leancloud.rocks";
 
 这样做的好处是，在用户提交信息时可以将输入的「用户名」默认设置为用户的 Email 地址，以后在用户忘记了密码的情况下，可以使用 LeanCloud 提供的「重置密码」功能。
 
-关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 。
+关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 ### 登录
 
