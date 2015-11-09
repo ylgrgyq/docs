@@ -244,6 +244,7 @@
   min-height: 36px;
   background: #f7f7f7;
   border-radius: 0;
+  margin-bottom: 0;
 
   .navbar-nav > li > a {
     display: block;
@@ -381,6 +382,7 @@
         }
       }
 
+      // App list
       .dropdown-menu {
 
         > li {
@@ -390,6 +392,18 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+
+            .icon-team-bold {
+              opacity: .2;
+            }
+
+            &:hover,
+            &:focus {
+
+              .icon-team-bold {
+                opacity: .4;
+              }
+            }
           }
         }
       }
@@ -470,7 +484,7 @@
   &:after {
     position: absolute;
     display: block;
-    top: 15px;
+    top: 13px;
     left: 15px;
     font-family: "ui-icon";
     font-size: @s;
@@ -483,6 +497,15 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  &:hover,
+  &:focus {
+
+    &:after,
+    input::placeholder {
+      color: @navbar-default-link-hover-color;
+    }
+  }
+
   input {
     height: 48px;
     border: none;
@@ -492,7 +515,12 @@
     padding-right: 15px;
 
     &:focus {
+      color: @navbar-default-link-hover-color;
       box-shadow: none;
+    }
+
+    &::placeholder {
+      color: @navbar-default-link-color;
     }
   }
 }

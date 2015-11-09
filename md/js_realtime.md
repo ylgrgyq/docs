@@ -338,7 +338,7 @@ var appId = '{{appid}}';
 var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: appid,
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: clientId,
    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
@@ -357,6 +357,7 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    console.log('与服务器连接成功！');
 });
+// http://jsplay.avosapps.com/rot/embed?js,console
 ```
 
 ### AV.realtime.version
