@@ -16,9 +16,9 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 建议你在阅读本文档之前，阅读我们提供的[快速入门](./start.html)文档，获取 LeanCloud 使用配置和第一印象。
 
-### 应用
+## SDK 安装
+我们提供了一个针对 JavaScript SDK 详细的安装指南：[LeanCloud JavaScript SDK 安装指南](sdk_setup-js.html)
 
-LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。同时，为了便于开发调试，LeanCloud 也为每一个应用提供了测试和生产两套环境。
 
 ### 贡献
 
@@ -27,38 +27,6 @@ LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自�
 SDK 仓库地址：[https://github.com/leancloud/javascript-sdk](https://github.com/leancloud/javascript-sdk)，相关 [change log](https://github.com/leancloud/javascript-sdk/blob/master/changelog.md)
 
 本文档仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
-### npm 安装
-
-可以通过 npm 安装。
-
-该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
-
-```
-$ npm install avoscloud-sdk
-```
-
-### bower 安装
-
-也支持 bower 安装
-
-```
-$ bower install leancloud-javascript-sdk
-```
-
-### CDN 加速
-
-```
-<script src="https://cdn1.lncld.net/static/js/av-mini-{版本号}.js"></script>
-// 或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{版本号}.js"></script>
-```
-
-### Web 安全
-
-如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**。配置方式：进入对应的 app，然后选择 **设置 > 安全中心 > Web 安全域名**。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
-
-具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
 
 ## 对象
 
@@ -87,7 +55,7 @@ description     objectId
 
 每一个 `AV.Object` 都是一个特定子类的实例，子类名可以来区分各种不同的数据。我们建议将类和属性名分别按照 `NameYourClassesLikeThis` 和 `nameYourKeysLikeThis` 这样的惯例来命名，即区分第一个字母的大小写，这样可以提高代码的可读性和可维护性。
 
-为了建立一个新的子类，你可以使用 `AV.Object.extend` 方法。如果你熟悉 Backbone.Model 的话，你已经明白如何使用 AV.Object 了，它本身就是设计来让两者可以相互替换的。
+为了建立一个新的子类，你可以使用 `AV.Object.extend` 方法。
 
 **注意**：`AV.Object.extend` 产生的对象需要作为全局变量保存，因为每调用
 一次，就会产生一个新的类的实例，并且和之前创建的实例形成一个链表。
@@ -103,10 +71,6 @@ var Post = AV.Object.extend("Post");
 // 创建该类的一个实例
 var post = new Post();
 
-// 你也可以用 Backbone 的语法.
-var Post = AV.Object.extend({
-  className: "Post"
-});
 ```
 
 你可以为 AV.Object 的子类添加任意方法：
@@ -147,8 +111,7 @@ var post2 = Post.new({pubUser: "LeanCloud官方客服", content:"每个 JavaScri
 
 ### 保存对象
 
-假如你想要在 LeanCloud 上保存 `Post` 实例，方法和 Backbone.Model 差不多，就用
- `save` 就可以了。
+假如你想要在 LeanCloud 上保存 `Post` 实例，就用 `save` 就可以了。
 
 这里要注意，我们每个存储条目的 `objectId` 是服务器端自动生成的唯一 id（非简单的自增逻辑生成），所以 `objectId` 是不可修改的。如果你有自定义 id 的需求，可以自己建立一个字段，逻辑上作为你的自定义 id。
 
@@ -568,9 +531,9 @@ query.greaterThan("createdAt", new Date("2015-06-26 18:37:09"));
 ```javascript
 query.notEqualTo("pubUser", "LeanCloud官方客服");
 query.notEqualTo("pubUser", "LeanCloud江宏");
-// 第一个查询条件会被第二个覆盖，系统只返回 pubUser != "LeanCloud江宏" 的结果 
+// 第一个查询条件会被第二个覆盖，系统只返回 pubUser != "LeanCloud江宏" 的结果
 // 而不是 (pubUser != "LeanCloud官方客服" AND pubUser != "LeanCloud江宏")
-// 要得到两个条件合并的结果，需使用 
+// 要得到两个条件合并的结果，需使用
 // query.notContainedIn("pubUser", ["LeanCloud官方客服", "LeanCloud江宏"]);
 ```
 
@@ -1307,7 +1270,7 @@ delay(100).then(function() {
 });
 ```
 
-### 兼容性 
+### 兼容性
 
 在非 node.js 环境（例如浏览器环境）下，`AV.Promise` 并不兼容 [Promises/A+](https://promisesaplus.com/) 规范，特别是错误处理这块。
 如果你想兼容，可以手工启用：
@@ -1327,90 +1290,6 @@ AV.Promise.setDebugError(true);
 ### JavaScript Promise 迷你书
 
 如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
-
-## Collection
-
-一个 `AV.Collection` 就是一个 `AV.Objects` 的有序集合，它和
- `Backbone.Collection` 是兼容的，有相同的特性和功能，你可以通过用一个模型类
-或者一个特定的 `AV.Query` 来创建一个新的子类。
-
-```javascript
-// A Collection containing all instances of TestObject.
-var TestCollection = AV.Collection.extend({
-  model: TestObject
-});
-var collection = new TestCollection();
-
-// A Collection of TestObjects whose temperature is "hot".
-var HotCollection = AV.Collection.extend({
-  model: TestObject,
-  query: (new AV.Query(TestObject)).equalTo("temperature", "hot")
-});
-var collection = new HotCollection();
-
-// The Collection of TestObjects that match a complex query.
-var query = new AV.Query(TestObject);
-query.equalTo("temperature", "hot");
-query.greaterThan("degreesF", 100);
-var collection = query.collection();
-```
-
-### 获取 Collection
-
-使用 fetch 方法来获取一个 collection 里的所有元素：
-
-```javascript
-var collection = new TestCollection();
-collection.fetch({
-  success: function(collection) {
-    collection.each(function(object) {
-      console.warn(object);
-    });
-  },
-  error: function(collection, error) {
-    // The collection could not be retrieved.
-  }
-});
-```
-
-### Collection 排序
-
-你可以设定一个 comparator 来对 collection 中的元素进行排序：
-
-```javascript
-var collection = new TestCollection();
-collection.comparator = function(object) {
-  return object.get("temperature");
-};
-```
-
-### 修改一个 Collection
-
-Collection 是可变的，你可以访问所有元素，增加或者删除元素：
-
-```javascript
-var collection = new TestCollection();
-
-collection.add([
-  {"name": "张三"},
-  {"name": "李四"}
-]);
-
-// Get the "张三" AV.Object by its sorted position.
-var model = collection.at(0);
-
-// Or you can get it by LeanCloud objectId.
-var modelAgain = collection.get(model.id);
-
-// Remove "张三" from the collection.
-collection.remove(model);
-
-// Completely replace all items in the collection.
-collection.reset([
-  {"name": "李雷"},
-  {"name": "韩梅梅"}
-]);
-```
 
 ## 文件
 
@@ -2244,54 +2123,9 @@ query.find({
 1. 每一个 AV.Object 只能有一个键指向一个 AV.GeoPoint 对象。
 2. Points 不应该等于或者超出它的界. 纬度不应该是 -90.0 或者 90.0，经度不应该是 -180.0 或者 180.0。试图在 GeoPoint 上使用超出范围内的经度和纬度会导致问题。
 
-### View
-
-我们引入的 AV.View 只是一个 Backbone.View 的简单复制，你可以随意拿它来建立视图，你可以查看 Backbone.View 的 API 来查看详细信息，注意当你使用了 AV.View 的时候，你需要包含一个 jQuery 库或者 jQuery 兼容的库（实现了$方法）。
-
-### 转换 Backbone app
-
-如果你已经有一个存在的Backbone程序，你可以用我们的 JavaScript SDK 轻松地转换。在转换过后，你就有一些静态文件但是包含了你的 app 的所有功能。
-
-我们的 JavaScript SDK 是 Backbone 兼容的，这意味着我们的 AV.Object 和 AV.Collection 都可以用 Backbone.Model 和 Backbone.Collection 加上一点点变化轻松地转换而来。下面就是怎样转换你的 app：
-
-1. 按照我们的说明来在你已经有的 JavaScript 程序中安装 SDK。
-2. 将所有的 `Backbone.Model.` 都替换成 `AV.Object.` 这样做的时候，url 和 urlRoot 应该用恰当的 className 替换，这些对象映射为 LeanCloud 的类：
-
-```javascript
-var BackboneTodo = Backbone.Model.extend({
-  urlRoot: "/todos"
-});
-
-var AVOSCloudTodo = AV.Object.extend({
-  className: "Todo"
-});
-```
-
-3. 将所有的 Backbone.Collection 替换为 AV.Collection，然后指定 AV.Object 类作为 model。你应该同时指定 query，所以 collection 知道怎样获取对象。
-
-```javascript
-var AVOSCloudTodoCollection = AV.Collection.extend({
-  model: AVOSCloudTodo
-});
-
-var todos = new AVOSCloudTodoCollection();
-
-// Construct a query to get the current user's todo items
-var query = new AV.Query(AVOSCloudTodo);
-query.equalTo("user", AV.User.current());
-todos.query = query;
-todos.fetch();
-```
-
-4. 在任何你建立 model 并从服务器获取的地方，你需要建立一个 AV.Query 来获取你感兴趣的对象，就像我们必须对 AV.Collection 的 query 属性做的一样。
-
-5. 加入或者将你的 app 更新为使用用户认证方式的，并且在需要的对象上应用 ACL。
-
-这样就结束了，你的 App 应该已经就绪并使用 LeanCloud 作为后端。
-
 ## 错误处理
 
-大部分 LeanCloud JavaScript 函数会通过一个有 callback 的对象来报告它们是否成功了，与 Backbone 的 options 对象类似。主要的两个 callback 是 success 和 error。
+大部分 LeanCloud JavaScript 函数会通过一个有 callback 的对象来报告它们是否成功了，主要的两个 callback 是 success 和 error。
 
 在一个操作都没有错误发生的时候 success 会被调用。通常来说，它的参数在 save 或者 get 的情况下可能是 AV.Object，或者在 find 的情形下是一个 AV.Object 数组。
 
@@ -2335,7 +2169,7 @@ query.get("thisObjectIdDoesntExist", {
 });
 ```
 
-对于像是 save 或者是 signUp 这种方法会对一个特定的 AV.Object 起作用的方法来说，error 函数的第一个参数是 object 本身。第二个是一个 AV.Error 对象，这是为了与其他的 Backbone 类型的框架兼容而设计的。请查看 JavaScript API 来得到所有的 AV.Error 的返回码。
+对于像是 save 或者是 signUp 这种方法会对一个特定的 AV.Object 起作用的方法来说，error 函数的第一个参数是 object 本身。第二个是一个 AV.Error 对象，详情请查看 JavaScript API 来得到所有的 AV.Error 的返回码。
 
 ## 应用内搜索
 
@@ -2357,18 +2191,18 @@ JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 Lea
 这些选项生成 WebView 的时候默认并不会被打开，需要配置：
 
 1. 因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 WebView 的 localStorage；设置方式：
-  
+
   ```java
   yourWebView.getSettings().setDomStorageEnabled(true);
   ```
 2. 如果你希望直接调试手机中的 WebView，也同样需要在生成 WebView 的时候设置远程调试，具体使用方式请参考 [Google 官方文档](https://developer.chrome.com/devtools/docs/remote-debugging)。
-  
+
   ```java
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
       yourWebView.setWebContentsDebuggingEnabled(true);
   }
   ```
-  
+
   注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
 3. 如果你是通过 WebView 来开发界面，Native 调用本地特性的 Hybrid 方式开发你的 App。比较推荐的开发方式是：通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 再来做数据连调，这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
 4. 为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2 以后的系统中间，WebView 中间只能访问通过 [@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html) 标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 **Uncaught TypeError**。

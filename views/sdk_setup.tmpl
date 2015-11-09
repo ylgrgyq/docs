@@ -1,0 +1,72 @@
+# LeanCloud {% block language %}{% endblock %} SDK 安装指南
+
+## 获取 SDK
+获取 SDK 有多种方式，较为推荐的方式是通过包依赖管理工具下载最新版本。
+
+### 包依赖管理工具安装
+
+{% block libs_tool_automatic %}{% endblock %}
+
+### 手动安装
+请访问 {% block sdk_download_link %}{% endblock %} 来获取 {% block language %}{% endblock %} 最新版本的 SDK。
+
+{% block import_sdk %}{% endblock %}
+
+
+## 初始化
+首先来获取App ID以及App Key。
+
+打开[**设置** > **应用 Key**](https://leancloud.cn/app.html?appid={{appid}}#/key)，如下图：
+
+![setting_app_key](images/setting_app_key.png)
+
+获取 `App ID` 以及 `App Key`
+
+{% block init_with_app_keys %}{% endblock %}
+
+
+## 验证
+首先，确认本地网络环境是可以访问 LeanCloud 服务器的，可以执行以下命令行：
+
+```
+ping api.leancloud.cn
+```
+如果当前网路正常将会得到如下响应：
+
+```
+PING api.leancloud.cn (120.132.49.239): 56 data bytes
+64 bytes from 120.132.49.239: icmp_seq=3 ttl=49 time=65.165 ms
+64 bytes from 120.132.49.239: icmp_seq=4 ttl=49 time=53.273 ms
+64 bytes from 120.132.49.239: icmp_seq=5 ttl=49 time=51.519 ms
+64 bytes from 120.132.49.239: icmp_seq=6 ttl=49 time=68.442 ms
+```
+然后在项目中编写如下测试代码：
+
+{% block save_a_hello_world %}{% endblock %}
+
+然后打开[**控制台** > **存储** > **TestObject**](https://leancloud.cn/data.html?appid={{appid}}#/TestObject)
+如果看到如下内容，说明 SDK 已经正确地执行了上述代码，安装完毕。
+
+![testobject_saved](images/testobject_saved.png)
+
+如果控制台没有发现对应的数据，请看下节的[问题排查](#问题排查)。
+
+## 问题排查
+
+### App ID 或者 App Key 有误
+如果 SDK 抛出 401 异常或者查看本地网络访问日志存在：
+
+```
+{
+  "code": 401,
+  "error": "Unauthorized."
+}
+```
+则可认定为 App ID 或者 App Key 输入有误，或者是不匹配，很多开发者同时注册了多个应用，导致拷贝粘贴的时候，用 A 应用的 App ID 匹配 B 应用的 App Key，这样就会出现服务端鉴权失败的错误。
+
+### 客户端无法访问网络
+客户端尤其是手机端，应用在访问网络的时候需要申请一定的权限。
+
+{% block permission_access_network_config %}{% endblock %}
+
+{% block platform_specific_faq %}{% endblock %}

@@ -71,7 +71,7 @@ where| |本次推送查询 _Installation 表的条件，符合这些查询条件
 
 ##### 保存 iOS 设备的 DeviceToken
 
-iOS 设备通常使用 DeviceToken 来惟一标识一台设备。
+iOS 设备通常使用 DeviceToken 来唯一标识一台设备。
 
 ```sh
 curl -X POST \

@@ -8,138 +8,9 @@
 
 建议您在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
-## 版本变迁
+## SDK 安装
 
-从 2.4.0 开始, 我们重新设计了 SDK 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包——除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar、avosstatistics.jar 等都可以在用到该组件时才导入。
-
-## 模块与 SDK 包
-
-我们已经提供了官方的 maven 仓库：[http://mvn.leancloud.cn/nexus/](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
-
-### Android Studio 用户
-
-从 2.6.10.3 开始, LeanCloud Android SDK 可以使用 gradle 来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
-
-在 Android Studio 的配置中间，您首先需要在项目下的 build.gradle 中配置成类似：
-
-```
-buildscript {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-    }
-}
-```
-
-之后需要在 app 目录下的 build.gradle 中根据需要进行相应的配置：
-
-```
-android {
-    //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-
-    //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
-
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-    
-    //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+@aar'
-
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
-
-    //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-
-    //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'    
-}
-```
-
-### Eclipse 用户
-
-Eclipse 用户依然可以在 [SDK下载](sdk_down.html) 进行下载
-
-#### LeanCloud 基本存储模块
-
-* avoscloud-<版本号>.jar
-* okhttp-2.5.0.jar
-* okio-1.6.0.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
-
-#### LeanCloud 推送模块和实时聊天模块
-
-* LeanCloud 基础存储模块
-* avospush-版本号.jar
-
-#### LeanCloud 统计模块
-
-* LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
-* Java-WebSocket-1.2.0-leancloud.jar
-
-#### LeanCloud SNS 模块
-
-* LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
-
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
-
-**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
-
-
-## 简介
-
-LeanCloud 平台为移动应用提供了一个完整的后端解决方案，目标是让开发者不需要再编写和维护传统的服务器代码。我们提供的 SDK 开发包也非常轻量，让开发者用最简单的方式使用 LeanCloud 平台的服务。
-
-## 应用程序初始化
-
-以下为 LeanCloud Android SDK 需要的所有的权限，请检查你的 AndroidManifest.xml。此外千万不要忘记在 AndroidManifest.xml 中注明 application name。过去用户反馈的很多问题都是因为这一步没有正确配置导致的。
-
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-```
-
-在 LeanCloud 平台注册后，你创建的每个应用都有自己的 ID 和 Key，在你的代码中将凭此 ID 和 Key 来访问 LeanCloud 的服务。你可以在一个帐号中创建多个应用。
-
-在你的应用访问 LeanCloud 之前，你需要使用上述的 ID 和 Key 在代码中对 LeanCloud SDK 进行初始化。你需要继承 [`Application`](http://developer.android.com/reference/android/app/Application.html) 类，并且在 `onCreate()` 方法中调用 `AVOSCloud.initialize(this, '<AppId>', '<AppKey>')` 来进行初始化。
+我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
 
 ## 数据的存储
 
@@ -569,7 +440,7 @@ try {
 query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
 ```
 
-当然，你可以在你的查询操作中添加多个约束条件（这些条件是 and 关系），来查询符合你要求的数据。
+当然，你可以在查询操作中添加多个约束条件，来过滤符合要求的数据。这些条件之间是 and 关系，即 `where a == b and c == d`。若想用 or 关系来组织约束条件，要使用 [复合查询](#复合查询)。
 
 ```java
 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -612,14 +483,14 @@ query.whereGreaterThan("pubUserCertificate", 4);
 query.whereGreaterThanOrEqualTo("pubUserCertificate", 4);
 ```
 
-如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」 三个账号的微博时，你可以使用whereContainedIn（类似SQL中的in查询）方法来实现。
+如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」、「LeanCloud江宏」、「滚滚艾买提」 三个账号的微博时，你可以使用 `whereContainedIn`（类似 SQL 中的 in 查询）方法来实现。
 
 ```java
 String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"};
 query.whereContainedIn("pubUser", Arrays.asList(names));
 ```
 
-相反，你想查询排除「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
+相反，你想查询排除「LeanCloud官方客服」、「LeanCloud江宏」、「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用 
 `whereNotContainedIn` 方法来实现。
 
 ```java
@@ -627,8 +498,17 @@ String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"}
 query.whereNotContainedIn("pubUser", Arrays.asList(names));
 ```
 
-对字符串值的查询
-查询包含字符串的值，有几种方法。你可以使用任何正确的正则表达式来检索相匹配的值，使用 `whereMatches` 方法：
+### 查询字符串值
+
+使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
+
+```java
+//查找出所有 username 以 LeanCloud 开头的用户
+AVQuery<AVObject> query = AVQuery.getQuery("_User");
+query.whereStartsWith("username", "LeanCloud");
+```
+
+`whereMatches` 方法允许使用正则表达式来检索相匹配的值：
 
 ```java
 // 比较用户名字段的值是以大写字母和数字开头
@@ -657,7 +537,8 @@ query.whereStartsWith("pubUser", "LeanCloud");
 AVQuery query = new AVQuery("Post");
 query.whereEndsWith("pubUser", "LeanCloud");
 ```
-### 数组值的查询
+
+### 查询数组值
 
 如果一个 Key 对应的值是一个数组，你可以查询 Key 的数组包含了数字 208 的所有对象，通过：
 
@@ -675,16 +556,6 @@ numbers.add(2);
 numbers.add(3);
 numbers.add(4);
 query.whereContainsAll("arrayKey", numbers);
-```
-
-### 字符串的查询
-
-使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
-
-```java
-//查找出所有 username 以 LeanCloud 开头的用户
-AVQuery<AVObject> query = AVQuery.getQuery("_User");
-query.whereStartsWith("username", "LeanCloud");
 ```
 
 ### 查询对象个数
@@ -710,8 +581,8 @@ query.countInBackground(new CountCallback() {
 
 对于超过 1000 个对象的查询，这种计数请求可能被超时限制。他们可能遇到超时错误或者返回一个近似的值。因此，请仔细设计你的应用架构来避免依赖这种计数查询。
 
-
 ### 关系查询
+
 有好几种方式可以发起关系数据的查询。如果你想获取某个字段匹配特定 `AVObject` 的实例列表，你可以像查询其他数据类型那样使用 `whereEqualTo` 来查询。例如，如果每个 `Comment` 对象都包含一个 `Post` 对象（在 `post` 字段上），你可以获取特定 `Post` 的所有 `Comment` 列表：
 
 ```java
@@ -776,14 +647,13 @@ query.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-你可以使用 `dot`（英语句号）操作符来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
+你可以使用点操作符（半角句号）来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
 
 ```java
 query.include("post.pubUser");
 ```
 
 `AVQuery` 的 `include` 方法可以被多次调用，每次调用的字段可以不一样。同样，上面所述的这些方法也可以作用在`AVQuery` 的其他方法，例如 `getFirst` 和 `getInBackground` 上。
-
 
 ### 缓存查询
 
@@ -843,7 +713,7 @@ query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
 在网络请求中间 `Last-Modified` 一般是标注在 http 响应中，用来表示该资源在服务器端的最后修改时间。在 LeanCloud 中间，我们也提供了这个选项来提升缓存的准确性、提高网络效率。
 当你通过 `AVOSCloud.setLastModifyEnabled(boolean enable)`来激活这个选项时，所有的对象和它们所对应的 `Last-Modified` 时间都会被缓存起来。
 当某个 `AVObject` 对象再次被发起一个 get 请求时，请求中就会带着 `Last-Modified` 信息，服务器端则会校验双方的 `Last-Modified` 信息。如果双方的 `Last-Modified` 时间一致，则说明自上次 get 请求之后，服务器端的数据并没有被修改，所以服务器不再需要将对象重新返回，客户端直接取缓存内对象返回即可，从而节省了网络资源。反之，则与平时一样，服务器返回该对象数据和对应的 `Last-Modified` 信息，由客户端更新缓存内容并返回，从而保证了缓存的正确性。
-** 注：该功能现在正处于 beta 阶段，请谨慎使用 **
+** 注：该功能现在正处于 beta 阶段，请谨慎使用**。
 
 ### 复合查询
 
@@ -870,7 +740,7 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 
 你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`、`skip`、`orderBy`、`include` 等。
 
 ### 删除查询结果
 
@@ -959,7 +829,7 @@ post.setPubUserCertificate(3);
 创建一个 `AVObject` 的子类很简单：
 
 * 首先声明一个子类继承自 `AVobject`。
-* 添加`@AVClassName`注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
+* 添加 `@AVClassName` 注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
 * 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 `AVObject` 的字段。
 * 在你的应用初始化的地方，在调用 `AVOSCloud.initialize()` 之前注册子类 `AVObject.registerSubclass(YourClass.class)`。
 
@@ -989,7 +859,7 @@ public class App extends Application {
 }
 ```
 
-### 访问器，修改器和方法
+### 访问器、修改器和方法
 
 添加方法到 `AVObject` 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
 
@@ -1076,7 +946,7 @@ query.findInBackground(new FindCallback<Post>() {
 
 ### AVUser 的子类化
 
-`AVUser` 作为 `AVObject` 的子类，同样允许子类化，你可以定义自己的 `User` 对象，不过比起 `AVObject` 子类化会更简单一些，只要继承 `AVUser` 就可以了：
+`AVUser` 作为 `AVObject` 的子类，同样允许子类化，你可以定义自己的 User 对象，不过比起 `AVObject` 子类化会更简单一些，只要继承 `AVUser` 就可以了：
 
 ```java
 import com.avos.avoscloud.AVObject;
@@ -1093,9 +963,15 @@ public class MyUser extends AVUser {
 }
 ```
 
-不需要添加 `@AVClassname` 注解，所有 `AVUser` 的子类的类名都是内建的`_User`。同样也不需要注册 `MyUser`。
+不需要添加 `@AVClassname` 注解，所有 `AVUser` 的子类的类名都是内建的 `_User`。同样也不需要注册 `MyUser`。
 
-注册跟普通的 `AVUser` 对象没有什么不同，但是登陆如果希望返回自定义的子类，必须这样：
+当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 `AVOSCloud.initialize()` 之前添加：
+
+```
+AVUser.alwaysUseSubUserClass(subUser.class);
+```
+
+注册跟普通的 `AVUser` 对象没有什么不同，但是登录如果希望返回自定义的子类，必须这样：
 
 ```java
 MyUser cloudUser = AVUser.logIn(username, password,
@@ -1640,7 +1516,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       }
     });
 ```
-修改成功以后，用户就可以使用新密码登陆了
+修改成功以后，用户就可以使用新密码登录了。
 
 
 ### 查询

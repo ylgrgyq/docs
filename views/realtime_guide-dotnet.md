@@ -1426,8 +1426,14 @@ await client.ConnectAsync();//Tom 登录客户端
 
 
 {% block connect_with_tag %}
-
+```
+该功能尚在开发中，即将上线
+```
 {% endblock %}
 
-{% block disconneted_by_server_with_sanme_tag %}
+{% block disconneted_by_server_with_same_tag %}
+```
+该功能尚在开发中，即将上线
+```
 {% endblock %}
+

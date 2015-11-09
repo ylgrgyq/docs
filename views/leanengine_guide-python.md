@@ -204,6 +204,10 @@ def after_user_save(user):
 ```
 {% endblock %}
 
+{% block beforeUpdate %}
+Python SDK 即将支持这个 Hook。
+{% endblock %}
+
 {% block afterUpdateExample %}
 ```python
 import leancloud
