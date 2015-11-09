@@ -34,7 +34,9 @@ $ sudo gem install cocoapods
 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
   ```sh
-  pod 'AVOSCloud'
+  pod 'AVOSCloud'//数据存储，短信等基础服务模块
+  pod 'AVOSCloudIM'//实时通信模块
+  // 根据实际需要选择引入的 SDK 模块
   ```
 
 执行命令 `pod install --verbose` 安装 SDK。如果本地安装过 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
