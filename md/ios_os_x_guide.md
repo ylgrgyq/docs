@@ -1136,7 +1136,8 @@ student.name = @"小明";
 @dynamic friends;
   ......
 ```
-注意：值为`Pointer`的实例对应的属性为`AVObject*`，比如:若`Student`中`bestFriend`代表一个指向另一个`Student`的键，则
+
+另外，值为`Pointer`的实例对应的属性为`AVObject*`，比如:若`Student`中`bestFriend`代表一个指向另一个`Student`的键，则
 ``` objc
 @interface Student : AVUser <AVSubclassing>
 @property(nonatomic, strong) AVObject *bestFriend
@@ -1147,7 +1148,7 @@ student.name = @"小明";
   ......
 ```
 
-当需要更新的时候，最后都要记得加上`[student save]`或者对应的后台存储函数进行更新，才会同步至服务器。
+提示：当需要更新的时候，最后都要记得加上`[student save]`或者对应的后台存储函数进行更新，才会同步至服务器。
 
 如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
 
