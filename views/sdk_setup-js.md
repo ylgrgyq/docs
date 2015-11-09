@@ -82,7 +82,7 @@ LeanCloud JavaScript SDK 是分模块使用的，可根据下列表格对应选�
 
 ```
 //参数依次为 AppId, AppKey
-AV.initialize('YOUR APP ID', 'YOUR APP KEY');
+AV.initialize('{{appid}}', '{{appkey}}');
 ```
 
 {% endblock %}
@@ -90,7 +90,8 @@ AV.initialize('YOUR APP ID', 'YOUR APP KEY');
 {% block sdk_using_north_america_node %}
 
 ```
-AV.initialize('YOUR APP ID', 'YOUR APP KEY');
+//参数依次为 AppId, AppKey
+AV.initialize('{{appid}}', '{{appkey}}');
 // 启用美国节点
 AV.useAVCloudUS()
 ```

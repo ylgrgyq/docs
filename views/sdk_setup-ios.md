@@ -86,8 +86,8 @@ $ sudo gem install cocoapods
 
 ```objc
 // applicationId 即 App Id，clientKey 是 App Key。
-[AVOSCloud setApplicationId:@"YOUR App ID"
-              clientKey:@"YOUR App KEY"];
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
 ```
 
 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
@@ -102,8 +102,8 @@ $ sudo gem install cocoapods
 
 ```
 // applicationId 即 App Id，clientKey 是 App Key。
-[AVOSCloud setApplicationId:@"YOUR App ID"
-              clientKey:@"YOUR App KEY"];
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
 //如果使用美国站点，请加上这行代码 
 [AVOSCloud useAVCloudUS];
 ```

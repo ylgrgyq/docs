@@ -173,7 +173,7 @@ public class MyLeanCloudApp extends Application {
         super.onCreate();
 
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"App ID","App Key");
+        AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
     }
 }
 ```
@@ -206,7 +206,7 @@ public class MyLeanCloudApp extends Application {
         super.onCreate();
 
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"App ID","App Key");
+        AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
         // 启用北美节点
         AVOSCloud.useAVCloudUS();
     }
