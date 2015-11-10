@@ -1129,9 +1129,28 @@ student.name = @"小明";
 
 ``` objc
 @interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends
+@property(retain) AVRelation *friends;
+  ......
+@end
+
+@implementation Student
+@dynamic friends;
   ......
 ```
+
+另外，值为Pointer的实例可用`AVObject*`来表示。比如，若`Student`中`bestFriend`代表一个指向另一个`Student`的键，由于Student是一个AVObject，因此表示这个键的值时，可用一个`AVObject*`代替：
+``` objc
+@interface Student : AVUser <AVSubclassing>
+@property(nonatomic, strong) AVObject *bestFriend;
+ ......
+@end
+
+@implementation Student
+@dynamic bestFriend;
+  ......
+```
+
+提示：当需要更新的时候，最后都要记得加上`[student save]`或者对应的后台存储函数进行更新，才会同步至服务器。
 
 如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
 
