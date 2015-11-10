@@ -1129,19 +1129,21 @@ student.name = @"小明";
 
 ``` objc
 @interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends
-
+@property(retain) AVRelation *friends;
+  ......
+@end
 
 @implementation Student
 @dynamic friends;
   ......
 ```
 
-另外，值为`Pointer`的实例对应的属性为`AVObject*`，比如:若`Student`中`bestFriend`代表一个指向另一个`Student`的键，则
+另外，值为Pointer的实例可用`AVObject*`来表示。比如，若`Student`中`bestFriend`代表一个指向另一个`Student`的键，由于Student是一个AVObject，因此表示这个键的值时，可用一个`AVObject*`代替：
 ``` objc
 @interface Student : AVUser <AVSubclassing>
-@property(nonatomic, strong) AVObject *bestFriend
-
+@property(nonatomic, strong) AVObject *bestFriend;
+ ......
+@end
 
 @implementation Student
 @dynamic bestFriend;
