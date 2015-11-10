@@ -1140,19 +1140,15 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 在这个例子中，我们将一段文本保存到服务器端：
 
 ```java
-AVFile avFile;
-try{
-       AVObject avObject = new AVObject("Post");
-       avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());
-       avFile.save();
-       avObject.put("content","#花儿与少年# 迪拜疯狂之旅");
-       avObject.put("attached", avFile);
-       avObject.saveInBackground();
-}catch(AVException  e){
-}
+AVFile avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());  
+avFile.saveInBackground();                                                 
+AVObject avObject = new AVObject("Post");                                  
+avObject.put("content", "#花儿与少年# 迪拜疯狂之旅");                             
+avObject.put("attached", avFile);                                          
+avObject.saveInBackground();                                               
 ```
 
-`AVFile` 构造函数的第一个参数指定文件名称，第二个构造函数接收一个 byte 数组，也就是将要上传文件的二进制。
+`AVFile` 构造函数的第一个参数指定文件名称，第二个参数接收一个 byte 数组，也就是将要上传文件的二进制。
 
 可以将 `AVFile` 直接存储到其他对象的某个属性里，后续可以取出来继续使用。
 
