@@ -14,37 +14,9 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
-
-
 ## SDK 安装
 
 我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
-
-## 应用
-
-LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。初始化方法如下：
-
-* 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
-
-``` 
-#import <AVOSCloud/AVOSCloud.h>;
-```
-
-* 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
-
-``` 
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
-[AVOSCloud setApplicationId:@"{{appid}}"
-              clientKey:@"{{appkey}}"];
-```
-
-* 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
-
-``` 
-[AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-```
-
-
 
 ## 对象
 

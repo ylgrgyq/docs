@@ -34,7 +34,9 @@ $ sudo gem install cocoapods
 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
   ```sh
-  pod 'AVOSCloud'
+  pod 'AVOSCloud'//数据存储，短信等基础服务模块
+  pod 'AVOSCloudIM'//实时通信模块
+  // 根据实际需要选择引入的 SDK 模块
   ```
 
 执行命令 `pod install --verbose` 安装 SDK。如果本地安装过 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
@@ -84,19 +86,29 @@ $ sudo gem install cocoapods
 
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
 
-```
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+```objc
 // applicationId 即 App Id，clientKey 是 App Key。
-[AVOSCloud setApplicationId:@"YOUR App ID"
-              clientKey:@"YOUR App KEY"];
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
 ```
 
 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
 
-```
+```objc
 [AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
 ```
 
+{% endblock %}
+
+{% block sdk_using_north_america_node %}
+
+```
+// applicationId 即 App Id，clientKey 是 App Key。
+[AVOSCloud setApplicationId:@"{{appid}}"
+              clientKey:@"{{appkey}}"];
+//如果使用美国站点，请加上这行代码 
+[AVOSCloud useAVCloudUS];
+```
 {% endblock %}
 
 {% block save_a_hello_world %}
