@@ -14,37 +14,9 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
-
-
 ## SDK 安装
 
 我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
-
-## 应用
-
-LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。初始化方法如下：
-
-* 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
-
-``` 
-#import <AVOSCloud/AVOSCloud.h>;
-```
-
-* 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
-
-``` 
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
-[AVOSCloud setApplicationId:@"{{appid}}"
-              clientKey:@"{{appkey}}"];
-```
-
-* 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
-
-``` 
-[AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-```
-
-
 
 ## 对象
 
@@ -1129,9 +1101,28 @@ student.name = @"小明";
 
 ``` objc
 @interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends
+@property(retain) AVRelation *friends;
+  ......
+@end
+
+@implementation Student
+@dynamic friends;
   ......
 ```
+
+另外，值为Pointer的实例可用`AVObject*`来表示。比如，若`Student`中`bestFriend`代表一个指向另一个`Student`的键，由于Student是一个AVObject，因此表示这个键的值时，可用一个`AVObject*`代替：
+``` objc
+@interface Student : AVUser <AVSubclassing>
+@property(nonatomic, strong) AVObject *bestFriend;
+ ......
+@end
+
+@implementation Student
+@dynamic bestFriend;
+  ......
+```
+
+提示：当需要更新的时候，最后都要记得加上`[student save]`或者对应的后台存储函数进行更新，才会同步至服务器。
 
 如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
 

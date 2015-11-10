@@ -80,11 +80,23 @@ LeanCloud JavaScript SDK 是分模块使用的，可根据下列表格对应选�
 {% block init_with_app_keys %}
 如果是在前端项目里面使用 LeanCloud JavaScript SDK，那么可以在页面加载的时候调用一下初始化的函数：
 
-```化参数依次为 AppId, AppKey
-AV.initialize('YOUR APP ID', 'YOUR APP KEY');
+```
+//参数依次为 AppId, AppKey
+AV.initialize('{{appid}}', '{{appkey}}');
 ```
 
 {% endblock %}
+
+{% block sdk_using_north_america_node %}
+
+```
+//参数依次为 AppId, AppKey
+AV.initialize('{{appid}}', '{{appkey}}');
+// 启用美国节点
+AV.useAVCloudUS()
+```
+{% endblock %}
+
 
 {% block save_a_hello_world %}
 

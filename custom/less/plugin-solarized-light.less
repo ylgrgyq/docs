@@ -65,9 +65,10 @@
   }
 }
 
-.copybtn {
+.copybtn, .runbtn {
   -webkit-appearance: none;
   border: 0;
+  padding: 3px 6px;
   color: #c29218;
   background: transparent;
   border-radius: 4px;
@@ -75,10 +76,6 @@
   font-size: 24px;
   line-height: 1;
   text-transform: uppercase;
-
-  &.zeroclipboard-is-hover {
-    color: #f9b813;
-  }
 
   .icon {
     vertical-align: middle;
@@ -88,6 +85,21 @@
   .input-group-addon & {
     padding: 0;
     font-size: 18px;
+  }
+}
+
+@btn-active-color: #f9b813;
+
+.copybtn {
+  &.zeroclipboard-is-hover {
+    color: @btn-active-color;
+  }
+}
+
+.runbtn {
+  &:hover, &:focus {
+    color: @btn-active-color;
+    text-decoration: none;
   }
 }
 

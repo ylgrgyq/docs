@@ -27,8 +27,10 @@
   .app-item-meta {
     padding: 8px 15px 6px;
 
-    .label {
-      vertical-align: 0;
+    .icon-team-bold {
+      color: @link-color;
+      vertical-align: middle;
+      font-size: 17px;
     }
 
     .app-item-settings {
@@ -86,23 +88,6 @@
 
     @media (max-width: @screen-sm-max) {
       // opacity: 1;
-    }
-
-    > a {
-
-      .dashboard-subnav-text {
-        // display: none;
-
-        // Show text for large screens
-        @media (min-width: @screen-xs) {
-          // display: inline;
-        }
-
-        // Hide text for small to medium screens
-        @media (max-width: @screen-sm-max) and (min-width: @screen-sm) {
-          // display: none;
-        }
-      }
     }
 
     > a,
