@@ -360,14 +360,18 @@ post.id = '5590cdfde4b00f7adb5860c8';
 myComment.set("post", post);
 ```
 
-默认情况下，当获取一个对象时，关联的 AV.Object 不会被获取到，这些对象的值不能访问，除非像下面这样获取它们：
+默认情况下，当获取一个对象时，关联的 AV.Object 不会被获取到，这些对象的值不能访问，要使用 include 来获取它们：
 
 ```javascript
 var post = fetchedComment.get("post");
 post.fetch({
-  success: function(post) {
-    var content = post.get("content");
-  }
+    // 用法可参考 API 文档 > AV.Object > fetch 
+    include: "author"
+  },
+  {
+    success: function(post) {
+      var content = post.get("content");
+    }
 });
 ```
 

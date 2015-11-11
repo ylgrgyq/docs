@@ -173,7 +173,7 @@ public class MyLeanCloudApp extends Application {
         super.onCreate();
 
         // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"App ID","App Key");
+        AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
     }
 }
 ```
@@ -191,6 +191,27 @@ public class MyLeanCloudApp extends Application {
 <application ...
   android:name=".MyLeanCloudApp"
   ... />
+```
+
+{% endblock %}
+
+{% block sdk_using_north_america_node %}
+只要在调用 `AVOSCloud.initialize` 之后调用一下 `AVOSCloud.useAVCloudUS()` 即可，如下： 
+
+```java
+public class MyLeanCloudApp extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        // 初始化参数依次为 this, AppId, AppKey
+        AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
+        // 启用北美节点
+        AVOSCloud.useAVCloudUS();
+    }
+}
+
 ```
 
 {% endblock %}
