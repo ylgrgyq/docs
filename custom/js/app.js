@@ -7,6 +7,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
     function($scope, $http, $timeout, $compile,$rootScope) {
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
+        $scope.masterkey = "{{masterkey}}";
         $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){
