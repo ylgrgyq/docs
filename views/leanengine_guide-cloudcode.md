@@ -275,6 +275,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
+  //输出信息请到「应用控制台 > 存储 > 云引擎 > 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -390,7 +391,7 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 {% endblock %}
 
 {% block http_client %}
-LeanEngine 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐您使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
+LeanEngine 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐你使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
 
 使用 `AV.Cloud.httpRequest` ，一个简单的 GET 请求看起来是这样：
 
@@ -462,7 +463,7 @@ AV.Cloud.httpRequest({
 
 ### 设置超时
 
-默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过 timeout 选项（单位毫秒）：
+默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，你可以调整这个超时，通过 timeout 选项（单位毫秒）：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -549,7 +550,7 @@ AV.Cloud.httpRequest({
 {% endblock %}
 
 {% block timerLegacy %}
-**原来提供的`AV.Cloud.setInterval`和`AV.Cloud.cronjob`都已经废弃，这两个函数的功能变成和`AV.Cloud.define`一样，已经定义的任务会自动帮您做转换并启动**
+**原来提供的`AV.Cloud.setInterval`和`AV.Cloud.cronjob`都已经废弃，这两个函数的功能变成和`AV.Cloud.define`一样，已经定义的任务会自动帮你做转换并启动**
 {% endblock %}
 
 {% block timerExample %}
@@ -623,7 +624,7 @@ app.listen({'static': {maxAge: 604800000}});
 {% block dynamic_request %}
 ### 动态请求
 
-如果只是展现静态资源，您可能使用 Github Pages 类似的免费服务也能做到，但是 LeanEngine 提供的 Web Hosting 功能同时支持动态请求。 这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+如果只是展现静态资源，你可能使用 Github Pages 类似的免费服务也能做到，但是 LeanEngine 提供的 Web Hosting 功能同时支持动态请求。 这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
 
 关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
 
@@ -661,7 +662,7 @@ app.listen();
 app.set('view engine', 'jade');
 ```
 
-您可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message:
+你可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message:
 
 ```
 Congrats, you just set up your app!
@@ -669,7 +670,7 @@ Congrats, you just set up your app!
 
 更多复杂的路由和参数传递，请看 [express.js框架文档](http://expressjs.com/guide.html)。
 
-我们还提供了一个在线demo： http://myapp.avosapps.com/ ，源码在 https://github.com/killme2008/cloudcode-test ，您可以作为参考。
+我们还提供了一个在线demo： http://myapp.avosapps.com/ ，源码在 https://github.com/killme2008/cloudcode-test ，你可以作为参考。
 {% endblock %}
 
 {% block error_page_404 %}
@@ -760,17 +761,17 @@ app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}
 
 使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
-`avos-express-cookie-session`支持的选项包括：
+`avos-express-cookie-session` 支持的选项包括：
 
-* cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
+* cookie：可选参数，设置 cookie 属性，例如 maxAge,secure等。我们会强制将 httpOnly 和 signed 设置为 true。
+* fetchUser：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性，你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
+* key：session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
 
-**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
 
 * 在云代码方法中，通过 request.user 获取用户信息。
 * 在 webHosting 中，通过 req.AV.user 获取用户信息。
-* 在后续的方法调用显示的传递 user 对象。
+* 在后续的方法调用显示传递 user 对象。
 
 登录很简单：
 
@@ -811,7 +812,7 @@ app.get('/logout', function(req, res) {
 });
 ```
 
-登录页面大概是这样login.ejs:
+登录页面大概是这样 login.ejs:
 
 ```html
 <html>
@@ -828,7 +829,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+注意： express 框架的 `express.session.MemoryStore` 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
 {% endblock %}
 
 {% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}
@@ -855,7 +856,7 @@ if (__local) {
 {% block cloud_code_module %}
 ## 模块
 
-云代码 2.0 支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+云代码 2.0 支持将 JavaScript 代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和 CommonJS 模块类似。当一个模块被加载的时候，JavaScript  文件首先被加载，然后执行文件内的源码，并返回全局的 export 对象。例如，假设 `cloud/name.js` 包含以下源码：
 
 ```javascript
 var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
@@ -863,7 +864,8 @@ exports.isACoolName = function(name) {
   return coolNames.indexOf(name) !== -1;
 }
 ```
-然后在`cloud/main.js`包含下列代码片段：
+
+然后在 `cloud/main.js` 包含下列代码片段：
 
 ```javascript
 var name = require('cloud/name.js');
@@ -871,9 +873,10 @@ name.isACoolName('Fred'); // 返回false
 name.isACoolName('Skippy'); // 返回true;
 name.coolNames; // 未定义.
 ```
-（提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
 
-name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的云代码项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+提示，你可以利用 `console.log` 来打印这几个调用的返回值到日志，在 [应用控制台 > 存储 > 云引擎 > 日志](/cloud.html?appid={{appid}}#/log) 中查看）。
+
+name 模块包含一个名为 `isACoolName` 的函数。`require` 接收的路径是相对于你的云代码项目的根路径，并且只限 `cloud/` 目录下的模块可以被加载。
 
 ### 可用的第三方模块
 
@@ -902,8 +905,8 @@ stripe
 sendgrid
 xml2js
 ```
-上面这些模块都可以直接require使用。
-我们还提供受限制的`fs`文件模块，仅可以读取上传文件目录下的文件。
+
+上面这些模块都可以直接 require 使用。我们还提供受限制的 `fs` 文件模块，仅可以读取上传文件目录下的文件。
 
 **云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
 {% endblock %}

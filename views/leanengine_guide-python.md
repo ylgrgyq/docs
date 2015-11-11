@@ -11,8 +11,10 @@ $ cd python-getting-started
 然后添加应用 appId 等信息到该项目：
 
 ```
-$ avoscloud add <appName> <appId>
+$ avoscloud add <APP-NAME> <APP-ID>
 ```
+
+`<APP-NAME>` 是应用名称，`<APP-ID>` 是应用 ID。这些信息可以在登录控制台后，选择应用，从 **设置** > **基本信息** 和 **应用 Key** 中找到。
 {% endblock %}
 
 {% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
@@ -123,7 +125,7 @@ def averageStars(movie):
 {% block cloudFuncParams %}
 客户端传递的参数，会被当作关键字参数传递进云函数。
 
-比如上面的例子，调用时传递的参数为 `{"movie": "The Matrix"}`，定义云函数的时候，参数写movie，即可拿到对应的参数。
+比如上面的例子，调用时传递的参数为 `{"movie": "夏洛特烦恼"}`，定义云函数的时候，参数写movie，即可拿到对应的参数。
 
 但是有时候，您传递的参数可能是变长的，或者客户端传递的参数数量错误，这时候就会报错。为了应对这种情况，推荐您使用关键字参数的形式来获取参数：
 
