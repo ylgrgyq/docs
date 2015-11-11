@@ -539,8 +539,11 @@ data | 消息内容
 `4108`|`LOGIN_TIMEOUT`|登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以 [创建工单](http://ticket.leancloud.cn/)，由我们技术顾问来给出建议。
 `4109`|`FRAME_TOO_LONG`|包过长。消息大小超过 5 KB，请缩短消息或者拆分消息。
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
+`4111`|`SESSION_CONFLICT`|启用单设备登录后，该用户在别的设备上登录，当前设备被强制下线。
+`4112`|`SESSION_TOKEN_EXPIRED`|登录的 Session Token 已过期（SDK 会自动重试解决）
 `4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
+`4301`|`CONVERSATION_CREATION_FAILED`|对话创建失败
 `4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
