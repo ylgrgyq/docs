@@ -191,6 +191,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
+  //输出信息请到「应用控制台 > 存储 > 云引擎 > 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
