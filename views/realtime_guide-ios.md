@@ -561,33 +561,7 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% block messagePolicy_received %}{% endblock %}
 
 {% block message_Relation_intro %}
-        
-                                                                +---------------+                                                           
-                                                                |               |                                                           
-                                                                |  AVIMMessage  |                                                           
-                                                                |               |                                                           
-                                                                +-------+-------+                                                           
-                                                                        |                                                                   
-                                                                        |                                                                   
-                                                              +---------+----------+                                                        
-                                                              |                    |                                                        
-                                                              |  AVIMTypedMessage  |                                                        
-                                                              |                    |                                                        
-                                                              +---------+----------+                                                        
-                                                                        |                                                                   
-                                                                        |                                                                   
-                                                                        |                                                                   
-             +---------------------+----------------------+-------------+---------+----------------------+------------------------+         
-             |                     |                      |                       |                      |                        |         
-             |                     |                      |                       |                      |                        |         
-             |                     |                      |                       |                      |                        |         
-    +--------+--------+   +--------+---------+   +--------+---------+   +---------+--------+   +---------+-----------+   +--------+--------+
-    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
-    | AVIMTextMessage |   | AVIMImageMessage |   | AVIMAudioMessage |   | AVIMVedioMessage |   | AVIMLocationMessage |   | AVIMFileMessage |
-    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
-    +-----------------+   +------------------+   +------------------+   +------------------+   +---------------------+   +-----------------+
-
-
+![message type diagram](images/message_type_diagram.png)
 {% endblock %}
 
 {% block message_Properties_intro %}
