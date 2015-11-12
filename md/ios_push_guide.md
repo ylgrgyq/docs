@@ -135,7 +135,7 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 选择证书
 
-默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用测试证书，可以通过 `setProductionMode`方法：
+默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用开发证书，可以通过 `setProductionMode`方法：
 
 ```
 [AVPush setProductionMode:NO];
@@ -433,7 +433,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
 
-你可以在[请求分析](/apistat.html?appid={{appid}}#/_apiRequest)菜单里看到通知和 app 的打开情况。
+你可以在 [**控制台** > **分析** > **行为分析** > **应用使用**](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 

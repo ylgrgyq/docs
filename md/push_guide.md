@@ -37,7 +37,7 @@ timeZone| |设备设定的时区
 ---|---|---
 data| |本次推送的消息内容，JSON 对象。
 invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW12) 错误。**如果这个数字过大，请留意证书是否正常。**
-prod|iOS|使用什么环境证书。**dev** 表示测试证书，**prod** 表示生产环境证书。
+prod|iOS|使用什么环境证书。**dev** 表示开发证书，**prod** 表示生产环境证书。
 status| |本次推送的状态，**in queue** 表示仍然在队列，**done** 表示完成，**schedule** 表示定时推送任务等待触发中。
 subscribers| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
 where| |本次推送查询 _Installation 表的条件，符合这些查询条件的设备将接收本条推送消息。
@@ -167,7 +167,7 @@ channels|推送给哪些频道，将作为条件加入 where 对象。
 data|推送的内容数据，JSON 对象，请参考 [消息内容](#消息内容_Data)。
 expiration_interval|消息过期的相对时间，从调用 API 的时间开始算起，单位是「秒」。
 expiration_time|消息过期的绝对日期时间
-prod|**仅对 iOS 有效**。设置使用测试证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
+prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
 
@@ -182,7 +182,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
   "data": {
    "alert":             "消息内容",
    "category":          "通知分类名称",
-   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 字符串",
+   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": "如果你在使用 Newsstand, 设置为1来开始一次后台下载"
   }
@@ -252,7 +252,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
   "data":{
     "ios": {
       "alert":             "消息内容",
-      "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 字符串",
+      "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载"
     },
@@ -284,7 +284,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 }
 ```
 
-如果是 `dev` 值就表示使用测试证书，`prod` 值表示使用生产证书，默认使用**生产证书**。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
+如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书，默认使用**生产证书**。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 
 #### 推送查询条件
 
@@ -573,7 +573,7 @@ curl -X POST \
 * 尝试到 [Apple Developer](https://developer.apple.com/account/overview.action) 重新生成 **provisioning profile**，修改 Apple ID，再改回来，然后重新生成。你需要重新安装 provisioning profile，并在 **Project** > **Build Settings** 里重新设置。
 * 打开 XCode Organizer，从电脑和 iOS 设备里删除所有过期和不用的 provisioning profile。
 * 如果编译和运行都没有问题，但是你仍然收不到推送，请确保你的应用打开了接收推送权限，在 iOS 设备的 **设置** > **通知** > **你的应用** 里确认。
-* 如果权限也没有问题，请确保使用了正确的 **provisioning profile**。 打包你的应用。如果你上传了测试证书并使用测试证书推送，那么必须使用 **Development Provisioning Profile** 构建你的应用。如果你上传了生产证书，并且使用生产证书推送，请确保你的应用使用 **Distribution Provisioning Profile** 签名打包。**Ad Hoc** 和 **App Store Distribution Provisioning Profile** 都可以接收使用生产证书发送的消息。
+* 如果权限也没有问题，请确保使用了正确的 **provisioning profile**。 打包你的应用。如果你上传了开发证书并使用开发证书推送，那么必须使用 **Development Provisioning Profile** 构建你的应用。如果你上传了生产证书，并且使用生产证书推送，请确保你的应用使用 **Distribution Provisioning Profile** 签名打包。**Ad Hoc** 和 **App Store Distribution Provisioning Profile** 都可以接收使用生产证书发送的消息。
 * 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 **provisioning profile**，并到 XCode Organizer 更新。
 * 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
 * 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。

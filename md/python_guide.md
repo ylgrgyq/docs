@@ -135,6 +135,7 @@ game_score.updated_at    # 此对象最后更新的时间，类型为 datetime.d
 
 ```python
 from leancloud import Query
+# Query 构造函数的参数可以是字符串，也可以是一个 leancloud.Object 子类。
 query = Query(GameScore)
 game_score = query.get('520ca0bbe4b07e8e0e847e31')
 print game_score.get('playerName')
@@ -142,12 +143,15 @@ print game_score.get('playerName')
 
 ### 更新对象
 
-更新对象的时候，直接修改对象上对应字段的值，然后再调用`save`方法即可。
+更新对象的时候，直接修改对象上对应字段的值，然后再调用 `save` 方法即可。
 
 ```python
 from leancloud import Object
+# Object.extend('GameScore') 和 class GameScore(leancloud.Object): 
+# 的写法是一样的，返回的结果是一个 class，所以是变量名大写
 GameScore = Object.extend('GameScore')
 
+game_score = GameScore()
 game_score.set('score', 42)
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
@@ -165,6 +169,7 @@ game_score.save()
 from leancloud import Object
 GameScore = Object.extend('GameScore')
 
+game_score = GameScore()
 game_score.set('score', 42)
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')

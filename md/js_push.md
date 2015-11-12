@@ -185,7 +185,7 @@ pushObject.send({
 
     * push_time {String}（可选） 定期推送时间
 
-    * prod {String} (可选) 如果想推送到 iOS 设备，可以通过该参数指定使用测试环境还是生产环境证书，dev 表示测试证书，prod 表示生产证书，默认生产证书
+    * prod {String} (可选) 如果想推送到 iOS 设备，可以通过该参数指定使用测试环境还是生产环境证书，dev 表示开发证书，prod 表示生产证书，默认生产证书
 
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
