@@ -456,9 +456,9 @@ master | |字符串 `"master"`，当使用 master key 签名请求的时候，�
 
 错误代码请看 [错误代码详解](./error_code.html)。
 
-##对象
+## 对象
 
-###对象格式
+### 对象格式
 
 LeanCloud 的数据存储服务是建立在 AVObject（对象）基础上的，每个 AVObject 包含若干属性值对（key-value，也称「键值对」），属性的值是与 JSON 格式兼容的数据。
 通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，后端会保存它。
@@ -509,7 +509,7 @@ https://api.leancloud.cn/1.1/users
 https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-###创建对象
+### 创建对象
 
 为了在 LeanCloud 上创建一个新的对象，应该向 class 的 URL 发送一个 **POST** 请求，其中应该包含对象本身。例如，要创建如上所说的对象：
 
@@ -540,7 +540,7 @@ Location: https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 
 >注意：**我们对单个 class 的记录数目没有做限制，但是单个应用的总 class 数目限定为 500 个以内**。也就是说单个应用里面，对象的类别不超过 500 个，但是单个类别下的实例数量则没有限制。
 
-###获取对象
+### 获取对象
 
 当你创建了一个对象时，你可以通过发送一个 GET 请求到返回的 header 的 Location 以获取它的内容。例如，为了得到我们上面创建的对象：
 
@@ -575,7 +575,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-###更新对象
+### 更新对象
 
 为了更改一个对象已经有的数据，你可以发送一个 PUT 请求到对象相应的 URL 上，任何你未指定的 key 都不会更改，所以你可以只更新对象数据的一个子集。例如，我们来更改我们对象的一个 content 字段：
 
@@ -596,7 +596,7 @@ curl -X PUT \
 }
 ```
 
-####计数器
+#### 计数器
 
 为了存储一个计数器类型的数据, LeanCloud 提供对任何数字字段进行原子增加（或者减少）的功能。比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
@@ -611,7 +611,7 @@ curl -X PUT \
 
 这样就将对象里的 **upvotes**（表示被用户点赞的次数）分数加 1，其中 **amount** 指定递增的数字大小，如果为负数，就变成递减。
 
-####数组
+#### 数组
 
 为了存储数组型数据，LeanCloud 提供 3 种操作来原子性地更改一个数组字段：
 
@@ -630,7 +630,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-####关系
+#### 关系
 
 为了更新 Relation 的类型，LeanCloud 提供特殊的操作来原子地添加和删除一个关系，所以我们可以像这样添加一个关系（某个用户喜欢了这条微博）：
 
@@ -654,7 +654,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-###删除对象
+### 删除对象
 
 为了在 LeanCloud 上删除一个对象，可以发送一个 DELETE 请求到指定的对象的 URL，比如：
 
@@ -676,7 +676,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
-###批量操作
+### 批量操作
 
 为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行 create、update、delete 操作。
 
@@ -759,7 +759,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/batch
 ```
 
-###数据类型
+### 数据类型
 
 到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
 
@@ -818,9 +818,9 @@ curl -X GET \
 
 当更多的数据类型被加入的时候，它们都会采用 hashmap 加上一个 `__type` 字段的形式，所以你不应该使用 `__type` 作为你自己的 JSON 对象的 key。
 
-##查询
+## 查询
 
-###基础查询
+### 基础查询
 
 通过发送一个 GET 请求到类的 URL 上，不需要任何 URL 参数，你就可以一次获取多个对象。下面就是简单地获取所有微博：
 
@@ -856,7 +856,7 @@ curl -X GET \
 }
 ```
 
-###查询约束
+### 查询约束
 
 通过 `where` 参数的形式可以对查询对象做出约束。
 
@@ -1034,7 +1034,7 @@ curl -X GET \
 
 所有以上这些参数都可以和其他的组合进行使用。
 
-###对数组的查询
+### 对数组的查询
 
 对于 key 的值是一个数组的情况，可以通过如下方式查找 key 的值中有 2 的对象：
 
@@ -1058,7 +1058,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/TestObject
 ```
 
-###关系查询
+### 关系查询
 
 有几种方式来查询对象之间的关系数据。如果你想获取对象，而这个对象的一个字段对应了另一个对象，你可以用一个 `where` 查询，自己构造一个 Pointer，和其他数据类型一样。例如，每条微博都会有很多人评论，我们可以让每一个 Comment 将它对应的 Post 对象保存到 post 字段上，这样你可以取得一条微博下所有 Comment：
 
@@ -1146,7 +1146,7 @@ curl -X GET \
 
 如果你要构建一个查询，这个查询要 include 多个类，此时用逗号分隔列表即可。
 
-###对象计数
+### 对象计数
 
 如果你在使用 `limit`，或者如果返回的结果很多，你可能想要知道到底有多少对象应该返回，而不用把它们全部获得以后再计数，此时你可以使用 `count` 参数。举个例子，如果你仅仅是关心一个某个用户发布了多少条微博：
 
@@ -1174,7 +1174,7 @@ curl -X GET \
 
 如果有一个非 0 的 `limit` 的话，则既会返回 `results` 也会返回 `count`。
 
-###复合查询
+### 复合查询
 
 如果你想查询对象符合几种查询之一，你可以使用 `$or` 操作符，带一个 JSON 数组作为它的值。例如，你想查询出企业官方账号和个人账号的微博，可以这样：
 
@@ -1218,13 +1218,13 @@ curl -X GET \
   https://api.leancloud.cn/1.1/cloudQuery
 ```
 
-##用户
+## 用户
 
 不仅在移动应用上，还在其他系统中，很多应用都有一个统一的登录流程。通过 REST API 访问用户的账户让你可以在 LeanCloud 上简单实现这一功能。
 
 通常来说，**用户**（类名 `_User`）这个类的功能与其他的对象是相同的，比如都没有限制模式（Schema free）。User 对象和其他对象不同的是一个用户必须有用户名（username）和密码（password），密码会被自动地加密和存储。LeanCloud 强制要求 username 和 email 这两个字段必须是没有重复的。
 
-###注册
+### 注册
 
 注册一个新用户与创建一个新的普通对象之间的不同点在于 username 和 password 字段都是必需的。password 字段会以和其他的字段不一样的方式处理，它在储存时会被加密而且永远不会被返回给任何来自客户端的请求。
 
@@ -1258,7 +1258,7 @@ Location: https://api.leancloud.cn/1.1/users/55a47496e4b05001a7732c5f
 }
 ```
 
-###登录
+### 登录
 
 在你允许用户注册之后，在以后你需要让他们用自己的用户名和密码登录。为了做到这一点，发送一个 GET 请求到 /1.1/login，加上 username 和 password 作为 URL 编码后的参数。
 
@@ -1287,7 +1287,7 @@ curl -X GET \
 }
 ```
 
-###使用手机号码一键注册或登录
+### 使用手机号码一键注册或登录
 
 请参考 [短信服务 REST API 详解 - 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
 <!--
@@ -1322,7 +1322,7 @@ curl -X POST \
 如果是第一次注册，将默认设置 `mobilePhoneVerified` 属性为 `true`。
 -->
 
-###验证 Email
+### 验证 Email
 
 设置 email 验证是 app 设置中的一个选项，通过这个标识，应用层可以对提供真实 email 的用户更好的功能或者体验。Email 验证会在 User 对象中加入 `emailVerified` 字段，当一个用户的 email 被新设置或者修改过的话，`emailVerified` 会被重置为 false。LeanCloud 后台会往用户填写的邮箱发送一个验证链接，用户点击这个链接可以让 `emailVerified` 被设置为 true。
 
@@ -1347,7 +1347,7 @@ curl -X POST \
   https://api.leancloud.cn/1.1/requestEmailVerify
 ```
 
-###请求密码重设
+### 请求密码重设
 
 在用户将 email 与他们的账户关联起来之后，你可以通过邮件来重设密码。操作方法为，发送一个 POST 请求到 `/1.1/requestPasswordReset`，同时在 request 的 body 部分带上 email 字段。
 
@@ -1367,6 +1367,7 @@ curl -X POST \
 ### 手机号码验证
 
 请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
+
 <!--
 在应用设置里你还可以选择开启注册手机码号验证功能（设置路径：进入应用控制台 > **设置** > **应用选项** > **短信**，打开「验证注册用户手机号码」），当注册的时候用户填写 mobilePhoneNumber 字段，LeanCloud 云端将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的 mobilePhoneNumberVerified 属性将设置为 true。
 
@@ -1475,6 +1476,7 @@ curl -X PUT \
 ```
 
 修改成功后，就可以用新密码登录了。
+
 -->
 
 ### 获取用户
@@ -1885,7 +1887,7 @@ Status: 201 Created
 Location: https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
-###获取角色
+### 获取角色
 
 你可以同样通过发送一个 GET 请求到 Location header 中返回的 URL 来获取这个对象，比如我们想要获取上面创建的对象：
 
@@ -1917,7 +1919,7 @@ curl -X GET \
 
 注意 users 和 roles 关系无法在 JSON 中见到，你需要相应地用 `$relatedTo` 操作符来查询角色中的子角色和用户。
 
-###更新角色
+### 更新角色
 
 更新一个角色通常可以像更新其他对象一样使用，但是 name 字段是不可以更改的。加入和删除 users 和 roles 可以通过使用`AddRelation` 和 `RemoveRelation`操作来进行。
 
@@ -1966,7 +1968,7 @@ curl -X PUT \
 ```
 
 
-###删除对象
+### 删除对象
 
 为了从 LeanCloud 上删除一个角色，只需要发送 DELETE 请求到它的 URL 就可以了。
 
@@ -1980,7 +1982,7 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/roles/55a483f0e4b05001a774b837
 ```
 
-###安全性
+### 安全性
 
 当你通过 REST API key 访问 LeanCloud 的时候，访问同样可能被 ACL 所限制，就像 iOS 和 Android SDK 上一样。你仍然可以通过 REST API 来读和修改 ACL，只用通过访问「ACL」键就可以了。
 
@@ -2032,7 +2034,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/roles/<ModeratorsRoleObjectId>
 ```
 
-##文件
+## 文件
 
 对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./cloud_code_commandline.html)。
 
@@ -2115,13 +2117,13 @@ curl -X DELETE \
   https://api.leancloud.cn/1.1/files/543cbaede4b07db196f50f3c
 ```
 
-##Push 通知
+## Push 通知
 
 请查看我们的 [消息推送开发指南 - 使用 REST API 推送消息](./push_guide.html#使用_REST_API_推送消息)。
 
-##安装数据
+## 安装数据
 
-###上传安装数据
+### 上传安装数据
 
 一个安装对象表示了一个你的在手机上被安装的 app，这些对象被用来保存订阅数据的，这些数据是一个或多个通知通道订阅的。安装数据除了一些特殊字段以外都可以是模式可变的。这些字段都有特殊的类型和验证需求。
 
@@ -2171,7 +2173,7 @@ Location: https://api.leancloud.cn/1.1/installations/51ff1808e4b074ac5c34d7fd
 }
 ```
 
-###获取安装对象
+### 获取安装对象
 
 你可以通过 GET 方法请求创建的时候 Location 表示的 URL 来获取 Installation 对象。比如，获取上面的被创建的对象：
 
@@ -2197,7 +2199,7 @@ curl -X GET \
 }
 ```
 
-###更新安装对象
+### 更新安装对象
 
 安装对象可以向相应的URL发送PUT请求来更新。举个例子，为了让设备订阅一个 foo 的 Push channel：
 
@@ -2217,7 +2219,7 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/installations/51ff1808e4b074ac5c34d7fd
 ```
 
-###查询安装对象
+### 查询安装对象
 
 你可以一次通过 GET 请求到 installations 的根 URL 来获取多个安装对象。这项功能在 SDK 中不可用。
 
@@ -2261,7 +2263,7 @@ curl -X GET \
 
 所有对普通的对象的查询都对 installatin 对象起作用，所以可以查看之前的查询部分以获取详细信息。通过做 channels 的数组查询，你可以查找一个订阅了给定的 push channel 的所有设备.
 
-###删除安装对象
+### 删除安装对象
 
 为了从 AVOSCloud 中删除一个安装对象，可以发送 DELETE 请求到相应的 URL。这个功能在客户端 SDK 也不可用。举例：
 
@@ -2312,7 +2314,7 @@ curl -X POST \
 
 你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
-##地理查询
+## 地理查询
 
 假如在发布微博的时候，我们也支持用户加上当时的位置信息（新增一个 `location` 字段），如果想看看指定的地点附近发生的事情，可以通过 GeoPoint 数据类型加上在查询中使用 `$nearSphere` 做到。获取离当前用户最近的 10 条微博应该看起来像下面这个样子:
 
@@ -2384,7 +2386,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Post
 ```
 
-###警告
+### 警告
 
 这是有一些问题是值得留心的:
 
@@ -2414,6 +2416,7 @@ curl -X POST \
 ## 短信验证 API
 
 请参考 [短信服务 REST API 详解](rest_sms_api.html)。
+
 <!--
 在一些场景下，你可能希望用户验证手机号码后才能进行一些操作，例如充值等。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
 
@@ -2503,15 +2506,16 @@ Hi {{username}},
 这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 <span ng-non-bindable>`{{var}}`</span>。
 
 短信签名，是指短信内容里用实心方括号（【】）括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
+
 -->
 
 ## 实时通信 API
 
 请参考 [实时通信 REST API](./realtime_rest_api.html)。
 
-##统计数据 API
+## 统计数据 API
 
-###数据查询 API
+### 数据查询 API
 
 统计 API 可以获取一个应用的统计数据。因为统计数据的隐私敏感性，统计数据查询 API 必须使用 master key 的签名方式鉴权，请参考 [更安全的鉴权方式](#更安全的鉴权方式) 一节。
 
@@ -2739,7 +2743,7 @@ curl -X GET \
 }
 ```
 
-###统计数据收集 API
+### 统计数据收集 API
 
 格式概览如下：
 
