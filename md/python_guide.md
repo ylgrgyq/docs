@@ -576,15 +576,6 @@ results = mainQuery.find()
 
 请注意 **我们不会在组合查询的子查询中支持非过滤型的条件**（比如:limit, skip, ascending/descending, include）。
 
-### 删除查询结果
-
-如果你想将查询出来的对象都删除，或者删除符合查询条件的所有对象，可以调用 destroyAll 方法：
-
-```python
-query.destroy_all()
-# delete all objects by this query successfully.
-```
-
 ### CQL 查询语言
 
 我们允许使用类 SQL 语法的 CQL 查询语言来查询 LeanCloud 应用内的数据，例如：

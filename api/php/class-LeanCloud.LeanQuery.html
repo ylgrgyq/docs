@@ -44,12 +44,16 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-LeanCloud.GeoPoint.html">GeoPoint</a></li>
+				<li><a href="class-LeanCloud.LeanACL.html">LeanACL</a></li>
 				<li><a href="class-LeanCloud.LeanBytes.html">LeanBytes</a></li>
 				<li><a href="class-LeanCloud.LeanClient.html">LeanClient</a></li>
 				<li><a href="class-LeanCloud.LeanFile.html">LeanFile</a></li>
 				<li><a href="class-LeanCloud.LeanObject.html">LeanObject</a></li>
+				<li><a href="class-LeanCloud.LeanPush.html">LeanPush</a></li>
 				<li class="active"><a href="class-LeanCloud.LeanQuery.html">LeanQuery</a></li>
 				<li><a href="class-LeanCloud.LeanRelation.html">LeanRelation</a></li>
+				<li><a href="class-LeanCloud.LeanRole.html">LeanRole</a></li>
 				<li><a href="class-LeanCloud.LeanUser.html">LeanUser</a></li>
 				<li><a href="class-LeanCloud.MIMEType.html">MIMEType</a></li>
 			</ul>
@@ -115,7 +119,7 @@
 		<b>Namespace:</b> <a href="namespace-LeanCloud.html">LeanCloud</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-LeanCloud.LeanQuery.html#7-690" title="Go to source code">LeanCloud/LeanQuery.php</a>
+			<b>Located at</b> <a href="source-class-LeanCloud.LeanQuery.html#7-794" title="Go to source code">LeanCloud/LeanQuery.php</a>
 		<br>
 	</div>
 
@@ -1075,6 +1079,219 @@ for large datasets.</p>
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="near" id="_near">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_near">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#409-419" title="Go to source code">near</a>( <span>string <var>$key</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$point</var></span> )</code>
+
+		<div class="description short">
+			<p>Find objects near a geo point</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Find objects near a geo point</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Field key</dd>
+					<dt><var>$point</var></dt>
+					<dd>Center geo point</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="withinRadians" id="_withinRadians">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_withinRadians">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#421-433" title="Go to source code">withinRadians</a>( <span>string <var>$key</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$point</var></span>, <span>number <var>$distance</var></span> )</code>
+
+		<div class="description short">
+			<p>Find objects within a sphere of point, in radians</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Find objects within a sphere of point, in radians</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Field key</dd>
+					<dt><var>$point</var></dt>
+					<dd>Center geo point</dd>
+					<dt><var>$distance</var></dt>
+					<dd>Distance in radians</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="withinKilometers" id="_withinKilometers">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_withinKilometers">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#435-447" title="Go to source code">withinKilometers</a>( <span>string <var>$key</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$point</var></span>, <span>number <var>$distance</var></span> )</code>
+
+		<div class="description short">
+			<p>Find objects within a sphere of point, in kilometers</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Find objects within a sphere of point, in kilometers</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Field key</dd>
+					<dt><var>$point</var></dt>
+					<dd>Center geo point</dd>
+					<dt><var>$distance</var></dt>
+					<dd>Distance in kilometers</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="withinMiles" id="_withinMiles">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_withinMiles">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#449-461" title="Go to source code">withinMiles</a>( <span>string <var>$key</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$point</var></span>, <span>number <var>$distance</var></span> )</code>
+
+		<div class="description short">
+			<p>Find objects within a sphere of point, in miles</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Find objects within a sphere of point, in miles</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Field key</dd>
+					<dt><var>$point</var></dt>
+					<dd>Center geo point</dd>
+					<dt><var>$distance</var></dt>
+					<dd>Distance in miles</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="withinBox" id="_withinBox">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_withinBox">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#463-476" title="Go to source code">withinBox</a>( <span>string <var>$key</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$southwest</var></span>, <span><code><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></code> <var>$northeast</var></span> )</code>
+
+		<div class="description short">
+			<p>Find objects within a rectangle</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Find objects within a rectangle</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$key</var></dt>
+					<dd>Field key</dd>
+					<dt><var>$southwest</var></dt>
+					<dd>Geo point of southwest corner</dd>
+					<dt><var>$northeast</var></dt>
+					<dd>Geo point of northeast corner</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="select" id="_select">
 
 		<td class="attributes"><code>
@@ -1087,7 +1304,7 @@ for large datasets.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_select">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#407-421" title="Go to source code">select</a>( <span>string|array <var>$keys</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#480-494" title="Go to source code">select</a>( <span>string|array <var>$keys</var></span> )</code>
 
 		<div class="description short">
 			<p>Specify fields to include in query result</p>
@@ -1128,7 +1345,7 @@ for large datasets.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#__include">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#423-443" title="Go to source code">_include</a>( <span>string|array <var>$keys</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#496-516" title="Go to source code">_include</a>( <span>string|array <var>$keys</var></span> )</code>
 
 		<div class="description short">
 			<p>Include nested objects in query result</p>
@@ -1175,7 +1392,7 @@ author object in comment query result.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_limit">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#445-457" title="Go to source code">limit</a>( <span>integer <var>$n</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#518-530" title="Go to source code">limit</a>( <span>integer <var>$n</var></span> )</code>
 
 		<div class="description short">
 			<p>Limit number of rows to return</p>
@@ -1217,7 +1434,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_skip">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#459-470" title="Go to source code">skip</a>( <span>integer <var>$n</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#532-543" title="Go to source code">skip</a>( <span>integer <var>$n</var></span> )</code>
 
 		<div class="description short">
 			<p>Skip number of rows to return in the query</p>
@@ -1258,7 +1475,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_ascend">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#472-483" title="Go to source code">ascend</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#545-556" title="Go to source code">ascend</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Set ascending order on field</p>
@@ -1299,7 +1516,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_descend">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#485-496" title="Go to source code">descend</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#558-569" title="Go to source code">descend</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Set descending order on field</p>
@@ -1340,7 +1557,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_addAscend">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#498-509" title="Go to source code">addAscend</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#571-582" title="Go to source code">addAscend</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Add ascending order on a field</p>
@@ -1381,7 +1598,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_addDescend">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#511-522" title="Go to source code">addDescend</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#584-595" title="Go to source code">addDescend</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Add descending order on a field</p>
@@ -1422,7 +1639,7 @@ at a time.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_orQuery">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#545-559" title="Go to source code">orQuery</a>( <span>... <var>$queries</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#618-632" title="Go to source code">orQuery</a>( <span>... <var>$queries</var></span> )</code>
 
 		<div class="description short">
 			<p>Compose OR query from variable number of queries</p>
@@ -1464,7 +1681,7 @@ LeanQueries.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_andQuery">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#561-575" title="Go to source code">andQuery</a>( <span>... <var>$queries</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#634-648" title="Go to source code">andQuery</a>( <span>... <var>$queries</var></span> )</code>
 
 		<div class="description short">
 			<p>Compose AND query from variable number of queries</p>
@@ -1506,7 +1723,7 @@ LeanQueries.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_addOption">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#577-590" title="Go to source code">addOption</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#650-663" title="Go to source code">addOption</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
 
 		<div class="description short">
 			<p>Add extra option in query request</p>
@@ -1550,7 +1767,7 @@ sending query to cloud.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_encode">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#592-622" title="Go to source code">encode</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#665-695" title="Go to source code">encode</a>( )</code>
 
 		<div class="description short">
 			<p>Encode query to JSON representation</p>
@@ -1584,7 +1801,7 @@ sending query to cloud.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#624-633" title="Go to source code">get</a>( <span>string <var>$objectId</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#697-706" title="Go to source code">get</a>( <span>string <var>$objectId</var></span> )</code>
 
 		<div class="description short">
 			<p>Query object by id</p>
@@ -1623,7 +1840,7 @@ sending query to cloud.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_first">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#635-646" title="Go to source code">first</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#708-719" title="Go to source code">first</a>( )</code>
 
 		<div class="description short">
 			<p>Find the first object by the query</p>
@@ -1657,7 +1874,7 @@ sending query to cloud.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_find">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#648-676" title="Go to source code">find</a>( <span>integer <var>$skip</var> = -<span class="php-num">1</span></span>, <span>integer <var>$limit</var> = -<span class="php-num">1</span></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#721-749" title="Go to source code">find</a>( <span>integer <var>$skip</var> = -<span class="php-num">1</span></span>, <span>integer <var>$limit</var> = -<span class="php-num">1</span></span> )</code>
 
 		<div class="description short">
 			<p>Find and return objects by the query</p>
@@ -1702,7 +1919,7 @@ It does not mutate query.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_count">#</a>
-		<code><a href="source-class-LeanCloud.LeanQuery.html#678-689" title="Go to source code">count</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#751-762" title="Go to source code">count</a>( )</code>
 
 		<div class="description short">
 			<p>Count number of objects by the query</p>
@@ -1719,6 +1936,59 @@ It does not mutate query.</p>
 				</div>
 
 
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="doCloudQuery" id="_doCloudQuery">
+
+		<td class="attributes"><code>
+			 public static
+
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_doCloudQuery">#</a>
+		<code><a href="source-class-LeanCloud.LeanQuery.html#764-793" title="Go to source code">doCloudQuery</a>( <span>string <var>$cql</var></span>, <span>array <var>$pvalues</var> = <span class="php-keyword1">array</span>()</span> )</code>
+
+		<div class="description short">
+			<p>Doing a CQL query to retrive objects</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Doing a CQL query to retrive objects</p>
+
+<p>It returns an array that contains:</p>
+
+<ul>
+<li>className - Class name of the query</li>
+<li>results   - List of objects</li>
+<li>count     - Number of objects when it's a count query</li>
+</ul>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$cql</var></dt>
+					<dd>CQL statement</dd>
+					<dt><var>$pvalues</var></dt>
+					<dd>Positional values to replace in CQL</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					array
+				</div>
+
+
+				<h4>Link</h4>
+				<div class="list">
+						<a href="https://leancloud.cn/docs/cql_guide.html">https://leancloud.cn/docs/cql_guide.html</a><br>
+				</div>
 
 
 		</div>
