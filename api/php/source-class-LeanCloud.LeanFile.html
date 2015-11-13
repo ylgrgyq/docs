@@ -45,12 +45,16 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-LeanCloud.GeoPoint.html">LeanCloud\GeoPoint</a></li>
+				<li><a href="class-LeanCloud.LeanACL.html">LeanCloud\LeanACL</a></li>
 				<li><a href="class-LeanCloud.LeanBytes.html">LeanCloud\LeanBytes</a></li>
 				<li><a href="class-LeanCloud.LeanClient.html">LeanCloud\LeanClient</a></li>
 				<li><a href="class-LeanCloud.LeanFile.html">LeanCloud\LeanFile</a></li>
 				<li><a href="class-LeanCloud.LeanObject.html">LeanCloud\LeanObject</a></li>
+				<li><a href="class-LeanCloud.LeanPush.html">LeanCloud\LeanPush</a></li>
 				<li><a href="class-LeanCloud.LeanQuery.html">LeanCloud\LeanQuery</a></li>
 				<li><a href="class-LeanCloud.LeanRelation.html">LeanCloud\LeanRelation</a></li>
+				<li><a href="class-LeanCloud.LeanRole.html">LeanCloud\LeanRole</a></li>
 				<li><a href="class-LeanCloud.LeanUser.html">LeanCloud\LeanUser</a></li>
 				<li><a href="class-LeanCloud.MIMEType.html">LeanCloud\MIMEType</a></li>
 				<li><a href="class-LeanCloud.Operation.ArrayOperation.html">LeanCloud\Operation\ArrayOperation</a></li>
@@ -399,11 +403,11 @@
 </span><span id="291" class="l">        }
 </span><span id="292" class="l">
 </span><span id="293" class="l">        <span class="php-keyword1">forEach</span>(<span class="php-var">$data</span> <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$val</span>) {
-</span><span id="294" class="l">            <span class="php-var">$this</span>-&gt;_data[<span class="php-var">$key</span>] = LeanClient::decode(<span class="php-var">$val</span>);
+</span><span id="294" class="l">            <span class="php-var">$this</span>-&gt;_data[<span class="php-var">$key</span>] = LeanClient::decode(<span class="php-var">$val</span>, <span class="php-var">$key</span>);
 </span><span id="295" class="l">        }
 </span><span id="296" class="l">
 </span><span id="297" class="l">        <span class="php-keyword1">forEach</span>(<span class="php-var">$meta</span> <span class="php-keyword1">as</span> <span class="php-var">$key</span> =&gt; <span class="php-var">$val</span>) {
-</span><span id="298" class="l">            <span class="php-var">$this</span>-&gt;_metaData[<span class="php-var">$key</span>] = LeanClient::decode(<span class="php-var">$val</span>);
+</span><span id="298" class="l">            <span class="php-var">$this</span>-&gt;_metaData[<span class="php-var">$key</span>] = LeanClient::decode(<span class="php-var">$val</span>, <span class="php-var">$key</span>);
 </span><span id="299" class="l">        }
 </span><span id="300" class="l">    }
 </span><span id="301" class="l">
@@ -537,6 +541,6 @@
 </div>
 </div>
 <script src="resources/combined.js?6c1445516699060e9205736f33c2dc95dfd61b10"></script>
-<script src="elementlist.js?a510d4c314e1e6b34d75fb9f00110cc6989a69f3"></script>
+<script src="elementlist.js?5eafcb7e3c897c08b644726a47bc075952de7e1d"></script>
 </body>
 </html>
