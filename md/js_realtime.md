@@ -289,6 +289,66 @@ Web 端本身无论处理什么类型的数据，浏览器都可以自动解析�
 - location（地理位置）
 - file（各种类型文件）等类型。
 
+### 示例
+
+```
+// 与 iOS、Android 等 SDK 通信
+
+// 发送文本
+roomObj.send({
+    text: '文本内容'
+}, {
+    type: 'text'
+}, function(data) {
+    // 发送成功之后的回调
+});
+
+// 发送图片
+roomObj.send({
+    // 描述信息
+    text: '图片测试',
+    // 自定义的属性，可选填，非必须项
+    attr: {
+        aaa: 123
+    },
+    url: 'https://leancloud.cn/images/123.png',
+    // 图片相关信息，所有选项可选填，非必须项
+    metaData: {
+        // 图片名字
+        name:'logo',
+        // 文件格式
+        format:'png',
+        // 高度，单位像素 px
+        height: 123,
+        // 宽度，单位像素 px
+        width: 123,
+        // 文件大小，单位比特 b
+        size: 888
+    }
+}, {
+   type: 'image'
+}, function(data) {
+    console.log('图片数据发送成功！');
+});
+
+```
+
+### 自定义消息类型
+
+发送的消息也支持自定义的消息类型，如果 iOS、Android 上面如果通过自定义的 `_lctype` 实现的自定义类型，那么 Web 端也可以直接发送和接受同样格式的数据。
+
+```
+// 发送自定义类型数据
+roomObj.send({
+    _lctype: 123,
+    data: {
+      test: 'abc'
+    }
+}, function(data) {
+  // 发送成功之后的回调
+});
+```
+
 ## 暂态对话
 
 标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](realtime_v2.html)」中了解。
