@@ -689,8 +689,8 @@ app.get('/logout', function(req, res) {
 
 {% block https_redirect %}
 ```javascript
-var HttpsRedirect = AV.Cloud.HttpsRedirect;
-app.use(HttpsRedirect());
+app.enable('trust proxy');
+app.use(AV.Cloud.HttpsRedirect());
 ```
 {% endblock %}
 
