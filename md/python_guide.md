@@ -117,7 +117,7 @@ game_score.save()
 game_score = GameScore(score=42, playerName='Marvin')
 ```
 
-这时候登陆 LeanCloud 控制台查看，可以看到 GameScore 中新增一条数据。
+这时候登录 LeanCloud 控制台查看，可以看到 GameScore 中新增一条数据。
 
 另外所有 Object 子类对象，都有三个特殊字段，保存之后服务器会自动填充其中的数据。
 
@@ -732,7 +732,7 @@ user.sign_up()
 
 ### 登录
 
-在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登陆。
+在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登录。
 
 ```python
 User().login("myname", "mypass")

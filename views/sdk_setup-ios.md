@@ -115,7 +115,7 @@ $ sudo gem install cocoapods
 
 ```
 AVObject *post = [AVObject objectWithClassName:@"TestObject"];
-[post setObject:@"words" forKey:@"Hello,World!"];
+[post setObject:@"Hello,World!" forKey:@"words"];
 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
       // 保存成功了！
