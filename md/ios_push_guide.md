@@ -437,7 +437,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
-***如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用`UILocalNotification`展示一个通知给用户。***
+**如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用 `UILocalNotification` 展示一个通知给用户。**
 
 如果应用在后台，并且用户点击了通知，那么应用将被带到前台可视，为了跟踪这种通过通知打开应用的情况，你需要在跟踪代码里多作一个检查：
 
@@ -452,7 +452,10 @@ if (application.applicationState != UIApplicationStateBackground) {
   }
 }
 ```
-如果使用 iOS 7 push 的新特性（包括新的"content-available" 功能），你需要实现 iOS 7 新加的方法：
+
+如果使用 iOS 7 push 的新特性（包括新的 "content-available" 功能），你需要实现 iOS 7 
+新加的方法：
+
 ```objc
 - (void)application:(UIApplication *)application
         didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -467,11 +470,16 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 ### 跟踪本地通知 (iOS only)
 
-为了统计跟踪本地通知消息，需要注意`application:didFinishLaunchingWithOptions:`和`application:didReceiveLocalNotification:`都会调用到，如果你实现了`application:didReceiveLocalNotification:`这个方法,要注意避免重复统计。
+为了统计跟踪本地通知消息，需要注意以下两种方法都会调用到：
+
+- `application:didFinishLaunchingWithOptions:`
+- `-application:didReceiveLocalNotification:`
+
+如果你实现了 `application:didReceiveLocalNotification:` 这个方法，要注意避免重复统计。
 
 #### 清除 Badge
 
-清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器:
+清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器：
 
 ```objc
 - (void)applicationDidBecomeActive:(UIApplication *)application {
