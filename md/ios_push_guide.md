@@ -164,7 +164,7 @@ AVInstallation *installation = [AVInstallation currentInstallation];
 
 表示比赛的分数，比赛结果和受伤报告。
 
-设置，你可以给 Installation 添加 owner 属性，比如当前的登陆用户：
+设置，你可以给 Installation 添加 owner 属性，比如当前的登录用户：
 
 ```objc
 // Saving the device's owner
@@ -487,4 +487,10 @@ if (application.applicationState != UIApplicationStateBackground) {
 }
 ```
 
-清除 Badge 数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
+清除 Badge 数字最相关的三个方法是：
+
+- `applicationDidBecomeActive:`
+- `application:didFinishLaunchingWithOptions:`
+- `application:didReceiveRemoteNotification:`
+
+请阅读 [UIApplicationDelegate 文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。

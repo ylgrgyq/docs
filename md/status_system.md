@@ -241,7 +241,7 @@ query.find().then(function(statuses){
 
 #### 关注/取消关注
 
-当前登陆用户可以关注某人：
+当前登录用户可以关注某人：
 
     NSString *userObjectId = @"XXXXXX";
 
@@ -412,7 +412,7 @@ query.inboxType=kAVStatusTypeTimeline;
 
 #### 关注和取消关注
 
-登陆的用户可以关注其他用户，成为他们的粉丝，例如：
+登录的用户可以关注其他用户，成为他们的粉丝，例如：
 
 ```java
 //关注
@@ -463,7 +463,7 @@ AVUser.getCurrentUser().followInBackground("target user objectId", attributes, n
 // 其中userA是AVUser对象，您也可以使用AVUser的子类化对象进行查询
 //vhaxun粉丝
 AVQuery<AVUser> followerQuery = userA.followerQuery(AVUser.class);
-//AVQuery<AVUser> followerQuery = AVUser.followerQuery(userA.getObjectId(),AVUser.class); 也可以使用这个静态方法来获取非登陆用户的好友关系
+//AVQuery<AVUser> followerQuery = AVUser.followerQuery(userA.getObjectId(),AVUser.class); 也可以使用这个静态方法来获取非登录用户的好友关系
 followerQuery.findInBackground(new FindCallback<AVUser>() {
     @Override
     public void done(List<AVUser> avObjects, AVException avException) {
