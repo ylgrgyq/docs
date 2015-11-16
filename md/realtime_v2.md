@@ -18,7 +18,7 @@
 
 关于这些项目的更多介绍、截图预览，可见 [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) 。
 
-目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](./realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
+目前新版本实时通信服务接口与旧版本并不兼容，不能互相通信。我们推荐所有新用户直接使用新版本。已有的旧版本用户可以继续参考 [v1 版本文档](realtime.html)，我们仍然会对已有版本提供支持，并可能在未来提供无缝的迁移方案。已经发布的旧版本用户不会在功能、资源等各个方面受到任何影响，请放心使用。
 
 ## 功能和特性
 
@@ -479,19 +479,19 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 
 ## Android 开发指南
 
-参考 [Android 实时通信开发指南](./android_realtime_v2.html)
+参考 [Android 实时通信开发指南](realtime_guide-android.html)
 
 ## iOS 开发指南
 
-参考 [iOS 实时通信开发指南](./ios_realtime_v2.html)
+参考 [iOS 实时通信开发指南](realtime_guide-ios.html)
 
 ##  JavaScript 开发指南
 
-参考 [JavaScript 实时通信开发指南](./js_realtime.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
+参考 [JavaScript 实时通信开发指南](js_realtime.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
 
 ## REST API
 
-参考 [实时通信 REST API](./realtime_rest_api.html)。
+参考 [实时通信 REST API](realtime_rest_api.html)。
 
 ## 系统对话
 

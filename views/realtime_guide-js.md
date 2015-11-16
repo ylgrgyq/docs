@@ -759,7 +759,7 @@ AV.realtime(options, callback)
 
     * encodeHTML {Boolean} （可选）是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击），该选项默认不开启；true 为开启，false 为关闭。
 
-    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读「[权限和认证](realtime.html#权限和认证)」相关文档，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
+    * authFun {Function}（可选）可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，或者许可之后才能建立连接，详细阅读 [权限和认证](realtime_v2.html#权限和认证)，也可以参考 [demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例；
 
     * secure {Boolean}（可选）是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护，默认开启。true 为开启，false 为关闭。
 

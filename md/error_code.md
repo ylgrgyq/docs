@@ -7,7 +7,7 @@
 
 ## 实时通信错误码
 
-参考[实时通信服务端错误码说明](./realtime.html#服务器端错误码说明)
+参考[实时通信服务端错误码说明](realtime_v2.html#服务器端错误码说明)
 
 ## 1
 * 信息 - `Internal server error. No information available.`
