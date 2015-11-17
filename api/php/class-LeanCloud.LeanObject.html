@@ -44,12 +44,16 @@
 		<div id="elements">
 			<h3>Classes</h3>
 			<ul>
+				<li><a href="class-LeanCloud.GeoPoint.html">GeoPoint</a></li>
+				<li><a href="class-LeanCloud.LeanACL.html">LeanACL</a></li>
 				<li><a href="class-LeanCloud.LeanBytes.html">LeanBytes</a></li>
 				<li><a href="class-LeanCloud.LeanClient.html">LeanClient</a></li>
 				<li><a href="class-LeanCloud.LeanFile.html">LeanFile</a></li>
 				<li class="active"><a href="class-LeanCloud.LeanObject.html">LeanObject</a></li>
+				<li><a href="class-LeanCloud.LeanPush.html">LeanPush</a></li>
 				<li><a href="class-LeanCloud.LeanQuery.html">LeanQuery</a></li>
 				<li><a href="class-LeanCloud.LeanRelation.html">LeanRelation</a></li>
+				<li><a href="class-LeanCloud.LeanRole.html">LeanRole</a></li>
 				<li><a href="class-LeanCloud.LeanUser.html">LeanUser</a></li>
 				<li><a href="class-LeanCloud.MIMEType.html">MIMEType</a></li>
 			</ul>
@@ -105,6 +109,7 @@
 
 	<div>
 		<h4>Direct known subclasses</h4>
+			<a href="class-LeanCloud.LeanRole.html">LeanCloud\LeanRole</a>, 
 			<a href="class-LeanCloud.LeanUser.html">LeanCloud\LeanUser</a>
 	</div>
 
@@ -119,7 +124,7 @@
 		<b>Namespace:</b> <a href="namespace-LeanCloud.html">LeanCloud</a><br>
 		
 
-			<b>Located at</b> <a href="source-class-LeanCloud.LeanObject.html#11-689" title="Go to source code">LeanCloud/LeanObject.php</a>
+			<b>Located at</b> <a href="source-class-LeanCloud.LeanObject.html#11-708" title="Go to source code">LeanCloud/LeanObject.php</a>
 		<br>
 	</div>
 
@@ -469,6 +474,79 @@ className to sub-classes.</p>
 		</div>
 		</div></td>
 	</tr>
+	<tr data-order="setACL" id="_setACL">
+
+		<td class="attributes"><code>
+			 public 
+
+			<code><a href="class-LeanCloud.LeanObject.html">LeanCloud\LeanObject</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setACL">#</a>
+		<code><a href="source-class-LeanCloud.LeanObject.html#196-204" title="Go to source code">setACL</a>( <span><code><a href="class-LeanCloud.LeanACL.html">LeanCloud\LeanACL</a></code> <var>$acl</var></span> )</code>
+
+		<div class="description short">
+			<p>Set ACL for object</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Set ACL for object</p>
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$acl</var></dt>
+					<dd></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><a href="class-LeanCloud.LeanObject.html">LeanCloud\LeanObject</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getACL" id="_getACL">
+
+		<td class="attributes"><code>
+			 public 
+
+			null|<code><a href="class-LeanCloud.LeanACL.html">LeanCloud\LeanACL</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getACL">#</a>
+		<code><a href="source-class-LeanCloud.LeanObject.html#206-213" title="Go to source code">getACL</a>( )</code>
+
+		<div class="description short">
+			<p>Get ACL for object</p>
+		</div>
+
+		<div class="description detailed hidden">
+			<p>Get ACL for object</p>
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					null|<code><a href="class-LeanCloud.LeanACL.html">LeanCloud\LeanACL</a></code>
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
 	<tr data-order="delete" id="_delete">
 
 		<td class="attributes"><code>
@@ -481,7 +559,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_delete">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#196-205" title="Go to source code">delete</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#215-224" title="Go to source code">delete</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Delete field by key</p>
@@ -520,7 +598,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_get">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#207-222" title="Go to source code">get</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#226-241" title="Go to source code">get</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Get field value by key</p>
@@ -559,7 +637,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_increment">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#224-236" title="Go to source code">increment</a>( <span>string <var>$key</var></span>, <span>number <var>$amount</var> = <span class="php-num">1</span></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#243-255" title="Go to source code">increment</a>( <span>string <var>$key</var></span>, <span>number <var>$amount</var> = <span class="php-num">1</span></span> )</code>
 
 		<div class="description short">
 			<p>Increment a numeric field</p>
@@ -590,7 +668,7 @@ className to sub-classes.</p>
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="add" id="_add">
+	<tr data-order="addIn" id="_addIn">
 
 		<td class="attributes"><code>
 			 public 
@@ -601,8 +679,8 @@ className to sub-classes.</p>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_add">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#271-282" title="Go to source code">add</a>( <span>string <var>$key</var></span>, <span>miexed <var>$val</var></span> )</code>
+		<a class="anchor" href="#_addIn">#</a>
+		<code><a href="source-class-LeanCloud.LeanObject.html#290-301" title="Go to source code">addIn</a>( <span>string <var>$key</var></span>, <span>miexed <var>$val</var></span> )</code>
 
 		<div class="description short">
 			<p>Add one object into array field</p>
@@ -635,7 +713,7 @@ className to sub-classes.</p>
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="addUnique" id="_addUnique">
+	<tr data-order="addUniqueIn" id="_addUniqueIn">
 
 		<td class="attributes"><code>
 			 public 
@@ -646,8 +724,8 @@ className to sub-classes.</p>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_addUnique">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#284-297" title="Go to source code">addUnique</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
+		<a class="anchor" href="#_addUniqueIn">#</a>
+		<code><a href="source-class-LeanCloud.LeanObject.html#303-316" title="Go to source code">addUniqueIn</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
 
 		<div class="description short">
 			<p>Add one object uniquely into array field</p>
@@ -680,7 +758,7 @@ className to sub-classes.</p>
 		</div>
 		</div></td>
 	</tr>
-	<tr data-order="remove" id="_remove">
+	<tr data-order="removeIn" id="_removeIn">
 
 		<td class="attributes"><code>
 			 public 
@@ -691,8 +769,8 @@ className to sub-classes.</p>
 		</td>
 
 		<td class="name"><div>
-		<a class="anchor" href="#_remove">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#299-310" title="Go to source code">remove</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
+		<a class="anchor" href="#_removeIn">#</a>
+		<code><a href="source-class-LeanCloud.LeanObject.html#318-329" title="Go to source code">removeIn</a>( <span>string <var>$key</var></span>, <span>mixed <var>$val</var></span> )</code>
 
 		<div class="description short">
 			<p>Remove one object from array field</p>
@@ -737,7 +815,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_isDirty">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#312-320" title="Go to source code">isDirty</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#331-339" title="Go to source code">isDirty</a>( )</code>
 
 		<div class="description short">
 			<p>If there are unsaved operations.</p>
@@ -771,7 +849,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_save">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#331-339" title="Go to source code">save</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#350-358" title="Go to source code">save</a>( )</code>
 
 		<div class="description short">
 			<p>Save object and its children objects and files</p>
@@ -805,7 +883,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mergeAfterSave">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#361-371" title="Go to source code">mergeAfterSave</a>( <span>array <var>$data</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#380-390" title="Go to source code">mergeAfterSave</a>( <span>array <var>$data</var></span> )</code>
 
 		<div class="description short">
 			<p>Merge server data after save.</p>
@@ -842,7 +920,7 @@ className to sub-classes.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_mergeAfterFetch">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#373-389" title="Go to source code">mergeAfterFetch</a>( <span>array <var>$data</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#392-408" title="Go to source code">mergeAfterFetch</a>( <span>array <var>$data</var></span> )</code>
 
 		<div class="description short">
 			<p>Merge server data after fetch.</p>
@@ -881,7 +959,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_fetch">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#391-400" title="Go to source code">fetch</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#410-419" title="Go to source code">fetch</a>( )</code>
 
 		<div class="description short">
 			<p>Fetch data from server</p>
@@ -917,7 +995,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_fetchAll">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#402-451" title="Go to source code">fetchAll</a>( <span>array <var>$objects</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#421-470" title="Go to source code">fetchAll</a>( <span>array <var>$objects</var></span> )</code>
 
 		<div class="description short">
 			<p>Fetch objects from server</p>
@@ -956,7 +1034,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_destroy">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#453-465" title="Go to source code">destroy</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#472-484" title="Go to source code">destroy</a>( )</code>
 
 		<div class="description short">
 			<p>Destroy object on server</p>
@@ -992,7 +1070,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getQuery">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#467-474" title="Go to source code">getQuery</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#486-493" title="Go to source code">getQuery</a>( )</code>
 
 		<div class="description short">
 			<p>Return query object based on the object class</p>
@@ -1026,7 +1104,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_getRelation">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#476-494" title="Go to source code">getRelation</a>( <span>string <var>$key</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#495-513" title="Go to source code">getRelation</a>( <span>string <var>$key</var></span> )</code>
 
 		<div class="description short">
 			<p>Get (or build) relation on field</p>
@@ -1069,7 +1147,7 @@ on server) will be preserved until saved to server.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_traverse">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#496-526" title="Go to source code">traverse</a>( <span>array <var>$value</var></span>, <span>function <var>&amp; $seen</var></span>, <span> <var>$func</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#515-545" title="Go to source code">traverse</a>( <span>array <var>$value</var></span>, <span>function <var>&amp; $seen</var></span>, <span> <var>$func</var></span> )</code>
 
 		<div class="description short">
 			<p>Traverse value in a hierarchy of arrays and objects</p>
@@ -1112,7 +1190,7 @@ arguement.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_findUnsavedChildren">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#528-546" title="Go to source code">findUnsavedChildren</a>( )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#547-565" title="Go to source code">findUnsavedChildren</a>( )</code>
 
 		<div class="description short">
 			<p>Find unsaved children (both files and objects) of object.</p>
@@ -1146,7 +1224,7 @@ arguement.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_saveAll">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#548-577" title="Go to source code">saveAll</a>( <span>array <var>$objects</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#567-596" title="Go to source code">saveAll</a>( <span>array <var>$objects</var></span> )</code>
 
 		<div class="description short">
 			<p>Save objects and associated unsaved children and files.</p>
@@ -1185,7 +1263,7 @@ arguement.</p>
 
 		<td class="name"><div>
 		<a class="anchor" href="#_destroyAll">#</a>
-		<code><a href="source-class-LeanCloud.LeanObject.html#647-688" title="Go to source code">destroyAll</a>( <span>array <var>$objects</var></span> )</code>
+		<code><a href="source-class-LeanCloud.LeanObject.html#666-707" title="Go to source code">destroyAll</a>( <span>array <var>$objects</var></span> )</code>
 
 		<div class="description short">
 			<p>Delete objects in batch</p>

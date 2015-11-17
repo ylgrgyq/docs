@@ -191,6 +191,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
+  //输出信息请到「应用控制台 > 存储 > 云引擎 > 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -222,7 +223,11 @@ AV.Cloud.beforeUpdate('Review', function(request, response) {
 });
 ```
 
-**注意**：你对 `request.object` 的修改不会被保存到数据库，所以你不应该修改它，但可以用 `response.error` 返回一个错误拒绝这次修改。
+请注意：
+
+* 需要将 `leanengine` 中间件升级至 0.2.0 版本以上才能使用这个功能。
+* 不要修改 `request.object`，因为对它的改动并不会保存到数据库，但可以用 `response.error` 返回一个错误，拒绝这次修改。
+
 {% endblock %}
 
 {% block afterUpdateExample %}
@@ -684,8 +689,8 @@ app.get('/logout', function(req, res) {
 
 {% block https_redirect %}
 ```javascript
-var HttpsRedirect = AV.Cloud.HttpsRedirect;
-app.use(HttpsRedirect());
+app.enable('trust proxy');
+app.use(AV.Cloud.HttpsRedirect());
 ```
 {% endblock %}
 

@@ -587,6 +587,30 @@ ul#toc,#toc li {
   }
 }
 
+.github-contributors {
+  .list-unstyled;
+  margin-bottom: 20px;
+
+  li {
+    display: inline;
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    a {
+
+      img {
+        @s: 24px;
+        width: @s;
+        height: @s;
+        border-radius: @border-radius-base;
+      }
+    }
+  }
+}
+
 // Main content
 .doc-content {
   width: 100%;
@@ -1068,4 +1092,3 @@ blockquote{
     // overflow: scroll;
   }
 }
-

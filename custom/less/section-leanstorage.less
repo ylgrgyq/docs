@@ -131,8 +131,11 @@ select.input-sm.cloud-stat-condition {
   }
 
   .icon {
-    margin-top: 5px;
     display: block;
+    margin: 4px auto 0;
+    width: 8px;
+    font-size: 10px;
+    line-height: 11px;
   }
 
   .no-timestamp & {
@@ -519,30 +522,34 @@ select.input-sm.cloud-stat-condition {
     width:66px;
   }
 
-  .index-check {
-    width: 190px;
+  .index-check-wrap {
+    width: 25%;
     float: left;
+  }
+
+  .index-check {
     margin: 5px 10px 5px 0;
-    padding: 0 10px;
+    padding: 6px 10px;
     position: relative;
     border-radius: 6px;
     border: 1px solid #eee;
 
+    // width and vertical align fix for checkboxes
+    .checkbox {
+      max-width: 7em;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
+
     select {
-      position:absolute;
-      right: 10px;
-      top: 10px;
+      float: right;
       font-size: 12px;
       padding: 1px 6px;
     }
-    input:checkbox {
-      margin-right: 2px;
-
-    }
-
   }
   .index-new {
 
   }
 }
-

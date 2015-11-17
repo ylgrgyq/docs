@@ -153,7 +153,7 @@
     }
   }
 
-  .site-nav {
+  .site-header {
     font-weight: bold;
     border-bottom: 1px solid fade(@homepage-link, 10%);
     text-align: left;
@@ -1754,7 +1754,7 @@ body {
       background: fade(@@var-bg, 20%);
     }
 
-    .site-nav {
+    .site-header {
       border-bottom-color: fade(@@var-link, 10%);
 
       .navbar-brand {
@@ -2890,69 +2890,6 @@ body {
     }
   }
 
-  .socal-btns {
-    text-align: center;
-    margin: 40px 0;
-  }
-
-  .social-btn {
-    border-radius: 4px;
-    font-size: 60px;
-    font-height: 60px;
-    font-weight: normal !important;
-    border: none;
-
-    .icon {
-      padding: 10px;
-      border-radius: 4px;
-      vertical-align: middle;
-    }
-
-    span {
-      display: none;
-      vertical-align: middle;
-    }
-
-    &:hover,
-    &:focus {
-      border: none;
-
-      .icon {
-        background: rgba(0, 0, 0, .1);
-      }
-    }
-
-    @media (max-width: @screen-xs-max) {
-      display: block;
-      padding: 4px 10px;
-      margin: 0 auto 10px;
-      font-size: 24px;
-      font-height: 24px;
-
-      &:hover,
-      &:focus {
-        background: rgba(0, 0, 0, .1);
-
-        .icon {
-          background: none;
-        }
-      }
-
-      &:last-child {
-        margin-bottom: 0;
-      }
-
-      .icon {
-        font-size: 32px;
-        padding: 0;
-      }
-
-      span {
-        display: inline;
-      }
-    }
-  }
-
   .contact-info {
     text-align: center;
     margin: 0;
@@ -2983,6 +2920,67 @@ body {
     &:focus {
       opacity: 1;
       background: rgba(0, 0, 0, .1);
+    }
+  }
+}
+
+.social-btns {
+  text-align: center;
+}
+
+.social-btn {
+  border-radius: 4px;
+  font-size: 60px;
+  line-height: 60px;
+  font-weight: normal !important;
+  border: none !important;
+
+  .icon {
+    padding: 10px;
+    border-radius: 4px;
+    vertical-align: middle;
+  }
+
+  span {
+    display: none;
+    vertical-align: middle;
+  }
+
+  &:hover,
+  &:focus {
+
+    .icon {
+      background: rgba(0, 0, 0, .1);
+    }
+  }
+
+  @media (max-width: @screen-xs-max) {
+    display: block;
+    padding: 4px 10px;
+    margin: 0 auto 10px;
+    font-size: 24px;
+    font-height: 24px;
+
+    &:hover,
+    &:focus {
+      background: rgba(0, 0, 0, .1);
+
+      .icon {
+        background: none;
+      }
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .icon {
+      font-size: 32px;
+      padding: 0;
+    }
+
+    span {
+      display: inline;
     }
   }
 }
@@ -3133,7 +3131,7 @@ body {
 
         li {
 
-          @s: 120px;
+          @s: 80px;
           a {
             width: @s;
             height: @s;
@@ -3142,7 +3140,7 @@ body {
             img {
               width: @s;
               height: @s;
-              border-radius: 27px;
+              border-radius: 20px;
             }
 
             &:hover,

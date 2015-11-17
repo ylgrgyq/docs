@@ -4,7 +4,7 @@
 
 * [快速入门](/start.html)
 <li><a href="ios_os_x_guide.html">iOS / OS X 数据存储指南</a></li>
-<li><a href="ios_realtime.html">iOS 实时通信指南</a></li>
+<li><a href="realtime_guide-ios.html">iOS 实时通信指南</a></li>
 <li><a href="ios_statistics.html">iOS 统计 SDK 开发指南</a></li>
 <li><a href="ios_push_cert.html">iOS 推送证书设置指南</a></li>
 <li><a href="ios_crashreporting_guide.html">iOS 崩溃报告使用指南</a></li>
@@ -14,7 +14,7 @@
 
 * [快速入门](/start.html)
 <li><a href="android_guide.html">Android 数据存储指南</a></li>
-<li><a href="android_realtime.html">Android 实时通信指南</a></li>
+<li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
 <li><a href="api/android/doc/index.html" target="_blank">Android SDK API</a></li>
 
@@ -24,7 +24,7 @@
 <li><a href="unity_guide.html">Unity3D 数据存储指南</a></li>
 <li><a href="unity_statistics.html">Unity3D 统计 SDK 指南</a></li>
 <li><a href="dotnet_guide.html">.NET 数据存储指南</a></li>
-<li><a href="dotnet_realtime.html">Windows Phone 8.0 实时通信指南</a></li>
+<li><a href="realtime_guide-dotnet.html">Windows Phone 8.0 实时通信指南</a></li>
 <li><a href="api/wp/Help/index.html">.NET SDK API</a>
 
 ## 你是 JavaScript 前端开发者？
@@ -63,10 +63,10 @@
 ## 你要实现聊天功能？
 
 <ul>
-<li><a href="ios_realtime.html">iOS 实时通信指南</a></li>
-<li><a href="android_realtime.html">Android 实时通信指南</a></li>
+<li><a href="realtime_guide-ios.html">iOS 实时通信指南</a></li>
+<li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="https://github.com/leancloud/realtime-messaging-jssdk">JavaScript 实时通信 SDK</a></li>
-<li><a href="dotnet_realtime.html">Windows Phone 8.0 实时通信指南</a></li>
+<li><a href="realtime_guide-dotnet.html">Windows Phone 8.0 实时通信指南</a></li>
 </ul>
 
 ## 你要实现统计功能？

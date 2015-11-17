@@ -35,7 +35,7 @@ public async void TomCreateConversationWithJerry()
     //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
     AVIMClient client = new AVIMClient("Tom");
 
-    //Tom 登陆到系统
+    //Tom 登录到系统
     await client.ConnectAsync();
 
     //Tom 建立了与 Jerry 的对话
@@ -56,7 +56,7 @@ public async void JerryReceiveMessageFromTom()
     //Jerry 用自己的名字作为 ClientId 建立了一个 AVIMClient
     AVIMClient client = new AVIMClient("Jerry");
 
-    //Tom 登陆到系统
+    //Tom 登录到系统
     await client.ConnectAsync();
 
     //Jerry 设置接受消息的方法，一旦有消息收到就会调用这个方法
@@ -97,7 +97,7 @@ public async void TomCreateConversationWithFriends()
     //Tom 用自己的名字作为 ClientId 建立了一个 AVIMClient
     AVIMClient client = new AVIMClient("Tom");
 
-    //Tom 登陆到系统
+    //Tom 登录到系统
     await client.ConnectAsync();
 
     #region 第一步：建立一个朋友列表
@@ -128,7 +128,7 @@ public async void BobReceiveMessageFromTom()
     //Bob 用自己的名字作为 ClientId 建立了一个 AVIMClient
     AVIMClient client = new AVIMClient("Bob");
 
-    //Bob 登陆到系统
+    //Bob 登录到系统
     await client.ConnectAsync();
 
     //Bob 设置接受消息的方法，一旦有消息收到就会调用这个方法
@@ -179,7 +179,7 @@ public async void SendImageMessageAsync_Test()
 {
     AVIMClient client = new AVIMClient("Tom");
     
-    await client.ConnectAsync();//Tom 登陆
+    await client.ConnectAsync();//Tom 登录
 
     AVIMConversation conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
 
@@ -300,7 +300,7 @@ private async void SendAudioMessageAsync()
 public async void SendAudioMessageAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
-    //Tom 登陆
+    //Tom 登录
     await client.ConnectAsync();
     var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
 
@@ -370,7 +370,7 @@ private async void SendVideoMessageAsync()
 public async void SendVideoMessageAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆
+    await client.ConnectAsync();//Tom 登录
 
     var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
 
@@ -391,7 +391,7 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 public async void SendDocAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆
+    await client.ConnectAsync();//Tom 登录
 
     var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
     StorageFolder local = Windows.Storage.ApplicationData.Current.LocalFolder;
@@ -421,7 +421,7 @@ AVIMLocationMessage locationMessage = new AVIMLocationMessage(avGeoPoint);
 public async void SendLocatioAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆
+    await client.ConnectAsync();//Tom 登录
     var conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠");//创建对话
 
     Geolocator geolocator = new Geolocator();
@@ -474,7 +474,7 @@ AVIMFileMessage
 ### 消息的接收策略
 消息接收有 **2** 个层级：
 
-* 第一个是在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登陆，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前 `AVIMClient.OnMessageReceived` 负责接收这类消息，但是它并没有针对消息的类型做区分。
+* 第一个是在 `AVIMClient` 上，它是为了帮助开发者实现被动接收消息，尤其是在本地并没有加载任何对话的时候，类似于刚登录，本地并没有任何 `AVIMConversation` 的时候，如果某个对话产生新的消息，当前 `AVIMClient.OnMessageReceived` 负责接收这类消息，但是它并没有针对消息的类型做区分。
 
 * 第二个是在 `AVIMConversation` 上，负责接收对话的全部信息，并且针对不同的消息类型有不同的事件类型做响应。
 
@@ -598,7 +598,7 @@ client.OnMessageReceieved += (s, e) =>
 public async void JerryCreateConversation()
 {
     AVIMClient client = new AVIMClient("Jerry");
-    await client.ConnectAsync();//Jerry 登陆
+    await client.ConnectAsync();//Jerry 登录
 
     IList<string> friends = new List<string>();
     friends.Add("Bob");
@@ -625,7 +625,7 @@ public async void InitiativeJoinAsync()
 ```
 该群的其他成员（比如 Bob）会根据自身客户端的状态不同会出现以下 2 种情况:
 
-* 如果 Bob 仅仅是登陆了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
+* 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，代码如下:
 
 ```c#
 public async void BobOnTomJoined_S1()
@@ -649,7 +649,7 @@ public async void BobOnTomJoined_S1()
 }
 ```
 
-* 如果 Bob 不但登陆了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会收到 `AVIMClient.OnConversationMembersChanged` 的响应的相关操作，也会收到 `AVIMConversation.OnMembersJoined` 的响应的相关操作，代码如下：
 
 ```c#
 public async void BobOnTomJoined_S2()
@@ -757,7 +757,7 @@ A 再剔除 B|`OnConversationMembersChanged && OnKicked`|`OnConversationMembersC
 public async void CountMembers_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
 
     AVIMConversation conversation = (await client.GetQuery().FindAsync()).FirstOrDefault();
     int membersCount = await conversation.CountMembersAsync();
@@ -801,7 +801,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 public async void UpdateConversationAsync()
 {
     AVIMClient client = new AVIMClient("Black");
-    await client.ConnectAsync();//Balck 登陆
+    await client.ConnectAsync();//Balck 登录
 
     AVIMConversation conversation = client.GetConversationById("55117292e4b065f7ee9edd29");//获取 Tom 创建的对话
 
@@ -825,7 +825,7 @@ public async void UpdateConversationAsync()
 public async void MuteConversationAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆
+    await client.ConnectAsync();//Tom 登录
 
     string conversationId = "551260efe4b01608686c3e0f";//对话的 Id
     AVIMConversation conversation = client.GetConversationById(conversationId);//Tom 获取到这个对话的对象
@@ -874,7 +874,7 @@ public async void CreateConversationWithCustomAttributesAsync()
  public async void QueryByIdAsync()
  {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversation conversation = await client.GetQuery().GetAsync("551260efe4b01608686c3e0f");
  }
 ```
@@ -901,7 +901,7 @@ public async void CreateConversationWithCustomAttributesAsync()
 public async void WhereEqualTo_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereEqualTo("attr.topic", "movie");//构建 topic 是 movie 的查询
     var result = await query.FindAsync();//执行查询
 }
@@ -933,7 +933,7 @@ AVIMConversationQuery query = client.GetQuery().WhereEqualTo("topic".InsertAttrP
 public async void WhereNotEqualTo_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereNotEqualTo("attr.type", "private");//构建 type 不等于 movie 的查询
     var result = await query.FindAsync();//执行查询
 }
@@ -945,7 +945,7 @@ public async void WhereNotEqualTo_SampleCode()
 public async void WhereGreaterThan_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereGreaterThan("attr.age", 18);//构建 年龄大于 18 的查询
     var result = await query.FindAsync();//执行查询
 }
@@ -962,7 +962,7 @@ Match 类的方法最大的便捷之处就是使用了正则表达式匹配，�
 public async void WhereMatchs_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereMatches("attr.tag", "[\u4e00-\u9fa5]");//查询 tag 是中文的对话
     var result = await query.FindAsync();//执行查询
 }
@@ -975,7 +975,7 @@ public async void WhereMatchs_SampleCode()
 public async void WhereContains_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育");//查询 keywords 包含教育
     var result = await query.FindAsync();//执行查询
 }
@@ -1007,7 +1007,7 @@ LeanCloud .NET SDK 的风格上一直保持以链式的方式提供给开发者�
 public async void CombinationQuery_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育").WhereLessThan("age", 18);//查询 keywords 包含教并且年龄小于18的对话
     var result = await query.FindAsync();//执行查询
 }
@@ -1022,7 +1022,7 @@ public async void CombinationQuery_SampleCode()
 public async void QueryCount_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     AVIMConversationQuery query = client.GetQuery().WhereContains("attr.keywords", "教育").WhereLessThan("attr.age", 18);//查询 keywords 包含教并且年龄小于18的对话
     var count = await query.CountAsync();//执行查询，获取符合条件的对话的数量
 }
@@ -1038,7 +1038,7 @@ public async void QueryCount_SampleCode()
 public async void ChatRoom_SampleCode()
 {
     AVIMClient client = new AVIMClient("Dendi");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
     var chatroom = client.CreateConversationAsync(null, "DK VS NewBee", null, true);
     //详细解释最后一个参数，transient 如果为 true 就说明是聊天室，逻辑上就是暂态对话
 }
@@ -1056,7 +1056,7 @@ var chatroom = client.CreateChatRoomAsync("皇马 VS 巴萨");//可以理解为�
 public async void CountMembers_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
 
     AVIMConversation conversation = (await client.GetQuery().FindAsync()).FirstOrDefault();
     int membersCount = await conversation.CountMembersAsync();
@@ -1071,7 +1071,7 @@ public async void CountMembers_SampleCode()
 public async void QueryChatRoom_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登陆客户端
+    await client.ConnectAsync();//Tom 登录客户端
 
     AVIMConversationQuery query = client.GetQuery().WhereContains("topic".InsertAttrPrefix(), "奔跑吧，兄弟").WhereEqualTo("tr", true);
     //比如我想查询主题包含《奔跑吧，兄弟》的聊天室
@@ -1107,7 +1107,7 @@ con.QueryHistory(DateTime.Now, 0, "UserA").Wait();
 /// </summary>
 public ISignatureFactoryV2 SignatureFactory { get; set; }
 ```
-是预留给开发者实现签名需求的接口，开发者只需要在登陆之前实现这个接口即可。
+是预留给开发者实现签名需求的接口，开发者只需要在登录之前实现这个接口即可。
 
 ###  签名的云代码实例
 为了方便开发者理解签名，我们特地开源了签名的[云代码实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)，只要按照要求正确配置，就可以在客户端通过调用云代码的具体的函数实现签名。
@@ -1151,7 +1151,7 @@ public class SampleSignatureFactory : ISignatureFactoryV2
         //以上这段代码，开发者无需手动调用，只要开发者对一个 AVIMClient 设置了 SignatureFactory，SDK 会在执行对应的操作时主动调用这个方法进行签名。
     }
     /// <summary>
-    /// 登陆签名
+    /// 登录签名
     /// </summary>
     /// <param name="clientId">当前的 clientId</param>
     /// <returns></returns>
@@ -1229,5 +1229,5 @@ public class SampleSignatureFactory : ISignatureFactoryV2
 ```c#
 AVIMClient client = new AVIMClient("Tom");
 client.SignatureFactory = new SampleSignatureFactory();//这里是一个开发者自己实现的接口的具体的类
-await client.ConnectAsync();//Tom 登陆客户端
+await client.ConnectAsync();//Tom 登录客户端
 ```

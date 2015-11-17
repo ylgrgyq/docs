@@ -9,24 +9,29 @@ custom/css/app-docs.css
 .tmp/
 
 npm-debug.log
-
-# use template
 .module-cache
-md/leanengine_guide-cloudcode.md
-md/leanengine_guide-node.md
-md/leanengine_guide-python.md
-
 .idea
-md/realtime_guide-android.md
-md/realtime_guide-dotnet.md
-md/realtime_guide-ios.md
-md/realtime_guide-js.md
 
+# ------------
+# use template
+# ------------
 md/acl_guide-android.md
 md/acl_guide-ios.md
 md/acl_guide-js.md
 md/acl_guide-python.md
-
 md/acl_quick_start-android.md
 md/acl_quick_start-ios.md
 md/acl_quick_start-js.md
+md/leanengine_guide-cloudcode.md
+md/leanengine_guide-node.md
+md/leanengine_guide-python.md
+md/realtime_guide-android.md
+md/realtime_guide-dotnet.md
+md/realtime_guide-ios.md
+md/realtime_guide-js.md
+md/sdk_setup-android.md
+md/sdk_setup-ios.md
+md/sdk_setup-js.md
+md/sms_guide-android.md
+md/sms_guide-ios.md
+md/sms_guide-js.md
