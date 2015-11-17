@@ -182,15 +182,33 @@ public class MyLeanCloudApp extends Application {
 然后打开 `AndroidManifest.xml` 文件来配置 SDK 所需要的手机的访问权限以及声明刚才我们创建的 `MyLeanCloudApp` 类：
 
 ```
+<!-- 基础模块所须声明，必填 - Start  !-->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<!-- 基础模块所须声明 - End  !-->
+
+<!-- 实时通信模块，推送所须声明 ，可选- Start  !-->
+<service android:name="com.avos.avoscloud.PushService"/>
+    <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+        <intent-filter>
+            <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            <action android:name="android.intent.action.USER_PRESENT"/>
+        </intent-filter>
+    </receiver>
+<!-- 实时通信模块，推送所须声明  - End  !-->
 
 <application ...
   android:name=".MyLeanCloudApp"
-  ... />
+  ... >
+  <!-- 反馈组件 ，可选- Start  !-->
+  <activity
+     android:name="com.avos.avoscloud.feedback.ThreadActivity" >
+  </activity>
+  <!-- 反馈组件 ，可选- End  !-->
+</application>
 ```
 
 {% endblock %}

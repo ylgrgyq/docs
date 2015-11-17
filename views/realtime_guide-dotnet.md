@@ -1,6 +1,7 @@
 {% extends "./realtime_guide.tmpl" %}
 
-{% block language %}.NET{% endblock %}
+{% set platform_name = '.NET' %}
+{% set sdk_name = '.NET SDK' %}
 
 {% block supportedRuntime %}
 目前我们的 .NET 实时通信支持如下运行时：
@@ -1424,16 +1425,10 @@ await client.ConnectAsync();//Tom 登录客户端
 
 {% block avoidCreatingDuplicateConversation %}>提示：每次调用 `CreateConversationAsync()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 conversationMembers 和 name 也是如此。因此必要时可以先使用 `AVIMConversationQuery` 进行查询，避免重复创建。{% endblock %}
 
+{% block text_im_history_cache %}{% endblock %}
 
-{% block connect_with_tag %}
-```
-该功能尚在开发中，即将上线
-```
-{% endblock %}
+{% block text_single_endpoint_login %}{% endblock %}
 
-{% block disconneted_by_server_with_same_tag %}
-```
-该功能尚在开发中，即将上线
-```
-{% endblock %}
+{% block conversation_query_cache %}{% endblock %}
 
+{% block goto_create_unique_conversation %}{% endblock %}
