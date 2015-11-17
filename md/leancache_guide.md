@@ -31,7 +31,7 @@ LeanCache 不提供外网直接访问。如果需要简单的数据操作或状�
 
 首先添加相关依赖到 LeanEngine 应用中：
 
-```
+``` 
 "dependencies": {
   ...
   "redis": "2.2.x",
@@ -41,21 +41,24 @@ LeanCache 不提供外网直接访问。如果需要简单的数据操作或状�
 
 然后可以使用下列代码获取 Redis 连接：
 
-```
+``` 
 var client = require('redis').createClient(process.env['REDIS_URL_<实例名称>']);
 ```
 
 ### 在 LeanEngine 中使用（Python 环境）
 
-首先添加相关依赖到 LeanEngine 应用中：
+首先添加相关以来到 LeanEngine 应用的 `requirents.txt` 中：
 
-```
-TODO
+``` 
+Flask>=0.10.1
+leancloud-sdk>=1.0.9
+...
+redis
 ```
 
 然后可以使用下列代码获取 Redis 连接：
 
-```
+``` 
 import os
 import redis
 
@@ -72,13 +75,13 @@ r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
 
 可以通过下列命令查询当前应用有哪些 LeanCache 实例：
 
-```
+``` 
 avoscloud redis list
 ```
 
 可以通过下列命令创建一个交互式的 client：
 
-```
+``` 
 avoscloud redis <实例名称>
 ```
 
@@ -86,7 +89,7 @@ avoscloud redis <实例名称>
 
 下面是使用 redis-benchmark 测试一个典型的容量为 2GB 的 LeanCache 实例的性能表现：
 
-```
+``` 
 $ redis-benchmark -n 100000 -q
 PING_INLINE: 69783.67 requests per second
 PING_BULK: 68306.01 requests per second
@@ -144,12 +147,4 @@ LeanCache 不同容量节点一个月（30 天）的价格：
 
 **注意**：LeanCache 实例是按照「最大容量」收费，而不是「实际使用容量」。
 
-购买实例是以一个月（30 天）作为一个计费单元实时结算。期间如果产生容量变更，则首先返还当前节点剩余金额，然后以新的容量开始一个付费单元并实时结算。
-
-比如：
-
-> 为了计算方便，我们假设 128MB 实例一个月 30 元，256MB 实例一个月 60 元。
-> 
-> 6 月 1 日购买了 LeanCache 128MB 实例，实时扣费 30 元，该实例使用周期为 6 月 1 日至 7 月 1 日。
-> 
-> 6 月 11 日将容量扩容到 256MB，则之前 128MB 实例未使用的时间（11 日至次月 1 日）折算为金额（20 元）返还给账户，并扣费 60 元用来支付新的容量，使用周期为 6 月 11 日至 7 月 11 日。
+LeanCache 采取每天实时扣费，按照当天使用的最大容量（如果有容量调整的话）结算，次日凌晨从账户余额扣款。
