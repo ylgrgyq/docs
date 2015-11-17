@@ -1,0 +1,237 @@
+#  {{platform_title}} 数据存储开发指南
+
+数据存储（LeanStorage）是 LeanCloud 提供的核心功能，它可以存储无模式化（Schema Free）的数据，换言之，字符串可以存，数字也可以存，图像，音频，视频等数据均可以存储在强大的 LeanCloud 云端，但是 LeanStorage 区别于数据库（DataBase），原因是 LeanStorage 并不是直接暴露数据库的操作接口给开发者去使用。我们把数据存储封装成一整套完整的开放的 REST API 接口提供给开发者去使用，而各个平台或者语言版本 SDK 只是对 REST API 的封装。
+
+为了更好的引导初学者，我们从传统数据库入手，对比 LeanStorage 的使用方式，可以让开发者更好地理解。
+
+## LeanStorage 初识
+首先我们来看一条 SQL 语句：
+
+```sql
+INSERT INTO Todo (title, content) VALUES ('工程师周会', '每周工程师会议，周一下午2点')
+```
+这条语句的含义很好理解，绝大数关系型数据库都可以执行这条语句，执行的结果就是会在 Todo 表里增加一条新的数据。
+但是使用传统的关系型数据库作为应用的数据源几乎无法避免以下的步骤：
+
+* 插入数据之前一定要先创建一个表结构，并且在之后随着需求变化的时候，需要不停的做数据库的表结构修改以及数据维护。
+* 每次插入数据的时候，都需要通过客户端与数据库连接进行数据的增删改查。
+
+而 LeanStorage 提供了更优雅的解决方案。
+
+使用 {{sdk_name}} 仅需如下简短的代码：
+
+{% block code_quick_save_a_todo %}{% endblock %}
+
+使用 LeanStorage 相对于传统关系型数据库的优势如下：
+
+* 不需要单独针对表结构进行维护，例如，就刚才的案例来说，我需要新增一个字段 `location`，也就是表示这个日程安排（Todo）的地点，只需要将刚才的代码作如下变动即可：
+
+{% block  code_quick_save_a_todo_with_location %}{% endblock %}
+
+真正实现了数据的存储无模式化（Schema Free），随用随加。
+
+* 所有请求都通过 HTTPS 请求访问标准的 REST API 来实现增删改查。每个平台或者语言的 SDK 实际上在底层都是调用 REST API。
+
+LeanStorage 不仅仅是提供了存数据的服务，一切跟数据相关的操作（增删改查）都有对应接口提供给开发者。
+
+LeanStorage 的存储模式分为以下几个类别：
+
+* 对象
+* 文件
+
+但是对于初学者来说，应用数据存储的概念过于宽泛，为了方便开发者理解和使用，我们按照顺序逐一分章节介绍。
+
+## 快速入门
+如果想对 LeanStorage 有一个快速了解，建议阅读[快速入门](start.html)
+
+## SDK 安装
+{% block text_sdk_setup_link %}{% endblock %}
+
+## 对象
+LeanStorage 的对象——`{{baseObjectName}}` 是 LeanStorage 对复杂对象的封装，每个 AVObject 包含若干属性值对（key-value，也称「键值对」），属性的值是与 JSON 格式兼容的数据。 通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
+
+### 保存对象
+正如 [LeanStorage 初识](#LeanStorage 初识) 小节里面实现的保存一个 Todo 对象操作一样，现在我们保存一个 TodoFolder，它可以包含多个 Todo，类似于给行程按文件夹的方式分组，那么我需要新建这个对象(`{{baseObjectName}}`)，而在此之前我不需要特地去后台创建这个类（Class），仅仅需要如下代码，云端就会自动创建这个类：
+
+{% block code_save_todo_folder %}{% endblock %}
+
+创建完成之后，打开 [**控制台** > **存储**](https://leancloud.cn/data.html?appid={{appid}}#/)，点开 `TodoFolder` 类，查看刚才添加的数据，它除了我们自己添加的名称(name)，优先级(priority)之外，还有一些服务端内置的属性，具体的含义对照表如下：
+
+属性名称|类型|描述
+---|---|---
+{{objectIdName}}|String|该对象唯一的 Id 标识
+ACL|ACL|该对象的权限控制，实际上是一个 JSON 对象，控制台做了展现优化
+{{createdAtName}}|Date|该对象被创建的 UTC 时间，控制台做了针对当地时间的展现优化
+{{updatedAtName}} |Date|该对象最后一次被修改的时间
+
+属性名（也称「键」，key），必须是由字母、数字或下划线组成的字符串；自定义的属性名，不能以 __（双下划线）开头。
+属性值，可以是字符串、数字、布尔值，或是数组和字典。
+在此也特地说明，以下为系统保留字段，不能作为属性名来使用：
+
+``` 
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
+```
+
+### 获取对象
+参照上一小节的表格，每一个被成功保存在云端的对象一定会有一个唯一的 Id 标识—— `{{objectIdName}}`，因此获取对象的最基本的方法就是根据 `{{objectIdName}}` 查询到这个对象：
+
+{% block code_get_todo_by_objectId %}{% endblock %}
+
+#### 如何获取 objectId ？
+
+{% block code_save_callback_get_objectId %}{% endblock %}
+
+#### 访问对象的属性
+访问 Todo 的属性可以通过如下代码：
+
+{% block code_access_todo_folder_properties %}{% endblock %}
+
+请注意以上代码中访问三个特殊属性（`{{objectIdName}}`, `{{createdAtName}}`, `{{updatedAtName}}`）的方式。
+### 更新对象
+更新对象的前提是对象的 `{{objectIdName}}` 属性必须不为空，而且是合法有效的，例如想要把 Todo 的 location 改成其他地方，可以如下做：
+
+{% block code_update_todo_location %}{% endblock %}
+
+SDK 内部会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud 云端。未更新的数据不会产生变动，这一点请不用担心
+
+注意，需要特别声明是，更新操作是覆盖式的，云端会根据最后一次提交到服务器的有效请求更新数据。更新是字段级别的操作，未更新的字段不会产生变动，这一点请不用担心。
+
+{% block text_fetch_when_save %}
+#### 更新后获取最新值
+为了减少网络传输，在更新对象操作后，对象本地的 updatedAt 字段（最后更新时间）会被刷新，但其他字段不会从云端重新获取。通过设置 fetchWhenSave 属性为 true，来获取更新字段在服务器上的最新结果，例如：
+
+{% block code_fetch_todo_when_save %}{% endblock %}
+
+{% endblock %}
+
+**请注意，LeanStorage 上的更新对象都是针对单个对象，确保对象的 objectId 不为空才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+#### 原子操作(Atomic Operation)
+##### 计数器
+为了存储一个计数器类型的数据, LeanCloud 提供对任何数字字段进行原子增加（或者减少）的功能。比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+
+{% block code_atomic_operation_increment %}{% endblock %}
+
+{% block text_atomic_operation_array %}
+##### 数组
+为了更好地存储数组类型的数据，SDK 提供了以下几种种不同的操作来自动更新数组字段：
+
+{% block code_atomic_operation_array %}{% endblock %}
+
+例如，Todo 对象有一个提醒日期(reminders)是一个数组，它代表的是这个日程会在哪些时间点提醒用户，比如有些拖延症患者会把闹钟设为早上的 7点10分，7点20分，以及7点30分……
+
+{% endblock %}
+
+### 删除对象
+假如某一个 TodoFolder 里面所有的 Todo 都已完成，用户想要删除这个 TodoFolder 对象，可以如下操作：
+
+{% block code_delete_todo_folder_by_objectId %}{% endblock %}
+
+{% block text_work_in_background %}
+### 后台运行
+细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 LeanCloud 云端，形如 `{{backgroundFunctionTemplate}}` 的方法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。
+
+{% endblock %}
+
+{% block save_eventually %}
+### 离线存储对象
+
+大多数保存功能可以立刻执行，并通知应用「保存完毕」。不过若不需要知道保存完成的时间，则可使用 {{saveEventuallyName}} 来代替。
+
+它的优点在于：如果用户目前尚未接入网络，{{saveEventuallyName}} 会缓存设备中的数据，并在网络连接恢复后上传。如果应用在网络恢复之前就被关闭了，那么当它下一次打开时，LeanCloud 会再次尝试保存操作。
+
+所有 {{saveEventuallyName}}（或 {{deleteEventuallyName}}）的相关调用，将按照调用的顺序依次执行。因此，多次对某一对象使用 {{saveEventuallyName}} 是安全的。
+
+{% endblock %}
+
+### 关联数据
+#### {{relationObjectName}}
+对象可以与其他对象相联系。如前面所述，我们可以把一个 {{baseObjectName}} 的实例 a，当成另一个 {{baseObjectName}} 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像关系型数据库中的主外键关系一样。
+
+例如，一个 TodoFolder 包含多个 Todo ，可以用如下代码实现：
+
+{% block code_relation_todoFolder_one_to_many_todo %}{% endblock %}
+
+#### Pointer
+Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObjectName}} 不一样的地方在于：{{relationObjectName}} 是在「一对多」的「一」这一方（上述代码中这个「一」就指的 TodoFolder）保存一个 {{relationObjectName}} 属性，这个属性实际上保存的是对被关联数据——「多」的这一方（上述代码中这个「多」指的是 Todo）的一个 Pointer 的集合。而反过来，LeanStorage 也支持在「多」的这一方保存一个指向「一」的这一方的 Pointer，这样也可以实现「一对多」的关系。
+
+我们知道，每一个 TodoFolder 都会有一个用户与之对应，用以表示 TodoFolder 属于哪个用户，使用 Pointer 来实现这个需求的代码如下：
+
+{% block code_pointer_user_one_to_many_todoFolder %}{% endblock %}
+
+关于关联数据的查询会在[关联数据查询](#关联数据查询)会详细介绍。
+
+### 数据类型
+{{baseObjectName}} 支持的数据类型请参照如下表格：
+
+{% block table_data_type %}{% endblock %}
+
+
+#### 地理位置
+地理位置是一个特殊的数据类型，LeanStorage 封装了 {{geoPointObjectName}} 来实现存储以及相关的查询。
+
+{% block text_deserialize_and_serialize %}
+
+### {{baseObjectName}} 序列化和反序列化
+在实际的开发中，把 `{{baseObjectName}}` 当做参数传递的时候，会涉及到复杂对象的拷贝的问题，因此 `{{baseObjectName}}` 也提供了序列化和反序列化的方法：
+
+序列化：
+{% block code_serialize_baseObject_to_string %}{% endblock %}
+
+反序列化：
+{% block code_deserialize_string_to_baseObject %}{% endblock %}
+
+{% endblock %}
+
+## 文件
+文件存储也是数据存储的一种方式，图像，音频，视频，通用文件等等都是数据的载体，另外很多开发者习惯了把复杂对象序列化之后保存成文件(常见的有 .json 或者 .xml 文件)，文件存储在 LeanCloud 中被单独封装成一个 {{fileObjectName}} 来实现文件的上传，下载等操作。
+
+### 文件上传
+文件的上传指的是开发者调用接口将文件存储在云端，并且返回文件最终 Url 的一个操作。
+
+### 文件下载
+文件的下载我们更推荐开发者在当前语言平台下使用成熟的库去下载，因为只要文件的 Url 可以读取到，那么针对下载这个操作，开发者可以自由发挥的空间就很大，比如很多组件都支持客户端自动缩放等等实用的功能，当然 {{sdk_name}} 也提供的接口给开发者下载文件，但是需要提醒的是，文件下载是一个仁者见仁智者见智的功能，{{sdk_name}} 提供的接口仅仅**是将文件的下载之后做了缓存，只要文件的 Url 不变，那么一次下载成功之后，就不会再重复下载，目的是为了减少客户端的流量**。
+
+## 查询
+{{baseQueryClassName}} 是构建针对 {{baseObjectName}} 查询的基础类。
+
+### 关联数据查询
+### 文件查询
+
+### 查询缓存
+
+### 地理位置查询
+地理位置查询是较为特殊的查询，一般来说，常用的业务场景是查询距离 xx 米之内的某个位置或者是某个建筑物，甚至是以手机为圆心，查找方圆多少范围内餐厅，诸如此类，对此，{{sdk_name}} 提供了一系列的方法来实现各种针对地理位置的查询。
+
+## 应用内搜索
+应用内搜索是一个针对应用数据进行全局搜索的接口，它基于搜索引擎构建，提供更强大的搜索功能，深入了解其用法和阅读示例代码请点击{% block link_to_in_app_search_doc %}{% endblock %}
+
+## 用户
+用户系统是每一个应用都会拥有的功能，注册，登陆，密码重置的传统功能暂且不表，随着移动开发的趋势，手机号一键登陆，手机短信验证码登陆等等诸多与用户相关的功能都逐渐被很多应用接纳，因此 LeanStorage 提供了一系列的接口，帮助开发者实现各种场景下的用户模块里面的功能。
+
+{{userObjectName}} 是 LeanStorage 封装的用来描述一个用户的特殊对象。下面的章节将围绕 {{userObjectName}}，按照功能接口逐一展示其用法和可以实现的功能。
+
+### 注册
+
+#### 手机号一键登陆
+一些应用为了提高首次使用的友好度，一般会允许用户浏览一些内容，直到用户发起了一些操作才会要求用户输入一个手机号，而云端会自动发送一条验证码的短信给用户的手机号，最后验证一下，完成一个用户注册并且登陆的操作，例如很多团购类应用都有这种用户场景。
+
+## 角色
+关于用户与角色的关系，我们有一个更为详尽的文档介绍这部分的内容，并且针对权限管理有深入的讲解，详情请点击{% block link_to_acl_doc %}{% endblock %}
+
+{% block text_subclass %}
+## 子类化
+子类化推荐给进阶的开发者在进行代码重构的时候做参考。
+
+{% endblock %}
+
+
+
+
+
+
