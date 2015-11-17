@@ -38,6 +38,8 @@ Release 地址: [https://github.com/leancloud/js-push-sdk/releases](https://gith
 
 如果您觉得一点点阅读文档较慢，可以直接看我们的 [Demo 代码](https://github.com/leancloud/js-push-sdk/tree/master/demo)，并且下载自己运行一下试试看。
 
+注意：Demo 需要使用一个 Web 服务器打开（如 http://localhost ），不能仅通过文件的方式打开（不要直接双击打开，URL 为 File:/// 协议的方式），否则会被服务器拒绝。
+
 ```javascript
 // 最简的示例代码，请换成自己的 appId 和 appKey
 var appId = '{{appid}}';
@@ -50,7 +52,7 @@ var push = AV.push({
 // 发送一条推送，如果不传 channels 则是给所有 channel 发送消息
 push.send({
     // channels: ['aaa'],
-    data: {LeanCloud: 123}
+    data: {alert: 'test123'}
 }, function(result) {
     if (result) {
         console.log('推送成功发送');
@@ -109,7 +111,7 @@ var pushObject = AV.push({
 }).on('message', function(data) {
     console.log(data);
 }).send({
-    data: {test: 123},
+    data: {alert: 'test123'},
     channels:['aaa']
 });
 ```
@@ -183,14 +185,17 @@ pushObject.send({
 
     * push_time {String}（可选） 定期推送时间
 
+    * prod {String} (可选) 如果想推送到 iOS 设备，可以通过该参数指定使用测试环境还是生产环境证书，dev 表示开发证书，prod 表示生产证书，默认生产证书
+
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
 例子：
 
 ```javascript
 pushObject.send({
-    data: {test: 123},
-    channels: ['cctv1', 'cctv2']
+    data: {alert: 'test123'},
+    channels: ['cctv1', 'cctv2'],
+    prod: 'dev'
 });
 ```
 
@@ -213,7 +218,7 @@ pushObject.subscribe(['testChannel'], function() {
 
 // 然后你就可以直接发送消息
 pushObject.send({
-    data: {test: 123},
+    data: {alert: 'test123'},
     channels: ['testChannel']
 });
 ```
@@ -237,7 +242,7 @@ pushObject.unsubscribe('testChannel', function() {
 
 // 然后你就可以直接发送消息
 pushObject.send({
-    data: {test: 123},
+    data: {alert: 'test123'},
     channels: ['testChannel']
 });
 ```
