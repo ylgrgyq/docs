@@ -2,8 +2,8 @@
 
 本文档尝试为所有服务端和SDK返回的错误码给出相对详细的解释，具体到各个SDK的错误码，请参考下列文档链接：
 
-* iOS 的 [AVConstants](api/iOS/docs/AVConstants.html)。
-* Android 的 [AVException](api/android/doc/index.html)。
+* iOS 的 [AVConstants](/api-docs/iOS/docs/AVConstants.html)。
+* Android 的 [AVException](/api-docs/android/doc/index.html)。
 
 ## 实时通信错误码
 
