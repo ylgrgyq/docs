@@ -1,5 +1,8 @@
 {% extends "./realtime_guide.tmpl" %}
 
+{% set platform_name = 'iOS' %}
+{% set sdk_name = 'iOS SDK' %}
+
 {% block language %}iOS{% endblock %}
 
 {% block demo %}
@@ -8,89 +11,7 @@
 {% endblock %}
 
 {% block setup_init %}
-### 使用 CocoaPods 安装 SDK
-
-[快速入门](/start.html) 会教你如何在一个项目中安装 SDK。
-
-[CocoaPods](https://cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
-
-首先确保开发环境中已经安装了 Ruby。一般安装了 Xcode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](https://ruby.taobao.org/)，在终端执行下列命令：
-
-```sh
-$ gem sources -r https://rubygems.org/
-$ gem sources -a https://ruby.taobao.org/
-# 请确保下列命令的输出只有 ruby.taobao.org
-$ gem sources -l
-*** CURRENT SOURCES ***
-https://ruby.taobao.org
-```
-
-通过下列命令，安装或更新 CocoaPods（可能需要输入登录密码）：
-
-```sh
-sudo gem install cocoapods
-```
-
-在项目根目录下创建一个名为 **Podfile** 的文件（无扩展名），并添加以下内容：
-
-```sh
-pod 'AVOSCloudIM'
-```
-
-最后执行安装命令：
-
-```sh
-pod install
-```
-
-相关资料：[《CocoaPods 安装和使用教程》](http://code4app.com/article/cocoapods-install-usage)
-
-### 手动安装 SDK
-
-你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见 [快速入门](/start.html)。
-
-这里要特别注意如下几点：
-
-* 手动添加下列依赖库：
-
-  * SystemConfiguration.framework
-  * MobileCoreServices.framework
-  * CoreTelephony.framework
-  * CoreLocation.framework
-  * libicucore.dylib
-
-* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++.dylib**。
-
-* 在项目 Targets 的 **Build Settings** 中，为 **Other Linker Flags** 增加 **-all_load** 链接选项。
-
-然后我们需要在 application 的 `applicationDelegate` 函数中对实时通信 SDK 进行初始化：
-
-```objc
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // 其他处理...
-    ...
-    // "你的 AppId", "你的 AppKey"
-    [AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
-    ...
-}
-```
-
-### 导入模块
-
-在使用到 IM 模块的地方，应该导入该模块。
-
-在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
-
-```objc
-#import <AVOSCloudIM/AVOSCloudIM.h>
-```
-
-在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
-
-```swift
-import AVOSCloudIM
-```
+我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
 {% endblock %}
 
 {% block compatibility %}
@@ -1718,11 +1639,30 @@ imClient.delegate = self;
 ```
 {% endblock %}
 
-{% block conversation_query_cache %}#### 缓存查询
+{% block connect_with_tag %}
 
-通常，将查询结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。或者为了节省用户流量，在应用打开的第一次查询走网络，之后的查询可优先走本地缓存。
+```objc
+AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mobile"];
+[currentClient openWithCallback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        // 与云端建立连接成功
+    }
+}];
+```
+{% endblock %}
 
-值得注意的是，默认的策略是先走本地缓存的再走网络的。AVIMConversationQuery 中有如下属性：
+{% block disconnected_by_server_with_same_tag %}
+
+```objc
+-(void)client:(AVIMClient *)client didOfflineWithError:(NSError *)error{
+    if ([error code]  == 4111) {
+        //适当的弹出友好提示，告知当前用户的 Client Id 在其他设备上登陆了
+    }
+};
+```
+{% endblock %}
+{% block code_set_query_policy %}
+
 ```objc
 // 设置缓存策略，默认是 kAVCachePolicyCacheElseNetwork
 @property (nonatomic) AVCachePolicy cachePolicy;
@@ -1730,7 +1670,8 @@ imClient.delegate = self;
 // 设置缓存的过期时间，默认是 1 小时（1 * 60 * 60）
 @property (nonatomic) NSTimeInterval cacheMaxAge;
 ```
-
+{% endblock %}
+{% block code_query_from_local_cache %}
 有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
 
 ```objc
@@ -1740,5 +1681,6 @@ imClient.delegate = self;
         
     }];
 ```
+{% endblock %}
 
-各种查询缓存策略的行为可以参考 [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}
+{% block link_avquery_chache %} [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}
