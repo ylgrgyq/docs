@@ -45,8 +45,8 @@ def _prepare_local_docs(target):
       local("npm install -d");
       # local("cnpm install -d");
     local("grunt build")
-    local("mkdir dist/api")
-    local("cp -rfv api/* dist/api/");
+#    local("mkdir dist/api")
+#    local("cp -rfv api/* dist/api/");
     local("cd dist ; tar zcvf leancloud-docs.tar.gz ./* ; cd ..")
     local("cp -rfv %s/dist/* %s" % (project_dir, tmp_dir))
 
