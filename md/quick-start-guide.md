@@ -8,7 +8,7 @@
 <li><a href="ios_statistics.html">iOS 统计 SDK 开发指南</a></li>
 <li><a href="ios_push_cert.html">iOS 推送证书设置指南</a></li>
 <li><a href="ios_crashreporting_guide.html">iOS 崩溃报告使用指南</a></li>
-<li><a href="api/iOS/index.html" target="_blank">iOS SDK API</a></li>
+<li><a href="/api-docs/iOS/index.html" target="_blank">iOS SDK API</a></li>
 
 ## 你是 Android 程序员？
 
@@ -16,7 +16,7 @@
 <li><a href="android_guide.html">Android 数据存储指南</a></li>
 <li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
-<li><a href="api/android/doc/index.html" target="_blank">Android SDK API</a></li>
+<li><a href="/api-docs/android/doc/index.html" target="_blank">Android SDK API</a></li>
 
 ## 你是 Unity3D 或者 WindowsPhone 开发者？
 
@@ -25,14 +25,14 @@
 <li><a href="unity_statistics.html">Unity3D 统计 SDK 指南</a></li>
 <li><a href="dotnet_guide.html">.NET 数据存储指南</a></li>
 <li><a href="realtime_guide-dotnet.html">Windows Phone 8.0 实时通信指南</a></li>
-<li><a href="api/wp/Help/index.html">.NET SDK API</a>
+<li><a href="/api-docs/wp/Help/index.html">.NET SDK API</a>
 
 ## 你是 JavaScript 前端开发者？
 
 * [快速入门](/start.html)
 <li><a href="js_guide.html">JavaScript 数据存储指南</a></li>
 <li><a href="https://github.com/leancloud/realtime-messaging-jssdk">JavaScript 实时通信 SDK</a></li>
-<li><a href="api/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
+<li><a href="/api-docs/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
 
 ## 你是后端逻辑开发者？
 

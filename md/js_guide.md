@@ -8,7 +8,7 @@
 
 LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目标是帮助开发团队完全消除写后端代码和维护服务器的负担。
 
-请在阅读本文档的同时，对照查看 [JavaScript API文档](./api/javascript/)，本指南并没有完全覆盖所有的 API 调用。
+请在阅读本文档的同时，对照查看 [JavaScript API文档](/api-docs/javascript/)，本指南并没有完全覆盖所有的 API 调用。
 
 该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
 
@@ -2040,7 +2040,7 @@ AV.Push.send({
 });
 ```
 
-`AV.Push` 的更多使用信息参考 API 文档 [AV.Push](api/javascript/symbols/AV.Push.html)。
+`AV.Push` 的更多使用信息参考 API 文档 [AV.Push](/api-docs/javascript/symbols/AV.Push.html)。
 
 更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息。
 

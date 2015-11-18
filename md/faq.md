@@ -116,8 +116,8 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 ### 错误信息代码和详细解释在哪里
 
 * [错误代码详解](./error_code.html)
-* iOS SDK：[AVConstants](/docs/api/iOS/docs/AVConstants.html)
-* Android SDK：[AVException](/docs/api/android/doc/index.html)
+* iOS SDK：[AVConstants](/api-docs/iOS/docs/AVConstants.html)
+* Android SDK：[AVException](/api-docs/android/doc/index.html)
 
 REST API 返回的错误信息跟 SDK 保持一致。
 
