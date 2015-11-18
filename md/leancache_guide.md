@@ -47,7 +47,7 @@ var client = require('redis').createClient(process.env['REDIS_URL_<实例名称>
 
 ### 在 LeanEngine 中使用（Python 环境）
 
-首先添加相关以来到 LeanEngine 应用的 `requirents.txt` 中：
+首先添加相关以来到 LeanEngine 应用的 `requirements.txt` 中：
 
 ``` 
 Flask>=0.10.1
