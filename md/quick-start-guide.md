@@ -44,7 +44,9 @@
 
 ## 你是 PHP 开发者？
 
-* [leancloud-php-library](https://github.com/killme2008/leancloud-php-library)
+* [快速入门](/start.html)
+* [官方 PHP SDK @Github](https://github.com/leancloud/php-sdk)
+* [PHP SDK API](/api-docs/php/)
 
 ## 你是 C++ 开发者？
 
