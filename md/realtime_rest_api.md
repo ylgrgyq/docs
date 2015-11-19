@@ -167,13 +167,18 @@ md5([系统对话 id] + ":" + [用户 Client ID])
 即将系统对话 ID 加半角冒号（`:`）与用户 ID 拼接后取 MD5 。
 
 ## 删除聊天记录
+
 删除一条指定的聊天历史记录，必须采用 master key 授权，所以不建议在客户端使用此接口。
 
 ```sh
 curl -X DELETE \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
-  https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593&msgid=PESlY&timestamp=1408008498571
+  -G \
+  --data-urlencode 'convid=219946ef32e40c515d33ae6975a5c593' \
+  --data-urlencode 'msgid=PESlY' \
+  --data-urlencode 'timestamp=1408008498571' \
+  https://leancloud.cn/1.1/rtm/messages/logs
 ```
 
 参数 | 说明
