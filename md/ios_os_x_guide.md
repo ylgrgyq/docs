@@ -1571,7 +1571,7 @@ user.email = @"hang@leancloud.rocks";
 
 请注意，我们使用的是 `signUpInBackgroundWithBlock` 方法，而不是 `saveInBackground` 方法。另外还有各种不同的 `signUp` 方法可供使用。
 
-像往常一样，我们建议，在可能的情况下，尽量使用异步版本的 `signUp` 方法，这样就不会影响到应用程序主 UI 线程的响应。具体方法请参考 [API 文档](api/iOS/index.html) 。
+像往常一样，我们建议，在可能的情况下，尽量使用异步版本的 `signUp` 方法，这样就不会影响到应用程序主 UI 线程的响应。具体方法请参考 [API 文档](/api-docs/iOS/index.html) 。
 
 如果注册不成功，请检查一下返回的错误对象。最有可能的情况是，用户名或电子邮件已经被另一个用户注册，此时可以提示用户尝试用不同的用户名进行注册，也可以要求用户用 Email 做为用户名注册。
 

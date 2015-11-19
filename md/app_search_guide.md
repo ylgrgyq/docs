@@ -469,7 +469,7 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
   });
 ```
 
-更多 API 请参考 [AV.SearchQuery](api/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](api/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
+更多 API 请参考 [AV.SearchQuery](/api-docs/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](/api-docs/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
 
 ## 搜索 API
 
