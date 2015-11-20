@@ -194,8 +194,51 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 ### 文件上传
 文件的上传指的是开发者调用接口将文件存储在云端，并且返回文件最终 Url 的一个操作。
 
+{% block text_create_avfile_by_stream_data %}
+#### 从数据流构建文件
+{{fileObjectName}} 支持图片、视频、音乐等常见的文件类型，以及其他任何二进制数据，在构建的时候，传入对应的数据流即可：
+
+{% block code_create_avfile_by_stream_data %}{% endblock %}
+{% endblock %}
+
+{% block text_create_avfile_from_local_path %}
+#### 从本地路径构建文件
+大多数的客户端应用程序都会跟本地文件系统产生交互，常用的操作就是读取本地文件，如下代码可以实现使用本地文件路径构建一个 {{fileObjectName}}：
+{% block code_create_avfile_from_local_path %}{% endblock %}
+
+{% endblock %}
+
+{% block text_create_avfile_from_url %}
+#### 从网络路径构建文件
+从一个已知的 Url 构建文件也是很多应用的需求，例如，从网页上拷贝了一个图像的链接，希望 SDK 能够读取并且上传到自己的应用内，之后的使用中不必担心原网址失效，而造成 UI 的缺失。
+
+{% block code_create_avfile_from_url %}{% endblock %}
+
+{% endblock %}
+
+#### 执行上传
+上传的操作调用方法如下：
+
+{% block code_upload_file %}{% endblock %}
+
+{% block text_upload_file_with_progress %}
+#### 上传进度监听
+一般来说，上传文件都会有一个上传进度条显示用以提高用户体验。因此，SDK 也提供了进度监听的接口：
+
+{% block code_upload_file_with_progress %}{% endblock %}
+
+{% endblock %}
+
 ### 文件下载
-文件的下载我们更推荐开发者在当前语言平台下使用成熟的库去下载，因为只要文件的 Url 可以读取到，那么针对下载这个操作，开发者可以自由发挥的空间就很大，比如很多组件都支持客户端自动缩放等等实用的功能，当然 {{sdk_name}} 也提供的接口给开发者下载文件，但是需要提醒的是，文件下载是一个仁者见仁智者见智的功能，{{sdk_name}} 提供的接口仅仅**是将文件的下载之后做了缓存，只要文件的 Url 不变，那么一次下载成功之后，就不会再重复下载，目的是为了减少客户端的流量**。
+文件的下载我们更推荐开发者在当前语言平台下使用成熟的库去下载，因为只要文件的 Url 可以读取到，那么针对下载这个操作，开发者可以自由发挥的空间就很大，比如很多组件都支持客户端自动缩放等等实用的功能，当然 SDK 也提供的接口给开发者下载文件，但是需要提醒的是，文件下载是一个仁者见仁智者见智的功能，SDK 提供的接口仅仅**是将文件的下载之后做了缓存，只要文件的 Url 不变，那么一次下载成功之后，就不会再重复下载，目的是为了减少客户端的流量**。
+
+{% block text_downlod_file %}
+####  执行下载
+SDK 提供的下载方法如下：
+
+{% block code_downlod_file %}{% endblock %}
+
+{% endblock %}
 
 ## 查询
 {{baseQueryClassName}} 是构建针对 {{baseObjectName}} 查询的基础类。

@@ -53,6 +53,65 @@
 {% block code_serialize_baseObject_to_string %}{% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}{% endblock %}
+
+{% block code_create_avfile_by_stream_data %}
+
+```objc
+    NSData *data = [@"Working with LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
+    AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
+```
+{% endblock %}
+
+{% block code_create_avfile_from_local_path %}
+
+```objc
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *leanclouImagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
+    AVFile *file = [AVFile fileWithName:fileName contentsAtPath:leanclouImagePath];
+```
+
+{% endblock %}
+
+{% block code_create_avfile_from_url %}
+
+```objc
+    AVFile *file =[AVFile fileWithURL:@"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"];
+    [file getData];// 注意这一步很重要，这是把图片从原始地址拉去到本地
+```
+{% endblock %}
+
+{% block code_upload_file %}
+
+```objc
+    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        NSLog(IshiharaSatomi.url);//返回一个唯一的 Url 地址
+    }];
+```
+{% endblock %}
+
+{% block code_upload_file_with_progress %}
+
+```objc
+    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+      // 成功或失败处理...
+    } progressBlock:^(int percentDone) {
+      // 上传进度数据，percentDone 介于 0 和 100。
+    }];
+```
+{% endblock %}
+
+{% block code_downlod_file %}
+
+```objc
+    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
+        // data 就是文件的数据流
+    } progressBlock:^(NSInteger percentDone) {
+        //下载的进度数据，percentDone 介于 0 和 100。
+    }];
+```
+{% endblock %}
+
 {% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
 {% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
 
