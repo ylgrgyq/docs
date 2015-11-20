@@ -1,4 +1,6 @@
 {% extends "./acl_guide.tmpl" %}
+{% block language_version %}Python{% endblock %}
+{% block link_to_acl_quickStart %}TODO:[权限管理以及 ACL 快速指南](acl_quick_start-python.html){% endblock %}
 
 {% block create_post_set_acl_for_single_user %}
 
