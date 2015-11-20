@@ -153,7 +153,15 @@ LeanCloud 实时通信服务的特性主要有：
 **消息记录** | 支持 | 支持 | 支持
 **用例** | 单聊、群聊 | 聊天室、弹幕、网页实时评论 | 公众号，机器人
 
-<span>*</span> 指 `_Conversation` 系统表中的字段
+<span> * </span> 指 `_Conversation` 系统表中的字段
+
+#### 创建对话
+
+对话可以通过 SDK 和 [REST API](./realtime_rest_api.html#创建一个对话) 创建。
+
+在大部分使用场景中，普通对话通过 SDK 创建，用于最终用户之间自发的通信。
+暂态对话和系统对话通常和应用中的特定实体绑定，可以通过 REST API 提前创建，通过应用中的业务逻辑
+把对话 ID 下发给最终用户。
 
 ### 消息（Message）
 
@@ -166,6 +174,10 @@ LeanCloud 实时通信服务的特性主要有：
 
 LeanCloud 对普通消息提供「至少一次」的到达保证，并且在官方 SDK 中支持对消息的去重，开发者无需关心。除了基于「推」模型的消息机制，我们还提供消息记录的机制允许
 SDK 和 REST API 通过「拉」的方式获取任意时间点前的消息。目前 LeanCloud 对消息记录提供永久存储。
+
+开发者可以通过 SDK 或 [REST API](./realtime_rest_api.html#通过_REST_API_发消息) 发送消息。
+SDK 通常用于最终用户发送消息，而 REST API 是开发者从服务器端发送消息的接口。当从 REST API
+发送消息时，开发者可以指定消息的发送者、对话 ID，对于系统对话还可以指定消息的接收者。
 
 ### 富媒体消息
 
@@ -196,7 +208,6 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ### 离线消息
 
-用户在离线状态时收到的消息称为离线消息。对 iOS 和 Windows Phone 用户来说，当应用离开前台时，用户就进入了离线状态。
 开发者可以通过 [**控制台** > **消息** > **实时消息** > **帮助**](/messaging.html?appid={{appid}}#/message/realtime/tool) 界面查询某个 Client ID 的在线状态和离线消息数。
 
 当用户重新登录后，LeanCloud 提供两种方式进行下发离线消息：
