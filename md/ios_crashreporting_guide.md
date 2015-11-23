@@ -22,10 +22,11 @@
 
 上传符号文件有两种方式：每次构建应用时自动上传和手动上传。我们推荐使用自动上传，这样开发者就不需要在每次发布版本时，还要记着去上传符号文件。实现符号文件**自动上传**的步骤如下：
 
-安装客户端工具：
+安装客户端工具（如果出现权限错误，可以在命令前面加上 `sudo`）：
 
 ```sh
-gem install --no-wrappers leancloud
+gem update --system
+gem install --no-wrappers -n /usr/local/bin leancloud
 ```
 
 在应用的 Targets 中，选择 **Build Phases** 选项卡，添加一个 **Run Script** 步骤：
