@@ -1,7 +1,6 @@
-
 {% extends "./sdk_setup.tmpl" %}
 
-{% block language %}Android{% endblock %} 
+{% block language %}Android{% endblock %}
 
 {% block libs_tool_automatic %}
 
@@ -19,8 +18,8 @@ Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android
     ├── ...
 ├── build.gradle        // 项目 Gradle 构建脚本
 ├── YOUR-APP-NAME.iml   // YOUR-APP-NAME 为你的应用名称
-├── gradle                   
-└── settings.gradle      
+├── gradle
+└── settings.gradle
 ```
 
 首先打开 `./build.gradle` ，按照如下进行标准配置，请注意：这一步我们修改的是根目录下的 `build.gradle`:
@@ -73,7 +72,7 @@ dependencies {
 
     //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
     compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
+    compile 'cn.leancloud.android:Java-WebSocket:1.3.1-leancloud'
 
     //avoscloud-statistics 为 LeanCloud 统计包
     compile 'cn.leancloud.android:avoscloud-statistics:v3.+'
@@ -86,13 +85,13 @@ dependencies {
     compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'    
+    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'
 }
 ```
 
 我们已经提供了官方的 [maven 仓库](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
 
-#### Eclipse 
+#### Eclipse
 Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步骤](#手动安装) 将 SDK 导入到项目里。
 
 {% endblock %}
@@ -150,7 +149,7 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 
 **注意：如果需要使用美国站点，并且 SDK 版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，需要下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)，将其拷贝到项目的 `res/raw/` 之下。**
 
-#### Android Studio 
+#### Android Studio
 首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
 
 1. 打开 **File** > **Project Structure** > **Modules** 对话框，点击 **Dependencies**；
@@ -214,7 +213,7 @@ public class MyLeanCloudApp extends Application {
 {% endblock %}
 
 {% block sdk_using_north_america_node %}
-只要在调用 `AVOSCloud.initialize` 之后调用一下 `AVOSCloud.useAVCloudUS()` 即可，如下： 
+只要在调用 `AVOSCloud.initialize` 之后调用一下 `AVOSCloud.useAVCloudUS()` 即可，如下：
 
 ```java
 public class MyLeanCloudApp extends Application {
@@ -255,7 +254,7 @@ public class MyLeanCloudApp extends Application {
                 }
             }
         });
-        
+
         ...
 
     }
@@ -267,5 +266,3 @@ public class MyLeanCloudApp extends Application {
 {% block permission_access_network_config %}{% endblock %}
 
 {% block platform_specific_faq %}{% endblock %}
-
-
