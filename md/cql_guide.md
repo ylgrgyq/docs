@@ -347,7 +347,7 @@ select * from GameScore where name=? and score>? limit ?,?
 
 占位符支持所有 LeanCloud 平台上的有效类型，复杂类型（如日期、GeoPoint）要求以 [REST API](./rest_api.html#数据类型) 文档说明的 JSON 格式来提供。
 
-**我们推荐使用占位符的方式来使用 CQL，查询语句可以通过预编译得到缓存，降低 CQL 的转换开销。**
+**我们推荐使用占位符的方式来使用 CQL，查询语句可以通过预编译被缓存起来，降低 CQL 的转换开销。**
 
 ## 排序
 
