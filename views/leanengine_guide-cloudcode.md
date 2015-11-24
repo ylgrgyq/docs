@@ -255,7 +255,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 {% block afterSaveExample %}
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {
-  query = new AV.Query('Post');
+  var query = new AV.Query('Post');
   query.get(request.object.get('post').id, {
     success: function(post) {
       post.increment('comments');
@@ -272,7 +272,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
-  //输出信息请到「应用控制台 > 存储 > 云引擎 > 日志」中查看
+  //输出信息请到「应用控制台 / 存储 / 云引擎 / 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -302,8 +302,8 @@ AV.Cloud.afterUpdate('Article', function(request) {
 {% block beforeDeleteExample %}
 ```javascript
 AV.Cloud.beforeDelete('Album', function(request, response) {
-  //查询Photo中还有没有属于这个相册的照片
-  query = new AV.Query('Photo');
+  //查询 Photo 中还有没有属于这个相册的照片
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.count({
@@ -327,7 +327,7 @@ AV.Cloud.beforeDelete('Album', function(request, response) {
 {% block afterDeleteExample %}
 ```javascript
 AV.Cloud.afterDelete('Album', function(request) {
-  query = new AV.Query('Photo');
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.find({
