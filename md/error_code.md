@@ -249,6 +249,15 @@
 * 信息 - `Email address isn't verified.`
 * 含义 - 未验证的邮箱地址。
 
+## 217
+
+* 信息 - `Invalid username, it must be a non-blank string.`
+* 含义 - 无效的用户名，不允许空白用户名。
+
+## 218
+
+* 信息 - `Invalid password, it must be a non-blank string.`
+* 含义 - 无效的密码，不允许空白密码。
 
 ## 250
 
@@ -259,6 +268,11 @@
 
 * 信息 - `Invalid linked session`或者`Invalid Weibo session`
 * 含义 - 无效的账户连接，一般是因为 access token 非法引起的。
+
+## 252
+
+* 信息 - `Invalid Weixin session`
+* 含义 - 无效的微信授权信息。
 
 ## 300
 
@@ -274,6 +288,11 @@
 
 * 信息 - `Invalid GeoPoint values.`
 * 含义 - 无效的 GeoPoint 类型，请确保经度在 -180 到 180 之间，纬度在 -90 到 90 之间。
+
+## 303
+
+* 信息 - `Fail to execute operation on storage.`
+* 含义 - 插入数据库失败，一般是数据格式或者内部错误，通常错误里包含更具体的错误信息。
 
 ## 401
 
@@ -294,6 +313,12 @@
 
 * 信息 - `Rate limit exceeded.`
 * 含义 - 超过流量访问限制，默认 API 并发 1000 访问每秒，通过数据管理平台每秒限制上传一个文件，并且每分钟最多上传 30 个文件，如需提升，请联系我们。
+
+## 511
+
+* 信息 - `Temporarily Unavailable.`
+* 含义 -  该请求 API 暂时不可用，请稍后重试。一般是运维操作临时禁止了某个 API 访问，一段时间后会自然恢复，或者联系我们处理。
+
 
 ## 600
 
@@ -330,6 +355,12 @@
 
 * 信息 - `Fails to render SMS template.`
 * 含义 - 渲染短信模板失败，通常是模板语法问题，我们的短信模板仅支持 [handlerbars](http://handlebarsjs.com/) 模板语法。
+
+## 700
+
+* 信息 - `Nonexistent query keys`
+* 含义 - 无效的查询或者排序字段，请确认查询或者排序的字段在表中存在。
+
 
 
 

@@ -145,6 +145,14 @@ select * from GameScore where scores all (100,100)
 
 `all` 表示数组完全匹配。
 
+查询数组长度为特定值的对象：
+
+```
+select * from GameScore where size(scores) = 2
+```
+
+数组长度查询仅支持等于号，不支持大小和小于等其他比较运算符。
+
 ### 子查询
 
 使用 `in` 来做子查询，后面跟的可以是一个列表，例如查询名字是 dennis、catty 和 green 三个玩家的成绩：
@@ -337,7 +345,9 @@ select * from Comment limit 100,10
 select * from GameScore where name=? and score>? limit ?,?
 ```
 
-我们推荐使用占位符的方式来使用 CQL，查询语句可以通过预编译得到缓存，降低 CQL 的转换开销。
+占位符支持所有 LeanCloud 平台上的有效类型，复杂类型（如日期、GeoPoint）要求以 [REST API](./rest_api.html#数据类型) 文档说明的 JSON 格式来提供。
+
+**我们推荐使用占位符的方式来使用 CQL，查询语句可以通过预编译被缓存起来，降低 CQL 的转换开销。**
 
 ## 排序
 
