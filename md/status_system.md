@@ -535,8 +535,8 @@ followerNameQuery.include("followee");
     query.getInBackground(new AVFriendshipCallback() {
       @Override
       public void done(AVFriendship friendship, AVException e) {
-        List<SubUser> followers = friendship.getFollowers();//获取关注列表
-        List<SubUser> followees = friendship.getFollowees();//获取粉丝
+        List<SubUser> followers = friendship.getFollowers(); //获取粉丝
+        List<SubUser> followees = friendship.getFollowees(); //获取关注列表
 	AVUser user = friendship.getUser();//获取用户对象本身
       }
     });
