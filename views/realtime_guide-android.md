@@ -1609,7 +1609,7 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
 
         // 获取第一页的消息里面最旧的一条消息
         AVIMMessage pager = firstPage.get(0);
-        conversation.queryMessages(pager.getMessageId(), pager.getReceiptTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
+        conversation.queryMessages(pager.getMessageId(), pager.getTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
           @Override
           public void done(List<AVIMMessage> secondPage, AVIMException e) {
             // secondPage 就是第二页的数据
