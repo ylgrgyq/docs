@@ -9,7 +9,7 @@
 
 云引擎允许你编写 JavaScript 或者 Python 代码，并部署到我们的云端，通过拦截 save 请求，在保存对象之前或之后做一些事情；你可以自定义业务函数，并通过 SDK 调用；你还可以调用部分第三方库来实现自己的业务逻辑，甚至还可以将整个网站架设在云引擎之上，我们提供了网站托管服务。
 
-现在我们将「云代码 2.0」的功能做了升级，开放性更高，并且更名为「云引擎 - LeanEngine」。老的云代码产品将在一段时间内继续运行并且维护下去，但是云代码上的所有功能都能在云引擎上 实现，并且自由度更高，因此我们强烈建议将项目改由云引擎来实现。
+现在我们将「云代码 2.0」的功能做了升级，开放性更高，并且更名为「云引擎」，即 LeanEngine。老的云代码产品将在一段时间内继续运行并且维护下去，但是云代码上的所有功能都能在云引擎上 实现，并且自由度更高，因此我们强烈建议将项目改由云引擎来实现。
 
 ### 与云代码的区别
 
@@ -50,7 +50,7 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 
 如果需要指定 web 服务端口，可以增加 `-P` 参数。获取帮助信息请使用 `-h` 参数。
 
-### 部署的到云引擎
+### 部署到云引擎
 
 部署到测试环境：
 
@@ -91,10 +91,10 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 LC_APP_ID|当前应用的 App Id
 LC_APP_KEY|当前应用的 App Key
 LC_APP_MASTER_KEY|当前应用的 Master Key
-LC_APP_ENV|当前应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
+LC_APP_ENV|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
 LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
-**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JS-SDK AV.setProduction(production)](https://leancloud.cn/docs/api/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
+**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; `AV.setProduction(production)`](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
 
 ### 安装
 
@@ -110,9 +110,9 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 ### 使用数据存储
 
-你可以直接在云引擎上使用我们的 [数据存储](https://leancloud.cn/features/storage.html) 服务，相关功能请参考 {% block sdk_guide_link %}{% endblock %}。
+你可以直接在云引擎上使用我们的 [数据存储](/features/storage.html) 服务，相关功能请参考 {% block sdk_guide_link %}{% endblock %}。
 
-##云函数
+## 云函数
 
 当你开发移动端应用时，可能会有下列需求：
 
@@ -140,22 +140,22 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 `stars` 表示评分，1-5。如果你想查找《夏洛特烦恼》这部电影的平均分，你可以找出这部电影的所有评分，并在设备上根据这个查询结果计算平均分。但是这样一来，尽管你只是需要平均分这样一个数字，却不得不耗费大量的带宽来传输所有的评分。通过云引擎，我们可以简单地传入电影名称，然后返回电影的平均分。
 
-云函数接收 JSON 格式的请求对象，我们可以用它来传入电影名称。整个 {% block sdk_guide_link %}{% endblock %} 都在云引擎运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合一起，实现 `averageStars` 函数的代码如下:
+云函数接收 JSON 格式的请求对象，我们可以用它来传入电影名称。整个 {% block sdk_guide_link %}{% endblock %} 都在云引擎运行环境上有效，可以直接使用，所以我们可以使用它来查询所有的评分。结合在一起，实现 `averageStars` 函数的代码如下：
 
 {% block cloudFuncExample %}{% endblock %}
 
-`averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须给 `request.params.movie` 提供参数。接下来，我们将介绍如何调用云函数。
+`averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须给 `request.params.movie` 提供参数。
 
 ### 调用云函数
 
-云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云代码」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
+云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云引擎」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
        -H "X-LC-Id: {{appid}}" \
        -H "X-LC-Key: {{appkey}}" \
        -H "X-LC-Prod: 0" \
-       -d '{"movie":"The Matrix"}' \
+       -d '{"movie":"夏洛特烦恼"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
 
@@ -174,7 +174,7 @@ https://leancloud.cn/1.1/functions/averageStars
 ```json
 {
   "code": 141,
-  "error": "movie lookup failed"
+  "error": "搜索失败"
 }
 ```
 
@@ -186,7 +186,7 @@ https://leancloud.cn/1.1/functions/averageStars
 
 API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
-### Save 前执行操作
+### beforeSave
 
 在某些情况下，你可能不想简单地丢弃无效的数据，而是想先清理一下再保存，`beforeSave` 可以帮你做到这一点。
 
@@ -194,7 +194,7 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block beforeSaveExample %}{% endblock %}
 
-### Save 后执行操作
+### afterSave
 
 如果想在保存对象后做一些动作，如发送一条推送通知，则可以通过 `afterSave` 函数来实现。例如，当一条留言保存后再更新一下这篇帖子的评论总数：
 
@@ -204,9 +204,9 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block afterSaveExample2 %}{% endblock %}
 
-如果`afterSave`函数调用失败，save请求仍然会返回成功应答给客户端。`afterSave`发生的任何错误，都将记录到云引擎日志里。
+如果 `afterSave` 函数调用失败，save 请求仍然会返回成功应答给客户端。`afterSave` 发生的任何错误，都将记录到云引擎日志里。
 
-### 在 update 更新前执行操作
+### beforeUpdate
 
 {% block beforeUpdate %}
 同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象前执行特定的动作，这是通过 `beforeUpdate` 函数实现的，你可以在这个 Hook 中知道哪些字段被修改了，还可以在特定情况下拒绝这次修改：
@@ -216,37 +216,47 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 **注意**：传入的对象是一个尚未保存到数据库的临时对象，并不保证与最终储存到数据库的对象完全相同，这是因为修改中可能包含自增、数组增改、关系增改等原子操作。
 {% endblock %}
 
-### 在 update 更新后执行动作
+### afterUpdate
 
 你还可以在在更新对象后执行特定的动作，这是通过 `afterUpdate` 函数实现的。比如每次修改文章后简单地记录日志：
 
 {% block afterUpdateExample %}{% endblock %}
 
-### 在 delete 前执行动作
+###  beforeDelete
 
-很多时候，你希望在删除一个对象前做一些检查工作。比如你要删除一个相册(Album)前，会去检测这个相册里的图片(Photo)是不是已经都被删除了，这都可以通过`beforeDelete`函数来定义一个钩子（callback）函数来做这些检查，示例代码：
+很多时候，你希望在删除一个对象前做一些检查工作。比如你要在删除一个相册（Album）前，去检测这个相册里的图片（Photo）是不是已经都被删除了，这都可以通过 `beforeDelete` 函数来定义一个 Hook（callback）函数来做这些检查。示例代码：
 
 {% block beforeDeleteExample %}{% endblock %}
 
-### 在 delete 后执行动作
+###  afterDelete
 
-另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在beforeDelete中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过`afterDelete`函数来实现：
+另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在 `beforeDelete`  中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过 `afterDelete` 函数来实现：
 
 {% block afterDeleteExample %}{% endblock %}
 
-### 用户验证通知函数
+### onVerified
 
-很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加`onVerified`函数：
+很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加 `onVerified`函数：
 
 {% block onVerifiedExample %}{% endblock %}
 
-函数的第一个参数是验证类型：短信验证为`sms`，邮箱验证为`email`。另外，数据库中相关的验证字段，如`emailVerified`不需要修改，我们已经为你更新完成。
+函数的第一个参数是验证类型：短信验证为 `sms`，邮箱验证为 `email`。另外，数据库中相关的验证字段，如 `emailVerified` 不需要修改，我们已经为你更新完成。
 
-### 用户登录时执行动作
+### onLogin
 
 有些时候你可能需要禁止一些用户登录（比如黑名单内的用户），可以定义以下函数：
 
 {% block onLoginExample %}{% endblock %}
+
+### 实时通信相关函数
+
+请阅读 [实时通信概览 &middot; 云引擎 Hook](realtime_v2.html#云引擎_Hook) 来了解以下函数的具体用法：
+
+- `_messageReceived`
+- `_receiversOffline`
+- `_conversationStart`
+- `_conversationAdd`
+- `_conversationRemove`
 
 ### 错误响应码
 
@@ -262,50 +272,46 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block http_client %}{% endblock %}
 
-##云引擎管理控制台
+## 云引擎管理控制台
 
-首先，请进入App的 [云引擎 管理](/cloud.html?appid={{appid}}#/repository) 界面：
+首先，请进入 [控制台 /（选择应用）/ 云引擎 / 管理](/cloud.html?appid={{appid}}#/online) 界面，可以看到左侧菜单：
 
-![image](images/cloud_code_menu.png)
-
-可以看到左侧菜单：
-
-* 定义函数：云引擎 的简单模式，可以直接在线维护云代码方法。
-* 定时任务：可以设置一些定时任务，比如每天凌晨清理无用数据等。
-* Git 部署：用于部署云引擎项目到测试环境或者生产环境。
-* 日志：用于查看云引擎项目的日志
-* 统计：用于查看云引擎项目的一些数据统计
-* 设置：用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
+菜单项|说明
+---|---
+<span style="white-space: nowrap;">定义函数</span>|云引擎的简单模式，可以直接在线维护云引擎方法。
+定时任务|可以设置一些定时任务，比如每天凌晨清理无用数据等。
+<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到测试环境或者生产环境。
+日志|用于查看云引擎项目的日志
+统计|用于查看云引擎项目的一些数据统计
+设置|用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
 
 ## 在线定义函数
 
-很多人使用云引擎是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护云函数 的功能。
-
-### 提醒
+很多人使用云引擎是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护云函数的功能。
 
 使用此功能，你需要注意：
 
 * 会替代你之前 git 或者命令行部署的项目。
-* 暂不提供 webHosting 功能。
+* 暂不提供主机托管功能。
 * 维护的所有函数可以生成并导出一个完整的项目，供 git 或命令行部署（即将推出）。
 
 ![image](images/cloud_code_snippet.png)
 
-左上角的「创建函数」可以新创建一个函数。中间部分是已经创建好的函数，并可以进行一些维护操作。
+左上角的 **创建函数** 可以新创建一个函数。中间部分是已经创建好的函数，并可以进行一些维护操作。
 
 ### 函数类型
 
-有几种函数类型：
+函数类型有：
 
-* Function：对应 `AV.Cloud.define` 定义的方法。
-* Hook：对应 `AV.Cloud.beforeSave` 等回调定义的方法。
-* Global：对应全局变量，一些全局变量和公共函数可以定义在这里。
+* **Function**：通过 `AV.Cloud.define` 定义的方法。
+* **Hook**：象 `AV.Cloud.beforeSave` 等回调定义的方法。
+* **Global**：全局变量，一些全局变量和公共函数可以定义在这里。
 
-这些函数的使用场景和具体细节，参见 [云函数](#云函数)
+这些函数的使用场景和具体细节，参见 [云函数](#云函数)。
 
 ### 创建函数
 
-如果需要创建一个新的函数，可以点击「创建函数」按钮，你将看到如下窗口：
+如果需要创建一个新的函数，可以点击 **创建函数** 按钮，你将看到如下窗口：
 
 ![image](images/cloud_code_snippet_create.png)
 
@@ -315,7 +321,7 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 * 函数名称
 * 数据具体的代码片段（注意，你不需要输入函数定义部分，即 `AV.Cloud.define(...)` 部分）
 * 注释
-* 全部 OK 后点击「保存」，或者放弃编辑点击「关闭」
+* 全部 OK 后点击 **保存**，或者放弃编辑点击 **关闭**。
 
 你可以在代码框中填入下列代码：
 
@@ -328,26 +334,26 @@ if (name) {
 }
 ```
 
-**注：如果想要发送 HTTP 请求，请看文档下面「[发送 HTTP 请求](#发送_HTTP_请求)」**
+**若想发送 HTTP 请求，请参考下文的 [发送 HTTP 请求](#发送_HTTP_请求)**。
 
 
-点击保存后，云引擎 会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
+点击保存后，云引擎会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。过程全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
 
 ### 发布
 
-如果函数部署「测试环境」成功，就可以点击「发布」按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
+如果函数部署「测试环境」成功，就可以点击 **发布** 按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
 
 ### 同步
 
-对于某个函数，可能生产环境运行一个版本，而测试环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的「测试环境」按钮会变成蓝色：
+对于某个函数，可能生产环境运行一个版本，而测试环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的 **测试环境** 按钮会变成蓝色：
 
 ![image](images/cloud_code_snippet_diff_version.png)
 
-当你在测试环境开发完成，点击「发布」后，两个环境的代码将会统一，这时「测试环境」按钮变为灰色。
+当你在测试环境开发完成，点击 **发布** 后，两个环境的代码将会统一，这时 **测试环境** 按钮变为灰色。
 
 ### 测试
 
-如果需要测试，可以点击相应函数的「调用」按钮，你将看到如下窗口：
+如果需要测试，可以点击相应函数的 **调用** 按钮，你将看到如下窗口：
 
 ![image](images/cloud_code_snippet_invoke.png)
 
@@ -355,7 +361,7 @@ if (name) {
 
 ### 历史版本
 
-如果你想看某个函数之前曾经部署过的代码，可以在函数列表页面点击「历史」按钮，将会弹出类似下面的窗口：
+如果你想看某个函数之前曾经部署过的代码，可以在函数列表页面点击 **历史** 按钮，将会弹出类似下面的窗口：
 
 ![image](images/cloud_code_snippet_history.png)
 
@@ -363,11 +369,11 @@ if (name) {
 
 ### 删除
 
-如果你确定某个函数已经不再需要，可以在函数列表页面点击「删除」按钮将其删除。**注意**：删除后该函数和其所有历史记录都将被删除，而且不能恢复。删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
+如果你确定某个函数已经不再需要，可以在函数列表页面点击 **删除** 按钮将其删除。**删除后该函数和其所有历史记录都将被删除，而且不能恢复。**删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
 
 ## 项目定义函数
 
-如果你希望有更强的灵活性，或者希望使用 webHosting 功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的 云引擎。
+如果你希望有更强的灵活性，或者希望使用主机托管功能实现自己的站点，甚至网站托管，你可以通过项目代码的方式管理自己的云引擎。
 
 {% block download_skeleton %} {% endblock %}
 
@@ -381,7 +387,7 @@ if (name) {
 
 ### 健康监测
 
-云引擎 项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 `应用启动检测失败` 类型的错误信息，导致部署失败。
+云引擎项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 **应用启动检测失败** 类型的错误信息，导致部署失败。
 
 {% block ping %}{% endblock %}
 
@@ -393,23 +399,21 @@ if (name) {
 
 ### 使用命令行工具部署
 
-使用命令行工具可以非常方便地部署、发布应用，查看应用状态，查看日志，甚至支持多应用部署。具体使用请 [参考文档](cloud_code_commandline.html)。
+使用命令行工具可以非常方便地部署、发布应用，查看应用状态，查看日志，甚至支持多应用部署。具体使用请参考 [命令行工具指南](cloud_code_commandline.html)。
 
-除此之外，还可以使用 git 仓库部署。你需要将项目提交到一个 git 仓库，LeanCloud并不提供源码的版本管理功能，而是借助于git这个优秀的分布式版本管理工具。我们推荐你使用[CSDN Code平台](https://code.csdn.net/)，[github](https://github.com/)或者[BitBucket](https://bitbucket.org/)这样第三方的源码
-托管网站，也可以使用你自己搭建的git仓库(比如使用[gitlab.org](http://gitlab.org/))。下面我们详细描述下怎么使用。
+除此之外，还可以使用 git 仓库部署。你需要将项目提交到一个 git 仓库，我们并不提供源码的版本管理功能，而是借助于 git 这个优秀的分布式版本管理工具。我们推荐你使用 [CSDN Code 平台](https://code.csdn.net/)、[Github](https://github.com/) 或者 [BitBucket](https://bitbucket.org/) 这样第三方的源码托管网站，也可以使用你自己搭建的 git 仓库（比如 [gitlab.org](http://gitlab.org/)）。
 
 ### 使用 CSDN Code 托管源码
 
-CSDN CODE 是国内非常优秀的源码托管平台，你可以使用 CODE 平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
+CSDN Code 是国内非常优秀的源码托管平台，你可以使用这个平台提供公有仓库和有限的私有仓库完成对代码的管理功能。以下是该平台与 LeanCloud 云引擎结合的一个例子。
 
-以下是使用CODE平台与LeanCloud云代码结合的一个例子。
-首先在CODE上创建一个项目
+首先在 CSDN Code 上创建一个项目：
 
 ![image](images/csdn_code1.png)
 
-**提示**：在已经有项目代码的情况下，一般不推荐”使用README文件初始化项目”
+**提示**：在已经有项目代码的情况下，一般不推荐 **使用 README 文件初始化项目**。
 
-接下来按照给出的提示，将源代码push到这个代码仓中
+接下来按照给出的提示，将源代码 push 到这个代码仓中：
 
 ```sh
 cd ${PROJECT_DIR}
@@ -420,16 +424,15 @@ git remote add origin git@code.csdn.net:${yourname}/test.git
 git push -u origin master
 ```
 
-我们已经将源码成功推送到CODE平台，接下来到LeanCloud云代码的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+我们已经将源码成功推送到 CSDN Code 平台，接下来到 LeanCloud 云引擎的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
 
 ![image](images/csdn_code2.png)
 
-添加 deploy key 到你的 CODE 平台项目上（deploy key是我们LeanCloud机器的ssh public key）
-保存到”项目设置””项目公钥”中，创建新的一项avoscloud:
+添加 deploy key 到你的 CSDN Code 平台项目上（deploy key 是我们云引擎机器的 ssh public key）保存到 **项目设置** / **项目公钥** 中，创建新的一项 avoscloud：
 
 ![image](images/csdn_code3.png)
 
-下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -438,17 +441,17 @@ git push -u origin master
 
 ### 使用 GitHub 托管源码
 
-使用BitBucket与此类似，不再赘述。
+使用 BitBucket 与此类似，不再赘述。
 
-[Github](https://github.com)是一个非常优秀的源码托管平台，你可以使用它的免费账号，那将无法创建私有仓库(bucket可以创建私有仓库)，也可以付费成为高级用户，可以创建私有仓库。
+[Github](https://github.com) 是一个非常优秀的源码托管平台，你可以使用它的免费账号，那将无法创建私有仓库（bucket 可以创建私有仓库），也可以付费成为高级用户，可以创建私有仓库。
 
-首先在github上创建一个项目，比如就叫`test`:
+首先在 Github上创建一个项目，比如就叫 `test`：
 
 ![image](images/github1.png)
 
 ![image](images/github2.png)
 
-接下来按照github给出的提示，我们将源码push到这个代码仓库：
+接下来按照 Github 给出的提示，我们将源码 push 到这个代码仓库：
 
 ```sh
 cd ${PROJECT_DIR}
@@ -459,17 +462,17 @@ git remote add origin git@github.com:${yourname}/test.git
 git push -u origin master
 ```
 
-到这一步我们已经将源码成功push到github，接下来到云引擎的管理界面填写下你的git地址（请注意，一定要填写以`git@`开头的地址，我们暂不支持https协议clone源码）并点击save按钮保存：
+到这一步我们已经将源码成功 push 到 Github，接下来到云引擎的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
 
 ![image](images/cloud_code_4.png)
 
-并添加deploy key到你的github项目（deploy key是我们云引擎机器的ssh public key），如果你是私有项目，需要设置deploy key，
+并添加 deploy key 到你的 github 项目（deploy key 是我们云引擎机器的 ssh public key），如果你是私有项目，需要设置 deploy key，
 
-拷贝 `设置` 菜单里的 `Deploy key` 保存到 github setting 里的deploy key，创建新的一项avoscloud:
+拷贝 **设置** 菜单里的 **Deploy key** 保存到 github setting 里的 deploy key，创建新的一项 avoscloud：
 
 ![image](images/cloud_code_github_deploy_key.png)
 
-下一步，部署源码到测试环境，进入 云代码 -> Git 部署 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -477,24 +480,24 @@ git push -u origin master
 
 ### Gitlab 无法部署问题
 
-很多用户自己使用[Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到LeanCloud 的问题，即使设置了Deploy Key，却仍然要求输入密码。
+很多用户自己使用 [Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到 LeanCloud 的问题，即使设置了 Deploy Key，却仍然要求输入密码。
 
 可能的原因和解决办法如下：
 
-* 确保你gitlab运行所在服务器的/etc/shadow文件里的git（或者gitlab）用户一行的`!`修改为`*`，原因参考[这里](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启SSH服务`sudo service ssh restart`。
-* 在拷贝deploy key时，确保没有多余的换行符号。
-* Gitlab目前不支持有comment的deploy key。早期LeanCloud 用户生成的deploy key可能带comment，这个comment是在deploy key的末尾76个字符长度的字符串，例如下面这个deploy key:
+* 确保你 gitlab 运行所在服务器的 /etc/shadow 文件里的 git（或者 gitlab）用户一行的 `!`修改为 `*`，原因参考 [Stackoverflow - SSH Key asks for password](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启 SSH 服务：`sudo service ssh restart`。
+* 在拷贝 deploy key 时，确保没有多余的换行符号。
+* Gitlab 目前不支持有 comment 的 deploy key。早期 LeanCloud 用户生成的 deploy key 可能带 comment，这个 comment 是在 deploy key 的末尾 76 个字符长度的字符串，例如下面这个 deploy key：
 
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw== App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
-其中最后76个字符
+其中最后 76 个字符：
 
 ```
 App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
 
-就是comment，删除这段字符串后的deploy key(如果没有这个字样的comment无需删除)保存到gitlab即可正常使用:
+就是 comment，删除这段字符串后的 deploy key（如果没有这个字样的comment无需删除）保存到 gitlab 即可正常使用：
 
 ```
 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
@@ -502,17 +505,17 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ## 定时任务
 
-很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云代码中运行这样的任务。
+很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云引擎中运行这样的任务。
 
 **我们提供的定时任务的最小时间单位是秒，正常情况下我们都能将误差控制在秒级别。**
 
 {% block timerLegacy %}{% endblock %}
 
-定时任务也是普通的云代码函数，比如我们定义一个打印循环打印日志的任务`log_timer`：
+定时任务也是普通的云引擎函数，比如我们定义一个打印循环打印日志的任务 `log_timer`：
 
 {% block timerExample %}{% endblock %}
 
-部署云代码之后，进入云代码管理菜单，左侧有个定时任务菜单：
+部署云引擎之后，进入云引擎管理菜单，左侧有个定时任务菜单：
 
 ![image](images/schedule_timer1.png)
 
@@ -522,43 +525,43 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 定时任务分为两类：
 
-* 使用标准的crontab语法调度
-* 简单的循环调度，我们这里以循环调度为例，每隔5分钟打印日志
+* 使用标准的 crontab 语法调度
+* 简单的循环调度，我们这里以循环调度为例，每隔 5 分钟打印日志。
 
-创建后，定时任务还没有启动，你需要在定时任务列表里启动这个任务:
+创建后，定时任务还没有启动，你需要在定时任务列表里启动这个任务：
 
 ![image](images/schedule_timer3.png)
 
-接下里就可以在云代码日志里看到这条日志的打印：
+接下里就可以在云引擎日志里看到这条日志的打印：
 
 ![image](images/schedule_timer4.png)
 
-我们再尝试定义一个复杂一点的任务，比如每周一早上8点准时发送推送消息给用户：
+我们再尝试定义一个复杂一点的任务，比如每周一早上 8 点准时发送推送消息给用户：
 
 {% block timerExample2 %}{% endblock %}
 
-创建定时器的时候，选择cron表达式并填写为`0 0 8 ? * MON`。
+创建定时器的时候，选择 cron 表达式并填写为 `0 0 8 ? * MON`。
 
-crontab的基本语法是
+crontab 的基本语法是：
 
 ```
 秒 分钟 小时 每个月的日期（Day-of-Month）月份 星期（Day-of-Week） 年（可选）
 ```
 
-一些常见的例子如下：
+一些常见的例子：
 
-* "0 0/5 * * * ?"   每隔5分钟执行一次
-* "10 0/5 * * * ?"  每隔5分钟执行一次，每次执行都在分钟开始的10秒，例如10:00:10，然后10:05:10等等。
-* "0 30 10-13 ? * WED,FRI"  每周三和每周五的10:30, 11:30, 12:30和13:30执行。
-* "0 0/30 8-9 5,20 * ?" 每个月的5号和20号的8点和10点之间每隔30分钟执行一次，也就是8:00, 8:30, 9:00和9:30。
-
+表达式|说明
+---|---
+`"0 0/5 * * * ?"`|每隔 5 分钟执行一次
+`"10 0/5 * * * ?"`|每隔 5 分钟执行一次，每次执行都在分钟开始的 10 秒，例如 10:00:10、10:05:10 等等。
+<code style="white-space:nowrap;">"0 30 10-13 ? * WED,FRI"</code>|每周三和每周五的 10:30、11:30、12:30、13:30 执行。
+`"0 0/30 8-9 5,20 * ?"`| 每个月的 5 号和 20 号的 8 点和 10 点之间每隔 30 分钟执行一次，也就是 8:00、8:30、9:00 和 9:30。
 
 ## 资源限制
 
-
 ### 权限说明
 
-云代码可以有超级权限，使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。你只需要使用下列代码来初始化 SDK：
+云引擎可以有超级权限，使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。你只需要使用下列代码来初始化 SDK：
 
 {% block masterKeyInit %}{% endblock %}
 
@@ -572,14 +575,13 @@ crontab的基本语法是
 
 ### 超时
 
-请求云引擎上的云函数时会经过负载均衡设备，该设备会限制一次请求的超时时间为 15 秒，如果超过15秒没有返回，请求将被强制停止，但此时云引擎的方法可能仍在执行，但执行完毕后的响应是无意义的。所有 Hook 函数，如 `beforeSave` 和`afterSave` 的超时时间限制在3秒内。如果 Hook 函数被其他的云函数调用（比如因为 save 对象而触发 `beforeSave` 和 `afterSave`），那么它们的超时时间会进一步被其他云函数调用的剩余时间限制。例如，如果一个 `beforeSave` 函数
-是被一个已经运行了13秒的云函数触发，那么 `beforeSave` 函数就只剩下 2 秒的时间来运行，而正常情况下是3秒的限制。
+请求云引擎上的云函数时会经过负载均衡设备，该设备会限制一次请求的超时时间为 15 秒，如果超过 15 秒没有返回，请求将被强制停止，但此时云引擎的方法可能仍在执行，但执行完毕后的响应是无意义的。所有 Hook 函数，如 `beforeSave` 和 `afterSave` 的超时时间限制在 3 秒内。如果 Hook 函数被其他的云函数调用（比如因为 save 对象而触发 `beforeSave` 和 `afterSave`），那么它们的超时时间会进一步被其他云函数调用的剩余时间限制。例如，如果一个 `beforeSave` 函数是被一个已经运行了 13 秒的云函数触发，那么 `beforeSave` 函数就只剩下 2 秒的时间来运行，而正常情况下是 3 秒的限制。
 
-Web Hosting的动态请求超时也被限定为15秒。
+网站托管的动态请求超时也被限定为 15 秒。
 
 ## 日志
 
-[云代码->日志](/cloud.html?appid={{appid}}#/log)，可以查看云引擎的部署和运行日志，还可以选择查看的日志级别：
+[云引擎 / 日志](/cloud.html?appid={{appid}}#/log)，可以查看云引擎的部署和运行日志，还可以选择查看的日志级别：
 
 ![image](images/cloud_code_11.png)
 
@@ -589,20 +591,26 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 **注意**：如果你的日志输出过于频繁（超过 50 条/秒），我们会丢弃部分日志信息。
 
-## Web Hosting
+## 网站托管
 
-很多时候，除了运行在移动设备的 App 之外，你通常也会为 App 架设一个网站，可能只是简单地展现 App 的信息并提供 AppStore 或者 Play 商店下载链接，或者展示当前热门的用户等等。你也可能建设一个后台管理系统，用来管理用户或者业务数据。
-这一切都需要你去创建一个web应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
+很多时候，除了运行在移动设备的应用之外，你通常也会为应用架设一个网站，可能只是简单地展现应用的信息并提供 App Store 或者 Play 商店下载链接，或者展示当前热门的用户等等。你也可能建设一个后台管理系统，用来管理用户或者业务数据。
 
-不过现在，云引擎 为你提供了 web hosting 功能，可以让你设置一个 App 的二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并部署你的 web 应用到该域名之下运行。同时支持静态资源和动态请求服务。
+这一切都需要你去创建一个 web 应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
+
+不过现在，云引擎为你提供了网站托管功能，可以让你为应用设置一个二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并把你的 web 应用部署到该域名之下运行，同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
-首先，你需要到 云代码 -> 设置 页面找到 `Web 主机域名`，在这里填写你的域名：
+首先，你需要到 [云引擎 / 设置](/cloud.html?appid={{appid}}#/conf) 页面找到 **Web 主机域名**，在这里填写你的域名：
 
 ![image](images/cloud_code_web_setting.png)
 
-上面将App的二级域名设置为 `myapp`，设置之后，你应该可以马上访问 `http://myapp.avosapps.com` 或 `http://myapp.avosapps.us`（可能因为DNS生效延迟暂时不可访问，请耐心等待或者尝试刷新DNS缓存），如果还没有部署，你看到的应该是一个404页面。
+上面将应用的二级域名设置为 **myapp**，设置之后，你应该可以马上访问： 
+
+- http://myapp.avosapps.com
+- http://myapp.avosapps.us
+
+可能因为 DNS 生效延迟暂时不可访问，请耐心等待或者尝试刷新 DNS 缓存，如果还没有部署，你看到的应该是一个 404 页面。
 
 ### 绑定独立域名
 
@@ -610,71 +618,69 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 #### 主域名
 
-仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与 App 绑定的相关手续。
+仅使用云引擎托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与应用绑定的相关手续。
 
-其他用户如果需要为 App 绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.rocks> ，或者从控制台菜单中选择 **帮助** > **技术支持** ，通过工单来提出申请 ：
+其他用户如果需要为应用绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.cn>，或者从控制台菜单中选择 [帮助 / 技术支持](https://ticket.leancloud.cn/)，通过工单来提出申请：
 
-* 你已经绑定的avosapps.com或avosapps.us二级子域名（请参考设置域名）
+* 你已经绑定的 avosapps.com 或 avosapps.us 二级子域名（请参考设置域名）
 * 要绑定的域名（必须是你名下的域名）
 * 你的注册邮箱（必须与发送者的邮箱一致）
-* 你想要绑定的App Id（该应用必须位于注册邮箱的用户名下）
-* 你的域名的备案信息 （**国内必须可以在工信部查询到，美国区不需要**）
+* 你想要绑定的 App Id（该应用必须位于注册邮箱的用户名下）
+* 你的域名的备案信息（**国内必须可以在工信部查询到，美国区不需要**）
 
 我们会在 3 个工作日内完成审核，如果审核通过将为你绑定域名。请在绑定操作完成后配置 DNS：
 
-* 将要绑定域名的 CNAME 或者 A 记录指向 avosapps.com（国内）或 avosapps.us（美国）
+- 将要绑定域名的 CNAME 或者 A 记录指向 avosapps.com（国内）或 avosapps.us（美国）
 
 #### 域名备案流程
 
-**域名备案的前置条件：云代码已经部署，并且网站内容和备案申请的内容一致。**
+**域名备案的前置条件：云引擎已经部署，并且网站内容和备案申请的内容一致。**
 
-仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
+仅使用云引擎托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
 
 其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
 
-1. 你提供相应资料，我们来录入
-2. 我们的备案接入商给你邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商
-3. 提交备案到（公司所在地）管局（通信管理局）审核
+1. 你提供相应资料，我们来录入。
+2. 我们的备案接入商给你邮寄幕布，进行拍照验证，并将其它资料签字盖章后一起邮寄给备案提供商。
+3. 提交备案到（公司所在地）管局（通信管理局）审核。
 
 <div class="callout callout-info">请注意：国内各地管局对备案的政策有差别，如北京地区对域名后缀有限制，陕西地区需要提交组织机构代码证，山东地区要求服务器必须托管在山东省内（因此我们无法为山东地区用户备案）等。具体请查询当地管局。</div>
 
-#####第一步
+##### 第一步
 
 请提交以下资料，我们来帮你录入到系统：
 
-1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件
-2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、QQ号码
-3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、联系地址 （可以为单位通信地址）、QQ号码
+1. 单位名称、单位通信地址、营业执照号码、营业执照副本扫描件；
+2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、QQ号码；
+3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、联系地址（可以为单位通信地址）、QQ号码；
 4. 网站名称（4个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个），还有网站服务内容类别，可在以下列表中选择一项：
    * 综合门户
    * 搜索引擎
    * 单位门户网站
    * 网络游戏
    * 网络广告
-5. 绑定独立域名所需的信息，参考上节文档
+5. [绑定独立域名](绑定独立域名) 所需的信息。
 
 如果企业之前已经备案过其他网站，即备案主体已经存在，此时还应向我们提供备案密码，我们才能完成资料录入工作。
 
-#####第二步
+##### 第二步
 
-请提供你的地址，我们的备案接入商来给你邮寄幕布，因为幕布数量的关系，这里可能需要排队。
-以下资料是需要你准备好邮寄给接入商
+请提供你的地址，我们的备案接入商来给你邮寄幕布，因为幕布数量的关系，这里可能需要排队。以下资料是需要你准备好邮寄给接入商：
 
-1.  企业营业执照副本复印件，盖公章
-2.  企业法人身份证复印件，盖公章
-3.  网站负责人身份证复印件，盖公章（如果和企业法人是同一人的话，此条可忽略）
-4. 《网站备案信息真实性核验单》在最下面一栏，请网站负责人签字并盖公章。上面主办者名称和域名都需打印出来手写
+1.  企业营业执照副本复印件，盖公章；
+2.  企业法人身份证复印件，盖公章；
+3.  网站负责人身份证复印件，盖公章（如果和企业法人是同一人的话，此条可忽略）；
+4. 《网站备案信息真实性核验单》在最下面一栏，请网站负责人签字并盖公章。上面主办者名称和域名都需打印出来手写。
 
 备案接入商地址：
-> 地　　址：北京市东城区和平里东街 15 号航天物资大厦 209 房间
-> 备案专员：孟南
-> 联系电话：010-84222290 转 8001、18101125625
 
-#####第三步
+**地　　址**：北京市东城区和平里东街 15 号航天物资大厦 209 房间<br/>
+**备案专员**：孟南<br/>
+**联系电话**：010-84222290 转 8001、18101125625<br/>
 
-由我们和备案接入商来完成。
+##### 第三步
 
-备案完成后，我们再执行绑定操作。
+由我们和备案接入商来完成。备案完成后，我们再执行绑定操作。
 
 ### 使用框架
 
@@ -689,7 +695,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 获取客户端 IP
 
-如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip`字段获取。
+如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip` 字段获取。
 
 {% block upload_file %}{% endblock %}
 
@@ -698,11 +704,11 @@ Web Hosting的动态请求超时也被限定为15秒。
 {% block custom_session %}
 {% endblock %}
 
-### 启用HTTPS
+### 启用 HTTPS
 
 为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
-因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过https访问，你只要这样：
+因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过 https 访问，你只要这样：
 
 {% block https_redirect %}{% endblock %}
 
@@ -710,28 +716,27 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 测试环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 Web Hosting 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 网站托管 就没有办法通过这个HTTP头来方便的区分。
 
-因此，我们其实为每个App创建了两个域名，除了`xxx.avosapps.com`之外，每个App还有`dev.xxx.avosapps.com`域名作为测试环境的域名。
+因此，我们其实为每个应用创建了两个域名，除了 `xxx.avosapps.com` 之外，每个应用还有 `dev.xxx.avosapps.com` 域名作为测试环境的域名。
 
-部署的测试代码将运行在这个域名之上，在测试通过之后，通过`部署`菜单里的`部署到生产环境`按钮切换之后，可以在`xxx.avosapps.com`看到最新的运行结果。
+部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** / **部署到生产环境** 按钮切换之后，可以在 `xxx.avosapps.com` 看到最新的运行结果。
 
 ## 第三方平台接入
 
-因为云引擎提供了 webHosting 功能，这相当于为你在 internet 上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
+因为云引擎提供了主机托管功能，这相当于为你在互联网上提供了一台简单的 VPS（虚拟主机），你可以用它接入第三方平台（很多第三方平台需要你有回调服务器），完成一些特定的工作。
 
 ### 接入支付宝
 
-通过 [这个](https://github.com/leancloud/cloud-code-alipay) 示例，你可以了解到如何接入支付宝，实现「即时到账收款」的功能。
+通过 [cloud-code-alipay 示例](https://github.com/leancloud/cloud-code-alipay) 了解如何接入支付宝，实现「即时到账收款」的功能。
 
 ### 接入微信
 
-通过 [这个](https://github.com/leancloud/cloud-code-weixin) 示例，你可以了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
-
+通过 [cloud-code-weixin 示例](https://github.com/leancloud/cloud-code-weixin) 了解如何接入微信，实现「开发者认证」和「自动回复」的功能。
 
 ## 运行环境区分
 
-云引擎区分「测试环境」和「生产环境」，两个环境使用的是同一数据源。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。
+云引擎区分「测试环境」和「生产环境」，两个环境虽然使用 [不同的二级域名](#部署到云引擎)，但是使用相同的数据源。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。 
 
 有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、测试环境或生产环境），从而做不同的处理：
 
@@ -742,7 +747,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 * 0 表示调用测试环境
 * 1 表示调用生产环境
 
-具体到SDK内的调用，请看各个平台的 SDK 指南。
+具体到 SDK 内的调用，请看各个平台的 SDK 指南。
 
 有些时候请求云引擎时会提示 production 还没有部署：
 
@@ -750,7 +755,7 @@ Web Hosting的动态请求超时也被限定为15秒。
 {"code":1,"error":"The cloud code isn't deployed for prod 1."}
 ```
 
-这个错误通常是只是部署了测试环境。通过点击 `Git 部署` 菜单下面的 `部署到生产环境` 框内的 `部署` 按钮，可以将开发环境的当前版本的代码部署到生产环境:
+这个错误通常是只是部署了测试环境。通过点击菜单 **Git 部署** / **部署到生产环境** / **部署**，可以将开发环境的当前版本的代码部署到生产环境：
 
 ![image](images/cloud_code_deploy_prod.png)
 
@@ -766,26 +771,27 @@ Web Hosting的动态请求超时也被限定为15秒。
 
 ### 时区问题产生的原因
 
-很多开发者在时间处理上会忽略「时区」标志，导致最后总是莫名其妙的出现 8 小时的偏差。我们假设有下面一个场景：
+很多开发者在时间处理上会忽略「时区」标志，导致最后总是莫名其妙的出现 8 小时的偏差。
 
-1. 某开发者开发的应用使用云代码的 WebHosting 功能做了一个网站，其中有时间格式的表单提交。
-1. 某用户使用浏览器访问该网站，提交表单，时间格式为：`2015-05-05 14:15:22.024`，注意该时间没有「时区」标志。因为这个时间是浏览器生成的，而该用户浏览器上的时间通常是东八区时间，所以该业务数据希望表达的时间是「东八区的 14 点」。
-1. 该时间 `2015-05-05 14:15:22.024` 提交到云代码服务器，被转换为 Date 类型（JS 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云代码 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
+【场景一】某开发者开发的应用使用云引擎的主机托管功能做了一个网站，其中有时间格式的表单提交。某用户使用浏览器访问该网站，提交表单，时间格式为：`2015-05-05 14:15:22.024`，注意该时间没有「时区」标志。因为这个时间是浏览器生成的，而该用户浏览器上的时间通常是东八区时间，所以该业务数据希望表达的时间是「东八区的 14 点」。
+
+该时间 `2015-05-05 14:15:22.024` 提交到服务器，被转换为 Date 类型（JavaScript 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云代码 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
 
 解决上面的办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
 
-另外一个场景：
-1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
-1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
-  * `toISOString` 2015-04-09T03:35:09.678Z
-  * `toLocaleString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-  * `toUTCString` Thu, 09 Apr 2015 03:35:09 GMT
-  * `toString` Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
-  * `getHours` 3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
+【场景二】从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
+
+函数|结果
+---|---
+`toISOString`|2015-04-09T03:35:09.678Z
+`toLocaleString`|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toUTCString`|Thu, 09 Apr 2015 03:35:09 GMT
+`toString`|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`getHours`|3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
 
 如果需要获取小时数据，解决办法是使用第三方的组件，比如 [moment-timezone](http://momentjs.com/timezone/)，通过下面的方式可以获得东八区的小时时间：
 
-```
+```javascript
 var time = moment(obj.createdAt).tz('Asia/Shanghai');
 console.log('toString', time.toString());
 console.log('getHours', time.hours())
@@ -793,7 +799,7 @@ console.log('getHours', time.hours())
 
 ### 云代码 2.0 和云引擎时区的差异
 
-为了方便大家的使用，更加符合通常的习惯，云引擎 运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
+为了方便大家的使用，更加符合通常的习惯，云引擎运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
 
 {% block introduceCloudCodeV2 %}{% endblock %}
 
