@@ -174,7 +174,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 {% block afterSaveExample %}
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {
-  query = new AV.Query('Post');
+  var query = new AV.Query('Post');
   query.get(request.object.get('post').id, {
     success: function(post) {
       post.increment('comments');
@@ -241,7 +241,7 @@ AV.Cloud.afterUpdate('Article', function(request) {
 ```javascript
 AV.Cloud.beforeDelete('Album', function(request, response) {
   //查询Photo中还有没有属于这个相册的照片
-  query = new AV.Query('Photo');
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.count({
@@ -265,7 +265,7 @@ AV.Cloud.beforeDelete('Album', function(request, response) {
 {% block afterDeleteExample %}
 ```javascript
 AV.Cloud.afterDelete('Album', function(request) {
-  query = new AV.Query('Photo');
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.find({
