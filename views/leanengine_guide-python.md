@@ -14,13 +14,13 @@ $ cd python-getting-started
 $ avoscloud add <APP-NAME> <APP-ID>
 ```
 
-`<APP-NAME>` 是应用名称，`<APP-ID>` 是应用 ID。这些信息可以在登录控制台后，选择应用，从 **设置** > **基本信息** 和 **应用 Key** 中找到。
+`<APP-NAME>` 是应用名称，`<APP-ID>` 是应用 ID。这些信息可以 [控制台 /（选择应用）/ 设置 / 基本信息](/app.html?appid={{appid}}#/general) 和 [应用 Key](/app.html?appid={{appid}}#/key) 中找到。
 {% endblock %}
 
-{% block runtime_env %}**注意**： 目前 LeanEngine 的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
+{% block runtime_env %}**注意**：目前云引擎的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
 
 {% block demo %}
-* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。效果体验：http://python.avosapps.com/
+* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。（在线演示：<http://python.avosapps.com/>）
 {% endblock %}
 
 {% block run_in_local_command %}
@@ -40,14 +40,14 @@ $ avoscloud
 {% block cloud_func_file %}`$PROJECT_DIR/cloud.py`{% endblock %}
 
 {% block ping %}
-LeanEngine 中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
+云引擎中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
 
 ```python
 from leancloud import Engine
 engine = Engine(your_wsgi_app)
 ```
 
-如果未使用 LeanEngine 中间件，可以自己实现该 URL 的处理，比如这样：
+如果未使用云引擎中间件，可以自己实现该 URL 的处理，比如这样：
 
 ```python
 @app.route('/__engine/1/ping')
@@ -62,11 +62,11 @@ def ping():
 {% endblock %}
 
 {% block others_web_framework %}
-LeanEngine 支持任意 python 的 web 框架，你可以使用你最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
+云引擎支持任意 Python 的 Web 框架，你可以使用你最熟悉的框架进行开发。但是请保证 `wsgi.py` 文件中有一个全局变量 `application`，值为一个 wsgi 函数。
 {% endblock %}
 
 {% block project_constraint %}
-LeanEngine Python 项目必须有 `$PROJECT_DIR/wsgi.py` 与 `$PROJECT_DIR/requirements.txt` 文件，该文件为整个项目的启动文件。
+云引擎 Python 项目必须有 `$PROJECT_DIR/wsgi.py` 与 `$PROJECT_DIR/requirements.txt` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block install_middleware %}
@@ -76,7 +76,7 @@ LeanEngine Python 项目必须有 `$PROJECT_DIR/wsgi.py` 与 `$PROJECT_DIR/requi
 leancloud-sdk
 ```
 
-之后执行 `pip install -r requirements.txt`来安装 LeanCloud Python SDK。
+之后执行 `pip install -r requirements.txt` 来安装 LeanCloud Python SDK。
 {% endblock %}
 
 {% block init_middleware %}
@@ -87,8 +87,8 @@ import leancloud
 from flask import Flask
 
 
-APP_ID = os.environ.get('LC_APP_ID', '{{appid}}') # your app id
-MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', '{{masterkey}}') # your app master key
+APP_ID = os.environ.get('LC_APP_ID', '{{appid}}') # 你的 app id
+MASTER_KEY = os.environ.get('LC_APP_MASTER_KEY', '{{masterkey}}') #  你的 master key
 
 leancloud.init(APP_ID, master_key=MASTER_KEY)
 
@@ -125,11 +125,11 @@ def averageStars(movie):
 {% block cloudFuncParams %}
 客户端传递的参数，会被当作关键字参数传递进云函数。
 
-比如上面的例子，调用时传递的参数为 `{"movie": "夏洛特烦恼"}`，定义云函数的时候，参数写movie，即可拿到对应的参数。
+比如上面的例子，调用时传递的参数为 `{"movie": "夏洛特烦恼"}`，定义云函数的时候，参数写 movie，即可拿到对应的参数。
 
 但是有时候，您传递的参数可能是变长的，或者客户端传递的参数数量错误，这时候就会报错。为了应对这种情况，推荐您使用关键字参数的形式来获取参数：
 
-如果是已登录的用户发起云代码调用，可以通过 `engine.current_user` 拿到此用户。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
+如果是已登录的用户发起云引擎调用，可以通过 `engine.current_user` 拿到此用户。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
 
 ```python
 @engine.define
@@ -139,14 +139,9 @@ def some_func(**params):
 ```
 
 这样 `params` 就是个 `dict` 类型的对象，可以方便的从中拿到参数了。
-
 {% endblock %}
 
-{% block runFuncName %}
-runFuncName
-
-
-{% endblock %}
+{% block runFuncName %}`cloudfunc.run`{% endblock %}
 
 {% block defineFuncName %}`engine.define`{% endblock %}
 
@@ -163,7 +158,7 @@ except LeanCloudError, e:
 ```
 {% endblock %}
 
-{% block runFuncApiLink %}[cloudfunc.run](./api/python/leancloud.engine.html#/module-leancloud.engine.cloudfunc){% endblock %}
+{% block runFuncApiLink %}[cloudfunc.run](/api-docs/python/leancloud.engine.html#/module-leancloud.engine.cloudfunc){% endblock %}
 
 {% block beforeSaveExample %}
 ```python
@@ -276,8 +271,7 @@ def on_login(user):
 {% endblock %}
 
 {% block errorCodeExample %}
-
-有些时候你希望能自己定义错误响应码。如果您的云代码抛出了 `LeanCloudError`（数据存储 API 会抛出此异常），会直接返回以 `LeanCloudError` 的错误码和原因返回给客户端。若想自定义错误码，可以自行构造 `LeanEngineError`，将 `code` 与 `error` 传入。否则 `code` 为 `1`， `message` 为错误对象的字符串形式。比如下列代码：
+有些时候你希望能自己定义错误响应码。如果您的云引擎抛出了 `LeanCloudError`（数据存储 API 会抛出此异常），会直接返回以 `LeanCloudError` 的错误码和原因返回给客户端。若想自定义错误码，可以自行构造 `LeanEngineError`，将 `code` 与 `error` 传入。否则 `code` 为 1， `message` 为错误对象的字符串形式。比如下列代码：
 
 ```python
 @engine.define
@@ -297,7 +291,7 @@ def custom_error_code(**params):
 {% endblock %}
 
 {% block http_client %}
-LeanEngine 可以使用 Python 内置的 urllib，不过推荐您使用 [requests](http://docs.python-requests.org/) 等第三方模块来处理 HTTP 请求。
+云引擎可以使用 Python 内置的 urllib，不过推荐您使用 [requests](http://docs.python-requests.org/) 等第三方模块来处理 HTTP 请求。
 {% endblock %}
 
 {% block timerExample %}
@@ -323,6 +317,7 @@ def push_timer():
 
 {% block masterKeyInit %}
 ```python
+// 第一个参数为 App Id
 leancloud.init('{{appid}}', master_key='{{masterkey}}')
 ```
 {% endblock %}
@@ -336,10 +331,9 @@ def log_something(**params):
 {% endblock %}
 
 {% block use_framework %}
+云引擎环境中可以使用大部分 Python Web Framework，比如 [Flask](http://flask.pocoo.org/)、[web.py](http://webpy.org/)、[bottle](http://bottlepy.org/)。
 
-LeanEngine 环境中可以使用大部分 Python Web Framework，比如 [Flask](http://flask.pocoo.org/)、[web.py](http://webpy.org/)、[bottle](http://bottlepy.org/)。
-
-事实上，您只需要提供一个兼容 WSGI 标准的框架，并且安装了 LeanEngine 的中间件，就可以在 LeanEngine 上运行。您提供的 WSGI 函数对象需要放在 `$PROJECT_DIR/wsgi.py` 文件中，并且变量名需要为 `application`。
+事实上，您只需要提供一个兼容 WSGI 标准的框架，并且安装了云引擎的中间件，就可以在云引擎上运行。您提供的 WSGI 函数对象需要放在 `$PROJECT_DIR/wsgi.py` 文件中，并且变量名需要为 `application`。
 
 ```python
 from leancloud import Engine
@@ -355,7 +349,6 @@ application = Engine(wsgi_func)
 ```
 
 将这段代码放到 `wsgi.py` 中，就可以实现一个最简单的动态路由。
-
 {% endblock %}
 
 {% block upload_file %}{% endblock %}
