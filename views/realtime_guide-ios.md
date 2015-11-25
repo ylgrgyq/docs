@@ -595,7 +595,7 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 }];
 ```
 
-然后使用代理方法 `AVIMConversation:didReceiveUnread:` 来从服务端取回未读消息：
+然后使用代理方法 `conversation:didReceiveUnread:` 来从服务端取回未读消息：
 
 ```objc
 - (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread {
