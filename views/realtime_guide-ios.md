@@ -587,7 +587,7 @@ iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线�
 
 SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
 
-要开启未读消息，可以在 AVOSCloud 初始化语句后面加上：
+要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
 ```objc
 [AVIMClient setUserOptions:@{
@@ -595,15 +595,23 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 }];
 ```
 
-接收未读消息数的 delegate 方法是：
+然后使用代理方法 `conversation:didReceiveUnread:` 来从服务端取回未读消息：
 
 ```objc
-/*
- 收到未读通知。
- @param conversation 所属会话。
- @param unread 未读消息数量。
- */
-- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread;
+- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread {
+  // unread 是未读消息数量，conversation 为所属的会话
+  // 没有未读消息就跳过
+  if (unread <= 0) return;
+  
+  // 否则从服务端取回未读消息
+  [conversation queryMessagesFromServerWithLimit:unread callback:^(NSArray *objects, NSError *error) {
+    if (!error && objects.count) {
+      // 显示消息或进行其他处理 
+    }
+  }];
+  // 将这些消息标记为已读 
+  [conversation markAsReadInBackground];
+}
 ```
 {% endblock %}
 
