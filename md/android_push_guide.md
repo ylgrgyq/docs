@@ -146,7 +146,7 @@ push.sendInBackground(new SendCallback() {
 ```
 
 
-* 发送给某个 Installation id的用户，通常来说，你会将 AVInstallation 关联到设备的登陆用户 AVUser 上作为一个属性，然后就可以通过下列代码查询 InstallationId 的方式来发送消息给特定用户，实现类似私信的功能：
+* 发送给某个 Installation id的用户，通常来说，你会将 AVInstallation 关联到设备的登录用户 AVUser 上作为一个属性，然后就可以通过下列代码查询 InstallationId 的方式来发送消息给特定用户，实现类似私信的功能：
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();

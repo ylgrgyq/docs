@@ -135,7 +135,7 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 选择证书
 
-默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用测试证书，可以通过 `setProductionMode`方法：
+默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用开发证书，可以通过 `setProductionMode`方法：
 
 ```
 [AVPush setProductionMode:NO];
@@ -164,7 +164,7 @@ AVInstallation *installation = [AVInstallation currentInstallation];
 
 表示比赛的分数，比赛结果和受伤报告。
 
-设置，你可以给 Installation 添加 owner 属性，比如当前的登陆用户：
+设置，你可以给 Installation 添加 owner 属性，比如当前的登录用户：
 
 ```objc
 // Saving the device's owner
@@ -433,11 +433,11 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
 
-你可以在[请求分析](/apistat.html?appid={{appid}}#/_apiRequest)菜单里看到通知和 app 的打开情况。
+你可以在 [**控制台** > **分析** > **行为分析** > **应用使用**](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
-***如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用`UILocalNotification`展示一个通知给用户。***
+**如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用 `UILocalNotification` 展示一个通知给用户。**
 
 如果应用在后台，并且用户点击了通知，那么应用将被带到前台可视，为了跟踪这种通过通知打开应用的情况，你需要在跟踪代码里多作一个检查：
 
@@ -452,7 +452,10 @@ if (application.applicationState != UIApplicationStateBackground) {
   }
 }
 ```
-如果使用 iOS 7 push 的新特性（包括新的"content-available" 功能），你需要实现 iOS 7 新加的方法：
+
+如果使用 iOS 7 push 的新特性（包括新的 "content-available" 功能），你需要实现 iOS 7 
+新加的方法：
+
 ```objc
 - (void)application:(UIApplication *)application
         didReceiveRemoteNotification:(NSDictionary *)userInfo
@@ -467,11 +470,16 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 ### 跟踪本地通知 (iOS only)
 
-为了统计跟踪本地通知消息，需要注意`application:didFinishLaunchingWithOptions:`和`application:didReceiveLocalNotification:`都会调用到，如果你实现了`application:didReceiveLocalNotification:`这个方法,要注意避免重复统计。
+为了统计跟踪本地通知消息，需要注意以下两种方法都会调用到：
+
+- `application:didFinishLaunchingWithOptions:`
+- `-application:didReceiveLocalNotification:`
+
+如果你实现了 `application:didReceiveLocalNotification:` 这个方法，要注意避免重复统计。
 
 #### 清除 Badge
 
-清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器:
+清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器：
 
 ```objc
 - (void)applicationDidBecomeActive:(UIApplication *)application {
@@ -487,4 +495,10 @@ if (application.applicationState != UIApplicationStateBackground) {
 }
 ```
 
-清除 Badge 数字最相关的三个方法是`applicationDidBecomeActive:`, `application:didFinishLaunchingWithOptions:`和`application:didReceiveRemoteNotification:`。请阅读[ UIApplicationDelegate文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
+清除 Badge 数字最相关的三个方法是：
+
+- `applicationDidBecomeActive:`
+- `application:didFinishLaunchingWithOptions:`
+- `application:didReceiveRemoteNotification:`
+
+请阅读 [UIApplicationDelegate 文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。

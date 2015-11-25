@@ -1,45 +1,11 @@
 {% extends "./realtime_guide.tmpl" %}
 
-{% block language %}Android{% endblock %}
+{% set platform_name = 'Android' %}
+{% set doc_title = 'Android' %}
+{% set sdk_name = 'Android SDK' %}
 
-{% block setup_init %}在 Application 的 `onCreate` 方法中对实时通信服务进行初始化：
-
-```java
-public class MyApplication extends Application{
-
-    public void onCreate(){
-      ...
-      // 你的 AppID、AppKey
-      AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
-      ...
-    }
-}
-```
-
-并在 AndroidManifest.xml 中间声明：
-
-```xml
-<manifest>
-   ...
-
-   <application
-        android:name=".MyApplication"
-        ....>
-        ...
-
-        <service android:name="com.avos.avoscloud.PushService" />
-
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-        ...
-   </application>
-
-</manifest>
-```
+{% block setup_init %}
+我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
 {% endblock %}
 
 {% block demo %}
@@ -91,7 +57,7 @@ public class MyApplication extends Application{
 
 ```
 public class MyApplication extends Application{
- public static class CustomMessageHandler implements AVIMMessageHandler{
+ public static class CustomMessageHandler extends AVIMMessageHandler{
    //接收到消息后的处理逻辑 
    @Override
    public void onMessage(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
@@ -538,9 +504,11 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
     });
 ```
 {% endblock %}
+
 {% block videoMessage_received_intro %}
 视频消息的接收与图像消息一样，它的元数据都可以通过 `getFileMetaData()` 来获取。
 {% endblock %}
+
 {% block fileMessage_sent %}
 ```
 
@@ -834,7 +802,6 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
-
 {% block message_Relation_intro %}
 消息类型之间的关系
 
@@ -989,6 +956,7 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 }
 ```
 {% endblock %}
+
 {% block api_send_message_method_intro %}
 #### 消息发送接口
 在 Android SDK 中，发送消息的方法是：`AVIMConversation.sendMessage`，它最核心的一个重载声明如下：
@@ -1018,6 +986,7 @@ public void sendMessage(AVIMMessage message, AVIMConversationCallback callback)
 其实本质上，调用 `sendMessage(message, callback)` 就等价于调用 `sendMessage(message,1, callback)` ，因为一般情况下消息存在的形式多以**非暂态**消息为主
 
 {% endblock %}
+
 {% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
 {% block messagePolicy_received_method %}{% endblock %}
@@ -1059,7 +1028,7 @@ jerry.open(new AVIMClientCallback() {
    * @param name 对话的名字
    * @param attributes 对话的额外属性
    * @param isTransient 是否是暂态对话
-   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
+   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
    *                 为 false 时，则一直为创建新的对话
    *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
    *                 为 true 时，仅 members 为有效查询条件
@@ -1075,6 +1044,7 @@ jerry.open(new AVIMClientCallback() {
 * attributes - 表示额外属性
 * isTransient - 用于标注是否是临时对话
 * isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则才创建新的对话，在 createConversation的多个重写中，没有 isUnique 参数的情况下，该值默认为 false
+
 {% endblock %}
 
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
@@ -1099,7 +1069,6 @@ jerry.open(new AVIMClientCallback() {
 `AVIMConversationEventHandler` 的实现和定义在下一节[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
 
 {% endblock %}
-
 
 {% block conversation_join %}
 
@@ -1640,7 +1609,7 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
 
         // 获取第一页的消息里面最旧的一条消息
         AVIMMessage pager = firstPage.get(0);
-        conversation.queryMessages(pager.getMessageId(), pager.getReceiptTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
+        conversation.queryMessages(pager.getMessageId(), pager.getTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
           @Override
           public void done(List<AVIMMessage> secondPage, AVIMException e) {
             // secondPage 就是第二页的数据
@@ -1649,6 +1618,13 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
       }
     }
   });
+```
+{% endblock %}
+
+{% block disable_im_cache %}
+
+```java
+AVIMClient.setMessageQueryCacheEnable(false);
 ```
 {% endblock %}
 
@@ -1866,7 +1842,6 @@ tom.open(new AVIMClientCallback(){
 ```
 {% endblock %}
 
-
 {% block conversation_query_count %}
 ```
 - 初始化 ClientId = Tom
@@ -1948,7 +1923,8 @@ private void TomQueryWithLimit() {
 ```
 {% endblock %}
 
-{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}对话
+{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}
+
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
 {% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
@@ -2043,6 +2019,16 @@ tom.open(new AVIMClientCallback(){
 
   /**
    * 实现AVIMConversation相关的签名计算
+   * 
+   * @param conversationId
+   * @param clientId
+   * @param targetIds - 此次操作的member的clientIds
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
+   * @return
+   * @throws SignatureException 如果签名计算中间发生任何问题请抛出本异常
+   */  /**
+   * 实现AVIMConversation相关的签名计算
+   * @param action - 此次行为的动作，行为分别对应常量 invite（加群和邀请）和 kick（踢出群）
    */
   public Signature createConversationSignature(String conversationId, String clientId,
       List<String> targetIds, String action) throws SignatureException;
@@ -2104,13 +2090,13 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
   @Override
   public Signature createConversationSignature(String convId, String peerId, List<String> targetPeerIds,String action){
    Map<String,Object> params = new HashMap<String,Object>();
-   params.put("self_id",peerId);
-   params.put("group_id",convId);
-   params.put("group_peer_ids",targetPeerIds);
+   params.put("client_id",peerId);
+   params.put("conv_id",convId);
+   params.put("members",targetPeerIds);
    params.put("action",action);
 
    try{
-     Object result = AVCloud.callFunction("group_sign",params);
+     Object result = AVCloud.callFunction("sign2",params);
      if(result instanceof Map){
         Map<String,Object> serverSignature = (Map<String,Object>) result;
         Signature signature = new Signature();
@@ -2127,3 +2113,64 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
 }
 ```
 {% endblock %}
+
+{% block connect_with_tag %}
+
+```java
+    // 第二个参数：登录标记 Tag
+    AVIMClient currentClient = AVIMClient.getInstance(clientId,"Mobile");
+    currentClient.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient avimClient, AVIMException e) {
+        if(e == null){
+          // 与云端建立连接成功
+        }
+      }
+    });
+```
+
+{% endblock %}
+
+{% block disconnected_by_server_with_same_tag %}
+
+```java
+public class AVImClientManager extends AVIMClientEventHandler {
+  ...
+  @Override
+  public void onClientOffline(AVIMClient avimClient, int i) {
+    if(i == 4111){
+      // 适当地弹出友好提示，告知当前用户的 Client Id 在其他设备上登陆了
+    }
+  }
+  ...
+}
+```
+
+{% endblock %}
+
+{% block code_set_query_policy %}
+
+```java
+  // 设置 AVIMConversationQuery的查询策略
+  public void setQueryPolicy(AVQuery.CachePolicy policy);
+```
+{% endblock %}
+
+{% block code_query_from_local_cache %}
+有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
+
+```java
+    AVIMConversationQuery query = client.getQuery();
+    query.setQueryPolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+    query.findInBackground(new AVIMConversationQueryCallback() {
+      @Override
+      public void done(List<AVIMConversation> conversations, AVIMException e) {
+        
+      }
+    });
+```
+{% endblock %}
+
+{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。
+{% endblock %}
+

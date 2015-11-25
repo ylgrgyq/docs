@@ -87,7 +87,7 @@ npm install leanengine --save
   7 AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
   8 // 如果不希望使用 masterKey 权限，可以将下面一行删除
   9 AV.Cloud.useMasterKey();
- 10 AV.setPromisesAPlusCompliant(false);
+ 10 
  11
  12 var app = require('./app');
  13

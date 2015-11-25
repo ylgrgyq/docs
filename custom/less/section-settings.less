@@ -187,7 +187,7 @@
 
   .large {
     font-size: 160%;
-    margin-bottom: 6px;
+    margin-bottom: 2px;
   }
 
   .medium {
@@ -229,11 +229,6 @@
     color: #009eff;
     background: #ebf7ff;
   }
-}
-
-.user-info-edit-btn {
-  display: block;
-  margin: 10px auto;
 }
 
 .avatar-settings {
@@ -363,7 +358,7 @@ table > tbody > tr > td > .cursor-pointer {
 
 // bill_charge.html
 .payment-methods {
-  margin-bottom: @grid-gutter-width;
+  margin-bottom: (@line-height-computed / 2);
 
   .payment-method {
     color: @text-color;
@@ -436,6 +431,23 @@ table > tbody > tr > td > .cursor-pointer {
       appearance: none;
       outline: none;
     }
+  }
+}
+
+.sticky-note {
+  color: #7d5d31;
+  padding: 10px;
+  border-radius: @border-radius-base;
+  border: 1px solid #efecdc;
+  background: #fffef8;
+  margin-bottom: (@line-height-computed / 2);
+
+  p:last-child {
+    margin-bottom: 0;
+  }
+
+  &.payment-method-bank-transfer {
+    max-width: 350px;
   }
 }
 
@@ -568,4 +580,3 @@ table > tbody > tr > td > .cursor-pointer {
     line-height: 1;
   }
 }
-

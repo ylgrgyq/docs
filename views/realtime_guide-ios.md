@@ -1,5 +1,8 @@
 {% extends "./realtime_guide.tmpl" %}
 
+{% set platform_name = 'iOS' %}
+{% set sdk_name = 'iOS SDK' %}
+
 {% block language %}iOS{% endblock %}
 
 {% block demo %}
@@ -8,89 +11,7 @@
 {% endblock %}
 
 {% block setup_init %}
-### 使用 CocoaPods 安装 SDK
-
-[快速入门](/start.html) 会教你如何在一个项目中安装 SDK。
-
-[CocoaPods](https://cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
-
-首先确保开发环境中已经安装了 Ruby。一般安装了 Xcode，Ruby 会被自动安装上。我们建议使用淘宝提供的 [Gem 源](https://ruby.taobao.org/)，在终端执行下列命令：
-
-```sh
-$ gem sources -r https://rubygems.org/
-$ gem sources -a https://ruby.taobao.org/
-# 请确保下列命令的输出只有 ruby.taobao.org
-$ gem sources -l
-*** CURRENT SOURCES ***
-https://ruby.taobao.org
-```
-
-通过下列命令，安装或更新 CocoaPods（可能需要输入登录密码）：
-
-```sh
-sudo gem install cocoapods
-```
-
-在项目根目录下创建一个名为 **Podfile** 的文件（无扩展名），并添加以下内容：
-
-```sh
-pod 'AVOSCloudIM'
-```
-
-最后执行安装命令：
-
-```sh
-pod install
-```
-
-相关资料：[《CocoaPods 安装和使用教程》](http://code4app.com/article/cocoapods-install-usage)
-
-### 手动安装 SDK
-
-你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见 [快速入门](/start.html)。
-
-这里要特别注意如下几点：
-
-* 手动添加下列依赖库：
-
-  * SystemConfiguration.framework
-  * MobileCoreServices.framework
-  * CoreTelephony.framework
-  * CoreLocation.framework
-  * libicucore.dylib
-
-* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++.dylib**。
-
-* 在项目 Targets 的 **Build Settings** 中，为 **Other Linker Flags** 增加 **-all_load** 链接选项。
-
-然后我们需要在 application 的 `applicationDelegate` 函数中对实时通信 SDK 进行初始化：
-
-```objc
-- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-{
-    // 其他处理...
-    ...
-    // "你的 AppId", "你的 AppKey"
-    [AVOSCloud setApplicationId:@"{{appid}}" clientKey:@"{{appkey}}"];
-    ...
-}
-```
-
-### 导入模块
-
-在使用到 IM 模块的地方，应该导入该模块。
-
-在 Objective-C 源文件中，IM 模块的所有头文件都包含在 AVOSCloudIM.h 文件中，只需导入该头文件即可：
-
-```objc
-#import <AVOSCloudIM/AVOSCloudIM.h>
-```
-
-在 Swift 源文件中，直接包含 AVOSCloudIM 模块：
-
-```swift
-import AVOSCloudIM
-```
+我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
 {% endblock %}
 
 {% block compatibility %}
@@ -561,33 +482,7 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% block messagePolicy_received %}{% endblock %}
 
 {% block message_Relation_intro %}
-        
-                                                                +---------------+                                                           
-                                                                |               |                                                           
-                                                                |  AVIMMessage  |                                                           
-                                                                |               |                                                           
-                                                                +-------+-------+                                                           
-                                                                        |                                                                   
-                                                                        |                                                                   
-                                                              +---------+----------+                                                        
-                                                              |                    |                                                        
-                                                              |  AVIMTypedMessage  |                                                        
-                                                              |                    |                                                        
-                                                              +---------+----------+                                                        
-                                                                        |                                                                   
-                                                                        |                                                                   
-                                                                        |                                                                   
-             +---------------------+----------------------+-------------+---------+----------------------+------------------------+         
-             |                     |                      |                       |                      |                        |         
-             |                     |                      |                       |                      |                        |         
-             |                     |                      |                       |                      |                        |         
-    +--------+--------+   +--------+---------+   +--------+---------+   +---------+--------+   +---------+-----------+   +--------+--------+
-    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
-    | AVIMTextMessage |   | AVIMImageMessage |   | AVIMAudioMessage |   | AVIMVedioMessage |   | AVIMLocationMessage |   | AVIMFileMessage |
-    |                 |   |                  |   |                  |   |                  |   |                     |   |                 |
-    +-----------------+   +------------------+   +------------------+   +------------------+   +---------------------+   +-----------------+
-
-
+![message type diagram](images/message_type_diagram.png)
 {% endblock %}
 
 {% block message_Properties_intro %}
@@ -692,7 +587,7 @@ iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线�
 
 SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
 
-要开启未读消息，可以在 AVOSCloud 初始化语句后面加上：
+要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
 ```objc
 [AVIMClient setUserOptions:@{
@@ -700,15 +595,23 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 }];
 ```
 
-接收未读消息数的 delegate 方法是：
+然后使用代理方法 `conversation:didReceiveUnread:` 来从服务端取回未读消息：
 
 ```objc
-/*
- 收到未读通知。
- @param conversation 所属会话。
- @param unread 未读消息数量。
- */
-- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread;
+- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread {
+  // unread 是未读消息数量，conversation 为所属的会话
+  // 没有未读消息就跳过
+  if (unread <= 0) return;
+  
+  // 否则从服务端取回未读消息
+  [conversation queryMessagesFromServerWithLimit:unread callback:^(NSArray *objects, NSError *error) {
+    if (!error && objects.count) {
+      // 显示消息或进行其他处理 
+    }
+  }];
+  // 将这些消息标记为已读 
+  [conversation markAsReadInBackground];
+}
 ```
 {% endblock %}
 
@@ -807,7 +710,6 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
 {% block api_method_conversation_quit %} `AVIMConversation.quitWithCallback`{% endblock %}
 
 {% block api_method_conversation_kick %} `AVIMConversation.removeMembersWithClientIds`{% endblock %}
-
 
 {% block conversation_members_change_notice_intro %}
 在 iOS 中，开发者需要实现 `AVIMClientDelegate` 代理，并且为 AVIMClient 指定该代理的一个实例。
@@ -1159,6 +1061,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 }
 ```
 {% endblock %}
+
 {% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
 {% block conversation_tag %}
@@ -1248,6 +1151,7 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 }
 ```
 {% endblock %}
+
 {% block pattern_conservation_query_default_property %}
 
 ```
@@ -1509,6 +1413,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 {% endblock %}
 
 {% block chatroom_query_method %} `[AVIMConversationQuery whereKey:]` {% endblock %}
+
 {% block create_query_instance_method %}`[AVIMClient conversationQuery]`{% endblock %}
 
 {% block chatroom_query_method2 %} `whereKey:` {% endblock %}
@@ -1569,7 +1474,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
         AVIMConversationQuery *query = [self.client conversationQuery];
         // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
         [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
-            // 设置查询时间从过去 24 小时开始
+            // 查询对话中最后 10 条消息
             [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
                 NSLog(@"查询成功！");
             }];
@@ -1591,7 +1496,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
         AVIMConversationQuery *query = [self.client conversationQuery];
         // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
         [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
-            // 设置查询时间从过去 24 小时开始
+            // 从指定的某条消息（id 为 grqEG2OqSL+i8FSX9j3l2g，时间戳为 1436137606358）开始查询
             [conversation queryMessagesBeforeId:@"grqEG2OqSL+i8FSX9j3l2g" timestamp:1436137606358 limit:10 callback:^(NSArray *objects, NSError *error) {
                 NSLog(@"查询成功！");
             }];
@@ -1613,7 +1518,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
         AVIMConversationQuery *query = [self.client conversationQuery];
         // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
         [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
-            // 设置查询时间从过去 24 小时开始
+            // 查询对话中最后 10 条消息
             [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
                 [self TomLoadMoreMessage:objects forConversation:conversation];
             }];
@@ -1741,4 +1646,49 @@ imClient.delegate = self;
 }];
 ```
 {% endblock %}
-	
+
+{% block connect_with_tag %}
+
+```objc
+AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mobile"];
+[currentClient openWithCallback:^(BOOL succeeded, NSError *error) {
+    if (succeeded) {
+        // 与云端建立连接成功
+    }
+}];
+```
+{% endblock %}
+
+{% block disconnected_by_server_with_same_tag %}
+
+```objc
+-(void)client:(AVIMClient *)client didOfflineWithError:(NSError *)error{
+    if ([error code]  == 4111) {
+        //适当的弹出友好提示，告知当前用户的 Client Id 在其他设备上登陆了
+    }
+};
+```
+{% endblock %}
+{% block code_set_query_policy %}
+
+```objc
+// 设置缓存策略，默认是 kAVCachePolicyCacheElseNetwork
+@property (nonatomic) AVCachePolicy cachePolicy;
+
+// 设置缓存的过期时间，默认是 1 小时（1 * 60 * 60）
+@property (nonatomic) NSTimeInterval cacheMaxAge;
+```
+{% endblock %}
+{% block code_query_from_local_cache %}
+有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
+
+```objc
+    AVIMConversationQuery *query = [[AVIMClient defaultClient] conversationQuery];
+    query.cachePolicy = kAVCachePolicyNetworkElseCache;
+    [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+        
+    }];
+```
+{% endblock %}
+
+{% block link_avquery_chache %} [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}

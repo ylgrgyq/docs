@@ -77,6 +77,35 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 
 ![img](images/quick_start/ios/embedded_binaries.png)
 
+最后，由于 Xcode 对动态库的处理不当，导致提交审核时，iTunes Connect 校验失败。需要一个额外的步骤来纠正。
+
+在 Build Phases 选项卡中，添加一个 Run Script：
+
+![img](images/quick_start/ios/create_run_script.png)
+
+确保 Shell 是默认的 `/bin/sh`，然后将以下脚本粘贴进去：
+
+```sh
+APP_PATH="${TARGET_BUILD_DIR}/${WRAPPER_NAME}"
+
+find "$APP_PATH" -name '*.framework' -type d | while read -r FRAMEWORK; do
+    EXTRACTED_ARCHS=()
+
+    FRAMEWORK_EXECUTABLE_NAME=$(defaults read "$FRAMEWORK/Info.plist" CFBundleExecutable)
+    FRAMEWORK_EXECUTABLE_PATH="$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME"
+
+    for ARCH in $ARCHS; do
+        lipo -extract "$ARCH" "$FRAMEWORK_EXECUTABLE_PATH" -o "$FRAMEWORK_EXECUTABLE_PATH-$ARCH"
+        EXTRACTED_ARCHS+=("$FRAMEWORK_EXECUTABLE_PATH-$ARCH")
+    done
+
+    lipo -o "$FRAMEWORK_EXECUTABLE_PATH-merged" -create "${EXTRACTED_ARCHS[@]}"
+
+    mv "$FRAMEWORK_EXECUTABLE_PATH-merged" "$FRAMEWORK_EXECUTABLE_PATH"
+    rm "${EXTRACTED_ARCHS[@]}"
+done
+```
+
 这样就集成完毕了。
 
 

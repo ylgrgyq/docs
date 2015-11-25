@@ -1,38 +1,44 @@
 // Sidebar
 .sidebar {
   margin-top: -5px;
-}
 
-.sidebar.affix {
-  position: static;
-}
+  &.affix {
+    position: static;
+  }
 
-.sidebar .nav > li {
-  color: #ccc;
-}
-.sidebar .nav > li > a {
-  display: block;
-  padding: 5px 20px 5px 0;
-  color: @gray-light;
-  border-right: 1px solid @gray-lighter
-}
-.sidebar .nav > li > a:hover,
-.sidebar .nav > li > a:focus {
-  color: #000;
-  text-decoration: none;
-  background: #fff;
-  border-right: 1px solid @gray-light;
-}
-.sidebar .nav > .active > a,
-.sidebar .nav > .active:hover > a,
-.sidebar .nav > .active:focus > a {
-  color: @link-color;
-  background-color: transparent;
-  border-right: 1px solid @link-color;
+  .nav {
 
-  &:hover,
-  &:focus {
-    color: @link-color;
+    > li {
+      color: #ccc;
+
+      > a {
+        display: block;
+        padding: 5px 20px 5px 0;
+        color: @gray-light;
+        border-right: 1px solid @gray-lighter;
+
+        &:hover,
+        &:focus {
+          color: #000;
+          text-decoration: none;
+          background: #fff;
+          border-right: 1px solid @gray-light;
+        }
+      }
+    }
+
+    > .active > a,
+    > .active:hover > a,
+    > .active:focus > a {
+      color: @link-color;
+      background-color: transparent;
+      border-right: 1px solid @link-color;
+
+      &:hover,
+      &:focus {
+        color: @link-color;
+      }
+    }
   }
 }
 
@@ -88,7 +94,7 @@
   }
 
   .icon-external {
-    opacity: .4;
+    opacity: .8;
     vertical-align: 1px;
   }
 }
@@ -102,6 +108,24 @@
 
   a {
     position: relative;
+  }
+
+  .cla-type {
+    padding: 2px 6px;
+    font-size: 10px;
+    text-transform: uppercase;
+    border-radius: 4px;
+    color: @gray;
+    background: @gray-lighter;
+
+    &--normal {
+      display: none;
+    }
+
+    &--log {
+      color: @brand-warning;
+      background: fade(@brand-warning, 10%);
+    }
   }
 
   .cla-name {

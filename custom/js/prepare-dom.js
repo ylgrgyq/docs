@@ -6,7 +6,12 @@
 // $(body).html($com)
 function refactDom(){
     $("pre.prettyprint code").each(function(index, ele) {
-      $(ele).after("<div class='doc-example-action'><button class='copybtn'><span class='icon icon-clipboard'></span></button></div>");
+      var url = getPlayUrl(ele);
+      var actions = $("<div class='doc-example-action'><button class='copybtn' title='复制'><span class='icon icon-clipboard'></span></button></div>");
+      if (url) {
+        actions.prepend("<a class='runbtn' href='" + url + "' target='_blank' title='运行'><span class='icon icon-console-run'></span></a>")
+      }
+      $(ele).after(actions);
       var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='pageState.currentApp' ng-options='app.app_name for app in apps'></select></span>";
       if($(ele).text().indexOf('{{appid}}')>-1){
         $(ele).after(appsStr);
@@ -41,3 +46,19 @@ function glueCopy(){
     });
 }
 
+function getPlayUrl(codeTag) {
+  var COMMENT_OF_AN_URL = /^\/\/\s*(https?\:\/\/\S+)$/i;
+  var code = codeTag.innerHTML.trim();
+  var lastBreak = code.lastIndexOf('\n');
+  if (lastBreak === -1) {
+    return;
+  }
+  var lastLine = code.slice(lastBreak).trim();
+  var results = lastLine.match(COMMENT_OF_AN_URL);
+  if (!results) {
+    return;
+  }
+  var url = results[1];
+  codeTag.innerHTML = code.slice(0, lastBreak);
+  return url;
+}
