@@ -8,9 +8,9 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### 获取客服支持有哪些途径
 
-* 访问 [技术问答社区](https://forum.leancloud.cn/)，进行提问。
-* 登录进入官网 [控制台](/applist.html)，选择页面顶部菜单：**帮助** > **技术支持**，进入工单系统，提交问题。
-* 发送邮件到 <support@leancloud.rocks>，获取帮助。
+* 到免费的[用户社区](https://forum.leancloud.cn/) 进行提问。
+* 购买 [技术支持](/bill.html#/bill/general)，进入 [工单系统](https://ticket.leancloud.cn/) 来提交问题。
+* 发送邮件到 <support@leancloud.rocks> 获取帮助。
 * 紧急情况拨打客服电话：010-82800646。
 
 ### 计费是基于账号还是应用
@@ -31,9 +31,12 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 * 对公账户付款
 
-  公司名称：**美味书签（北京）信息技术有限公司**  
-  开户　行：**中国银行北京大运村支行**  
-  银行账号：**344159259324**  
+  公司税号：**110108597742364**
+  公司名称：**美味书签（北京）信息技术有限公司**<br/>
+  开户银行：**中国银行股份有限公司北京大运村支行**<br/>
+  银行账号：**344159259324**<br/>
+  银行地址：**北京市海淀区知春路 6 号锦秋国际大厦一层**
+  银行行号：**104100004013**
 
 ### 如何申请开具发票
 
@@ -54,8 +57,9 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 * [官方博客](http://blog.leancloud.cn/)（每次更新的详细信息都会发布在那里）
 * [官方微博](http://weibo.com/avoscloud)
+* 官方微信公众号：LeanCloud
 * 每月初，我们会将每月的更新摘要发送到您的注册邮箱。
-* 控制台页面的右上方有一个 **消息中心** 功能，请注意查看新通知。
+* 在控制台页面的右上方有 [消息中心](/info-center.html#/index)，请注意查看新通知。
 
 ### API 开放吗
 
@@ -70,18 +74,18 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 * JavaScript
 * Windows Phone
 * Unity
+* Python
+* PHP
 
 来自第三方的开源项目有：
 
 * [C#](https://github.com/freewing99/BaasReponsitory)
-* [PHP](https://github.com/killme2008/avoscloud-php-library)
 
 详情请访问 [SDK 下载](/docs/sdk_down.html) 页面。
 
 ### iOS 和 Android 是否可以使用同一个 App
 
 当然可以。使用我们的 SDK，可以为同一个应用开发多个平台的版本，共享后端数据。
-
 
 ### 支持 Unity 3D 吗
 
@@ -92,6 +96,27 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
  **官网文档** 首页右上角就有搜索框，也可以直接访问 [搜索](/search.html) 页面。
 
 ## API 相关
+
+### API 调用次数有什么限制吗
+
+我们每个月提供 100 万次的免费额度，超过的部分才收费。免费额度不会将完全免费的推送服务和统计服务计算进去。另外，对于免费版和专业版，默认情况下，每个应用都有每秒 1000 次的并发访问上限，如果需要提高上限，请与我们联系。
+
+对于从控制台或者使用 JavaScript SDK 上传文件（包括云引擎内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
+
+### API 调用次数的计算
+
+对于「数据存储」来说，每次 create 和 update 一条数据算一次请求，如调用一次 `object.saveInBackground` 算一次 API 请求。
+
+`fetch`、`find`、`delete`、`deleteAll` 算**一次请求**：
+
+- 调用一次 fetch / find 通过 include 返回了 100 个关联对象，算一次 API 请求。
+- 调用一次 find / deleteAll 来查找或删除 500 条记录，只算一次 API 请求。
+
+`saveAll`、`fetchAll` 算**多次请求**：
+
+- 调用一次 saveAll / fetchAll 来保存或获取 array 里面 100 个 对象，算 100 次 API 请求。
+
+对于「[应用内社交](status_system.html)」，create 和 update 按照 Status 和 Follower/Followee 的对象数量来计费。对于 query 则是按照请求数来计费，与结果的大小无关。collection fetch 也是按照请求次数来计费。
 
 ### 可以在线测试 API 吗
 
@@ -116,8 +141,8 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 ### 错误信息代码和详细解释在哪里
 
 * [错误代码详解](./error_code.html)
-* iOS SDK：[AVConstants](/docs/api/iOS/docs/AVConstants.html)
-* Android SDK：[AVException](/docs/api/android/doc/index.html)
+* iOS SDK：[AVConstants](/api-docs/iOS/docs/AVConstants.html)
+* Android SDK：[AVException](/api-docs/android/doc/index.html)
 
 REST API 返回的错误信息跟 SDK 保持一致。
 
@@ -135,13 +160,6 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 ### 应用内用户的密码需要加密吗
 
 不需要加密密码，我们的服务端已使用随机生成的 salt，自动对密码做了加密。 如果用户忘记了密码，可以调用 `requestResetPassword` 方法（具体查看 SDK 的 AVUser 用法），向用户注册的邮箱发送邮件，用户以此可自行重设密码。 在整个过程中，密码都不会有明文保存的问题，密码也不会在客户端保存，只是会保存 sessionToken 来标示用户的登录状态。
-
-### API 调用次数有什么限制吗
-
-我们每个月提供 100 万次的免费额度，超过的部分才收费。免费额度不会将完全免费的推送服务和统计服务计算进去。另外，对于免费版和专业版，默认情况下，每个应用都有每秒 1000 次的并发访问上限，如果需要提高上限，请与我们联系。
-
-对于从控制台或者使用 JavaScript SDK 上传文件（包括云引擎内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
-
 
 ## 控制台相关
 

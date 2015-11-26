@@ -67,6 +67,10 @@ $ sudo gem install cocoapods
   * MobileCoreServices.framework
   * CoreTelephony.framework
   * CoreLocation.framework
+  * libicucore.dylib
+
+* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++.dylib**。
+
 * 在 Target 的 **Build Settings** 中，为 **Other Linker Flags** 增加：
   * `-lz`
   * `-licucore`
@@ -82,6 +86,16 @@ $ sudo gem install cocoapods
 
 ```
 #import <AVOSCloud/AVOSCloud.h>;
+//如果使用了实时通信模块，请添加下列导入语句到头部：
+#import <AVOSCloudIM.h>
+```
+
+如果是使用 Swift 语言开发，直接包含 AVOSCloud 模块：
+
+```swift
+import AVOSCloud
+//如果使用了实时通信模块，请添加下列导入语句到头部：
+import AVOSCloudIM
 ```
 
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：

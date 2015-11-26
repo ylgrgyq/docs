@@ -15,16 +15,16 @@
 
 请务必确保你的应用拥有如下权限：
 
-* `android.permission.INTERNET`  
+* `android.permission.INTERNET`
   向 LeanCloud 的统计服务器发送用户分析数据。
-* `android.permission.READ_PHONE_STATE`  
-  `android.permission.ACCESS_WIFI_STATE`  
+* `android.permission.READ_PHONE_STATE`
+  `android.permission.ACCESS_WIFI_STATE`
   这两个权限是为了获取用户手机的 IMEI 以及 WiFi 的 Mac 地址，用来唯一的标识用户。
-* `android.permission.ACCESS_NETWORK_STATE`  
+* `android.permission.ACCESS_NETWORK_STATE`
   检测网络状态。
-* `android.permission.READ_LOGS`  
+* `android.permission.READ_LOGS`
   获取客户端 crash log。通过将 crash log 汇报到服务器上，你可以了解你的应用 crash 的原因以及次数。
-* `android.permission.WRITE_EXTERNAL_STORAGE`  
+* `android.permission.WRITE_EXTERNAL_STORAGE`
   保存离线报告的缓存数据。
 
 示例：
@@ -69,7 +69,7 @@
 ```java
 
 AVAnalytics.setAppChannel("SomeChannel");
-// 参数依次为 context, AppId, AppKey
+// 参数依次是 context, appId, appKey
 AVOSCloud.initialize(getContext(),"{{appid}}","{{appKey}}");
 
 ```
@@ -232,7 +232,7 @@ AVAnalytics.onEvent(Context context, String eventName, String label, int count)
 
 ## 自定义参数设置
 
-你可以控制台某个应用的 **组件** > **自定义参数** 设置中配置你的自定义在线参数。这些参数会在我们每次更新统计配置时进行更新，你可以用以下方法来获得对应的值： 
+你可以控制台某个应用的 **组件** > **自定义参数** 设置中配置你的自定义在线参数。这些参数会在我们每次更新统计配置时进行更新，你可以用以下方法来获得对应的值：
 
 ```java
 AVAnalytics.getConfigParams(this.getContext(), "key")

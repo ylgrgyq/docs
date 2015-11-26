@@ -701,6 +701,7 @@ RealtimeObject.conv(options, callback)
 &nbsp;&nbsp;&nbsp;&nbsp; attr|Object|可选|自定义的数据信息，如 title、image、xxx 等。
 &nbsp;&nbsp;&nbsp;&nbsp; members|Array|可选|创建 conversation 时可以直接加入成员的 clientId，<br/>如 `['LeanCloud1', 'LeanCloud2']`。
 &nbsp;&nbsp;&nbsp;&nbsp; name|String|可选|Conversation 的名字
+&nbsp;&nbsp;&nbsp;&nbsp; unique|Boolean|可选|是否原子创建对话，针对相同成员多次原子创建对话会返回同一个会话。请参考 [实时通信服务概览](realtime_v2.html#普通对话_Normal_Conversation_) 中 `unique` 选项相关说明。
 &nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](realtime_v2.html)」。
 **callback**|Function|可选|创建成功后的回调函数，此时也会在 RealtimeObject <br/>内部派发一个 create 事件，可以通过 `RealtimeObject.on()` 方法来监听。
 

@@ -1,45 +1,11 @@
 {% extends "./realtime_guide.tmpl" %}
 
-{% block language %}Android{% endblock %}
+{% set platform_name = 'Android' %}
+{% set doc_title = 'Android' %}
+{% set sdk_name = 'Android SDK' %}
 
-{% block setup_init %}在 Application 的 `onCreate` 方法中对实时通信服务进行初始化：
-
-```java
-public class MyApplication extends Application{
-
-    public void onCreate(){
-      ...
-      // 你的 AppID、AppKey
-      AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
-      ...
-    }
-}
-```
-
-并在 AndroidManifest.xml 中间声明：
-
-```xml
-<manifest>
-   ...
-
-   <application
-        android:name=".MyApplication"
-        ....>
-        ...
-
-        <service android:name="com.avos.avoscloud.PushService" />
-
-        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.USER_PRESENT" />
-            </intent-filter>
-        </receiver>
-        ...
-   </application>
-
-</manifest>
-```
+{% block setup_init %}
+我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
 {% endblock %}
 
 {% block demo %}
@@ -1062,7 +1028,7 @@ jerry.open(new AVIMClientCallback() {
    * @param name 对话的名字
    * @param attributes 对话的额外属性
    * @param isTransient 是否是暂态对话
-   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
+   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
    *                 为 false 时，则一直为创建新的对话
    *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
    *                 为 true 时，仅 members 为有效查询条件
@@ -1078,6 +1044,7 @@ jerry.open(new AVIMClientCallback() {
 * attributes - 表示额外属性
 * isTransient - 用于标注是否是临时对话
 * isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则才创建新的对话，在 createConversation的多个重写中，没有 isUnique 参数的情况下，该值默认为 false
+
 {% endblock %}
 
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
@@ -1642,7 +1609,7 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
 
         // 获取第一页的消息里面最旧的一条消息
         AVIMMessage pager = firstPage.get(0);
-        conversation.queryMessages(pager.getMessageId(), pager.getReceiptTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
+        conversation.queryMessages(pager.getMessageId(), pager.getTimestamp(), pageSize, new AVIMMessagesQueryCallback() {
           @Override
           public void done(List<AVIMMessage> secondPage, AVIMException e) {
             // secondPage 就是第二页的数据
@@ -1651,6 +1618,13 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
       }
     }
   });
+```
+{% endblock %}
+
+{% block disable_im_cache %}
+
+```java
+AVIMClient.setMessageQueryCacheEnable(false);
 ```
 {% endblock %}
 
@@ -2140,16 +2114,49 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
 ```
 {% endblock %}
 
-{% block conversation_query_cache %}#### 缓存查询
+{% block connect_with_tag %}
 
-通常，将查询结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。或者为了节省用户流量，在应用打开的第一次查询走网络，之后的查询可优先走本地缓存。
+```java
+    // 第二个参数：登录标记 Tag
+    AVIMClient currentClient = AVIMClient.getInstance(clientId,"Mobile");
+    currentClient.open(new AVIMClientCallback() {
+      @Override
+      public void done(AVIMClient avimClient, AVIMException e) {
+        if(e == null){
+          // 与云端建立连接成功
+        }
+      }
+    });
+```
 
-值得注意的是，默认的策略是先走本地缓存的再走网络的，缓存时间是一小时。AVIMConversationQuery 中有如下方法：
+{% endblock %}
+
+{% block disconnected_by_server_with_same_tag %}
+
+```java
+public class AVImClientManager extends AVIMClientEventHandler {
+  ...
+  @Override
+  public void onClientOffline(AVIMClient avimClient, int i) {
+    if(i == 4111){
+      // 适当地弹出友好提示，告知当前用户的 Client Id 在其他设备上登陆了
+    }
+  }
+  ...
+}
+```
+
+{% endblock %}
+
+{% block code_set_query_policy %}
+
 ```java
   // 设置 AVIMConversationQuery的查询策略
   public void setQueryPolicy(AVQuery.CachePolicy policy);
 ```
+{% endblock %}
 
+{% block code_query_from_local_cache %}
 有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
 
 ```java
@@ -2162,5 +2169,8 @@ public class KeepAliveSignatureFactory implements SignatureFactory {
       }
     });
 ```
+{% endblock %}
 
-各种查询缓存策略的行为可以参考 [存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。{% endblock %}
+{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。
+{% endblock %}
+
