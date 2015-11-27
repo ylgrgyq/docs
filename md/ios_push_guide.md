@@ -413,7 +413,7 @@ AVPush *push = [[AVPush alloc] init];
 
 ## 跟踪推送和应用的打开情况
 
-通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的`application:didFinishLaunchingWithOptions: `方法来收集打开信息：
+通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的 `application:didFinishLaunchingWithOptions:` 方法来收集打开信息：
 
 ```objc
 if (application.applicationState != UIApplicationStateBackground) {
@@ -431,9 +431,9 @@ if (application.applicationState != UIApplicationStateBackground) {
 ```
 
 
-传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
+传递 nil 或者空白的参数给 `trackAppOpenedWithLaunchOptions:` 方法只是统计一次标准的应用打开事件（比如不是通过通知打开的应用）。
 
-你可以在 [**控制台** > **分析** > **行为分析** > **应用使用**](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
+你可以在 [控制台 / 分析 / 行为分析 / 应用使用](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
