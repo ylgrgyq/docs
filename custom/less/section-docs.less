@@ -182,7 +182,7 @@ body {
     height: 17px;
     outline: none;
 
-    @media (max-width: 480px) {
+    @media (max-width: @screen-xs) {
       width: 120px;
     }
   }
@@ -294,7 +294,7 @@ body {
     }
 
     // Affix fix for mobile devices
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
       position: static !important;
 
       #toc {
@@ -319,7 +319,7 @@ body {
   &.affix-top,
   &.affix-bottom {
 
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
 
       #toc > li > ul ul {
         display: block;
@@ -363,7 +363,7 @@ body {
 .sidebar-affix-shadow {
   .clearfix;
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 
@@ -430,7 +430,7 @@ body {
     }
   }
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     position: static;
     padding: 0 0 20px;
     border-bottom: 1px solid #eee;
@@ -565,7 +565,7 @@ ul#toc,#toc li {
   margin-top: 17px;
   color: @gray-lighter;
 
-  @media (max-width: @screen-sm) {
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 
@@ -676,7 +676,7 @@ ul#toc,#toc li {
     margin-right: 10px;
     float: left;
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
       margin-right: 0;
       margin-bottom: 10px;
       float: none;
@@ -822,7 +822,7 @@ h1 {
 
   > li {
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
 
       .btn {
         margin-bottom: 15px;
@@ -847,7 +847,7 @@ h1 {
     border: 1px solid @gray-lighter;
     border-radius: 4px;
 
-    @media(max-width: (@screen-sm - 1px)) {
+    @media(max-width: @screen-xs-max) {
       margin: 15px 0 0;
     }
 
