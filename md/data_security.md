@@ -126,39 +126,43 @@ Object类型简单地表示每个字段的值都可以由能JSON编码的内嵌�
 
 除了REST api之外，我们还提供通过 JSON 文件和 CSV 格式文件的导入数据的功能。
 
-为了通过JSON文件创建一个新Class，请到[数据管理](/data.html?appid={{appid}})并点击左侧class导航的"数据导入"按钮。
+要使用 JSON 文件创建一个新 Class，请进入 [控制台 / 存储 / 数据管理 / ](/data.html?appid={{appid}}) 并点击左侧class导航的"数据导入"按钮。
 
 ![image](images/data_import.png)
 
-**数据文件的扩展名必须是`.csv`或者`.json`结尾，我们根据这个来判断导入数据的类型。**
+<div class="callout callout-info">数据文件的扩展名必须是 `.csv` 或者 `.json` 结尾，我们以此来判断导入数据的类型。</div>
 
-#### JSON文件格式
+#### JSON 文件格式
 
-JSON格式要求是一个符合我们REST格式的JSON对象数组，或者一个JSON对象包含results字段，对应的是一个对象数组。
-
-一个包含普通对象的文件看来像这样：
+JSON 格式要求是一个符合我们 REST 格式的 JSON 对象数组，或者是一个包含了键名为 results、值为对象数组的 JSON 对象。例如：
 
 ```json
 { "results": [
   {
-    "score": 1337,
-    "playerName": "James",
-    "player": {
+    "likes": 2333,
+    "title": "讲讲明朝的那些事儿",
+    "author": {
       "__type": "Pointer",
-      "className": "Player",
+      "className": "Author",
       "objectId": "mQtjuMF5xk"
     },
-    "cheatMode": false,
-    "createdAt": "2012-07-11T20:56:12.347Z",
-    "updatedAt": "2012-07-11T20:56:12.347Z",
+    "isDraft": false,
+    "createdAt": "2015-11-25T17:15:33.347Z",
+    "updatedAt": "2015-11-27T19:05:21.377Z",
+    "publishedAt": {
+      "__type": "Date",
+      "iso": "2015-11-27T19:05:21.377Z"
+    },
     "objectId": "fchpZwSuGG"
   }]
 }
 ```
 
-导入用户数据，密码需要一个特殊的字段`bcryptPassword`，并且完全遵循[Stackoverflow帖子里描述的加密算法加密后](http://stackoverflow.com/a/5882472/1351961)，将导入作为用户密码。
+【日期】示例中，`publishedAt` 是一个日期型字段，其格式要求请参考 [REST API &middot; 数据类型](rest_api.html#datatype_date)。
 
-关联Relation数据的导入，需要填写导入的class名称，导入后的字段名称，关联的class名称等信息，才能完整导入，示范的relation数据类似：
+【密码】导入用户密码需要使用一个特殊的字段 `bcryptPassword`，并且完全遵循 [Stackoverflow &middot; What column type/length should I use for storing a Bcrypt hashed password in a Database?](http://stackoverflow.com/a/5882472/1351961)  所描述的加密算法加密后，才可以作为合法的密码进行导入。
+
+【关系】导入 Relation 关联数据时，需要填写要导入的 Class 名称、导入后的字段名称、关联的 Class 名称等信息，才能完整导入，例如：
 
 ```json
 { "results": [
@@ -173,20 +177,18 @@ JSON格式要求是一个符合我们REST格式的JSON对象数组，或者一�
 ```
 其中：
 
-* owningId 是将要导入的class表内已经存在的对象的objectId。
-* relatedId 是将要关联的class里的对象的objectId。
+* `owningId`： 将要导入的 Class 表内已经存在的对象的 objectId。
+* `relatedId`：将要关联的 Class 里的对象的 objectId。
 
-例如Post有一个字段comments是relation类型，对应的Class是Comment，那么owningId就是已存在的Post的objectId，而relatedId就是关联的Comment的ObjectId。
+例如，Post 有一个字段 comments 是 Relation 类型，对应的 Class 是 Comment，那么 owningId 就是已存在的 Post 的 objectId，而 relatedId 就是关联的 Comment 的 objectId。
 
 ### CSV格式文件
 
-导入Class的 csv 文件格式必须符合我们的扩展要求：
+导入 Class 的 csv 文件格式必须符合我们的扩展要求：
 
-* 第一行必须是字段的类型描述，支持`int`,`long`,`number`,`double`,`string`,`date`,`boolean`,`file`,`array`,`object`,`geopoint`等。
+* 第一行必须是字段的类型描述，支持 `int`、`long`、`number`、`double`、`string`、`date`、`boolean`、`file`、`array`、`object`、`geopoint` 等。
 * 第二行是字段的名称
 * 第三行开始才是要导入的数据
-
-例如：
 
 ```csv
 string,int,string,double,date
@@ -196,7 +198,7 @@ name,age,address,account,createdAt
 王五,21,上海,1000.5,2012-04-22T09:21:35.701Z
 ```
 
-导入的 `geopoint` 格式是一个用空格隔开字符串
+导入的 `geopoint` 格式是一个用空格隔开字符串：
 
 ```csv
 geopoint,string,int,string,double,date
@@ -206,7 +208,7 @@ location,name,age,address,account,createdAt
 40 40,王五,21,上海,1000.5,2012-04-22T09:21:35.701Z
 ```
 
-导入的relation数据，比JSON简单一些，第一列对应JSON的`owningId`，也就是要导入的 Class 的存在对象的 objectId，第二列对应`relatedId`，对应关联 Class 的objectId。例如：
+导入的 Relation 数据，比 JSON 简单一些，第一列对应 JSON 的 `owningId`，也就是要导入的 Class 的存在对象的 objectId，第二列对应 `relatedId`，对应关联 Class 的 objectId。例如：
 
 ```csv
 dMEbKFJiQo,19rUj9I0cy
@@ -224,7 +226,7 @@ playerName,player
 
 ### 导出数据
 
-我们还支持你可以导出所有的应用数据（包括加密后的用户密码），只要进入 [应用设置->数据导出](/app.html?appid={{appid}}#/export) 点击导出按钮即可开始导出任务。我们将在导出完成之后发送下载链接到你的注册邮箱。
+我们还支持你可以导出所有的应用数据（包括加密后的用户密码），只要进入 [控制台 / 应用设置 / 数据导出](/app.html?appid={{appid}}#/export) 点击导出按钮即可开始导出任务。我们会在导出完成之后发送下载链接到你的注册邮箱。
 
 导出还可以限定日期，我们将导出在限定时间内有过更新或者新增加的数据。
 
@@ -241,10 +243,26 @@ playerName,player
 3. 重复 512 次调用 `hasher.update(hv)`，每次hv都更新为最新的 `hasher.digest` 加密值
 4. 最终的 hv 值做 base64 编码，保存为 password
 
-假设 salt 为 `h60d8x797d3oa0naxybxxv9bn7xpt2yiowz68mpiwou7gwr2`, 原始密码为 `password`，经过加密后为 `tA7BLW+NK0UeARng0693gCaVnljkglCB9snqlpCSUKjx2RgYp8VZZOQt0S5iUtlDrkJXfT3gknS4rRqjYsd/Ug==`
+假设：
 
-参考下列代码
+<table width="100%" border="0" cellpadding="6">
+  <tbody>
+    <tr>
+      <td nowrap>salt</td>
+      <td><pre style="margin:0;"><code>h60d8x797d3oa0naxybxxv9bn7xpt2yiowz68mpiwou7gwr2</code></pre></td>
+    </tr>
+    <tr>
+      <td nowrap>原始密码</td>
+      <td><code>password</code></td>
+    </tr>
+    <tr>
+      <td nowrap>加密后</td>
+      <td><pre style="margin:0;"><code>tA7BLW+NK0UeARng0693gCaVnljkglCB9snqlpCSUKjx2RgYp8VZZOQt0S5iUtlDrkJXfT3gknS4rRqjYsd/Ug==</code></pre></td>
+    </tr>
+  </tbody>
+</table>
 
+实现代码：
 
 ```ruby
 require 'digest/sha2'
@@ -269,7 +287,7 @@ result = Base64.encode64(hashme(hasher,hv))
 puts result.gsub(/\n/,'')
 ```
 
-用户残圆贡献一段 C# 语言示例代码，非常感谢：
+非常感谢用户残圆贡献了一段 C# 语言示例代码：
 
 ```
         /// 根据数据字符串和自定义 salt 值，获取对应加密后的字符串
