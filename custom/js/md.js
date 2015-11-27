@@ -151,6 +151,8 @@ function getGitHubContributors() {
         "class": "github-contributors"
       }).insertAfter(appendTarget);
 
+      $(".doc-content h1").addClass("github-contributors-loaded");
+
       var wrap = $(".github-contributors");
 
       $.each(contributors, function(index, item) {

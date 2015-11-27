@@ -61,15 +61,31 @@ body {
 // Headings
 .doc-content {
 
-  h1 {
+  > h1 {
     font-size: 32px;
     font-weight: 300;
     padding-top: 90px;
     margin-top: 0px;
+    margin-bottom: 20px;
     .font-logo;
+    font-weight: bold;
+
+    // We add extra space for top heading before GitHub contributers loaded
+    // This could help avoid FOUT issue when page is loading
+    @github-avatar-height: 24px;
+    @heading-margin-bottom-offset: 10px;
+    padding-bottom: (100px + @github-avatar-height + @heading-margin-bottom-offset + 3px) !important;
+    border-bottom: 1px solid @gray-lighter;
 
     a {
       color: #000;
+    }
+
+    // When GitHub contributers loaded, add a special class to remove extra space
+    &.github-contributors-loaded {
+      padding-bottom: 0 !important;
+      margin-bottom: @heading-margin-bottom-offset;
+      border-bottom: none;
     }
   }
 
