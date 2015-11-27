@@ -1,6 +1,6 @@
 {
   "name": "leancloud-docs",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "LeanCloud Documentation",
   "main": "index.js",
   "scripts": {

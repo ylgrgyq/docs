@@ -1,3 +1,40 @@
+<a name="0.0.3"></a>
+## [0.0.3](https://github.com/leancloud/docs/compare/v0.0.2...v0.0.3) (2015-11-27)
+
+
+### Bug Fixes
+
+* **docs:** fix getTimestamp() param by a user's comment ([c4028be](https://github.com/leancloud/docs/commit/c4028be))
+* fetch more contributers via `per_page` parameter ([7445e4d](https://github.com/leancloud/docs/commit/7445e4d))
+* **docs:** add a missing variable for book title ([56caa50](https://github.com/leancloud/docs/commit/56caa50))
+* **docs:** add code example for processing unread message ([1362b51](https://github.com/leancloud/docs/commit/1362b51))
+* **docs:** add example code of modifying conversation's attrs for iOS ([8895f90](https://github.com/leancloud/docs/commit/8895f90)), closes [#752](https://github.com/leancloud/docs/issues/752)
+* **docs:** add missing var in example code ([1d9252e](https://github.com/leancloud/docs/commit/1d9252e))
+* **docs:** add more supported data type: float, double, bigdecimal ([e3521d1](https://github.com/leancloud/docs/commit/e3521d1))
+* **docs:** add param --save and remove -g ([757362e](https://github.com/leancloud/docs/commit/757362e))
+* **docs:** add url-encoded command for params ([5eb0f84](https://github.com/leancloud/docs/commit/5eb0f84))
+* **docs:** apply updates by reviewer's comments ([a934288](https://github.com/leancloud/docs/commit/a934288))
+* **docs:** correct comments in Android example code ([ea73693](https://github.com/leancloud/docs/commit/ea73693))
+* **docs:** correct the usage of voice message ([ea396c6](https://github.com/leancloud/docs/commit/ea396c6)), closes [#738](https://github.com/leancloud/docs/issues/738)
+* **docs:** fix broken links ([c9dbc14](https://github.com/leancloud/docs/commit/c9dbc14))
+* **docs:** fix typos by users' comments ([fa12528](https://github.com/leancloud/docs/commit/fa12528))
+* **docs:** rearrange content by users' comment ([b21d08a](https://github.com/leancloud/docs/commit/b21d08a))
+* **docs:** update links for PHP SDK ([98dd0cd](https://github.com/leancloud/docs/commit/98dd0cd))
+* **docs:** update payment info ([38db894](https://github.com/leancloud/docs/commit/38db894))
+* **docs:** update SMS usage ([efc33aa](https://github.com/leancloud/docs/commit/efc33aa))
+* **docs:** 修正格式 ([848a15c](https://github.com/leancloud/docs/commit/848a15c))
+
+### Features
+
+* add Bootstrap tooltip support for contributors ([3881064](https://github.com/leancloud/docs/commit/3881064))
+* add play buttons for code blocks. ([7458e89](https://github.com/leancloud/docs/commit/7458e89))
+* basic contributor list support ([0521a23](https://github.com/leancloud/docs/commit/0521a23))
+* only create wrap element if has contributors ([6bdb4fd](https://github.com/leancloud/docs/commit/6bdb4fd))
+* **homepage:** update icons for hero buttons ([a060d45](https://github.com/leancloud/docs/commit/a060d45))
+* **homepage:** update list responsive for small screens ([5b0eb43](https://github.com/leancloud/docs/commit/5b0eb43))
+
+
+
 <a name="0.0.2"></a>
 ## [0.0.2](https://github.com/leancloud/docs/compare/v0.0.1...v0.0.2) (2015-10-30)
 
