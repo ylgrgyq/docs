@@ -61,14 +61,31 @@ body {
 // Headings
 .doc-content {
 
-  h1 {
-    font-size: 26px;
+  > h1 {
+    font-size: 32px;
     font-weight: 300;
-    padding-top: 20px;
+    padding-top: 90px;
     margin-top: 0px;
+    margin-bottom: 20px;
+    .font-logo;
+    font-weight: bold;
+
+    // We add extra space for top heading before GitHub contributers loaded
+    // This could help avoid FOUT issue when page is loading
+    @github-avatar-height: 24px;
+    @heading-margin-bottom-offset: 10px;
+    padding-bottom: (100px + @github-avatar-height + @heading-margin-bottom-offset + 3px) !important;
+    border-bottom: 1px solid @gray-lighter;
 
     a {
       color: #000;
+    }
+
+    // When GitHub contributers loaded, add a special class to remove extra space
+    &.github-contributors-loaded {
+      padding-bottom: 0 !important;
+      margin-bottom: @heading-margin-bottom-offset;
+      border-bottom: none;
     }
   }
 
@@ -181,7 +198,7 @@ body {
     height: 17px;
     outline: none;
 
-    @media (max-width: 480px) {
+    @media (max-width: @screen-xs) {
       width: 120px;
     }
   }
@@ -293,7 +310,7 @@ body {
     }
 
     // Affix fix for mobile devices
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
       position: static !important;
 
       #toc {
@@ -318,7 +335,7 @@ body {
   &.affix-top,
   &.affix-bottom {
 
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
 
       #toc > li > ul ul {
         display: block;
@@ -362,7 +379,7 @@ body {
 .sidebar-affix-shadow {
   .clearfix;
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 
@@ -429,7 +446,7 @@ body {
     }
   }
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     position: static;
     padding: 0 0 20px;
     border-bottom: 1px solid #eee;
@@ -560,13 +577,11 @@ ul#toc,#toc li {
 }
 
 .docs-meta {
-  float: right;
   overflow: auto;
-  padding-left: 15px;
-  margin-top: 20px;
+  margin-top: 17px;
   color: @gray-lighter;
 
-  @media (max-width: @screen-sm) {
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 
@@ -589,7 +604,9 @@ ul#toc,#toc li {
 
 .github-contributors {
   .list-unstyled;
+  padding-bottom: 100px;
   margin-bottom: 20px;
+  border-bottom: 1px solid @gray-lighter;
 
   li {
     display: inline;
@@ -617,6 +634,10 @@ ul#toc,#toc li {
 
   &.with-comment {
     padding-left: 16px;
+
+    @media (max-width: @screen-sm-max) {
+      padding-left: 0;
+    }
   }
 
   @media (max-width: 640px) {
@@ -671,7 +692,7 @@ ul#toc,#toc li {
     margin-right: 10px;
     float: left;
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
       margin-right: 0;
       margin-bottom: 10px;
       float: none;
@@ -817,7 +838,7 @@ h1 {
 
   > li {
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
 
       .btn {
         margin-bottom: 15px;
@@ -842,11 +863,13 @@ h1 {
     border: 1px solid @gray-lighter;
     border-radius: 4px;
 
-    @media(max-width: (@screen-sm - 1px)) {
+    @media(max-width: @screen-xs-max) {
       margin: 15px 0 0;
     }
 
     h1 {
+      font-size: 24px;
+      .font-logo;
       padding-top: 0;
       margin-top: 0;
     }
