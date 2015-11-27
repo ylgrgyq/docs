@@ -5106,6 +5106,18 @@ body.news {
 
     .pricing-input-wrap {
 
+      // Used by LeanCache in Pricing page
+      &.extra-margin-bottom-for-mobile {
+
+        @media (max-width: @screen-xs-max) {
+          margin-bottom: 20px;
+        }
+      }
+
+      // Remove too large space if there's a label on the left side
+      label > input {
+        margin-left: 6px;
+      }
     }
 
     .pricing-input {
@@ -5117,6 +5129,34 @@ body.news {
       &::-webkit-inner-spin-button,
       &::-webkit-outer-spin-button {
         display: none;
+      }
+    }
+
+    .pricing-fixed-select-wraper {
+    }
+
+    .pricing-fixed-select {
+      float: left;
+
+      &--text {
+        display: block;
+        padding: 6px 11px;
+        margin-right: 8px;
+        margin-bottom: 10px;
+        font-size:  16px;
+        border: 1px solid @input-border;
+        border-radius: @border-radius-base;
+        cursor: pointer;
+      }
+
+      input[type=radio] {
+        display: none;
+        outline: none;
+
+        &:checked ~ .pricing-fixed-select--text {
+          color: @brand-primary;
+          border-color: @brand-primary;
+        }
       }
     }
   }
