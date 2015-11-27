@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block setup_init %}
-我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
+请参考详细的 [iOS / OS X SDK 安装指南](sdk_setup-ios.html)。
 {% endblock %}
 
 {% block compatibility %}
@@ -390,7 +390,6 @@ iOS 暂不支持发送通用文件消息，已在计划中，近期发布。
 {% endblock %}
 
 {% block transientMessage_sent %}
-
 ```objc
 typedef NS_ENUM(NSInteger, YourCustomMessageType) {
     YourCustomMessageTypeOperation = 1
@@ -440,7 +439,6 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% endblock %}
 
 {% block transientMessage_received %}
-
 ```objc
 - (void)jerryOnline {
     // Jerry 创建了一个 client
@@ -481,106 +479,7 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 
 {% block messagePolicy_received %}{% endblock %}
 
-{% block message_Relation_intro %}
-![message type diagram](images/message_type_diagram.png)
-{% endblock %}
-
-{% block message_Properties_intro %}
-所有消息都是 `AVIMMessage` 的实例，每种消息实例都具备如下属性：
-
-属性|类型|描述
----|---|---
-content|NSString|消息内容
-clientId|NSString|指消息发送者的 clientId
-conversationId|NSString|消息所属对话 id
-messageId|NSString|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
-sendTimestamp|int64_t|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
-deliveredTimestamp|int64_t|消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
-status|AVIMMessageStatus 枚举|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
-ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
-
-我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
-
-消息 | 类型
---- | ---
-文本消息|-1
-图像消息|-2
-音频消息|-3
-视频消息|-4
-位置消息|-5
-文件消息|-6
-
-<!-- >TODO: 举例说明如何使用这样的数字类型 -->
-{% endblock %}
-
-{% block attributes %} `AVIMTypedMessage.attributes` {% endblock %}
-
-{% block attributes_property %}attributes{% endblock %}
-
-{% block customAttributesMessage_sent %}
-```objc
-- (void)tomSendLocalImageToJerry {
-    // Tom 创建了一个 client
-    self.client = [[AVIMClient alloc] init];
-
-    // Tom 用自己的名字作为 ClientId 打开 client
-    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
-        // Tom 建立了与 Jerry 的会话
-        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
-            // Tom 创建了一个图像消息
-            NSString *filePath = [self imagePath];
-            NSDictionary *attributes = @{ @"location": @"拉萨布达拉宫" };
-            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"这蓝天……我彻底是醉了" attachedFilePath:filePath attributes:attributes];
-
-            // Tom 将图像消息发给 Jerry
-            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
-                if (succeeded) {
-                    NSLog(@"发送成功！");
-                }
-            }];
-        }];
-    }];
-}
-```
-{% endblock %}
-
-{% block customAttributesMessage_received %}
-
-```objc
-- (void)jerryReceiveMessageFromTom {
-    // Jerry 创建了一个 client
-    self.client = [[AVIMClient alloc] init];
-
-    // 设置 client 的 delegate，并实现 delegate 方法
-    self.client.delegate = self;
-
-    // Jerry 用自己的名字作为 ClientId 打开了 client
-    [self.client openWithClientId:@"friend" callback:^(BOOL succeeded, NSError *error) {
-        // ...
-    }];
-}
-
-#pragma mark - AVIMClientDelegate
-
-- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
-    if ([message isKindOfClass:[AVIMImageMessage class]]) {
-        AVIMImageMessage *imageMessage = (AVIMImageMessage *)message;
-
-        // 拉萨布达拉宫
-        NSString *location = imageMessage.attributes[@"location"];
-    }
-}
-```
-{% endblock %}
-
-{% block customMessage_create %}
-继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
-
-* 实现 `AVIMTypedMessageSubclassing` 协议
-* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
-{% endblock %}
-
-{% block unread_message %}
+{% block message_unread %}
 ### 未读消息
 
 iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线消息的接收机制。
@@ -613,6 +512,104 @@ SDK 默认的接收机制是：当客户端上线时，离线消息会自动通�
   [conversation markAsReadInBackground];
 }
 ```
+{% endblock %}
+
+{% block message_Relation_intro %}
+![message type diagram](images/message_type_diagram.png)
+{% endblock %}
+
+{% block message_Properties_intro %}
+所有消息都是 `AVIMMessage` 的实例，每种消息实例都具备如下属性：
+
+属性|类型|描述
+---|---|---
+content|NSString|消息内容
+clientId|NSString|指消息发送者的 clientId
+conversationId|NSString|消息所属对话 id
+messageId|NSString|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
+sendTimestamp|int64_t|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
+deliveredTimestamp|int64_t|消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
+status|AVIMMessageStatus 枚举|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusDelivered`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
+ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/>`AVIMMessageIOTypeIn`（发给当前用户）<br/>`AVIMMessageIOTypeOut`（由当前用户发出）
+
+我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
+
+消息 | 类型
+--- | ---
+文本消息|-1
+图像消息|-2
+音频消息|-3
+视频消息|-4
+位置消息|-5
+文件消息|-6
+
+<!-- >TODO: 举例说明如何使用这样的数字类型 -->
+{% endblock %}
+
+{% block attributes %}`AVIMTypedMessage.attributes`{% endblock %}
+
+{% block attributes_property %}attributes{% endblock %}
+
+{% block customAttributesMessage_sent %}
+```objc
+- (void)tomSendLocalImageToJerry {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 建立了与 Jerry 的会话
+        [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] callback:^(AVIMConversation *conversation, NSError *error) {
+            // Tom 创建了一个图像消息
+            NSString *filePath = [self imagePath];
+            NSDictionary *attributes = @{ @"location": @"拉萨布达拉宫" };
+            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"这蓝天……我彻底是醉了" attachedFilePath:filePath attributes:attributes];
+
+            // Tom 将图像消息发给 Jerry
+            [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"发送成功！");
+                }
+            }];
+        }];
+    }];
+}
+```
+{% endblock %}
+
+{% block customAttributesMessage_received %}
+```objc
+- (void)jerryReceiveMessageFromTom {
+    // Jerry 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // 设置 client 的 delegate，并实现 delegate 方法
+    self.client.delegate = self;
+
+    // Jerry 用自己的名字作为 ClientId 打开了 client
+    [self.client openWithClientId:@"friend" callback:^(BOOL succeeded, NSError *error) {
+        // ...
+    }];
+}
+
+#pragma mark - AVIMClientDelegate
+
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    if ([message isKindOfClass:[AVIMImageMessage class]]) {
+        AVIMImageMessage *imageMessage = (AVIMImageMessage *)message;
+
+        // 拉萨布达拉宫
+        NSString *location = imageMessage.attributes[@"location"];
+    }
+}
+```
+{% endblock %}
+
+{% block customMessage_create %}
+继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
+
+* 实现 `AVIMTypedMessageSubclassing` 协议
+* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
 {% endblock %}
 
 {% block messagePolicy_received_method %} `conversation:didReceiveCommonMessage:` {% endblock %}
@@ -833,6 +830,7 @@ No.|加入者|其他人
     }];
 }
 ```
+
 如果 Mary 在线的话，就会收到 `invitedByClientId` 通知：
 
 ```
@@ -882,6 +880,7 @@ No.|邀请者|被邀请者|其他人
     }];
 }
 ```
+
 如果 Harry 在线的话，他将收到 `membersRemoved` 通知：
 
 ```
@@ -930,7 +929,8 @@ No.|退出者|其他人
     }];
 }
 ```
-如果 Harry 在线的话，会 收到 `kickedByClientId` 通知：
+
+如果 Harry 在线的话，会收到 `kickedByClientId` 通知：
 
 ```
 -(void)harryNoticedWhenKickedByWilliam{
@@ -948,7 +948,6 @@ No.|退出者|其他人
     NSLog(@"%@", [NSString stringWithFormat:@"当前 ClientId(Harry) 被提出对话， 操作者为：%@",clientId]);
 }
 ```
-
 {% endblock %}
 
 {% block conversation_kick_events %}
@@ -961,7 +960,7 @@ No.|踢人者|被踢者|其他人
 3|收到 membersRemoved 通知| | 收到 membersRemoved 通知
 {% endblock %}
 
-{% block conversation_countMember_method %} `conversation:countMembersWithCallback:` {% endblock %}
+{% block conversation_countMember_method %}`conversation:countMembersWithCallback:`{% endblock %}
 
 {% block conversation_countMember %}
 ```objc
@@ -1064,21 +1063,65 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 
 {% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
-{% block conversation_tag %}
+{% block conversation_attributes_new %}
 ```objc
-- (void)tomCreateConversationWithAttribute {
+- (void)tomCreateConversationWithAttributes {
     // Tom 创建了一个 client
     self.client = [[AVIMClient alloc] init];
 
     // Tom 用自己的名字作为 ClientId 打开 client
     [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
         // Tom 创建名称为「猫和老鼠」的会话，并附加会话属性
-        NSDictionary *attributes = @{ @"tag": @"private" };
+        NSDictionary *attributes = @{ 
+            @"type": @"private",
+            @"isSticky": @(YES) 
+        };
         [self.client createConversationWithName:@"猫和老鼠" clientIds:@[@"Jerry"] attributes:attributes options:AVIMConversationOptionNone callback:^(AVIMConversation *conversation, NSError *error) {
             if (succeeded) {
                 NSLog(@"创建成功！");
             }
         }];
+    }];
+}
+```
+{% endblock %}
+
+{% block conversation_attributes_modify %}
+接下来，Tom 将 type 修改为 public：
+
+```objc
+-(void)tomUpdateConversationAttributes {
+    // Tom 创建了一个 client
+    self.client = [[AVIMClient alloc] init];
+
+    // Tom 用自己的名字作为 ClientId 打开 client
+    [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
+        // Tom 查询 id 为 551260efe4b01608686c3e0f 的对话
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        [query getConversationById:@"551260efe4b01608686c3e0f" callback:^(AVIMConversation *conversation, NSError *error) {
+
+            AVIMConversationUpdateBuilder *updateBuilder = [conversation newUpdateBuilder];
+            
+            // ---------  非常重要！！！--------------
+            // 将所有属性转交给 updateBuilder 统一处理。
+            // 如果缺失这一步，下面没有改动过的属性，如上例中的 isSticky，
+            // 在保存后会被删除。
+            // -------------------------------------
+            updateBuilder.attributes = conversation.attributes;
+            
+            // 将 type 值改为 public
+            [updateBuilder setObject:@"public" forKey:@"type"];
+
+            // 其他操作方法：删除 type 
+            // [updateBuilder removeObjectForKey:@"type"];
+
+            // 将更新后的全部属性写回对话
+            [conversation update:[updateBuilder dictionary] callback:^(BOOL succeeded, NSError *error) {
+                if (succeeded) {
+                    NSLog(@"更新 attr 成功");
+                }
+            }];
+        }
     }];
 }
 ```
@@ -1153,7 +1196,6 @@ AVIMConversation 属性名 | _Conversation 字段|含义
 {% endblock %}
 
 {% block pattern_conservation_query_default_property %}
-
 ```
 // 查询对话名称为「LeanCloud 粉丝群」的对话
 [query whereKey:@"name" equalTo:@"LeanCloud 粉丝群"];
@@ -1166,7 +1208,6 @@ NSDate *today = [NSDate date];
 NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 [query whereKey:@"lm" greaterThan:yesterday];
 ```
-
 {% endblock %}
 
 {% block pattern_conservation_query_custom_property %}
@@ -1177,7 +1218,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 [query whereKey:@"attr.level" greaterThan:@(5)];
 ```
 
-在 iOS SDK 中，针对自定义属性的查询，可以使用预定义的宏 `AVIMAttr` 为自定义属性查询添加 `attr` 前缀：
+在 iOS SDK 中，针对自定义属性的查询，可以使用预定义的宏 `AVIMAttr` 为自定义属性查询添加 `attr` 前缀：
 
 ```
 // 查询话题为 DOTA2 对话
@@ -1185,7 +1226,6 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 // 它与下面这行代码是一样的
 [query whereKey:@"attr.topic" equalTo:@"DOTA2"];
 ```
-
 {% endblock %}
 
 {% block table_conservation_query_than %}
@@ -1271,9 +1311,9 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 
     // Tom 用自己的名字作为 ClientId 打开 client
     [self.client openWithClientId:@"Tom" callback:^(BOOL succeeded, NSError *error) {
-        // Tom 创建 attr.tag 是中文的查询
+        // Tom 创建 attr.language 为中文字符的查询
         AVIMConversationQuery *query = [self.client conversationQuery];
-        [query whereKey:AVIMAttr(@"tag") matchesRegex:@"[\u4e00-\u9fa5]"];
+        [query whereKey:AVIMAttr(@"language") matchesRegex:@"[\u4e00-\u9fa5]"];
         // 执行查询
         [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
             NSLog(@"找到 %ld 个对话！", [objects count]);
@@ -1607,10 +1647,10 @@ imClient.signatureDataSource = signatureDelegate;
 
 其中四个属性分别是：
 
-* signature 签名
-* timestamp 时间戳，单位秒
-* nonce 随机字符串 nonce
-* error 签名错误信息
+* signature：签名
+* timestamp：时间戳，单位秒
+* nonce：随机字符串 nonce
+* error：签名错误信息
 
 在启用签名功能的情况下，实时通信 SDK 在进行一些重要操作前，都会首先请求 `AVIMSignatureDataSource` 接口，获取签名信息 `AVIMSignature`，然后把操作信息和第三方签名一起发给 LeanCloud 云端，由云端根据签名的结果来对操作进行处理。 
 
@@ -1624,8 +1664,8 @@ imClient.signatureDataSource = signatureDelegate;
 
 各参数含义如下：
 
-* clientId - 操作发起人的 id，以后使用该账户的所有聊天行为，都由此人发起。
-* callback - 聊天开启之后的回调，在操作结束之后调用，通知开发者成功与否
+* clientId：操作发起人的 id，以后使用该账户的所有聊天行为，都由此人发起。
+* callback：聊天开启之后的回调，在操作结束之后调用，通知开发者成功与否
 
 我们现在来实际看一下这个过程如何实现。假定聊天发起方名叫 Tom，为直观起见，我们使用用户名来作为 `clientId` 登录聊天系统（LeanCloud 云端只要求 `clientId` 在应用内唯一即可，具体用什么数据由应用层决定）。示例代码如下：
 
@@ -1648,7 +1688,6 @@ imClient.delegate = self;
 {% endblock %}
 
 {% block connect_with_tag %}
-
 ```objc
 AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mobile"];
 [currentClient openWithCallback:^(BOOL succeeded, NSError *error) {
@@ -1660,7 +1699,6 @@ AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mo
 {% endblock %}
 
 {% block disconnected_by_server_with_same_tag %}
-
 ```objc
 -(void)client:(AVIMClient *)client didOfflineWithError:(NSError *)error{
     if ([error code]  == 4111) {
@@ -1669,6 +1707,7 @@ AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mo
 };
 ```
 {% endblock %}
+
 {% block code_set_query_policy %}
 
 ```objc
@@ -1679,6 +1718,7 @@ AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mo
 @property (nonatomic) NSTimeInterval cacheMaxAge;
 ```
 {% endblock %}
+
 {% block code_query_from_local_cache %}
 有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
 
@@ -1691,4 +1731,4 @@ AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mo
 ```
 {% endblock %}
 
-{% block link_avquery_chache %} [存储指南 - AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}
+{% block link_avquery_chache %} [存储指南 &middot; AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}

@@ -37,9 +37,7 @@
 
 Tom 想给 Jerry 发一条消息，实现代码如下：
 
-
 {% block oneOnOneChat_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -47,7 +45,7 @@ Tom 想给 Jerry 发一条消息，实现代码如下：
 ```
 {% endblock %}
 
-执行完以上代码，在 LeanCloud 网站的控制台找到指定的应用，进入 **存储** > **数据** 页面，可以看到默认表 `_Conversation` 中多了一行数据，其字段含义如下：
+执行完以上代码，在 LeanCloud 网站的 [控制台 /（选择应用）/ 存储 / 数据 / `_Conversation ` 表](/data.html?appid={{appid}}#/_Conversation) 中多了一行数据，其字段含义如下：
 
 名称|类型|描述
 ---|---|---
@@ -65,7 +63,9 @@ attr|Object|开发者设置的对话的自定义属性
 要让 Jerry 收到 Tom 的消息，需要这样写：
 
 {% block oneOnOneChat_received %}{% endblock %}
+
 {% block androidMessageHandler %}{% endblock %}
+
 ## 群聊
 
 对于多人同时参与的固定群组，我们有成员人数限制，最大不能超过 500 人。对于另外一种多人聊天的形式，譬如聊天室，其成员不固定，用户可以随意进入发言的这种「临时性」群组，后面会单独介绍。
@@ -79,7 +79,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 3. 发送消息
 
 {% block groupChat_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -93,7 +92,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 群聊的接收消息与单聊的接收消息在代码写法上是一致的。
 
 {% block groupChat_received %}
-
 ```
 - 初始化 ClientId = Bob
 - Bob 登录到系统
@@ -113,6 +111,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 实时通信 SDK 在内部会为每一个 clientId 创建唯一的 `AVIMClient` 实例，也就是说多次使用相同的 clientId 创建出来的实例还是同一个。因此，如果要支持同一个客户端内多账号登录，只要使用不同的 clientId 来创建多个实例即可。我们的 SDK 也支持多账户同时登录。
 
 ## 消息
+
 消息是一个对话的基本组成部分，我们支持的消息类型有：
 
 - 文本消息：`AVIMTextMessage`
@@ -123,7 +122,9 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 - 位置消息：`AVIMLocationMessage`
 
 ### 富媒体消息
+
 #### 图像消息
+
 图像可以从系统提供的拍照 API 或本地媒体库中获取，也可以用有效的图像 URL。先调用 SDK  方法构造出一个 `AVIMImageMessage` 对象，然后把它当做参数交由 `AVIMConversation` 发送出去即可。
 
 ##### 发送图像消息
@@ -131,7 +132,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景一】用系统自身提供的 API 去获取本地媒体库里的照片的数据流，然后构造出 `AVIMImageMessage` 来发送：
 
 {% block imageMessage_local_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -146,7 +146,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景二】从微博上复制的一个图像链接来创建图像消息：
 
 {% block imageMessage_url_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -184,7 +183,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 发送音频消息的基本流程是：读取音频文件（或者录制音频）> 构建音频消息 > 消息发送。
 
 {% block audioMessage_local_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -198,7 +196,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 与图像消息类似，音频消息也支持从 URL 构建：
 
 {% block audioMessage_url_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -212,7 +209,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ##### 接收音频消息
 
 {% block audioMessage_received_intro %}
-
 ```
 - 音频元信息提取/列表 [messageId, file.url, size, duration, format]
 ```
@@ -239,7 +235,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 同样我们也支持从一个视频的 URL 创建视频消息，然后发送出去：
 
 {% block videoMessage_url_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -277,6 +272,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
   )
 ```
 {% endblock %}
+
 ##### 发送地理位置消息
 
 {% block locationMessage_sent %}
@@ -308,7 +304,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 暂态消息不会被自动保存（以后在历史消息中无法找到它），也不支持延迟接收，离线用户更不会收到推送通知，所以适合用来做控制协议。譬如聊天过程中「某某正在输入...」这样的状态信息，就适合通过暂态消息来发送；或者当群聊的名称修改以后，也可以用暂态消息来通知该群的成员「群名称被某某修改为...」。
 
 {% block transientMessage_sent %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录到系统
@@ -320,7 +315,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 而对话中的其他成员在聊天界面中需要有以下代码做出响应：
 
 {% block transientMessage_received %}
-
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录到系统
@@ -335,6 +329,7 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 {% block messagePolicy_sent %}{% endblock %}
 
 #### 多媒体消息发送
+
 目前 SDK 内置的多媒体消息类如下：
 
 * 图像 `AVIMImageMessage`
@@ -383,6 +378,8 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 {% block messagePolicy_received %}{% endblock %}
 
+{% block message_unread %}{% endblock %}
+
 ### 消息类详解
 {% block message_Relation_intro %}{% endblock %}
 
@@ -395,7 +392,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 【场景】发照片给朋友，告诉对方照片的拍摄地点：
 
 {% block customAttributesMessage_sent %}
-
 ```
 - 构造一个 AVIMImageMessage
 - 在 Attributes 中加入 location = "拉萨布达拉宫"
@@ -407,7 +403,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 接收时可以读取这一属性：
 
 {% block customAttributesMessage_received %}
-
 ```
 - 初始化 ClientId = friend
 - 登录到系统
@@ -421,7 +416,6 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 #### 创建新的消息类型
 
 {% block customMessage_create %}
-
 ```
 - 新建 NewsMessage 类型
 - 初始化 NewsMessage 的实例
@@ -431,11 +425,9 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 
 > **什么时候需要自己创建新的消息类型？**
 >
->譬如有一条图像消息，除了文本之外，还需要附带地理位置信息，为此开发者需要创建一个新的消息类型吗？从上面的例子可以看出，其实完全没有必要。这种情况只要使用消息类中预留的 `{% block attributes %}{% endblock %}` 属性就可以保存额外的地理位置信息了。
+>譬如有一条图像消息，除了文本之外，还需要附带地理位置信息，为此开发者需要创建一个新的消息类型吗？从上面的例子可以看出，其实完全没有必要。这种情况只要使用消息类中预留的 {% block attributes %}{% endblock %} 属性就可以保存额外的地理位置信息了。
 >
 >只有在我们的消息类型完全无法满足需求的时候，才需要扩展自己的消息类型。譬如「今日头条」里面允许用户发送某条新闻给好友，在展示上需要新闻的标题、摘要、图片等信息（类似于微博中的 linkcard）的话，这时候就可以扩展一个新的 NewsMessage 类。
-
-{% block unread_message %}{% endblock %}
 
 ## 对话
 
@@ -500,7 +492,6 @@ Tom 想主动加入 Jerry、Bob、Harry 和 William 的对话，以下代码将�
 Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这个功能：
 
 {% block conversation_invite %}
-
 ```
 - 初始化 ClientId = Jerry
 - Jerry 登录
@@ -522,7 +513,6 @@ Jerry 想再把 Mary 加入到对话中，需要如下代码帮助他实现这�
 Tom 主动从对话中退出，他需要如下代码实现需求：
 
 {% block conversation_left %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -537,7 +527,6 @@ Tom 主动从对话中退出，他需要如下代码实现需求：
 Harry 被 William 从对话中删除。实现代码如下（关于 William 如何获得权限在后面的 [签名和安全](#签名和安全) 中会做详细阐述，此处不宜扩大话题范围。）：
 
 {% block conversation_kick %}
-
 ```
 - 初始化 ClientId = William
 - William 登录
@@ -555,7 +544,6 @@ Harry 被 William 从对话中删除。实现代码如下（关于 William 如�
 {% block conversation_countMember_method %}{% endblock %}这个方法返回的是实时数据：
 
 {% block conversation_countMember %}
-
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -609,11 +597,19 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 通过该属性，开发者可以随意存储自己的键值对，为对话添加自定义属性，来满足业务逻辑需求。
 
-典型的场景是，给某个对话加上一个值为 private 的 tag 标签，表示这个对话被标记为私有，代码如下：
+给某个对话加上两个自定义的属性：type = "private"（类型为私有）、isSticky = true（置顶显示）：
 
-{% block conversation_tag %}{% endblock %}
+{% block conversation_attributes_new %}{% endblock %}
 
-**自定义属性在 SDK 级别是对所有成员可见的**。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。关于自定义属性的更多的用法，请参见 [对话的查询](#对话的查询)。
+{% block conversation_attributes_modify %}
+- 初始化 ClientId = Tom
+- Tom 登录
+- 找到 id 为 551260efe4b01608686c3e0f 的对话
+- 将自定义属性 type 值更新为 public
+- 保存新版本的自定义属性
+{% endblock %}
+
+**自定义属性在 SDK 级别是对所有成员可见的**。如果要控制所谓的可见性，开发者需要自己维护这一属性的读取权限。要对自定义属性进行查询，请参见 [对话的查询](#对话的查询)。
 
 ### 对话的查询
 
@@ -656,7 +652,9 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 {% endblock %}
 
 #### 条件查询
+
 ##### 构建查询
+
 对话的条件查询需要注意的对话属性的存储结构，在对话的属性一章节我们介绍的对话的几个基本属性，这些属性都是 SDK 提供的默认属性，根据默认属性查询的构建如下：
 
 {% block pattern_conservation_query_default_property %}
@@ -667,7 +665,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 ```
 {% endblock %}
 
-相对于默认属性的查询，开发者自定义属性的查询需要在构建查询的时在关键字(key)前加上一个特殊的前缀: `attr`，不过每个 SDK 都提供相关的快捷方式帮助开发者方便的构建查询:
+相对于默认属性的查询，开发者自定义属性的查询需要在构建查询的时在关键字（key）前加上一个特殊的前缀：`attr`，不过每个 SDK 都提供相关的快捷方式帮助开发者方便的构建查询：
 
 {% block pattern_conservation_query_custom_property %}
 ```
@@ -728,13 +726,13 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 {% block conversation_query_regexIntro %}{% endblock %}
 
-比如要查询所有 tag 是中文的对话：
+比如要查询所有 language 是中文的对话：
 
 {% block conversation_query_regex %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
-- 构建查询条件：attr.tag 是中文的查询 // 正则为 [\u4e00-\u9fa5]
+- 构建查询条件：attr.language 是中文的查询 // 正则为 [\u4e00-\u9fa5]
 - 执行查询
 ```
 {% endblock %}
@@ -799,7 +797,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 {% endblock %}
 ## 聊天室
 
-聊天室本质上就是一个对话，所以上面章节提到的**所有属性、方法、操作以及管理都适用于聊天室**，它仅仅在逻辑上是一种暂态的、临时的对话，应用场景有弹幕、直播等等。
+聊天室本质上就是一个对话，所以上面章节提到的**所有属性、方法、操作以及管理都适用于聊天室**。它仅仅在逻辑上是一种暂态、临时的对话，应用场景有弹幕、直播等等。
 
 聊天室与普通对话或群聊不一样的地方具体体现为：
 
@@ -828,7 +826,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 ### 查询在线人数
 
-{% block chatroom_count_method %}{% endblock %}可以用来查询普通对话的成员总数，在聊天室中，它返回的就是实时在线的人数：
+{% block chatroom_count_method %}{% endblock %} 可以用来查询普通对话的成员总数，在聊天室中，它返回的就是实时在线的人数：
 
 {% block chatroom_count %}
 ```
@@ -841,7 +839,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 ### 查找聊天室
 
-开发者需要注意的是，通过{% block create_query_instance_method %}{% endblock %}这样得到的 `AVIMConversationQuery` 实例默认是查询全部对话的，也就是说，如果想查询指定的聊天室，需要额外再调用{% block chatroom_query_method2 %}{% endblock %}方法来限定更多的查询条件：
+开发者需要注意的是，通过 {% block create_query_instance_method %}{% endblock %} 这样得到的 `AVIMConversationQuery` 实例默认是查询全部对话的，也就是说，如果想查询指定的聊天室，需要额外再调用 {% block chatroom_query_method2 %}{% endblock %} 方法来限定更多的查询条件：
 
 比如查询主题包含「奔跑吧，兄弟」的聊天室：
 
@@ -862,7 +860,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 我们的 SDK 会将普通的对话消息自动保存在云端，开发者可以通过 AVIMConversation 来获取该对话的所有历史消息。
 
-获取该对话中最近的 N （默认 20 ，最大值 1000）条历史消息，通常在第一次进入对话时使用：
+获取该对话中最近的 N 条（默认 20，最大值 1000）历史消息，通常在第一次进入对话时使用：
 
 {% block conversation_messageHistoryByLimit %}
 ```
@@ -898,6 +896,7 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 {% block text_im_history_cache %}
 ### 客户端聊天记录缓存
+
 为了减少客户端的请求数量，以及减少用户的流量，SDK 实现了一套缓存同步策略。用户在调用获取聊天记录的接口时优先从缓存中获取，SDK 是有算法保证本地与服务器聊天记录是同步的。
 
 聊天记录的缓存功能默认为**开启**，但如果开发者出于自身业务逻辑需求，不想在客户端使用缓存功能，可以使用如下接口将其关闭：
@@ -932,15 +931,15 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 为了满足开发者对权限和认证的要求，我们设计了操作签名的机制。签名启用后，所有的用户登录、对话创建/加入、邀请成员、踢出成员等登录都需要验证签名，这样开发者就对消息具有了完全的掌控。
 
-我们强烈推荐启用签名，具体步骤是：进入 LeanCloud 应用控制台，选择 **设置** > **应用选项** > **聊天推送**，勾选 **聊天服务签名认证**。
+我们强烈推荐启用签名，具体步骤是 [控制台 /（选择应用）/ 设置 / 应用选项 / 聊天推送](/app.html?appid={{appid}}#/permission)，勾选 **聊天服务签名认证**。
 
 {% block conversation_security %}{% endblock %}
-
 
 > 需要强调的是：开发者切勿在客户端直接使用 MasterKey 进行签名操作，因为 MaterKey 一旦泄露，会造成应用的数据处于高危状态，后果不容小视。因此，强烈建议开发者将签名的具体代码托管在安全性高稳定性好的服务器上（例如 LeanCloud 云引擎）。
 
 {% block text_single_endpoint_login %}
 ### 单点登录
+
 一款聊天应用，随着不断的发展，会衍生出多个平台的不同客户端。以 QQ 为例，目前它所提供的客户端如下：
 
 - PC：Windows PC、Mac OS、Linux（已停止更新）
@@ -958,7 +957,8 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 下面我们来详细说明：如何使用我们的 SDK 去实现单点登录。
 
-#### 设置登录标记-Tag
+#### 设置登录标记 Tag
+
 假设开发者想实现 QQ 这样的功能，那么需要在登录到服务器的时候，也就是打开与服务器长连接的时候，标记一下这个链接是从什么类型的客户端登录到服务器的：
 
 {% block connect_with_tag %}{% endblock %}
@@ -966,19 +966,20 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 上述代码可以理解为 LeanCloud 版 QQ 的登录，而另一个带有同样 Tag 的客户端打开连接，则较早前登录系统的客户端会被强制下线。
 
 #### 处理登录冲突
-我们可以看到上述代码中，登录的 Tag 是 `Mobile`。
-当存在与其相同的 Tag 登录的客户端，较早前登录的设备会被服务端强行下线，而且他会收到被服务端下线的通知：
+
+我们可以看到上述代码中，登录的 Tag 是 `Mobile`。当存在与其相同的 Tag 登录的客户端，较早前登录的设备会被服务端强行下线，而且他会收到被服务端下线的通知：
 
 {% block disconnected_by_server_with_same_tag %}{% endblock %}
 
 如上述代码中，被动下线的时候，服务端会告知原因，因此客户端在做展现的时候也可以做出类似于 QQ 一样友好的通知。
 
 {% endblock %}
-## FAQ
+
+## 常见问题
 
 **我只想实现两个用户的私聊，是不是每次都得重复创建对话？**
 
-答：不需要重复创建。我们推荐的方式是开发者可以用自定义属性来实现对私聊和群聊的标识，并且在进行私聊之前，需要查询当前两个参与对话的 ClientId 是否之前已经存在一个私聊的对话了。{% block goto_create_unique_conversation %}另外，SDK 已经提供了创建唯一对话的接口，详情请查看[创建对话](#创建对话)这一章节。{% endblock %}
+答：不需要重复创建。我们推荐的方式是开发者可以用**自定义属性**来实现对私聊和群聊的标识，并且在进行私聊之前，需要查询当前两个参与对话的 ClientId 是否之前已经存在一个私聊的对话了。{% block goto_create_unique_conversation %}另外，SDK 已经提供了创建唯一对话的接口，请查看 [创建对话](#创建对话)。{% endblock %}
 
 
 **某个成员退出对话之后，再加入，在他离开的这段期间内的产生的聊天记录，他还能获取么？**
@@ -987,8 +988,8 @@ Black 发现对话名字不够酷，他想修改成「聪明的喵星人」 ，�
 
 **我自己没有服务器，如何实现签名的功能？**
 
-答：LeanCloud 云引擎提供了托管 Python 和 Node 运行的方式，开发者可以所以用这两种语言按照签名的算法实现签名，完全可以支持开发者的自定义权限控制。
+答：LeanCloud 云引擎提供了托管 Python 和 Node.js 运行的方式，开发者可以所以用这两种语言按照签名的算法实现签名，完全可以支持开发者的自定义权限控制。
 
 ## 问题排查
 
-1. 客户端连接被关闭有许多原因，详细的请看[服务器端错误码说明](realtime_v2.html#服务器端错误码说明)
+1. 客户端连接被关闭有许多原因，请参考 [服务器端错误码说明](realtime_v2.html#服务器端错误码说明)。

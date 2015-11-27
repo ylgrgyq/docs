@@ -520,6 +520,8 @@ AVIMClient.Status != Online
 
 {% endblock %}
 
+{% block message_unread %}{% endblock %}
+
 {% block message_Relation_intro %}
 我们所支持的文本、图像、音频、视频、文件、地理位置等富媒体消息类型都有一个共同的基类：`AVIMTypedMessage`，它们之间的关系如下图所示：
 
@@ -566,7 +568,7 @@ MessageIOType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<b
 
 {% endblock %}
 
-{% block attributes %} `AVIMMessage.Attributes` {% endblock %}
+{% block attributes %}`AVIMMessage.Attributes`{% endblock %}
 
 {% block attributes_property %}Attributes{% endblock %}
 
@@ -925,18 +927,21 @@ public async void MuteConversationAsync()
 
 {% block conversation_unmute %}可使用 `UnmuteAsync()` 方法{% endblock %}
 
-{% block conversation_tag %}
+{% block conversation_attributes_new %}
 ```c#
 public async void CreateConversationWithCustomAttributesAsync()
 {
     AVIMClient client = new AVIMClient("Tom");
     await client.ConnectAsync();
     IDictionary<string, object> attr = new Dictionary<string, object>();
-    attr.Add("tag", "private");
+    attr.Add("type", "private");
+    attr.Add("isSticky", true);
     AVIMConversation conversation = await client.CreateConversationAsync("Jerry", "猫和老鼠", attr);//创建对话的时候传入即可。
 }
 ```
 {% endblock %}
+
+{% block conversation_attributes_modify %}{% endblock %}
 
 {% block conversation_remove %}
 ```
@@ -1106,7 +1111,7 @@ public async void WhereMatchs_SampleCode()
 {
     AVIMClient client = new AVIMClient("Tom");
     await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereMatches("attr.tag", "[\u4e00-\u9fa5]");//查询 tag 是中文的对话
+    AVIMConversationQuery query = client.GetQuery().WhereMatches("attr.language", "[\u4e00-\u9fa5]");//查询 language 是中文字符的对话
     var result = await query.FindAsync();//执行查询
 }
 ```
