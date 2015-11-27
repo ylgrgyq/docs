@@ -1,3 +1,13 @@
+<a name="0.0.4"></a>
+## [0.0.4](https://github.com/leancloud/docs/compare/v0.0.3...v0.0.4) (2015-11-27)
+
+
+### Features
+
+* **postman:** update layout and screenshot ([70b4030](https://github.com/leancloud/docs/commit/70b4030))
+
+
+
 <a name="0.0.3"></a>
 ## [0.0.3](https://github.com/leancloud/docs/compare/v0.0.2...v0.0.3) (2015-11-27)
 
