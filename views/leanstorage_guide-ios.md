@@ -2,6 +2,7 @@
 {% extends "./leanstorage_guide.tmpl" %}
 
 {# --Start--变量定义，主模板使用的单词，短语所有子模板都必须赋值 #}
+{% set productName ="LeanStorage" %}
 {% set platform_title ="iOS / OS X" %}
 {% set sdk_name ="iOS / OS X SDK" %}
 {% set baseObjectName ="AVObject" %}
@@ -17,38 +18,296 @@
 {% set geoPointObjectName ="AVGeoPoint" %}
 {% set userObjectName ="AVUser" %}
 {% set fileObjectName ="AVFile" %}
+
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
 
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
-{% block code_quick_save_a_todo %}{% endblock %}
 
-{% block code_quick_save_a_todo_with_location %}{% endblock %}
+{% block code_create_todo_object %}
+
+```objc
+    // objectWithClassName 参数对应的就是控制台中的 Class Name
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    // 也可以是用下面的方式调用实例方法来创建一个对象
+    AVObject *todo = [[AVObject alloc] initWithClassName:@"Todo"];
+    // 以上两行代码是完全等价的
+```
+{% endblock %}
+
+{% block code_quick_save_a_todo %}
+
+```objc
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo setObject:@"工程师周会" forKey:@"title"];
+    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            // 存储成功
+        } else {
+            // 失败的话，请检查网络环境以及 SDK 配置是否正确
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_quick_save_a_todo_with_location %}
+
+```objc
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo setObject:@"工程师周会" forKey:@"title"];
+    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，服务端就会自动添加这个字段
+    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            // 存储成功
+        } else {
+            // 失败的话，请检查网络环境以及 SDK 配置是否正确
+        }
+    }];
+```
+{% endblock %}
 
 {% block text_sdk_setup_link %}我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html){% endblock %}
 
-{% block code_save_todo_folder %}{% endblock %}
+{% block code_save_todo_folder %}
 
-{% block code_get_todo_by_objectId %}{% endblock %}
+```objc
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+```
+{% endblock %}
 
-{% block code_save_callback_get_objectId %}{% endblock %}
+{% block code_get_todo_by_objectId %}
 
-{% block code_access_todo_folder_properties %}{% endblock %}
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c" block:^(AVObject *object, NSError *error) {
+        // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
+    }];
+```
+{% endblock %}
 
-{% block code_update_todo_location %}{% endblock %}
+{% block code_save_callback_get_objectId %}
 
-{% block code_fetch_todo_when_save %}{% endblock %}
+```objc
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo setObject:@"工程师周会" forKey:@"title"];
+    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，服务端就会自动添加这个字段
+    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            // 存储成功
+            NSLog(@"%@",todo.objectId);// 保存成功之后，objectId 会自动从服务端加载到本地
+        } else {
+            // 失败的话，请检查网络环境以及 SDK 配置是否正确
+        }
+    }];
+```
+{% endblock %}
 
-{% block code_atomic_operation_increment %}{% endblock %}
+{% block code_access_todo_folder_properties %}
 
-{% block code_set_array_value %}{% endblock %}
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c" block:^(AVObject *object, NSError *error) {
+        // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
+        int priority = [[object objectForKey:@"priority"] intValue];
+        NSString *location = [object objectForKey:@"location"];
+        NSString *title = object[@"title"];
+        NSString *content = object[@"content"];
+        
+        // 获取三个特殊属性
+        NSString *objectId = object.objectId;
+        NSDate *updatedAt = object.updatedAt;
+        NSDate *createdAt = object.createdAt;
+    }];
+```
+{% endblock %}
 
-{% block code_delete_todo_folder_by_objectId %}{% endblock %}
+{% block code_object_fetch %}
 
-{% block code_relation_todoFolder_one_to_many_todo %}{% endblock %}
+```objc
+        // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
+        AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
+        // 然后调用刷新的方法，将数据从服务端拉到本地
+        [anotherTodo refresh];
+        
+        [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+            // 调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果是一样的。
+        }];
+```
+{% endblock %}
 
-{% block code_pointer_user_one_to_many_todoFolder %}{% endblock %}
+{% block code_object_fetch_with_keys %}
 
-{% block table_data_type %}{% endblock %}
+```objc
+        AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
+        NSArray *keys = [NSArray arrayWithObjects:@"location", @"content",nil];// 指定刷新的 key 数组
+        [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+            // theTodo 的 location 和 content 属性的值就是与服务端一致的
+            NSString *location = [object objectForKey:@"location"];
+            NSString *content = object[@"content"];
+        }];
+```
+{% endblock %}
+
+{% block code_update_todo_location %}
+
+```objc
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo setObject:@"工程师周会" forKey:@"title"];
+    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo setObject:@"会议室" forKey:@"location"];
+    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            // 存储成功
+            [todo setObject:@"二楼大会议室" forKey:@"location"];
+            [todo saveInBackground];
+        } else {
+            // 失败的话，请检查网络环境以及 SDK 配置是否正确
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_atomic_operation_increment %}
+
+```objc
+    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
+    [theTodo setObject:[NSNumber numberWithInt:0] forKey:@"views"]; //初始值为 0
+    [theTodo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        // 原子增加查看的次数
+        [theTodo incrementKey:@"views"];
+        [theTodo saveInBackground];
+        // 也可以使用 incrementKey:byAmount: 来给 Number 类型字段累加一个特定数值。
+        [theTodo incrementKey:@"views" byAmount:@(5)];
+    }];
+```
+{% endblock %}
+
+{% block code_set_array_value %}
+
+```objc
+-(NSDate*) getDateWithDateString:(NSString*) dateString{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormat dateFromString:dateString];
+    return date;
+}
+
+-(void)addReminders{
+    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 07:10:00"];
+    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 07:20:00"];
+    NSDate *reminder3= [self getDateWithDateString:@"2015-11-11 07:30:00"];
+    
+    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,reminder3, nil];// 添加提醒时间
+    
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo addUniqueObjectsFromArray:reminders forKey:@"reminders"];
+    [todo saveInBackground];
+}
+```
+{% endblock %}
+
+{% block code_delete_todo_folder_by_objectId %}
+
+```objc
+    [myObject deleteInBackground];
+```
+{% endblock %}
+
+{% block code_relation_todoFolder_one_to_many_todo %}
+
+```objc
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    
+    AVObject *todo1 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo1 setObject:@"工程师周会" forKey:@"title"];
+    [todo1 setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo1 setObject:@"会议室" forKey:@"location"];
+    
+    AVObject *todo2 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo2 setObject:@"维护文档" forKey:@"title"];
+    [todo2 setObject:@"每天 16：00 到 18：00 定期维护文档" forKey:@"content"];
+    [todo2 setObject:@"当前工位" forKey:@"location"];
+    
+    AVObject *todo3 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo3 setObject:@"发布 SDK" forKey:@"title"];
+    [todo3 setObject:@"每周一下午 15：00" forKey:@"content"];
+    [todo3 setObject:@"SA 工位" forKey:@"location"];
+    
+    AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
+    [relation addObject:todo1];
+    [relation addObject:todo2];
+    [relation addObject:todo3];
+    // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+    
+    [todoFolder saveInBackground];// 保存到云端
+```
+{% endblock %}
+
+{% block code_pointer_user_one_to_many_todoFolder %}
+
+```objc
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    
+    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登陆的用户
+```
+
+代码中提及的 `[AVUser currentUser]` 在后文的[用户->当前用户](#当前用户)会有介绍。
+{% endblock %}
+
+{% block code_data_type %}
+
+到目前为止，我们使用过的数据类型有 NSString、 NSNumber、 AVObject，LeanCloud 还支持 NSDate 和 NSData。
+
+此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。例如：
+
+```objc
+NSNumber *boolean = @(YES);
+NSNumber *number = [NSNumber numberWithInt:2014];
+NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
+NSDate *date = [NSDate date];
+NSData *data = [@"fooBar" dataUsingEncoding:NSUTF8StringEncoding];
+NSArray *array = [NSArray arrayWithObjects:string, number, nil];
+NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",
+                                                                      string, @"string",
+                                                                      nil];
+
+AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
+[testObject setObject:boolean    forKey:@"testBoolean"];
+[testObject setObject:number     forKey:@"testInteger"];
+[testObject setObject:string     forKey:@"testString"];
+[testObject setObject:date       forKey:@"testDate"];
+[testObject setObject:data       forKey:@"testData"];
+[testObject setObject:array      forKey:@"testArray"];
+[testObject setObject:dictionary forKey:@"testDictionary"];
+[testObject saveInBackground];
+```
+
+我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
+
+若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
+{% endblock %}
+
+{% block code_create_geoPoint %}
+
+``` objc
+AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
+```
+{% endblock %}
+
+{% block code_use_geoPoint %}
+
+``` objc
+[todo setObject:point forKey:@"createdLocated"];
+```
+{% endblock %}
 
 {% block code_serialize_baseObject_to_string %}{% endblock %}
 
@@ -70,7 +329,6 @@
     NSString *leanclouImagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
     AVFile *file = [AVFile fileWithName:fileName contentsAtPath:leanclouImagePath];
 ```
-
 {% endblock %}
 
 {% block code_create_avfile_from_url %}
@@ -315,6 +573,32 @@
 查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirstObject` 和 `getObjectInBackground`。
 {% endblock %}
 
+{% block code_query_geoPoint_near %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
+    query.limit = 10;
+    [query whereKey:@"createdLocated" nearGeoPoint:point];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSArray<AVObject *> *nearTodos = objects;// 离这个位置最近的 10 个 Todo 对象
+    }];
+```
+
+在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
+{% endblock %}
+
+{% block text_platform_geoPoint_notice %}
+* iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
+{% endblock %}
+
+{% block code_query_geoPoint_within %}
+
+```objc
+    [query whereKey:@"createdLocated"  nearGeoPoint:point withinKilometers:2.0];
+```
+{% endblock %}
+
 {% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
 {% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
 
@@ -425,7 +709,213 @@
 ```
 {% endblock %}
 
+{% block code_current_user %}{% endblock %}
+
 {% block code_query_user %}{% endblock %}
 
+{% block text_subclass %}
+## 子类化
+子类化推荐给进阶的开发者在进行代码重构的时候做参考。
+你可以用 `AVObject` 访问到所有的数据，用 `objectForKey:` 获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
+
+子类化是可选的，请对照下面的例子来加深理解：
+
+``` 
+AVObject *student = [AVObject objectWithClassName:@"Student"];
+[student setObject:@"小明" forKey:@"name"];
+[student saveInBackground];
+```
+
+可改写成:
+
+``` 
+Student *student = [Student object];
+student.name = @"小明";
+[student saveInBackground];
+```
+
+这样代码看起来是不是更简洁呢？
+
+### 子类化的实现
+
+要实现子类化，需要下面几个步骤：
+
+1. 导入 `AVObject+Subclass.h`；
+2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
+3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
+4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 之前调用即可）。
+
+下面是实现 `Student` 子类化的例子:
+
+``` objc
+  //Student.h
+  #import <AVOSCloud/AVOSCloud.h>
+
+  @interface Student : AVObject <AVSubclassing>
+
+  @property(nonatomic,copy) NSString *name;
+
+  @end
+
+
+  //Student.m
+  #import "Student.h"
+
+  @implementation Student
+
+  @dynamic name;
+
+  + (NSString *)parseClassName {
+      return @"Student";
+  }
+
+  @end
+
+
+  // AppDelegate.m
+  #import <AVOSCloud/AVOSCloud.h>
+  #import "Student.h"
+
+  - (BOOL)application:(UIApplication *)application
+  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [Student registerSubclass];
+    [AVOSCloud setApplicationId:appid clientKey:appkey];
+  }
+```
+
+### 属性
+
+为 `AVObject` 的子类添加自定义的属性和方法，可以更好地将这个类的逻辑封装起来。用 `AVSubclassing` 可以把所有的相关逻辑放在一起，这样不必再使用不同的类来区分业务逻辑和存储转换逻辑了。
+
+`AVObject` 支持动态 synthesizer，就像 `NSManagedObject` 一样。先正常声明一个属性，只是在 .m 文件中把 `@synthesize` 变成 `@dynamic`。
+
+请看下面的例子是怎么添加一个「年龄」属性：
+
+``` objc
+  //Student.h
+  #import <AVOSCloud/AVOSCloud.h>
+
+  @interface Student : AVObject <AVSubclassing>
+
+  @property int age;
+
+  @end
+
+
+  //Student.m
+  #import "Student.h"
+
+  @implementation Student
+
+  @dynamic age;
+
+  ......
+```
+
+这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
+
+``` objc
+[student setAge:19]
+```
+
+**注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
+
+`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
+
+你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
+
+**注意** 子类中，对于 `BOOL` 类型的字段，SDK 在 3.1.3.2 之前会将其保存为 Number 类型，3.1.3.2 之后将其正确保存为 Bool 类型。详情请参考[这里](https://leancloud.cn/docs/ios_os_x_faq.html#为什么升级到_3_1_3_2_以上的版本时_BOOL_类型数据保存错误_)。
+
+注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
+
+``` objc
+@interface Student : AVUser <AVSubclassing>
+@property(retain) AVRelation *friends;
+  ......
+@end
+
+@implementation Student
+@dynamic friends;
+  ......
+```
+
+另外，值为 Pointer 的实例可用 `AVObject*` 来表示。例如，如果 `Student` 中 `bestFriend` 代表一个指向另一个 `Student` 的键，由于 Student 是一个 AVObject，因此在表示这个键的值的时候，可以用一个 `AVObject*` 来代替：
+
+``` objc
+@interface Student : AVUser <AVSubclassing>
+@property(nonatomic, strong) AVObject *bestFriend;
+ ......
+@end
+
+@implementation Student
+@dynamic bestFriend;
+  ......
+```
+
+提示：当需要更新的时候，最后都要记得加上 `[student save]` 或者对应的后台存储函数进行更新，才会同步至服务器。
+
+如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
+
+``` objc
+  @dynamic iconFile;
+
+  - (UIImageView *)iconView {
+    UIImageView *view = [[UIImageView alloc] initWithImage:kPlaceholderImage];
+    view.image = [UIImage imageNamed:self.iconFile];
+    return [view autorelease];
+  }
+
+```
+
+### 针对 AVUser 子类化的特别说明
+
+假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
+
+``` objc
+@interface Student : AVUser<AVSubclassing>
+@property (retain) NSString *displayName;
+@end
+
+
+@implementation Student
+@dynamic displayName;
++ (NSString *)parseClassName {
+    return @"_User";
+}
+@end
+```
+
+登录时需要调用 `Student` 的登录方法才能通过 `currentUser` 得到这个子类:
+
+``` objc
+[Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
+        Student *student = [Student currentUser];
+        student.displayName = @"YOUR_DISPLAY_NAME";
+    }];
+```
+
+同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
+
+### 初始化子类
+
+创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithoutDataWithObjectId:` 类方法。
+
+### 子类查询
+
+使用类方法 `query` 可以得到这个子类的查询对象。
+
+例如，查询年龄小于 21 岁的学生：
+
+``` objc
+  AVQuery *query = [Student query];
+  [query whereKey:@"age" lessThanOrEqualTo:@(21)];
+  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    if (!error) {
+      Student *stu1 = [objects objectAtIndex:0];
+      // ...
+    }
+  }];
+```
+{% endblock %}
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
