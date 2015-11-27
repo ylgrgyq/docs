@@ -936,7 +936,7 @@ RealtimeObject.query(options, callback)
 &nbsp;&nbsp;&nbsp;&nbsp; limit|Number||10|一次获取的条目数量
 &nbsp;&nbsp;&nbsp;&nbsp; skip|Number||0|跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询。
 &nbsp;&nbsp;&nbsp;&nbsp; sort|String||-lm|默认为最近对话反序，排序字段
-&nbsp;&nbsp;&nbsp;&nbsp; where|Object||{m: clientId}|默认为包含自己的查询 {m: clientId}
+&nbsp;&nbsp;&nbsp;&nbsp; where|Object||{m: clientId}|默认为包含自己的查询 {m: clientId}，其他查询条件具体请看下面示例。
 **callback**|Function|必须||创建成功后的回调函数，参数中可以获取到 Room 的列表。
 
 #### 返回
@@ -968,6 +968,25 @@ realtimeObject.on('open', function() {
       console.log(data);  // list
    });
 });
+
+// 查询同时含有用户 clientId 为 A 和 B 的用户
+realtimeObject.query({
+  where: {
+    m: ['A', 'B']
+  },
+},function(data) {
+  console.log(data);  // list
+});
+
+// 查询多个 Room 的信息，可在 roomIds 中传入 roomId 的 list
+realtimeObject.query({
+  where: {
+    roomIds: ['adsfa12131231', '123123sdfaa']
+  },
+},function(data) {
+  console.log(data);  // list
+});
+
 ```
 
 ### RealtimeObject.ping
