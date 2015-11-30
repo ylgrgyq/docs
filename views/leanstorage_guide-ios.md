@@ -2,6 +2,7 @@
 {% extends "./leanstorage_guide.tmpl" %}
 
 {# --Start--变量定义，主模板使用的单词，短语所有子模板都必须赋值 #}
+{% set cloudName ="LeanCloud" %}
 {% set productName ="LeanStorage" %}
 {% set platform_title ="iOS / OS X" %}
 {% set sdk_name ="iOS / OS X SDK" %}
@@ -18,6 +19,9 @@
 {% set geoPointObjectName ="AVGeoPoint" %}
 {% set userObjectName ="AVUser" %}
 {% set fileObjectName ="AVFile" %}
+{% set dateType= "NSDate" %}
+{% set byteType= "NSData" %}
+
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
 
@@ -186,6 +190,20 @@
 ```
 {% endblock %}
 
+{% block code_atomic_operation_array %}
+
+* `addObject:forKey:`<br>
+  `addObjectsFromArray:forKey:`<br>
+  将指定对象附加到数组末尾。
+* `addUniqueObject:forKey:`<br>
+  `addUniqueObjectsFromArray:forKey:`<br>
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
+* `removeObject:forKey:`<br>
+  `removeObjectsInArray:forKey:`<br>
+  从数组字段中删除指定对象的所有实例。
+
+{% endblock %}
+
 {% block code_set_array_value %}
 
 ```objc
@@ -264,20 +282,14 @@
 
 {% block code_data_type %}
 
-到目前为止，我们使用过的数据类型有 NSString、 NSNumber、 AVObject，LeanCloud 还支持 NSDate 和 NSData。
-
-此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。例如：
-
 ```objc
 NSNumber *boolean = @(YES);
 NSNumber *number = [NSNumber numberWithInt:2014];
 NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
 NSDate *date = [NSDate date];
 NSData *data = [@"fooBar" dataUsingEncoding:NSUTF8StringEncoding];
-NSArray *array = [NSArray arrayWithObjects:string, number, nil];
-NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",
-                                                                      string, @"string",
-                                                                      nil];
+NSArray *array = [NSArray arrayWithObjects:string, number, nil]; // NSArray
+NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",string, @"string",nil];// NSDictionary
 
 AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
 [testObject setObject:boolean    forKey:@"testBoolean"];
@@ -289,6 +301,10 @@ AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
 [testObject setObject:dictionary forKey:@"testDictionary"];
 [testObject saveInBackground];
 ```
+
+到目前为止，我们使用过的数据类型有 NSString、 NSNumber、 AVObject，LeanCloud 还支持 NSDate 和 NSData。
+
+此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
 
 我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
 
@@ -309,9 +325,39 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_serialize_baseObject_to_string %}{% endblock %}
+{% block code_serialize_baseObject_to_string %}
 
-{% block code_deserialize_string_to_baseObject %}{% endblock %}
+```objc
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登陆的用户
+    NSMutableDictionary *serializedJSONDictionary = [todoFolder dictionaryForObject];//获取序列化后的字典
+    NSError * err;
+    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:serializedJSONDictionary options:0 error:&err];//获取 JSON 数据
+    NSString *serializedString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];// 获取 JSON 字符串
+    // serializedString 的内容是：{"name":"工作","className":"TodoFolder","priority":1} 
+
+```
+
+{% endblock %}
+
+{% block code_deserialize_string_to_baseObject %}
+
+```objc
+    NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithCapacity:10];// 声明一个 NSMutableDictionary
+    [objectDictionary setObject:@"工作" forKey:@"name"];
+    [objectDictionary setObject:@1 forKey:@"priority"];
+    [objectDictionary setObject:@"TodoFolder" forKey:@"className"];
+    
+    AVObject *todoFolder = [AVObject objectWithDictionary:objectDictionary];// 由 NSMutableDictionary 转化一个 AVObject
+    
+    [todoFolder saveInBackground];// 保存到服务端
+```
+{% endblock %}
+
+
+{% block code_data_protocol_save_date %}{% endblock %}
 
 {% block code_create_avfile_by_stream_data %}
 
@@ -373,9 +419,11 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% block code_create_query_by_className %}
 
 ```objc
-
+AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
+
+{% block text_create_query_by_avobject %}{% endblock %}
 
 {% block code_create_query_by_avobject %}
 
@@ -384,7 +432,16 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_priority_equalTo_zero_query %}{% endblock %}
+{% block code_priority_equalTo_zero_query %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKey:@"priority" equalTo:@0];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSArray<AVObject *> *priorityEqualsZeroTodos = objects;// 符合 priority = 0 的 Todo 数组
+    }];
+```
+{% endblock %}
 
 {% block table_logic_comparison_in_query %}
 逻辑操作 | AVQuery 方法|
@@ -397,9 +454,19 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 小于等于 | `lessThanOrEqualTo`
 {% endblock %}
 
-{% block code_query_lessThan %}{% endblock %}
+{% block code_query_lessThan %}
 
-{% block code_query_greaterThanOrEqualTo %}{% endblock %}
+```objc
+[query whereKey:@"priority" lessThan:@2];
+```
+{% endblock %}
+
+{% block code_query_greaterThanOrEqualTo %}
+
+```objc
+[query whereKey:@"priority" greaterThanOrEqualTo:@2];
+```
+{% endblock %}
 
 {% block code_query_with_regular_expression %}
 
@@ -424,7 +491,17 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_query_with_not_contains_keyword %}notContainedIn{% endblock %}
+{% block code_query_with_not_contains_keyword %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
+    [query whereKey:@"title" notContainedIn:filterArray];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSArray<AVObject *> *nearTodos = objects;// 离这个位置最近的 10 个 Todo 对象
+    }];
+```
+{% endblock %}
 
 {% block code_query_array_contains_using_equalsTo %}{% endblock %}
 
