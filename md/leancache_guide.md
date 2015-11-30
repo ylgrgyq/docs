@@ -1,4 +1,4 @@
-# LeanCache 指南
+# LeanCache 使用指南
 
 ## 介绍
 
@@ -10,30 +10,65 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 * 需要同步锁或者队列处理，比如秒杀、抢红包等场景。
 * 多个云引擎节点的协同和通信。
 
+其和云引擎配合使用的架构图如下：
+
+![image](images/leancache_arch.png)
+
 如果使用得当，LeanCache 不仅可以极大地提高性能，还能**降低成本**，因为某些高频率的查询不需要走存储服务（存储服务按调用次数收费）。
 
 ## 主要特性
 
 * **高性能**：接近 7 万的 QPS
-* **高可用**：基于 AOF 持久化的 Master-Slave 主从热备份
+* **高可用**：基于 [AOF 持久化](http://redisbook.readthedocs.org/en/latest/internal/aof.html) 的 Master-Slave 主从热备份
 * **在线扩容**：在线调整容量，数据平滑迁移
 * **多节点**：满足更大容量或更高性能的需求
 
 ## 创建实例
 
-进入 [控制台 > (选择应用) > 存储 > 云引擎 > LeanCache](#)，点击 **创建节点**。
+进入 控制台 > (选择应用) > 存储 > 云引擎 > LeanCache，点击 **创建节点**，如下图所示：
+
+![image](images/leancache_enter.png)
 
 创建实例时可选参数：
 
-* 实例名称：不填则为随机字符串。每个开发者账户下 LeanCache 实例名称**必须唯一**。
+* 实例名称：最大长度不超过 32 个字符，限英文、数字、下划线，且不能以数字开头。每个开发者账户下 LeanCache 实例名称**必须唯一**，不填则为随机字符串。
 * 最大容量：可选 128 MB、256 MB、512 MB、1 GB、2 GB、4 GB、8 GB。
-* 删除策略：当内存满时对 key 的删除策略，默认是 'volatile-lru'，详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)（注意：LeanCache 节点生成后，该属性不可修改）。
+* 删除策略：当内存满时对 key 的删除策略，默认是 'volatile-lru'。目前我们支持如下几种策略：
+  * noeviction，不删除，当内存满时，直接返回错误；
+  * allkeys-lru， 优先删除最近最少使用的 key，以释放内存；
+  * volatile-lru，优先删除设定了过期时间的 key 中最近最少使用的 key，以释放内存；
+  * allkeys-random，随机删除一个 key，以释放内存；
+  * volatile-random，从设定了过期时间的 key 中随机删除一个，以释放内存；
+  * volatile-ttl，从设定了过期时间的 key 中删除最老的 key，以释放内存；
+  
+  请注意，如果所有的 key 都不设置过期时间，那么「volatile-lru」、「volatile-random」、「volatile-ttl」这三种策略会等同于「noeviction（不删除）」。关于删除策略的详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)（注意：LeanCache 节点生成后，该属性不可修改）。
 
 ## 使用
 
 LeanCache 目前支持通过云引擎访问。实例创建完毕后，云引擎应用就可以从环境变量中获取 `REDIS_URL_<实例名称>` 的 Redis 连接字符串，通过该信息连接并使用 Redis。
 
-LeanCache 不提供外网直接访问。如果需要进行简单的数据操作或者查看状态，可以使用 [命令行工具](cloud_code_commandline.html)。
+LeanCache 不提供外网直接访问。如果需要进行简单的数据操作或者查看状态，可以查看控制台：
+
+![image](images/leancache_status.png)
+
+或者使用命令行工具。
+
+### 在命令行工具中使用
+
+**提示**：[命令行工具](cloud_code_commandline.html) 在 v0.8.0 增加了 redis 命令来支持 LeanCache 的操作。
+
+可以通过下列命令查询当前应用有哪些 LeanCache 实例：
+
+``` 
+avoscloud redis list
+```
+
+可以通过下列命令创建一个交互式的 client：
+
+``` 
+avoscloud redis <实例名称>
+```
+
 
 ### 在云引擎中使用（Node.js 环境）
 
@@ -77,21 +112,11 @@ r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
 
 旧版云代码环境不支持 LeanCache，建议升级到云引擎 3.0 Node.js 环境，升级文档详见 [云引擎 2.0 升级 3.0 指南](leanengine_upgrade_3.html)。
 
-### 在命令行工具中使用
+### 多应用间共享使用
 
-**提示**：[命令行工具](cloud_code_commandline.html) 在 v0.8.0 增加了 redis 命令来支持 LeanCache 的操作。
+LeanCache 实例是开发者账户内全局可见的，并不固定绑死在某个应用上。所以在某个应用内创建的 LeanCache 实例，其他应用也一样可以使用，其调用方法和上述例子一样。
 
-可以通过下列命令查询当前应用有哪些 LeanCache 实例：
-
-``` 
-avoscloud redis list
-```
-
-可以通过下列命令创建一个交互式的 client：
-
-``` 
-avoscloud redis <实例名称>
-```
+对于某些使用场景，譬如 O2O 行业的用户端和管理端，或者网络租约车平台的乘客端和司机端，需要多个应用共享同一个 LeanCache 数据，这一点将会非常有用。
 
 ## 性能
 
@@ -118,7 +143,7 @@ MSET (10 keys): 60096.15 requests per second
 
 ## 可靠性
 
-LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点每隔 1 秒钟观察一次主节点的状态。如果「主节点」最后一次有效响应在 5 秒之前，则该观察节点认为主节点失效。如果超过总数一半的观察节点发现主节点失效，则自动将「从节点」切换为主节点，并会有新的从节点启动重新组成主从热备。这个过程对云引擎应用完全透明，不需要修改连接字符串或者重启应用，整个切换过程应用只有几秒钟不能使用 Redis。
+LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点每隔 1 秒钟观察一次主节点的状态。如果「主节点」最后一次有效响应在 5 秒之前，则该观察节点认为主节点失效。如果超过总数一半的观察节点发现主节点失效，则自动将「从节点」切换为主节点，并会有新的从节点启动重新组成主从热备。这个过程对应用完全透明，不需要修改连接字符串或者重启，整个切换过程应用只有几秒钟会出现访问中断。
 
 与此同时，从节点还会以 [AOF 方式](http://redisbook.readthedocs.org/en/latest/internal/aof.html) 将数据持久化存储到可靠的中央文件中，每秒刷新一次。如果很不巧主从节点同时失效，则马上会有新的 Redis 节点启动，并从 AOF 文件恢复，完成后即可再次提供服务，并且会有新的从节点与之构成主从热备。
 
@@ -132,7 +157,7 @@ LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点�
 
 ## 在线扩容
 
-你可以在线扩大（或者缩小） LeanCache 实例的最大内存容量。整个过程可能会持续一段时间，在此期间 Redis 会中断几秒钟进行切换，其他时间都正常提供服务。
+你可以在线扩大（或者缩小） LeanCache 实例的最大内存容量。整个过程可能会持续一段时间，在此期间 LeanCache 会中断几秒钟进行切换，其他时间都正常提供服务。
 
 <!-- TODO: 2015-11-19: 现在只支持控制台菜单操作，但是接口已经具备，命令行工具只要添加相关指令即可，这个后面命令行更新了再加吧。 -->
 
@@ -149,7 +174,7 @@ LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点�
 
 ## 价格方案
 
-LeanCache 不同容量节点的价格如下：
+LeanCache 采取按天扣费，使用时间不足一天按一天收费。因为用户可能需要随时调整容量，所以为了方便计算，我们按照用户当天所使用的「最大容量」来结算，次日凌晨从账户余额中扣款。LeanCache 不同容量节点的价格如下：
 
 容量 | 每日
 ---:|---:
@@ -162,5 +187,3 @@ LeanCache 不同容量节点的价格如下：
 8 GB|50 元
 
 注意：LeanCache 实例是按照「**最大容量**」收费，而不是「实际使用容量」。
-
-LeanCache 采取按天扣费，使用时间不足一天按一天收费。因为用户可能需要随时调整容量，所以为了方便计算，我们按照用户当天所使用的「最大容量」来结算，次日凌晨从账户余额中扣款。
