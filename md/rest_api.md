@@ -1290,37 +1290,6 @@ curl -X GET \
 ### 使用手机号码一键注册或登录
 
 请参考 [短信服务 REST API 详解 - 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
-<!--
-现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登录，我们也提供了一个新 API `POST /usersByMobilePhone` 来处理：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -G \
-  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
-  https://api.leancloud.cn/1.1/usersByMobilePhone
-```
-
-其中 **mobilePhoneNumber** 就是手机号码，而 **smsCode** 是使用 [短信验证 API](rest_sms_api.html#短信验证_API) 发送到手机上的 6 位验证码字符串。如果不传入 username，默认用户名将是手机号码。
-
-注册或者登录成功后，返回的应答跟登录接口类似：
-
-```json
-{
-  "username": "186xxxxxxxx",
-  "mobilePhone": "186xxxxxxxx",
-  "createdAt":"2015-07-14T02:31:50.100Z",
-  "updatedAt": "2015-07-14T02:31:50.100Z",
-  "objectId": "58c38496e4b05001a7732c5f",
-  "sessionToken": "qmdj8pdidnmyzp0c7yqil91oc"
-  ……其他属性
-}
-```
-
-如果是第一次注册，将默认设置 `mobilePhoneVerified` 属性为 `true`。
--->
 
 ### 验证 Email
 
