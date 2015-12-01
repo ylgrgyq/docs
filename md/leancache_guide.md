@@ -25,23 +25,32 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 ## 创建实例
 
-进入 控制台 > (选择应用) > 存储 > 云引擎 > LeanCache，点击 **创建节点**，如下图所示：
+进入 [控制台 ><span style="color:#999">（选择应用）</span>> 存储 > 云引擎 > LeanCache](/cloud.html?appid={{appid}}#/cache)，点击 **创建节点**，如下图所示：
 
 ![image](images/leancache_enter.png)
 
 创建实例时可选参数：
 
-* 实例名称：最大长度不超过 32 个字符，限英文、数字、下划线，且不能以数字开头。每个开发者账户下 LeanCache 实例名称**必须唯一**，不填则为随机字符串。
-* 最大容量：可选 128 MB、256 MB、512 MB、1 GB、2 GB、4 GB、8 GB。
-* 删除策略：当内存满时对 key 的删除策略，默认是 'volatile-lru'。目前我们支持如下几种策略：
-  * noeviction，不删除，当内存满时，直接返回错误；
-  * allkeys-lru， 优先删除最近最少使用的 key，以释放内存；
-  * volatile-lru，优先删除设定了过期时间的 key 中最近最少使用的 key，以释放内存；
-  * allkeys-random，随机删除一个 key，以释放内存；
-  * volatile-random，从设定了过期时间的 key 中随机删除一个，以释放内存；
-  * volatile-ttl，从设定了过期时间的 key 中删除最老的 key，以释放内存；
+* **实例名称**：最大长度不超过 32 个字符，限英文、数字、下划线，且不能以数字开头。每个开发者账户下 LeanCache 实例名称**必须唯一**，不填则为随机字符串。
+* **最大容量**：可选 128 MB、256 MB、512 MB、1 GB、2 GB、4 GB、8 GB。
+* **删除策略**：内存满时对 key 的删除策略，默认为 `volatile-lru`，更多选择请参考 [删除策略](#删除策略)。
+
+### 删除策略
+
+目前我们支持如下几种策略：
+
+策略|说明
+---|---
+`noeviction`|不删除，当内存满时，直接返回错误。
+`allkeys-lru`|优先删除最近最少使用的 key，以释放内存。
+`volatile-lru`|优先删除设定了过期时间的 key 中最近最少使用的 key，以释放内存。
+`allkeys-random`|随机删除一个 key，以释放内存。
+<span style="white-space:nowrap"><code>volatile-random</code></span>|从设定了过期时间的 key 中随机删除一个，以释放内存。
+`volatile-ttl`|从设定了过期时间的 key 中删除最老的 key，以释放内存。
   
-  请注意，如果所有的 key 都不设置过期时间，那么「volatile-lru」、「volatile-random」、「volatile-ttl」这三种策略会等同于「noeviction（不删除）」。关于删除策略的详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)（注意：LeanCache 节点生成后，该属性不可修改）。
+请注意，如果所有的 key 都不设置过期时间，那么 `volatile-lru`、`volatile-random`、`volatile-ttl` 这三种策略会等同于 `noeviction`（不删除）。关于删除策略的详细内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)。
+
+<div class="callout callout-info">LeanCache 节点一旦生成后，该属性不可修改。</div>
 
 ## 使用
 
@@ -114,7 +123,7 @@ r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
 
 ### 多应用间共享使用
 
-LeanCache 实例是开发者账户内全局可见的，并不固定绑死在某个应用上。所以在某个应用内创建的 LeanCache 实例，其他应用也一样可以使用，其调用方法和上述例子一样。
+LeanCache 实例在开发者账户内全局可见，并不与某个应用固定绑定。所以在某个应用内创建的 LeanCache 实例，其他应用也一样可以使用，其调用方法和上述例子一样。
 
 对于某些使用场景，譬如 O2O 行业的用户端和管理端，或者网络租约车平台的乘客端和司机端，需要多个应用共享同一个 LeanCache 数据，这一点将会非常有用。
 
@@ -159,9 +168,7 @@ LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点�
 
 你可以在线扩大（或者缩小） LeanCache 实例的最大内存容量。整个过程可能会持续一段时间，在此期间 LeanCache 会中断几秒钟进行切换，其他时间都正常提供服务。
 
-<!-- TODO: 2015-11-19: 现在只支持控制台菜单操作，但是接口已经具备，命令行工具只要添加相关指令即可，这个后面命令行更新了再加吧。 -->
-
-<div class="callout callout-info">注意：缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成意料之外的结果。</div>
+<div class="callout callout-info">缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成意料之外的结果。</div>
 
 ## 多节点
 
@@ -172,7 +179,7 @@ LeanCache 实例使用 Redis Master-Slave 主从热备，有多个观察节点�
 
 添加节点的方式请参考 [创建实例](#创建实例)。
 
-## 价格方案
+## 价格
 
 LeanCache 采取按天扣费，使用时间不足一天按一天收费。因为用户可能需要随时调整容量，所以为了方便计算，我们按照用户当天所使用的「最大容量」来结算，次日凌晨从账户余额中扣款。LeanCache 不同容量节点的价格如下：
 
@@ -186,4 +193,4 @@ LeanCache 采取按天扣费，使用时间不足一天按一天收费。因为�
 4 GB|20 元
 8 GB|50 元
 
-注意：LeanCache 实例是按照「**最大容量**」收费，而不是「实际使用容量」。
+<div class="callout callout-info">LeanCache 实例是按照「最大容量」收费，而不是「实际使用容量」。</div>
