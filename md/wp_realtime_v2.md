@@ -1,4 +1,4 @@
-# Windows Phone 实时通信服务
+# Windows Phone 实时通信服务开发指南
 
 ## 简介
 

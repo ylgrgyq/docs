@@ -1,4 +1,4 @@
-# JavaScript 推送 SDK
+# JavaScript 推送开发指南
 
 ## 简介
 

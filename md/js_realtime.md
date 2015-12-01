@@ -1,4 +1,4 @@
-# JavaScript 实时通信 SDK
+# JavaScript 实时通信开发指南
 
 ## 简介
 
