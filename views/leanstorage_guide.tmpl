@@ -1,9 +1,12 @@
 #  {{platform_title}} 数据存储开发指南
 
-数据存储（{{productName}}）是 {{cloudName}} 提供的核心功能，它可以存储无模式化（Schema Free）的数据，换言之，字符串可以存，数字也可以存，图像，音频，视频等数据均可以存储在强大的 {{productName}} 云端，但是 {{productName}} 区别于数据库（DataBase），原因是 {{productName}} 并不是直接暴露数据库的操作接口给开发者去使用。我们把数据存储封装成一整套完整的开放的 REST API 接口提供给开发者去使用，而各个平台或者语言版本 SDK 只是对 REST API 的封装。
+数据存储（{{productName}}）是 {{cloudName}} 提供的核心功能。
+{{productName}} 在结构化数据存储方面，与 DB 的区别在于：
+1，Schema Free／Not free 的差异；
+2，数据接口上，{{productName}} 是面向对象的（数据操作接口都是基于 Object 的），开放的（所有移动端都可以直接访问），DB 是面向结构的，封闭的（一般在 Server 内部访问）；
+3，数据之间关联的方式，DB 是主键外键模型，{{productName}} 则有自己的关系模型（Pointer、Relation 等）；
 
 为了更好的引导初学者，我们从传统数据库入手，对比 {{productName}} 的使用方式，可以让开发者更好地理解。
-
 ## {{productName}} 初识
 首先我们来看一条 SQL 语句：
 
@@ -82,6 +85,11 @@ createdAt       keyValues
 description     objectId
 ```
 
+### 数据类型
+{{baseObjectName}} 支持的数据类型请参照如下代码演示：
+
+{% block code_data_type %}{% endblock %}
+
 ### 获取对象
 参照上一小节的表格，每一个被成功保存在云端的对象一定会有一个唯一的 Id 标识—— `{{objectIdName}}`，因此获取对象的最基本的方法就是根据 `{{objectIdName}}` 查询到这个对象：
 
@@ -104,7 +112,7 @@ description     objectId
 默认属性是所有对象都会拥有的属性，它包括 `{{objectIdName}}`，`{{createdAtName}}`，`{{updatedAtName}}`。
 `{{objectIdName}}` 已在前面介绍过了，本小节主要介绍`{{createdAtName}}` 和 `{{updatedAtName}}`。
 ##### {{createdAtName}}
-在 {{productName}} 中任何一个对象被保存在服务端都会记录一个服务端的时间，这个时间一定被服务端创建，在之后的操作中，不会被修改，它只表示对象第一次被创建时候的时间戳，它的时区国际标准时区，客户端在做展示的时候，根据当前客户端的时区做了转化。
+在 {{productName}} 中任何一个对象被保存在服务端都会记录一个服务端的时间，这个时间一定被服务端创建，在之后的操作中，不会被修改，它只表示对象第一次被创建时候的时间戳，它的时区是国际标准时区，客户端在做展示的时候，根据当前客户端的时区做了转化。
 
 ##### {{updatedAtName}}
 与 {{createdAtName}} 对比来说，{{updatedAtName}} 记录的就是对象最后一次被修改，或者可以理解为最近一次被更新的时间。
@@ -157,13 +165,13 @@ description     objectId
 {% endblock %}
 
 ### 删除对象
-假如某一个 TodoFolder 里面所有的 Todo 都已完成，用户想要删除这个 TodoFolder 对象，可以如下操作：
+假如某一个 Todo 完成了，用户想要删除这个 Todo 对象，可以如下操作：
 
-{% block code_delete_todo_folder_by_objectId %}{% endblock %}
+{% block code_delete_todo_by_objectId %}{% endblock %}
 
 {% block text_work_in_background %}
 ### 后台运行
-细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 {{productName}} 云端，形如 `{{backgroundFunctionTemplate}}` 的方法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。
+细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 {{productName}} 云端，形如 `{{backgroundFunctionTemplate}}` 的方法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
 
 {% endblock %}
 
@@ -194,11 +202,6 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 {% block code_pointer_user_one_to_many_todoFolder %}{% endblock %}
 
 关于关联数据的查询会在[关联数据查询](#关联数据查询)会详细介绍。
-
-### 数据类型
-{{baseObjectName}} 支持的数据类型请参照如下代码演示：
-
-{% block code_data_type %}{% endblock %}
 
 #### 地理位置
 地理位置是一个特殊的数据类型，{{productName}} 封装了 {{geoPointObjectName}} 来实现存储以及相关的查询。
@@ -325,10 +328,6 @@ SDK 提供的下载方法如下：
 #### 通过 {{baseQueryClassName}} 自身构造
 {% block code_create_query_by_className %}{% endblock %}
 
-{% block text_create_query_by_avobject %}
-#### 通过  {{baseObjectName}} 构造
-{% block code_create_query_by_avobject %}{% endblock %}
-{% endblock %}
 {% endblock %}
 ### 根据 id 查询
 在[获取对象](#获取对象)中我们介绍过如何通过 objectId 来获取对象实例，从而简单的介绍了一下 {{baseQueryClassName}} 的用法，代码请参考对应的内容，不再赘述。

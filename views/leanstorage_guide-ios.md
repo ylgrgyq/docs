@@ -79,6 +79,7 @@
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    [todoFolder saveInBackground];// 保存到服务端
 ```
 {% endblock %}
 
@@ -135,8 +136,6 @@
         // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
         AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
         // 然后调用刷新的方法，将数据从服务端拉到本地
-        [anotherTodo refresh];
-        
         [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
             // 调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果是一样的。
         }];
@@ -147,7 +146,7 @@
 
 ```objc
         AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-        NSArray *keys = [NSArray arrayWithObjects:@"location", @"content",nil];// 指定刷新的 key 数组
+        NSArray *keys = [NSArray arrayWithObjects:@"priority", @"content",nil];// 指定刷新的 key 数组
         [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
             // theTodo 的 location 和 content 属性的值就是与服务端一致的
             NSString *location = [object objectForKey:@"location"];
@@ -228,10 +227,10 @@
 ```
 {% endblock %}
 
-{% block code_delete_todo_folder_by_objectId %}
+{% block code_delete_todo_by_objectId %}
 
 ```objc
-    [myObject deleteInBackground];
+    [todo deleteInBackground];
 ```
 {% endblock %}
 
@@ -674,12 +673,12 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```objc
     [query whereKey:@"createdLocated"  nearGeoPoint:point withinKilometers:2.0];
 ```
-{% endblock %}
+{% endblock %} code_object_fetch_with_keys
 
 {% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
 {% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
 
-{% block link_to_relation_guide_doc %}[iOS / OS X 关系建模南](relation_guide-ios.html){% endblock %}
+{% block link_to_relation_guide_doc %}[iOS / OS X 关系建模指南](relation_guide-ios.html){% endblock %}
 
 {% block link_to_sms_guide_doc %}[iOS / OS X 短信服务使用指南](sms_guide-ios.html#注册验证){% endblock %}
 
