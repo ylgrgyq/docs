@@ -1,4 +1,5 @@
 {% extends "./leanengine_guide.tmpl" %}
+{% set environment = "python" %}
 
 {% block quick_start_create_project %}
 从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
