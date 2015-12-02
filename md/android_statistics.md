@@ -213,7 +213,7 @@ AVAnalytics.onEvent(Context context, String eventName, String label, int count)
 参数 count 是对应事件（和对应标签）被触发的次数。
 
 ## 设置数据发送策略
-你可以进入应用的 [**分析** > **统计设置**<span style="color:#999">（左下角）</span> > **数据发送策略**](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改 SDK 端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略。
+你可以进入应用的 [**分析** > **统计设置**<span class="text-muted">（左下角）</span> > **数据发送策略**](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改 SDK 端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略。
 
 以下均为在线配置中的可选策略。
 

@@ -12,7 +12,8 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 其和云引擎配合使用的架构图如下：
 
-![image](images/leancache_arch.png)
+<div style="max-width:620px" data
+-fix><img src="images/leancache_arch.png" class="img-responsive" alt=""></div>
 
 如果使用得当，LeanCache 不仅可以极大地提高性能，还能**降低成本**，因为某些高频率的查询不需要走存储服务（存储服务按调用次数收费）。
 
@@ -25,9 +26,9 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 ## 创建实例
 
-进入 [控制台 ><span style="color:#999">（选择应用）</span>> 存储 > 云引擎 > LeanCache](/cloud.html?appid={{appid}}#/cache)，点击 **创建节点**，如下图所示：
+进入 [控制台 ><span class="text-muted">（选择应用）</span>> 存储 > 云引擎 > LeanCache](/cloud.html?appid={{appid}}#/cache)，点击 **创建节点**，如下图所示：
 
-![image](images/leancache_enter.png)
+<div style="max-width: 620px;" data-fix><img src="images/leancache_controller.png" class="img-responsive" alt=""></div>
 
 创建实例时可选参数：
 
