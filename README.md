@@ -102,6 +102,8 @@ $ grunt server
 其他常用的 [nunjucks 模板方法](https://mozilla.github.io/nunjucks/templating.html) 还有：
 
 ```
+{# 这是注释，用 <!-- --> 无效 #} 
+
 {% if numUsers < 5 %}...{% endif %}
 {% if i == 0 %}...{% endif %}
 {% if users and showUsers %}...{% endif %}
