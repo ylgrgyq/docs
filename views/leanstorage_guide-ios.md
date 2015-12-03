@@ -502,11 +502,74 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
-{% block code_query_array_contains_using_equalsTo %}{% endblock %}
+{% block code_query_array_contains_using_equalsTo %}
 
-{% block code_query_array_contains_all %}{% endblock %}
+```objc
+-(NSDate*) getDateWithDateString:(NSString*) dateString{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormat dateFromString:dateString];
+    return date;
+}
+-(void)queryRemindersContains{
+    NSDate *reminder= [self getDateWithDateString:@"2015-11-11 08:30:00"];
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    
+    [query whereKey:@"reminders" equalTo:reminder];
+}
+```
+{% endblock %}
 
-{% block code_create_family_with_tag %}{% endblock %}
+{% block code_query_array_contains_all %}
+
+```objc
+-(NSDate*) getDateWithDateString:(NSString*) dateString{
+    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
+    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormat dateFromString:dateString];
+    return date;
+}
+
+-(void)queryRemindersContainsAll{
+    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 08:30:00"];
+    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 09:30:00"];
+
+    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,reminder3, nil];// 构建查询时间点
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKey:@"reminders" containsAllObjectsInArray:reminders];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
+    }];
+}
+```
+{% endblock %}
+
+{% block code_query_TodoFolder_by_user %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
+    [query whereKey:@"owner" equalTo:[AVUser currentUser]];
+```
+{% endblock %}
+
+{% block code_create_tag_object %}
+
+```objc
+    AVObject *tag = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
+    [tag setObject:@"今日必做" forKey:@"name"];// 设置名称
+    [tag saveInBackground];
+```
+{% endblock %}
+
+{% block code_create_family_with_tag %}
+
+```objc
+code here
+```
+{% endblock %}
 
 {% block code_query_tag_for_todoFolder %}{% endblock %}
 
@@ -675,7 +738,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %} code_object_fetch_with_keys
 
-{% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
+
 {% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
 
 {% block link_to_relation_guide_doc %}[iOS / OS X 关系建模指南](relation_guide-ios.html){% endblock %}
@@ -993,5 +1056,10 @@ student.name = @"小明";
   }];
 ```
 {% endblock %}
+{% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
+{% block link_to_status_system_doc %}[iOS / OS X 应用内社交模块](status_system.html#iOS_SDK){% endblock %}
+{% block link_to_sns_doc %}[iOS / OS X SNS 开发指南](sns.html#iOS_SNS_组件){% endblock %}
+{% block link_to_feedback_doc %}[iOS / OS X 用户反馈指南](feedback.html#iOS_反馈组件){% endblock %}
+
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
