@@ -29,7 +29,7 @@ gem update --system
 gem install --no-wrappers -n /usr/local/bin leancloud
 ```
 
-在应用的 Targets 中，选择 **Build Phases** 选项卡，添加一个 **Run Script** 步骤：
+在应用的 Targets 中，选择 **Build Settings** > **Build Options** > **Debug Information Format**，将其设置为 **DWARF with dSYM File**；再打开 **Build Phases** ><span class="text-muted">（点击 + 号）</span>> **New Run Script Phase**，添加一个 **Run Script** 步骤：
 
 ```sh
 leancloud upload_symbol \
