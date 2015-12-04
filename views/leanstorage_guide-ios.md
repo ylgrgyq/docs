@@ -978,6 +978,14 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
+{% block code_current_user_logout %}
+
+```objc
+  [AVUser logOut];  //清除缓存用户对象 
+  AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
+```
+{% endblock %}
+
 {% block code_query_user %}
 
 ```objc
