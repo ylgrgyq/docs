@@ -133,25 +133,25 @@
 {% block code_object_fetch %}
 
 ```objc
-        // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
-        AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
+    // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
+    AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
         // 然后调用刷新的方法，将数据从服务端拉到本地
-        [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-            // 调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果是一样的。
-        }];
+    [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        // 调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果是一样的。
+    }];
 ```
 {% endblock %}
 
 {% block code_object_fetch_with_keys %}
 
 ```objc
-        AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-        NSArray *keys = [NSArray arrayWithObjects:@"priority", @"content",nil];// 指定刷新的 key 数组
-        [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-            // theTodo 的 location 和 content 属性的值就是与服务端一致的
-            NSString *location = [object objectForKey:@"location"];
+    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
+    NSArray *keys = [NSArray arrayWithObjects:@"priority", @"content",nil];// 指定刷新的 key 数组
+    [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+        // theTodo 的 location 和 content 属性的值就是与服务端一致的
+        NSString *location = [object objectForKey:@"location"];
             NSString *content = object[@"content"];
-        }];
+    }];
 ```
 {% endblock %}
 
@@ -567,22 +567,65 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_create_family_with_tag %}
 
 ```objc
-code here
+    AVObject *tag1 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
+    [tag1 setObject:@"今日必做" forKey:@"name"];// 设置 Tag 名称
+    
+    AVObject *tag2 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
+    [tag2 setObject:@"老婆吩咐" forKey:@"name"];// 设置 Tag 名称
+    
+    AVObject *tag3 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
+    [tag3 setObject:@"十分重要" forKey:@"name"];// 设置 Tag 名称
+
+    
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"家庭" forKey:@"name"];// 设置 Todo 名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    
+    AVRelation *relation = [todoFolder relationforKey:@"tags"];// 新建一个 AVRelation
+    [relation addObject:tag1];
+    [relation addObject:tag2];
+    [relation addObject:tag3];
+    
+    [todoFolder saveInBackground];// 保存到云端
 ```
 {% endblock %}
 
-{% block code_query_tag_for_todoFolder %}{% endblock %}
+{% block code_query_tag_for_todoFolder %}
 
-{% block code_query_todoFolder_with_tag %}{% endblock %}
+```objc
+    AVObject *todoFolder = [AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5661047dddb299ad5f460166"];
+    AVRelation *relation = [todoFolder relationforKey:@"tags"];
+    AVQuery *query = [relation query];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+       // objects 是一个 AVObject 的 NSArray，它包含所有当前 todoFolder 的 tags
+    }];
+```
+{% endblock %}
 
-{% block code_query_with_or %}{% endblock %}
+{% block code_query_todoFolder_with_tag %}
 
-{% block code_query_with_and %}{% endblock %}
+```objc
+    AVObject *tag = [AVObject objectWithoutDataWithClassName:@"Tag" objectId:@"5661031a60b204d55d3b7b89"];
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
+    
+    [query whereKey:@"tags" equalTo:tag];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 是一个 AVObject 的 NSArray
+        // objects 指的就是所有包含当前 tag 的 TodoFolder
+    }];
+```
+{% endblock %}
 
 {% block code_query_find_first_object %}
 
 ```objc
-
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKey:@"priority" equalTo:@0];
+    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        // object 就是符合条件的第一个 AVObject
+    }];
 ```
 {% endblock %}
 
@@ -623,6 +666,39 @@ code here
     }];
 ```
 
+{% endblock %}
+
+{% block code_query_with_or %}
+
+```objc
+    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
+    [priorityQuery whereKey:@"priority" greaterThanOrEqualTo:[NSNumber numberWithInt:3]];
+    
+    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
+    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
+    
+    AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+        // 返回 priority 大于等3 或 status 等于 1 的 Todo
+    }];
+```
+{% endblock %}
+
+{% block code_query_with_and %}
+
+```objc
+    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
+    [priorityQuery whereKey:@"priority" lessThan:[NSNumber numberWithInt:3]];
+    
+    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
+    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:0]];
+    
+    AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+        // 返回 priority 小于 1 并且 status 等于 0 的 Todo
+    }];
+```
 {% endblock %}
 
 {% block code_query_by_cql %}
@@ -745,6 +821,24 @@ code here
 
 {% block link_to_sms_guide_doc %}[iOS / OS X 短信服务使用指南](sms_guide-ios.html#注册验证){% endblock %}
 
+{% block code_send_sms_code_for_loginOrSignup %}
+
+```objc
+    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13888888888" callback:^(BOOL succeeded, NSError *error) {
+        // 发送失败可以查看 error 里面提供的信息
+    }];
+```
+{% endblock %}
+
+{% block code_verify_sms_code_for_loginOrSignup %}
+
+```objc
+    [AVUser signUpOrLoginWithMobilePhoneNumberInBackground:@"13888888888" smsCode:@"123456" block:^(AVUser *user, NSError *error) {
+       // 如果 error 为空就可以表示登录成功了，并且 user 是一个全新的用户
+    }];
+```
+{% endblock %}
+
 {% block code_user_signUp_with_username_and_password %}
 
 ```objc
@@ -803,11 +897,35 @@ code here
 ```
 {% endblock %}
 
-{% block code_get_user_properties %}{% endblock %}
+{% block code_get_user_properties %}
 
-{% block code_set_user_custom_properties %}{% endblock %}
+```objc
+    NSString *currentUsername = [AVUser currentUser].username;// 当前用户名
+    NSString *currentEmail = [AVUser currentUser].email; // 当前用户的邮箱
+    
+    // 请注意，以下代码无法获取密码
+    NSString *currentPassword = [AVUser currentUser].password;//  currentPassword 是 nil
+```
+{% endblock %}
 
-{% block code_update_user_custom_properties %}{% endblock %}
+{% block code_set_user_custom_properties %}
+
+```objc
+    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
+    [[AVUser currentUser] saveInBackground];
+```
+{% endblock %}
+
+{% block code_update_user_custom_properties %}
+
+```objc
+    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
+    [[AVUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        [[AVUser currentUser] setObject:[NSNumber numberWithInt:27] forKey:@"age"];
+        [[AVUser currentUser] saveInBackground];
+    }];
+```
+{% endblock %}
 
 {% block code_reset_password_by_email %}
 
@@ -848,9 +966,24 @@ code here
 ```
 {% endblock %}
 
-{% block code_current_user %}{% endblock %}
+{% block code_current_user %}
 
-{% block code_query_user %}{% endblock %}
+```objc
+  AVUser *currentUser = [AVUser currentUser];
+  if (currentUser != nil) {
+      // 跳转到首页
+  } else {
+      //缓存用户对象为空时，可打开用户注册界面…
+  }
+```
+{% endblock %}
+
+{% block code_query_user %}
+
+```objc
+  AVQuery *userQuery = [AVQuery queryWithClassName:@"_User"];
+```
+{% endblock %}
 
 {% block text_subclass %}
 ## 子类化
