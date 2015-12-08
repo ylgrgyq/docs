@@ -335,7 +335,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 云引擎 Hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
 
 * **_messageReceived**<br/>
-  消息达到服务器，群组成员已解析完成之后。
+  消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * **_receiversOffline**<br/>
   消息发送完成，存在离线的收件人。
 * **_conversationStart**<br/>
@@ -355,7 +355,9 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 这个 hook 发生在消息到达 LeanCloud 云端之后。如果是群组消息，我们会解析出所有消息收件人。
 
-你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象则会执行系统默认的流程。
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象（`response.success({})`）则会执行系统默认的流程。
+
+<div class="callout callout-info">请注意，在这个 hook 的代码实现的任何分支上**请确保最终会调用 response.success 返回结果**，使得消息可以尽快投递给收件人。这个 hook 将**阻塞发送流程**，因此请尽量减少无谓的代码调用，提升效率。</div>
 
 如果你使用了 LeanCloud 默认提供的富媒体消息格式，云引擎参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考 [实时通信 REST API 指南 - 富媒体消息格式说明](./realtime_rest_api.html#富媒体消息格式说明)。
 
