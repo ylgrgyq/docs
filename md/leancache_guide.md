@@ -30,7 +30,7 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 <div style="max-width: 620px;" data-fix><img src="images/leancache_controller.png" class="img-responsive" alt=""></div>
 
-<div class="callout callout-info">LeanCache 实例一旦生成，就开始计费，因此请仔细地进行该操作。</div>
+<div class="callout callout-info">LeanCache 实例一旦生成，就开始计费，因此请认真对待该操作。</div>
 
 创建实例时可设置的参数有：
 
@@ -177,7 +177,7 @@ MSET (10 keys): 60096.15 requests per second
 
 你可以在线扩大（或者缩小） LeanCache 实例的最大内存容量。整个过程可能会持续一段时间，在此期间 LeanCache 会中断几秒钟进行切换，其他时间都正常提供服务。
 
-<div class="callout callout-info">缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成意料之外的结果。</div>
+<div class="callout callout-danger">缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成意料之外的结果。</div>
 
 ## 多实例
 
