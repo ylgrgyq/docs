@@ -2,29 +2,25 @@
 
 ## 简介
 
-感谢使用 JavaScript 的 Push SDK，LeanCloud 的 Push 服务每天处理超过百万级的请求，安全可靠，绝对是明智之选。
+发送 Push 服务是基于 HTTP 的一个 Post 请求，接收 Push 消息是通过 WebSocket 来监听数据。SDK 对数据进行过包装，并且会对连接产生的错误进行处理，包括网络断开重连等，所以稳定可靠。
 
-发送 Push 服务是基于 HTTP 的一个 Post 请求，接收 Push 消息是通过 WebSocket 来监听数据，
+你可以基于 Push SDK 做很多有趣的 Web 应用。比如，年会上面做个简单的弹幕应用，一些客户端发，弹幕墙接收。
 
-SDK 对数据进行过包装，并且会对连接产生的错误进行处理，包括网络断开重连等，所以稳定可靠。
+当然，你可以做一个比较简单的消息通知功能。推送消息的方式也是很灵活的，可以在客户端通过对应 SDK 的接口发送，也可以在 [控制台 /<span class="text-muted">（选择应用）</span>/ 消息 / 推送 / 在线发送](/messaging.html?appid={{appid}}#/message/push/create) 中手动发送推送消息到各个客户端。
 
-你可以基于 Push SDK 做很多有趣的 Web App，比如：年会上面做个简单的弹幕应用，一些客户端发，弹幕墙接收。
+<div class="callout callout-info">如果前端使用的是 JavaScript SDK，请务必配置 <strong>Web 安全域名</strong>，来防止其他人盗用你的服务器资源。配置方式：进入 [控制台 /<span class="text-muted">（选择应用）</span>/ 设置 / 安全中心](/app.html?appid={{appid}}#/security)，找到 **Web 安全域名**。</div>
 
-当然，你可以做一个比较简单的消息通知功能。推送消息的方式也是很灵活的，可以在客户端通过对应 SDK 的接口发送，也可以在「控制台」- 「消息」中手动发送推送消息到各个客户端。
-
-**如果是纯前端使用 JavaScript SDK，请务必配置 `Web 安全域名`，防止其他人盗用你的服务器资源。配置方式：进入对应的 App，然后选择`设置`——`安全中心`——`Web 安全域名`。**
-
-详细请看 [数据和安全 - Web 安全域名](data_security.html#Web_安全域名) 。
+详细内容请查看 [数据和安全 &middot; Web 安全域名](data_security.html#Web_安全域名)。
 
 ## 通过 bower 安装
 
-[什么是 bower ?](http://bower.io/)
+[什么是 bower？](http://bower.io/)
 
 ```
 bower install leancloud-push --save
 ```
 
-安装之后，页面直接加载 bower_components/leancloud-push/src/AV.push.js 即可。
+安装之后，页面直接加载 `bower_components/leancloud-push/src/AV.push.js` 即可。
 
 ## Github 仓库地址
 
@@ -93,7 +89,7 @@ LeanCloud JavaScript 相关 SDK 都会使用「AV」作为命名空间。
 
 * options {Object} （必须） 配置 Push 服务的参数。其中包括：
 
-    * appId {String} （必须）应用的 AppId，在「控制台」-「设置」-「基本信息」中可以查看；
+    * appId {String} （必须）应用的 AppId，在 **控制台 / 设置 / 基本信息** 中可以查看；
 
     * appKey {String}（必须）应用的 AppKey；
 
@@ -205,7 +201,7 @@ pushObject.send({
 
 参数：
 
-* channels {Array} 订阅的 channel 名字的数组，**注意名字中不能含有横线「-」**
+* channels {Array} 订阅的 channel 名字的数组，**每个 channel 名称只能包含 26 个英文字母和数字。**
 
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 
@@ -229,7 +225,7 @@ pushObject.send({
 
 参数：
 
-* channels {Array} 订阅的 channel 名字的数组，**注意名字中不能含有横线「-」**
+* channels {Array} 订阅的 channel 名字的数组，**每个 channel 名称只能包含 26 个英文字母和数字。**
 
 返回：{Object} 返回 pushObject，可以做后续 Push 服务的方法，支持链式。
 

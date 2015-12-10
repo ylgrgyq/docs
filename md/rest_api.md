@@ -2088,7 +2088,7 @@ curl -X DELETE \
 
 ## Push 通知
 
-请查看我们的 [消息推送开发指南 - 使用 REST API 推送消息](./push_guide.html#使用_REST_API_推送消息)。
+请查看我们的 [消息推送开发指南 &middot; 使用 REST API 推送消息](./push_guide.html#使用_REST_API_推送消息)。
 
 ## 安装数据
 
@@ -2099,7 +2099,7 @@ curl -X DELETE \
 字段|描述
 ---|---
 badge|数字，表示最新的 iOS 的安装已知的 application badge。
-channels| 数组，可选，表示这个安装对象的订阅频道列表设备订阅的频道。
+channels| 数组，可选，表示这个安装对象的订阅频道列表设备订阅的频道。**每个 channel 名称只能包含 26 个英文字母和数字。**
 deviceToken|由 Apple 生成的字符串标志，在 deviceType 为 iOS 上的设备是必须的，而且自对象生成开始就不能改动，对于一个 app 来说也是不可重复的。
 deviceType|必须被设置为"ios"、"android"、"wp"、"web"中的一种，而且自这个对象生成以后就不能变化。
 installationId|由 LeanCloud 生成的字符串标志，而且如果 deviceType 是 android 的话是一个必选字段，如果是 iOS 的话则可选。它只要对象被生成了就不能发生改变，而且对一个 app 来说是不可重复的。
@@ -2170,7 +2170,7 @@ curl -X GET \
 
 ### 更新安装对象
 
-安装对象可以向相应的URL发送PUT请求来更新。举个例子，为了让设备订阅一个 foo 的 Push channel：
+安装对象可以向相应的 URL 发送 PUT 请求来更新。例如，为了让设备订阅一个名字为「foo」的推送频道：
 
 ```sh
 curl -X PUT \
@@ -2230,7 +2230,7 @@ curl -X GET \
 }
 ```
 
-所有对普通的对象的查询都对 installatin 对象起作用，所以可以查看之前的查询部分以获取详细信息。通过做 channels 的数组查询，你可以查找一个订阅了给定的 push channel 的所有设备.
+所有对普通的对象的查询都对 installatin 对象起作用，所以可以查看之前的查询部分以获取详细信息。通过做 channels 的数组查询，你可以查找一个订阅了给定的推送频道的所有设备.
 
 ### 删除安装对象
 
