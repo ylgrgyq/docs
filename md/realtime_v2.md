@@ -1,4 +1,4 @@
-# 实时通信服务概览
+# 实时通信服务总览
 
 实时通信服务是 LeanCloud 消息服务中的重要一环。你不但可以为应用加入实时聊天、私信等常用功能，还能实现游戏对战等实时互动功能。
 
@@ -222,7 +222,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 对离线的 iOS 和 Windows Phone 用户，每次有离线消息时，我们会触发一个对应平台的推送通知。
 由于不同平台的不同限制，且用户的消息正文可能还包含上层协议，所以我们允许用户在控制台中为应用设置一个静态的 APNs JSON，推送一条内容固定的通知。
 
-进入 [控制台 ><span style="color:#999;">（选择应用）</span>> 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
+进入 [控制台 ><span class="text-muted">（选择应用）</span>> 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
 
 ```
 {"alert":"您有新的消息", "badge":"Increment"}`
@@ -326,7 +326,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 * appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对加入群的情况，这里 sorted_member_ids 是空字符串。
 * convid - 此次行为关联的对话 id。
-* action - 此次行为的动作，行为分别对应常量 **invite**（加群和邀请）和 **kick**（踢出群）。
+* action - 此次行为的动作，分为 **add** （加群和邀请）与 **remove** （踢出群）两种，但出于兼容考虑，签名时分别使用常量 **invite** 和 **kick** 来进行表示。
 
 ## 云引擎 Hook
 
@@ -335,7 +335,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 云引擎 Hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
 
 * **_messageReceived**<br/>
-  消息达到服务器，群组成员已解析完成之后。
+  消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * **_receiversOffline**<br/>
   消息发送完成，存在离线的收件人。
 * **_conversationStart**<br/>
@@ -347,7 +347,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 ### 使用场景
 
-示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，以 `fromPeer` 得到发送者的名称，组装成 `pushMessage`，这样能使推送通知的用户体验更好。可参考 [leanchat-cloudcode 代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，以 `fromPeer` 得到发送者的名称，组装成 `pushMessage`，这样能使推送通知的用户体验更好。可参考 [leanchat-cloudcode 代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud.js)。
 
 与 conversation 相关的 hook 可以在应用签名之外增加额外的权限判断，控制对话是否允许被建立、某些用户是否允许被加入对话等。你可以用这一 hook 实现黑名单功能。
 
@@ -355,7 +355,9 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 这个 hook 发生在消息到达 LeanCloud 云端之后。如果是群组消息，我们会解析出所有消息收件人。
 
-你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象则会执行系统默认的流程。
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象（`response.success({})`）则会执行系统默认的流程。
+
+<div class="callout callout-info">请注意，在这个 hook 的代码实现的任何分支上**请确保最终会调用 response.success 返回结果**，使得消息可以尽快投递给收件人。这个 hook 将**阻塞发送流程**，因此请尽量减少无谓的代码调用，提升效率。</div>
 
 如果你使用了 LeanCloud 默认提供的富媒体消息格式，云引擎参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考 [实时通信 REST API 指南 - 富媒体消息格式说明](./realtime_rest_api.html#富媒体消息格式说明)。
 

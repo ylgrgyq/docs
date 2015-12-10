@@ -188,14 +188,28 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 ### 安装 Cocopods 失败怎么解决
 
-推荐使用淘宝提供的 Gem 源，访问 [http://ruby.taobao.org/](http://ruby.taobao.org/)。
+推荐使用淘宝提供的 Gem 源，访问 [https://ruby.taobao.org/](https://ruby.taobao.org/)。
 
 ```sh
-$ gem sources --remove https://rubygems.org/
-$ gem sources -a http://ruby.taobao.org/
+$ gem sources --add https://ruby.taobao.org/ --remove https://rubygems.org/
 $ gem sources -l
 *** CURRENT SOURCES ***
-http://ruby.taobao.org
+
+https://ruby.taobao.org
+# 请确保只有 ruby.taobao.org
+$ gem install cocoapods
+```
+
+由于淘宝已经停止基于 HTTP 协议的镜像服务，如果之前使用的是 [http://ruby.taobao.org/](http://ruby.taobao.org/)，这也可能导致安装 Cocopods 失败。
+
+需要在配置中使用 HTTPS 协议代替：
+
+```sh
+$ gem sources --add https://ruby.taobao.org/ --remove http://ruby.taobao.org/
+$ gem sources -l
+*** CURRENT SOURCES ***
+
+https://ruby.taobao.org
 # 请确保只有 ruby.taobao.org
 $ gem install cocoapods
 ```
