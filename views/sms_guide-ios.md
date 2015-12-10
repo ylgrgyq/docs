@@ -69,8 +69,8 @@
 {% block send_sms_by_template %}
 ```objc
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:@"月度周刊" forKey:@"serviceName"];
-    [dict setObject:@"7623432424540" forKey:@"orderId"];
+    [dict setObject:@"月度周刊" forKey:@"service_name"];
+    [dict setObject:@"7623432424540" forKey:@"order_id"];
     [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Notice_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             //操作成功

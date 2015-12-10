@@ -2,7 +2,7 @@
 {% set appkey = '{{appkey}}' %}
 {% set masterkey = '{{masterkey}}' %}
 {% set service_name = '{{service_name}}' %}
-{% set order_Id = '{{order_Id}}' %}
+{% set order_id = '{{order_id}}' %}
 {% set guest_name = '{{guest_name}}' %}
 {% set guest_phone = '{{guest_phone}}' %}
 {% set payment_create_time = '{{payment_create_time}}' %}
@@ -12,6 +12,9 @@
 {% set phase = '{{phase}}' %}
 {% set num = '{{num}}' %}
 {% set date = '{{date}}' %}
+{% set name = '{{name}}' %}
+{% set code = '{{code}}' %}
+{% set ttl = '{{ttl}}' %}
 # {% block language %}{% endblock %} - 短信服务使用指南
 
 LeanCloud 短信服务支持的应用场景有以下三种：
@@ -156,7 +159,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 假设你提交了如下的短信模板，并且将这个模板的名称保存为 **Notice_Template**：
 
-<pre ng-non-bindable><code>尊敬的用户，你购买的服务《{{service_name}}》（订单号{{order_Id}}）
+<pre ng-non-bindable><code>尊敬的用户，你购买的服务《{{service_name}}》（订单号{{order_id}}）
 </code></pre>
 
 #### 使用模板
@@ -164,6 +167,19 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 当模板通过审批之后，就可以调用了：
 
 {% block send_sms_by_template %}{% endblock %}
+
+#### 模板变量
+
+模板可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>自定义变量</span>，如上例中的 <code ng-non-bindable>{{service_name}}</code> 和 <code ng-non-bindable>{{order_id}}</code>，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
+
+模板还可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>系统预留变量</span>，在发送短信发送时，它们会被自动填充：
+
+<pre ng-non-bindable><code>欢迎注册{{name}}应用！请使用验证码 {{code}} 来完成注册。该验证码将在{{ttl}}分钟后失效，请尽快使用。
+</code></pre>
+
+- `name`：应用名称
+- `code`：验证码
+- `ttl`：过期时间（默认为 10 分钟）
 
 #### 模板规范
 
