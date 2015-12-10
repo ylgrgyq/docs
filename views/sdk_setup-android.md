@@ -181,15 +181,15 @@ public class MyLeanCloudApp extends Application {
 然后打开 `AndroidManifest.xml` 文件来配置 SDK 所需要的手机的访问权限以及声明刚才我们创建的 `MyLeanCloudApp` 类：
 
 ```
-<!-- 基础模块所须声明，必填 - Start  !-->
+<!-- 基础模块（必须加入以下声明）START -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<!-- 基础模块所须声明 - End  !-->
+<!-- 基础模块 END -->
 
-<!-- 实时通信模块，推送所须声明 ，可选- Start  !-->
+<!-- 实时通信模块、推送（若使用该功能，需添加以下声明）START -->
 <service android:name="com.avos.avoscloud.PushService"/>
     <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
         <intent-filter>
@@ -197,16 +197,16 @@ public class MyLeanCloudApp extends Application {
             <action android:name="android.intent.action.USER_PRESENT"/>
         </intent-filter>
     </receiver>
-<!-- 实时通信模块，推送所须声明  - End  !-->
+<!-- 实时通信模块、推送 END -->
 
 <application ...
   android:name=".MyLeanCloudApp"
   ... >
-  <!-- 反馈组件 ，可选- Start  !-->
+  <!-- 反馈组件（若使用该功能，需添加以下声明）START -->
   <activity
      android:name="com.avos.avoscloud.feedback.ThreadActivity" >
   </activity>
-  <!-- 反馈组件 ，可选- End  !-->
+  <!-- 反馈组件 END -->
 </application>
 ```
 
