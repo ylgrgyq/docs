@@ -64,6 +64,19 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 -(BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url{
     return [AVOSCloudSNS handleOpenURL:url];
 }
+
+// When Build with IOS 9 SDK
+// For application on system below ios 9
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    return [AVOSCloudSNS handleOpenURL:url];
+}
+// For application on system equals or larger ios 9
+- (BOOL)application:(UIApplication *)app openURL:(NSURL *)url options:(NSDictionary<NSString *,id> *)options
+{
+    return [AVOSCloudSNS handleOpenURL:url];
+}
+
 ```
 
 这样，代码部分就完成了。
