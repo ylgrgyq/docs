@@ -20,7 +20,7 @@
 bower install leancloud-push --save
 ```
 
-安装之后，页面直接加载 `bower_components/leancloud-push/src/AV.push.js` 即可。
+安装之后，页面直接加载 `bower_components/leancloud-push.js/src/AV.push.js` 即可。
 
 ## Github 仓库地址
 
