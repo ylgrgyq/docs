@@ -3,6 +3,7 @@
 本文档尝试为所有服务端和SDK返回的错误码给出相对详细的解释，具体到各个SDK的错误码，请参考下列文档链接：
 
 * iOS 的 [AVConstants](/api-docs/iOS/docs/AVConstants.html)。
+* iOS v3.1.5 及之后的版本，网络请求操作相关的错误码，比如：28 表示请求超时、7 表示连接服务器失败，这些请参考 [**libcurl error codes**](http://curl.haxx.se/libcurl/c/libcurl-errors.html)。
 * Android 的 [AVException](/api-docs/android/doc/index.html)。
 
 ## 实时通信错误码
