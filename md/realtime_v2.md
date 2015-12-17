@@ -440,6 +440,7 @@ force|可选|如果为真将强制推送给 offlinePeers 里 mute 的用户，�
 --- | ---
 initBy | 由谁发起的 clientId
 members | 初始成员数组，包含初始成员
+attr | 创建对话时的额外属性
 
 #### 返回
 
