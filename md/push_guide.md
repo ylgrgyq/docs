@@ -561,7 +561,7 @@ curl -X GET \
 
 其中 URL 里的 `:objectId` 替换成 `/push` 接口返回的 objectId 。
 
-将返回推送记录对象，推送记录各字段含义参考 [Notification 文档](#Notification)
+将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)
 
 ## Installation 自动过期和清理
 
