@@ -166,8 +166,15 @@ public class MyListFragment extends ListFragment {
   * `WRITE_EXTERNAL_STORAGE`
 * 确认所有的 Activity 中都调用了 onResume 和 onPause 方法。
 * 确认测试手机（或者模拟器）已成功连入网络。
-* 启动应用程序，几分钟之内你应该已经可以看到相应的报表。
+* 启动应用程序，几分钟之内你应该已经可以在 [控制台 / 分析](/stat.html?appid={{appid}}}#/statrealtime) 中的相应菜单中看到报表了。
 
+## 数据时效性
+
+在控制台的 **分析** 页面中，有些报告可以展示实时数据，有些报告则依靠 [离线数据](leaninsight_guide.html) 进行分析，因此有时你会看不到当天的数据。
+
+如果当前页面中存在 **日期选择** 选项（通常在页面右上角），你可以以此判断当前的统计结果是否有延迟。如果 **结束日期** 显示为 **当日日期** 或在其下拉菜单中有「今日」选项，即为实时数据；反之则为离线数据（如下图所示），要推迟一天才能看到当日的情况。
+
+<img src="../images/analytics_datepicker_for_offline_data.png" alt="" width="231" height="256">
 
 ## 使用自定义事件
 
