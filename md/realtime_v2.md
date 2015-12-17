@@ -258,7 +258,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 这部分平台的用户，在完成登录时，SDK 会自动关联当前的 Client ID 和设备。关联的方式是通过设备**订阅**名为 Client ID 的 Channel 实现的。开发者可以在数据存储
 的 `_Installation` 表中的 `channel` 字段查到这组关联关系。在实际离线推送时，系统根据用户 Client ID 找到对应的关联设备进行推送。
 
-另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到 `_Notification` 表中。
+另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到消息菜单的推送记录。
 
 #### 敏感词过滤
 
