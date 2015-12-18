@@ -2,9 +2,19 @@
 <div ng-controller="DemoCtrl">
   <div class="row">
     <div class="col-md-12">
-      <h1 style="margin-top: 0;">
-        Demo <span class="small"> <a href="https://download.leancloud.cn/demo/" class="text-warning small">GitHub 太慢 ？直接在 LeanCloud 下载</a></span>
-      </h1>
+
+      <div class="doc-home-title">
+        <h1 class="font-logo">
+          LeanCloud Demos
+        </h1>
+        <h4>
+          使用 LeanCloud 搭建的各类应用演示
+          <br>
+          GitHub 太慢或无法访问？<a href="https://download.leancloud.cn/demo/">直接在 LeanCloud 下载</a>
+        </h4>
+      </div>
+      <!-- .doc-home-title -->
+
       <div class="btn-group">
         <a class="btn btn-default " ng-click="setCurrentType('all')" ng-class="{'active':currentSDKType == 'all'}" href="#/all">
           所有平台

@@ -1299,11 +1299,11 @@ body.ready {
     text-align: center;
     font-size: 20px;
     letter-spacing: .2em;
-    margin-top: 160px;
+    margin-top: 60px;
     margin-bottom: 26px;
 
     &:first-child {
-      margin-top: 100px;
+      margin-top: 10px;
     }
 
     .btn {
@@ -1320,24 +1320,26 @@ body.ready {
     margin-bottom: 40px;
   }
 
-  ul {
+  .clients-list {
     list-style: none;
     padding: 0;
     text-align: center;
     max-width: 900px;
-    margin: 0 auto;
+    margin: 0 auto 40px;
+    overflow: auto;
 
     li {
       display: inline-block;
       // float: left;
       padding: 10px 5px;
-      width: 108px;
+      width: 175px;
 
       @media (max-width: @screen-xs-max) {
-        padding: 10px 4px;
+        width: 20%;
+        float: left;
       }
 
-      @s: 60px;
+      @s: 120px;
       a {
         display: block;
         width: @s;
@@ -1349,10 +1351,25 @@ body.ready {
         img {
           width: @s;
           height: @s;
-          border-radius: 12px;
+          border-radius: 26px;
           // filter: brightness(1.4) grayscale(1);
           // backface-visibility: hidden; // No more blurry edges
           background: fade(#fff, 50%);
+        }
+
+        @media (max-width: @screen-xs-max) {
+          @s: 50px;
+
+          width: @s !important;
+          height: @s !important;
+
+          img {
+            border-radius: 9px;
+            width: @s !important;
+            height: @s !important;
+            max-width: @s !important;
+            max-height: @s !important;
+          }
         }
 
         &:hover,
@@ -1370,10 +1387,23 @@ body.ready {
       }
 
       .client-app-name {
+        font-size: 18px;
         text-align: center;
         margin-top: 4px;
+
+        @media (max-width: @screen-xs-max) {
+          display: none;
+        }
       }
     }
+  }
+}
+
+.slider-homepage-clients {
+
+  @media (max-width: @screen-xs-max) {
+    margin-left: -15px;
+    margin-right: -15px;
   }
 }
 
@@ -3130,6 +3160,11 @@ body {
       ul {
 
         li {
+          width: 120px;
+
+          @media (max-width: @screen-xs-max) {
+            width: 20%;
+          }
 
           @s: 80px;
           a {
@@ -3141,6 +3176,10 @@ body {
               width: @s;
               height: @s;
               border-radius: 20px;
+
+              @media (max-width: @screen-xs-max) {
+                border-radius: 10px;
+              }
             }
 
             &:hover,
@@ -3155,6 +3194,10 @@ body {
               text-overflow: ellipsis;
               margin: 6px 0 10px;
               font-size: 16px;
+
+              @media (max-width: @screen-xs-max) {
+                display: none;
+              }
             }
           }
         }
@@ -3290,6 +3333,10 @@ body {
         vertical-align: bottom;
         line-height: @s;
         transition: transform .2s ease;
+        // TODO: Fixes weird transform flashes behavior for Google Chrome
+        // Author: Tunghsiao Liu
+        // Date: Nov 23, 2015, 4:42 PM
+        will-change: transform;
 
         &:hover,
         &:focus {
@@ -3303,7 +3350,7 @@ body {
 
         .icon {
           font-size: @s;
-          vertical-align: middle;
+          vertical-align: bottom;
           line-height: @s;
         }
       }
@@ -5059,6 +5106,18 @@ body.news {
 
     .pricing-input-wrap {
 
+      // Used by LeanCache in Pricing page
+      &.extra-margin-bottom-for-mobile {
+
+        @media (max-width: @screen-xs-max) {
+          margin-bottom: 20px;
+        }
+      }
+
+      // Remove too large space if there's a label on the left side
+      label > input {
+        margin-left: 6px;
+      }
     }
 
     .pricing-input {
@@ -5070,6 +5129,34 @@ body.news {
       &::-webkit-inner-spin-button,
       &::-webkit-outer-spin-button {
         display: none;
+      }
+    }
+
+    .pricing-fixed-select-wraper {
+    }
+
+    .pricing-fixed-select {
+      float: left;
+
+      &--text {
+        display: block;
+        padding: 6px 11px;
+        margin-right: 8px;
+        margin-bottom: 10px;
+        font-size:  16px;
+        border: 1px solid @input-border;
+        border-radius: @border-radius-base;
+        cursor: pointer;
+      }
+
+      input[type=radio] {
+        display: none;
+        outline: none;
+
+        &:checked ~ .pricing-fixed-select--text {
+          color: @brand-primary;
+          border-color: @brand-primary;
+        }
       }
     }
   }

@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/leancloud/docs.png?label=ready&title=Ready)](https://waffle.io/leancloud/docs)
 # LeanCloud Documentation
 [![Build Status](https://travis-ci.org/leancloud/docs.svg)](https://travis-ci.org/leancloud/docs)
 [![devDependency Status](https://david-dm.org/leancloud/docs/dev-status.svg)](https://david-dm.org/leancloud/docs#info=devDependencies)
@@ -18,7 +19,13 @@ LeanCloud 开发者文档
 
 我们欢迎所有用户为我们贡献或者修正错误。您只要 [fork](https://github.com/leancloud/docs/fork) 这个项目，并提交 [Pull Request](https://github.com/leancloud/docs/pulls) 即可。
 
-我们所有文档的源文件都在 `/md` 目录中（内容使用 Markdown 语法），相关图片放在 `/images` 目录下。
+我们所有文档的源文件都在 `/md` 或 `/views` 目录中（内容使用 Markdown 语法），相关图片放在 `/images` 目录下。需要注意：
+
+```
+.
+├── archive //已下线存档的文档，请勿更新
+├── private //未完成、未发布的文档临时保存在这里，以便让重建全站文档索引的系统任务忽略这些文件。
+```
 
 LeanCloud 衷心感谢您的贡献。
 
@@ -38,7 +45,7 @@ $ sudo npm install -g grunt-cli
 $ npm install
 ```
 
-本地启动一个 HTTP Server，然后打开浏览器访问 http://localhost:3000 即可
+本地启动一个 HTTP Server，然后打开浏览器访问 <http://localhost:3000> 即可
 
 ```bash
 $ grunt server
@@ -60,7 +67,7 @@ $ grunt server
   ```
 
   括起来。可以参考 [leanengine_guide.tmpl](https://github.com/leancloud/docs/blob/master/views/leanengine_guide.tmpl)。
-* 在 `views ` 目录里编写多份渲染变量（以 `md` 作为文件扩展名）。第一行表明自己继承哪个模板：
+* 在 `views` 目录里编写多份渲染变量（以 `md` 作为文件扩展名）。第一行表明自己继承哪个模板：
 
   ```
   {% extends "./<your-tmpl-file>" %}
@@ -89,7 +96,24 @@ $ grunt server
 {% set appkey = '{{appkey}}' %}
 {% set masterkey = '{{masterkey}}' %}
 ```
+
 这样，在生成的 html 文档中，`{{appid}}` 才可以被正确渲染，否则，它会被替换为空值，原因是 nunjucks 在上下文中找不到该变量的定义。
+
+其他常用的 [nunjucks 模板方法](https://mozilla.github.io/nunjucks/templating.html) 还有：
+
+```
+{# 这是注释，用 <!-- --> 无效 #} 
+
+{% if numUsers < 5 %}...{% endif %}
+{% if i == 0 %}...{% endif %}
+{% if users and showUsers %}...{% endif %}
+{% if i == 0 and not hideFirst %}...{% endif %}
+{% if (x < 5 or y < 5) and foo %}...{% endif %}
+
+// 复用文档片断
+{% macro ... %}  
+{% include ... %} 
+```
 
 ### 辅助工具
 
@@ -119,7 +143,10 @@ $ grunt server
 * 所有 `.md` 格式文档需要更新到 `/md` 目录下
 * 更新文档只需要修改或创建相应的 `.md` 文件，然后提交 Pull Request 即可
 * 由于文档会采用 AngularJS 渲染，当文档中需要显示 `{{content}}` 这种格式时，外面需要加上 `<span ng-non-bindable></span>`，以不被 AngularJS 渲染
-* 图片资源放在当前 repo 的 `/images` 文件夹下，引用方式类似 `![image](images/cloud_code_menu.png)`
+* 图片资源放在当前 repo 的 `/images` 文件夹下，引用方式类似 
+  ```
+![image](images/cloud_code_menu.png)
+  ```
 * 当增加一个全新的文档，需要更新文档首页 `templates/pages/index.html`，顶部菜单 `templates/include/header.html`
 
 

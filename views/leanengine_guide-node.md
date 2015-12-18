@@ -675,7 +675,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意：express 框架的 express.session.MemoryStore 在我们云引擎中是无法正常工作的，因为我们的云引擎是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession 中间件](https://gist.github.com/visionmedia/1491756)。
+注意：express 框架的 `express.session.MemoryStore` 在我们云引擎中是无法正常工作的，因为我们的云引擎是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
 {% endblock %}
 
 {% block custom_session %}

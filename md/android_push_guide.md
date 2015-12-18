@@ -1,17 +1,10 @@
 # Android 消息推送开发指南
 
-> 开始之前
-> 在看下面的内容之前，我们假设你已经看过我们的[消息推送开发总览](./push_guide.html)，了解了基本的概念和模型。
+请先阅读 [消息推送概览](push_guide.html) 了解相关概念。
 
 Android 推送功能除了需要必须的 avoscloud.jar 以外，还需要额外的 avospush.jar。
 
-Android 消息推送有专门的 Demo，请见[Android-Push-Demo](https://github.com/leancloud/android-push-demo)项目。
-
-## 文档贡献
-
-如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
-
-Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
+Android 消息推送有专门的 Demo，请见 [Android-Push-Demo](https://github.com/leancloud/android-push-demo) 项目。
 
 ## Installation
 
@@ -53,16 +46,20 @@ PushService.setDefaultPushCallback(this, PushDemo.class);
 
 ## 订阅频道
 
-你的应用可以订阅某个频道的消息，只要在保存 Installation 之前调用`PushService.subscribe`方法：
+你的应用可以订阅某个频道（channel）的消息，只要在保存 Installation 之前调用 `PushService.subscribe` 方法：
 
 ```java
 // 订阅频道，当该频道消息到来的时候，打开对应的 Activity
+// 参数依次为：当前的 context、频道名称、回调对象的类
 PushService.subscribe(this, "public", PushDemo.class);
 PushService.subscribe(this, "private", Callback1.class);
 PushService.subscribe(this, "protected", Callback2.class);
 ```
 
-第一个参数是当前的 context，第二个参数是频道名称，第三个参数是回调对象的类，回调对象是指用户点击通知栏的通知进入的 Activity 页面。
+注意：
+
+- 频道名称：**每个 channel 名称只能包含 26 个英文字母和数字。**
+- 回调对象：指用户点击通知栏的通知进入的 Activity 页面。
 
 退订频道也很简单：
 
@@ -77,13 +74,14 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 
 ### 配置
 
-请确保你的 AndroidManifest.xml 的`<application>`中包含如下内容
+请确保你的 `AndroidManifest.xml` 的 `<application>` 中包含如下内容：
+
 ```xml
 <service android:name="com.avos.avoscloud.PushService"
   android:exported="true"/>
 ```
 
-同时设置了必要的权限
+同时设置了必要的权限：
 
 ```xml
 <uses-permission android:name="android.permission.INTERNET"/>
@@ -91,7 +89,7 @@ AVInstallation.getCurrentInstallation().saveInBackground();
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
-为了让应用能在关闭的情况下也可以收到推送，你需要在`<application>`中加入：
+为了让应用能在关闭的情况下也可以收到推送，你需要在 `<application>` 中加入：
 
 ```xml
 <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
@@ -124,7 +122,7 @@ push.sendInBackground(new SendCallback() {
 
 ### 发送给特定的用户
 
-* 发送给 public 频道的用户
+发送给「public」频道的用户
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();
@@ -145,8 +143,7 @@ push.sendInBackground(new SendCallback() {
 });
 ```
 
-
-* 发送给某个 Installation id的用户，通常来说，你会将 AVInstallation 关联到设备的登录用户 AVUser 上作为一个属性，然后就可以通过下列代码查询 InstallationId 的方式来发送消息给特定用户，实现类似私信的功能：
+发送给某个 Installation id 的用户，通常来说，你会将 AVInstallation 关联到设备的登录用户 AVUser 上作为一个属性，然后就可以通过下列代码查询 InstallationId 的方式来发送消息给特定用户，实现类似私信的功能：
 
 ```java
 AVQuery pushQuery = AVInstallation.getQuery();
@@ -181,14 +178,13 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
     });
 ```
 
-> 注意：
-> CQL 与 AVQuery 同时只能设置一个，并且 setPushTarget 类函数（setPushToAndroid / setPushToIOS / setPushToWindowsPhone）只能与 AVQuery 一起使用。在设置 CQL 时，只能在 CQL 语句中设定目标机器的类型
+<div class="callout callout-info">CQL 与 AVQuery 同时只能设置一个，并且 `setPushTarget` 类函数（setPushToAndroid / setPushToIOS / setPushToWindowsPhone）只能与 AVQuery 一起使用。在设置 CQL 时，只能在 CQL 语句中设定目标机器的类型。</div>
 
 ### 自定义 Receiver
 
 如果你想推送消息，但不显示在 Andoid 系统的通知栏中，而是执行应用程序预定义的逻辑，你需要在你的 Android 项目中添加如下配置：
 
-* AndroidManifest.xml 中声明你的 Receiver
+AndroidManifest.xml 中声明你的 Receiver：
 
 ```xml
 <receiver android:name="com.avos.avoscloud.PushDemo.MyCustomReceiver" android:exported="false">
@@ -201,11 +197,11 @@ AVPush.sendMessageInBackground("message to installation",  pushQuery, new SendCa
 </receiver>
 ```
 
-其中 com.avos.avoscloud.PushDemo.MyCustomReceiver 是你的 Android 的 Receiver 类。
+其中 `com.avos.avoscloud.PushDemo.MyCustomReceiver` 是你的 Android 的 Receiver 类。
 
 而 `<action android:name="com.avos.UPDATE_STATUS" />` 需要与 push 的 data 中指定的 action 相对应。
 
-* 你的 Receiver 可以按照如下方式实现
+你的 Receiver 可以按照如下方式实现：
 
 ```java
 public class MyCustomReceiver extends BroadcastReceiver {
@@ -233,7 +229,7 @@ public class MyCustomReceiver extends BroadcastReceiver {
 }
 ```
 
-* 同时，要求发送推送的请求也做相应更改，例如
+同时，要求发送推送的请求也做相应更改，例如：
 
 ```sh
 curl -X POST \
@@ -250,8 +246,7 @@ curl -X POST \
   https://leancloud.cn/1.1/push
 ```
 
-请注意：**如果你使用自定义的 Receiver，发送的消息必须带 action，并且其值在自定义的 Receiver 配置的 <intent-filter> 列表里存在，比如这里的'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义**
-
+<div class="callout callout-info">如果你使用自定义的 Receiver，发送的消息必须带 action，并且其值在自定义的 Receiver 配置的 `<intent-filter>` 列表里存在，比如这里的 'com.avos.UPDATE_STATUS'，请使用自己的 action，尽量不要跟其他应用混淆，推荐采用域名来定义。</div>
 
 ### 跟踪 Android 推送和应用的打开情况
 

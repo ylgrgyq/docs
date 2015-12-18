@@ -1,4 +1,4 @@
-# JavaScript 指南
+# JavaScript 数据存储开发指南
 
 如果你还没有设置你的项目，请查看文档 [快速入门](./start.html)。
 

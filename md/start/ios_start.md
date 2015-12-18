@@ -103,6 +103,8 @@ find "$APP_PATH" -name '*.framework' -type d | while read -r FRAMEWORK; do
 
     mv "$FRAMEWORK_EXECUTABLE_PATH-merged" "$FRAMEWORK_EXECUTABLE_PATH"
     rm "${EXTRACTED_ARCHS[@]}"
+
+    /usr/bin/codesign -f -s "${CODE_SIGN_IDENTITY}" $FRAMEWORK
 done
 ```
 

@@ -498,7 +498,7 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 ```
 {% endblock %}
 
-{% block conversation_tag %}
+{% block conversation_attributes_new %}
 ```
 - 初始化 ClientId = Tom
 - Tom 登录
@@ -507,6 +507,8 @@ Conversation（对话）这个概念有些人更喜欢叫做 Room（房间），
 - 创建与 Jerry 的对话，对话名称「猫和老鼠」，传入刚加的 attr.tag
 ```
 {% endblock %}
+
+{% block conversation_attributes_modify %}{% endblock %}
 
 {% block conversation_getSingle %}
 
