@@ -594,8 +594,8 @@ curl -X GET \
 * 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 **provisioning profile**，并到 XCode Organizer 更新。
 * 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
 * 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。
-* 检查 _Notifcation 表的 `subscribers` 和 `status`，确认推送状态和接收设备数目正常。
-
+* 检查消息菜单里的推送记录中的 `devices` 和 `status`，确认推送状态和接收设备数目正常。
+* 检查消息菜单里的推送记录中的 `invalidTokens` 字段，如果该数字异常大，可能证书选择错误，跟设备 build 的 provisioning profile 不匹配。
 
 ### Android 排查建议
 
