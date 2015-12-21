@@ -562,9 +562,9 @@ data | 消息内容
 ]
 ```
 
-### 开发者给系统对话发送消息
+### 系统对话发送消息
 
-请参考 [REST API - 给系统对话发消息](./realtime_rest_api.html#给系统对话发消息)。
+请参考 [REST API - 系统对话给用户发消息](./realtime_rest_api.html#系统对话给用户发消息)。
 
 ## 限制
 
