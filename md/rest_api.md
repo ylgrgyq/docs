@@ -761,7 +761,7 @@ curl -X POST \
 
 ### 数据类型
 
-到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
+到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段（注意：**前缀是两个下划线**）来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
 
 <a id="datatype_date" name="datatype_date"></a>**Date** 类型包含了一个 iso 字段，其值是一个 UTC 时间戳，以 ISO 8601 格式和毫秒级的精度来存储的时间值，格式为：`YYYY-MM-DDTHH:MM:SS.MMMZ`：
 
