@@ -1331,7 +1331,7 @@ AVUser 类的 `loginInBackground` 方法。
 ```java
 AVUser.logInInBackground("username", "password", new LogInCallback() {
     public void done(AVUser user, AVException e) {
-        if (user != null) {
+        if (e == null) {
             // 登录成功
         } else {
             // 登录失败
