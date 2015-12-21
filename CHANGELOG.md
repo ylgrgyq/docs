@@ -1,3 +1,44 @@
+<a name="0.0.5"></a>
+## [0.0.5](https://github.com/leancloud/docs/compare/v0.0.4...v0.0.5) (2015-12-18)
+
+
+### Bug Fixes
+
+* **demo:** app title refines ([865d4a0](https://github.com/leancloud/docs/commit/865d4a0))
+* **docs:** add format description for date field ([fc16ab0](https://github.com/leancloud/docs/commit/fc16ab0)), closes [#762](https://github.com/leancloud/docs/issues/762)
+* **docs:** fix a broken link ([e1e1d1f](https://github.com/leancloud/docs/commit/e1e1d1f))
+* **docs:** fix some cosmetics problems ([aff9dfa](https://github.com/leancloud/docs/commit/aff9dfa))
+* **docs:** fix the broken link to LeanChat Cloud Code Demo ([b3d9603](https://github.com/leancloud/docs/commit/b3d9603))
+* **docs:** iOS 崩溃报告加入 Debug Information Format 设置 ([3bb0cbd](https://github.com/leancloud/docs/commit/3bb0cbd))
+* **docs:** LeanCache 更新字词和样式名称 ([adb4f72](https://github.com/leancloud/docs/commit/adb4f72))
+* **docs:** refresh images for LeanCache and some Bootstrap styles ([f278ba0](https://github.com/leancloud/docs/commit/f278ba0))
+* **docs:** remove html comment markups that couldn't be rendered correctly ([512cf43](https://github.com/leancloud/docs/commit/512cf43)), closes [#774](https://github.com/leancloud/docs/issues/774)
+* **docs:** update wordings of data secuirty ([7b5f58d](https://github.com/leancloud/docs/commit/7b5f58d))
+* **docs:** 从 Python 文档中移除「在线定义函数」 ([de16a05](https://github.com/leancloud/docs/commit/de16a05))
+* **docs:** 修复云引擎 cookie-session 中间件的失效链接 ([d197eed](https://github.com/leancloud/docs/commit/d197eed)), closes [#786](https://github.com/leancloud/docs/issues/786)
+* **docs:** 修改在 AndroidManifest.xml 增加声明定义的说明 ([cf77d41](https://github.com/leancloud/docs/commit/cf77d41))
+* **docs:** 修正参数类型 ([14cd295](https://github.com/leancloud/docs/commit/14cd295))
+* **docs:** 增加 LeanCache 收费细则和注意事项 ([0475ad6](https://github.com/leancloud/docs/commit/0475ad6))
+* **docs:** 增加如何判断控制台「分析」报告使用的是实时数据还是历史数据 ([6fe3958](https://github.com/leancloud/docs/commit/6fe3958)), closes [#814](https://github.com/leancloud/docs/issues/814)
+* **docs:** 增加模板常用函数 if,macro, include，补充目录结构说明 ([814ce1c](https://github.com/leancloud/docs/commit/814ce1c))
+* **docs:** 增加聊天 hook「_messageReceived」说明 ([2a0b6d6](https://github.com/leancloud/docs/commit/2a0b6d6))
+* **docs:** 更新 LeanCache 架构图片内容 ([2262a26](https://github.com/leancloud/docs/commit/2262a26))
+* **docs:** 补充 Android 统计/应用权限配置的示例代码 ([8708406](https://github.com/leancloud/docs/commit/8708406))
+* **docs:** 补充 nunjunks 的 comment 语法 ([bca0302](https://github.com/leancloud/docs/commit/bca0302))
+* **docs:** 补充推送频道 channel 名称的限制 ([ab5eda1](https://github.com/leancloud/docs/commit/ab5eda1)), closes [#796](https://github.com/leancloud/docs/issues/796)
+* **docs:** 补充短信模板的系统预留变量的说明 ([b46de86](https://github.com/leancloud/docs/commit/b46de86)), closes [#711](https://github.com/leancloud/docs/issues/711)
+* **docs:** 隐藏 iOS 客户端聊天记录缓存一节 ([bfa5040](https://github.com/leancloud/docs/commit/bfa5040))
+* **postman:** weird nesting ([0ee405a](https://github.com/leancloud/docs/commit/0ee405a))
+* **template:** avoid dropdown menu overlay, fixes https://github.com/leancloud/docs/issues/768  ([4d625e1](https://github.com/leancloud/docs/commit/4d625e1))
+
+### Features
+
+* larger headings! ([9733b1a](https://github.com/leancloud/docs/commit/9733b1a))
+* **homepage:** we have search feature! ([b61848e](https://github.com/leancloud/docs/commit/b61848e))
+* **template:** more heading fix ([51e7516](https://github.com/leancloud/docs/commit/51e7516))
+
+
+
 <a name="0.0.4"></a>
 ## [0.0.4](https://github.com/leancloud/docs/compare/v0.0.3...v0.0.4) (2015-11-27)
 

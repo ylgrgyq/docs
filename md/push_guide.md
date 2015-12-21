@@ -31,16 +31,17 @@ timeZone| |设备设定的时区
 
 ### Notification
 
-对应 `_Notification` 表，表示一条推送消息，它包括下列属性：
+对应消息菜单里的推送记录，表示一条推送消息，它包括下列属性：
 
 名称|适用平台|描述
 ---|---|---
 data| |本次推送的消息内容，JSON 对象。
 invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW12) 错误。**如果这个数字过大，请留意证书是否正常。**
 prod|iOS|使用什么环境证书。**dev** 表示开发证书，**prod** 表示生产环境证书。
-status| |本次推送的状态，**in queue** 表示仍然在队列，**done** 表示完成，**schedule** 表示定时推送任务等待触发中。
-subscribers| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
+status| |本次推送的状态，**in-queue** 表示仍然在队列，**done** 表示完成，**scheduled** 表示定时推送任务等待触发中。
+devices| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
 where| |本次推送查询 _Installation 表的条件，符合这些查询条件的设备将接收本条推送消息。
+errors| | 本次推送过程中的错误信息。
 
 如何发送消息也请看下面的详细指南。
 
@@ -546,6 +547,22 @@ curl -X POST \
 ```
 
 
+### 推送记录查询
+
+`/push` 接口在推送后会返回代表该条推送消息的 `objectId`，你可以使用这个 ID 调用下列 API 查询推送记录：
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/tables/Notifications/:objectId
+```
+
+其中 URL 里的 `:objectId` 替换成 `/push` 接口返回的 objectId 。
+
+将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)
+
 ## Installation 自动过期和清理
 
 每当用户打开应用，我们都会更新该设备的 _Installation 表中的 `updatedAt` 时间戳。用户如果长期没有更新 _Installation 的 `updatedAt` 时间戳，也就意味着该用户长期没有打开过应用。当超过 360 天没有打开过应用时，我们会将这个用户在 _Installation 表中的记录删除。不过请不要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
@@ -558,9 +575,9 @@ curl -X POST \
 
 ### 推送结果查询
 
-所有经过 `/push` 接口发出的消息的都可以在控制台的存储里的 _Notification 表看到。每次调用 `/push` 都将产生一条新的 `_Notification` 对象表示一次推送。该表的各属性含义请参考 [Notification 表详解](#Notification) 。
+所有经过 `/push` 接口发出的消息的都可以在控制台的消息菜单里的推送记录看到。每次调用 `/push` 都将产生一条新的 推送记录表示一次推送。该表的各属性含义请参考 [Notification 表详解](#Notification) 。
 
-`/push` 接口会返回新建的 `_Notification` 对象的 `objectId`，你就可以在这张表里查找消息推送的结果。
+`/push` 接口会返回新建的推送记录的 `objectId`，你就可以在推送记录里根据 ID 查询消息推送的结果。
 
 
 ### iOS 推送排查建议
@@ -577,8 +594,8 @@ curl -X POST \
 * 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 **provisioning profile**，并到 XCode Organizer 更新。
 * 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
 * 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。
-* 检查 _Notifcation 表的 `subscribers` 和 `status`，确认推送状态和接收设备数目正常。
-
+* 检查消息菜单里的推送记录中的 `devices` 和 `status`，确认推送状态和接收设备数目正常。
+* 检查消息菜单里的推送记录中的 `invalidTokens` 字段，如果该数字异常大，可能证书选择错误，跟设备 build 的 provisioning profile 不匹配。
 
 ### Android 排查建议
 
