@@ -2,8 +2,6 @@
 
 ```
 <script src="https://cdn1.lncld.net/static/js/av-mini-{{sdkversion.javascript}}.js"></script>
-//或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{{sdkversion.javascript}}.js"></script>
 ```
 
 进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。
