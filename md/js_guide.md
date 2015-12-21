@@ -365,7 +365,7 @@ myComment.set("post", post);
 ```javascript
 var post = fetchedComment.get("post");
 post.fetch({
-    // 用法可参考 API 文档 > AV.Object > fetch 
+    // 用法可参考 API 文档 > AV.Object > fetch
     include: "author"
   },
   {
@@ -583,10 +583,14 @@ query.skip(10); // 跳过前 10 条结果
 
 ```javascript
 // 升序
-query.ascending("pubUser");
+query.addAscending("pubUser");
 
 // 降序
-query.descending("pubTimestamp");
+query.addDescending("pubTimestamp");
+
+// 排序条件可以多个叠加，但要注意叠加的顺序，会先按照第一个条件排序
+query.addAscending("userNum");
+query.addAscending("createdAt");
 ```
 
 对于可以排序的类型，你同样可以在查询中进行比较：
@@ -765,7 +769,7 @@ query.equalTo("post", post);
 var query = new AV.Query(Comment);
 
 // 最新的在前面
-query.descending("createdAt");
+query.addDescending("createdAt");
 
 // 只要 10 条
 query.limit(10);
@@ -841,7 +845,7 @@ mainQuery.find({
 
 你也可以对 AV.Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
 
-请注意我们不会在组合查询的子查询中支持非过滤型的条件（比如：limit、skip、ascending/descending、include）。
+请注意我们不会在组合查询的子查询中支持非过滤型的条件（比如：limit、skip、addAscending/addDescending、include）。
 
 ### 删除查询结果
 
@@ -980,7 +984,7 @@ Promise 比较神奇，可以代替多层嵌套方式来解决发送异步请求
 
 ```javascript
 var query = new AV.Query("Student");
-query.descending("gpa");
+query.addDescending("gpa");
 query.find().then(function(students) {
   students[0].set("valedictorian", true);
   return students[0].save();
@@ -1007,7 +1011,7 @@ query.find().then(function(students) {
 
 ```javascript
 var query = new AV.Query("Student");
-query.descending("gpa");
+query.addDescending("gpa");
 query.find().then(function(students) {
   students[0].set("valedictorian", true);
   // 强制失败
@@ -1040,7 +1044,7 @@ query.find().then(function(students) {
 
 ```javascript
 var query = new AV.Query("Student");
-query.descending("gpa");
+query.addDescending("gpa");
 query.find().try(function(students) {
   students[0].set("valedictorian", true);
   // 强制失败
@@ -2101,7 +2105,7 @@ query.find({
 });
 ```
 
-在这时 posts 会返回一个按离 userGeoPoint 的距离排序的列表。注意如果在 AV.Query 上调用了 `ascending()`/`descending()` 的话，指定的排序属性会取代距离。
+在这时 posts 会返回一个按离 userGeoPoint 的距离排序的列表。注意如果在 AV.Query 上调用了 `addAscending()`/`addDescending()` 的话，指定的排序属性会取代距离。
 
 为了按距离限制返回的结果，你还可以使用 `withinMiles`、`withinKilometers` 和 `withinRadians`。
 
