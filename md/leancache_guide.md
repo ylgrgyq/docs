@@ -20,7 +20,7 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 ## 主要特性
 
 * **高性能**：接近 7 万的 QPS
-* **高可用**：基于 [AOF 持久化](http://redisbook.readthedocs.org/en/latest/internal/aof.html) 的 Master-Slave 主从热备份。
+* **高可用**：基于 [AOF 持久化](http://www.redis.cn/topics/persistence.html) 的 Master-Slave 主从热备份。
 * **在线扩容**：在线调整容量，数据平滑迁移。
 * **多实例**：满足更大容量或更高性能的需求。
 
@@ -163,7 +163,7 @@ MSET (10 keys): 60096.15 requests per second
 
 每个 LeanCache 实例使用 Redis Master-Slave 主从热备，其下的多个观察节点每隔 1 秒钟观察一次主节点的状态。如果「主节点」最后一次有效响应在 5 秒之前，则该观察节点认为主节点失效。如果超过总数一半的观察节点发现主节点失效，则自动将「从节点」切换为主节点，并会有新的从节点启动重新组成主从热备。这个过程对应用完全透明，不需要修改连接字符串或者重启，整个切换过程应用只有几秒钟会出现访问中断。
 
-与此同时，从节点还会以 [AOF 方式](http://redisbook.readthedocs.org/en/latest/internal/aof.html) 将数据持久化存储到可靠的中央文件中，每秒刷新一次。如果很不巧主从节点同时失效，则马上会有新的 Redis 节点启动，并从 AOF 文件恢复，完成后即可再次提供服务，并且会有新的从节点与之构成主从热备。
+与此同时，从节点还会以 [AOF 方式](http://www.redis.cn/topics/persistence.html) 将数据持久化存储到可靠的中央文件中，每秒刷新一次。如果很不巧主从节点同时失效，则马上会有新的 Redis 节点启动，并从 AOF 文件恢复，完成后即可再次提供服务，并且会有新的从节点与之构成主从热备。
 
 ### 极端情况下的数据丢失
 
