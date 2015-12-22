@@ -74,7 +74,7 @@ curl -X PUT \
 ```sh
 curl -X GET \
   -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 
