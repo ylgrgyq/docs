@@ -608,8 +608,8 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 {% block customMessage_create %}
 继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
-* 实现 `AVIMTypedMessageSubclassing` 协议
-* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
+* 实现 `AVIMTypedMessageSubclassing` 协议；
+* 子类将自身类型进行注册，一般可在子类的 `+load` 方法或者 UIApplication 的 `-application:didFinishLaunchingWithOptions:` 方法里面调用 `[YourClass registerSubclass]`。
 {% endblock %}
 
 {% block messagePolicy_received_method %} `conversation:didReceiveCommonMessage:` {% endblock %}
