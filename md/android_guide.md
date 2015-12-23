@@ -1442,7 +1442,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       public void done(AVException e) {
           //发送了验证码以后做点什么呢
       }
-    })
+    });
 ```
 
 调用以下代码即可验证验证码:

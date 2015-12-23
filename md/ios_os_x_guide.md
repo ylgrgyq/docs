@@ -370,7 +370,7 @@ AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
 
 ``` objc
 // 取回关联的微博实例
-AVObject *post = [fetchedComment objectForKey:@"post"];
+AVObject *post = [myComment objectForKey:@"post"];
 // 获取 post 的相关属性
 [post fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   // 取回微博帖子内容
