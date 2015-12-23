@@ -588,7 +588,7 @@ query.addAscending("pubUser");
 // 降序
 query.addDescending("pubTimestamp");
 
-// 排序条件可以多个叠加，但要注意叠加的顺序，会先按照第一个条件排序
+// 排序条件可以多个叠加，但要注意叠加的顺序，系统会按条件的添加顺序依次排序。
 query.addAscending("userNum");
 query.addAscending("createdAt");
 ```
