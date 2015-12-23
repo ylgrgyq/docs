@@ -95,7 +95,7 @@ var Post = AV.Object.extend('Post', {
 });
 
 var post = Post.spawn('LeanCloud官方客服');
-alert(post.pubUser());
+console.log(post.pubUser());
 ```
 
 创建实例还可以通过 `AV.Object.new` 方法，子类对象也可以：
@@ -123,12 +123,12 @@ post.set('pubTimestamp', 1435541999);
 post.save(null, {
   success: function(post) {
     // 成功保存之后，执行其他逻辑.
-    alert('New object created with objectId: ' + post.id);
+    console.log('New object created with objectId: ' + post.id);
   },
   error: function(post, error) {
     // 失败之后执行其他逻辑
     // error 是 AV.Error 的实例，包含有错误码和描述信息.
-    alert('Failed to create new object, with error message: ' + error.message);
+    console.log('Failed to create new object, with error message: ' + error.message);
   }
 });
 ```
@@ -499,15 +499,15 @@ var query = new AV.Query(Post);
 query.equalTo('pubUser', 'LeanCloud官方客服');
 query.find({
   success: function(results) {
-    alert('Successfully retrieved ' + results.length + ' posts.');
+    console.log('Successfully retrieved ' + results.length + ' posts.');
     // 处理返回的结果数据
     for (var i = 0; i < results.length; i++) {
       var object = results[i];
-      alert(object.id + ' - ' + object.get('content'));
+      console.log(object.id + ' - ' + object.get('content'));
     }
   },
   error: function(error) {
-    alert('Error: ' + error.code + ' ' + error.message);
+    console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
@@ -568,7 +568,7 @@ query.first({
     // LeanCloud官方客服的第一条微博.
   },
   error: function(error) {
-    alert('Error: ' + error.code + ' ' + error.message);
+    console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
@@ -808,7 +808,7 @@ query.equalTo('pubUser', 'LeanCloud官方客服');
 query.count({
   success: function(count) {
     // 成功了
-    alert('LeanCloud官方客服 发布了 ' + count + ' 条微博');
+    console.log('LeanCloud官方客服 发布了 ' + count + ' 条微博');
   },
   error: function(error) {
     // 失败了
@@ -1485,7 +1485,7 @@ user.signUp(null, {
   },
   error: function(user, error) {
     // 失败了
-    alert('Error: ' + error.code + ' ' + error.message);
+    console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
@@ -1826,7 +1826,7 @@ AV.User.requestPasswordReset('email@example.com', {
   },
   error: function(error) {
     // Show the error message somewhere
-    alert('Error: ' + error.code + ' ' + error.message);
+    console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 
@@ -1837,7 +1837,7 @@ AV.User.requestPasswordResetBySmsCode('18212346648', {
   },
   error: function(error) {
     // Show the error message somewhere
-    alert('Error: ' + error.code + ' ' + error.message);
+    console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
@@ -2144,13 +2144,13 @@ var query = new AV.Query(Note);
 query.get('aBcDeFgH', {
   success: function(results) {
     // This function will *not* be called.
-    alert('Everything went fine!');
+    console.log('Everything went fine!');
   },
   error: function(model, error) {
     // This will be called.
     // error is an instance of AV.Error with details about the error.
     if (error.code === AV.Error.OBJECT_NOT_FOUND) {
-      alert('Uh oh, we couldn\'t find the object!');
+      console.log('Uh oh, we couldn\'t find the object!');
     }
   }
 });
@@ -2163,15 +2163,15 @@ var query = new AV.Query(Note);
 query.get('thisObjectIdDoesntExist', {
   success: function(results) {
     // This function will *not* be called.
-    alert('Everything went fine!');
+    console.log('Everything went fine!');
   },
   error: function(model, error) {
     // This will be called.
     // error is an instance of AV.Error with details about the error.
     if (error.code === AV.Error.OBJECT_NOT_FOUND) {
-      alert('Uh oh, we couldn\'t find the object!');
+      console.log('Uh oh, we couldn\'t find the object!');
     } else if (error.code === AV.Error.CONNECTION_FAILED) {
-      alert('Uh oh, we couldn\'t even connect to the LeanCloud!');
+      console.log('Uh oh, we couldn\'t even connect to the LeanCloud!');
     }
   }
 });
