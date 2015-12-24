@@ -797,7 +797,7 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
 ```
-AVIMClient.setOfflineMessagePush(boolean isOnlyCount);
+AVIMClient.setOfflineMessagePush(true);
 ```
 
 然后实现 AVIMConversationEventHandler 的代理方法 `onOfflineMessagesUnread` 来从服务端取回未读消息：
