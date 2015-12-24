@@ -793,7 +793,35 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
-{% block message_unread %}{% endblock %}
+{% block message_unread %}
+要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
+
+```
+AVIMClient.setOfflineMessagePush(boolean isOnlyCount);
+```
+
+然后实现 AVIMConversationEventHandler 的代理方法 `onOfflineMessagesUnread` 来从服务端取回未读消息：
+
+```
+onOfflineMessagesUnread(AVIMClient client, AVIMConversation conversation, int unreadCount) {
+  //如果有多个 conversation 有未读消息，此函数会执行多次
+  if (unreadCount > 0) {
+    // 可以根据 readCount 更新 UI
+    
+    // 也可以拉取对应的未读消息
+    conversation.queryMessages(unreadCount, new AVIMMessagesQueryCallback() {
+      @Override
+      public void done(List<AVIMMessage> list, AVIMException e) {
+        if (e == null) {
+          // 获得对应的未读消息
+        }
+      }
+    });
+  }
+}
+```
+`AVIMConversationEventHandler` 的实现和定义在[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
+{% endblock %}
 
 {% block message_Relation_intro %}
 消息类型之间的关系
