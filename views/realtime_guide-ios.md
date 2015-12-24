@@ -480,12 +480,6 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% block messagePolicy_received %}{% endblock %}
 
 {% block message_unread %}
-### 未读消息
-
-iOS SDK 从 v3.1.3.6 开始支持未读消息。未读消息是另一种离线消息的接收机制。
-
-SDK 默认的接收机制是：当客户端上线时，离线消息会自动通过长连接发送至客户端；而如果开启了未读消息，消息接收机制变为：当客户端上线时，会收到其参与过的会话的离线消息数量，服务器不再主动将离线消息推送至客户端，转而由客户端负责主动拉取。
-
 要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
 ```objc
