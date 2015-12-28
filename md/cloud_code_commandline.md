@@ -71,9 +71,9 @@ npm install -g avoscloud-code
 
 安装过程可能有些慢，请耐心等待。
 
-##### 不建议使用 cnpm 安装命令行工具
+#### cnpm 安装
 
-使用 `cnpm` 安装全局模块（-g 参数）时会将模块保存在 `c:\Program Files\nodejs\node_modules\` 目录，该目录没有 admin 权限是无法写入的。而原生的 `npm` 会将全局模块安装在 `%USERPROFILE%\AppData\Roaming\npm\node_modules\` 目录下，该目录写入不需要 admin 权限。
+【不建议使用】使用 `cnpm` 安装全局模块（-g 参数）时会将模块保存在 `c:\Program Files\nodejs\node_modules\` 目录，该目录没有 admin 权限是无法写入的。而原生的 `npm` 会将全局模块安装在 `%USERPROFILE%\AppData\Roaming\npm\node_modules\` 目录下，该目录写入不需要 admin 权限。
 
 使用 `cnpm` 安装命令行工具，运行时可能出现下列提示信息：
 
@@ -97,32 +97,36 @@ Error: Cannot find module 'C:\Users\wchen\workspace\cloud-code-unit-test_v2.0\"C
 npm install -g avoscloud-code --registry=https://r.cnpmjs.org
 ```
 
-#### 仍有问题
+#### 问题排查
 
 如果安装完执行仍然出现一些问题，请尝试下列步骤：
 
-* 移除命令行工具
+**移除命令行工具：**
 
   ```
   npm uninstall -g avoscloud-code
   ```
-  移除之后，确认命令行工具不可运行，即执行 avoscloud 命令时会有如下提示：
+
+移除之后，确认命令行工具不可运行，即执行 avoscloud 命令时会有如下提示：
   
   ```
   C:\Users\wchen\workspace\cloud-code-unit-test_v2.0>avoscloud
   'avoscloud' 不是内部或外部命令，也不是可运行的程序或批处理文件。
   ```
-* 清除缓存：
+
+**清除缓存：**
   
   ```
   npm cache clean
   ```
-  如果有安装 `cnpm`，还需要清除 `cnpm` 的缓存：
+  
+如果有安装 `cnpm`，还需要清除 `cnpm` 的缓存：
   
   ```
   cnpm cache clean
   ```
-* 然后使用 `npm` 重新安装 avoscloud 命令行工具
+
+然后使用 `npm` 重新安装 avoscloud 命令行工具。
 
 ## 使用
 
@@ -133,20 +137,20 @@ $ avoscloud -h
 Usage: avoscloud [选项] <命令>
 
   有效的命令列表包括:
-    deploy: 部署云引擎代码到 LeanCloud 平台开发环境
-    undeploy: 从 LeanCloud 平台清除云引擎部署，包括生产环境和开发环境
-    status: 查询当前部署状态
-    search <keyword>: 根据关键字查询开发文档
-    publish: 发布开发环境代码到生产环境
-    new: 创建云引擎项目
-    logs: 查看云引擎日志
-    clear: 清除本地状态，在输入 app id 或者 master key 错误的情况下使用
+    deploy:                     部署云引擎代码到 LeanCloud 平台开发环境
+    undeploy:                   从 LeanCloud 平台清除云引擎部署，包括生产环境和开发环境
+    status:                     查询当前部署状态
+    search <keyword>:           根据关键字查询开发文档
+    publish:                    发布开发环境代码到生产环境
+    new:                        创建云引擎项目
+    logs:                       查看云引擎日志
+    clear:                      清除本地状态，在输入 app id 或者 master key 错误的情况下使用
     upload <file-or-directory>: 导入文件到 LeanCloud 平台，如果是目录，则会将该目录下的文件递归导入。
-    app [list]:  显示当前应用，deploy、status 等命令运行在当前应用上，如果加上 list ，则显示所有的应用信息。
-    checkout <app>: 切换到一个应用，deploy、status 等命令将运行在该应用上。
-    add <app>: 添加一个应用。
-    rm <app>: 移除一个应用。
-    cql: 进入 CQL 查询交互。
+    app [list]:                 显示当前应用，deploy、status 等命令运行在当前应用上，如果加上 list ，则显示所有的应用信息。
+    checkout <app>:             切换到一个应用，deploy、status 等命令将运行在该应用上。
+    add <app>:                  添加一个应用。
+    rm <app>:                   移除一个应用。
+    cql:                        进入 CQL 查询交互。
 
   Options:
 
@@ -181,7 +185,7 @@ $ avoscloud -V
 source ~/.leancloud_completion.sh
 ```
 
-重启终端 bash，或者重新加载 profile 文件，就可以让 avoscloud 命令拥有自动提示和完成功能(tab 按键提示)。
+重启终端 bash，或者重新加载 profile 文件，就可以让 avoscloud 命令拥有自动提示和完成功能（tab 按键提示）。
 
 **Mac 上建议通过 homebrew 安装 bash-completion。**
 
@@ -194,14 +198,9 @@ source ~/.leancloud_completion.sh
 $ avoscloud new
 ```
 
-它会要求你输入应用的 Id 和 Master Key（都可以从开发者平台的应用设置里的应用 key 菜单里找到这些信息），
+窗口会提示输入应用的 Id 和 Master Key，这些信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 里找到。注意在输入或粘贴这些信息时，窗口并无任何显示或反应，输入完成后按回车键确认即可。
 
-第三步选择应用类型包括两类：
-
-* Standard 标准版：输入字符 's' 或者字符串 "standard" 即可创建，标准的云引擎项目，不包括 web 主机功能（网站托管）。
-* Web Hosting 版：输入字符 'w' 或者字符串 'web' 即可创建，包含 web 主机功能的云引擎项目。
-
-输入正确后，会自动创建一个新的云引擎项目框架：
+接下来选择项目语言，确认后一个新的云引擎项目框架就被创建出来了：
 
 ```sh
 Creating project...

@@ -1,4 +1,13 @@
 {% extends "./leanengine_guide.tmpl" %}
+{% set environment        = "node" %}
+{% set hook_before_save   = "beforeSave" %}
+{% set hook_after_save    = "afterSave" %}
+{% set hook_before_update = "beforeUpdate" %}
+{% set hook_after_update  = "afterUpdate" %}
+{% set hook_before_delete = "beforeDelete" %}
+{% set hook_after_delete  = "afterDelete" %}
+{% set hook_on_verified   = "onVerified" %}
+{% set hook_on_login      = "onLogin" %}
 
 {% block quick_start_create_project %}
 从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
@@ -191,7 +200,6 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
-  //输出信息请到「控制台 /（选择应用）/ 存储 / 云引擎 / 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -306,7 +314,7 @@ AV.Cloud.onLogin(function(request, response) {
 {% endblock %}
 
 {% block errorCodeExample %}
-有些时候你希望能自己定义错误响应码。云引擎方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 1， `message` 为错误对象的字符串形式。比如下列代码：
+错误响应码允许自定义。云引擎方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 body 以这两个属性为准，否则 `code` 为 1， `message` 为错误对象的字符串形式。比如：
 
 ```
 AV.Cloud.define('errorCode', function(req, res) {
@@ -323,6 +331,18 @@ AV.Cloud.define('errorCode', function(req, res) {
 ```
 AV.Cloud.define('customErrorCode', function(req, res) {
   res.error({code: 123, message: 'custom error message'});
+});
+```
+{% endblock %}
+
+{% block errorCodeExampleForHooks %}
+```
+AV.Cloud.beforeSave('Review', function(request, response) {
+  // 使用 JSON.stringify() 将 object 变为字符串
+  response.error(JSON.stringify({
+    code: 123,
+    message: '自定义错误信息'
+  }));
 });
 ```
 {% endblock %}

@@ -341,7 +341,7 @@ roomObj.send({
 // 发送自定义类型数据
 roomObj.send({
     _lctype: 123,
-    data: {
+    attr: {
       test: 'abc'
     }
 }, function(data) {
@@ -1026,7 +1026,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1077,7 +1077,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1127,7 +1127,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1178,7 +1178,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1229,7 +1229,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1281,7 +1281,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1381,7 +1381,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1429,7 +1429,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1476,7 +1476,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1534,7 +1534,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1632,7 +1632,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1680,7 +1680,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1837,7 +1837,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
