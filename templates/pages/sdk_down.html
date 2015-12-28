@@ -95,7 +95,7 @@
             </div>
           </div>
 
-          <hr>
+
 
           <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('osx')">
       下载 <span>- {{getDownSize('osx')}}</span>
@@ -111,8 +111,25 @@
               <a href="https://download.leancloud.cn/sdk/OSX/">其他版本</a>
             </li>
           </ul>
+<hr>
+          <div>
+          <h2> 其他 Apple 相关 SDK</h2>
+           <ul class="list-unstyled list-inline">
+            <li>
+              <a ng-click="download('watchos','Static')">watchOS</a>
+            </li>
+            <li>
+              <a ng-click="download('tvos','Static')">tvOS</a>
+            </li>
+           </ul>
+
+
+          </div>
         </div>
         <!-- .dl-cell -->
+
+
+
       </div>
     </div>
     <!-- .row -->
@@ -335,6 +352,8 @@
     </div>
     <!-- .row -->
   </div>
+
+
 
   <div class="col-md-12">
 
