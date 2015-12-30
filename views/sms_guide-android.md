@@ -8,7 +8,7 @@
         user.setEmail("hang@leancloud.rocks");
         
         // 其他属性可以像其他AVObject对象一样使用put方法添加
-        user.put("phone", "186-1234-0000");
+        user.put("mobilePhoneNumber", "186-1234-0000");
 
         user.signUpInBackground(new SignUpCallback() {
             public void done(AVException e) {
@@ -20,6 +20,10 @@
             }
         });
   ```
+{% endblock %}
+
+{% block builtin_account_url %}
+/docs/android_guide.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
