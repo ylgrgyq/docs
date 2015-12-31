@@ -58,7 +58,7 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 $ avoscloud deploy
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://dev.${your_app_domain}.avosapps.com` 访问你应用的测试环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的测试环境。
 
 部署到生产环境：
 
@@ -66,7 +66,7 @@ $ avoscloud deploy
 $ avoscloud publish
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.avosapps.com` 访问你应用的生产环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.leanapp.cn` 访问你应用的生产环境。
 
 通过下列命令可以确认云函数在云引擎上工作正常：
 
@@ -608,7 +608,7 @@ crontab 的基本语法是：
 
 这一切都需要你去创建一个 web 应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
 
-不过现在，云引擎为你提供了网站托管功能，可以让你为应用设置一个二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并把你的 web 应用部署到该域名之下运行，同时支持静态资源和动态请求服务。
+不过现在，云引擎为你提供了网站托管功能，可以让你为应用设置一个二级域名 `${your_app_domain}.leanapp.cn`（美国区为 `${your_app_domain}.avosapps.us` ），并把你的 web 应用部署到该域名之下运行，同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
@@ -618,7 +618,7 @@ crontab 的基本语法是：
 
 上面将应用的二级域名设置为 **myapp**，设置之后，你应该可以马上访问：
 
-- http://myapp.avosapps.com
+- http://myapp.leanapp.cn
 - http://myapp.avosapps.us
 
 可能因为 DNS 生效延迟暂时不可访问，请耐心等待或者尝试刷新 DNS 缓存，如果还没有部署，你看到的应该是一个 404 页面。
@@ -635,7 +635,7 @@ crontab 的基本语法是：
 
 其他用户如果需要为应用绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.cn>，或者从控制台菜单中选择 [帮助 / 技术支持](https://ticket.leancloud.cn/)，通过工单来提出申请：
 
-* 你已经绑定的 avosapps.com 或 avosapps.us 二级子域名（请参考设置域名）
+* 你已经绑定的 leanapp.cn 或 avosapps.us 二级子域名（请参考设置域名）
 * 要绑定的域名（必须是你名下的域名）
 * 你的注册邮箱（必须与发送者的邮箱一致）
 * 你想要绑定的 App Id（该应用必须位于注册邮箱的用户名下）
@@ -643,7 +643,7 @@ crontab 的基本语法是：
 
 我们会在 3 个工作日内完成审核，如果审核通过将为你绑定域名。请在绑定操作完成后配置 DNS：
 
-- 将要绑定域名的 CNAME 或者 A 记录指向 avosapps.com（国内）或 avosapps.us（美国）
+- 将要绑定域名的 CNAME 或者 A 记录指向 leanapp.cn（国内）或 avosapps.us（美国）
 
 #### 域名备案流程
 
@@ -802,7 +802,7 @@ WAP<br/>
 
 为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
-因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过 https 访问，你只要这样：
+因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.leanapp.cn` 的网站通过 https 访问，你只要这样：
 
 {% block https_redirect %}{% endblock %}
 
@@ -812,9 +812,9 @@ WAP<br/>
 
 前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 网站托管 就没有办法通过这个HTTP头来方便的区分。
 
-因此，我们其实为每个应用创建了两个域名，除了 `xxx.avosapps.com` 之外，每个应用还有 `dev.xxx.avosapps.com` 域名作为测试环境的域名。
+因此，我们其实为每个应用创建了两个域名，除了 `${your_app_domain}.leanapp.cn` 之外，每个应用还有 `stg-${your_app_domain}.leanapp.cn` 域名作为测试环境的域名。
 
-部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** / **部署到生产环境** 按钮切换之后，可以在 `xxx.avosapps.com` 看到最新的运行结果。
+部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** / **部署到生产环境** 按钮切换之后，可以在 `${your_app_domain}.leanapp.cn` 看到最新的运行结果。
 
 ## 第三方平台接入
 

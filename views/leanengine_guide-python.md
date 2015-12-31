@@ -29,7 +29,7 @@ $ avoscloud add <APP-NAME> <APP-ID>
 {% block runtime_env %}**注意**：目前云引擎的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
 
 {% block demo %}
-* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。（在线演示：<http://python.avosapps.com/>）
+* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。（在线演示：<http://python.leanapp.cn/>）
 {% endblock %}
 
 {% block run_in_local_command %}
