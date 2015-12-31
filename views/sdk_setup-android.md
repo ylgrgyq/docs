@@ -112,8 +112,8 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 ├── fastjson.jar                                // LeanCloud 基本存储模块
 ├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
 ├── Java-WebSocket-1.2.0-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
-├── okhttp-2.5.0.jar                            // LeanCloud 基本存储模块
-├── okio-1.6.0.jar                              // LeanCloud 基本存储模块
+├── okhttp-2.6.0-leancloud.jar                  // LeanCloud 基本存储模块
+├── okio-1.6.0-leancloud.jar                    // LeanCloud 基本存储模块
 ├── qq.sdk.1.6.1.jar                            // LeanCloud SNS 模块
 └── weibo.sdk.android.sso.3.0.1-leancloud.jar   // LeanCloud SNS 模块
 ```
@@ -123,8 +123,8 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 ##### LeanCloud 基本存储模块
 
 * avoscloud-<版本号>.jar
-* okhttp-2.5.0.jar
-* okio-1.6.0.jar
+* okhttp-2.6.0-leancloud.jar
+* okio-1.6.0-leancloud.jar
 * fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
 * httpmime-4.2.4.jar
 
