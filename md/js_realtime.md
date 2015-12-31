@@ -417,7 +417,7 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    console.log('与服务器连接成功！');
 });
-// http://jsplay.avosapps.com/rot/embed?js,console
+// http://jsplay.leanapp.cn/rot/embed?js,console
 ```
 
 ### AV.realtime.version

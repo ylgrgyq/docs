@@ -8,7 +8,7 @@
 
 * 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+* 便于调试的 [在线测试工具](http://chat.leanapp.cn/)。
 
 
 ## 功能和特性

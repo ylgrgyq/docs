@@ -105,7 +105,7 @@
 * 通过 [工单系统](https://ticket.leancloud.cn/login) 提交技术支持申请，获取 LeanCloud 工程师的帮助。
 * 在右上角用户名左侧的消息中心，可以看到 LeanCloud 最火热的新闻和教程。
 * 在工具栏的资源菜单里，可以找到 LeanCloud 移动客户端下载链接，在移动设备上查看应用分析数据。
-* 使用 [drop](https://drop.avosapps.com/) 或者 [fir.im](http://fir.im/) 分发测试你的应用。
+* 使用 [drop](https://drop.leanapp.cn/) 或者 [fir.im](http://fir.im/) 分发测试你的应用。
 * 我们提供 [离线文档](leancloud-docs.tar.gz) 下载。
 * 不知道怎么使用 LeanCloud？各种 [Demo](demo.html) 等你来拿。
 * [文档搜索工具](/search.html)，查找问题或资料不用愁。
