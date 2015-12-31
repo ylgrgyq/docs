@@ -264,7 +264,7 @@ Production commit log  : 'Uploaded at 2014-10-09 16:56:06'
 $ avoscloud deploy -o '测试本地推送部署'
 ```
 
-部署之后，你可以通过 curl 命令，或者访问你设置的 `xxxx.avosapps.com` 的二级域名对应的专用测试域名 `dev.xxx.avosapps.com` 测试你的云引擎代码。
+部署之后，你可以通过 curl 命令，或者访问你设置的 `${your_app_domain}.leanapp.cn` 的二级域名对应的专用测试域名 `stg-${your_app_domain}.leanapp.cn` 测试你的云引擎代码。
 
 ### Git 仓库部署
 
