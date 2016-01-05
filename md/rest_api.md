@@ -2625,7 +2625,7 @@ curl -X GET \
 格式概览如下：
 
 ```
-curl -i X POST \
+curl -i -X POST \
 -H "Content-Type: application/json" \
 -H "X-LC-Id: {{appid}}" \
 -H "X-LC-Key: {{appkey}}" \
@@ -2826,7 +2826,7 @@ curl -X GET \
 获取服务端当前日期时间可以通过 `/date` API:
 
 ```
-curl -i X GET \
+curl -i -X GET \
     -H "X-LC-Id: {{appid}}" \
     -H "X-LC-Key: {{appkey}}" \
     https://api.leancloud.cn/1.1/date
