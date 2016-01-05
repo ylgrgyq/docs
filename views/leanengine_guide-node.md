@@ -30,7 +30,19 @@ $ avoscloud add <appName> <appId>
 * [LeanEngine-Full-Stack](https://github.com/leancloud/LeanEngine-Full-Stack) ：该项目是基于云引擎的 Web 全栈开发的技术解决方案，比较大型的 Web 项目可以使用这个结构实现从 0 到 1 的敏捷开发。
 {% endblock %}
 
-{% block runtime_env %}**注意**：目前云引擎的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock %}
+{% block runtime_env %}
+**注意**：
+- 目前云引擎的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10。
+- 由于云引擎尚未支持 Node.js 4.x 版本，如果希望使用 ECMAScript 6 所提供的新语法，请在项目的 `package.json` 中为 node 加入 `--harmony` 参数，例如：
+  
+  ```json
+  ...
+  "scripts": {
+    "start": "node --harmony server.js"
+  },
+  ...
+  ```
+{% endblock %}
 
 {% block run_in_local_command %}
 安装依赖：
