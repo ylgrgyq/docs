@@ -119,7 +119,7 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 * 应用有 Android、iOS 甚至 Windows Phone 客户端，但是很多业务逻辑都是一样的，你希望能将这部分逻辑抽取出来，只维护一份。
 * 有些逻辑希望能够较灵活的调整（比如某些个性化列表的排序规则），但又不想频繁的更新和发布移动客户端。
 * 有些逻辑需要的数据量很大，或者运算成本高（比如某些统计汇总需求），你不希望在移动客户端进行运算，因为这样会消耗大量的网络流量和手机运算能力。
-* 你希望能在特定操作时触发一段逻辑（我们称为 Hook 函数），比如：用户注册后对该用户增加一些信息记录用于统计；或某业务数据发生变化后希望做一些别的业务操作。这些代码不适合放在移动客户端（比如因为上面提到的几个原因）。
+* 当应用执行特定操作时，由云端系统自动触发一段逻辑（称为 [Hook 函数](#Hook_函数)），比如：用户注册后对该用户增加一些信息记录用于统计；或某业务数据发生变化后希望做一些别的业务操作。这些代码不适合放在移动客户端（比如因为上面提到的几个原因）。
 * 你希望有能有定时任务，比如每天凌晨清理垃圾注册账号等等。
 
 这时，你可以使用云引擎的云函数。云函数是一段部署在服务端的代码，编写 JavaScript 或者 Python 代码，并部署到我们的平台上，可以很好的完成上述需求。
@@ -146,7 +146,7 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 `averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须给 `request.params.movie` 提供参数。
 
-### 调用云函数
+### REST API 调用云函数
 
 云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云引擎」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
 
@@ -180,7 +180,7 @@ https://leancloud.cn/1.1/functions/averageStars
 
 如有需要，也可以 [自定义错误响应码](#错误响应码)。 
 
-#### 调用已定义的函数
+### 云引擎调用云函数
 
 在云引擎中也可以使用 {% block runFuncName %}{% endblock %} 调用 {% block defineFuncName %}{% endblock %} 定义的云函数：
 
@@ -188,13 +188,19 @@ https://leancloud.cn/1.1/functions/averageStars
 
 API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
-### {{hook_before_save}}
+### Hook 函数
 
-在将对象保存到云端数据表之前，可以用此函数对数据做一些清理或验证。例如，一条电影评论不能过长，否则界面上显示不开，使用 `beforeSave` 将其截断至 140 个字符：
+Hook 函数本质上是云函数，但它有固定的名称，定义之后会**由系统**在特定事件或操作（如数据保存前、保存后，数据更新前、更新后等等）发生时**自动触发**，而不是由开发者来控制其触发时机。
+
+关于使用 Hook 函数时所需要注意的要点，请参考下文的 [防止死循环调用](#防止死循环调用)。
+
+#### {{hook_before_save}}
+
+在将对象保存到云端数据表之前，可以对数据做一些清理或验证。例如，一条电影评论不能过长，否则界面上显示不开，需要将其截断至 140 个字符：
 
 {% block beforeSaveExample %}{% endblock %}
 
-### {{hook_after_save}}
+#### {{hook_after_save}}
 
 在数据保存后触发指定操作，比如当一条留言保存后再更新一下所属帖子的评论总数：
 
@@ -206,7 +212,7 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 如果 `afterSave` 函数调用失败，save 请求仍然会返回成功应答给客户端。`afterSave` 发生的任何错误，都将记录到云引擎日志里，可以到 [控制台 / 存储 / 云引擎 / 日志](https://leancloud.cn/cloud.html?appid={{appid}}}#/log) 中查看。
 
-### {{hook_before_update}}
+#### {{hook_before_update}}
 
 {% block beforeUpdate %}
 在更新对象前执行操作，这时你可以知道哪些字段已被修改，还可以在特定情况下拒绝本次修改：
@@ -216,25 +222,25 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 **注意**：传入的对象是一个尚未保存到数据库的临时对象，并不保证与最终储存到数据库的对象完全相同，这是因为修改中可能包含自增、数组增改、关系增改等原子操作。
 {% endblock %}
 
-### {{hook_after_update}}
+#### {{hook_after_update}}
 
 在更新对象后执行特定的动作，比如每次修改文章后记录下日志：
 
 {% block afterUpdateExample %}{% endblock %}
 
-###  {{hook_before_delete}}
+#### {{hook_before_delete}}
 
 在删除一个对象之前做一些检查工作，比如在删除一个相册 Album 前，先检查一下该相册中还有没有照片 Photo：
 
 {% block beforeDeleteExample %}{% endblock %}
 
-###  {{hook_after_delete}}
+#### {{hook_after_delete}}
 
 在被删一个对象后执行操作，例如递减计数、删除关联对象等等。同样以相册为例，这次我们不在删除相册前检查是否还有照片，而是在删除后，同时删除相册中的照片：
 
 {% block afterDeleteExample %}{% endblock %}
 
-### {{hook_on_verified}}
+#### {{hook_on_verified}}
 
 当用户通过邮箱或者短信验证时，对该用户执行特定操作。比如：
 
@@ -242,13 +248,13 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 函数的第一个参数是验证类型。短信验证为 `sms`，邮箱验证为 `email`。另外，数据库中相关的验证字段，如 `emailVerified` 不需要修改，系统会自动更新。
 
-### {{hook_on_login}}
+#### {{hook_on_login}}
 
 在用户登录之时执行指定操作，比如禁止在黑名单上的用户登录：
 
 {% block onLoginExample %}{% endblock %}
 
-### 实时通信的 Hook 函数
+#### 实时通信 Hook 函数
 
 请阅读 [实时通信概览 &middot; 云引擎 Hook](realtime_v2.html#云引擎_Hook) 来了解以下函数的具体用法：
 
@@ -257,6 +263,51 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 - `_conversationStart`
 - `_conversationAdd`
 - `_conversationRemove`
+
+#### 防止死循环调用
+
+在实际使用中有这样一种场景：在 `Post` 类的 `afterUpdate` Hook 函数中，对传入的 `Post` 对象做了修改并且保存，而这个保存动作又会再次触发 `afterUpdate`，由此形成死循环。针对这种情况，我们为所有 Hook 函数传入的 `request.object` 对象做了处理，以阻止死循环调用的产生。
+
+不过注意，以下情况还是需要开发者自行处理：
+
+- 对传入的 `request.object` 对象进行 `fetch` 操作。
+- 重新构造传入的 `request.object` 对象，如使用 `AV.Object.createWithoutData()` 方法。
+
+对于使用上述方式产生的对象，请根据需要自行调用以下 API：
+
+- `object.disableBeforeHook()` 或 
+- `object.disableAfterHook()` 
+
+这样，对象的保存或删除动作就不会再次触发相关的 Hook 函数。
+
+```javascript
+AV.Cloud.afterUpdate('Post', function(request) {
+    // 直接修改并保存对象不会再次触发 afterUpdate Hook 函数
+    request.object.set('foo', 'bar');
+    request.object.save().then(function(obj) {
+      // 你的业务逻辑
+    });
+
+    // 如果有 fetch 操作，则需要在新获得的对象上调用相关的 disable 方法
+    // 来确保不会再次触发 Hook 函数
+    request.object.fetch().then(function(obj) {
+      obj.disableAfterHook();
+      obj.set('foo', 'bar');
+      return obj.save();
+    }).then(function(obj) {
+      // 你的业务逻辑
+    });
+
+    // 如果是其他方式构建对象，则需要在新构建的对象上调用相关的 disable 方法
+    // 来确保不会再次触发 Hook 函数
+    var obj = AV.Object.createWithoutData('Post', request.object.id);
+    obj.disableAfterHook();
+    obj.set('foo', 'bar');
+    obj.save().then(function(obj) {
+      // 你的业务逻辑
+    });
+  });
+```
 
 ### 错误响应码
 
