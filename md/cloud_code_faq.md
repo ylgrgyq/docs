@@ -124,14 +124,3 @@ AV.Cloud.define('querySomething', function(req, res) {
     //返回错误给客户端
   });
 ```
-
-## Hook 函数会死循环吗？怎么预防／解决？
-
-假设你在 `Post` 类的 `afterUpdate` Hook 函数中修改了传入的 `Post` 对象并且保存时，你可能会担心产生死循环（即这个保存动作又触发 `afterUpdate` Hook 函数）。针对这种情况，我们为所有 Hook 函数传入的 `request.object` 对象做了处理，可以阻止死循环调用的产生。不过注意有些情况还是需要自行处理：
-
-- 对传入的 `request.object` 对象进行 `fetch` 操作。
-- 重新构造传入的 `request.object` 对象，比如通过 `AV.Object.createWithoutData()` 方法。
-
-对于上述方式产生的对象，请根据需要自行调用两个 API： `object.disableBeforeHook()` 或 `object.disableAfterHook()` ，这样对象的保存或删除动作就不会再次触发相关的 Hook 函数。
-
-**提示**：`object.disableBeforeHook()` 和 `object.disableAfterHook()` 由 `leanengine v0.3.0` 版本提供。
