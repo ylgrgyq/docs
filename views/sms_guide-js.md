@@ -11,7 +11,7 @@ user.signUp(null, ……)
 {% endblock %}
 
 {% block builtin_account_url %}
-/docs/js_guide.html#用户
+js_guide.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
