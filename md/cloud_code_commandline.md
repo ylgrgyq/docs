@@ -198,7 +198,9 @@ source ~/.leancloud_completion.sh
 $ avoscloud new
 ```
 
-窗口会提示输入应用的 Id 和 Master Key，这些信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 里找到。注意在输入或粘贴这些信息时，窗口并无任何显示或反应，输入完成后按回车键确认即可。
+窗口会提示输入应用的 Id 和 Master Key，这些信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 里找到。
+
+<div class="callout callout-info">注意：在输入或粘贴这些信息时，当前命令行不会有任何交互响应，输入完成后按回车键确认即可。</div>
 
 接下来选择项目语言，确认后一个新的云引擎项目框架就被创建出来了：
 
