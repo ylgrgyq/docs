@@ -36,7 +36,7 @@ $ avoscloud add <APP-NAME> <APP-ID>
 安装依赖：
 
 ```
-$ pip install -Ur requirements.txt
+$ sudo pip install -Ur requirements.txt
 ```
 
 启动应用：
