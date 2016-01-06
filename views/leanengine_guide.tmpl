@@ -36,6 +36,10 @@
 
 {% block run_in_local_command %}{% endblock %}
 
+窗口会提示输入 Master Key，该信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
+
+<div class="callout callout-info">复制粘贴 Master Key 后，窗口不会有任何显示，直接按回车键确认即可。</div>
+
 应用即可启动运行：<http://localhost:3000>
 
 可以通过下列命令确认云函数工作正常，该函数定义在 {% block cloud_func_file %}{% endblock %} 文件中：

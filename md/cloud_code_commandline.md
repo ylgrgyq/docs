@@ -198,9 +198,9 @@ source ~/.leancloud_completion.sh
 $ avoscloud new
 ```
 
-窗口会提示输入应用的 Id 和 Master Key，这些信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 里找到。
+窗口会提示输入应用的 Id 和 Master Key，该信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
 
-<div class="callout callout-info">注意：在输入或粘贴这些信息时，当前命令行不会有任何交互响应，输入完成后按回车键确认即可。</div>
+<div class="callout callout-info">复制粘贴 Master Key 后，窗口不会有任何显示，直接按回车键确认即可。</div>
 
 接下来选择项目语言，确认后一个新的云引擎项目框架就被创建出来了：
 
@@ -219,9 +219,26 @@ Project created!
 
 进入 `new_app` 目录就可以看到新建立的项目。
 
-## 本地调试
+## 本地运行
 
-`cd new_app` 进入该目录，并执行 `avoscloud` 命令，可以在本机调试云引擎。
+进入项目目录：
+
+```sh
+$ cd new_app
+``` 
+
+安装依赖：
+
+```sh
+$ npm install
+``` 
+
+启动应用：
+
+```sh
+$ avoscloud
+``` 
+提示输入应用的 Master Key，粘贴后窗口不会有任何显示，直接回车，即可在本机调试云引擎。
 
 * 通过浏览器打开 [http://localhost:3000/avos](http://localhost:3000/avos)，进入云引擎函数和 Class Hook 函数调试界面。
 * 通过浏览器打开 [http://localhost:3000](http://localhost:3000)，可以看到 public 目录的 index.html 页面的内容。
