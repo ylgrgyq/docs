@@ -248,7 +248,7 @@ public class MyLeanCloudApp extends Application {
         ...
         // 测试 SDK 是否正常工作的代码
         AVObject testObject = new AVObject("TestObject");
-        testObject.put("words","Hello,World!");
+        testObject.put("words","Hello World!");
         testObject.saveInBackground(new SaveCallback() {
             @Override
             public void done(AVException e) {
