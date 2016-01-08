@@ -2,9 +2,10 @@
 
 数据存储（{{productName}}）是 {{cloudName}} 提供的核心功能。
 {{productName}} 在结构化数据存储方面，与 DB 的区别在于：
-1，Schema Free／Not free 的差异；
-2，数据接口上，{{productName}} 是面向对象的（数据操作接口都是基于 Object 的），开放的（所有移动端都可以直接访问），DB 是面向结构的，封闭的（一般在 Server 内部访问）；
-3，数据之间关联的方式，DB 是主键外键模型，{{productName}} 则有自己的关系模型（Pointer、Relation 等）；
+
+1. Schema Free／Not free 的差异；
+2. 数据接口上，{{productName}} 是面向对象的（数据操作接口都是基于 Object 的），开放的（所有移动端都可以直接访问），DB 是面向结构的，封闭的（一般在 Server 内部访问）；
+3. 数据之间关联的方式，DB 是主键外键模型，{{productName}} 则有自己的关系模型（Pointer、Relation 等）；
 
 为了更好的引导初学者，我们从传统数据库入手，对比 {{productName}} 的使用方式，可以让开发者更好地理解。
 ## {{productName}} 初识
@@ -63,7 +64,7 @@
 
 {% block code_save_todo_folder %}{% endblock %}
 
-创建完成之后，打开 [**控制台** > **存储**](https://{{productName}}.cn/data.html?appid={{appid}}#/)，点开 `TodoFolder` 类，查看刚才添加的数据，它除了我们自己添加的名称(name)，优先级(priority)之外，还有一些服务端内置的属性，具体的含义对照表如下：
+创建完成之后，打开 [**控制台** > **存储**](https://leancloud.cn/data.html?appid={{appid}}#/)，点开 `TodoFolder` 类，查看刚才添加的数据，它除了我们自己添加的名称(name)，优先级(priority)之外，还有一些服务端内置的属性，具体的含义对照表如下：
 
 属性名称|类型|描述
 ---|---|---
@@ -556,7 +557,7 @@ Todo 的 createdLocated 是一个 {{geoPointObjectName}} 对象，现在已知�
 
 这样做的好处是，在用户提交信息时可以将输入的「用户名」默认设置为用户的 Email 地址，以后在用户忘记了密码的情况下，可以使用 {{productName}} 提供的「重置密码」功能。
 
-关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.{{productName}}.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 #### 设置手机号
 微信，陌陌等流行的应用都会建议用户的账号和一个手机号绑定，这样方便进行身份认证以及日后的密码找回等安全模块的使用，为此，在注册用户的时候也可以设置手机号，并且我们提供了一整套发送短信验证码以及验证手机号的流程。
@@ -633,7 +634,7 @@ Todo 的 createdLocated 是一个 {{geoPointObjectName}} 对象，现在已知�
 3. 用户点击重置密码链接后，一个特殊的页面会打开，让他们输入新密码；
 4. 用户的密码已被重置为新输入的密码。
 
-关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.{{productName}}.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 
+关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 
 
 #### 手机号码重置密码
 
