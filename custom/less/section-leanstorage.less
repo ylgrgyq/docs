@@ -553,3 +553,61 @@ select.input-sm.cloud-stat-condition {
 
   }
 }
+
+// LeanCache
+.leancache-node {
+  border: 1px solid @gray-lighter;
+  border-radius: @border-radius-base;
+  width: 400px;
+  float: left;
+  padding: (@grid-gutter-width / 4) (@grid-gutter-width / 2);
+  margin-right: 10px;
+  margin-bottom: (@grid-gutter-width / 2);
+
+  @media (max-width: @screen-xs-max) {
+    width: 100%;
+  }
+
+  p {
+    margin: 0 0 .4em;
+  }
+
+  hr {
+    margin: 12px (@grid-gutter-width / -2);
+  }
+
+  .leancache-node-title-wrap {
+    margin-bottom: -4px;
+  }
+
+  .leancache-node-title {
+    max-width: calc(~"100% - 85px");
+    font-size: 16px;
+    line-height: 20px;
+    font-weight: bold;
+  }
+
+  .leancache-node-mem-size {
+    font-size: 16px;
+  }
+
+  .app-item-settings {
+    color: @gray-light;
+    margin-left: 6px;
+    text-decoration: none;
+    transition: color .2s ease;
+
+    &:hover,
+    &:focus {
+      color: @brand-primary;
+    }
+  }
+
+  &:hover,
+  &:focus {
+
+    .app-item-settings {
+      color: @gray-dark;
+    }
+  }
+}

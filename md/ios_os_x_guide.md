@@ -370,7 +370,7 @@ AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
 
 ``` objc
 // 取回关联的微博实例
-AVObject *post = [fetchedComment objectForKey:@"post"];
+AVObject *post = [myComment objectForKey:@"post"];
 // 获取 post 的相关属性
 [post fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   // 取回微博帖子内容
@@ -1014,7 +1014,7 @@ student.name = @"小明";
 1. 导入 `AVObject+Subclass.h`；
 2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
 3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
-4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 之前调用即可）。
+4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**。可在子类的 `+load` 方法或者 UIApplication 的 `-application:didFinishLaunchingWithOptions:` 方法里面调用。）。
 
 下面是实现 `Student` 子类化的例子:
 

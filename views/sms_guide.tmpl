@@ -2,7 +2,7 @@
 {% set appkey = '{{appkey}}' %}
 {% set masterkey = '{{masterkey}}' %}
 {% set service_name = '{{service_name}}' %}
-{% set order_Id = '{{order_Id}}' %}
+{% set order_id = '{{order_id}}' %}
 {% set guest_name = '{{guest_name}}' %}
 {% set guest_phone = '{{guest_phone}}' %}
 {% set payment_create_time = '{{payment_create_time}}' %}
@@ -12,6 +12,9 @@
 {% set phase = '{{phase}}' %}
 {% set num = '{{num}}' %}
 {% set date = '{{date}}' %}
+{% set name = '{{name}}' %}
+{% set code = '{{code}}' %}
+{% set ttl = '{{ttl}}' %}
 # {% block language %}{% endblock %} - 短信服务使用指南
 
 LeanCloud 短信服务支持的应用场景有以下三种：
@@ -76,39 +79,6 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 开发者在开发过程中也可能会遇到与微信类似的场景和需求。
 
-### 注册验证
-
-1. **用户输入手机号以及密码**  
-  引导用户正确的输入，建议在调用 SDK 接口之前，验证一下手机号的格式。
-
-2. **调用 AVUser 的注册接口，传入手机号以及密码。**  
-  {% block avuser_signup_send_sms %}{% endblock %}
-3. **云端发送手机验证码，并且返回注册成功，但是此时用户的 `mobilePhoneVerified` 依然是 `false`，客户端需要引导用户去输入验证码。**   
-  
-4. **用户再一次输入验证码**  
-  最好验证一下是否为纯数字。
-  
-5. **调用验证接口，检查用户输入的纯数字验证码是否合法。**  
-  {% block avuser_signup_sms_verify %}{% endblock %}
-
-以上是一个通用的带有手机号验证的注册过程。开发者可以根据需求增加或减少步骤，但是推荐开发者在使用该功能时，首先明确是否需要勾选「验证注册用户手机号码」。因为一旦勾选，只要调用了 AVUser 相关的注册账号，并传入手机号，云端就会自动发送短信验证码。
-
-另外，假如注册的时候并没有强制用户验证手机号，而是在用户使用某一个功能的时候，要求用户验证手机号，也可以调用接口进行「延迟验证」，验证之后 `mobilePhoneVerified` 就会被置为 `true`。
-
-1. **请求发送验证码**    
-  {% block avuser_request_sms_code %}{% endblock %}
-2. **调用验证接口，验证用户输入的纯数字的验证码。**  
-  {% block avuser_verify_sms_code %}{% endblock %}
-
-#### 没收到注册验证短信？
-
-一般来说，用户收到的注册验证短信内容为：
-
-```
-【AppName】欢迎使用 AppName 服务，您的安全码是 123456，请输入完成验证。
-```
-
-其中 **AppName** 是应用的名称，如果这个名称超过五个汉字（10 个字符）的长度，就会因为签名太长而被短信供应商拒绝发送。请到 [**控制台** > **设置**](https://leancloud.cn/app.html?appid={{appid}}#/general) 页面修改应用名称。
 
 ### 操作认证
 
@@ -130,6 +100,42 @@ LeanCloud 短信服务支持的应用场景有以下三种：
   
 针对上述的需求，可以把场景换成异地登录验证、修改个人敏感信息验证等一些常见的场景，步骤是类似的，调用的接口也是一样的，仅仅是在做 UI 展现的时候需要开发者自己去优化验证过程。
 
+### 注册验证
+**用户注册**对所有开发者来说都是非常重要的，为了降低操作难度，越来越多的应用支持使用手机号码来快速注册账户，并且同时会通过短信验证码来核实用户手机号码的有效性。为了满足这一需求，我们将 LeanCloud 内建的[账户系统]({% block builtin_account_url %}{% endblock %})与短信验证码相结合，推出了便捷的「注册验证」功能。其使用步骤如下：
+
+1. **用户输入手机号以及密码**  
+  引导用户正确的输入，建议在调用 SDK 接口之前，验证一下手机号的格式。
+
+2. **调用 AVUser 的注册接口，传入手机号以及密码。**  
+  {% block avuser_signup_send_sms %}{% endblock %}
+3. **云端发送手机验证码，并且返回注册成功，但是此时用户的 `mobilePhoneVerified` 依然是 `false`，客户端需要引导用户去输入验证码。**   
+  
+4. **用户再一次输入验证码**  
+  最好验证一下是否为纯数字。
+  
+5. **调用验证接口，检查用户输入的纯数字验证码是否合法。**  
+  {% block avuser_signup_sms_verify %}{% endblock %}
+
+以上是一个通用的带有手机号验证的注册过程。开发者可以根据需求增加或减少步骤，但是推荐开发者在使用该功能时，首先明确是否需要勾选「验证注册用户手机号码」。因为一旦勾选，只要调用了 AVUser 相关的注册账号，并传入手机号，云端就会自动发送短信验证码。
+
+> 注意：只有使用了 LeanCloud 内建账户系统的应用才能使用这一功能。
+
+另外，假如注册的时候并没有强制用户验证手机号，而是在用户使用某一个功能的时候，要求用户验证手机号，也可以调用接口进行「延迟验证」，验证之后 `mobilePhoneVerified` 就会被置为 `true`。
+
+1. **请求发送验证码**    
+  {% block avuser_request_sms_code %}{% endblock %}
+2. **调用验证接口，验证用户输入的纯数字的验证码。**  
+  {% block avuser_verify_sms_code %}{% endblock %}
+
+#### 没收到注册验证短信？
+
+一般来说，用户收到的注册验证短信内容为：
+
+```
+【AppName】欢迎使用 AppName 服务，您的安全码是 123456，请输入完成验证。
+```
+
+其中 **AppName** 是应用的名称，如果这个名称超过五个汉字（10 个字符）的长度，就会因为签名太长而被短信供应商拒绝发送。请到 [**控制台** > **设置**](https://leancloud.cn/app.html?appid={{appid}}#/general) 页面修改应用名称。
 
 ## 通知类
 通知类短信是很多人每天都可能收到的信息，例如，联通用户从外地进入上海可能会收到如下短信：
@@ -156,7 +162,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 假设你提交了如下的短信模板，并且将这个模板的名称保存为 **Notice_Template**：
 
-<pre ng-non-bindable><code>尊敬的用户，你购买的服务《{{service_name}}》（订单号{{order_Id}}）
+<pre ng-non-bindable><code>尊敬的用户，你购买的服务《{{service_name}}》（订单号{{order_id}}）
 </code></pre>
 
 #### 使用模板
@@ -164,6 +170,19 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 当模板通过审批之后，就可以调用了：
 
 {% block send_sms_by_template %}{% endblock %}
+
+#### 模板变量
+
+模板可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>自定义变量</span>，如上例中的 <code ng-non-bindable>{{service_name}}</code> 和 <code ng-non-bindable>{{order_id}}</code>，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
+
+模板还可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>系统预留变量</span>，在发送短信发送时，它们会被自动填充：
+
+<pre ng-non-bindable><code>欢迎注册{{name}}应用！请使用验证码 {{code}} 来完成注册。该验证码将在{{ttl}}分钟后失效，请尽快使用。
+</code></pre>
+
+- `name`：应用名称
+- `code`：验证码
+- `ttl`：过期时间（默认为 10 分钟）
 
 #### 模板规范
 

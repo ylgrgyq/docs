@@ -3,11 +3,15 @@
 本文档尝试为所有服务端和SDK返回的错误码给出相对详细的解释，具体到各个SDK的错误码，请参考下列文档链接：
 
 * iOS 的 [AVConstants](/api-docs/iOS/docs/AVConstants.html)。
+* iOS v3.1.5 及之后的版本，网络请求操作相关的错误码，比如：28 表示请求超时、7 表示连接服务器失败，这些请参考 [**libcurl error codes**](http://curl.haxx.se/libcurl/c/libcurl-errors.html)。
 * Android 的 [AVException](/api-docs/android/doc/index.html)。
 
 ## 实时通信错误码
 
-参考[实时通信服务端错误码说明](realtime_v2.html#服务器端错误码说明)
+相关参考链接：
+
+* [实时通信服务端错误码说明](realtime_v2.html#服务器端错误码说明)。
+* iOS SDK 在进行 WebSocket 通信过程中，相关的状态码请参考  [**RFC 6455 -- Status Codes**]( http://tools.ietf.org/html/rfc6455#section-7.4 )。
 
 ## 1
 * 信息 - `Internal server error. No information available.`

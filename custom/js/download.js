@@ -2,7 +2,7 @@ angular.module("app").controller("DownCtrl",['$scope', '$http', function($scope,
     $scope.download = {};
     $scope.downselect ={};
 
-    var modules = [ 'ios', 'osx', 'android', 'javascript', 'unity3d', 'wp', 'jschat'];
+    var modules = [ 'ios', 'osx', 'android', 'javascript', 'unity3d', 'wp', 'jschat', 'watchos', 'tvos'];
     angular.forEach(modules,function(v, k){
         $http.get("https://download.avoscloud.com/1/sdkComponents/"+v).then(function(result){
            $scope.download[v] = result.data;

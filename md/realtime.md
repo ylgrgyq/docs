@@ -8,7 +8,7 @@
 
 * 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+* 便于调试的 [在线测试工具](http://chat.leanapp.cn/)。
 
 
 ## 功能和特性
@@ -235,7 +235,7 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 云引擎 hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改
 默认的流程等等。目前我们开放了两个需求比较强烈的 hook 云函数：
 
-* _messageReceived 消息达到服务器，群组成员已解析完成之后
+* _messageReceived 消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * _receiversOffline 消息发送完成，存在离线的收件人
 
 关于如何定义云函数，你可以参考 [云引擎 -云函数](leanengine_guide-cloudcode.html#云函数) 部分的说明。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
@@ -244,8 +244,9 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 
 这个 hook 发生在消息到达实时通信服务，如果是群组消息，我们会解析出所有消息收件人。
 
-你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消
-息内容。返回空对象则会执行系统默认的流程。
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象（`response.success({})`）则会执行系统默认的流程。
+
+**请注意，在这个 hook 的代码实现的任何分支上请确保最终会调用 response.success 返回结果，使得消息可以尽快投递给收件人。这个 hook 将阻塞发送流程，因此请尽量减少无谓的代码调用，提升效率。**
 
 #### 参数
 

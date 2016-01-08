@@ -15,31 +15,32 @@
 
 请务必确保你的应用拥有如下权限：
 
-* `android.permission.INTERNET`
+* `android.permission.INTERNET`<br/>
   向 LeanCloud 的统计服务器发送用户分析数据。
-* `android.permission.READ_PHONE_STATE`
-  `android.permission.ACCESS_WIFI_STATE`
+* `android.permission.READ_PHONE_STATE`<br/>
+  `android.permission.ACCESS_WIFI_STATE`<br/>
   这两个权限是为了获取用户手机的 IMEI 以及 WiFi 的 Mac 地址，用来唯一的标识用户。
-* `android.permission.ACCESS_NETWORK_STATE`
+* `android.permission.ACCESS_NETWORK_STATE`<br/>
   检测网络状态。
-* `android.permission.READ_LOGS`
+* `android.permission.READ_LOGS`<br/>
   获取客户端 crash log。通过将 crash log 汇报到服务器上，你可以了解你的应用 crash 的原因以及次数。
-* `android.permission.WRITE_EXTERNAL_STORAGE`
+* `android.permission.WRITE_EXTERNAL_STORAGE`<br/>
   保存离线报告的缓存数据。
 
 示例：
 
 ```xml
-<manifest ……>
-    <application ……>
-        ……
-        <activity ……/>
+<manifest ...>
+    <application ...>
+        ...
+        <activity .../>
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
 </manifest>
 ```
 
@@ -165,8 +166,15 @@ public class MyListFragment extends ListFragment {
   * `WRITE_EXTERNAL_STORAGE`
 * 确认所有的 Activity 中都调用了 onResume 和 onPause 方法。
 * 确认测试手机（或者模拟器）已成功连入网络。
-* 启动应用程序，几分钟之内你应该已经可以看到相应的报表。
+* 启动应用程序，几分钟之内你应该已经可以在 [控制台 / 分析](/stat.html?appid={{appid}}}#/statrealtime) 中的相应菜单中看到报表了。
 
+## 数据时效性
+
+在控制台的 **分析** 页面中，有些报告可以展示实时数据，有些报告则依靠 [离线数据](leaninsight_guide.html) 进行分析，因此有时你会看不到当天的数据。
+
+如果当前页面中存在 **日期选择** 选项（通常在页面右上角），你可以以此判断当前的统计结果是否有延迟。如果 **结束日期** 显示为 **当日日期** 或在其下拉菜单中有「今日」选项，即为实时数据；反之则为离线数据（如下图所示），要推迟一天才能看到当日的情况。
+
+<img src="../images/analytics_datepicker_for_offline_data.png" alt="" width="231" height="256">
 
 ## 使用自定义事件
 
@@ -213,7 +221,7 @@ AVAnalytics.onEvent(Context context, String eventName, String label, int count)
 参数 count 是对应事件（和对应标签）被触发的次数。
 
 ## 设置数据发送策略
-你可以进入应用的 [**分析** > **统计设置**<span style="color:#999">（左下角）</span> > **数据发送策略**](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改 SDK 端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略。
+你可以进入应用的 [**分析** > **统计设置**<span class="text-muted">（左下角）</span> > **数据发送策略**](/stat.html?appid={{appid}}&os=android#/statconfig/trans_strategoy) 在线更改 SDK 端的数据报告发送策略。在没有取到在线配置的发送策略的情况下，会使用默认的发送策略。
 
 以下均为在线配置中的可选策略。
 

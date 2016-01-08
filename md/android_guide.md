@@ -683,7 +683,7 @@ LeanCloud 提供了几种不同的缓存策略：
 `IGNORE_CACHE`|默认的缓存策略，查询不走缓存，查询结果也不存储在缓存。
 `CACHE_ONLY`|查询只从缓存获取，不走网络。如果缓存中没有结果，引发一个 AVException。
 `NETWORK_ONLY`|查询不走缓存，从网路中获取，但是查询结果会写入缓存。
-`CACHE_ELSE_NETWORK`|查询首先尝试从缓存中获取，如果失败，则从网络获取，如果两者都失败，则引发一个 AVException。
+<code style="white-space:nowrap;">CACHE_ELSE_NETWORK</code>|查询首先尝试从缓存中获取，如果失败，则从网络获取，如果两者都失败，则引发一个 AVException。
 `NETWORK_ELSE_CACHE`|查询首先尝试从网络获取，如果失败，则从缓存中查找；如果两者都失败，则应发一个 AVException。
 `CACHE_THEN_NETWORK`|查询首先尝试从缓存中获取，然后再从网络获取。在这种情况下，`FindCallback` 会被实际调用两次：首先是缓存的结果，其次是网络查询的结果。这个缓存策略只能用在异步的 `findInBackground` 方法中。
 
@@ -1331,7 +1331,7 @@ AVUser 类的 `loginInBackground` 方法。
 ```java
 AVUser.logInInBackground("username", "password", new LogInCallback() {
     public void done(AVUser user, AVException e) {
-        if (user != null) {
+        if (e == null) {
             // 登录成功
         } else {
             // 登录失败
@@ -1442,7 +1442,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       public void done(AVException e) {
           //发送了验证码以后做点什么呢
       }
-    })
+    });
 ```
 
 调用以下代码即可验证验证码:

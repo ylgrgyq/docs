@@ -10,6 +10,10 @@ user.signUp(null, ……)
   ```
 {% endblock %}
 
+{% block builtin_account_url %}
+js_guide.html#用户
+{% endblock %}
+
 {% block avuser_signup_sms_verify %}
   ```javascript
   AV.User.verifyMobilePhone('6位数字验证码').then(function(){
@@ -74,7 +78,7 @@ AV.Cloud.requestSmsCode({
   mobilePhoneNumber: '186xxxxxxxx',
   template: "Notice_Template"
   service_name: '月度周刊',
-  order_Id: '7623432424540'
+  order_id: '7623432424540'
 }).then(function(){
   //发送成功
 }, function(err){

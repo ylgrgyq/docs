@@ -12,6 +12,10 @@
   ```
 {% endblock %}
 
+{% block builtin_account_url %}
+ios_os_x_guide.html#用户
+{% endblock %}
+
 {% block avuser_signup_sms_verify %}
   ```objc
 [AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
@@ -69,8 +73,8 @@
 {% block send_sms_by_template %}
 ```objc
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-    [dict setObject:@"月度周刊" forKey:@"serviceName"];
-    [dict setObject:@"7623432424540" forKey:@"orderId"];
+    [dict setObject:@"月度周刊" forKey:@"service_name"];
+    [dict setObject:@"7623432424540" forKey:@"order_id"];
     [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Notice_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             //操作成功

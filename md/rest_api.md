@@ -1,4 +1,4 @@
-# REST API 详解
+# REST API 使用详解
 
 REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 进行交互，你可以使用 REST API 做很多事情，比如：
 
@@ -443,7 +443,7 @@ master | |字符串 `"master"`，当使用 master key 签名请求的时候，�
 
 ### 响应格式
 
-对于所有的请求的响应格式都是一个 JSON 对象.
+对于所有的请求，响应格式都是一个 JSON 对象。
 
 一个请求是否成功是由 HTTP 状态码标明的。一个 2XX 的状态码表示成功，而一个 4XX 表示请求失败。当一个请求失败时响应的主体仍然是一个 JSON 对象，但是总是会包含 `code` 和 `error` 这两个字段，你可以用它们来进行调试。举个例子，如果尝试用非法的属性名来保存一个对象会得到如下信息：
 
@@ -761,9 +761,9 @@ curl -X POST \
 
 ### 数据类型
 
-到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
+到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段（注意：**前缀是两个下划线**）来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
 
-**Date** 类型包含了一个 iso 字段，其值是一个 UTC 时间戳，以 ISO 8601 格式和毫秒级的精度来存储的时间值，格式为：`YYYY-MM-DDTHH:MM:SS.MMMZ`：
+<a id="datatype_date" name="datatype_date"></a>**Date** 类型包含了一个 iso 字段，其值是一个 UTC 时间戳，以 ISO 8601 格式和毫秒级的精度来存储的时间值，格式为：`YYYY-MM-DDTHH:MM:SS.MMMZ`：
 
 ```json
 {
@@ -1290,37 +1290,6 @@ curl -X GET \
 ### 使用手机号码一键注册或登录
 
 请参考 [短信服务 REST API 详解 - 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
-<!--
-现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登录，我们也提供了一个新 API `POST /usersByMobilePhone` 来处理：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -G \
-  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
-  https://api.leancloud.cn/1.1/usersByMobilePhone
-```
-
-其中 **mobilePhoneNumber** 就是手机号码，而 **smsCode** 是使用 [短信验证 API](rest_sms_api.html#短信验证_API) 发送到手机上的 6 位验证码字符串。如果不传入 username，默认用户名将是手机号码。
-
-注册或者登录成功后，返回的应答跟登录接口类似：
-
-```json
-{
-  "username": "186xxxxxxxx",
-  "mobilePhone": "186xxxxxxxx",
-  "createdAt":"2015-07-14T02:31:50.100Z",
-  "updatedAt": "2015-07-14T02:31:50.100Z",
-  "objectId": "58c38496e4b05001a7732c5f",
-  "sessionToken": "qmdj8pdidnmyzp0c7yqil91oc"
-  ……其他属性
-}
-```
-
-如果是第一次注册，将默认设置 `mobilePhoneVerified` 属性为 `true`。
--->
 
 ### 验证 Email
 
@@ -2119,7 +2088,7 @@ curl -X DELETE \
 
 ## Push 通知
 
-请查看我们的 [消息推送开发指南 - 使用 REST API 推送消息](./push_guide.html#使用_REST_API_推送消息)。
+请查看我们的 [消息推送开发指南 &middot; 使用 REST API 推送消息](./push_guide.html#使用_REST_API_推送消息)。
 
 ## 安装数据
 
@@ -2130,7 +2099,7 @@ curl -X DELETE \
 字段|描述
 ---|---
 badge|数字，表示最新的 iOS 的安装已知的 application badge。
-channels| 数组，可选，表示这个安装对象的订阅频道列表设备订阅的频道。
+channels| 数组，可选，表示这个安装对象的订阅频道列表设备订阅的频道。**每个 channel 名称只能包含 26 个英文字母和数字。**
 deviceToken|由 Apple 生成的字符串标志，在 deviceType 为 iOS 上的设备是必须的，而且自对象生成开始就不能改动，对于一个 app 来说也是不可重复的。
 deviceType|必须被设置为"ios"、"android"、"wp"、"web"中的一种，而且自这个对象生成以后就不能变化。
 installationId|由 LeanCloud 生成的字符串标志，而且如果 deviceType 是 android 的话是一个必选字段，如果是 iOS 的话则可选。它只要对象被生成了就不能发生改变，而且对一个 app 来说是不可重复的。
@@ -2201,7 +2170,7 @@ curl -X GET \
 
 ### 更新安装对象
 
-安装对象可以向相应的URL发送PUT请求来更新。举个例子，为了让设备订阅一个 foo 的 Push channel：
+安装对象可以向相应的 URL 发送 PUT 请求来更新。例如，为了让设备订阅一个名字为「foo」的推送频道：
 
 ```sh
 curl -X PUT \
@@ -2261,7 +2230,7 @@ curl -X GET \
 }
 ```
 
-所有对普通的对象的查询都对 installatin 对象起作用，所以可以查看之前的查询部分以获取详细信息。通过做 channels 的数组查询，你可以查找一个订阅了给定的 push channel 的所有设备.
+所有对普通的对象的查询都对 installatin 对象起作用，所以可以查看之前的查询部分以获取详细信息。通过做 channels 的数组查询，你可以查找一个订阅了给定的推送频道的所有设备.
 
 ### 删除安装对象
 
@@ -2416,98 +2385,6 @@ curl -X POST \
 ## 短信验证 API
 
 请参考 [短信服务 REST API 详解](rest_sms_api.html)。
-
-<!--
-在一些场景下，你可能希望用户验证手机号码后才能进行一些操作，例如充值等。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
-
-短信 API 每个  LeanCloud 账户有 100 个免费额度，超过就即时收费。使用这些 API 需要开启 **启用手机号码短信认证（针对 `/1.1/verifySmsCode/<code>` 接口）** 选项。
-
-给某个手机号码发送验证短信通过：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
-```
-
-### 语音验证码
-
-语音验证码，是通过电话直接呼叫用户的电话号码来播报验证码。它可以作为一种备选方案，来解决因各种原因导致短信无法及时到达的问题。发送方式如下：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
-```
-
-语音验证码是一个 6 位的数字组合，语音只播报数字内容，不能添加其他任何内容，smsType 可以为 **voice** 或者 **sms**。
-
- - **voice**：发送「语音」验证码
- - **sms**：发送「短信」验证码
-
-此接口与之前的 [短信验证 API](#短信验证_API) 完全兼容，如果你不需要此服务，完全不需要修改之前的发送短信代码。
-
-验证收到的 6 位数字验证码是否正确通过：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  "https://api.leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
-```
-
-其中 **code** 是手机收到的 6 位数字验证码。**mobilePhoneNumber** 是收到短信的手机号码。
-
-**由于运营商和渠道的限制，短信验证码发送要求间隔至少一分钟，并且每个手机号码每日少于 10 条，因此建议你在界面上提示用户**。
-
-## 自定义短信模板
-
-我们还支持通过 `requestSmsCode` 发送自定义模板的短信，但是**要求内容必须是验证码类或者通知类短信，不允许包含下载链接等推广信息**。模板的创建和修改都需要审核，并且要求创建或者修改的时候账户至少有 200 RMB 的非赠送余额。模板本身不扣费，短信发送才扣费。**通知类短信没有间隔和条数限制。**
-
-你可以在应用设置的短信模板里创建短信模板，创建后将自动提交审核，审核结果将通过邮件的形式发送到你的账号邮箱。
-
-如果你创建了短信模板，可以指定 `template` 参数指定模板名称来使用你的模板，并且可以传入变量渲染模板，比如下面例子里的 `date`：
-
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx", "template":"activity","date":"2014 年 10 月 31 号"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
-```
-
-短信模板可以在应用设置的短信模板里创建，每个应用限制创建 10 个模板，并且每个模板都需要经过审核才可以使用（审核在工作时间内通常在 1个小时内）。模板一经审核，就可以马上使用，
-后续你可以创建同名模板来替换当前使用模板，新模板也同样需要审核。审核通过，即可替换老模板。
-
-目前我们仅允许两类自定义短信：验证类短信和通知类短信，不允许发送推广营销类短信。
-
-短信模板的语法遵循 [Handlebars](http://handlebarsjs.com/)，举例：
-
-<pre ng-non-bindable ><code>
-Hi {{username}},
-欢迎注册{{name}}应用，你可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
-以上。
-</code></pre>
-
-其中：
-* **code**：我们帮你生成的验证码，可以通过 `/1.1/verifySmsCode/<code>` 校验。
-* **ttl**：短信有效期，单位分钟，默认为 10 分钟。
-* **name**：应用名称
-
-这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 <span ng-non-bindable>`{{var}}`</span>。
-
-短信签名，是指短信内容里用实心方括号（【】）括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
-
--->
 
 ## 实时通信 API
 
@@ -2748,7 +2625,7 @@ curl -X GET \
 格式概览如下：
 
 ```
-curl -i X POST \
+curl -i -X POST \
 -H "Content-Type: application/json" \
 -H "X-LC-Id: {{appid}}" \
 -H "X-LC-Key: {{appkey}}" \
@@ -2949,7 +2826,7 @@ curl -X GET \
 获取服务端当前日期时间可以通过 `/date` API:
 
 ```
-curl -i X GET \
+curl -i -X GET \
     -H "X-LC-Id: {{appid}}" \
     -H "X-LC-Key: {{appkey}}" \
     https://api.leancloud.cn/1.1/date

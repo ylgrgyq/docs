@@ -1,4 +1,4 @@
-# 实时通信服务概览
+# 实时通信服务总览
 
 实时通信服务是 LeanCloud 消息服务中的重要一环。你不但可以为应用加入实时聊天、私信等常用功能，还能实现游戏对战等实时互动功能。
 
@@ -42,7 +42,7 @@ LeanCloud 实时通信服务的特性主要有：
 * **支持富媒体、自定义类型消息**<br/>
   支持文本、图片、音频、视频和地理位置等多种格式的富媒体消息，并且开发者还可方便地自定义扩展。
 * **离线消息推送**<br/>
-  消息在对方离线时，会自动通过 [消息推送](#聊天离线时可以推送吗) 来及时送达对方，并且推送的消息文本可以由开发者自己控制。
+  消息在对方离线时，会自动通过 [消息推送](#离线推送通知) 来及时送达对方，并且推送的消息文本可以由开发者自己控制。
 * **敏感词过滤**<br/>
   实时消息中出现的敏感词，会自动被过滤掉；对于部分 VIP 客户，我们还允许自定义仅属于自己应用的敏感词列表。
 * **聊天记录保存在云端**<br/>
@@ -116,8 +116,8 @@ LeanCloud 实时通信服务的特性主要有：
 这是我们经常会用到的「对话」，单聊和群聊都通过它来实现。我们建议开发者将单聊/群聊、私密/公开等属性存入到 Conversation.attributes 之中，在应用层进行区别对待。
 
 为了提高系统的灵活性，我们允许多个对话保持相同的成员，因此创建对话时系统总是默认创建新的对话。
-如果开发者希望使用固定的对话，可以在创建对话时设置相应 SDK 上的 `unique` 选项，系统将首先查找对应成员的对话，如果找到即返回已有的对话，如果没有则自动创建。
-（注意，这种方式查找的对话仅对使用 `unique` 选项的对话有效，并且创建对话时不会触发 `_Conversation` 表在云引擎上的 `beforeSave` 等 hook）
+如果开发者希望使用固定的对话，可以在创建对话时设置相应 SDK 上的 `unique` 选项，系统将查找对应成员相同且 `unique` 选项为 true 的对话，如果找到即返回已有的对话，如果没有则自动创建。
+（注意，这种方式查找的对话仅对已经使用 `unique` 选项的对话有效，并且创建对话时不会触发 `_Conversation` 表在云引擎上的 `beforeSave` 等 hook）
 
 #### 暂态对话（Transient Conversation）
 
@@ -151,7 +151,7 @@ LeanCloud 实时通信服务的特性主要有：
 **离线消息** | 支持 | 不支持 | 支持
 **离线推送** | 支持 | 不支持 | 支持
 **消息记录** | 支持 | 支持 | 支持
-**用例** | 单聊、群聊 | 聊天室、弹幕、网页实时评论 | 公众号，机器人，下发加好友通知
+**用例** | 单聊、群聊 | 聊天室、弹幕、网页实时评论 | 公众号、机器人、下发加好友通知
 
 <span> * </span> 指 `_Conversation` 系统表中的字段
 
@@ -222,7 +222,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 对离线的 iOS 和 Windows Phone 用户，每次有离线消息时，我们会触发一个对应平台的推送通知。
 由于不同平台的不同限制，且用户的消息正文可能还包含上层协议，所以我们允许用户在控制台中为应用设置一个静态的 APNs JSON，推送一条内容固定的通知。
 
-进入 [控制台 ><span style="color:#999;">（选择应用）</span>> 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
+进入 [控制台 ><span class="text-muted">（选择应用）</span>> 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
 
 ```
 {"alert":"您有新的消息", "badge":"Increment"}`
@@ -258,7 +258,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 这部分平台的用户，在完成登录时，SDK 会自动关联当前的 Client ID 和设备。关联的方式是通过设备**订阅**名为 Client ID 的 Channel 实现的。开发者可以在数据存储
 的 `_Installation` 表中的 `channel` 字段查到这组关联关系。在实际离线推送时，系统根据用户 Client ID 找到对应的关联设备进行推送。
 
-另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到 `_Notification` 表中。
+另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到消息菜单的推送记录。
 
 #### 敏感词过滤
 
@@ -326,7 +326,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 * appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对加入群的情况，这里 sorted_member_ids 是空字符串。
 * convid - 此次行为关联的对话 id。
-* action - 此次行为的动作，行为分别对应常量 **invite**（加群和邀请）和 **kick**（踢出群）。
+* action - 此次行为的动作，分为 **add** （加群和邀请）与 **remove** （踢出群）两种，但出于兼容考虑，签名时分别使用常量 **invite** 和 **kick** 来进行表示。
 
 ## 云引擎 Hook
 
@@ -335,7 +335,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 云引擎 Hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改默认的流程等等。目前开放的 hook 云函数包括：
 
 * **_messageReceived**<br/>
-  消息达到服务器，群组成员已解析完成之后。
+  消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * **_receiversOffline**<br/>
   消息发送完成，存在离线的收件人。
 * **_conversationStart**<br/>
@@ -347,7 +347,7 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 ### 使用场景
 
-示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，以 `fromPeer` 得到发送者的名称，组装成 `pushMessage`，这样能使推送通知的用户体验更好。可参考 [leanchat-cloudcode 代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，以 `fromPeer` 得到发送者的名称，组装成 `pushMessage`，这样能使推送通知的用户体验更好。可参考 [leanchat-cloudcode 代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud.js)。
 
 与 conversation 相关的 hook 可以在应用签名之外增加额外的权限判断，控制对话是否允许被建立、某些用户是否允许被加入对话等。你可以用这一 hook 实现黑名单功能。
 
@@ -355,7 +355,9 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 
 这个 hook 发生在消息到达 LeanCloud 云端之后。如果是群组消息，我们会解析出所有消息收件人。
 
-你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象则会执行系统默认的流程。
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象（`response.success({})`）则会执行系统默认的流程。
+
+<div class="callout callout-info">请注意，在这个 hook 的代码实现的任何分支上**请确保最终会调用 response.success 返回结果**，使得消息可以尽快投递给收件人。这个 hook 将**阻塞发送流程**，因此请尽量减少无谓的代码调用，提升效率。</div>
 
 如果你使用了 LeanCloud 默认提供的富媒体消息格式，云引擎参数中的 `content` 接收的是 JSON 结构的字符串形式。关于这个结构的详细说明，请参考 [实时通信 REST API 指南 - 富媒体消息格式说明](./realtime_rest_api.html#富媒体消息格式说明)。
 
@@ -438,6 +440,7 @@ force|可选|如果为真将强制推送给 offlinePeers 里 mute 的用户，�
 --- | ---
 initBy | 由谁发起的 clientId
 members | 初始成员数组，包含初始成员
+attr | 创建对话时的额外属性
 
 #### 返回
 
@@ -510,11 +513,27 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 
 系统对话可以用于实现机器人自动回复、公众号、服务账号等功能。在我们的 [官方聊天 Demo](http://leancloud.github.io/leanmessage-demo/) 中就有一个使用系统对话 hook 实现的机器人 MathBot，它能计算用户发送来的数学表达式并返回结果，[其服务端源码](https://github.com/leancloud/leanmessage-demo/tree/master/server) 可以从 GitHub 上获取。
 
+### 系统对话的创建
+
+系统对话也是对话的一种，创建后也是在 `_Conversation` 表中增加一条记录，只是该记录 `sys` 列的值为 true，从而与普通会话进行区别。具体创建方法请参考: [创建对话](#创建对话) 。
+
+### 系统对话消息的发送
+
+系统对话给用户发消息请参考： [REST API - 系统对话给用户发消息](realtime_rest_api.html#系统对话给用户发消息)。
+
+用户给系统对话发送消息跟用户给普通对话发消息方法一致。
+
+### 获取系统对话消息记录
+
+获取系统对话给用户发送的消息记录请参考： [获取系统对话中某个特定用户与系统的消息记录](realtime_rest_api.html#获取系统对话中某个特定用户与系统的消息记录)
+
+获取用户给系统对话发送的消息记录可以通过 `_SysMessage` 表和 Web Hook 两种方式实现。`_SysMessage` 表在应用首次有用户发送消息给某系统对话时自动创建，创建后我们将所有发送到系统对话的消息都存储在该表中。Web Hook 方式需要开发者自行定义 Web Hook，用于实时接收用户发给系统对话的消息。
+
 ### 系统对话消息结构
 
 #### `_SysMessage`
 
-用户发给系统对话的消息会存储在 `_SysMessage` 表中，各字段含义如下：
+存储用户发给系统对话的消息，各字段含义如下：
 
 字段 | 说明
 --- | ---
@@ -526,9 +545,9 @@ data | 消息内容
 
 #### Web Hook
 
-开发者可以自定义 Web Hook 来实时接收用户发给系统对话的消息，消息的数据结构与上文所述的 `_SysMessage` 一致。
+需要开发者自行在 [**控制台** > **消息** > **实时消息** > **设置** > **消息回调设置**](/messaging.html?appid={{appid}}#/message/realtime/conf) 定义，来实时接收用户发给系统对话的消息，消息的数据结构与上文所述的 `_SysMessage` 一致。
 
-当有用户向系统对话发送消息时，我们会通过 HTTP POST 请求将 JSON 格式的数据发送到用户设置的 Web Hook 上。
+当有用户向系统对话发送消息时，我们会通过 HTTP POST 请求将 JSON 格式的数据发送到用户设置的 Web Hook 上。请注意，我们调用 Web Hook 时并不是一次调用只发送一条消息，而是会以批量的形式将消息发送过去。从下面的发送消息格式中能看到，JSON 的最外层是个 Array。
 
 超时时间为 5 秒，当用户 hook 地址超时没有响应，我们会重试至多 3 次。
 
@@ -558,10 +577,6 @@ data | 消息内容
   }
 ]
 ```
-
-### 开发者给系统对话发送消息
-
-请参考 [REST API - 给系统对话发消息](./realtime_rest_api.html#给系统对话发消息)。
 
 ## 限制
 

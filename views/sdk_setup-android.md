@@ -92,11 +92,12 @@ dependencies {
 我们已经提供了官方的 [maven 仓库](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
 
 #### Eclipse
+
 Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步骤](#手动安装) 将 SDK 导入到项目里。
 
 {% endblock %}
 
-{% block sdk_download_link %}[SDK下载](sdk_down.html){% endblock %}
+{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
 
 {% block import_sdk %}
 
@@ -112,8 +113,8 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 ├── fastjson.jar                                // LeanCloud 基本存储模块
 ├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
 ├── Java-WebSocket-1.2.0-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
-├── okhttp-2.5.0.jar                            // LeanCloud 基本存储模块
-├── okio-1.6.0.jar                              // LeanCloud 基本存储模块
+├── okhttp-2.6.0-leancloud.jar                  // LeanCloud 基本存储模块
+├── okio-1.6.0-leancloud.jar                    // LeanCloud 基本存储模块
 ├── qq.sdk.1.6.1.jar                            // LeanCloud SNS 模块
 └── weibo.sdk.android.sso.3.0.1-leancloud.jar   // LeanCloud SNS 模块
 ```
@@ -122,34 +123,35 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 
 ##### LeanCloud 基本存储模块
 
-* avoscloud-<版本号>.jar
-* okhttp-2.5.0.jar
-* okio-1.6.0.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
+* `avoscloud-<版本号>.jar`
+* `okhttp-2.6.0-leancloud.jar`
+* `okio-1.6.0-leancloud.jar`
+* `fastjson.jar` (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
+* `httpmime-4.2.4.jar`
 
 ##### LeanCloud 推送模块和实时聊天模块
 
 * LeanCloud 基础存储模块
-* avospush-<版本号>.jar
-* Java-WebSocket-1.2.0-leancloud.jar
+* `avospush-<版本号>.jar`
+* `Java-WebSocket-1.2.0-leancloud.jar`
 
 ##### LeanCloud 统计模块
 
 * LeanCloud 基础存储模块
-* avosstatistics-<版本号>.jar
+* `avosstatistics-<版本号>.jar`
 
 ##### LeanCloud SNS 模块
 
 * LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
+* `weibo.sdk.android.sso.jar`
+* `qq.sdk.1.6.1.jar`
 
 我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 必须使用我们提供的版本，否则无法运行。
 
 **注意：如果需要使用美国站点，并且 SDK 版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，需要下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)，将其拷贝到项目的 `res/raw/` 之下。**
 
 #### Android Studio
+
 首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
 
 1. 打开 **File** > **Project Structure** > **Modules** 对话框，点击 **Dependencies**；
@@ -164,7 +166,7 @@ Eclipse 的导入与一般的 jar 导入无本质区别，不做赘述。
 
 然后新建一个 Java Class ，名字叫做 **MyLeanCloudApp**,让它继承自 **Application** 类，实例代码如下:
 
-```
+```java
 public class MyLeanCloudApp extends Application {
 
     @Override
@@ -180,33 +182,34 @@ public class MyLeanCloudApp extends Application {
 
 然后打开 `AndroidManifest.xml` 文件来配置 SDK 所需要的手机的访问权限以及声明刚才我们创建的 `MyLeanCloudApp` 类：
 
-```
-<!-- 基础模块所须声明，必填 - Start  !-->
+```xml
+<!-- 基础模块（必须加入以下声明）START -->
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.INTERNET"/>
 <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-<!-- 基础模块所须声明 - End  !-->
+<!-- 基础模块 END -->
 
-<!-- 实时通信模块，推送所须声明 ，可选- Start  !-->
-<service android:name="com.avos.avoscloud.PushService"/>
+<application
+  ...
+  android:name=".MyLeanCloudApp" >
+
+  <!-- 实时通信模块、推送（若使用该功能，需添加以下声明）START -->
+  <service android:name="com.avos.avoscloud.PushService"/>
     <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
-        <intent-filter>
-            <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            <action android:name="android.intent.action.USER_PRESENT"/>
-        </intent-filter>
-    </receiver>
-<!-- 实时通信模块，推送所须声明  - End  !-->
+      <intent-filter>
+        <action android:name="android.intent.action.BOOT_COMPLETED"/>
+        <action android:name="android.intent.action.USER_PRESENT"/>
+    </intent-filter>
+  </receiver>
+  <!-- 实时通信模块、推送 END -->
 
-<application ...
-  android:name=".MyLeanCloudApp"
-  ... >
-  <!-- 反馈组件 ，可选- Start  !-->
+  <!-- 反馈组件（若使用该功能，需添加以下声明）START -->
   <activity
      android:name="com.avos.avoscloud.feedback.ThreadActivity" >
   </activity>
-  <!-- 反馈组件 ，可选- End  !-->
+  <!-- 反馈组件 END -->
 </application>
 ```
 

@@ -1,10 +1,15 @@
 --- layout: download.swig ---
 <link rel="alternate" type="application/atom+xml" title="LeanCloud SDK Update Feed" href="https://download.leancloud.cn/sdk/feed.xml" />
 <div class="row" ng-controller="DownCtrl">
+
   <div class="col-md-12">
-    <h1 style="margin-top: 0;">
-    SDK 下载 <a href="https://download.leancloud.cn/sdk/feed.xml" class="changelog-rss bstooltip" title="所有平台 SDK 的 RSS 更新"><i class="icon icon-rss"></i> RSS</a>
-  </h1>
+    <div class="doc-home-title">
+      <h1 class="font-logo">
+        LeanCloud SDK 下载 <a href="https://download.leancloud.cn/sdk/feed.xml" class="changelog-rss bstooltip" title="所有平台 SDK 的 RSS 更新"><i class="icon icon-rss"></i> RSS</a>
+      </h1>
+      <h4>SDK 及相关资源下载</h4>
+    </div>
+    <!-- .doc-home-title -->
   </div>
   <!-- .col-md-12 -->
 
@@ -90,7 +95,7 @@
             </div>
           </div>
 
-          <hr>
+
 
           <a class="btn btn-sm btn-primary dl-cell-btn" ng-click="download('osx')">
       下载 <span>- {{getDownSize('osx')}}</span>
@@ -106,8 +111,25 @@
               <a href="https://download.leancloud.cn/sdk/OSX/">其他版本</a>
             </li>
           </ul>
+<hr>
+          <div>
+          <h2> 其他 Apple 相关 SDK</h2>
+           <ul class="list-unstyled list-inline">
+            <li>
+              <a ng-click="download('watchos','Static')">watchOS</a>
+            </li>
+            <li>
+              <a ng-click="download('tvos','Static')">tvOS</a>
+            </li>
+           </ul>
+
+
+          </div>
         </div>
         <!-- .dl-cell -->
+
+
+
       </div>
     </div>
     <!-- .row -->
@@ -330,6 +352,8 @@
     </div>
     <!-- .row -->
   </div>
+
+
 
   <div class="col-md-12">
 

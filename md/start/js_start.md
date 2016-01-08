@@ -1,12 +1,11 @@
 把下面这行代码加入你的测试页面中：
 
+
 ```
 <script src="https://cdn1.lncld.net/static/js/av-mini-{{sdkversion.javascript}}.js"></script>
-//或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{{sdkversion.javascript}}.js"></script>
 ```
 
-进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。
+进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。想要跟进最新功能，可以到官方的 [GitHub Repo](https://github.com/leancloud/javascript-sdk) 。
 
 ```
 AV.initialize('{{appid}}', '{{appkey}}');

@@ -381,6 +381,16 @@ table *,
 
 .modal-body {
 
+  > h1:first-child,
+  > h2:first-child,
+  > h3:first-child,
+  > h4:first-child,
+  > h5:first-child,
+  > h6:first-child
+  {
+    margin-top: 0;
+  }
+
   > p:last-child,
   > ul:last-child,
   > ol:last-child,
@@ -540,9 +550,26 @@ label {
 .has-error,
 .has-warning {
 
-  .form-control,
-  .form-control:focus {
+  .form-control {
     .box-shadow(none);
+  }
+}
+
+.form-control:focus {
+
+  .has-success & {
+    color: @state-success-text;
+    .form-focus(@state-success-text);
+  }
+
+  .has-warning & {
+    color: @state-warning-text;
+    .form-focus(@state-warning-text);
+  }
+
+  .has-error & {
+    color: @state-danger-text;
+    .form-focus(@state-danger-text;);
   }
 }
 
@@ -1174,6 +1201,21 @@ hr {
 
 
 //
+// Opacity Shortcuts
+// --------------------------------------------------
+.opacity-0 { opacity: .0 };
+.opacity-1 { opacity: .1 };
+.opacity-2 { opacity: .2 };
+.opacity-3 { opacity: .3 };
+.opacity-4 { opacity: .4 };
+.opacity-5 { opacity: .5 };
+.opacity-6 { opacity: .6 };
+.opacity-7 { opacity: .7 };
+.opacity-8 { opacity: .8 };
+.opacity-9 { opacity: .9 };
+
+
+//
 // More Custom Defines
 // --------------------------------------------------
 
@@ -1209,6 +1251,22 @@ select.form-control {
     opacity: .5;
     cursor: not-allowed;
   }
+}
+
+// Custom external link symbol
+a {
+  .icon-external {
+    opacity: .6;
+    vertical-align: 0;
+  }
+}
+
+// Avoid long words break the layout
+.word-break {
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // Custom animations

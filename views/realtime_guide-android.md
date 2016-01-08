@@ -5,7 +5,7 @@
 {% set sdk_name = 'Android SDK' %}
 
 {% block setup_init %}
-我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
+请参考详细的 [Android SDK 安装指南](sdk_setup-android.html)。
 {% endblock %}
 
 {% block demo %}
@@ -14,7 +14,6 @@
 {% endblock %}
 
 {% block oneOnOneChat_sent %}
-
 ```
   public void sendMessageToJerryFromTom() {
     // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
@@ -117,7 +116,6 @@ public void jerryReceiveMsgFromTom(){
 {% endblock %}
 
 {% block groupChat_sent %}
-
 ```
   public void sendMessageToJerryFromTom() {
     // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
@@ -157,7 +155,6 @@ public void jerryReceiveMsgFromTom(){
 {% endblock %}
 
 {% block groupChat_received %}
-
 ```
 public class MyApplication extends Application{
   public void onCreate(){
@@ -283,9 +280,7 @@ tom.open(new AVIMClientCallback() {
 ```
 {% endblock %}
 
-{% block imageMessage_received_intro %}
-
-{% endblock %}
+{% block imageMessage_received_intro %}{% endblock %}
 
 {% block imageMessage_received %}
 
@@ -372,7 +367,7 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          // 创建名为“猫和老鼠”的对话
+          // 创建名为「猫和老鼠」的对话
           client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
               new AVIMConversationCreatedCallback() {
                 @Override
@@ -399,7 +394,6 @@ AVIMClient tom = AVIMClient.getInstance("Tom");
 {% endblock %}
 
 {% block audioMessage_received_intro %}
-
 ```
 AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
         new AVIMTypedMessageHandler<AVIMAudioMessage>() {
@@ -432,9 +426,7 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
         }
       }
     });
-
 ```
-
 {% endblock %}
 
 {% block videoMessage_local_sent %}
@@ -471,14 +463,13 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
 {% endblock %}
 
 {% block videoMessage_url_sent %}
-
 ```
  AVIMClient tom = AVIMClient.getInstance("Tom");
     tom.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
         if (e == null) {
-          // 创建名为“猫和老鼠”的对话
+          // 创建名为「猫和老鼠」的对话
           client.createConversation(Arrays.asList("Jerry"), "猫和老鼠", null,
               new AVIMConversationCreatedCallback() {
                 @Override
@@ -802,6 +793,36 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
+{% block message_unread %}
+要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
+
+```
+AVIMClient.setOfflineMessagePush(true);
+```
+
+然后实现 AVIMConversationEventHandler 的代理方法 `onOfflineMessagesUnread` 来从服务端取回未读消息：
+
+```
+onOfflineMessagesUnread(AVIMClient client, AVIMConversation conversation, int unreadCount) {
+  //如果有多个 conversation 有未读消息，此函数会执行多次
+  if (unreadCount > 0) {
+    // 可以根据 readCount 更新 UI
+    
+    // 也可以拉取对应的未读消息
+    conversation.queryMessages(unreadCount, new AVIMMessagesQueryCallback() {
+      @Override
+      public void done(List<AVIMMessage> list, AVIMException e) {
+        if (e == null) {
+          // 获得对应的未读消息
+        }
+      }
+    });
+  }
+}
+```
+`AVIMConversationEventHandler` 的实现和定义在[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
+{% endblock %}
+
 {% block message_Relation_intro %}
 消息类型之间的关系
 
@@ -835,7 +856,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
  
 {% endblock %}
 
-{% block attributes %} `AVIMTypedMessage.attributes` {% endblock %}
+{% block attributes %}`AVIMTypedMessage.attributes`{% endblock %}
 
 {% block attributes_property %}attributes{% endblock %}
 
@@ -1394,8 +1415,7 @@ tom.open(new AVIMClientCallback(){
 
 {% block conversation_property_name %}`AVIMConversation.creator`{% endblock %}
 
-{% block conversation_tag %}
-
+{% block conversation_attributes_new %}
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
 tom.open(new AVIMClientCallback(){
@@ -1405,7 +1425,8 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  HashMap<String,Object> attr = new HashMap<String,Object>();
-	  attr.put("tag","private");
+	  attr.put("type","private");
+    attr.put("isSticky",true);
 	  client.createConversation(Arrays.asList("Jerry"),"猫和老鼠",attr,
 	           new AVIMConversationCreatedCallback(){
 	             @Override
@@ -1420,6 +1441,8 @@ tom.open(new AVIMClientCallback(){
 });
 ```
 {% endblock %}
+
+{% block conversation_attributes_modify %}{% endblock %}
 
 {% block conversation_getSingle %}
 
@@ -1730,7 +1753,7 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  query.whereMatches("attr.tag","[\\u4e00-\\u9fa5]"); //attr.tag 是中文 
+	  query.whereMatches("attr.language","[\\u4e00-\\u9fa5]"); //attr.language 是中文字符 
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override

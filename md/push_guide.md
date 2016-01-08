@@ -1,4 +1,4 @@
-# 消息推送开发指南
+# 消息推送服务总览
 
 消息推送，使得开发者可以即时地向其应用程序的用户推送通知或者消息，与用户保持互动，从而有效地提高留存率，提升用户体验。平台提供整合了 Android 推送、iOS 推送、Windows Phone 推送和 Web 网页推送的统一推送服务。
 
@@ -31,16 +31,17 @@ timeZone| |设备设定的时区
 
 ### Notification
 
-对应 `_Notification` 表，表示一条推送消息，它包括下列属性：
+对应消息菜单里的推送记录，表示一条推送消息，它包括下列属性：
 
 名称|适用平台|描述
 ---|---|---
 data| |本次推送的消息内容，JSON 对象。
-invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW12) 错误。**如果这个数字过大，请留意证书是否正常。**
+invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/mac/technotes/tn2265/_index.html#//apple_ref/doc/uid/DTS40010376-CH1-TNTAG32) 错误。**如果这个数字过大，请留意证书是否正常。**
 prod|iOS|使用什么环境证书。**dev** 表示开发证书，**prod** 表示生产环境证书。
-status| |本次推送的状态，**in queue** 表示仍然在队列，**done** 表示完成，**schedule** 表示定时推送任务等待触发中。
-subscribers| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
+status| |本次推送的状态，**in-queue** 表示仍然在队列，**done** 表示完成，**scheduled** 表示定时推送任务等待触发中。
+devices| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
 where| |本次推送查询 _Installation 表的条件，符合这些查询条件的设备将接收本条推送消息。
+errors| | 本次推送过程中的错误信息。
 
 如何发送消息也请看下面的详细指南。
 
@@ -111,7 +112,7 @@ curl -X POST \
 
 ##### 订阅和退订频道
 
-通过设置 `channels` 属性来订阅某个推送频道：
+通过设置 `channels` 属性来订阅某个推送频道，下面假设 `mrmBZvsErB` 是待操作 `Installation` 对象的 `objectId`：
 
 ```sh
 curl -X PUT \
@@ -144,7 +145,9 @@ curl -X PUT \
 
 `channels` 本质上是数组属性，因此可以使用标准 [REST API](./rest_api.html#数组) 操作。
 
-#### 自定义属性
+#### 在 `Installation` 中添加自定义属性
+
+假设 `mrmBZvsErB` 是待操作 `Installation` 对象的 `objectId`，待添加的自定义属性是 `userObjectId`，值为 "<用户的 objectId>"：
 
 ```sh
 curl -X PUT \
@@ -171,7 +174,14 @@ prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产�
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
 
->我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，可以参考 [Stackoverflow 帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。
+#### 开发证书推送
+
+为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。
+
+#### 过期时间
+
+我们建议给 iOS 设备的推送都设置过期时间，这样才能保证在推送的当时，如果用户与 APNs 之间的连接恰好断开（如关闭了手机网络、设置了飞行模式等)，在连接恢复之后消息过期之前，用户仍然可以收到推送消息。可以参考 [Stackoverflow &middot; Push notification is not being delivered when iPhone comes back online](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。
+过期时间具体设置方法请参考 [expiration_time、expiration_interval 和 push_time](#expiration_time_expiration_interval_和_push_time)。
 
 #### 消息内容 Data
 
@@ -185,6 +195,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
    "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": "如果你在使用 Newsstand, 设置为1来开始一次后台下载"
+   "custom-key":        "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
@@ -216,11 +227,12 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
   "data":{
     "alert":      "消息内容",
     "title":      "显示在通知栏的标题"
+    "custom-key": "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
 
-如果自定义 Receiver，需要设置 `action`，当然也可以自己加属性了:
+如果自定义 Receiver，需要设置 `action`：
 
 ```
 {
@@ -228,7 +240,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
     "alert":      "消息内容",
     "title":      "显示在通知栏的标题",
     "action":     "com.your_company.push",
-    "fromUserId": "自定义属性"
+    "custom-key": "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
@@ -255,12 +267,14 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
       "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载"
+      "custom-key":        "自定义属性，根据应用具体需要自行添加"
     },
     "android": {
       "alert":             "消息内容",
       "title":             "显示在通知栏的标题",
       "action":            "com.your_company.push",
       "fromUserId":        "自定义属性"
+      "custom-key":        "自定义属性，根据应用具体需要自行添加"
     },
     "wp":{
       "alert":             "消息内容",
@@ -546,6 +560,22 @@ curl -X POST \
 ```
 
 
+### 推送记录查询
+
+`/push` 接口在推送后会返回代表该条推送消息的 `objectId`，你可以使用这个 ID 调用下列 API 查询推送记录：
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{appkey}}"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/tables/Notifications/:objectId
+```
+
+其中 URL 里的 `:objectId` 替换成 `/push` 接口返回的 objectId 。
+
+将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)
+
 ## Installation 自动过期和清理
 
 每当用户打开应用，我们都会更新该设备的 _Installation 表中的 `updatedAt` 时间戳。用户如果长期没有更新 _Installation 的 `updatedAt` 时间戳，也就意味着该用户长期没有打开过应用。当超过 360 天没有打开过应用时，我们会将这个用户在 _Installation 表中的记录删除。不过请不要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
@@ -558,9 +588,9 @@ curl -X POST \
 
 ### 推送结果查询
 
-所有经过 `/push` 接口发出的消息的都可以在控制台的存储里的 _Notification 表看到。每次调用 `/push` 都将产生一条新的 `_Notification` 对象表示一次推送。该表的各属性含义请参考 [Notification 表详解](#Notification) 。
+所有经过 `/push` 接口发出的消息的都可以在控制台的消息菜单里的推送记录看到。每次调用 `/push` 都将产生一条新的 推送记录表示一次推送。该表的各属性含义请参考 [Notification 表详解](#Notification) 。
 
-`/push` 接口会返回新建的 `_Notification` 对象的 `objectId`，你就可以在这张表里查找消息推送的结果。
+`/push` 接口会返回新建的推送记录的 `objectId`，你就可以在推送记录里根据 ID 查询消息推送的结果。
 
 
 ### iOS 推送排查建议
@@ -577,8 +607,8 @@ curl -X POST \
 * 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 **provisioning profile**，并到 XCode Organizer 更新。
 * 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
 * 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。
-* 检查 _Notifcation 表的 `subscribers` 和 `status`，确认推送状态和接收设备数目正常。
-
+* 检查消息菜单里的推送记录中的 `devices` 和 `status`，确认推送状态和接收设备数目正常。
+* 检查消息菜单里的推送记录中的 `invalidTokens` 字段，如果该数字异常大，可能证书选择错误，跟设备 build 的 provisioning profile 不匹配。
 
 ### Android 排查建议
 

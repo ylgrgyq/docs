@@ -153,7 +153,7 @@ require('cloud/app.js');
 {% endblock %}
 
 {% block demo %}
-* [cloudcode-test](https://github.com/killme2008/cloudcode-test)：一个简单留言板网站。效果体验：<https://myapp.avosapps.com/>
+* [cloudcode-test](https://github.com/killme2008/cloudcode-test)：一个简单留言板网站。效果体验：<https://myapp.leanapp.cn/>
 {% endblock %}
 
 {% block run_in_local_command %}
@@ -597,11 +597,11 @@ AV.Cloud.define('Logger', function(request, response) {
 {% block static_cache %}
 ### 静态资源
 
-`public` 目录下的资源将作为静态文件服务，例如，`public/index.html` 就可以通过 `http://${your_app_domain}.avosapps.com/index.html` 访问到这个文件。
+`public` 目录下的资源将作为静态文件服务，例如，`public/index.html` 就可以通过 `http://${your_app_domain}.leanapp.cn/index.html` 访问到这个文件。
 
 通常，你会将资源文件按照类型分目录存放，比如 css 文件放在 `stylesheets` 目录下，将图片放在 `images` 目录下，将 javascript 文件放在 `js` 目录下，云引擎同样能支持这些目录的访问。
 
-例如，`public/stylesheets/app.css` 可以通过 `http://${your_app_domain}.avosapps.com/stylesheets/app.css` 访问到。
+例如，`public/stylesheets/app.css` 可以通过 `http://${your_app_domain}.leanapp.cn/stylesheets/app.css` 访问到。
 
 在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在 `public/index.html` 下引用 `app.css`：
 
@@ -660,7 +660,7 @@ app.listen();
 app.set('view engine', 'jade');
 ```
 
-你可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message：
+你可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.leanapp.cn/hello` 将看到展示的 message：
 
 ```
 Congrats, you just set up your app!
@@ -668,7 +668,7 @@ Congrats, you just set up your app!
 
 更多复杂的路由和参数传递，请看 [express.js 框架文档](http://expressjs.com/guide.html)。
 
-我们还提供了一个在线 Demo：<http://myapp.avosapps.com/>，[源码](https://github.com/killme2008/cloudcode-test) 开放供大家参考。
+我们还提供了一个在线 Demo：<http://myapp.leanapp.cn/>，[源码](https://github.com/killme2008/cloudcode-test) 开放供大家参考。
 {% endblock %}
 
 {% block error_page_404 %}
@@ -826,7 +826,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express 框架的 `express.session.MemoryStore` 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+注意： express 框架的 `express.session.MemoryStore` 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
 {% endblock %}
 
 {% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}

@@ -1,26 +1,16 @@
 # iOS 消息推送开发指南
 
-> 开始之前
-> 在看下面的内容之前，我们假设你已经看过我们的[消息推送开发总览](./push_guide.html)，了解了基本的概念和模型。
-
-本节将向你简单介绍如何在 iOS 设备中使用 LeanCloud 的推送功能（如果你对 iOS 消息推送还不太了解，推荐先看我们的博客文章：[细说 iOS 消息推送](https://blog.leancloud.cn/1163/)）。
-
-## 文档贡献
-
-如果觉得这个文档写的不够好，也可以帮助我们来不断完善。
-
-Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/leancloud/docs)
-
+本文介绍了如何在 iOS 设备中使用 LeanCloud 的推送功能。请先阅读我们的博客文章《[细说 iOS 消息推送](https://blog.leancloud.cn/1163/)》，再通过 [消息推送概览](push_guide.html) 了解和巩固相关概念。
 
 ## 配置 iOS 推送证书
 
-配置 iOS 证书相对麻烦，但是却是必须的步骤，请仔细看[iOS推送证书设置指南](./ios_push_cert.html)。
+配置 iOS 证书相对麻烦，但是却是必须的步骤，请详读 [iOS 推送证书设置指南](ios_push_cert.html)。
 
 ## 多证书场景
 
 对于一些应用，他们在发布和上架时分为不同的版本（司机版、乘客版），但数据和消息是互通的，这种场景下我们允许应用上传多个自定义证书并对不同的设备设置 `deviceProfile`，从而可以用合适的证书给不同版本的应用推送。
 
-当你上传自定义证书时会被要求输入“证书类型”，即 deviceProfile 的名字。当 installation 上保存了 deviceProfile 时，我们将忽略原先的开发、生产证书设置，而直接按照 deviceProfile 推送。
+当你上传自定义证书时会被要求输入「证书类型」，即 deviceProfile 的名字。当 installation 上保存了 deviceProfile 时，我们将忽略原先的开发和生产证书设置，而直接按照 deviceProfile 推送。
 
 ## 保存 Installation
 
@@ -55,7 +45,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 ```
 
-在 iOS 设备中，Installation 的类是 AVInstallation，并且是 AVObject 的子类，使用同样的 API 存储和查询。如果要访问当前应用的 Installation 对象，可以通过`[AVInstallation currentInstallation]`方法。当你第一次保存 AVInstallation 的时候，它会插入`_Installation`表，你可以在[数据管理](/data.html?appid={{appid}})平台看到和查询。当 deviceToken 一被保存，你就可以向这台设备推送消息了。
+在 iOS 设备中，Installation 的类是 AVInstallation，并且是 AVObject 的子类，使用同样的 API 存储和查询。如果要访问当前应用的 Installation 对象，可以通过 `[AVInstallation currentInstallation]` 方法。当你第一次保存 AVInstallation 的时候，它会插入 `_Installation` 表，你可以在 [数据管理](/data.html?appid={{appid}}) 平台看到和查询。当 deviceToken 一被保存，你就可以向这台设备推送消息了。
 
 ```objc
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
@@ -67,11 +57,13 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 可以像修改 AVObject 那样去修改 AVInstallation，但是有一些特殊字段可以帮你管理目标设备：
 
-* badge 应用 icon 旁边的红色数字，修改 AVInstallation 的这个值将修改应用的 badge。修改应该保存到服务器，以便为以后做 badge 增量式的推送做准备。
-* channels 当前设备订阅的频道数组。
-* appName 应用名称，只读
-* appVersion 应用版本，只读
-* deviceProfile 设备对应的后台自定义证书名称，用于多证书推送
+字段|说明
+---|---
+badge|应用图标旁边的红色数字，修改 AVInstallation 的这个值将修改应用的 badge。修改应该保存到服务器，以便为以后做 badge 增量式的推送做准备。
+channels|当前设备所订阅的频道数组
+appName|应用名称（只读）
+appVersion|应用版本（只读）
+deviceProfile|设备对应的后台自定义证书名称，用于多证书推送
 
 ## 发送推送消息
 
@@ -79,25 +71,26 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ## 使用频道
 
-使用频道可以实现发布——订阅的模型。设备订阅某个频道，然后发送消息的时候指定要发送的频道即可。
+使用频道（channel）可以实现「发布—订阅」的模型。设备订阅某个频道，然后发送消息的时候指定要发送的频道即可。
+
+<div class="callout callout-info">每个 channel 名称只能包含 26 个英文字母和数字。</div>
 
 ### 订阅和退订
 
-订阅"Giants"频道：
+订阅 Giants 频道：
 
 ```objc
-// When users indicate they are Giants fans, we subscribe them to that channel.
+// 当用户表示喜欢 Giants，则为其订阅该频道。
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 [currentInstallation addUniqueObject:@"Giants" forKey:@"channels"];
 [currentInstallation saveInBackground];
 ```
 
-订阅后要记得保存，即可在[数据管理](/data.html?appid={{appid}})平台看到该installation的channels字段多了"Giants"。
+订阅后要记得保存，即可在 [数据管理](/data.html?appid={{appid}})平台看到该 installation 的 channels 字段多了一个「Giants」。
 
 退订：
 
 ```objc
-// When users indicate they are no longer Giants fans, we unsubscribe them.
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 [currentInstallation removeObject:@"Giants" forKey:@"channels"];
 [currentInstallation saveInBackground];
@@ -111,17 +104,17 @@ NSArray *subscribedChannels = [AVInstallation currentInstallation].channels;
 
 ### 发送消息到频道
 
-例如，发送消息到刚才订阅的"Giants"频道：
+发送消息到刚才订阅的「Giants」频道：
 
 ```objc
 // Send a notification to all devices subscribed to the "Giants" channel.
 AVPush *push = [[AVPush alloc] init];
 [push setChannel:@"Giants"];
-[push setMessage:@"The Giants just scored!"];
+[push setMessage:@"Giants 太牛掰了"];
 [push sendPushInBackground];
 ```
 
-如果你想发送到多个频道，可以指定 channels 数组:
+如果你想发送到多个频道，可以指定 channels 数组：
 
 ```objc
 NSArray *channels = [NSArray arrayWithObjects:@"Giants", @"Mets", nil];
@@ -135,13 +128,14 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 选择证书
 
-默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用开发证书，可以通过 `setProductionMode`方法：
+默认情况下，从客户端发起的推送都是使用你在消息菜单上传的生产证书，如果想使用开发证书，可以通过 `setProductionMode` 方法：
 
 ```
 [AVPush setProductionMode:NO];
-......
+...
 ```
 
+<div class="callout callout-info">为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。</div>
 
 ## 高级定向发送
 
@@ -156,15 +150,15 @@ AVPush *push = [[AVPush alloc] init];
 ```objc
 // Store app language and version
 AVInstallation *installation = [AVInstallation currentInstallation];
+
+//字段依次为：比赛分数、比赛结果、受伤报告
 [installation setObject:@(YES) forKey:@"scores"];
 [installation setObject:@(YES) forKey:@"gameResults"];
 [installation setObject:@(YES) forKey:@"injuryReports"];
 [installation saveInBackground];
 ```
 
-表示比赛的分数，比赛结果和受伤报告。
-
-设置，你可以给 Installation 添加 owner 属性，比如当前的登录用户：
+你可以给 Installation 添加 owner 属性，比如当前的登录用户：
 
 ```objc
 // Saving the device's owner
@@ -175,8 +169,8 @@ AVInstallation *installation = [AVInstallation currentInstallation];
 
 ### 根据查询来推送消息
 
-一旦 Installation保存了你的应用数据，你可以使用`AVQuery`来查询出设备的一个子集做推送。Installation 的查询跟其他对象的查询没有什么不同，只是使用特殊的静态方法
-`[AVInstallation query]`创建查询对象：
+一旦 Installation 保存了你的应用数据，你可以使用 AVQuery 来查询出设备的一个子集做推送。Installation 的查询跟其他对象的查询没有什么不同，只是使用特殊的静态方法
+ `[AVInstallation query]` 创建查询对象：
 
 ```objc
 // Create our Installation query
@@ -231,15 +225,16 @@ AVPush *push = [[AVPush alloc] init];
 
 ### 定制通知
 
-如果你不仅想发送一条文本消息，你需要一个 NSDictionary 来打包想发送的数据。这里有一些保留字段有特殊含义需要说明下：
+如果你不仅想发送一条文本消息，你需要一个 NSDictionary 来打包想发送的数据。这里有一些保留字段，具有特殊含义，需要说明：
 
-* alert: 推送消息的文本内容
-* badge: (iOS only) app icon 右上角的数字。可以设置一个值或者递增当前值。
-* sound: (iOS only) 应用 bundle 里的声音文件名称。
-* content-available: (iOS only) 如果你在使用 Newsstand, 设置为 1 来开始一次后台下载。
-* action: (Android only) 当消息收到的时候，触发的 Intent 名称。如果没有设置 title 或者 alert，Intent 将触发，但是不会显示通知给用户。
-* title: (Android only) 显示在系统通知栏的标题。
-
+保留字段|平台|说明
+---|---|---
+alert|通用|推送消息的文本内容
+badge|iOS|应用图标右上角的数字。可以设置一个值或者递增当前值。
+sound|iOS|应用 bundle 里的声音文件名称。
+content-available|iOS|如果你在使用 Newsstand, 设置为 1 来开始一次后台下载。
+action|Android|当消息收到的时候，触发的 Intent 名称。如果没有设置 title 或者 alert，Intent 将触发，但是不会显示通知给用户。
+title|Android|显示在系统通知栏的标题。
 
 例如，递增 badge 数字，并播放声音可以这样做:
 
@@ -294,7 +289,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-这个方法有个隐患，因为设备的时钟是无法保证精确的，你可能得到错误的结果。因此，AVPush 还提供了 expireAfterTimeInterval 方法，接收 NSTimeInterval 对象。通知将在指定间隔时间后失效：
+这个方法有个隐患，因为设备的时钟是无法保证精确的，你可能得到错误的结果。因此，AVPush 还提供了 `expireAfterTimeInterval` 方法，接收 NSTimeInterval 对象。通知将在指定间隔时间后失效：
 
 ```objc
 // Create time interval
@@ -308,7 +303,7 @@ AVPush *push = [[AVPush alloc] init];
 [push sendPushInBackground];
 ```
 
-**我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时，如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，参考这个[帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)**
+<div class="callout callout-info">我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时，如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，可以参考 [Stackoverflow - Push notification is not being delivered when iPhone comes back online](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。</div>
 
 ### 指定设备平台
 
@@ -336,12 +331,12 @@ AVPush *iOSPush = [[AVPush alloc] init];
 
 ## 定时推送
 
-请进入消息推送的 web 管理平台，可以做到定时推送（延迟或者指定时间）。
+请进入消息推送的 Web 管理平台，可以做到定时推送（延迟或者指定时间）。
 
 
 ## 接收推送通知
 
-正如前面定制通知一节提到，你可以随通知发送任意的数据。我们使用这些数据修改应用的行为，当应用是通过通知打开的时候。例如，当打开一条通知告诉你有一个新朋友的时候，这时候如果显示一张图片会非常好。
+正如 [定制通知](#定制通知) 一节提到，你可以随通知发送任意的数据。我们使用这些数据修改应用的行为，当应用是通过通知打开的时候。例如，当打开一条通知告诉你有一个新朋友的时候，这时候如果显示一张图片会非常好。
 
 由于 Apple 的对消息大小的限制，请尽量缩小要发送的数据大小，否则可能被截断：
 
@@ -358,7 +353,7 @@ AVPush *push = [[AVPush alloc] init];
 
 ## 响应通知数据
 
-当应用是被通知打开的时候，, 你可以通过`application:didFinishLaunchingWithOptions: `方法的 launchOptions dictionary 访问到数据：
+当应用是被通知打开的时候，你可以通过 `application:didFinishLaunchingWithOptions:`方法的 `launchOptions` 参数所使用的 dictionary 访问到数据：
 
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -382,7 +377,7 @@ AVPush *push = [[AVPush alloc] init];
 }
 ```
 
-如果当通知到达的时候，你的应用已经在运行，那么你可以通过`application:didReceiveRemoteNotification:fetchCompletionHandler:`方法的 userInfo dictionary 访问到数据：
+如果当通知到达的时候，你的应用已经在运行，那么你可以通过 `application:didReceiveRemoteNotification:fetchCompletionHandler:` 方法的 `userInfo` 参数所使用 dictionary 访问到数据：
 
 ```objc
 - (void)application:(UIApplication *)application
@@ -409,11 +404,11 @@ AVPush *push = [[AVPush alloc] init];
 ```
 
 
-你可以阅读[Apple本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1)来更多地了解推送通知。
+你可以阅读 [Apple 本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1) 来更多地了解推送通知。
 
 ## 跟踪推送和应用的打开情况
 
-通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的`application:didFinishLaunchingWithOptions: `方法来收集打开信息：
+通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的 `application:didFinishLaunchingWithOptions:` 方法来收集打开信息：
 
 ```objc
 if (application.applicationState != UIApplicationStateBackground) {
@@ -431,13 +426,13 @@ if (application.applicationState != UIApplicationStateBackground) {
 ```
 
 
-传递 nil 或者空白的参数给`trackAppOpenedWithLaunchOptions:`方法只是统计一次标准的应用打开事件 (比如不是通过通知打开的应用）。
+传递 nil 或者空白的参数给 `trackAppOpenedWithLaunchOptions:` 方法只是统计一次标准的应用打开事件（比如不是通过通知打开的应用）。
 
-你可以在 [**控制台** > **分析** > **行为分析** > **应用使用**](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
+你可以在 [控制台 /<span class="text-muted">（选择应用）</span>/ 分析 / 行为分析 / 应用使用](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
-**如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用 `UILocalNotification` 展示一个通知给用户。**
+<div class="callout callout-info">如果你的应用处于运行状态，iOS 系统将不会在系统的通知中心显示推送消息，你可以使用 `UILocalNotification` 展示一个通知给用户。</div>
 
 如果应用在后台，并且用户点击了通知，那么应用将被带到前台可视，为了跟踪这种通过通知打开应用的情况，你需要在跟踪代码里多作一个检查：
 
@@ -453,8 +448,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 }
 ```
 
-如果使用 iOS 7 push 的新特性（包括新的 "content-available" 功能），你需要实现 iOS 7 
-新加的方法：
+如果使用 iOS 7 推送的新特性（包括新的 content-available 功能），你需要实现 iOS 7 新加的方法：
 
 ```objc
 - (void)application:(UIApplication *)application
@@ -479,7 +473,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 #### 清除 Badge
 
-清除 Badge 数字的最好时机是打开 app 的时候。 设置当前 installation 的 badge 属性并保存到服务器：
+清除 Badge 数字的最好时机是打开应用的时候。设置当前 installation 的 badge 属性并保存到服务器：
 
 ```objc
 - (void)applicationDidBecomeActive:(UIApplication *)application {
