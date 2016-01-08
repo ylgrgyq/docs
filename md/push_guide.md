@@ -112,7 +112,7 @@ curl -X POST \
 
 ##### 订阅和退订频道
 
-通过设置 `channels` 属性来订阅某个推送频道：
+通过设置 `channels` 属性来订阅某个推送频道，下面假设 `mrmBZvsErB` 是待操作 `Installation` 对象的 `objectId`：
 
 ```sh
 curl -X PUT \
@@ -145,7 +145,9 @@ curl -X PUT \
 
 `channels` 本质上是数组属性，因此可以使用标准 [REST API](./rest_api.html#数组) 操作。
 
-#### 自定义属性
+#### 在 `Installation` 中添加自定义属性
+
+假设 `mrmBZvsErB` 是待操作 `Installation` 对象的 `objectId`，待添加的自定义属性是 `userObjectId`，值为 "<用户的 objectId>"：
 
 ```sh
 curl -X PUT \
@@ -179,6 +181,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
 #### 过期时间
 
 我们建议给 iOS 设备的推送都设置过期时间，这样才能保证在推送的当时，如果用户与 APNs 之间的连接恰好断开（如关闭了手机网络、设置了飞行模式等)，在连接恢复之后消息过期之前，用户仍然可以收到推送消息。可以参考 [Stackoverflow &middot; Push notification is not being delivered when iPhone comes back online](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。
+过期时间具体设置方法请参考 [expiration_time、expiration_interval 和 push_time](#expiration_time_expiration_interval_和_push_time)。
 
 #### 消息内容 Data
 
@@ -192,6 +195,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
    "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": "如果你在使用 Newsstand, 设置为1来开始一次后台下载"
+   "custom-key":        "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
@@ -223,11 +227,12 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
   "data":{
     "alert":      "消息内容",
     "title":      "显示在通知栏的标题"
+    "custom-key": "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
 
-如果自定义 Receiver，需要设置 `action`，当然也可以自己加属性了:
+如果自定义 Receiver，需要设置 `action`：
 
 ```
 {
@@ -235,7 +240,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
     "alert":      "消息内容",
     "title":      "显示在通知栏的标题",
     "action":     "com.your_company.push",
-    "fromUserId": "自定义属性"
+    "custom-key": "自定义属性，根据应用具体需要自行添加"
   }
 }
 ```
@@ -262,12 +267,14 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
       "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载"
+      "custom-key":        "自定义属性，根据应用具体需要自行添加"
     },
     "android": {
       "alert":             "消息内容",
       "title":             "显示在通知栏的标题",
       "action":            "com.your_company.push",
       "fromUserId":        "自定义属性"
+      "custom-key":        "自定义属性，根据应用具体需要自行添加"
     },
     "wp":{
       "alert":             "消息内容",
