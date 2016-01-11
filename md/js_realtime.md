@@ -255,6 +255,8 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 详细请看《[实时通信开发指南 - 权限和认证](realtime_v2.html#权限和认证)》。
 
+另外，在 [Demo1](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中，我们也增加了一个实际的例子。
+
 ### 防御 XSS
 
 Web 端实现任何可以将用户输入直接输出到界面上的应用，都要注意防止产生 XSS（跨站脚本攻击）。实时通信 SDK 为了保证数据上的纯净性及功能的纯净，没有在 SDK 层面做 HTML 字符的转义。所以当你实现一个 Web 产品时，一定要对用户的输出做字符串 HTML 转义。当然现在的很多 Web 端框架已经自带防御 XSS 的功能，比如 jQuery、Angular、React 等。
@@ -393,7 +395,7 @@ AV.realtime(options, callback)
 ---|---|---|---|---
 **options**|Object|必须||配置实时通信服务所需的必要参数。其中包括：
 &nbsp;&nbsp;&nbsp;&nbsp; appId|String|必须||应用的 appId，在 **控制台** > **设置** > **基本信息** 中可以查看。
-&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读 [实时通信概览 &middot; 权限和认证](realtime_v2.html#权限和认证)，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例。
+&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读 [实时通信概览 &middot; 权限和认证](realtime_v2.html#权限和认证)，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/blob/master/demo/demo1/test.js#L248) 中的示例。
 &nbsp;&nbsp;&nbsp;&nbsp; clientId|String|必须||当前客户端的唯一 id，用来标示当前客户端。
 &nbsp;&nbsp;&nbsp;&nbsp; secure|Boolean||true|是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护。<br/>默认开启 true，false 为关闭。
 &nbsp;&nbsp;&nbsp;&nbsp; region|String||cn|选择服务部署的节点，如果是美国节点，则设置为 `us`，如果是国内节点，则设置为 `cn`。
