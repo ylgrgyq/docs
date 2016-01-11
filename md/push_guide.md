@@ -31,7 +31,7 @@ timeZone| |设备设定的时区
 
 ### Notification
 
-对应 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 消息菜单里的一条记录，表示一条推送消息，它包括下列属性：
+对应 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 里的一条记录，表示一条推送消息，它包括下列属性：
 
 名称|适用平台|描述
 ---|---|---
