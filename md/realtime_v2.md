@@ -217,9 +217,15 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 #### 离线推送通知
 
+对离线的 iOS 和 Windows Phone 用户，每次有离线消息时，我们会触发一个对应平台的推送通知。
+
+这部分平台的用户，在完成登录时，SDK 会自动关联当前的 Client ID 和设备。关联的方式是通过设备**订阅**名为 Client ID 的 Channel 实现的。开发者可以在数据存储
+的 `_Installation` 表中的 `channels` 字段查到这组关联关系。在实际离线推送时，系统根据用户 Client ID 找到对应的关联设备进行推送。
+
+另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到消息菜单的推送记录。
+
 ##### 静态内容
 
-对离线的 iOS 和 Windows Phone 用户，每次有离线消息时，我们会触发一个对应平台的推送通知。
 由于不同平台的不同限制，且用户的消息正文可能还包含上层协议，所以我们允许用户在控制台中为应用设置一个静态的 APNs JSON，推送一条内容固定的通知。
 
 进入 [控制台 ><span class="text-muted">（选择应用）</span>> 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
@@ -254,11 +260,6 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 * `${convId}` 推送相关的对话 ID
 * `${timestamp}` 触发推送的时间戳（Unix 时间戳）
 * `${fromClientId}` 消息发送者的 Client ID
-
-这部分平台的用户，在完成登录时，SDK 会自动关联当前的 Client ID 和设备。关联的方式是通过设备**订阅**名为 Client ID 的 Channel 实现的。开发者可以在数据存储
-的 `_Installation` 表中的 `channel` 字段查到这组关联关系。在实际离线推送时，系统根据用户 Client ID 找到对应的关联设备进行推送。
-
-另外，由于实时通信触发的推送量比较大，内容单一，这部分记录不会保存到消息菜单的推送记录。
 
 #### 敏感词过滤
 
@@ -653,6 +654,7 @@ LeanCloud 实时通信服务是完全独立的实时通信业务抽象，专注�
 
 检查方法总结如下：
 
+* 检查 `_Installation` 表中是否有设备订阅了对应的 Client ID
 * 检查普通的 iOS 推送是否到达
 * 检查证书设置
 * 在控制台检查接收方是否在离线状态
