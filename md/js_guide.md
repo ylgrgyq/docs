@@ -1814,9 +1814,7 @@ publicPost.save();
 
 ### 重设密码
 
-在现实中只要你引入了密码系统，总会有用户会忘掉他们的密码。在这种情形下，我们的库提供一个让他们安全地重设密码的功能。
-
-为了能让用户重设密码，应该要求用户提供他们的 email 地址，然后这样调用:
+**邮箱重置密码**：
 
 ```javascript
 // 邮件重置
@@ -1829,32 +1827,46 @@ AV.User.requestPasswordReset('email@example.com', {
     console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
+```
 
-// 短信重置
+云端会使用这个 email 来与用户的 email 或者 username 字段进行匹配，然后发送密码重设邮件。因此，开发者在保存用户信息时，可以考虑是否直接将 email 作为 username，还是单独使用一个字段来保存 email。
+
+密码重设的流程如下：
+
+1. 用户输入所注册的电子邮件，请求重置密码；
+1. 云端向该邮箱发送一封邮件，内容为用来重置密码的特殊链接；
+1. 用户点击这一重置密码链接后，一个特殊的页面会打开，让用户输入新密码；
+1. 用户确认提交后，其旧密码即被重置。
+
+关于自定义邮件模板和验证链接，请参考 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
+
+**短信重置密码**：
+
+```
 AV.User.requestPasswordResetBySmsCode('18212346648', {
   success: function() {
-    // Password reset request was sent successfully
+    // 密码重置请求已成功发送
   },
   error: function(error) {
-    // Show the error message somewhere
+    // 记录失败信息
     console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
 
-这样会尝试匹配给定的 email 和用户的 email 或者 username 字段，然后会发送用户的密码重设邮件。由于我们是这样做的，所以你可以选择用户是否拿 email 作为他们的用户名，或者说用户把 email 作为用户的另一个信息保存。
+注意！用户需要先绑定手机号码，然后才能使用短信来重置密码：
 
-密码重设的流程如下:
-
-1. 用户输入 email 来请求重设他们的密码；
-2. LeanCloud 向用户的 email 地址发送邮件，包含了一个重设密码的链接；
-3. 用户点击这个重设密码的链接，会重定向到一个 LeanCloud 页面来允许他们重设密
-   码；
-4. 用户输入新的密码，他们的密码现在会更新为输入的新密码。
-
-注意这个流程的信息会引用你的 App 的名字，这个名字是你最初在 LeanCloud 上创建的 App 的名字.
-
-关于自定义邮件模板和验证链接请看博文 [自定义应用内用户重设密码和邮箱验证页面](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+```
+AV.User.resetPasswordBySmsCode('6位验证码', '新密码', {
+  success: function() {
+    // 密码被成功更新
+  },
+  error: function(error) {
+    // 记录失败信息
+    console.log('Error: ' + error.code + ' ' + error.message);
+  }
+});
+```
 
 ### 查询
 
