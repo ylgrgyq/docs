@@ -4,6 +4,8 @@
 
 云引擎命令行工具是用来管理、部署云引擎项目的命令行工具，称之为 avoscloud-code 项目。通过它，你可以部署、发布、回滚云引擎代码，并且可以对同一个云引擎项目做多应用管理，还可以查看云引擎日志，批量上传文件到 LeanCloud 平台上等。
 
+<div class="callout callout-info">命令行工具不支持美国节点（avosapps.us），请使用 git 部署。</div>
+
 ## 安装
 
 ### Linux 和 Mac OSX
