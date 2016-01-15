@@ -1292,7 +1292,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getConversationQuery();
+	  AVIMConversationQuery query = client.getQuery();
 	  query.setLimit(1);
 	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
@@ -1950,7 +1950,7 @@ private void TomQueryWithLimit() {
 
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
-{% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
+{% block create_query_instance_method %}`AVIMClient.getQuery()`{% endblock %}
 
 {% block chatroom_query_single %}
 
@@ -1962,8 +1962,8 @@ private void TomQueryWithLimit() {
     public void done(AVIMClient client, AVIMException e) {
       if (e == null) {
         //登录成功
-        //查询attr.topic为"奔跑吧，兄弟"的暂存聊天室
-        AVIMConversationQuery query = client.getConversationQuery();
+        //查询 attr.topic 为 "奔跑吧，兄弟" 的暂存聊天室
+        AVIMConversationQuery query = client.getQuery();
         query.whereEqualTo("attr.topic", "奔跑吧，兄弟");
         query.whereEqualTo("tr", true);
         //获取第一个对话
