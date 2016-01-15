@@ -5,6 +5,7 @@
 {% set cloudName ="LeanCloud" %}
 {% set productName ="LeanStorage" %}
 {% set platform_title ="iOS / OS X" %}
+{% set segment_code ="ios" %}
 {% set sdk_name ="iOS / OS X SDK" %}
 {% set baseObjectName ="AVObject" %}
 {% set objectIdName ="objectId" %}
@@ -12,7 +13,7 @@
 {% set createdAtName ="createdAt" %}
 {% set backgroundFunctionTemplate ="xxxxInBackground" %}
 {% set saveEventuallyName ="saveEventually" %}
-{% set deleteEventuallyName ="saveEventually" %}
+{% set deleteEventuallyName ="deleteEventually" %}
 {% set relationObjectName ="AVRelation" %}
 {% set pointerObjectName ="AVPointer" %}
 {% set baseQueryClassName ="AVQuery" %}
@@ -70,8 +71,6 @@
     }];
 ```
 {% endblock %}
-
-{% block text_sdk_setup_link %}我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html){% endblock %}
 
 {% block code_save_todo_folder %}
 
@@ -142,6 +141,15 @@
 ```
 {% endblock %}
 
+{% block code_object_fetchWhenSave %}
+
+```
+    todo.fetchWhenSave = true;// 设置 fetchWhenSave 为 true
+    [todo saveInBackground];// 如此
+```
+{% endblock %}
+
+
 {% block code_object_fetch_with_keys %}
 
 ```objc
@@ -185,6 +193,8 @@
         [theTodo saveInBackground];
         // 也可以使用 incrementKey:byAmount: 来给 Number 类型字段累加一个特定数值。
         [theTodo incrementKey:@"views" byAmount:@(5)];
+        [theTodo saveInBackground];
+        //saveInBackground 调用之后，如果成功的话，对象的计数器字段是当前系统最新值。
     }];
 ```
 {% endblock %}
@@ -225,6 +235,48 @@
     [todo saveInBackground];
 }
 ```
+{% endblock %}
+
+{% block code_batch_operation %}
+
+```objc
+// 批量创建、更新
++ (BOOL)saveAll:(NSArray *)objects error:(NSError **)error;
++ (void)saveAllInBackground:(NSArray *)objects
+						  block:(AVBooleanResultBlock)block; 
+
+// 批量删除
++ (BOOL)deleteAll:(NSArray *)objects error:(NSError **)error;
++ (void)deleteAllInBackground:(NSArray *)objects
+                        block:(AVBooleanResultBlock)block;
+
+// 批量获取
++ (BOOL)fetchAll:(NSArray *)objects error:(NSError **)error;
++ (void)fetchAllInBackground:(NSArray *)objects
+                       block:(AVArrayResultBlock)block;                        
+```
+{% endblock %}
+
+{% block code_batch_set_todo_completed %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        NSArray<AVObject *> *todos = objects;
+        for (AVObject *todo in todos) {
+            todo[@"status"] = @1;
+        }
+        
+        [AVObject saveAllInBackground:todos block:^(BOOL succeeded, NSError *error) {
+            if (error) {
+                // 网络错误
+            } else {
+                // 保存成功
+            }
+        }];
+    }];
+```
+
 {% endblock %}
 
 {% block code_delete_todo_by_objectId %}
@@ -273,7 +325,7 @@
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
     
-    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登陆的用户
+    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登录的用户
 ```
 
 代码中提及的 `[AVUser currentUser]` 在后文的[用户->当前用户](#当前用户)会有介绍。
@@ -288,7 +340,10 @@ NSString *string = [NSString stringWithFormat:@"famous film name is %i", number]
 NSDate *date = [NSDate date];
 NSData *data = [@"fooBar" dataUsingEncoding:NSUTF8StringEncoding];
 NSArray *array = [NSArray arrayWithObjects:string, number, nil]; // NSArray
-NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"number",string, @"string",nil];// NSDictionary
+NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+                              number,@"number",
+                              string, @"string",nil];
+                              // NSDictionary
 
 AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
 [testObject setObject:boolean    forKey:@"testBoolean"];
@@ -300,8 +355,6 @@ AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
 [testObject setObject:dictionary forKey:@"testDictionary"];
 [testObject saveInBackground];
 ```
-
-到目前为止，我们使用过的数据类型有 NSString、 NSNumber、 AVObject，LeanCloud 还支持 NSDate 和 NSData。
 
 此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
 
@@ -330,7 +383,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登陆的用户
+    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登录的用户
     NSMutableDictionary *serializedJSONDictionary = [todoFolder dictionaryForObject];//获取序列化后的字典
     NSError * err;
     NSData * jsonData = [NSJSONSerialization dataWithJSONObject:serializedJSONDictionary options:0 error:&err];//获取 JSON 数据
@@ -371,8 +424,8 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```objc
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *leanclouImagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
-    AVFile *file = [AVFile fileWithName:fileName contentsAtPath:leanclouImagePath];
+    NSString *imagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
+    AVFile *file = [AVFile fileWithName:fileName contentsAtPath: imagePath];
 ```
 {% endblock %}
 
@@ -388,7 +441,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 
 ```objc
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        NSLog(IshiharaSatomi.url);//返回一个唯一的 Url 地址
+        NSLog(file.url);//返回一个唯一的 Url 地址
     }];
 ```
 {% endblock %}
@@ -404,7 +457,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_downlod_file %}
+{% block code_download_file %}
 
 ```objc
     [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
@@ -442,6 +495,19 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
+{% block code_priority_equalTo_zero_and_one_wrong_example %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKey:@"priority" equalTo:@0];
+    [query whereKey:@"priority" equalTo:@1];
+   // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+       ...
+    }];
+```
+{% endblock %}
+
 {% block table_logic_comparison_in_query %}
 逻辑操作 | AVQuery 方法|
 ---|---
@@ -449,7 +515,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 不等于 |  `notEqualTo` 
 大于 | `greaterThan`
 大于等于 | `greaterThanOrEqualTo` 
-小于 | `lessThanOrEqualTo`
+小于 | `lessThan`
 小于等于 | `lessThanOrEqualTo`
 {% endblock %}
 
@@ -497,7 +563,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
     [query whereKey:@"title" notContainedIn:filterArray];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearTodos = objects;// 离这个位置最近的 10 个 Todo 对象
+        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
     }];
 ```
 {% endblock %}
@@ -535,7 +601,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 08:30:00"];
     NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 09:30:00"];
 
-    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,reminder3, nil];// 构建查询时间点
+    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,nil];// 构建查询时间点
     
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [query whereKey:@"reminders" containsAllObjectsInArray:reminders];
@@ -632,8 +698,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_set_query_limit %}
 
 ```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];\
-    NSDate* now = [NSDate date];
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    NSDate *now = [NSDate date];
     [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
     query.limit = 10; // 最多返回 10 条结果
 ```
@@ -643,7 +709,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 ```objc
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSDate* now = [NSDate date];
+    NSDate *now = [NSDate date];
     [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
     query.limit = 10; // 最多返回 10 条结果
     query.skip = 20;  // 跳过 20 条结果
@@ -659,7 +725,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
         if (!error) {
             // 查询成功，输出计数
-            NSLog(@"今天 发布了 %ld 条微博", number);
+            NSLog(@"今天完成了 %ld 条待办事项。", number);
         } else {
             // 查询失败
         }
@@ -679,7 +745,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     
     AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-        // 返回 priority 大于等3 或 status 等于 1 的 Todo
+        // 返回 priority 大于等于3 或 status 等于 1 的 Todo
     }];
 ```
 {% endblock %}
@@ -696,7 +762,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
     
     [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-        // 返回 priority 小于 1 并且 status 等于 0 的 Todo
+        // 返回 priority 小于 3 并且 status 等于 0 的 Todo
     }];
 ```
 {% endblock %}
@@ -705,12 +771,17 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 ```objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@ where status = 1", @"Todo"];
-    AVCloudQueryResult *result = [AVQuery doCloudQueryWithCQL:cql];
-    NSLog(@"results:%@", result.results);
-
+    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
+    {
+        NSLog(@"results:%@", result.results);
+    }];
+    
+    
     cql = [NSString stringWithFormat:@"select count(*) from %@ where priority = 0", @"Todo"];
-    result = [AVQuery doCloudQueryWithCQL:cql];
-    NSLog(@"count:%lu", (unsigned long)result.count);
+    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
+    {
+       NSLog(@"count:%lu", (unsigned long)result.count);
+    }];
 ```
 {% endblock %}
 
@@ -752,14 +823,14 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 策略枚举 | 含义及解释|
 ---|---
-`kAVCachePolicyIgnoreCache ` | **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
+`kAVCachePolicyIgnoreCache`| **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
 `kAVCachePolicyCacheOnly` |  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。 
 `kAVCachePolicyCacheElseNetwork` |  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
 `kAVCachePolicyNetworkElseCache` | 查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。 
-`kAVCachePolicyCacheThenNetwork` | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
+<code class="text-nowrap">`kAVCachePolicyCacheThenNetwork`</code> | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
 {% endblock %}
 
-{% block code_cache_opration %}
+{% block code_cache_operation %}
 
 * 检查是否存在缓存查询结果：
   
@@ -796,11 +867,11 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     query.limit = 10;
     [query whereKey:@"createdLocated" nearGeoPoint:point];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearTodos = objects;// 离这个位置最近的 10 个 Todo 对象
+        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
     }];
 ```
 
-在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
+在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
 {% endblock %}
 
 {% block text_platform_geoPoint_notice %}
@@ -824,7 +895,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_send_sms_code_for_loginOrSignup %}
 
 ```objc
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13888888888" callback:^(BOOL succeeded, NSError *error) {
+    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13577778888" callback:^(BOOL succeeded, NSError *error) {
         // 发送失败可以查看 error 里面提供的信息
     }];
 ```
@@ -833,7 +904,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_verify_sms_code_for_loginOrSignup %}
 
 ```objc
-    [AVUser signUpOrLoginWithMobilePhoneNumberInBackground:@"13888888888" smsCode:@"123456" block:^(AVUser *user, NSError *error) {
+    [AVUser signUpOrLoginWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"123456" block:^(AVUser *user, NSError *error) {
        // 如果 error 为空就可以表示登录成功了，并且 user 是一个全新的用户
     }];
 ```
@@ -873,7 +944,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
 ```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13888888888" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
+    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
         
     }];
 ```
@@ -882,7 +953,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_user_logIn_requestLoginSmsCode %}
 
 ```objc
-    [AVUser requestLoginSmsCode:@"13888888888" withBlock:^(BOOL succeeded, NSError *error) {
+    [AVUser requestLoginSmsCode:@"13577778888" withBlock:^(BOOL succeeded, NSError *error) {
         
     }];
 ```
@@ -891,7 +962,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_user_logIn_with_smsCode %}
 
 ```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13888888888" smsCode:@"238825" block:^(AVUser *user, NSError *error) {
+    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"238825" block:^(AVUser *user, NSError *error) {
         
     }];
 ```
@@ -1023,7 +1094,7 @@ student.name = @"小明";
 1. 导入 `AVObject+Subclass.h`；
 2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
 3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
-4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 之前调用即可）。
+4. 在实例化子类之前调用 [YourClass registerSubclass]（**在应用当前生命周期中，只需要调用一次**。可在子类的 +load 方法或者 UIApplication 的 -application:didFinishLaunchingWithOptions: 方法里面调用）。
 
 下面是实现 `Student` 子类化的例子:
 
