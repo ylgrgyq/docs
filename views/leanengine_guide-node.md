@@ -733,7 +733,7 @@ if (NODE_ENV === 'development') {
 } else if(NODE_ENV == 'production') {
   // 当前环境为「生产环境」，是线上正式运行的环境
 } else {
-  // 当前环境为「测试环境」
+  // 当前环境为「预备环境」
 }
 ```
 {% endblock %}

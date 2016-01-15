@@ -56,13 +56,13 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 
 ### 部署到云引擎
 
-部署到测试环境：
+部署到预备环境：
 
 ```
 $ avoscloud deploy
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的测试环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的预备环境。
 
 部署到生产环境：
 
@@ -95,10 +95,10 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 LC_APP_ID|当前应用的 App Id
 LC_APP_KEY|当前应用的 App Key
 LC_APP_MASTER_KEY|当前应用的 Master Key
-LC_APP_ENV|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
+LC_APP_ENV|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>预备环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
 LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
-**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; `AV.setProduction(production)`](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
+**提示**：如果在客户端想调用云引擎的预备环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; `AV.setProduction(production)`](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求预备环境；设置为 `1` 将请求生产环境，默认为 `1`。
 
 ### 安装
 
@@ -272,7 +272,7 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 
 在实际使用中有这样一种场景：在 `Post` 类的 `afterUpdate` Hook 函数中，对传入的 `Post` 对象做了修改并且保存，而这个保存动作又会再次触发 `afterUpdate`，由此形成死循环。针对这种情况，我们为所有 Hook 函数传入的 `request.object` 对象做了处理，以阻止死循环调用的产生。
 
-不过注意，以下情况还是需要开发者自行处理：
+不过请注意，以下情况还需要开发者自行处理：
 
 - 对传入的 `request.object` 对象进行 `fetch` 操作。
 - 重新构造传入的 `request.object` 对象，如使用 `AV.Object.createWithoutData()` 方法。
@@ -313,7 +313,7 @@ AV.Cloud.afterUpdate('Post', function(request) {
   });
 ```
 
-**提示**：从云引擎 3.0 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
+**提示**：云引擎从 3.0 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
 
 ### 错误响应码
 
@@ -345,7 +345,7 @@ AV.Cloud.afterUpdate('Post', function(request) {
 ---|---
 <span style="white-space: nowrap;">定义函数</span>|云引擎的简单模式，可以直接在线维护云引擎方法。
 定时任务|可以设置一些定时任务，比如每天凌晨清理无用数据等。
-<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到测试环境或者生产环境。
+<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到预备环境或者生产环境。
 日志|用于查看云引擎项目的日志
 统计|用于查看云引擎项目的一些数据统计
 设置|用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
@@ -404,19 +404,19 @@ if (name) {
 **若想发送 HTTP 请求，请参考下文的 [发送 HTTP 请求](#发送_HTTP_请求)**。
 
 
-点击保存后，云引擎会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。过程全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
+点击保存后，云引擎会在后台编译、保存，并将代码部署到预备环境，这个过程可能需要十几秒钟的时间，请耐心等待。过程全部完成后，页面上方会提示「已更新到预备环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
 
 ### 发布
 
-如果函数部署「测试环境」成功，就可以点击 **发布** 按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
+如果函数部署「预备环境」成功，就可以点击 **发布** 按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
 
 ### 同步
 
-对于某个函数，可能生产环境运行一个版本，而测试环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的 **测试环境** 按钮会变成蓝色：
+对于某个函数，可能生产环境运行一个版本，而预备环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的 **预备环境** 按钮会变成蓝色：
 
 ![image](images/cloud_code_snippet_diff_version.png)
 
-当你在测试环境开发完成，点击 **发布** 后，两个环境的代码将会统一，这时 **测试环境** 按钮变为灰色。
+当你在预备环境开发完成，点击 **发布** 后，两个环境的代码将会统一，这时 **预备环境** 按钮变为灰色。
 
 ### 测试
 
@@ -436,7 +436,7 @@ if (name) {
 
 ### 删除
 
-如果你确定某个函数已经不再需要，可以在函数列表页面点击 **删除** 按钮将其删除。**删除后该函数和其所有历史记录都将被删除，而且不能恢复。**删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
+如果你确定某个函数已经不再需要，可以在函数列表页面点击 **删除** 按钮将其删除。**删除后该函数和其所有历史记录都将被删除，而且不能恢复。**删除动作会重新部署预备和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
 {% endif %}
 
 ## 项目定义函数
@@ -500,7 +500,7 @@ git push -u origin master
 
 ![image](images/csdn_code3.png)
 
-下一步，部署源码到测试环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到预备环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -540,7 +540,7 @@ git push -u origin master
 
 ![image](images/cloud_code_github_deploy_key.png)
 
-下一步，部署源码到测试环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
+下一步，部署源码到预备环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -639,7 +639,7 @@ crontab 的基本语法是：
 
 ### 定时器数量
 
-开发环境和测试环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
+生产环境和预备环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
 
 ### 超时
 
@@ -855,7 +855,7 @@ WAP<br/>
 {% block custom_session %}
 {% endblock %}
 
-### 启用 HTTPS
+### 自动重定向到 HTTPS
 
 为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
@@ -863,15 +863,15 @@ WAP<br/>
 
 {% block https_redirect %}{% endblock %}
 
-部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过 HTTPS 访问。测试环境的域名仍然不会启用 HTTPS。
+部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过 HTTPS 访问。
 
-### 测试环境和开发环境
+### 预备环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 网站托管 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的预备和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于网站托管就没有办法通过这个 HTTP 头来区分了。
 
-因此，我们其实为每个应用创建了两个域名，除了 `${your_app_domain}.leanapp.cn` 之外，每个应用还有 `stg-${your_app_domain}.leanapp.cn` 域名作为测试环境的域名。
+因此，我们其实为每个应用创建了两个域名，除了 `${your_app_domain}.leanapp.cn` 之外，每个应用还有 `stg-${your_app_domain}.leanapp.cn` 域名作为预备环境的域名。
 
-部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** / **部署到生产环境** 按钮切换之后，可以在 `${your_app_domain}.leanapp.cn` 看到最新的运行结果。
+部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** > **部署到生产环境** 按钮切换之后，可以在 `${your_app_domain}.leanapp.cn` 看到最新的运行结果。
 
 ## 第三方平台接入
 
@@ -887,15 +887,15 @@ WAP<br/>
 
 ## 运行环境区分
 
-云引擎区分「测试环境」和「生产环境」，两个环境虽然使用 [不同的二级域名](#部署到云引擎)，但是使用相同的数据源。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。
+云引擎区分「预备环境」和「生产环境」，两个环境虽然使用 [不同的二级域名](#部署到云引擎)，但是使用相同的数据源。代码在预备环境测试通过后，再部署到生产环境是更安全的做法。
 
-有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、测试环境或生产环境），从而做不同的处理：
+有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、预备环境或生产环境），从而做不同的处理：
 
 {% block get_env %}{% endblock %}
 
 你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
 
-* 0 表示调用测试环境
+* 0 表示调用预备环境
 * 1 表示调用生产环境
 
 具体到 SDK 内的调用，请看各个平台的 SDK 指南。
@@ -906,7 +906,7 @@ WAP<br/>
 {"code":1,"error":"The cloud code isn't deployed for prod 1."}
 ```
 
-这个错误通常是只是部署了测试环境。通过点击菜单 **Git 部署** / **部署到生产环境** / **部署**，可以将开发环境的当前版本的代码部署到生产环境：
+这个错误通常是只是部署了预备环境。通过点击菜单 **Git 部署** / **部署到生产环境** / **部署**，可以将开发环境的当前版本的代码部署到生产环境：
 
 ![image](images/cloud_code_deploy_prod.png)
 
