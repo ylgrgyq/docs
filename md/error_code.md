@@ -4,7 +4,7 @@
 
 * iOS 的 [AVConstants](/api-docs/iOS/docs/AVConstants.html)。
 * iOS v3.1.5 及之后的版本，网络请求操作相关的错误码，比如：28 表示请求超时、7 表示连接服务器失败，这些请参考 [**libcurl error codes**](http://curl.haxx.se/libcurl/c/libcurl-errors.html)。
-* Android 的 [AVException](/api-docs/android/doc/index.html)。
+* Android 的 [AVException](/api-docs/android/index.html)。
 
 ## 实时通信错误码
 
