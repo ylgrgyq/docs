@@ -81,6 +81,32 @@ createdAt       keyValues
 description     objectId
 ```
 
+#### 保存选项
+
+当 `AVObject` 在本地做一些更改操作的同时，该对象有可能在远端被另外一个用户被更改并且保存，这个时候我们有可能会需要在保存之前根据该对象的某一个属性的值来判断本地的这次修改是否有效，如果无效则可能需要放弃本次修改。
+这个功能可以通过 `AVQuery` 和 `AVObject` 来完成，但是这样的操作无法保证原子性从而导致并发问题。
+
+现在我们可以在保存的时候传入 `AVSaveOption` 参数来来完成这个功能：
+
+``` java
+
+    AVObject object = new AVObject("ObjectSaveWithQuery");
+    object.put("int", 1);
+    object.save();
+
+    object.put("int", 2);
+    AVQuery query = new AVQuery("ObjectSaveWithQuery");
+    query.whereEqualTo("int", 2);
+    AVSaveOption option = new AVSaveOption();
+    option.query(query);
+    try {
+      object.save(option);   //本次保存将不成功，因为不满足 AVSaveOption 里面的 query 条件
+    } catch (AVException e) {
+      Assert.assertEquals(305, e.getCode());
+    }
+```
+
+同时 AVSaveOption 还提供了 fetchWhenSave 选项来支持 fetchWhenSave 功能
 
 ### 数据检索
 
