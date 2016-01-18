@@ -945,7 +945,8 @@ RealtimeObject.query(options, callback)
 参数|类型|约束|默认|说明
 ---|---|---|---|---
 **options**|Object|||一些配置参数
-&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|是否要去掉内置大字段（成员列表、静音列表、当前用户静音的状态）。
+&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|去掉大字段（成员列表、静音列表、当前用户静音的状态），需要 2.4.0 以上版本。
+&nbsp;&nbsp;&nbsp;&nbsp; withLastMessages|Boolean||false|同时返回会话的最后一条消息，需要 2.4.0 以上版本。
 &nbsp;&nbsp;&nbsp;&nbsp; limit|Number||10|一次获取的条目数量
 &nbsp;&nbsp;&nbsp;&nbsp; skip|Number||0|跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询。
 &nbsp;&nbsp;&nbsp;&nbsp; sort|String||-lm|默认为最近对话反序，排序字段
