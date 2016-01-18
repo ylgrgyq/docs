@@ -298,6 +298,16 @@
 * 信息 - `Fail to execute operation on storage.`
 * 含义 - 插入数据库失败，一般是数据格式或者内部错误，通常错误里包含更具体的错误信息。
 
+## 304
+
+* 信息 - `Database error.`
+* 含义 - 数据操作错误，一般是语法错误或者内部异常，请及时联系我们。
+
+## 305
+
+* 信息 - `No effect on updating/deleting a document.`
+* 含义 - 根据 where 条件更新或者删除对象不起作用，通常是因为条件不满足。
+
 ## 401
 
 * 信息 - `Unauthorized.`
