@@ -618,6 +618,29 @@ curl -X PUT \
 
 这样就将对象里的 **upvotes**（表示被用户点赞的次数）分数加 1，其中 **amount** 指定递增的数字大小，如果为负数，就变成递减。
 
+除了 Increment，我们也提供了 Decrement 操作用于递减（等价于 Increment 一个负数）。
+
+#### 位运算
+
+如果文档的某个列是整型，可以使用我们提供的位运算操作符，来对这个列做原子的位运算：
+
+* BitAnd 与运算。
+* BitOr 或运算。
+* BitXor 异或运算。
+
+例如:
+
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"flags":{"__op":"BitOr","value": 0x0000000000000004}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+
 #### 数组
 
 为了存储数组型数据，LeanCloud 提供 3 种操作来原子性地更改一个数组字段：

@@ -4,9 +4,32 @@ Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套
 
 本文档将详细介绍 CQL 的语法和常见用法。
 
+## 与 SQL 主要差异
+
+* 不支持 join ，关联查询提供 include， relatedTo 等替代，参考[关系查询](#关系查询)。
+* 不支持事务。
+* 更新、删除要求一定要提供 objectId=xxx 的条件，只能根据 objectId 和其他条件来更新或者删除某个文档，不提供批量更新和删除。
+* 不支持锁
+* 不支持大部分 sql 函数，内置函数列表参见[内置函数](#内置函数)
+* 不支持 group by、having、sum、distinct 等分组聚合查询语法。
+
 ## 介绍及基本语法
 
-最基本的一个查询某个 class 下的 100 条数据：
+插入一条数据：
+
+```sql
+insert into GameScore(name, score) values('leancloud', 100)
+```
+
+更新一条数据：
+
+```sql
+update GameScore set score=90 where objectId='558e20cbe4b060308e3eb36c'
+```
+
+但是， **CQL 强制要求更新和删除必须有 where 条件，并且 where 条件中包含 `objectId=xxx` ，也就是说你只能根据 objectId 加上其他条件来更新或者删除一条记录**。如果没有提供，将报错。
+
+一个查询某个 class 下的 100 条数据：
 
 ```sql
 select * from GameScore
@@ -47,10 +70,82 @@ select * from GameScore limit 100,10
 select * from GameScore order by score,+name desc
 ```
 
+删除一条数据：
 
-## 查询条件
+```sql
+delete from GameScore where objectId='558e20cbe4b060308e3eb36c'
+```
 
-`where` 之后的查询条件基本跟 SQL 语法相似，比如支持 `or` 和 `and` 的复合查询，支持 `=`、`!=`、`<`、`<` 等比较运算符，支持子查询、in 查询等。详细解释如下。
+## 插入
+
+insert 语句的基本语法：
+
+```sql
+insert into table_name (列1, 列2,...) VALUES (值1, 值2,....)
+```
+
+例如：
+
+```sql
+insert into Player(name, age) values('LeanCloud', 2)
+insert into GameScore(player, score) values(pointer('Player','player objectId'), 100)
+```
+
+上面例子里我们使用内置的 `pointer` 函数创建一个指向 Player 的 pointer，并存入 GameScore 表的 player 列。更多内置函数请参考[内置函数](#内置函数)一节。
+
+insert 还支持多行插入：
+
+```sql
+insert into Player(name, age) values ('LeanCloud', 2) ('美味书签', 3)
+```
+
+values 后面接多个括号括起来的值列表即可。
+
+insert 语句也支持占位符（推荐方式）:
+
+```sql
+insert into GameScore(name, score) values (?, ?)
+```
+
+## 更新
+
+update 语句的基本语法：
+
+```sql
+update 表名称 set 列名称 = 新值 where 条件列表
+```
+
+例如：
+
+```sql
+update GameScore set score=90, name='leancloud' where objectId='558e20cbe4b060308e3eb36c'
+```
+
+如果涉及到 op 操作，例如只有当账户余额超过 100 元的时候，给账户扣款 50:
+
+```sql
+update Account set account=op('Decrement', {'amount': 50}) where objectId='558e20cbe4b060308e3eb36c' and amount>=100
+```
+
+如果当前账户少于 100 元，这个操作将失败，并返回错误信息。
+
+CQL 的 update 和 delete 语句都强制要求 where 条件中出现 objectId=xxx 的条件，也就是只能更新或者删除特定 objectId 的文档。
+
+op 操作提供了 `op(名称, JSON 参数)` 的内置函数，来方便用户使用，例如往一个 relation 列添加一个对象：
+
+```sql
+update _User set friends=op('AddRelation', {'objects': [pointer('_User','user id')]}) where objectId='558e20cbe4b060308e3eb36c'
+```
+
+update 语句同样也支持占位符（推荐方式）:
+
+```sql
+update GameScore set name=?,score=? where objectId=?
+```
+
+## 查询
+
+select 语句中 `where` 之后的查询条件基本跟 SQL 语法相似，比如支持 `or` 和 `and` 的复合查询，支持 `=`、`!=`、`<`、`<` 等比较运算符，支持子查询、in 查询等。详细解释如下。
 
 ### 基本查询
 
@@ -93,7 +188,7 @@ date 函数接收的日期格式必须是 `2011-08-20T02:06:57.931Z` 的 UTC 时
 
 比较运算符可以用在日期、字符串、数字甚至对象上。
 
-#### 模糊查询
+### 模糊查询
 
 模糊查询可以使用 `like`，比如查询名字以 dennis 开头的对象。
 
@@ -118,7 +213,7 @@ select * from GameScore where name not regexp 'dennis.*'
 ```
 正则匹配的效率一般，类似这种全文搜索请求，我们都推荐采用 [应用内全文搜索](app_search_guide.html)。
 
-##### 值是否存在查询
+### 值是否存在查询
 
 只返回 `level` 字段值存在的对象：
 
@@ -126,7 +221,7 @@ select * from GameScore where name not regexp 'dennis.*'
 select * from GameScore where level is exists
 ```
 
-反之，使用 `is not exists`。
+反之，使用 `is not exists`。请注意，值是否存在，跟 null 或者空字符串是不同的，不存在表示这个列在文档里都不存在。
 
 
 ### 数组查询
@@ -349,7 +444,7 @@ select * from GameScore where name=? and score>? limit ?,?
 
 **我们推荐使用占位符的方式来使用 CQL，查询语句可以通过预编译被缓存起来，降低 CQL 的转换开销。**
 
-## 排序
+### 排序
 
 通过 `order` 语句来排序，`order` 语句只能出现在最后，不能在 `where` 和 `limit` 之前。
 
@@ -383,6 +478,25 @@ select * from GameScore order by -score,name asc
 
 没有写上明确的加号或者减号的字段，将根据最后的 `desc` 或者 `asc` 来决定采用升序还是降序。
 
+## 删除
+
+delete 语句基本语法：
+
+```sql
+delete from 表名称 where 条件列表
+```
+
+最简单的，根据 objectId 删除一个文档：
+
+```sql
+delete from GameScore where objectId=?
+```
+
+可见， delete 语句也支持占位符。
+
+**删除的条件列表要求一定提供 objectId=xxx 的条件，也就是只能根据 objectId 来删除某个文档。**
+
+
 ## 内置函数
 
 CQL 提供了一些内置函数来方便地创建 pointer、geopoint 等类型：
@@ -395,6 +509,7 @@ CQL 提供了一些内置函数来方便地创建 pointer、geopoint 等类型�
   <tr><td>file(objectId)</td><td>创建 file 类型</td></tr>
   <tr><td>base64(base64编码字符串)</td><td>创建 Bytes 类型</td></tr>
   <tr><td>current_timestamp()</td><td>创建当前日期</td></tr>
+  <tr><td>op(op 名称, JSON 参数对象)</td><td>创建更新 op 对象</td></tr>
 </table>
 
 如果不使用这些函数，你也使用 [REST API 文档](./rest_api.html#数据类型) 定义的 JSON 对象来创建特定类型，例如 Pointer：
