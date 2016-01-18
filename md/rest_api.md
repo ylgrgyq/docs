@@ -497,7 +497,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 
 （最后加上 **master** 来告诉服务器这个签名是使用 master key 生成的。）
 
-以上两种计算 sign 的方法任选一种来使用。
+<div class="callout callout-danger">使用 master key 将绕过所有权限校验，应该确保只在可控环境中使用，比如自行开发的管理平台，并且要完全避免泄露。因此，以上两种计算 sign 的方法可以根据实际情况来选择一种使用。</div>
 
 ### 响应格式
 
