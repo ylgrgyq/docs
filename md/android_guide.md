@@ -1705,7 +1705,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
     AVCloud.rpcFunctionInBackground("testBareAVObjectParams", complexObject,
         new FunctionCallback<AVObject>() {
           @Override
-          public void done(HashMap object, AVException e) {
+          public void done(AVObject object, AVException e) {
             Assert.assertNull(e);
           }
         });
