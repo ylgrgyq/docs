@@ -9,11 +9,11 @@ Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套
 * 不支持 join ，关联查询提供 include， relatedTo 等替代，参考[关系查询](#关系查询)。
 * 不支持事务。
 * 更新、删除要求一定要提供 objectId=xxx 的条件，只能根据 objectId 和其他条件来更新或者删除某个文档，不提供批量更新和删除。
-* 不支持锁
-* 不支持大部分 sql 函数，内置函数列表参见[内置函数](#内置函数)
+* 不支持锁。
+* 仅支持部分 SQL 函数，请参考 [内置函数](#内置函数)。
 * 不支持 group by、having、sum、distinct 等分组聚合查询语法。
 
-## 介绍及基本语法
+## 基本语法
 
 插入一条数据：
 
@@ -221,7 +221,7 @@ select * from GameScore where name not regexp 'dennis.*'
 select * from GameScore where level is exists
 ```
 
-反之，使用 `is not exists`。请注意，值是否存在，跟 null 或者空字符串是不同的，不存在表示这个列在文档里都不存在。
+反之，使用 `is not exists`。请注意，值是否存在，跟 null 或者空字符串是不同的，不存在表示这个列在对象里都不存在。
 
 
 ### 数组查询
@@ -483,7 +483,7 @@ select * from GameScore order by -score,name asc
 delete 语句基本语法：
 
 ```sql
-delete from 表名称 where 条件列表
+delete from 表名称 where objectId = ? [and 条件列表]
 ```
 
 最简单的，根据 objectId 删除一个文档：
