@@ -96,7 +96,7 @@ insert into GameScore(player, score) values(pointer('Player','player objectId'),
 insert 还支持多行插入：
 
 ```sql
-insert into Player(name, age) values ('LeanCloud', 2) ('美味书签', 3)
+insert into Player(name, age) values ('LeanCloud', 2), ('美味书签', 3)
 ```
 
 values 后面接多个括号括起来的值列表即可。
