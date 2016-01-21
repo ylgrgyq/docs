@@ -578,7 +578,65 @@ curl -X GET \
 
 其中 URL 里的 `:objectId` 替换成 `/push` 接口返回的 objectId 。
 
-将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)
+将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)。
+
+### 定时推送任务查询和取消
+
+可以使用 **master key** 查询当前正在等待推送的定时推送任务：
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{masterkey}},master"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/scheduledPushMessages
+ ```
+ 
+查询出来的结果类似：
+
+```json
+{
+  "results": [
+    {
+      "id": 1,
+      "expire_time": 1373912050838,
+      "push_msg": {
+        "through?": null,
+        "app-id": "OLnulS0MaC7EEyAJ0uA7uKEF-gzGzoHsz",
+        "where": {
+          "sort": {
+            "createdAt": 1
+          },
+          "query": {
+            "installationId": "just-for-test",
+            "valid": true
+          }
+        },
+        "prod": "prod",
+        "api-version": "1.1",
+        "msg": {
+          "message": "test msg"
+        },
+        "id": "XRs9jmWnLd0GH2EH",
+        "notificationId": "mhWjvHvJARB6Q6ni"
+      },
+      "createdAt": "2016-01-21T00:47:46.000Z"
+    }
+  ]
+}
+``` 
+
+其中 `push_msg` 就是该推送消息的详情，`expire_time` 是消息设定推送时间的 unix 时间戳。
+
+取消一个定时推送任务，要使用返回结果中最外层的 id。以上面的结果为例，即为 `results[0].id`，而不是 `results[0].push_msg.id`:
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{masterkey}},master"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/scheduledPushMessages/:id
+```
 
 ## Installation 自动过期和清理
 
