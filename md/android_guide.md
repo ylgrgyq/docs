@@ -1695,14 +1695,14 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 
 ### rpc 调用函数
 
-上文提到的 `callFunction` 方法的返回并不支持 AVObject 类型的解析，很多用户不得不通过 HashMap 来返回结果。考虑到这个因素，我们提供了 `rpcFunction` 以支持 AVObject 类型。
+上文提到的 `callFunction` 方法的返回并不支持 AVObject 类型的解析，很多用户不得不通过 HashMap 来返回结果。考虑到这个因素，我们在 v3.10.2 提供了 `rpcFunction` 以支持 AVObject 类型。
 
 ``` java
-    AVObject complexObject = new AVObject("ComplexObject");
-    complexObject.put("name", "avObject");
-    complexobject.save();
+    AVObject post = new AVObject("Post");
+    post.put("title", "新增 RPC 远程过程调用功能");
+    post.save();
 
-    AVCloud.rpcFunctionInBackground("testBareAVObjectParams", complexObject,
+    AVCloud.rpcFunctionInBackground("publishPost", complexObject,
         new FunctionCallback<AVObject>() {
           @Override
           public void done(AVObject object, AVException e) {
