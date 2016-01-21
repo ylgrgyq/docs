@@ -1049,7 +1049,7 @@ jerry.open(new AVIMClientCallback() {
    * @param name 对话的名字
    * @param attributes 对话的额外属性
    * @param isTransient 是否是暂态对话
-   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
+   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
    *                 为 false 时，则一直为创建新的对话
    *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
    *                 为 true 时，仅 members 为有效查询条件
@@ -1059,13 +1059,15 @@ jerry.open(new AVIMClientCallback() {
       final Map<String, Object> attributes, final boolean isTransient, final boolean isUnique,
       final AVIMConversationCreatedCallback callback)
 ```
-各个参数的含义如下：
+参数说明：
+
 * members - 对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知。
 * name - 对话的名字，主要是用于标记对话，让用户更好地识别对话。
 * attributes - 额外属性
-* isTransient - 是否为临时对话
-* isUnique - 是否创建唯一对话，当 isUnique 为 true。 时，如果当前已经有相同成员的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
+* isTransient - 是否为 [暂态对话](#聊天室)
+* isUnique - 是否创建唯一对话，当 `isUnique` 为 true 时，如果当前已经有**相同成员**的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
 
+<div class="callout callout-info">由于暂态对话不支持创建唯一对话，所以将 `isTransient` 和 `isUnique` 同时设为 true 时并不会产生预期效果。</div>
 {% endblock %}
 
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
