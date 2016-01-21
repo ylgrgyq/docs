@@ -404,7 +404,7 @@ import os
 if os.environ.get('LC_APP_PROD') == '1':
     # 当前为生产环境
 elif os.environ.get('LC_APP_PROD') == '0':
-    # 当前为测试环境
+    # 当前为预备环境
 else:
     # 当前为开发环境
 ```

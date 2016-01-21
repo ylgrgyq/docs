@@ -173,7 +173,7 @@ post.save({
 在 LeanCloud 中保存数据是很简单的，获取数据也非常容易。如果事先知道 `objectId` 的话,你可以用一个 `AV.Query` 提取出整个 `AV.Object`:
 
 ```javascript
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.get('558e20cbe4b060308e3eb36c', {
   success: function(post) {
     // 成功获得实例
@@ -495,7 +495,7 @@ AV.Object 实例的大小不应该超过 128 KB，如果需要存储较大的文
 回一个满足条件的 AV.Object 数组。例如，查询指定人员的微博信息，使用 `equalTo` 方法来添加条件值：
 
 ```javascript
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
 query.find({
   success: function(results) {
@@ -561,7 +561,7 @@ query.limit(10); // 最多返回 10 条结果
 如果你只想要一个结果，一个更加方便的方法可能是使用 `first`，而不是 `find` 方法.
 
 ```javascript
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
 query.first({
   success: function(object) {
@@ -641,10 +641,11 @@ postQuery.find({
 });
 ```
 
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery` 。
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。
 例如，找出当前用户没有关注的人发布的微博：
 
 ```javascript
+// Post 和 userQuery 在上段代码中已声明
 var postQuery = new AV.Query(Post);
 postQuery.doesNotMatchKeyInQuery('author', 'followee', userQuery);
 postQuery.find({
@@ -657,7 +658,7 @@ postQuery.find({
 你可以用 `select` 和一个 keys 的列表来限定返回的字段，为了获得只包含 pubUser 和 content 字段的微博（包括内置字段，如 objectId、createdAt、updatedAt）:
 
 ```javascript
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.select('pubUser', 'content');
 query.find().then(function(results) {
   // each of results will only have the selected fields available.
@@ -702,7 +703,7 @@ query.sizeEqualTo('arrayKey', 3);
 
 ```javascript
 // 找出名字以 'LeanCloud' 开头的账户的微博帖子
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.startsWith('pubUser', 'LeanCloud');
 ```
 
@@ -713,8 +714,8 @@ query.startsWith('pubUser', 'LeanCloud');
 例如，如果每条评论 `Comment` 的 `post` 字段都有一个 `Post` 微博对象，那么找出指定微博下的评论：
 
 ```javascript
-// Assume AV.Object myPost was previously created.
-var query = new AV.Query(Comment);
+// 假设类型为 AV.Object 的 myPost 已提前定义
+var query = new AV.Query('Comment');
 query.equalTo('post', myPost);
 query.find({
   success: function(comments) {
@@ -728,9 +729,9 @@ query.find({
 况。例如，为了找到有图片的微博的评论，你可以:
 
 ```javascript
-var innerQuery = new AV.Query(Post);
+var innerQuery = new AV.Query('Post');
 innerQuery.exists('image');
-var query = new AV.Query(Comment);
+var query = new AV.Query('Comment');
 query.matchesQuery('post', innerQuery);
 query.find({
   success: function(comments) {
@@ -743,9 +744,9 @@ query.find({
 `doesNotMatchQuery`。例如，为了找到针对不含图片的微博的评论，你可以这样：
 
 ```javascript
-var innerQuery = new AV.Query(Post);
+var innerQuery = new AV.Query('Post');
 innerQuery.exists('image');
-var query = new AV.Query(Comment);
+var query = new AV.Query('Comment');
 query.doesNotMatchQuery('post', innerQuery);
 query.find({
   success: function(comments) {
@@ -766,7 +767,7 @@ query.equalTo('post', post);
 法。比如，假设你想获得最新的 10 个 comments，你可能想同时获取它们相关的 post 数据:
 
 ```javascript
-var query = new AV.Query(Comment);
+var query = new AV.Query('Comment');
 
 // 最新的在前面
 query.addDescending('createdAt');
@@ -803,7 +804,7 @@ AV.Query 的 helper 函数，例如 `first` 和 `get` 等.
 如果你只是想查询满足一个 query 的结果集到底有多少对象，但是你不需要得到它们，你可以使用 `count` 来取代 `find`。比如，计算一下某位用户一共发布了多少条微博：
 
 ```javascript
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
 query.count({
   success: function(count) {
@@ -1814,9 +1815,7 @@ publicPost.save();
 
 ### 重设密码
 
-在现实中只要你引入了密码系统，总会有用户会忘掉他们的密码。在这种情形下，我们的库提供一个让他们安全地重设密码的功能。
-
-为了能让用户重设密码，应该要求用户提供他们的 email 地址，然后这样调用:
+**邮箱重置密码**：
 
 ```javascript
 // 邮件重置
@@ -1829,32 +1828,46 @@ AV.User.requestPasswordReset('email@example.com', {
     console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
+```
 
-// 短信重置
+云端会使用这个 email 来与用户的 email 或者 username 字段进行匹配，然后发送密码重设邮件。因此，开发者在保存用户信息时，可以考虑是否直接将 email 作为 username，还是单独使用一个字段来保存 email。
+
+密码重设的流程如下：
+
+1. 用户输入所注册的电子邮件，请求重置密码；
+1. 云端向该邮箱发送一封邮件，内容为用来重置密码的特殊链接；
+1. 用户点击这一重置密码链接后，一个特殊的页面会打开，让用户输入新密码；
+1. 用户确认提交后，其旧密码即被重置。
+
+关于自定义邮件模板和验证链接，请参考 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
+
+**短信重置密码**：
+
+```
 AV.User.requestPasswordResetBySmsCode('18212346648', {
   success: function() {
-    // Password reset request was sent successfully
+    // 密码重置请求已成功发送
   },
   error: function(error) {
-    // Show the error message somewhere
+    // 记录失败信息
     console.log('Error: ' + error.code + ' ' + error.message);
   }
 });
 ```
 
-这样会尝试匹配给定的 email 和用户的 email 或者 username 字段，然后会发送用户的密码重设邮件。由于我们是这样做的，所以你可以选择用户是否拿 email 作为他们的用户名，或者说用户把 email 作为用户的另一个信息保存。
+注意！用户需要先绑定手机号码，然后才能使用短信来重置密码：
 
-密码重设的流程如下:
-
-1. 用户输入 email 来请求重设他们的密码；
-2. LeanCloud 向用户的 email 地址发送邮件，包含了一个重设密码的链接；
-3. 用户点击这个重设密码的链接，会重定向到一个 LeanCloud 页面来允许他们重设密
-   码；
-4. 用户输入新的密码，他们的密码现在会更新为输入的新密码。
-
-注意这个流程的信息会引用你的 App 的名字，这个名字是你最初在 LeanCloud 上创建的 App 的名字.
-
-关于自定义邮件模板和验证链接请看博文 [自定义应用内用户重设密码和邮箱验证页面](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+```
+AV.User.resetPasswordBySmsCode('6位验证码', '新密码', {
+  success: function() {
+    // 密码被成功更新
+  },
+  error: function(error) {
+    // 记录失败信息
+    console.log('Error: ' + error.code + ' ' + error.message);
+  }
+});
+```
 
 ### 查询
 
@@ -1886,7 +1899,7 @@ post.set('author', user);
 post.save(null, {
   success: function(post) {
     // Find all posts by the current user
-    var query = new AV.Query(Post);
+    var query = new AV.Query('Post');
     query.equalTo('author', user);
     query.find({
       success: function(usersPosts) {
@@ -2090,7 +2103,7 @@ post.set('location', point);
 var userGeoPoint = userObject.get('location');
 
 // Create a query for posts
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 
 // Interested in posts near user.
 query.near('location', userGeoPoint);
@@ -2115,7 +2128,7 @@ query.find({
 var point1 = new AV.GeoPoint(39.97, 116.33);
 var point2 = new AV.GeoPoint(39.99, 116.37);
 
-var query = new AV.Query(Post);
+var query = new AV.Query('Post');
 query.withinGeoBox('location', point1, point2);
 query.find({
   success: function(posts) {

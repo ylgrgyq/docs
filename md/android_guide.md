@@ -1263,6 +1263,7 @@ String url = file.getThumbnailUrl(false, 200, 100);
 
 ```java
     List<AVFile> fileList = new LinkedList<AVFile>();
+    // 假设 file1 和 file2 已提前通过 AVFile 保存到了云端
     fileList.add(file1);
     fileList.add(file2);
 

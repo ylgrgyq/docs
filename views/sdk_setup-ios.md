@@ -129,7 +129,7 @@ import AVOSCloudIM
 
 ```
 AVObject *post = [AVObject objectWithClassName:@"TestObject"];
-[post setObject:@"Hello,World!" forKey:@"words"];
+[post setObject:@"Hello World!" forKey:@"words"];
 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
       // 保存成功了！

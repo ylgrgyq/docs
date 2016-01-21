@@ -16,11 +16,18 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 1.1 | 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
 1.0|存在时间不准确的 Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
 
-## 快速参考
+## API 域名
 
-所有的 API 访问都是通过 HTTPS 进行的。API 访问需要在 <https://leancloud.cn> 域名下，相对路径前缀 __/1.1/__ 表明现在使用的是第 1.1 版的 API。
+所有 API 访问都通过 HTTPS 进行。API 访问域名为：
 
-在线测试 API，请打开 <https://leancloud.cn/apionline/>。
+- **中国节点**：<https://api.leancloud.cn> 
+- **美国节点**：<https://us-api.leancloud.cn>
+ 
+域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
+
+### 在线测试
+
+[API 在线测试工具](https://leancloud.cn/apionline/)，目前仅支持调试**中国节点**下的应用。
 
 ### 对象
 
@@ -408,38 +415,89 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 Content-Type 需要设置为 `application/json`。
 
-用户验证是通过 HTTP header 来进行的，__X-LC-Id__ 标明正在运行的是哪个 App 程序，而 __X-LC-Key__ 用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
+用户验证通过 HTTP header 来进行，**X-LC-Id** 标明正在运行的是哪个应用，**X-LC-Key** 用来授权鉴定 endpoint：
+
+```
+curl -X PUT \
+  -H "X-LC-Id: FFnN2hso42Wego3pWq4X5qlu" \
+  -H "X-LC-Key: UtOCzqb67d3sN12Kts4URwy8" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "更新一篇博客的内容"}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
 
 对于 JavaScript 使用，LeanCloud 支持跨域资源共享，所以你可以将这些 header 同 XMLHttpRequest 一同使用。
 
-
 #### 更安全的鉴权方式
 
-我们服务端目前支持一种新的 API 鉴权方式，用户仍然需要传递 X-LC-Id 的 HTTP 头表示 App id，但是不需要再传递 X-LC-Key。
+我们还支持一种新的 API 鉴权方式，即在 HTTP header 中使用 **X-LC-Sign** 来代替 **X-LC-Key**，以降低 App Key 的泄露风险。例如：
 
-取而代之的，增加了新 HTTP 头部 X-LC-Sign，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
+```
+curl -X PUT \
+  -H "X-LC-Id: FFnN2hso42Wego3pWq4X5qlu" \
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "在 HTTP header 中使用 X-LC-Sign 来更新一篇博客的内容"}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+**X-LC-Sign** 的值是由 `sign,timestamp[,master]` 组成的字符串：
 
 取值|约束|描述
 ---|---|---
-sign|必须|将 timestamp 加上 App key（或者 master key）组成的字符串，在对它做 MD5 签名后的结果。
-timestamp|必须|客户端产生本次请求的 unix 时间戳，精确到毫秒。
-master | |字符串 `"master"`，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
+sign|必须|将 timestamp 加上 App Key 或 Master Key 组成的字符串，再对它做 MD5 签名后的结果。
+timestamp|必须|客户端产生本次请求的 unix 时间戳（UTC），精确到**毫秒**。
+master |可选|字符串 `"master"`，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
 
-我们举个例子来说明，假设应用的：
+举例来说，假设应用的信息如下：
 
-* App id：`mdx1l0uh1p08tdpsk8ffn4uxjh2bbhl86rebrk3muph08qx7`
-* App key：`n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo`
-* Master key：`h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2`
+<table border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td scope="row">App Id</td>
+      <td><code>FFnN2hso42Wego3pWq4X5qlu</code></td>
+    </tr>
+    <tr>
+      <td scope="row">App Key</td>
+      <td><code>UtOCzqb67d3sN12Kts4URwy8</code></td>
+    </tr>
+    <tr>
+      <td scope="row">Master Key</td>
+      <td><code>DyJegPlemooo4X1tg94gQkw1</code></td>
+    </tr>
+    <tr>
+      <td scope="row">请求时间</td>
+      <td>2016-01-17 15:15:43.466</td>
+    </tr>
+    <tr>
+      <td scope="row">timestamp</td>
+      <td><code>1453014943466</code></td>
+    </tr>
+  </tbody>
+</table>
 
-那么：
+**使用 App Key 来计算 sign**：
 
-* **X-LC-Sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854**  
-  表示请求时间戳为 `1389085779854`，
-  签名为 `28ad0513f8788d58bb0f7caa0af23400`，
-  签名是通过对 `1389085779854n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo` 的字符串做 md5sum 得到，也就是时间戳加上 app key 组成的字符串做 MD5 签名。
-* **X-LC-Sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master**    
-  表示使用 master key 产生签名，时间戳仍然是 `1389085779854`，
-  签名是通过对 `1389085779854h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2` 做 md5sum 得到，最后的 `master` 告诉服务器这个签名是使用 master key 产生的。
+>md5( timestamp + App Key ) <br/>
+= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
+
+```sh
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+```
+
+**使用 Master Key 来计算 sign**：
+
+>md5( timestamp + Master Key )<br/>
+= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
+= e074720658078c898aa0d4b1b82bdf4b
+
+```sh
+  -H "X-LC-Sign: e074720658078c898aa0d4b1b82bdf4b,1453014943466,master" \
+```
+
+（最后加上 **master** 来告诉服务器这个签名是使用 master key 生成的。）
+
+<div class="callout callout-danger">使用 master key 将绕过所有权限校验，应该确保只在可控环境中使用，比如自行开发的管理平台，并且要完全避免泄露。因此，以上两种计算 sign 的方法可以根据实际情况来选择一种使用。</div>
 
 ### 响应格式
 
@@ -610,6 +668,29 @@ curl -X PUT \
 ```
 
 这样就将对象里的 **upvotes**（表示被用户点赞的次数）分数加 1，其中 **amount** 指定递增的数字大小，如果为负数，就变成递减。
+
+除了 Increment，我们也提供了 Decrement 操作用于递减（等价于 Increment 一个负数）。
+
+#### 位运算
+
+如果文档的某个列是整型，可以使用我们提供的位运算操作符，来对这个列做原子的位运算：
+
+* BitAnd 与运算。
+* BitOr 或运算。
+* BitXor 异或运算。
+
+例如:
+
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"flags":{"__op":"BitOr","value": 0x0000000000000004}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
 
 #### 数组
 

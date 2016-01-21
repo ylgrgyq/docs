@@ -16,7 +16,7 @@
 <li><a href="android_guide.html">Android 数据存储指南</a></li>
 <li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
-<li><a href="/api-docs/android/doc/index.html" target="_blank">Android SDK API</a></li>
+<li><a href="/api-docs/android/index.html" target="_blank">Android SDK API</a></li>
 
 ## 你是 Unity3D 或者 WindowsPhone 开发者？
 

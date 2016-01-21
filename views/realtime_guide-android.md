@@ -1060,11 +1060,11 @@ jerry.open(new AVIMClientCallback() {
       final AVIMConversationCreatedCallback callback)
 ```
 各个参数的含义如下：
-* members - 表示对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知
-* name - 表示对话的名字，主要是用于标记对话，让用户更好地识别对话
-* attributes - 表示额外属性
-* isTransient - 用于标注是否是临时对话
-* isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则才创建新的对话，在 createConversation的多个重写中，没有 isUnique 参数的情况下，该值默认为 false
+* members - 对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知。
+* name - 对话的名字，主要是用于标记对话，让用户更好地识别对话。
+* attributes - 额外属性
+* isTransient - 是否为临时对话
+* isUnique - 是否创建唯一对话，当 isUnique 为 true。 时，如果当前已经有相同成员的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
 
 {% endblock %}
 
@@ -1292,7 +1292,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getConversationQuery();
+	  AVIMConversationQuery query = client.getQuery();
 	  query.setLimit(1);
 	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
@@ -1950,7 +1950,7 @@ private void TomQueryWithLimit() {
 
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
-{% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
+{% block create_query_instance_method %}`AVIMClient.getQuery()`{% endblock %}
 
 {% block chatroom_query_single %}
 
@@ -1962,8 +1962,8 @@ private void TomQueryWithLimit() {
     public void done(AVIMClient client, AVIMException e) {
       if (e == null) {
         //登录成功
-        //查询attr.topic为"奔跑吧，兄弟"的暂存聊天室
-        AVIMConversationQuery query = client.getConversationQuery();
+        //查询 attr.topic 为 "奔跑吧，兄弟" 的暂存聊天室
+        AVIMConversationQuery query = client.getQuery();
         query.whereEqualTo("attr.topic", "奔跑吧，兄弟");
         query.whereEqualTo("tr", true);
         //获取第一个对话
