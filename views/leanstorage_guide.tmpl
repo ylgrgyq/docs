@@ -113,7 +113,7 @@ description     objectId
 默认属性是所有对象都会拥有的属性，它包括 `{{objectIdName}}`，`{{createdAtName}}`，`{{updatedAtName}}`。
 `{{objectIdName}}` 已在前面介绍过了，本小节主要介绍`{{createdAtName}}` 和 `{{updatedAtName}}`。
 ##### {{createdAtName}}
-在 {{productName}} 中任何一个对象被保存在服务端都会记录一个服务端的时间，这个时间一定被服务端创建，在之后的操作中，不会被修改，它只表示对象第一次被创建时候的时间戳，它的时区是国际标准时区，客户端在做展示的时候，根据当前客户端的时区做了转化。
+在 {{productName}} 中任何一个对象被保存在服务端都会记录一个服务端的时间，这个时间一旦被服务端创建，在之后的操作中，不会被修改，它只表示对象第一次被创建时候的时间戳，它的时区是国际标准时区，客户端在做展示的时候，需要根据当前客户端的时区做转化。
 
 ##### {{updatedAtName}}
 与 {{createdAtName}} 对比来说，{{updatedAtName}} 记录的就是对象最后一次被修改，或者可以理解为最近一次被更新的时间。
@@ -178,6 +178,8 @@ description     objectId
 
 {% block code_batch_set_todo_completed %}{% endblock %}
 
+不同类型的批量操作所引发不同数量的 API 调用，具体请参考 [API 调用次数的计算](faq.html#API_调用次数的计算)。
+
 ### 删除对象
 假如某一个 Todo 完成了，用户想要删除这个 Todo 对象，可以如下操作：
 
@@ -213,9 +215,9 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 
 简单的说， Pointer 就是一个外键的指针，只是在 LeanCloud 控制台做了显示优化。
 
-我们知道，每一个 TodoFolder 都会有一个用户与之对应，用以表示 TodoFolder 属于哪个用户，使用 Pointer 来实现这个需求的代码如下：
+现在有一个新的需求：用户可以分享自己的 TodoFolder 到广场上，而其他用户看见可以给与评论，比如某一个宅男分享了自己列出的一个想买的游戏列表（TodoFolder 包含多个游戏名字），而我们用 Comment 对象来保存其他用户的评论以及是否点赞等相关信息，代码如下：
 
-{% block code_pointer_user_one_to_many_todoFolder %}{% endblock %}
+{% block code_pointer_comment_one_to_many_todoFolder %}{% endblock %}
 
 关于关联数据的查询会在[关联数据查询](#关联数据查询)会详细介绍。
 
@@ -429,6 +431,10 @@ SDK 提供的下载方法如下：
 
 假如有一个 Todo 会在 8 点 30 分，9 点 30 分 以及 10 点 30 分响起闹钟，它是不会被查询出来的。
 
+#### 字符串查询
+使用 `whereKey:hasPrefix:` 可以过滤出以特定字符串开头的结果，这有点像 MySQL 的 LIKE 条件。因为支持索引，所以该操作对于大数据集也很高效。
+{% block code_query_whereHasPrefix %}{% endblock %}
+
 ### 查询结果
 
 #### 获取查询的第一个结果
@@ -462,9 +468,9 @@ SDK 提供的下载方法如下：
 首先，我们需要明确关系的存储方式，再来确定对应的查询方式。
 
 #### Pointer 查询
-基于在 [Pointer](#Pointer) 小节介绍的存储方式：每一个 TodoFolder 都会有一个用户与之对应，用以表示 TodoFolder 属于哪个用户。现在我已知一个用户，想查询 TA 拥有的 TodoFolder，可以使用如下代码：
+基于在 [Pointer](#Pointer) 小节介绍的存储方式：每一个 Comment 都会有一个 TodoFolder 与之对应，用以表示 Comment 属于哪个 TodoFolder。现在我已知一个 TodoFolder，想查询所有的 Comnent 对象，可以使用如下代码：
 
-{% block code_query_TodoFolder_by_user %}{% endblock %}
+{% block code_query_comment_by_todoFolder %}{% endblock %}
 
 #### {{relationObjectName}} 查询
 假如用户可以给 TodoFolder 增加一个 Tag 选项，用以表示它的标签，而为了以后拓展 Tag 的属性，就新建了一个 Tag 对象，如下代码是创建 Tag 对象：
@@ -484,6 +490,11 @@ SDK 提供的下载方法如下：
 {% block code_query_todoFolder_with_tag %}{% endblock %}
 
 关于关联数据的建模是一个复杂的过程，很多开发者因为在存储方式上的选择失误导致最后构建查询的时候难以下手，不但客户端代码冗余复杂，而且查询效率低，为了解决这个问题，我们专门针对关联数据的建模推出了一个详细的文档予以介绍，详情请点击：{% block link_to_relation_guide_doc %}{% endblock %}
+
+#### 关联属性查询
+正如在 [Pointer](#Pointer) 中保存 Comnent 的 targetTodoFolder 属性一样，假如查询到了一些 Comment 对象，想要一并查询出每一条 Comment 对应的 TodoFolder 对象的时候可以使用如下代码：
+
+{% block code_query_comment_include_todoFolder %}{% endblock %}
 
 ### 组合查询
 组合查询的概念就是把诸多查询条件合并成一个查询，再交给 SDK 去云端进行查询。
@@ -541,7 +552,7 @@ Cloud Query Language（CQL） 是 {{productName}} 独创的云端类 SQL 语句�
 地理位置查询是较为特殊的查询，一般来说，常用的业务场景是查询距离 xx 米之内的某个位置或者是某个建筑物，甚至是以手机为圆心，查找方圆多少范围内餐厅，诸如此类，对此，{{productName}} 提供了一系列的方法来实现各种针对地理位置的查询。
 
 #### 查询位置附近的对象
-Todo 的 createdLocated 是一个 {{geoPointObjectName}} 对象，现在已知了一个地理位置，现在要查询 createdLocated 靠近这个位置的 Todo 对象可以使用如下代码：
+Todo 的 whereCreated 是一个 {{geoPointObjectName}} 对象，现在已知了一个地理位置，现在要查询 whereCreated 靠近这个位置的 Todo 对象可以使用如下代码：
 
 {% block code_query_geoPoint_near %}{% endblock %}
 

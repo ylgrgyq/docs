@@ -190,6 +190,7 @@
     [theTodo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         // 原子增加查看的次数
         [theTodo incrementKey:@"views"];
+        theTodo.fetchWhenSave = true;
         [theTodo saveInBackground];
         // 也可以使用 incrementKey:byAmount: 来给 Number 类型字段累加一个特定数值。
         [theTodo incrementKey:@"views" byAmount:@(5)];
@@ -318,17 +319,18 @@
 ```
 {% endblock %}
 
-{% block code_pointer_user_one_to_many_todoFolder %}
+{% block code_pointer_comment_one_to_many_todoFolder %}
 
 ```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    AVObject *comment = [[AVObject alloc] initWithClassName:@"Comment"];// 构建 Comment 对象
+    [comment setObject:@1 forKey:@"like"];// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
+    [comment setObject:@"content" forKey:@"这个太赞了！楼主，我也要这些游戏，咱们团购么？"];// 留言的内容
     
-    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登录的用户
+    // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
+    [comment setObject:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"] forKey:@"targetTodoFolder"];
+    // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
 ```
 
-代码中提及的 `[AVUser currentUser]` 在后文的[用户->当前用户](#当前用户)会有介绍。
 {% endblock %}
 
 {% block code_data_type %}
@@ -373,7 +375,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% block code_use_geoPoint %}
 
 ``` objc
-[todo setObject:point forKey:@"createdLocated"];
+[todo setObject:point forKey:@"whereCreated"];
 ```
 {% endblock %}
 
@@ -582,7 +584,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     
-    [query whereKey:@"reminders" equalTo:reminder];
+    [query whereKey:@"reminders" equalTo:reminder];// equalTo: 可以找出数组中包含单个值的对象
 }
 ```
 {% endblock %}
@@ -613,11 +615,20 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
-{% block code_query_TodoFolder_by_user %}
+{% block code_query_whereHasPrefix %}
 
 ```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
-    [query whereKey:@"owner" equalTo:[AVUser currentUser]];
+    // 找出开头是「早餐」的 Todo 
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKey:@"content" hasPrefix:@"早餐"];
+```
+{% endblock %}
+
+{% block code_query_comment_by_todoFolder %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
+    [query whereKey:@"targetTodoFolder" equalTo:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"]];
 ```
 {% endblock %}
 
@@ -680,6 +691,24 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         // objects 是一个 AVObject 的 NSArray
         // objects 指的就是所有包含当前 tag 的 TodoFolder
+    }];
+```
+{% endblock %}
+
+{% block code_query_comment_include_todoFolder %}
+
+```objc
+    AVQuery *commentQuery = [AVQuery queryWithClassName:@"Comment"];
+    [commentQuery orderByDescending:@"createdAt"];
+    commentQuery.limit = 10;
+    [commentQuery includeKey:@"targetTodoFolder"];// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+    
+    [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
+        // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
+        for (AVObject *comment in comments) {
+            // 并不需要网络访问
+            AVObject *todoFolder = [comment objectForKey:@"targetTodoFolder"];
+        }
     }];
 ```
 {% endblock %}
@@ -865,7 +894,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
     query.limit = 10;
-    [query whereKey:@"createdLocated" nearGeoPoint:point];
+    [query whereKey:@"whereCreated" nearGeoPoint:point];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
     }];
@@ -881,7 +910,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_query_geoPoint_within %}
 
 ```objc
-    [query whereKey:@"createdLocated"  nearGeoPoint:point withinKilometers:2.0];
+    [query whereKey:@"whereCreated"  nearGeoPoint:point withinKilometers:2.0];
 ```
 {% endblock %} code_object_fetch_with_keys
 
