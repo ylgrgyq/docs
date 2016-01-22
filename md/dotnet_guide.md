@@ -467,7 +467,7 @@ catch(AVException avException)
 相对于邮箱认证，手机号认证的过程稍微需要多一点代码，如果当您的应用在注册的时候没有开启短信验证，伴随业务发展，发现需要验证用户的手机，LeanCloud 正好提供了这一接口。
 
 ```
-//调用的前提是，改手机号已经与已存在的用户有关联(_User表中的mobilePhoneNumber即可关联手机，至于如何关联取决于客户端的业务逻辑)
+//调用的前提是，该手机号已经与已存在的用户有关联(_User表中的mobilePhoneNumber即可关联手机，至于如何关联取决于客户端的业务逻辑)
 await AVUser.RequestMobilePhoneVerifyAsync ("18688888888").ContinueWith(t=>
 		{
 		   //这样就成功的发送了验证码
@@ -874,7 +874,7 @@ AVFile localFile = AVFile.CreateFileWithLocalPath("screenshot.PNG", Path.Combine
 
 ### 文件元信息
 
-AVFile默认会存储文件大小和文件上传者objectId作为元信息。同样的，我们提供了一个字典接口帮助开发者可以未任意文件添加任意符合字典命名规则的自定义元数据。在本小节的第一个例子了已经为文件添加了一个自定义的元数据：
+AVFile默认会存储文件大小和文件上传者objectId作为元信息。同样的，我们提供了一个字典接口帮助开发者可以为任意文件添加任意符合字典命名规则的自定义元数据。在本小节的第一个例子了已经为文件添加了一个自定义的元数据：
 ```
  AVFile file = new AVFile("mytxtFile.txt", data, new Dictionary<string, object>()
  {
