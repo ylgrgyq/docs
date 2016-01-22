@@ -1516,7 +1516,7 @@ AV.User.logIn('myname', 'mypass', {
 
 ### 验证 Email
 
-在应用设置的应用选项中中启用 email 验证可以让你的应用给最终用户一些更安全的使用体验，譬如部分功能只开放给验证过邮箱的用户使用，等等。
+在应用设置的应用选项中启用 email 验证可以让你的应用给最终用户一些更安全的使用体验，譬如部分功能只开放给验证过邮箱的用户使用，等等。
 
 Email 验证会在 AV.User 上加入一个 `emailVerified` 字段，当一个
 AV.User 的 email 被设定或者修改后，`emailVerified` 会被置为 false，同时 LeanCloud 云端会向用户的 email 来发送一个确认链接。用户接收邮件之后，点击这个链接会设置 `emailVerified` 为 true。
@@ -1569,7 +1569,7 @@ user.setMobilePhoneNumber('186xxxxxxxx');
 user.signUp(null, ……)
 ```
 
-为了发送短信，你需要在应用设置的应用选项里启用：`验证注册用户手机号码`。
+为了发送短信，你需要在 [控制台 > 设置 > 应用选项 > 用户账号](/app.html?appid={{appid}}#/permission) 中启用 **用户注册时，向注册手机号码发送验证短信**。
 
 如果用户注册没有收到短信，你可以通过 `requestMobilePhoneVerify` 方法强制重新发送：
 
@@ -1606,7 +1606,7 @@ AV.User.logInWithMobilePhone('186xxxxxxxx', password).then(function(user){
 });
 ```
 
-如果你在应用设置的应用选项里启用 **允许用户使用手机短信登录**（需要先启用「验证注册用户手机号码」），并且用户通过了手机号码认证，那么可以通过请求发送短信验证码来登录：
+如果你在 [控制台 > 设置 > 应用选项 > 用户账号](/app.html?appid={{appid}}#/permission) 中打开了 **已验证手机号码的用户，允许以短信验证码登录**（需要先启用 **用户注册时，向注册手机号码发送验证短信**），那么可以通过请求发送短信验证码来登录：
 
 ```javascript
 //请求登录验证码
@@ -1630,7 +1630,7 @@ AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').
 
 ```javascript
 //获取短信
-//在应用选项开启 "启用帐号无关短信验证服务（针对 requestSmsCode 和 verifySmsCode 接口）"
+//已在 应用选项 > 其他 中开启 "启用通用的短信验证码服务（开放 requestSmsCode 和 verifySmsCode 接口）"
 AV.Cloud.requestSmsCode('186xxxxxxxx').then(function(){
   //发送成功
 }, function(err){
