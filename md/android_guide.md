@@ -1426,7 +1426,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 ###  手机号码验证
 
-在 [控制台 /（选择应用）/ 设置 / 应用选项 / 短信](/app.html?appid={{appid}}#/permission) 中打开 **验证注册用户手机号码** 选项后，当你在注册用户时，如果提供了手机号码，LeanCloud 会自动向该手机号码发送一个验证短信，用户在输入验证码以后，该用户就被表示为已经验证过手机。
+在 [控制台 > 设置 > 应用选项 > 用户账号](/app.html?appid={{appid}}#/permission) 中打开 **用户注册时，向注册手机号码发送验证短信** 选项后，当你在注册用户时，如果提供了手机号码，LeanCloud 会自动向该手机号码发送一个验证短信，用户在输入验证码以后，该用户就被表示为已经验证过手机。
 
 以下代码就可发送注册验证码到用户手机:
 ```java
