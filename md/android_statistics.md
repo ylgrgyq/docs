@@ -166,7 +166,7 @@ public class MyListFragment extends ListFragment {
   * `WRITE_EXTERNAL_STORAGE`
 * 确认所有的 Activity 中都调用了 onResume 和 onPause 方法。
 * 确认测试手机（或者模拟器）已成功连入网络。
-* 启动应用程序，几分钟之内你应该已经可以在 [控制台 / 分析](/stat.html?appid={{appid}}}#/statrealtime) 中的相应菜单中看到报表了。
+* 启动应用程序，几分钟之内你应该已经可以在 [控制台 / 分析](/stat.html?appid={{appid}}#/statrealtime) 中的相应菜单中看到报表了。
 
 ## 数据时效性
 
