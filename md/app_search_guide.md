@@ -26,11 +26,11 @@
 
 ### 第一步：设置（可选，建议设置）
 
-在这一步，我们需要设置一些应用内搜索的选项，首先为您的应用选择一个合适的 URL Scheme，然后设置一下您的应用的下载地址等信息。
+在这一步，我们需要设置一些应用内搜索的选项，首先为你的应用选择一个合适的 URL Scheme，然后设置一下你的应用的下载地址等信息。
 
 #### 设置应用内搜索选项
 
-为了能够使用户直接从搜索结果打开您的应用，开发者需要使您的应用支持外部调用，我们使用 AppURL 来指向一个可以在应用里展现的 Class 数据，格式如下：
+为了能够使用户直接从搜索结果打开你的应用，开发者需要使你的应用支持外部调用，我们使用 AppURL 来指向一个可以在应用里展现的 Class 数据，格式如下：
 
 ``` 
 {URL Scheme}://{ URL Host}/{ Resource Path}
@@ -42,25 +42,25 @@
 
 其中最关键的是这几个属性：
 
-- 应用名称 -- 您的应用名称，必须。
-- 应用 URL Scheme -- 支持外部调用的 URL scheme，我们强制要求采用**域名反转**的方式，类似 Java 语言的 package 命名机制。假设您的应用的域名为`myapp.company.com`，那么我们要求的 scheme 就是形如`com.company.myapp`的字符串。例如我们的 Todo Demo 设置的scheme为`com.avoscloud.todo`。如果您没有域名，那么我们推荐您使用`com.avoscloud.{appId的前8位}`来作为 Scheme。我们会在保存的时候检测scheme是否冲突。
-- 应用 URL Host -- 支持外部调用的 URL Host，可不设置，但是我们推荐默认值使用`avoscloud`，防止跟其他 AppURL 提供商冲突。
+- **应用名称**：你的应用名称（必须）
+- **应用 URL Scheme**：支持外部调用的 URL scheme，我们强制要求采用**域名反转**的方式，类似 Java 语言的 package 命名机制。假设你的应用的域名为 `myapp.company.com`，那么我们要求的 scheme 就是形如 `com.company.myapp` 的字符串。例如我们的 Todo Demo 设置的scheme为 `com.avoscloud.todo`。如果你没有域名，那么我们推荐你使用 `com.avoscloud.{appId的前8位}` 来作为 Scheme。我们会在保存的时候检测scheme是否冲突。
+- **应用 URL Host**：支持外部调用的 URL Host，可不设置，但是我们推荐默认值使用 `avoscloud`，防止跟其他 AppURL 提供商冲突。
 
-其他一些属性，都是用于设置您的应用的下载地址，例如:
+其他一些属性，都是用于设置你的应用的下载地址，例如:
 
-- iPhone 应用下载地址 -- 您的应用的 iPhone 版本的 App Store 下载链接，或者您的网站链接。
-- iPad 应用下载地址 -- 您的应用的 iPad 版本的 App Store 下载链接，或者您的网站链接。
+- iPhone 应用下载地址 -- 你的应用的 iPhone 版本的 App Store 下载链接，或者你的网站链接。
+- iPad 应用下载地址 -- 你的应用的 iPad 版本的 App Store 下载链接，或者你的网站链接。
 - ……
 
-这些链接都是可选的，当用户没有安装您的应用的时候，无法直接从搜索结果打开应用，将展示这些下载链接给用户下载您的应用。
+这些链接都是可选的，当用户没有安装你的应用的时候，无法直接从搜索结果打开应用，将展示这些下载链接给用户下载你的应用。
 
-设置保存之后，您应该可以通过下列链接访问到您的应用信息：
+设置保存之后，你应该可以通过下列链接访问到你的应用信息：
 
 ``` 
 https://leancloud.cn/1.1/go/{your uri scheme}/
 ```
 
-查看到您的 App URL 应用设置信息。
+查看到你的 App URL 应用设置信息。
 
 例如我们的todo应用就是:
 
@@ -70,41 +70,50 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
 
 #### 为 Class 启用搜索
 
-在设置了应用内搜索，选择了适当的 URL Scheme 之后，您需要选择至少一个 Class 为它开启应用内搜索。开启后，该 Class 的数据将被 LeanCloud 自动建立索引，并且可以调用我们的搜索组件或者 API 搜索到内容。
+在设置了应用内搜索，选择了适当的 URL Scheme 之后，你需要选择至少一个 Class 为它开启应用内搜索。开启后，该 Class 的数据将被 LeanCloud 自动建立索引，并且可以调用我们的搜索组件或者 API 搜索到内容。
 
-** 请注意，启用了搜索的 Class 数据，仍然只能被该应用的认证过的 API 搜索到，其次，搜索结果仍然遵循我们提供的 ACL 机制，如果您为 Class 里的Object设定了合理的ACL，那么搜搜结果也将遵循这些 ACL 值，保护您的数据安全。**
+** 请注意，启用了搜索的 Class 数据，仍然只能被该应用的认证过的 API 搜索到，其次，搜索结果仍然遵循我们提供的 ACL 机制，如果你为 Class 里的Object设定了合理的ACL，那么搜搜结果也将遵循这些 ACL 值，保护你的数据安全。**
 
-在 Class 的`其他`菜单里新增了应用内搜索菜单，打开的截图如下：
+在 Class 的 **其他** 菜单里新增了应用内搜索菜单，打开的截图如下：
 
 ![image](images/app_search_setting.png)
 
 其中包括三个设定项目：
 
-- 通过打开或者关闭`启用`，您可以启用或者关闭这个 Class 的应用内搜索功能，默认是关闭的。
-- 选择开放的列 -- 您可以选择哪些字段将加入索引引擎，这些字段将可以被外部用户看到（前提是 ACL 允许）。请慎重选择开放的字段。默认情况下，`objectId,createdAt,updatedAt`三个字段将无条件加入开放字段列表。
-- 数据模板 -- 设置这个 Class 的数据展现模板，当外部调用无法打开应用（通常是用户没有安装应用）的时候，将渲染这个模板并展现给用户，默认的模板的只是渲染一些下载链接，您可以自定义这个模板的样式，比如加入您的应用 Logo， 添加 CSS 等。
+- **启用**：你可以启用或者关闭这个 Class 的应用内搜索功能，默认是关闭的。
+- **选择开放的列**：你可以选择哪些字段将加入索引引擎，这些字段将可以被外部用户看到（前提是 ACL 允许）。请慎重选择开放的字段。默认情况下，`objectId`、`createdAt`、`updatedAt` 三个字段将无条件加入开放字段列表。
+- **数据模板**：设置这个 Class 的数据展现模板，当外部调用无法打开应用（通常是用户没有安装应用）的时候，将渲染这个模板并展现给用户，默认的模板的只是渲染一些下载链接，你可以自定义这个模板的样式，比如加入你的应用 Logo， 添加 CSS 等。
 
-数据模板的语法支持[ handlebars 模板](http://handlebarsjs.com/)语法，支持的变量（使用两个大括号包起来 <code ng-non-bindable>{{{var}}}</code>）包括：
+数据模板支持 [handlebars 模板语法](http://handlebarsjs.com/) ，支持的变量（使用两个大括号包起来 <code ng-non-bindable>{{var}}</code>）包括：
 
-- app_uri 字符串 --  打开应用的URL，就是前面提到的`{URL Scheme} : // { URL Host} / { Resource Path}`。
-- applinks 对象 -- 应用内搜索配置对象，包括这些属性：`app_name,android_phone_link,android_pad_link,iphone_link,ipad_link`等，也就是应用名称，和各种平台应用的下载链接。
-- qrcode_uri 字符串 -- 本页面的二维码图片链接，用户可以用扫描器扫描打开该页面。
-- object -- 查询出来的 object 对象，默认至少包括`objectId,createdAt,updatedAt`三个属性。其他是您在选择开放的列。
+- **app_uri**<br/>
+  (String) 打开应用的 URL，就是前面提到的 `{URL Scheme} : // {URL Host} / {Resource Path}`。
+- **applinks**<br/>
+  (Object) 应用内搜索配置对象，包括这些属性：
+  - app_name
+  - android_phone_link
+  - android_pad_link
+  - iphone_link
+  - ipad_link
+  
+  等等，也就是应用名称，和各种平台应用的下载链接。
+- **qrcode_uri** <br/>
+  (String) 本页面的二维码图片链接，用户可以用扫描器扫描打开该页面。
+- **object** <br/>
+  (Object) 查询出来的 object 对象，默认至少包括：`objectId`、`createdAt`、`updatedAt` 三个属性。其他是你在选择开放的列。
 
 以我们的 Todo Demo 为例，我们启用了 Todo 的应用内搜索功能，选择了开放字段`content`，设定数据模板（消除了css）为：
-
-<div ng-non-bindable>
 
 ``` html
 <div class="wrap">
   <div class="section section-open">
     <div class="section-inner">
-      <p>Todo Content:  {{object.content}} </p>
+      <p>Todo Content: {{object.content}}</p>
     </div>
   </div>
   <div class="section section-open">
     <div class="section-inner">
-      <p>已安装 {{applinks.app_name}}？您可以:</p>
+      <p>已安装 {{applinks.app_name}}？你可以:</p>
       <p><a href='{{app_uri}}' class="btn">直接打开应用</a></p>
     </div>
   </div>
@@ -132,9 +141,7 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
 </div>
 ```
 
-</div>
-
-在 LeanCloud 索引完成数据后，您应当可以通过下列URL访问到一条数据，如果在安装了 Todo Demo 应用的移动设备上访问下面这个URL，应该会打开应用展现这条 Todo 的内容:
+在 LeanCloud 索引完成数据后，你应当可以通过下列URL访问到一条数据，如果在安装了 Todo Demo 应用的移动设备上访问下面这个URL，应该会打开应用展现这条 Todo 的内容:
 
 ``` 
 https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18
@@ -143,13 +150,11 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c
 
 如果直接在 PC 浏览器[打开](https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18?render=true)，看到的应该是数据渲染页面，如图：
 
-
-
 ![image](images/todo_render.png)
 
 ### 第二步：使 App 支持外部调用
 
-在设置了和启用了 Class 应用内搜索之后，接下来，您需要让您的应用响应搜索结果的 URL 调用。
+在设置了和启用了 Class 应用内搜索之后，接下来，你需要让你的应用响应搜索结果的 URL 调用。
 
 #### Android 应用支持外部调用
 
@@ -171,8 +176,8 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c
 
 其中:
 
-- android:scheme 设置为您为应用选择的 URL Scheme，这里是`com.avoscloud.todo`
-- android:host 设置为您为应用选择的 URL Host，默认为`avoscloud`。
+- android:scheme 设置为你为应用选择的 URL Scheme，这里是`com.avoscloud.todo`
+- android:host 设置为你为应用选择的 URL Host，默认为`avoscloud`。
 - android:pathPrefix  具体的资源路径前缀，搜索结果的URL具体路径都将展现为`/classes/{className}/{objectId}`，这里的 className 就是 `Todo`，因此路径前缀为`classes/Todo/`。
 - action必须设置为`android.intent.action.VIEW`，并且加入`DEFAULT`和`BROWSABLE`的Category。
 
@@ -264,9 +269,9 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
 
 ##### 导入SDK
 
-您可以从 sdk_down.html 页面下载`应用内搜索`模块,解压缩avossearch.zip压缩包，将libs下的`avossearch-v{version}.jar`包加入您的libs下面。
+你可以从 sdk_down.html 页面下载`应用内搜索`模块,解压缩avossearch.zip压缩包，将libs下的`avossearch-v{version}.jar`包加入你的libs下面。
 
-之后，您需要将res下的资源文件夹拷贝并且合并到您工程的res目录下，更改资源文件的内容并不影响SDK工作，但是请不要改动资源的文件名和文件内资源ID。
+之后，你需要将res下的资源文件夹拷贝并且合并到你工程的res目录下，更改资源文件的内容并不影响SDK工作，但是请不要改动资源的文件名和文件内资源ID。
 
 - 应用内搜索组件的资源文件都以avoscloud_search打头。*
 
@@ -286,13 +291,13 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
 	</application>
 ```
 
-*注：由于一些UI的原因，应用内搜索的最低API level要求是12，如您需要更低的版本支持，请参照文档中的高级定制部分进行开发。*
+*注：由于一些UI的原因，应用内搜索的最低API level要求是12，如你需要更低的版本支持，请参照文档中的高级定制部分进行开发。*
 
 ###### 添加代码实现基础的应用内搜索功能
 
 ``` java
 AVSearchQuery searchQuery = new AVSearchQuery("keyword");
-SearchActivity.setHighLightStyle("<font color='#E68A00'>");//通过这个方法，您可以像指定html tag一样设定搜索匹配字符的高亮风格
+SearchActivity.setHighLightStyle("<font color='#E68A00'>");//通过这个方法，你可以像指定html tag一样设定搜索匹配字符的高亮风格
 searchQuery.search();//即可打开一个显式搜索结果的Activity
 ```
 
@@ -328,7 +333,7 @@ searchQuery.setSortBuilder(builder);
 
 ##### 　高级指定指南
 
-由于每个应用的数据、UI展现要求都有很大的差别，所以单一的搜索组件界面仅仅能够满足较为简单的要求，所以我们将数据接口开放出来以便您能够方便的定制属于您自己的应用内搜索结果页面。
+由于每个应用的数据、UI展现要求都有很大的差别，所以单一的搜索组件界面仅仅能够满足较为简单的要求，所以我们将数据接口开放出来以便你能够方便的定制属于你自己的应用内搜索结果页面。
 
 ``` java
 	  AVSearchQuery search = new AVSearchQuery("test-query");
@@ -340,7 +345,7 @@ searchQuery.setSortBuilder(builder);
 		  if (exception == null) {
 			 //你可以使用 objects来展现自己的UI
 			 for(AVObject o : objects){
-				//这里可以得到搜索结果和您的应用所对应的AppUrl
+				//这里可以得到搜索结果和你的应用所对应的AppUrl
 				String appUrl = o.getString(AVConstants.AVSEARCH_APP_URL);
 				//这里可以得到搜索结果对应的语法高亮
 				Map<String,List<String>> resultHighLights = ((Map<String, List<String>>)) o.get(AVConstants.AVSEARCH_HIGHTLIGHT);
@@ -353,11 +358,11 @@ searchQuery.setSortBuilder(builder);
 	  });
 ```
 
-您也可以参考我们的SearchActivity来更好的指定您自己的搜索结果页面。`https://github.com/leancloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java`
+你也可以参考我们的SearchActivity来更好的指定你自己的搜索结果页面。`https://github.com/leancloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java`
 
 ##### 分页查询
 
-通过`findInBackgroud`方法做定制查询的话，如果需要分页，您仅仅需要通过多次调用同一个`AVSearchQuery`的`findInBackgroud`即可实现翻页效果，它将返回下一页搜索结果，直到末尾。
+通过`findInBackgroud`方法做定制查询的话，如果需要分页，你仅仅需要通过多次调用同一个`AVSearchQuery`的`findInBackgroud`即可实现翻页效果，它将返回下一页搜索结果，直到末尾。
 
 搜索结果的文档总数可以通过`AVSearchQuery`的`getHits`方法得到。
 
@@ -375,7 +380,7 @@ AVSearchQuery query = new AVSearchQuery("basic-query");//搜索包含basic-query
 
 ###### 字段搜索
 
-您也可以通过指定某个特定字段的值或者值域区间
+你也可以通过指定某个特定字段的值或者值域区间
 
 ``` java
 query.setQuery("status:active");//搜索status字段包含active
@@ -390,7 +395,7 @@ query.setQuery("age:(>=10 AND < 20)");//搜索年龄在[10,20)区间内的数据
   query.setQuery("qu?c*k");//此处?代表一个字符，*代表0个或者多个字符。类似正则表达式通配符
 ```
 
-更多更详细的语法资料，您可以参考 Elasticsearch 文档中 [Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)一节。
+更多更详细的语法资料，你可以参考 Elasticsearch 文档中 [Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)一节。
 
 #### iOS 集成
 
@@ -475,9 +480,9 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
 
 
 
-我们提供一个 `/1.1/search/select` 来做应用内搜索，前提是您参考前面的文档，启用了应用内搜索。
+我们提供一个 `/1.1/search/select` 来做应用内搜索，前提是你参考前面的文档，启用了应用内搜索。
 
-假设你对 GameScore 类启用了应用内搜索，您就可以尝试传入关键字来搜索，比如查询关键字`dennis`，限定返回结果 200 个，并且按照`score`降序排序：
+假设你对 GameScore 类启用了应用内搜索，你就可以尝试传入关键字来搜索，比如查询关键字`dennis`，限定返回结果 200 个，并且按照`score`降序排序：
 
 ``` sh
 curl -X GET \
