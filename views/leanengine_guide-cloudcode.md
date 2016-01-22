@@ -1,15 +1,21 @@
 {% extends "./leanengine_guide.tmpl" %}
 
-{% block updateToLeanEngine%}
-### 升级到 LeanEngine
-云代码 2.0 和 LeanEngine 的差别主要是应用的目录结构：因为 LeanEngine 没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
+{% block updateToLeanEngine %}
+## 云代码 2.0 环境已不推荐使用
 
-* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以 LeanEngine 环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 masterKey 。
-* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以 LeanEngine 默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+### 如何判断当前运行环境
+如果项目中有 `cloud/main.js` 文件，即为云代码 2.0 环境，该环境以后不会增加任何新功能，我们强烈建议你升级到云引擎环境。
+
+### 升级到云引擎
+
+云代码 2.0 和云引擎的差别主要是**应用的目录结构**。因为云引擎没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
+
+* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以云引擎环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 master key 。
+* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以云引擎默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
 * `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
-* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「测试环境」还是「生产环境」，而 LeanEngine 尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为测试环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)
+* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「预备环境」还是「生产环境」，而云引擎尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为预备环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)。
 
-请参见详细的 [升级指南](./leanengine_upgrade_3.0.html)。
+请参见详细的 [升级指南](leanengine_upgrade_3.html)。
 {% endblock %}
 
 {% block quick_start_create_project %}
@@ -33,9 +39,9 @@ $ cd <appName>
 
 ### 升级到 2.0
 
-1. 时区问题：2.0版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
-  * 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论。
-1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 Node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
+1. 时区问题：2.0 版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码 2.0 之前，移除代码中之前对时间修正的部分代码。
+  > 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论。
+1. 引入 package.json（可选）：如果项目需要引入其他三方类库，可以像标准 Node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
 
 ```json
 {
@@ -69,7 +75,7 @@ xml2js: "0.4.4"
 
 **注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
 
-在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多5分钟，平台将自动迁移完成，在5分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
+在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
 
 ### 最新特性
 
@@ -83,11 +89,11 @@ xml2js: "0.4.4"
 {% block download_skeleton %}
 ### 下载项目框架
 
-你可以在 云代码 -> 设置 页面下载到项目框架：
+你可以在 [云引擎 / 设置](/cloud.html?appid={{appid}}#/conf) 页面下载到项目框架：
 
 ![image](images/cloud_code_skeleton.png)
 
-点击 `下载项目框架(基本版)` 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以 App 名称命名的目录，目录结构是这样：
+点击 **下载项目框架（基本版）** 链接，会自动下载一个初始的项目框架，下载后的文件是一个 zip 打包文件，请解压该文件，会看到一个以**应用名称**命名的目录，目录结构是这样：
 
 ```
 <appName>
@@ -99,9 +105,8 @@ xml2js: "0.4.4"
 └── public
     └── index.html
 ```
-其中：
 
-* cloud 目录下有一个 `main.js`，这就是你的业务逻辑代码存放的地方，初始内容定义了一个函数，代码如下：
+其中，cloud 目录下有一个 `main.js`，这就是你的业务逻辑代码存放的地方，初始内容定义了一个函数，代码如下：
 
 ```javascript
 // Use AV.Cloud.define to define as many cloud functions as you want.
@@ -111,18 +116,18 @@ AV.Cloud.define('hello', function(request, response) {
 });
 ```
   
-  这段代码定义了一个名为`hello`的函数，它简单的返回应答`Hello world!`。
+这段代码定义了一个名为`hello`的函数，它简单的返回应答`Hello world!`。
 
 * config 目录下是项目的配置文件 `global.json`，已经按照你的项目信息（主要是 appId 和 appKey）帮你自动配置好了。
-* public 目录，用于存放 [Web Hosting](#web_hosting) 功能的静态资源文件，具体请看后面的介绍。
+* public 目录，用于存放 [网站托管](#网站托管) 功能的静态资源文件，具体请看后面的介绍。
 
-### 下载Web Hosting项目框架
+### 下载网站托管项目框架
 
-进入 云代码 -> 设置 菜单下载项目框架（web主机版）：
+进入控制台：**云引擎** / **设置** / **下载项目框架** / **Web 主机版**：
 
 ![image](images/cloud_code_skeleton.png)
 
-下载后的代码结构类似 LeanEngine（基本版），只是在`Cloud`目录下多了`app.js`文件和`views`目录:
+下载后的代码结构类似云引擎（基本版），只是在 `Cloud` 目录下多了 `app.js` 文件和 `views` 目录：
 
 ```
 <appName>
@@ -138,19 +143,17 @@ AV.Cloud.define('hello', function(request, response) {
     └── index.html
 ```
 
-并且`cloud/main.js`里还多了一行代码：
+并且 `cloud/main.js` 里还多了一行代码，用来加载 app.js：
 
 ```javascript
 require('cloud/app.js');
 ```
 
-用来加载app.js
-
-代码部署的过程跟 LeanEngine 部署是一样的，具体见[部署](#部署)。
+代码部署的过程跟云引擎部署是一样的，具体见 [部署](#部署)。
 {% endblock %}
 
 {% block demo %}
-* [cloudcode-test](https://github.com/killme2008/cloudcode-test)：一个简单留言板网站。效果体验：https://myapp.avosapps.com/
+* [cloudcode-test](https://github.com/killme2008/cloudcode-test)：一个简单留言板网站。效果体验：<https://myapp.leanapp.cn/>
 {% endblock %}
 
 {% block run_in_local_command %}
@@ -170,7 +173,7 @@ $ avoscloud
 {% endblock %}
 
 {% block others_web_framework %}
-因为云代码 2.0 是运行在沙箱环境，所以不支持其他的 web 框架。只能使用预定义的 Express 3.x。
+因为云代码 2.0 是运行在沙箱环境，所以不支持其他的 Web 框架。只能使用预定义的 Express 3.x。
 {% endblock %}
 
 {% block install_middleware_cloudcode %}
@@ -201,14 +204,14 @@ AV.Cloud.define('averageStars', function(request, response) {
 {% endblock %}
 
 {% block cloudFuncParams %}
-有两个参数会被传入到Cloud函数：
+有两个参数会被传入到云函数：
 
-* request - 包装了请求信息的请求对象，下列这些字段将被设置到request对象内:
- * params - 客户端发送的参数对象
- * user - `AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
-* response - 应答对象，包含两个函数：
- * success - 这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的JSON对象或数组，并且可以包含`AV.Object`对象。
- * error - 如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
+* **request**：包装了请求信息的请求对象，下列这些字段将被设置到 request 对象内：
+  * **params**：客户端发送的参数对象
+  * **user**：`AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
+* **response**：应答对象，包含两个函数：
+  * **success**：这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的JSON对象或数组，并且可以包含 `AV.Object` 对象。
+  * **error**：如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
 {% endblock %}
 
 {% block runFuncName %}`AV.Cloud.run`{% endblock %}
@@ -228,7 +231,7 @@ AV.Cloud.run('hello', {name: 'dennis'}, {
 ```
 {% endblock %}
 
-{% block runFuncApiLink %}[AV.Cloud.run](https://leancloud.cn/docs/api/javascript/symbols/AV.Cloud.html#.run){% endblock %}
+{% block runFuncApiLink %}[AV.Cloud.run](/api-docs/javascript/symbols/AV.Cloud.html#.run){% endblock %}
 
 {% block beforeSaveExample %}
 ```javascript
@@ -252,7 +255,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 {% block afterSaveExample %}
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {
-  query = new AV.Query('Post');
+  var query = new AV.Query('Post');
   query.get(request.object.get('post').id, {
     success: function(post) {
       post.increment('comments');
@@ -269,6 +272,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
+  //输出信息请到「应用控制台 / 存储 / 云引擎 / 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -283,6 +287,10 @@ AV.Cloud.afterSave('_User', function(request) {
 ```
 {% endblock %}
 
+{% block beforeUpdate %}
+云代码 2.0 没有支持这个 Hook，你需要升级到云引擎来使用它，请参见详细的 [升级指南](leanengine_upgrade_3.html)。
+{% endblock %}
+
 {% block afterUpdateExample %}
 ```javascript
 AV.Cloud.afterUpdate('Article', function(request) {
@@ -294,8 +302,8 @@ AV.Cloud.afterUpdate('Article', function(request) {
 {% block beforeDeleteExample %}
 ```javascript
 AV.Cloud.beforeDelete('Album', function(request, response) {
-  //查询Photo中还有没有属于这个相册的照片
-  query = new AV.Query('Photo');
+  //查询 Photo 中还有没有属于这个相册的照片
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.count({
@@ -319,7 +327,7 @@ AV.Cloud.beforeDelete('Album', function(request, response) {
 {% block afterDeleteExample %}
 ```javascript
 AV.Cloud.afterDelete('Album', function(request) {
-  query = new AV.Query('Photo');
+  var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
   query.equalTo('album', album);
   query.find({
@@ -380,7 +388,7 @@ AV.Cloud.define('customErrorCode', function(req, res) {
 {% endblock %}
 
 {% block http_client %}
-LeanEngine 允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐您使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
+云引擎允许你使用 `AV.Cloud.httpRequest` 函数来发送 HTTP 请求到任意的 HTTP 服务器。不过推荐你使用 [request](https://www.npmjs.com/package/request) 等第三方模块来处理 HTTP 请求。
 
 使用 `AV.Cloud.httpRequest` ，一个简单的 GET 请求看起来是这样：
 
@@ -396,11 +404,11 @@ AV.Cloud.httpRequest({
 });
 ```
 
-当返回的 HTTP 状态码是成功的状态码（例如200,201等），则success函数会被调用，反之，则error函数将被调用。
+当返回的 HTTP 状态码是成功的状态码（例如 200、201等），则 `success` 函数会被调用，反之  `error` 函数将被调用。
 
 ### 查询参数
 
-如果你想添加查询参数到URL末尾，你可以设置选项对象的params属性。你既可以传入一个JSON格式的key-value对象，像这样：
+如果你想添加查询参数到URL末尾，你可以设置选项对象的 params 属性。你既可以传入一个 JSON 格式的 key-value 对象，像这样：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -416,6 +424,7 @@ AV.Cloud.httpRequest({
   }
 });
 ```
+
 也可以是一个原始的字符串：
 
 ```javascript
@@ -433,7 +442,7 @@ AV.Cloud.httpRequest({
 
 ### 设置 HTTP 头部
 
-通过设置选项对象的header属性，你可以发送HTTP头信息。假设你想设定请求的`Content-Type`，你可以这样做：
+通过设置选项对象的 header 属性，你可以发送 HTTP 头信息。假设你想设定请求的 `Content-Type`，你可以这样做：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -452,7 +461,7 @@ AV.Cloud.httpRequest({
 
 ### 设置超时
 
-默认请求超时设置为10秒，超过这个时间没有返回的请求将被强制终止，您可以调整这个超时，通过 timeout 选项（单位毫秒）：
+默认请求超时设置为 10 秒，超过这个时间没有返回的请求将被强制终止，你可以通过 timeout 选项（单位毫秒）调整这个超时，如将请求超时设置为 15 秒：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -469,11 +478,10 @@ AV.Cloud.httpRequest({
   }
 });
 ```
-上面的代码设置请求超时为15秒。
 
 ### 发送 POST 请求
 
-通过设置选项对象的method属性就可以发送POST请求。同时可以设置选项对象的body属性来发送数据，一个简单的例子：
+通过设置选项对象的 method 属性就可以发送 POST 请求。同时可以设置选项对象的 body 属性来发送数据，例如：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -492,7 +500,7 @@ AV.Cloud.httpRequest({
 });
 ```
 
-这将会发送一个POST请求到`http://www.example.com/create_post`，body是被URL编码过的表单数据。 如果你想使用JSON编码body，可以这样做：
+这将会发送一个 POST 请求到 <http://www.example.com/create_post>，body 是被 URL 编码过的表单数据。 如果你想使用 JSON 编码 body，可以这样做：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -514,19 +522,19 @@ AV.Cloud.httpRequest({
 });
 ```
 
-当然，body可以被任何想发送出去的String对象替换。
+当然，body 可以被任何想发送出去的 String 对象替换。
 
 ### HTTP 应答对象
 
-传给success和error函数的应答对象包括下列属性：
+传给 success 和 error 函数的应答对象包括下列属性：
 
-* status - HTTP状态码
-* headers - HTTP应答头部信息
-* text - 原始的应答body内容。
-* buffer - 原始的应答Buffer对象
-* data - 解析后的应答内容，如果 LeanEngine 可以解析返回的`Content-Type`的话（例如JSON格式，就可以被解析为一个JSON对象）
+* **status**：HTTP 状态码
+* **headers**：HTTP 应答头部信息
+* **text**：原始的应答 body 内容。
+* **buffer**：原始的应答 Buffer 对象
+* **data**：解析后的应答内容，如果云引擎可以解析返回的 `Content-Type`的话（例如 JSON 格式，就可以被解析为一个 JSON 对象）。
 
-如果你不想要text（会消耗资源做字符串拼接），只需要buffer，那么可以设置请求的text选项为false:
+如果你不想要 text（会消耗资源做字符串拼接），只需要 buffer，那么可以设置请求的 text 选项为 false：
 
 ```javascript
 AV.Cloud.httpRequest({
@@ -539,7 +547,7 @@ AV.Cloud.httpRequest({
 {% endblock %}
 
 {% block timerLegacy %}
-**原来提供的`AV.Cloud.setInterval`和`AV.Cloud.cronjob`都已经废弃，这两个函数的功能变成和`AV.Cloud.define`一样，已经定义的任务会自动帮您做转换并启动**
+**原来提供的 `AV.Cloud.setInterval` 和 `AV.Cloud.cronjob` 都已经废弃，这两个函数的功能变成和 `AV.Cloud.define` 一样，已经定义的任务会自动帮你做转换并启动。**
 {% endblock %}
 
 {% block timerExample %}
@@ -567,13 +575,14 @@ AV.Cloud.define('push_timer', function(req, res){
 
 {% block masterKeyInit %}
 ```javascript
-AV.initialize('app id', 'app key', 'master key');
+//参数依次为 AppId, AppKey, MasterKey
+AV.initialize('{{appid}}', '{{appkey}}', '{{masterkey}}');
 AV.Cloud.useMasterKey();
 ```
 {% endblock %}
 
-{% block masterKeyInitLegacy%}
-**注意：**云代码 2.0 版本已经默认使用 masterKey 初始化 SDK，所以不需要额外初始化。
+{% block masterKeyInitLegacy %}
+**注意：**云代码 2.0 版本已经默认使用 master key 初始化 SDK，所以不需要额外初始化。
 {% endblock %}
 
 {% block loggerExample %}
@@ -588,39 +597,39 @@ AV.Cloud.define('Logger', function(request, response) {
 {% block static_cache %}
 ### 静态资源
 
-`public`目录下的资源将作为静态文件服务，例如，你在public下有个文件叫`index.html`，那么就可以通过`http://${your_app_domain}.avosapps.com/index.html`访问到这个文件。
+`public` 目录下的资源将作为静态文件服务，例如，`public/index.html` 就可以通过 `http://${your_app_domain}.leanapp.cn/index.html` 访问到这个文件。
 
-通常，你会将资源文件按照类型分目录存放，比如css文件放在`stylesheets`目录下，将图片放在`images`目录下，将javascript文件放在`js`目录下，LeanEngine 同样能支持这些目录的访问。
+通常，你会将资源文件按照类型分目录存放，比如 css 文件放在 `stylesheets` 目录下，将图片放在 `images` 目录下，将 javascript 文件放在 `js` 目录下，云引擎同样能支持这些目录的访问。
 
-例如，`public/stylesheets/app.css`可以通过`http://${your_app_domain}.avosapps.com/stylesheets/app.css`访问到。
+例如，`public/stylesheets/app.css` 可以通过 `http://${your_app_domain}.leanapp.cn/stylesheets/app.css` 访问到。
 
-在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在`public/index.html`下引用`app.css`：
+在你的HTML文件里引用这些资源文件，使用相对路径即可，比如在 `public/index.html` 下引用 `app.css`：
 
 ```html
 <link href="stylesheets/app.css" rel="stylesheet">
 ```
 
-默认静态资源的`Cache-Control`是`max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回304状态码。你还可以在`app.listen`的时候传入选项，设置静态资源的maxAge：
+默认静态资源的 `Cache-Control` 是 `max-age=0`，这样在每次请求静态资源的时候都会去服务端查询是否更新，如果没有更新返回 304 状态码。你还可以在 `app.listen` 的时候传入选项，设置静态资源的 maxAge：
 
 ```javascript
-//设置7天不过期
+//设置 7 天不过期
 app.listen({'static': {maxAge: 604800000}});
 ```
 
-请注意`maxAge`的单位是毫秒，这样cache-control头会变成`max-age=604800`。更多static选项参考[static middleware](http://www.senchalabs.org/connect/static.html)。
+请注意 `maxAge` 的单位是毫秒，这样 cache-control 头会变成 `max-age=604800`。更多 static 选项参考 [static middleware](http://www.senchalabs.org/connect/static.html)。
 {% endblock %}
 
 {% block dynamic_request %}
 ### 动态请求
 
-如果只是展现静态资源，您可能使用 Github Pages 类似的免费服务也能做到，但是 LeanEngine 提供的 Web Hosting 功能同时支持动态请求。 这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/)这个web MVC框架做到的。
+如果只是展现静态资源，你可能使用 Github Pages 类似的免费服务也能做到，但是云引擎提供的网站托管功能同时支持动态请求。这是通过编写 [Node.js](http://nodejs.org) 代码，基于[express.js](http://expressjs.com/) 这个 Web MVC 框架做到的。
 
-关于[express.js](http://expressjs.com/)框架，请参考官方文档来学习。
+请参考 [express.js 官方文档](http://expressjs.com/) 框架来学习。
 
-在下载的项目框架`cloud/app.js`，我们可以看到一个初始代码：
+在下载的项目框架 `cloud/app.js` 中，我们可以看到一个初始代码：
 
 ```javascript
-// 在 LeanEngine 里初始化express框架
+// 在云引擎里初始化express框架
 var express = require('express');
 var app = express();
 var name = require('cloud/name.js');
@@ -639,42 +648,40 @@ app.get('/hello', function(req, res) {
 app.listen();
 ```
 
-我们使用`ejs`模板来渲染view，默认的模板都放在`views`目录下，比如这里`hello.ejs`:
+我们使用 `ejs` 模板来渲染 view，默认的模板都放在 `views` 目录下，比如这里 `hello.ejs`:
 
 ```html
 <%= message %>
 ```
 
-简单地显示message内容。你还可以选用[jade](https://github.com/visionmedia/jade)这个模板引擎：
+简单地显示 message 内容。你还可以选用 [jade](https://github.com/visionmedia/jade) 这个模板引擎：
 
 ```javascript
 app.set('view engine', 'jade');
 ```
 
-您可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.avosapps.com/hello` 将看到展示的 message:
+你可以参照上面的 [部署](#部署) 章节来部署这个框架代码，部署成功之后，直接可以访问 `http://${your_app_domain}.leanapp.cn/hello` 将看到展示的 message：
 
 ```
 Congrats, you just set up your app!
 ```
 
-更多复杂的路由和参数传递，请看 [express.js框架文档](http://expressjs.com/guide.html)。
+更多复杂的路由和参数传递，请看 [express.js 框架文档](http://expressjs.com/guide.html)。
 
-我们还提供了一个在线demo： http://myapp.avosapps.com/ ，源码在 https://github.com/killme2008/cloudcode-test ，您可以作为参考。
+我们还提供了一个在线 Demo：<http://myapp.leanapp.cn/>，[源码](https://github.com/killme2008/cloudcode-test) 开放供大家参考。
 {% endblock %}
 
 {% block error_page_404 %}
-### 自定义404页面
+### 自定义 404 页面
 
-自定义404页面在云代码里比较特殊，假设我们要渲染一个404页面，必须将下列代码放在`app.listen()`之后：
+自定义 404 页面在云引擎里比较特殊，假设我们要渲染一个 404 页面，必须将下列代码放在 `app.listen()` 之后：
 
 ```javascript
-// 在app.listen();之后。
+// 在 app.listen(); 之后
 app.use(function(req, res, next){
-  res.status(404).render('404', {title: 'Sorry, page not found'});
+  res.status(404).render('404', {title: 'Sorry, the page cannot be found.'});
 });
 ```
-
-这将渲染views下面的404模板页面。
 {% endblock %}
 
 {% block get_client_ip %}
@@ -684,7 +691,9 @@ var ip = req.headers['x-real-ip']
 {% endblock %}
 
 {% block upload_file %}
-在 LeanEngine 里上传文件也很容易，首先配置 app 使用 bodyParser 中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到 request.files 里：
+### 上传文件
+
+在云引擎里上传文件也很容易，首先配置应用使用 bodyParser 中间件，它会将上传表单里的文件存放到临时目录并构造一个文件对象放到 request.files 里：
 
 ```javascript
 app.use(express.bodyParser());
@@ -699,9 +708,9 @@ app.use(express.bodyParser());
 </form>
 ```
 
-上传文件使用multipart表单，并POST提交到/upload路径下。
+上传文件使用 multipart 表单，并 POST 提交到 `/upload` 路径下。
 
-接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的`fs`模块：
+接下来定义文件上传的处理函数，使用受到严格限制并且只能读取上传文件的 `fs` 模块：
 
 ```javascript
 var fs = require('fs');
@@ -721,13 +730,15 @@ app.post('/upload', function(req, res){
     res.send('请选择一个文件。');
 });
 ```
+
+上传成功后，即可在数据管理平台里看到你所上传的文件。
 {% endblock %}
 
 {% block cookie_session %}
 
 ### 处理用户登录和登出
 
-假设你创建了一个支持web主机功能的云代码项目，在app.js里添加下列代码：
+假设你创建了一个支持web主机功能的云代码项目，在 app.js 里添加下列代码：
 
 ```javascript
 var express = require('express');
@@ -745,19 +756,19 @@ app.use(express.cookieParser('Your Cookie Secure'));
 app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}));
 ```
 
-使用`express.cookieParser`中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个session存储，它会自动将AV.User的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+使用 `express.cookieParser` 中间件启用 cookieParser，注意传入一个 secret 用于 cookie 加密（必须）。然后使用 `require('avos-express-cookie-session')` 导入的 avosExpressCookieSession 创建一个 session 存储，它会自动将 AV.User 的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
-`avos-express-cookie-session`支持的选项包括：
+`avos-express-cookie-session` 支持的选项包括：
 
-* cookie  -- 可选参数，设置cookie属性，例如maxAge,secure等。我们会强制将httpOnly和signed设置为true。
-* fetchUser -- **是否自动fetch当前登录的AV.User对象。默认为false。**如果设置为true，每个HTTP请求都将发起一次LeanCloud API调用来fetch用户对象。如果设置为false，默认只可以访问 `req.AV.user` 当前用户的id属性，您可以在必要的时候fetch整个用户。通常保持默认的false就可以。
-* key -- session在cookie中存储的key名称，默认为 `avos.sess`。
+* **cookie**：可选参数，设置 cookie 属性，例如 maxAge,secure等。我们会强制将 httpOnly 和 signed 设置为 true。
+* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性，你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
+* **key**：session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
 
-**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
 
-* 在云代码方法中，通过 request.user 获取用户信息。
-* 在 webHosting 中，通过 req.AV.user 获取用户信息。
-* 在后续的方法调用显示的传递 user 对象。
+* 在云代码方法中通过 request.user 获取用户信息。
+* 在网站托管中通过 req.AV.user 获取用户信息。
+* 在后续的方法调用显示传递 user 对象。
 
 登录很简单：
 
@@ -768,10 +779,10 @@ app.get('/login', function(req, res) {
 });
 // 点击登录页面的提交将出发下列函数
 app.post('/login', function(req, res) {
-    AV.User.logIn(req.body.username, req.body.password).then(function() {
+    AV.User.logIn(req.body.username, req.body.password).then(function(user) {
       //登录成功，avosExpressCookieSession会自动将登录用户信息存储到cookie
       //跳转到profile页面。
-      console.log('signin successfully: %j', req.AV.user);
+      console.log('signin successfully: %j', user);
       res.redirect('/profile');
     },function(error) {
       //登录失败，跳转到登录页面
@@ -798,7 +809,7 @@ app.get('/logout', function(req, res) {
 });
 ```
 
-登录页面大概是这样login.ejs:
+登录页面大概是这样 login.ejs:
 
 ```html
 <html>
@@ -815,10 +826,10 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express框架的express.session.MemoryStore在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型session是无法共享的，建议用[cookieSession中间件](https://gist.github.com/visionmedia/1491756)。
+注意： express 框架的 `express.session.MemoryStore` 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
 {% endblock %}
 
-{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock%}
+{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}
 
 {% block https_redirect %}
 ```javascript
@@ -834,7 +845,7 @@ if (__local) {
 } else if(__production) {
   // 当前环境为「生产环境」，是线上正式运行的环境
 } else {
-  // 当前环境为「测试环境」
+  // 当前环境为「预备环境」
 }
 ```
 {% endblock %}
@@ -842,7 +853,7 @@ if (__local) {
 {% block cloud_code_module %}
 ## 模块
 
-云代码 2.0 支持将JavaScript代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和CommonJS模块类似。当一个模块被加载的时候，JavaScript文件首先被加载，然后执行文件内的源码，并返回全局的export对象。例如，假设`cloud/name.js`包含以下源码：
+云代码 2.0 支持将 JavaScript 代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和 CommonJS 模块类似。当一个模块被加载的时候，JavaScript  文件首先被加载，然后执行文件内的源码，并返回全局的 export 对象。例如，假设 `cloud/name.js` 包含以下源码：
 
 ```javascript
 var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
@@ -850,7 +861,8 @@ exports.isACoolName = function(name) {
   return coolNames.indexOf(name) !== -1;
 }
 ```
-然后在`cloud/main.js`包含下列代码片段：
+
+然后在 `cloud/main.js` 包含下列代码片段：
 
 ```javascript
 var name = require('cloud/name.js');
@@ -858,9 +870,10 @@ name.isACoolName('Fred'); // 返回false
 name.isACoolName('Skippy'); // 返回true;
 name.coolNames; // 未定义.
 ```
-（提示，你可以利用`console.log`来打印这几个调用的返回值到日志）
 
-name模块包含一个名为`isACoolName`的函数。`require`接收的路径是相对于你的云代码项目的根路径，并且只限`cloud/`目录下的模块可以被加载。
+提示，你可以利用 `console.log` 来打印这几个调用的返回值到日志，在 [控制台 / 存储 / 云引擎 / 日志](/cloud.html?appid={{appid}}#/log) 中查看。
+
+name 模块包含一个名为 `isACoolName` 的函数。`require` 接收的路径是相对于你的云代码项目的根路径，并且只限 `cloud/` 目录下的模块可以被加载。
 
 ### 可用的第三方模块
 
@@ -889,8 +902,8 @@ stripe
 sendgrid
 xml2js
 ```
-上面这些模块都可以直接require使用。
-我们还提供受限制的`fs`文件模块，仅可以读取上传文件目录下的文件。
 
-**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本**
+上面这些模块都可以直接 require 使用。我们还提供受限制的 `fs` 文件模块，仅可以读取上传文件目录下的文件。
+
+**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本。**
 {% endblock %}

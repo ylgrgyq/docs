@@ -2,17 +2,18 @@
 
 [REST API](/rest_api.html) 可以让任何支持发送 HTTP 请求的设备与 LeanCloud 进行交互。使用我们的短信服务 REST API 可以完成很多事情，比如：
 
-* 给指定手机号码发送短信验证码。
-* 验证手机号和短信验证码是否匹配。
-* 使用手机号和验证码进行登录。
-* 通过合法的手机号和验证码来重置账户密码。
-* 进行重要操作（例如支付）的验证确认等。
+* 给指定手机号码发送短信验证码
+* 验证手机号和短信验证码是否匹配
+* 使用手机号和验证码进行登录
+* 通过合法的手机号和验证码来重置账户密码
+* 进行重要操作（例如支付）的验证确认等
 
-我们支持**国内短信、国际短信**，并为每个 LeanCloud 账户提供 100 条国内短信的免费额度进行测试，超过的部分将实时从短信余额中扣除，所以请务必保证短信账户余额充足。具体的价格请参看 [官网价格](https://leancloud.cn/pricing.html)。
+<!-- 我们支持**国内短信**、**国际短信**，并为每个 LeanCloud 账户-->
+我们为每个 LeanCloud 账户提供 100 条国内短信的免费额度进行测试，超过的部分将实时从短信余额中扣除，所以请务必保证短信账户余额充足。具体的价格请参看 [官网价格](/pricing.html)。
 
 ## 快速参考
 
-所有 API 访问都需要使用 HTTPS 协议，在 https://leancloud.cn 域名下。相对路径前缀 __/1.1/__ 代表现在使用的是第 1.1 版的 API。如需在线测试 API，请在浏览器中打开 <https://leancloud.cn/apionline/>。
+所有 API 访问都需要使用 HTTPS 协议，在 https://leancloud.cn 域名下。相对路径前缀 **/1.1/** 代表现在使用的是第 1.1 版的 API。如需在线测试 API，请在浏览器中打开 <https://leancloud.cn/apionline/>。
 
 我们的短信服务 REST API 包括：
 
@@ -21,17 +22,17 @@
 URL|HTTP|功能
 :---|:---|---
 /1.1/requestSmsCode|POST|请求发送短信验证码
-/1.1/verifySmsCode/:code|POST|验证短信验证码
+/1.1/verifySmsCode/`<code>`|POST|验证短信验证码
 
 ### 用户
 URL|HTTP|功能
 :---|:---|---
 /1.1/usersByMobilePhone|POST|使用手机号码注册或登录
 /1.1/requestMobilePhoneVerify|POST|请求发送用户手机号码验证短信
-/1.1/verifyMobilePhone/:code|POST|使用「验证码」验证用户手机号码
+/1.1/verifyMobilePhone/`<code>`|POST|使用「验证码」验证用户手机号码
 /1.1/requestLoginSmsCode|POST|请求发送手机号码短信登录验证码
 /1.1/requestPasswordResetBySmsCode|POST|请求发送手机短信验证码重置用户密码
-/1.1/resetPasswordBySmsCode/:code|PUT|验证手机短信验证码并重置密码
+/1.1/resetPasswordBySmsCode/`<code>`|PUT|验证手机短信验证码并重置密码
 
 ### 请求和响应格式
 
@@ -52,7 +53,7 @@ URL|HTTP|功能
 
 在一些场景下，你可能希望用户在验证手机号码后才能进行一些操作，例如充值。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
 
-使用这些 API 需要在 [应用控制台](/applist.html#/apps) > **设置** > **应用选项** > **短信** 中开启 **启用手机号码短信认证（针对 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。如下图所示：
+使用这些 API 需要在 [控制台 >（选择应用）> **设置** > **应用选项** > **短信**](https://leancloud.cn/app.html?appid={{appid}}#/permission) 中开启 **启用手机号码短信认证（针对 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。如下图所示：
 
 ![image](images/leancloud_sms_setting1.png)
 
@@ -60,8 +61,8 @@ URL|HTTP|功能
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -72,7 +73,7 @@ curl -X POST \
 参数|约束|描述
 :---|:---:|:---
 mobilePhoneNumber|必填|目标手机号码
-ttl||验证码有效时间。单位：分钟（默认为 10 分钟）。
+ttl||验证码有效时间。单位分钟（默认为 **10 分钟**）
 name||应用名字（默认为 LeanCloud 控制台填写的应用名。）
 op||操作类型
 
@@ -82,8 +83,8 @@ op||操作类型
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -96,7 +97,7 @@ curl -X POST \
  - **voice**：发送语音验证码
  - **sms**：发送普通短信验证码
 
-此接口与之前的 [验证短信 API](#短信验证_API) 完全兼容，如果你不需要此服务，完全不需要修改之前的发送短信代码。
+此接口与之前的 [验证短信 API](#短信验证_API) 完全兼容，如果你不需要此服务，完全不需要修改之前的发送短信代码。它的 [发送限制](#短信有什么限制吗_) 与短信验证码相同。
 
 ### 校验验证码
 
@@ -104,15 +105,16 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   "https://api.leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
 
 其中 `verifySmsCode` 后面是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码。
 
->由于运营商和渠道的限制，短信验证码发送要求间隔至少一分钟，并且每天向同一手机号码发送次数不能超过 10 次，**因此建议采用图形验证码、倒数计时等措施来控制频率**，提示用户，防止短信轰炸等恶劣情况发生。
+>由于运营商和渠道的限制，短信验证码（也包括语音验证码）向同一手机号码发送要求间隔至少一分钟，并且每天向同一手机号码发送次数不能超过 5 次，**因此建议采用 [图片验证码](#图片验证码)、倒数计时等措施来控制频率**，提示用户，防止短信轰炸等恶劣情况发生。另外，请了解有关短信的 [其他限制](#短信有什么限制吗_)。
+
 
 <!--
 ### 国际短信
@@ -125,8 +127,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "917646xxxxx", "countryCode":"US"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -143,8 +145,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "template":"activity","date":"2014 年 10 月 31 号"}' \
   https://api.leancloud.cn/1.1/requestSmsCode
@@ -152,18 +154,18 @@ curl -X POST \
 
 短信模板的语法遵循 [Handlebars](http://handlebarsjs.com/)，举例如下：
 
-<pre ng-non-bindable ><code>Hi {{username}},
+<pre ng-non-bindable><code>Hi {{username}},
 欢迎注册{{name}}应用，您可以通过验证码:{{code}}，进行注册。本条短信将在{{ttl}}分钟后自行销毁。请尽快使用。
 以上。
 </code></pre>
 
-* **code** 是我们帮你生成的验证码，可以通过 `/1.1/verifySmsCode/:code` 校验。
-* **ttl**  是短信有效期，单位分钟，默认为 10 分钟。
-* **name** 是应用名称。
+* **code** 是我们帮你生成的验证码，可以通过 `/1.1/verifySmsCode/<code>` 校验。
+* **ttl** 是短信有效期，单位分钟，默认为 10 分钟。
+* **name** 是应用名称
 
-这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 `{{var}}`。
+这三个内置字段会自动填充，你当然也可以添加自定义变量，形如 <span ng-non-bindable>`{{var}}`</span>。
 
-短信签名是指短信内容里 `【】` 括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。**短信签名不能超过 10 个字符，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。**
+短信签名是指短信内容里 `【】` 括起来的短信发送方名称，如果没有明确在模板里指定，默认就是你的应用名称。短信签名**不能超过 10 个字符，不能有任何非文字字符，也不可以是变量**。应用名称可以在应用设置里修改，并且短信签名**必须出现在短信内容的开头或者结尾。**
 
 ### 短信模板审核
 
@@ -182,15 +184,15 @@ curl -X POST \
 
 LeanCloud 提供了内建的账户系统，方便开发者快速接入。我们也支持账户系统与手机号码绑定的一系列功能，譬如：
 
-###使用手机号码注册或登录
+### 使用手机号码注册或登录
 
 现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登录，我们也提供了一个新 API： `POST /usersByMobilePhone` 来处理:
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
-  -G \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
   https://api.leancloud.cn/1.1/usersByMobilePhone
 ```
@@ -221,8 +223,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"username":"cooldude6","password":"p_n7!-e8","mobilePhoneNumber":"186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/users
@@ -232,14 +234,14 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/:code
+  https://api.leancloud.cn/1.1/verifyMobilePhone/<code>
 ```
 
-其中 URL 中最后的 `:code` 要替换成 6 位验证数字。
+其中 URL 中最后的 `<code>` 要替换成 6 位验证数字。
 
 验证成功后，用户的 `mobilePhoneNumberVerified` 将变为 `true`，并会触发调用云引擎的 `AV.Cloud.onVerified(type, function)` 方法，`type` 被设置为 `sms`。
 
@@ -249,8 +251,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestMobilePhoneVerify
@@ -262,8 +264,8 @@ curl -X POST \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestLoginSmsCode
@@ -273,8 +275,8 @@ curl -X POST \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'smsCode=123456' \
@@ -285,8 +287,8 @@ curl -X GET \
 
 ```sh
 curl -X GET \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'password=p_n7!-e8' \
@@ -299,8 +301,8 @@ curl -X GET \
 
 ```sh
 curl -X POST \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
   https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
@@ -308,30 +310,85 @@ curl -X POST \
 
 发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的 `mobilePhoneNumber`。
 
-用户收到验证码后，调用 `PUT /1.1/resetPasswordBySmsCode/:code` 来设置新的密码（其中 URL 中的 `:code` 就是 6 位验证数字）：
+用户收到验证码后，调用 `PUT /1.1/resetPasswordBySmsCode/<code>` 来设置新的密码（其中 URL 中的 `<code>` 就是 6 位验证数字）：
 
 ```sh
 curl -X PUT \
-  -H "X-AVOSCloud-Application-Id: {{appid}}" \
-  -H "X-AVOSCloud-Application-Key: {{appkey}}" \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"password": "new password"}' \
+  -d '{"password": "<新密码>"}' \
   https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
 ```
 
 修改成功后，用户就可以用新密码登录了。
 
+## 图片验证码
+
+### 短信轰炸
+
+网络世界也不太平，很多角落都可能存在着不法分子，肆意进行网络攻击和破坏，其中短信轰炸就是一例。
+
+网络上有这样一种「轰炸软件」，它可以自动收集一些不需要认证（如图片验证码认证）就能发送短信验证码的网站，当恶意攻击者随意提供一个或一组手机号码，它就逐个访问先前找到的那些网站，把手机号都自动填上，利用这些网站向指定手机号发送短信。轰炸软件找到的可利用的网站越多，发出的短信也就越多。
+
+轰炸软件的恶意之处还在于，它对各个网站提交发送短信验证码请求不仅仅是一次，它可以设置时间，比如每隔几分钟请求一次，24 小时不间断请求，这样造成的后果就是：
+
+- 对于网站来说，它会不断收到发送短信验证码的请求，并可能承担更多的短信费用；
+- 对手机号码的使用者来说，他会在短时间内频繁收到包含验证码的无关短信。
+
+### 防范的重要性
+
+毫无疑问，图片验证码（又称 captcha）是防范短信轰炸最有力的手段。比如，我们在一些网站注册的时候，经常需要填写以下图片的信息：
+
+<img src="images/captcha.png" width="400" height="50">
+
+网站只有在用户进行「免费获取验证码」 操作前，要求用户先输入图片验证码来确认操作真实有效，服务器端再请求 LeanCloud 云端发送动态短信到用户手机上，这样才可以有效防范恶意攻击者。下图显示出使用图片验证码的正确和错误做法：
+
+![image](images/captcha_comparison.png)
+
+所以，在短信验证码发送前，一定先让用户填写图片验证码，确认后再发送短信验证码。
+
+一个实际有效的验证码还必须满足：
+
+- **生成过程安全**：图片验证码必须在服务器端生成并校验；
+- **使用过程安全**：单次有效，且以用户的验证请求为准；
+- **验证码自身安全**：不易被识别工具识别，能有效防止暴力破解。
+
+以下网站使用了图片验证码，大家可以参考：
+
+- [网易邮箱注册](http://reg.email.163.com/unireg/call.do?cmd=register.entrance&from=163mail_right)
+- [京东商城注册](https://reg.jd.com/reg/person?ReturnUrl=http%3A%2F%2Fwww.jd.com)
+
+### 更多验证形式
+
+除了采用这种图片输入的方式来验证，现在有很多网站也采用了新颖的验证方式，比如淘宝、pptv 在注册时采用行为验证方式、拖拽验证方式等等。大家可以去搜索一下，网上有一些图片验证码的现成解决方案，可以尝试。
+
 ## 常见问题 FAQ
+
+### 短信有什么限制吗？
+
+短信有 **验证**（包括语音验证）和**通知**（如通过短信模板创建）两类。由于运营商和渠道的限制，短信发送要遵循以下原则：
+
+* 无论是验证类还是通知类短信，一分钟只能向同一个手机号码发送一条短信。
+* 每天只能向同一个手机号码发送 5 条验证类短信、15 条通知类短信。
+
+**通知类**短信内容如果涉及以下不正当用途，我们将停止你的短信使用权限：
+
+* 推广营销用途
+* 包含不明下载地址
+* 色情、政治等法律禁止情况
+
+以上限制对测试手机号码也同样有效。
 
 ### 短信 100 条的免费额度是针对每个账户还是每个应用？
 
 每个 LeanCloud 账户拥有 100 条免费的短信测试额度，**不是每个应用**；使用完毕就需要付费。可以通过 [充值](/bill.html#/bill/charge) 菜单来购买短信。
 
->注意：为了不影响其他服务的使用，我们将短信费用和普通服务费用分开计算，所以充值的时候请明确选择「购买短信」，万一充错了，我们也支持用账户余额来购买短信。**
+>注意：为了不影响其他服务的使用，我们将短信费用和普通服务费用分开计算，所以充值的时候请明确选择「购买短信」，万一充错了，我们也支持用账户余额来购买短信。
 
 ### 短信的到达率如何？
 
-我们通过接入多个短信提供商来提升普通短信的到达率。从我们实际使用来看，整体的到达率在 97%－98% 之间。为了保证重要操作的验证信息可以 100% 送达，我们也推出了语音验证码服务（保证百分百到达），因此，除了普通的文本短信之外，还可以使用语音短信或者其他备份手段来向用户提供应用的重要功能。
+我们通过接入多个短信提供商来提升普通短信的到达率。从我们实际使用来看，整体的到达率在 97%~98% 之间。为了保证重要操作的验证信息可以 100% 送达，我们也推出了 [语音验证码](https://blog.leancloud.cn/3202/) 服务，即短信内容通过语音电话直接发送。因此，除了普通的文本短信之外，还可以使用语音短信或者其他备份手段来向确保将通知送达用户。
 
 ### 怎么知道单条短信发送成功与否？
 
@@ -341,30 +398,44 @@ LeanCloud 通过运营商通道发送的每一条短信，都可以通过「接�
 * **失败**：这表示出现内部错误，导致发送失败。内部错误则包括目标号码因为某种原因进入发送方黑名单、短时间内发送过量短信、甚至是政策调整等等情况。
 * **等待**：表示运营商服务器尚未收到目标手机的接收回执，发送结果可能成功也可能失败，当前不可知。
 
-大家可以从 [应用控制台](/applist.html#/apps) > **消息** > **短信** > **发送记录**，清楚地看到每条消息和它的发送状态。
+大家可以从 [应用控制台 > **消息** > **短信** > **发送记录**](/messaging.html?appid={{appid}}#/message/sms/create) 清楚地看到每条消息和它的发送状态。
+
+### 有些手机收不到短信是什么情况？
+
+首先请检查 [应用控制台 > **消息** > **短信** > **发送记录**](/messaging.html?appid={{appid}}#/message/sms/create)）有无发送数据。如果没有，请检查 API 的报错，根据报错修改客户端代码或逻辑；如果有数据，依然收不到短信，则可能有如下原因：
+
+- **状态为「等待回执」**：说明在等待运营商给我们发回回执，这时候用户可能已经收到短信，也可能没有收到，结果未知。在高峰时段，很可能会出现延迟。
+- **状态为「失败」**：说明运营商向用户发送短信失败。可能的原因有很多种，譬如：
+  - 每天往同一用户发送的短信量 [超过了限制](#短信有什么限制吗_)；
+  - 往同一用户发送短信频率太快（一分钟内最多只允许发送一条短信，此限制也适用于语音验证码）；
+  - 用户之前退订或投诉过运营商当前分发的短信通道，该号码处在运营商黑名单中；
+  - 用户手机号不存在或关机等等。
+- **状态为「成功」**：说明运营商告诉我们用户已经成功收到了短信。如果用户没有收到，可能用户端手机出了问题（是否安装了某些安全软件，导致劫持或过滤了部分短信，等等）。
+
+短信发送受客观因素或政策原因影响较多，没有一个通道可以保证 100% 送达。LeanCloud 短信服务通过对接多条通道、动态智能匹配最优线路，能够保证 97% 以上的到达率。
+
+##### 解决方案
+- 请在产品交互上，对验证码请求加上时间间隔限制，一分钟之内不允许多次请求；
+- 请注意一天内不要往同一号码发送超过 5 条验证码短信（包含语音验证码）；
+- 对于实在无法送达的少量手机号码，请转用 [语音验证码](https://blog.leancloud.cn/3202/)，将短信内容通过语音电话直接发送。强烈建议大家在产品上，对于同一用户尝试再次获取验证码的情况，换用语音验证码来保证绝对送达（语音验证码收费与文本短信一样）。
+
+如果需要详查原因，请将 appId 及手机号发送到 <support@leancloud.cn>，我们联系运营商查询详情。
+
 
 ### 短信签名是什么？必须的吗？
 
-根据运营商的要求，短信签名是必须的。短信签名是指短信里 `【】` 括起来的短信发送方名称。我们只允许自定义短信模板的用户自定义签名，其他用户都使用应用名称。
+根据运营商的要求，短信签名是必须的。短信签名是指短信里 `【】` 括起来的短信发送方名称。我们只允许自定义短信模板的用户自定义签名，其他用户都使用应用名称。自定义签名要求在 10 个字符内，不能有任何**非文字字符**，不可以是变量。
 
->短信签名限制在 10 个字符内，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。
+> 短信签名限制在 10 个字符内，应用名称可以在应用设置里修改，并且短信签名必须出现在短信内容的开头或者结尾。
 
-### 短信有什么限制吗？
+### 短信模板审核的原则是哪些？
 
-针对验证码类短信的限制有：
+1. 模板用途明确：通知类短信，比如活动通知、消息通知等。或者验证类短信，要求有验证码。
+2. 短信用途不得违反国家法律法规，下列短信是严格禁止的：房产类、中奖类、违法类（谣言、诈骗等）、赌博类等。
+3. 模板语法正确：我们仅支持 handlebars 语法，变量是以两个大括号括起来，类似 <span ng-non-bindable>`{{var}}`</span>。
+4. 默认短信签名是应用名，你也可以在模板里设置短信签名，签名要求在 10 个字符内，不能有任何**非文字字符**，不可以是变量。
 
-* 针对同一个手机号码，一分钟只能发送一条验证码短信。
-* 每天只能发送 10 条验证短信给同一个手机号码。
-
-以上限制对测试手机号码也同样有效。
-
-通知类短信没有流控限制，但是我们禁止下列短信：
-
-* 推广营销用途
-* 包含不明下载地址
-* 涉及色情、政治等法律禁止情况
-
-如果涉及上述不正当用途，我们将停止您的短信使用权限。
+如果你创建的短信模板被拒绝，请注意查收邮件，查看里面的拒绝原因等。如果还有疑问，请及时与我们联系。
 
 ### 短信支持港澳台和国外吗？
 
@@ -372,4 +443,4 @@ LeanCloud 通过运营商通道发送的每一条短信，都可以通过「接�
 
 ### 短信余额不足有预警通知吗？
 
-有。请在 [开发者帐户](/settings.html#/setting/info) 里填写手机号码，我们将提前通过邮件和短信的方式向你 发送告警信息。
+有。请在 [开发者帐户](/settings.html#/setting/info) 里填写手机号码，我们将提前通过邮件和短信的方式向你发送告警信息。

@@ -1,4 +1,4 @@
-# Unity 指南
+# Unity 数据存储开发指南
 
 如果还没有安装 LeanCloud Unity SDK，请阅读 [快速入门](/start.html) 来获得该 SDK。我们的 SDK 兼容 Unity 4.2 及更高版本，支持使用 Unity 开发的 iOS、Android、Windows Phone 8、Windows Store、Windows Desktop，以及网页游戏。
 
@@ -598,10 +598,10 @@ task.ContinueWith(t =>
 ```
 以上两步，就是一个完整的手机号注册流程。
 
-### 登陆
-登陆是一个`AVUser`的静态方法，通过如下`三种`方式可以实现登陆，登陆之后，SDK会默认将此次登陆的用户设置为`AVUser.CurrentUser`：
+### 登录
+登录是一个`AVUser`的静态方法，通过如下`三种`方式可以实现登录，登录之后，SDK会默认将此次登录的用户设置为`AVUser.CurrentUser`：
 
-#### 用户名和密码登陆
+#### 用户名和密码登录
 
 ```javascript
 var userName = "demoUser";
@@ -610,27 +610,27 @@ AVUser.LogInAsync(userName, pwd).ContinueWith(t =>
 {
     if (t.IsFaulted || t.IsCanceled)
     {
-       var error = t.Exception.Message; // 登陆失败，可以查看错误信息。
+       var error = t.Exception.Message; // 登录失败，可以查看错误信息。
     }
     else
     {
-       //登陆成功
+       //登录成功
     }
 });
 ```
-#### 手机号和密码登陆
-在短信服务上线之后，只要是`通过认证`的手机号可以当做用户名在 LeanCloud 服务端进行登陆，自然SDK里面也加入了相应的支持(Unity SDK 自V1.1.0以及以后的版本都有支持)。它的调用与用户名登陆一样，只是方法名字不一样，代码如下:
+#### 手机号和密码登录
+在短信服务上线之后，只要是`通过认证`的手机号可以当做用户名在 LeanCloud 服务端进行登录，自然SDK里面也加入了相应的支持(Unity SDK 自V1.1.0以及以后的版本都有支持)。它的调用与用户名登录一样，只是方法名字不一样，代码如下:
 
 ```javascript
 AVUser.LogInByMobilePhoneNumberAsync (mobilePhone, password).ContinueWith (t =>
         {
 			AVUser user=t.Result;
-			//这里可以拿到登陆之后的AVUser，但是实际上AVUser.CurrentUser已经是当前登陆的用户了。
+			//这里可以拿到登录之后的AVUser，但是实际上AVUser.CurrentUser已经是当前登录的用户了。
 			//这里提供返回值是为了使链式表达式脱离对全局变量的依赖，当然大部分情况下AVUser.CurrentUser应该已经可以满足一般的需求。
 		});
 ```
-#### 手机号和短信验证码登陆
-在对客户端验证要求比较高的应用里面，也许有些应用要求支持短信随机的验证码作为临时的密码登陆，这个应用场景在现在已经被普遍的采用了，这种验证机制被认为是安全性高的一种机制，自然 LeanCloud 也给予了支持。它比前2种静态登陆的方法多了`发送短信验证码`这一步，具体代码如下：
+#### 手机号和短信验证码登录
+在对客户端验证要求比较高的应用里面，也许有些应用要求支持短信随机的验证码作为临时的密码登录，这个应用场景在现在已经被普遍的采用了，这种验证机制被认为是安全性高的一种机制，自然 LeanCloud 也给予了支持。它比前2种静态登录的方法多了`发送短信验证码`这一步，具体代码如下：
 
 ```javascript
 //第一步，请求服务端发送6为数字的验证码到指定mobilePhoneNumber上。
@@ -649,7 +649,7 @@ catch(AVException avException)
 ```
 
 ```javascript
-//第二步，直接使用验证码登陆，如果验证码输入错误也会抛出异常。
+//第二步，直接使用验证码登录，如果验证码输入错误也会抛出异常。
 try
 {
 	AVUser.LoginBySmsCodeAsync (mobilePhoneNumber, code).ContinueWith(t=>
@@ -673,7 +673,7 @@ catch(AVException avException)
 
 注意，验证过的用户，TA的`emailVerified`将会置成`true`，反之`false`，但是如果**未启用注册用户邮箱验证**，这个字段会为空。
 
-用户邮箱验证后，会调用`AV.Cloud.onVerified('email',function)`的云代码回调函数，方便您做一些后处理。
+用户邮箱验证后，会调用`AV.Cloud.onVerified('email',function)`的云引擎回调函数，方便您做一些后处理。
 
 ### 手机号认证
 相对于邮箱认证，手机号认证的过程稍微需要多一点代码，如果当您的应用在注册的时候没有开启短信验证，伴随业务发展，发现需要验证用户的手机，LeanCloud正好提供了这一接口。
@@ -688,7 +688,7 @@ AVUser.RequestMobilePhoneVerifyAsync ("18688888888").ContinueWith(t=>
 回调认证的接口与`手机号注册`小节的第二步一样。
 
 
-验证成功后，用户的`mobilePhoneVerified`属性变为true，并且调用云代码的`AV.Cloud.onVerifed('sms', function)`方法。
+验证成功后，用户的`mobilePhoneVerified`属性变为true，并且调用云引擎的`AV.Cloud.onVerifed('sms', function)`方法。
 
 **以上只是针对_User表的一个属性mobilePhoneNumber进行验证，但是存在另一种需求，类似于支付宝在进行交易的时候会要求进行实时的短信认证，这一机制现在已经普遍存在于各种应用中进行敏感操作的首选，LeanCloud 也提供了这一机制**
 
@@ -748,7 +748,7 @@ public void VerifySMSCode(string code)
 ```
 
 ### 当前用户
-诚如所有移动应用一样当前用户一直是被在客户端视作持久化存储处理，比如手机QQ等流行的App，LeanCloud必然也会如此为开发者解决持久化存储当前用户，只要调用了`登陆`相关的接口，当前用户就会被持久化存储在客户端。
+诚如所有移动应用一样当前用户一直是被在客户端视作持久化存储处理，比如手机QQ等流行的App，LeanCloud必然也会如此为开发者解决持久化存储当前用户，只要调用了`登录`相关的接口，当前用户就会被持久化存储在客户端。
 
 ```javascript
 var user = AVUser.CurrentUser;
@@ -768,7 +768,7 @@ var user = AVUser.CurrentUser;	//如此做就会抛出异常，因为登出之�
 ```javascript
 AVUser.RequestPasswordResetAsync(user.Email);
 ```
-这样服务端就会再次发送重置密码的邮件，开发者只要引导用户登陆邮箱，进行操作就完成了。
+这样服务端就会再次发送重置密码的邮件，开发者只要引导用户登录邮箱，进行操作就完成了。
 
 #### 短信验证码重置
 如果用户的手机是有效地，并且已经通过了验证码验证手机的有效性，那么开发者可以提供另一种在手机上体验较好的方式：通过短信验证码重置密码。具体实例如下：
@@ -797,7 +797,7 @@ AVUser.Query.WhereEqualTo("gender", "female").FindAsync().ContinueWith(t =>
 
 
 ### 用户安全数据的认证规则
-很多时候，就算是开发者也不要轻易修改用户的基本信息，比如用户的一些比较敏感的个人信息，例如手机号，社交账号等，这些都应该让用户在App中自行修改，所以为了用户数据的数据有且仅有自己在登陆的情况下得以修改，LeanCloud服务端对所有针对`AVUser`对象的数据做了验证。
+很多时候，就算是开发者也不要轻易修改用户的基本信息，比如用户的一些比较敏感的个人信息，例如手机号，社交账号等，这些都应该让用户在App中自行修改，所以为了用户数据的数据有且仅有自己在登录的情况下得以修改，LeanCloud服务端对所有针对`AVUser`对象的数据做了验证。
 
 ```javascript
 AVUser user = null;
@@ -810,12 +810,12 @@ AVUser.LogInAsync("demoUser", "asvscloud").ContinueWith(t =>
 {
     if (!t.IsFaulted)
     {
-        // 在登陆之后，提交修改用户相关字段（密码除外），都会成功。
+        // 在登录之后，提交修改用户相关字段（密码除外），都会成功。
         AVUser.LogOut();
     }
 }).ContinueWith(t =>
 {
-    // 通过Id获取这个用户，注：如此做并未使当前用户登陆。
+    // 通过Id获取这个用户，注：如此做并未使当前用户登录。
     return AVUser.Query.GetAsync(user.ObjectId);
 }).Unwrap().ContinueWith(t =>
 {
@@ -1154,10 +1154,11 @@ if (GUI.Button(new Rect(50, 50, 200, 50), "Delete file"))
    });
 }
 ```
-## 调用云代码
-云代码是 LeanCloud 提供给开发者自定义服务端逻辑的解决方案，例如想在用户注册的时候，服务端统一给用户分配随机的昵称，这一操作就可以用云代码实现。具体关于云代码的一些相关概念和操作可以先查看[云代码指南](https://leancloud.cn/docs/cloud_code_guide.html)。
 
-调用云代码在SDK中比较方便，它是`AVCloud`的静态方法，全局均可调用。
+## 调用云引擎
+云引擎是 LeanCloud 提供给开发者自定义服务端逻辑的解决方案，例如想在用户注册的时候，服务端统一给用户分配随机的昵称，这一操作就可以用云引擎实现。具体关于云引擎的一些相关概念和操作可以先查看 [云引擎指南](leanengine_guide-cloudcode.html)。
+
+调用云引擎在 SDK 中比较方便，它是 `AVCloud` 的静态方法，全局均可调用。
 
 ```javascript
 var dic = new Dictionary<string, object>();
@@ -1168,7 +1169,7 @@ dic.Add("name", "Justin");
 //...
 var callTask = AVCloud.CallFunctionAsync<string>("TestFunctionName", dic);
 ```
-只需要传入云代码中函数的名字和这个函数需要参数即可，如果是无参的函数，直接传入`null`即可。
+只需要传入云引擎中函数的名字和这个函数需要参数即可，如果是无参的函数，直接传入`null`即可。
 
 ## 消息推送
 在Unity中消息的推送只需要掌握`AVPush`的用法就可以在客户端推送消息发给服务端，再由 LeanCloud 的服务端将消息都推送各个客户端，但要注意**Unity想实现接受消息，最好依赖于当前操作系统的本地的API**，换言之，因为接受消息这一操作在各个移动操作系统最好使用当前系统的API去实现，当然，开发者也可以自己去实现。考虑到这一点，LeanCloud 暂时不考虑在Unity 做过多的强制性，如何展现消息接受，应该是客户端开发者自己去掌控。另外，我们也推荐在Unity开发中，针对不同平台搭配使用我们针对这个平台的SDK（iOS,Android,Windows Phone等）去调用带有平台特征性的一些功能和API。

@@ -1,4 +1,6 @@
-# 实时通信服务开发指南
+# 实时通信服务开发指南（V1）
+
+> 本文档仅适用于使用老版本 SDK 的用户，新用户请参考 [最新版本的文档](realtime_v2.html)。
 
 除了实时的消息推送服务外，LeanCloud 从 2.5.9 版本开始提供实时的点对点消息服务，这意味着，你将可以通过我们的服务开发实时的用户间聊天、游戏对战等互动功能。截至目前，我们提供 Android、JavaScript、iOS、Windows Phone 四个主要平台的客户端 SDK。
 
@@ -6,7 +8,7 @@
 
 * 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+* 便于调试的 [在线测试工具](http://chat.leanapp.cn/)。
 
 
 ## 功能和特性
@@ -14,7 +16,7 @@
 在进入开发之前，请允许我们先介绍一下实时通信服务的功能和特性，加粗的条目是最新添加的：
 
 * 登录，通过签名与你的用户系统集成
-* 单个设备多个帐号，单个帐号多个设备，实时消息同步到所有设备
+* 单个设备多个账号，单个账号多个设备，实时消息同步到所有设备
 * 单聊（发给一个人），群发（发给多个人），群聊（发给一个群）
 * 自定义消息解析；基于 AVFile 可以实现图片、音频和视频等丰富格式
 * 通过签名控制关注权限和参与对话权限
@@ -35,7 +37,7 @@
 * 异常数据报警
 * 消息到达回执
 * 发送消息 REST API
-* 实时消息云代码 Hook
+* 实时消息云引擎 Hook
   * 消息到达服务器
   * 收件人离线
 * **不限成员的开放群组**
@@ -121,23 +123,23 @@ Session open 和 watch 行为都需要包含签名，这样你可以对用户的
 1. 客户端发起 session open 或 watch 等操作，SDK 会调用
 SignatureFactory 的实现，并携带用户信息和用户行为（登录、关注或群组操
 作）请求签名；
-2. 应用自有的权限系统，或应用在云代码上的签名程序收到请求，进行权限验
+2. 应用自有的权限系统，或应用在云引擎上的签名程序收到请求，进行权限验
 证，如果通过则利用**下文所述的签名算法**生成时间戳、随机字符串和签名返回给
 客户端；
 3. 客户端获得签名后，编码到请求中，发给实时通信服务器；
 4. 实时通信服务器通过请求的内容和签名做一遍验证，确认这个操作是经由服
 务器允许的，进而执行后续的实际操作。
 
-### 云代码签名范例
+### 云引擎签名范例
 
-我们提供了一个运行在 LeanCloud [云代码](https://cn.avoscloud.com/docs/cloud_code_guide.html)上的
+我们提供了一个运行在 LeanCloud [云引擎](leanengine_guide-cloudcode.html)上的
 [签名范例程序](https://github.com/leancloud/realtime-messaging-signature-cloudcode)
 ，他提供了基于 Web Hosting 和 Cloud Function 两种方式的签名实现，你可以根据实际情况选
 择自己的实现。
 
 ### 签名方法
 
-签名采用**Hmac-sha1**算法，输出字节流的十六进制字符串(hex dump)，签名的消息格式如下
+签名采用**Hmac-sha1**算法，输出字节流的十六进制字符串(hex dump)，签名的消息格式如下：
 
 ```
 app_id:peer_id:watch_peer_ids:timestamp:nonce
@@ -153,7 +155,7 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce
 
 签名的 key 必须是应用的 **master key**，您可以在应用设置的应用 Key 里找到，请保护好 Master Key ，不要泄露给任何无关人员。
 
-开发者可以实现自己的 SignatureFactory，调用远程的服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在我们的云代码上通过 Web Hosting 动态接口实现自己的签名接口。在移动应用中直接做签名是**非常危险**的，它可能导致你的**master key**泄漏。
+开发者可以实现自己的 SignatureFactory，调用远程的服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在我们的云引擎上通过 Web Hosting 动态接口实现自己的签名接口。在移动应用中直接做签名是**非常危险**的，它可能导致你的**master key**泄漏。
 
 使用蟒蛇(Python)大法的签名范例：
 
@@ -228,22 +230,23 @@ LeanChat 用到了大多数实时通信组件的提供的接口与功能，通�
 
 至于其它技术细节，请参考 [项目wiki](https://github.com/leancloud/leanchat-android/wiki) 。
 
-## 云代码 Hook
+## 云引擎 Hook
 
-云代码 hook 允许你通过自定义的云代码函数处理实时通信中的某些事件，修改
+云引擎 hook 允许你通过自定义的云引擎函数处理实时通信中的某些事件，修改
 默认的流程等等。目前我们开放了两个需求比较强烈的 hook 云函数：
 
-* _messageReceived 消息达到服务器，群组成员已解析完成之后
+* _messageReceived 消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * _receiversOffline 消息发送完成，存在离线的收件人
 
-关于如何定义云函数，你可以参考[云代码部分的说明](https://cn.avoscloud.com/docs/cloud_code_guide.html#cloud-函数)。所有云代码调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
+关于如何定义云函数，你可以参考 [云引擎 -云函数](leanengine_guide-cloudcode.html#云函数) 部分的说明。所有云引擎调用都有默认超时时间和容错机制，在出错的情况下将按照默认的流程执行后续的操作。
 
 ### _messageReceived
 
 这个 hook 发生在消息到达实时通信服务，如果是群组消息，我们会解析出所有消息收件人。
 
-你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消
-息内容。返回空对象则会执行系统默认的流程。
+你可以通过返回参数控制消息是否需要被丢弃，删除个别收件人，还可以修改消息内容。返回空对象（`response.success({})`）则会执行系统默认的流程。
+
+**请注意，在这个 hook 的代码实现的任何分支上请确保最终会调用 response.success 返回结果，使得消息可以尽快投递给收件人。这个 hook 将阻塞发送流程，因此请尽量减少无谓的代码调用，提升效率。**
 
 #### 参数
 
@@ -286,11 +289,11 @@ timestamp | 服务器收到消息的时间戳，毫秒
 
 参数 | 说明
 --- | ---
-skip | 可选，如果是 truthy 值将跳过推送（比如已经在云代码里触发了推送或者其他通知）
+skip | 可选，如果是 truthy 值将跳过推送（比如已经在云引擎里触发了推送或者其他通知）
 offlinePeers | 可选，数组，筛选过的推送收件人
 pushMessage | 可选，推送内容，支持自定义 JSON 结构
 
-示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云代码 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
+示例应用 [LeanChat](https://github.com/leancloud/leanchat-android) 也用了云引擎 Hook 功能来自定义消息推送，通过解析上层消息协议获取消息类型和内容，通过`fromPeer`得到发送者的名称，组装成 `pushMessage`。这样，能使推送通知的用户体验更好。可参考[相应的代码](https://github.com/leancloud/leanchat-cloudcode/blob/master/cloud/mchat.js)。
 
 ## 服务器端错误码说明
 
@@ -332,7 +335,7 @@ iOS在应用退出前台后即离线，这时收到消息会触发一个APNS的�
 
 桌面图标也会有相应的红点`badge`，清除 `badge` 的操作请参考 [iOS推送指南](push_guide.html#清除-badge)。
 
-云代码 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云代码-Hook](realtime.html#云代码-hook) 章节。
+云引擎 Hook 已支持自定义消息推送，可推送具体的消息内容，可参考[云引擎-Hook](realtime.html#云引擎-hook) 章节。
 
 
 ### 为什么我的 iPhone 收不到离线消息推送？

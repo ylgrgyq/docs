@@ -104,11 +104,91 @@ var initGitHubLinks = function() {
   var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
   $("#content").prepend("<div class=docs-meta>\
       <span class='icon icon-github'></span>\
-      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>查看文件</a>\
+      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>在 GitHub 查看</a>\
       |\
-      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑文件</a>\
+      <a href='http://github.com/leancloud/docs/commits/master/md/" + currentPath + ".md'>文件历史</a>\
+      |\
+      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑</a>\
     </div>");
-  $(".sidebar-wrapper #toc").append("<li class=back-to-top><a href=#top>返回顶部</a></li>");
+  $(".sidebar-wrapper #toc").append("<li class=sidebar-meta><a href='#' class=do-expand-all>展开所有</a> <a href='#top' class=back-to-top>返回顶部</a></li>");
+}
+
+// Init GitHub contributors
+function getGitHubContributors() {
+  var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
+  var url = "https://api.github.com/repos/leancloud/docs/commits?path=md/" + currentPath + ".md&per_page=10000000"
+  var contributors = [];
+  var appendTarget = $("#content h1");
+  $.getJSON(url, function(data) {
+    $.each(data, function(index, item) {
+      if(item.author) {
+        contributors.push({
+          handle: item.author.login,
+          url: item.author.html_url,
+          avatar: item.author.avatar_url
+        });
+      }
+    });
+  })
+  .done(function() {
+    // Make contributor array of objects unique
+    var uniqArr = {};
+    for ( var i=0, n=contributors.length; i < n; i++ ) {
+      var item = contributors[i];
+      uniqArr[item.handle] = item;
+    }
+
+    contributors = new Array();
+    for ( var key in uniqArr ) {
+      contributors.push(uniqArr[key]);
+    }
+
+    if($.isEmptyObject(contributors)) {
+      return;
+    }
+    else {
+      $("<ul />", {
+        "class": "github-contributors"
+      }).insertAfter(appendTarget);
+
+      $(".doc-content h1").addClass("github-contributors-loaded");
+
+      var wrap = $(".github-contributors");
+
+      $.each(contributors, function(index, item) {
+        $("<li />").append(
+          $("<a />", {
+            "href": item.url,
+            "data-title": item.handle
+          }).append(
+            $("<img />", {
+              "src": item.avatar,
+              "alt": item.handle
+            })
+          )
+        ).appendTo(wrap);
+      });
+
+      $(wrap).find("a").tooltip();
+    }
+
+    console.log("fetch contributors success");
+  })
+  .fail(function() { console.log("fetch contributors error"); })
+  .always(function() { console.log("fetch contributors complete"); });
+}
+
+function sidebarExpandAll() {
+  var el = $(".do-expand-all");
+  var target = $(".sidebar-wrapper");
+
+  el.on("click", function(e) {
+    e.preventDefault();
+    target.toggleClass("expand-all");
+    $(this).text(function(i, t) {
+      return t === '展开所有' ? '折叠所有' : '展开所有'
+    });
+  });
 }
 
 var initScrollHistoryState = function() {
@@ -130,6 +210,8 @@ $(function() {
   updateScrollSpy();
   addSidebarHoverListener();
   initGitHubLinks();
+  sidebarExpandAll();
+  getGitHubContributors();
   // initSmoothScroll();
 
   var arr = $('#toc ul').parents('li');

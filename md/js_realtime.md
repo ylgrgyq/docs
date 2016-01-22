@@ -1,4 +1,4 @@
-# JavaScript 实时通信 SDK
+# JavaScript 实时通信开发指南
 
 ## 简介
 
@@ -6,13 +6,15 @@
 
 你可以通过使用我们提供的 SDK，一行后端代码都不用写，就可以做一个功能完备的实时聊天应用、也可以做一个实时对战类的游戏，总之一切与实时通信相关的业务都可以使用 LeanCloud 提供的实时通信服务。
 
-你还可以通过实时通信 SDK 配合「[云代码](https://leancloud.cn/docs/cloud_code_guide.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
+你还可以通过实时通信 SDK 配合「[云引擎](leanengine_guide-node.html)」简单的实现之前可能需要很多人才能完成的实时通信相关需求的开发，并且如果你达到我们的收费额度，也会以极低的成本支付你的使用费用，成本远远小于同等规模自建实时通信服务。
 
 本 SDK 实现轻量、高效、无依赖，支持浏览器与 node 运行环境。其中浏览器支持涵盖了移动终端的浏览器及各种 WebView，包括微信、PhoneGap、Cordova 的 WebView，同时 SDK 通过插件方式提供兼容 IE8 与 IE9 的方案。具体请看下面「[兼容方案](#兼容方案)」部分的说明。
 
 ### Demo
 
-在开始一切之前，你可以尝试一下 [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，也可以直接查看它的 [源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)，还有热心用户提供的[实时对战游戏 Demo](http://cutpage.sinaapp.com/)。
+- [简单聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/)，[源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo/demo2)
+- [LeanMessage Demo](http://leancloud.github.io/leanmessage-demo)，[源码](https://github.com/leancloud/leanmessage-demo/tree/master/Web)
+- 热心用户提供的 [实时对战游戏 Demo](http://cutpage.sinaapp.com/)
 
 ### 贡献
 
@@ -30,7 +32,7 @@ SDK 仓库地址：[https://github.com/leancloud/js-realtime-sdk](https://github
 
 * 另一层是业务逻辑层，用户可以使用 SDK 建立不同的 Conversation（对话）。一个 Conversation 就是一个独立的通信单元，但 Conversation 间一般是无法通信的。当然你可以自己在业务逻辑层，通过派发自定义事件的方式来封装其他自定义的逻辑。当创建一个新 Conversation 之后，对应的服务器端就会自动生成这个 Conversation，除非你自行删除，否则该 Conversation 一直存在。但是用户如果没有连接，该房间不会占用服务器资源，只是存储的一个数据条目；
 
-如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](https://leancloud.cn/docs/realtime_rest_api.html)」。
+如果想了解实时通信的整体概念，请阅读「[实时通信开发指南](realtime_v2.html)」。另外，我们也提供「[实时通信 REST API](realtime_rest_api.html)」。
 
 ### 特别说明
 
@@ -38,7 +40,7 @@ Conversation（对话）这个概念也可以理解为 Room（房间）。几个
 
 也许说到这里你已经跃跃欲试了，好的，那你可以试用一下看看了。
 
-注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](https://leancloud.cn/start.html)」开始尝试。
+注：如果还不是很了解 LeanCloud 的使用方式，建议先从「[快速入门](/start.html)」开始尝试。
 
 ## 安装与配置
 
@@ -63,6 +65,8 @@ leancloud-realtime 是标准的 node package，支持使用 browserify 进行浏
 SDK 提供插件化的、无痛兼容 IE8 与 IE9 老版本 IE 浏览器的支持方式。
 
 IE8 与 IE9 没有实现 WebSocket，SDK 通过 Flash 插件实现对 IE8 与 IE9 的支持。SDK 的 plugin/web-socket-js 目录是兼容 IE8 与 IE9 所需要用到的插件。主要实现原理就是通过 Flash 的 Socket 实现 WebSocket 协议通信，然后 JavaScript 包装下 window.WebSocket，再通过 Flash 与 JavaScript 通信完成对 SDK 的兼容。我们的 Demo 是兼容 IE8 与 IE9 的，可以参考其代码。
+
+另外，如果在 IE8、IE9 下启用了 HTTPS 协议，那么在实例化 AV.realtime 的时候，`secure` 要设置为 true。因为 IE8、IE9 中，只支持 HTTP 协议发送 HTTP 的请求，HTTPS 发送 HTTPS 的请求，不支持混用，就是 HTTPS 的站点无法发送 HTTP 的请求，但是新版 IE 已经支持。
 
 **具体使用方式：**
 
@@ -102,19 +106,19 @@ npm install leancloud-realtime --save
 ```
 var realtime = require('leancloud-realtime');
 ```
-由于 node 运行环境没有内置的 WebSocket 实现，在使用 `realtime` 方法之前需要通过 `config` 方法配置一个 Websocket 类，否则会抛出一个 **No WebSocket implement set** 错误，这里以 [ws](https://www.npmjs.com/package/ws) 这个实现为例进行配置：
+SDK 在 node 环境下使用 [ws](https://www.npmjs.com/package/ws) 作为内置的 WebSocket 实现，你也可以在使用 `realtime` 方法之前通过 `config` 方法配置一个 Websocket 类，这里以 [websocket](https://www.npmjs.com/package/websocket) package 为例进行配置：
 ```
-// 首先安装 ws：
-// npm install ws --save
+// 首先安装 websocket：
+// npm install websocket --save
 // 然后进行配置：
 realtime.config({
-  WebSocket: require('ws')
+  WebSocket: require('websocket').w3cwebsocket
 });
 ```
 
-##示例代码
+## 示例代码
 
-如果您觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
+如果你觉得一点点阅读文档较慢，可以直接看我们的「[Demo 代码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)」，并且下载自己运行一下试试看，Demo 代码可以通过开两个浏览器标签的方式来模拟两个用户的互相通信，代码中也有详细的注释方便你来了解使用方法。
 
 ```javascript
 // 最简的示例代码，请换成自己的 appId，可以通过浏览器多个标签模拟多用户通信
@@ -128,10 +132,10 @@ var conversationObj;
 realtimeObj = AV.realtime({
     appId: appId,
     clientId: clientId,
-    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-    encodeHTML: true,
     // 是否开启服务器端认证
-    // auth: authFun
+    // auth: authFun,
+    // 是否使用其他地区的节点
+    // region: 'us'
 });
 
 // 当前 SDK 版本
@@ -170,7 +174,7 @@ realtimeObj.on('reuse', function() {
     console.log('正在重新连接。。。');
 });
 
-// 当 Conversation 被创建时触发，当然您可以使用回调函数来处理，不一定要监听这个事件
+// 当 Conversation 被创建时触发，当然你可以使用回调函数来处理，不一定要监听这个事件
 realtimeObj.on('create', function(data) {
 
     // 向这个 Conversation 添加新的用户
@@ -216,12 +220,12 @@ realtimeObj.on('create', function(data) {
 });
 
 // 监听所有用户加入的情况
-realtimeObj.on('join', function(data) {
+realtimeObj.on('membersjoined', function(data) {
     console.log('有用户加入某个当前用户在的 Conversation：', data);
 });
 
 // 监听所有用户离开的情况
-realtimeObj.on('left', function(data) {
+realtimeObj.on('membersleft', function(data) {
     console.log('有用户离开某个当前用户在的 Conversation：', data);
 });
 
@@ -241,35 +245,52 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 ### Web 安全域名
 
-如果是纯前端使用 JavaScript SDK，请务必配置 **Web 安全域名**`**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。
+如果是纯前端使用 JavaScript SDK，请务必配置 **Web 安全域名**，防止其他人盗用你的服务器资源。实时通信的安全域名设置会有三分钟的延迟，所以设置完毕后，请耐心等待下。配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
 
-配置方式：进入对应的 App，然后选择 **设置** > **安全中心** > **Web 安全域名**。
-
-详细请看「[数据和安全](https://leancloud.cn/docs/data_security.html)」指南中的「Web 安全域名」部分。
+详细请看[《数据和安全 - Web 安全域名》](data_security.html#Web_安全域名)。
 
 ### 权限和认证
 
 为了满足开发者对权限和认证的需求，我们设计了签名的概念。
 
-详细请看「[实时通信开发指南](https://leancloud.cn/docs/realtime_v2.html)」中的 「权限和认证」部分。
+详细请看《[实时通信开发指南 - 权限和认证](realtime_v2.html#权限和认证)》。
+
+另外，在 [Demo1](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中，我们也增加了一个实际的例子。
 
 ### 防御 XSS
 
-Web 端实现任何可以将用户输入直接输出到界面上的应用都要注意防止产生 XSS（跨站脚本攻击），实时通信 SDK 支持在 SDK 层面开启这个防御，但是我们默认不开启，所以你可以在实例化 realtimeObject 的时候，开启这个选项。
+Web 端实现任何可以将用户输入直接输出到界面上的应用，都要注意防止产生 XSS（跨站脚本攻击）。实时通信 SDK 为了保证数据上的纯净性及功能的纯净，没有在 SDK 层面做 HTML 字符的转义。所以当你实现一个 Web 产品时，一定要对用户的输出做字符串 HTML 转义。当然现在的很多 Web 端框架已经自带防御 XSS 的功能，比如 jQuery、Angular、React 等。
 
-注意：我们没有对 clientId 做任何过滤，也不建议直接输出 clientId，如果你要输出 clientId 到 Web 页面中，记得要自己手工做 HTML 转义，防止 XSS。
+注意：不仅要对内容，如果界面上会显示 clientId，也要做 HTML 过滤。
+
+如果你没有使用任何框架来防御 XSS，可以使用如下代码，用来过滤某个字符串中的 HTML 字符。
 
 ```javascript
-// 创建实时通信实例（支持单页多实例）
-var appId = '{{appid}}';
-realtimeObj = AV.realtime({
-    appId: appId,
-    clientId: clientId,
-    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-    encodeHTML: true
-    // 是否开启服务器端认证
-    // auth: authFun
-});
+
+// HTML 转义方法，可以防止 XSS
+tool.encodeHTML = function(string) {
+  var encodeHTML = function(str) {
+    if (typeof(str) === 'string') {
+      return str.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    } else {
+      // 数字
+      return str;
+    }
+  };
+
+  // Object 类型
+  if (typeof(string) === 'object') {
+    for (var key in string) {
+      string[key] = tool.encodeHTML(string[key]);
+    }
+    return string;
+  } else {
+    // 非 Object 类型
+    return encodeHTML(string);
+  }
+};
 ```
 
 ## 与 iOS、Android 等客户端通信
@@ -285,9 +306,69 @@ Web 端本身无论处理什么类型的数据，浏览器都可以自动解析�
 - location（地理位置）
 - file（各种类型文件）等类型。
 
+### 示例
+
+```
+// 与 iOS、Android 等 SDK 通信
+
+// 发送文本
+roomObj.send({
+    text: '文本内容'
+}, {
+    type: 'text'
+}, function(data) {
+    // 发送成功之后的回调
+});
+
+// 发送图片
+roomObj.send({
+    // 描述信息
+    text: '图片测试',
+    // 自定义的属性，可选填，非必须项
+    attr: {
+        aaa: 123
+    },
+    url: 'https://leancloud.cn/images/123.png',
+    // 图片相关信息，所有选项可选填，非必须项
+    metaData: {
+        // 图片名字
+        name:'logo',
+        // 文件格式
+        format:'png',
+        // 高度，单位像素 px
+        height: 123,
+        // 宽度，单位像素 px
+        width: 123,
+        // 文件大小，单位比特 b
+        size: 888
+    }
+}, {
+   type: 'image'
+}, function(data) {
+    console.log('图片数据发送成功！');
+});
+
+```
+
+### 自定义消息类型
+
+发送的消息也支持自定义的消息类型，如果 iOS、Android 上通过 SDK 自定义 `_lctype` 字段实现的自定义类型，那么 Web 端也可以直接发送和接受同样格式的数据。
+
+```
+// 发送自定义类型数据
+roomObj.send({
+    _lctype: 123,
+    attr: {
+      test: 'abc'
+    }
+}, function(data) {
+  // 发送成功之后的回调
+});
+```
+
 ## 暂态对话
 
-标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」中了解。
+标准的 Conversation（对话） 每个最多只能支持 500 个 client，假如想要创建一个有非常大量的用户的聊天室，可以使用方法来创建一个「暂态对话」（或者也叫开放聊天室）。但是这种方式创建的 Conversation 不支持消息回执等方法，具体请到「[实时通讯服务开发指南](realtime_v2.html)」中了解。
 
 具体如何创建，请看下面实例化一个 Conversation 的方法 [RealtimeObject.conv](#RealtimeObject_conv)。
 
@@ -314,10 +395,10 @@ AV.realtime(options, callback)
 ---|---|---|---|---
 **options**|Object|必须||配置实时通信服务所需的必要参数。其中包括：
 &nbsp;&nbsp;&nbsp;&nbsp; appId|String|必须||应用的 appId，在 **控制台** > **设置** > **基本信息** 中可以查看。
-&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读「[权限和认证](./realtime.html#权限和认证)」相关文档，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例。
+&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读 [实时通信概览 &middot; 权限和认证](realtime_v2.html#权限和认证)，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/blob/master/demo/demo1/test.js#L248) 中的示例。
 &nbsp;&nbsp;&nbsp;&nbsp; clientId|String|必须||当前客户端的唯一 id，用来标示当前客户端。
-&nbsp;&nbsp;&nbsp;&nbsp; encodeHTML|Boolean||false|是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击）。<br/>该选项默认为关闭 false，true 为开启。
 &nbsp;&nbsp;&nbsp;&nbsp; secure|Boolean||true|是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护。<br/>默认开启 true，false 为关闭。
+&nbsp;&nbsp;&nbsp;&nbsp; region|String||cn|选择服务部署的节点，如果是美国节点，则设置为 `us`，如果是国内节点，则设置为 `cn`。
 
 <!-- &nbsp; 用来维护层级，请勿去掉。-->
 
@@ -332,13 +413,13 @@ var appId = '{{appid}}';
 var clientId = 'abc123';
 var realtimeObject = AV.realtime({
    // appId 需要换成你自己的 appId
-   appId: appid,
+   appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: clientId,
-   // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-   encodeHTML: true,
    // auth 是权限校验的方法函数
    // auth: authFun,
+   // 是否使用美国节点
+   // region: 'us',
    // 是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护
    secure: true
 }, function() {
@@ -349,6 +430,7 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    console.log('与服务器连接成功！');
 });
+// http://jsplay.leanapp.cn/rot/embed?js,console
 ```
 
 ### AV.realtime.version
@@ -478,7 +560,7 @@ realtimeObject.on('create', function(data) {
 });
 
 // 有人加入 Room 的时候会被触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -632,7 +714,8 @@ RealtimeObject.conv(options, callback)
 &nbsp;&nbsp;&nbsp;&nbsp; attr|Object|可选|自定义的数据信息，如 title、image、xxx 等。
 &nbsp;&nbsp;&nbsp;&nbsp; members|Array|可选|创建 conversation 时可以直接加入成员的 clientId，<br/>如 `['LeanCloud1', 'LeanCloud2']`。
 &nbsp;&nbsp;&nbsp;&nbsp; name|String|可选|Conversation 的名字
-&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](https://leancloud.cn/docs/realtime_v2.html)」。
+&nbsp;&nbsp;&nbsp;&nbsp; unique|Boolean|可选|是否原子创建对话，针对相同成员多次原子创建对话会返回同一个会话。请参考 [实时通信服务概览](realtime_v2.html#普通对话_Normal_Conversation_) 中 `unique` 选项相关说明。
+&nbsp;&nbsp;&nbsp;&nbsp; transient|Boolean|可选|是否为暂态的 conversation，暂态的 conversation 可以<br/>支持大量用户（超过 500 人）同时在此聊天，但是不支持消息回执。<br/>**普通聊天每个 conversation 最多只能支持 500 人，<br/>如果预计单个 conversation 会超过这个数字，那请开启这个选项。**<br/>具体可以查看文档「[实时通讯服务开发指南](realtime_v2.html)」。
 **callback**|Function|可选|创建成功后的回调函数，此时也会在 RealtimeObject <br/>内部派发一个 create 事件，可以通过 `RealtimeObject.on()` 方法来监听。
 
 #### 返回
@@ -862,11 +945,12 @@ RealtimeObject.query(options, callback)
 参数|类型|约束|默认|说明
 ---|---|---|---|---
 **options**|Object|||一些配置参数
-&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|是否要去掉内置大字段（成员列表、静音列表、当前用户静音的状态）。
+&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|去掉大字段（成员列表、静音列表、当前用户静音的状态），需要 2.4.0 以上版本。
+&nbsp;&nbsp;&nbsp;&nbsp; withLastMessages|Boolean||false|同时返回对话的最后一条消息，需要 2.4.0 以上版本。
 &nbsp;&nbsp;&nbsp;&nbsp; limit|Number||10|一次获取的条目数量
 &nbsp;&nbsp;&nbsp;&nbsp; skip|Number||0|跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询。
 &nbsp;&nbsp;&nbsp;&nbsp; sort|String||-lm|默认为最近对话反序，排序字段
-&nbsp;&nbsp;&nbsp;&nbsp; where|Object||{m: clientId}|默认为包含自己的查询 {m: clientId}
+&nbsp;&nbsp;&nbsp;&nbsp; where|Object||{m: clientId}|默认为包含自己的查询 {m: clientId}，其他查询条件具体请看下面示例。
 **callback**|Function|必须||创建成功后的回调函数，参数中可以获取到 Room 的列表。
 
 #### 返回
@@ -898,6 +982,25 @@ realtimeObject.on('open', function() {
       console.log(data);  // list
    });
 });
+
+// 查询同时含有用户 clientId 为 A 和 B 的用户
+realtimeObject.query({
+  where: {
+    m: ['A', 'B']
+  },
+},function(data) {
+  console.log(data);  // list
+});
+
+// 查询多个 Room 的信息，可在 roomIds 中传入 roomId 的 list
+realtimeObject.query({
+  where: {
+    roomIds: ['adsfa12131231', '123123sdfaa']
+  },
+},function(data) {
+  console.log(data);  // list
+});
+
 ```
 
 ### RealtimeObject.ping
@@ -937,7 +1040,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -988,7 +1091,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1015,7 +1118,7 @@ RoomObject.add(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1038,7 +1141,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1048,7 +1151,7 @@ room.add('LeanCloud03', function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1066,7 +1169,7 @@ RoomObject.add(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|创建成功后的回调函数。
 
 #### 返回
 
@@ -1089,7 +1192,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1099,7 +1202,7 @@ room.add(['LeanCloud03', 'LeanCloud04'], function() {
 });
 
 // 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('membersjoined', function(data) {
    console.log(data);
 });
 ```
@@ -1117,7 +1220,7 @@ RoomObject.remove(clientId, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientId|String|必须|传入已有用户的 clientId。
-callback|Function|可选|删除成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1140,7 +1243,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1149,8 +1252,8 @@ room.remove('LeanCloud02', function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1168,7 +1271,7 @@ RoomObject.remove(clientIdList, callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|删除成功后的回调函数。
 
 #### 返回
 
@@ -1192,7 +1295,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1201,8 +1304,8 @@ room.remove(['LeanCloud02', 'LeanCloud03'], function() {
     console.log('成功删除。');
 });
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+// 当前 Room 有 client 退出时触发
+realtimeObject.on('membersleft', function(data) {
    console.log(data);
 });
 ```
@@ -1219,7 +1322,7 @@ RoomObject.join(callback)
 
 参数|类型|约束|说明
 ---|---|---|---
-callback|Function|可选|加入成功后的回调函数，此时会在 RealtimeObject 内部派发一个 join 事件。
+callback|Function|可选|加入成功后的回调函数。
 
 #### 返回
 
@@ -1250,8 +1353,7 @@ realtimeObject.room(roomId, function(object) {
     }
 });
 
-// 当前 Room 有新的 client 加入时触发
-realtimeObject.on('join', function(data) {
+realtimeObject.on('invited', function(data) {
    console.log(data);
 });
 ```
@@ -1269,7 +1371,7 @@ RoomObject.leave(callback)
 参数|类型|约束|说明
 ---|---|---|---
 clientIdList|Array|必须|传入已有用户的 clientId 的 list，每个元素是 client。
-callback|Function|可选|创建成功后的回调函数，此时会在 RealtimeObject 内部派发一个 left 事件。
+callback|Function|可选|成功后的回调函数。
 
 #### 返回
 
@@ -1293,15 +1395,14 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
 
 room.leave();
 
-// 当前 Room 有 client 立刻时触发
-realtimeObject.on('left', function(data) {
+realtimeObject.on('kicked', function(data) {
    console.log(data);
 });
 ```
@@ -1342,7 +1443,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1389,7 +1490,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1447,7 +1548,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1545,7 +1646,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1593,7 +1694,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1750,7 +1851,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1759,6 +1860,38 @@ var room = realtimeObject.room({
 room.count(function(data) {
    // 当前用户数量
    console.log(data);
+});
+```
+
+### RoomObject.update
+
+更新 Room（或者 Conversation）的名字与自定义属性。
+
+```javascript
+RealtimeObject.update(data, callback);
+```
+
+#### 输入
+
+参数|类型|约束|说明
+---|---|---|---
+data|object|必须|要修改的 key-value
+callback|Function|可选|修改成功的回调函数
+
+#### 返回
+
+`Object` 返回 RoomObject，其中有后续调用的方法，支持链式调用。
+
+#### 示例
+
+```javascript
+room.update({
+  // 新的 room name
+  name: 'New Name',
+  // 新的自定义的数据
+  attr: {}
+}, function() {
+  console.log('update succeeded.');
 });
 ```
 
@@ -1780,12 +1913,53 @@ SDK 会默认派发一些事件，这些事件仅会在 RealtimeObject 内部被
 
 新建一个 Room 成功之后会被触发。
 
+### invited & membersjoined
+当一个 Room 中有成员加入时，该成员收到 `invited` 事件，Room 中的其他成员收到 `membersjoined` 事件。
+
+A 将 B 加入到会话中时，各方收到事件的时序是这样的：
+
+|邀请者(A)|被邀请者(B)|其他人(C)
+---|:---:|:---:|:---:
+1|发出请求 add| |
+2| |invited|
+3|membersjoined|membersjoined|membersjoined
+
+如果是 A 主动加入会话：
+
+|加入者(A)|其他人(C)
+---|:---:|:---:
+1|发出请求 join|
+2|invited|
+3|membersjoined|membersjoined
+
+### kicked & membersleft
+当一个 Room 中有成员离开时，该成员收到 `kicked` 事件，Room 中的其他成员收到 `membersleft` 事件。
+
+A 将 B 移出会话中时，各方收到事件的时序是这样的：
+
+|A|B|C
+---|:---:|:---:|:---:
+1|发出请求 remove| |
+2| |kicked|
+3|membersleft||membersleft
+
+如果是 A 主动退出会话：
+
+|A|C
+---|:---:|:---:
+1|发出请求 left|
+2|kicked|
+3||membersleft
+
+
 ### join
 
+不赞成使用，已被 `invited`、`membersjoined` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 新增了一个成员之后会被触发。
 
 ### left
 
+不赞成使用，已被 `kicked`、`membersleft` 事件代替。该事件会在下个主版本中移除。
 当一个 Room 中有成员离开之后会被触发。
 
 ### message

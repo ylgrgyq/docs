@@ -11,23 +11,31 @@
 
     .col-md-10,
     .col-md-12 {
-      padding-top: 4px;
 
       // This is too tricky, disable and investigate
       // Date: Mar 24, 2015, 12:16 AM
       // Tunghsiao Liu
-      // > .ng-scope {
-      //
-      //   > *:first-child,
-      //   > .row > div[class^="col-"] > *:first-child {
-      //     margin-top: 0;
-      //   }
-      // }
+      > .ng-scope {
+
+        > h4:first-child {
+          padding-top: 1px;
+          margin-top: 0;
+        }
+
+        // > *:first-child,
+        // > .row > div[class^="col-"] > *:first-child {
+        //   padding-top: 1px;
+        //   margin-top: 0;
+        // }
+      }
     }
   }
 }
 
-
+.first-heading {
+  padding-top: 6px;
+  margin-top: 0;
+}
 
 
 
@@ -61,6 +69,22 @@
 
 .no-margin-left {
   margin-left: 0 !important;
+}
+
+.no-padding-top {
+  padding-top: 0 !important;
+}
+
+.no-padding-right {
+  padding-right: 0 !important;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0 !important;
+}
+
+.no-padding-left {
+  padding-left: 0 !important;
 }
 
 
@@ -145,6 +169,8 @@
         text-align: center;
         margin-right: 6px;
         border-radius: 4px;
+        min-width: 30px;
+        box-shadow: 0 1px 1px 0 rgba(0, 0, 0, .05);
       }
     }
   }
@@ -156,7 +182,7 @@
 
 // 404.html and 500.html
 .error-container {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 #chart-container.chart-hide-title {
@@ -250,6 +276,10 @@
 // Close icon for new modal (Bootstrap 3.1.1+)
 .modal-header .close {
   margin-top: 3px;
+
+  &:focus {
+    outline: none;
+  }
 }
 
 
@@ -288,11 +318,14 @@
   max-height: 500px;
   overflow-y: scroll;
 }
-.cell-acl-edit{
-  float: right;
+.cell-acl-edit {
+  position: absolute;
+  right: 4px;
+  top: 2px;
 }
-.acl-cell-text{
+.acl-cell-text {
   width: 75%;
+  width: calc(~"100% - 38px");
   overflow: hidden;
   display: inline-block;
   text-overflow: ellipsis;
@@ -302,4 +335,20 @@
 }
 .ng-table-pager .pagination{
   margin-top: 0;
+}
+
+.daterangepicker_start_input,.daterangepicker_end_input{
+  display: none;
+}
+.st-sort-ascent:before{
+    content: '\25B2';
+}
+
+.st-sort-descent:before{
+    content: '\25BC';
+}
+
+.st-selected{
+    background: #216eff !important;
+    color: white !important;
 }

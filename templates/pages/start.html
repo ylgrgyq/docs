@@ -4,8 +4,14 @@ title: 快速入门 - LeanCloud
 ---
 <div class="start-page" ng-controller="StartCtrl" >
 
+  <div class="doc-home-title">
+    <h1 class="font-logo">LeanCloud Quick Start</h1>
+    <h4>帮助您快速上手 LeanCloud</h4>
+  </div>
+  <!-- .doc-home-title -->
+
   <div class="step">
-    <h3>选择开发平台</h3>
+    <h3 class="no-padding-top">选择开发平台</h3>
 
     <div class="step-content step1">
       <form class="custom-form-inline no-margin select-plat">
@@ -37,6 +43,14 @@ title: 快速入门 - LeanCloud
             <input type="radio" ng-model="selectedPlat" value="python">
             <span class="control-indicator"></span>
             Python
+          </label>
+        </div>
+
+        <div class="radio custom-control">
+          <label>
+            <input type="radio" ng-model="selectedPlat" value="php">
+            <span class="control-indicator"></span>
+            PHP
           </label>
         </div>
 

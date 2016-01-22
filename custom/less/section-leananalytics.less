@@ -321,11 +321,6 @@
   }
 }
 
-.table-date-selector {
-  margin-top: 6px;
-  margin-left: 10px;
-}
-
 .data-export-btn {
   margin-top: 6px;
 }
@@ -347,9 +342,16 @@
 }
 
 .table-date-selector {
+  margin-top: 6px;
+  margin-left: 10px;
 
   input {
     cursor: pointer;
+    border: none;
+    padding: 0;
+    background: transparent;
+    height: auto;
+    width: 80px !important;
   }
 }
 
@@ -677,6 +679,11 @@ button.close {
 
   .dropdown-toggle {
     cursor: pointer;
+
+    &:hover,
+    &:focus {
+      text-decoration: none;
+    }
   }
 
   .dropdown-menu-right {
@@ -732,4 +739,47 @@ button.close {
 
 #stat-crash-chart {
   display: none;
+}
+
+.trace-detail {
+  font-family: @font-family-monospace;
+
+  .thread-title {
+    color: @link-color;
+    margin-top: 2em;
+    margin-bottom: .6em;
+    font-weight: bold;
+
+    &.stat-crash-title {
+      margin-top: 0;
+    }
+  }
+
+  // temp font stack fix
+  .callout {
+    font-family: @font-family-sans-serif;
+    margin-bottom: 1em;
+  }
+}
+
+.crash-mark {
+  margin-right: 6px;
+
+  &.resolved {
+
+    &:hover,
+    &:focus {
+      color: @brand-success;
+      border-color: @brand-success;
+    }
+  }
+
+  &.unresolved {
+
+    &:hover,
+    &:focus {
+      color: @brand-danger;
+      border-color: @brand-danger;
+    }
+  }
 }

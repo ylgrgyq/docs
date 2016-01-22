@@ -1,15 +1,14 @@
 把下面这行代码加入你的测试页面中：
 
+
 ```
 <script src="https://cdn1.lncld.net/static/js/av-mini-{{sdkversion.javascript}}.js"></script>
-//或者你只是用最核心的存储、推送等功能，可以使用精简版的core.js
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-{{sdkversion.javascript}}.js"></script>
 ```
 
-进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。
+进行代码初始化，加入这行代码后，就可以创建 class 或任何其他操作了。想要跟进最新功能，可以到官方的 [GitHub Repo](https://github.com/leancloud/javascript-sdk) 。
 
 ```
-AV.initialize("{{appid}}", "{{appkey}}");
+AV.initialize('{{appid}}', '{{appkey}}');
 // 初始化 param1：应用 id、param2：应用 key
 ```
 
@@ -18,25 +17,30 @@ AV.initialize("{{appid}}", "{{appkey}}");
 开始测试。初始化后加入下面代码：
 
 ```
-var TestObject = AV.Object.extend("TestObject");
+var TestObject = AV.Object.extend('TestObject');
 var testObject = new TestObject();
-testObject.save({foo: "bar"}, {
+testObject.save({
+  foo: 'bar'
+}, {
   success: function(object) {
-  alert("LeanCloud works!");
+    alert('LeanCloud works!');
   }
 });
 ```
 大功告成，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 TestObject 的相关数据。
 
-如果你希望在 [Node.js](http://nodejs.org/) 环境使用 JavaScript SDK 也可以，在 package.json 引用 SDK：
+如果你希望在 [Node.js](http://nodejs.org/) 环境使用 JavaScript SDK 也可以，使用 npm 安装 SDK：
 
 ```
-"avoscloud-sdk":"latest"
+npm install avoscloud-sdk --save
 ```
 
 然后代码中使用 SDK：
 
 ```
-	var AV = require('avoscloud-sdk').AV;
-	AV.initialize("{{appid}}", "{{appkey}}");
+var AV = require('avoscloud-sdk');
+AV.initialize('{{appid}}', '{{appkey}}');
 ```
+
+LeanCloud 同时也提供了一个完整的 Nodejs 环境，我们称之为 LeanEngine，更推荐基于 LeanEngine 来实现并部署 Nodejs 相关的代码。详细请参考[云引擎文档](https://leancloud.cn/docs/leanengine_guide-node.html) 。
+

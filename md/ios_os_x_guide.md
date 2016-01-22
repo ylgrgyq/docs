@@ -14,83 +14,9 @@ LeanCloud 是一个完整的平台解决方案，它为应用开发提供了全�
 
 建议在阅读本文之前，先阅读 [快速入门](/start.html)，了解如何配置和使用 LeanCloud。
 
-## 使用 CocoaPods 安装 SDK
+## SDK 安装
 
-[快速入门](https://leancloud.cn/start.html) 会教你如何在一个项目中安装 SDK。
-
-[CocoaPods](http://www.cocoapods.org/) 是一款很好的依赖管理工具，其安装步骤大致如下：
-
-* 首先确保开发环境中已经安装了 Ruby（一般安装了 XCode，Ruby 会被自动安装上）
-* 我们建议使用淘宝提供的 [Gem源](http://ruby.taobao.org/)，在终端执行下列命令：
-
-  ```sh
-  $ gem sources --remove https://rubygems.org/
-  $ gem sources -a http://ruby.taobao.org/
-  # 请确保下列命令的输出只有 ruby.taobao.org
-  $ gem sources -l
-  *** CURRENT SOURCES ***
-  http://ruby.taobao.org
-  ```
-
-* 通过下列命令，安装（或更新）CocoaPods（可能需要输入登录密码）：
-
-  ```sh
-  sudo gem install cocoapods
-  ```
-
-* 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
-
-  ```sh
-  pod 'AVOSCloud'
-  ```
-* 如果使用 SNS 组件（社交平台服务）的相关功能，则添加：
-
-  ```sh
-  pod 'AVOSCloudSNS'
-  ```
-
-* 执行命令 `pod install` 安装 SDK。
-
-相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
-
-## 手动安装 SDK
-你也可以从我们官网下载最新版本的 iOS SDK，手动导入项目中。具体步骤详见[快速入门](https://leancloud.cn/start.html) 。
-
-这里要特别注意如下几点：
-
-* 手动添加下列依赖库：
-  * SystemConfiguration.framework
-  * MobileCoreServices.framework
-  * CoreTelephony.framework
-  * CoreLocation.framework
-  * libicucore.dylib
-* 如果使用 AVOSCloudCrashReporting ，还需额外添加 `libc++.dylib`
-* 在 target 的 Build Settings 中，为 `Other Linker Flags` 增加 `-all_load` 链接选项。
-
-## 应用
-
-LeanCloud 的每一个账户都可以创建多个应用，每个应用都有自己的 appId 和客户端密钥，客户端代码应该使用它们来初始化 SDK。初始化方法如下：
-
-* 打开 `AppDelegate.m` 文件，添加下列导入语句到头部：
-
-```
-#import <AVOSCloud/AVOSCloud.h>;
-```
-
-* 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
-
-```
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
-[AVOSCloud setApplicationId:@"{{appid}}"
-              clientKey:@"{{appkey}}"];
-```
-
-* 如果想跟踪统计应用的打开情况，后面还可以添加下列代码：
-
-```
-[AVAnalytics trackAppOpenedWithLaunchOptions:launchOptions];
-```
-
+我们提供了一个针对 iOS / OS X SDK 详细的安装指南：[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)
 
 ## 对象
 
@@ -100,20 +26,21 @@ LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，
 
 假如我们要实现一个类似于微博的社交 app，主要有三类数据：账户、帖子、评论。以微博帖子为例，我们可以建立一个类名为 `Post` 的 `AVObject` 对象，包含下面几个属性：
 
-```
+``` 
 content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999
 ```
 
 属性名（也称「键」，key），必须是由字母、数字或下划线组成的字符串；自定义的属性名，不能以 `__`（双下划线）开头。属性值，可以是字符串、数字、布尔值，或是数组和字典。
 
->**注意：以下为系统保留字段，不能作为属性名来使用。**
+**注意：以下为系统保留字段，不能作为属性名来使用。**
 
-```
-acl        description     objectId
-ACL        error           pendingKeys
-className  fetchWhenSave   running
-code       isDataReady     updatedAt
-createdAt  keyValues       uuid
+``` 
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
 ```
 
 每个 `AVObject` 都必须有一个类（Class）名称，以便区分不同类型的数据。例如，微博帖子这个对象可取名为 `Post`。
@@ -124,7 +51,7 @@ createdAt  keyValues       uuid
 
 接下来，需要将上文中的 `Post` 存储到 LeanCloud 上。LeanCloud 的相关接口和 `NSMutableDictionary` 类似，但只有在调用 `save` 方法时，数据才会被真正保存下来。
 
-```objc
+``` objc
 AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post setObject:@"每个 Objective-C 程序员必备的 8 个开发工具" forKey:@"content"];
 [post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
@@ -132,11 +59,21 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post save];
 ```
 
+或者用下标用法：
+
+``` objc
+AVObject *post = [AVObject objectWithClassName:@"Post"];
+post[@"content"] = @"每个 Objective-C 程序员必备的 8 个开发工具";
+post[@"pubUser"] = @"LeanCloud官方客服";
+post[@"pubTimestamp"] = @(1435541999);
+[post save];
+```
+
 运行此代码后，要想确认保存动作是否已经生效，可以到 LeanCloud 应用管理平台的 [数据管理](/data.html?appid={{appid}}) 页面来查看数据的存储情况。
 
 如果保存成功，`Post` 的数据表中应该显示出以下记录：
 
-```objc
+``` objc
 objectId: "558e20cbe4b060308e3eb36c", content: "每个 Objective-C 程序员必备的 8 个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999,
 createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 ```
@@ -144,32 +81,34 @@ createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 在此要特别说明两点：
 
 1. 运行此代码前，不用配置或设置 `Post` 类，LeanCloud 会自动创建这个类。
+   
 2. 对于每一个 AVObject，系统内置了一些属性，以下字段不需要提前指定：
-  * `objectId` 是为每个对象自动生成的唯一的标识符
-  * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
-
-  在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
+   
+   * `objectId` 是为每个对象自动生成的唯一的标识符
+   * `createdAt` 和 `updatedAt` 分别代表每个对象在 LeanCloud 中创建和最后修改的时间，它们会被自动赋值。
+   
+   在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
 
 ### 检索对象
 
 将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以查询到对应的 `AVObject` 实例：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 AVObject *post = [query getObjectWithId:@"558e20cbe4b060308e3eb36c"];
 ```
 
-接下来可以用 `objectForKey` 获取属性值：
+接下来可以用 `objectForKey:`或下标语法来获取属性值：
 
-```objc
+``` objc
 int timestamp = [[post objectForKey:@"pubTimestamp"] intValue];
 NSString *userName = [post objectForKey:@"pubUser"];
-NSString *content = [post objectForKey:@"content"];
+NSString *content = post[@"content"];
 ```
 
 获取三个特殊属性：
 
-```objc
+``` objc
 NSString *objectId = post.objectId;
 NSDate *updatedAt = post.updatedAt;
 NSDate *createdAt = post.createdAt;
@@ -177,7 +116,7 @@ NSDate *createdAt = post.createdAt;
 
 如果需要刷新特定对象的最新数据，可调用 `refresh` 方法 ：
 
-```objc
+``` objc
 [myObject refresh];
 ```
 
@@ -189,7 +128,7 @@ NSDate *createdAt = post.createdAt;
 
 例如，方法 `saveInBackground` 可在后台线程中保存之前的 `AVObject` 实例：
 
-```objc
+``` objc
 [post saveInBackground];
 ```
 
@@ -199,7 +138,7 @@ NSDate *createdAt = post.createdAt;
 
 例如，在保存完成后运行一些代码：
 
-```objc
+``` objc
 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
   if (!error) {
     // post 保存成功
@@ -211,7 +150,7 @@ NSDate *createdAt = post.createdAt;
 
 或者写成回调方式：
 
-```objc
+``` objc
 // 先创建一个回调
 - (void)saveCallback:(NSNumber *)result error:(NSError *)error {
   if (!error) {
@@ -230,7 +169,7 @@ LeanCloud 在进行网络通讯时不会阻塞调用线程，Block 或回调会�
 
 `AVQuery` 也遵循相同的模式。如果需要从对象 `Post` 获取并修改某一条微博帖子，同时又确保主线程不会被阻塞，则可以：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c"
                              block:^(AVObject *post, NSError *error) {
@@ -246,7 +185,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 
 或用回调方式：
 
-```objc
+``` objc
 // 先创建一个回调
 - (void)getCallback:(AVObject *)post error:(NSError *)error {
   if (!error) {
@@ -265,7 +204,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
                           selector:@selector(getCallback:error:)];
 ```
 
-###离线存储对象
+### 离线存储对象
 
 大多数保存功能可以立刻执行，并通知应用「保存完毕」。不过若不需要知道保存完成的时间，则可使用 `saveEventually` 来代替。
 
@@ -273,7 +212,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 
 所有 `saveEventually`（或 `deleteEventually`）的相关调用，将按照调用的顺序依次执行。因此，多次对某一对象使用 `saveEventually` 是安全的。
 
-```objc
+``` objc
 // 创建对象
 AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
@@ -290,7 +229,7 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 
 更新对象非常简单，仅需要更新其属性，再调用保存方法即可。例如：
 
-```objc
+``` objc
 // 创建对象
 AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
@@ -307,11 +246,29 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 
 SDK 内部会自动计算出哪些数据已经改变，并将修改过的的字段发送给 LeanCloud 云端。未更新的数据不会产生变动，这一点请不用担心。
 
+**请注意，LeanCloud 上的更新对象都是针对单个对象，获得对象的 objectId 主键才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+上面的例子是先创建对象，然后在 saveInBackgroundWithBlock 的 block 里更新对象，不过更常见的场景是你通过[查询](#查询)得到一个 AVObject 对象，这个时候更新对象也是类似上面的代码那样，修改属性，调用 saveInBackground 即可。
+
+如果你已经知道了 objectId（例如从查询后的列表页进入一个详情页面，传入了 objectId），想要修改一个对象，可以采用类似下面的代码来更新对象属性：
+
+``` objc
+// 知道 objectId，创建 AVObject
+AVObject *post = [AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"];
+//更新属性
+[post setObject:@"http://tp1.sinaimg.cn/3652761852/50/5730347813/0" forKey:@"pubUserAvatar"];
+[post setObject:[NSNumber numberWithInt:4] forKey:@"pubUserCertificate"];
+//保存
+[post saveInBackground];
+```
+
+
+
 ### 计数器
 
-许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+许多应用都需要实现计数器功能。比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准，这时可以用 `incrementKey:` 以原子操作方式来实现计数：
 
-```objc
+``` objc
 AVObject *post = [AVObject objectWithClassName:@"Post"];
 [post setObject:@"居有良田，食有黍稷；躬耕山間，優游人世；生之所往，不過良風年年。" forKey:@"content"];
 [post setObject:@"LeanCloud官方客服" forKey:@"pubUser"];
@@ -324,12 +281,11 @@ AVObject *post = [AVObject objectWithClassName:@"Post"];
 }];
 ```
 
-也可以使用 `incrementKey:byAmount:` 来给字段累加一个特定数值。
+也可以使用 `incrementKey:byAmount:` 来给 Number 类型字段累加一个特定数值。
 
-那有没有方法，可以不用特意去做 `fetch`，就能马上得到计数器当前在后端的最新数据呢？LeanCloud 提供了
-`fetchWhenSave` 属性，当设置为 `true` 时，SDK 会在保存操作发生时，自动返回当前计数器的最新数值。
+能不能不用特意去做 `fetch`，就马上得到计数器当前在后端的最新数据呢？这就需要使用 `fetchWhenSave` 属性。当它被设置为 `true` 时，SDK 会在保存操作发生时，自动返回当前计数器的最新数值。
 
-```objc
+``` objc
 post.fetchWhenSave = YES;
 [post incrementKey:@"upvotes"];
 [post saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -341,25 +297,28 @@ post.fetchWhenSave = YES;
 
 为了更好地存储数组类型的数据，LeanCloud 提供了三种不同的操作来自动更新数组字段：
 
-* `addObject:forKey:` 和 `addObjectsFromArray:forKey:`
+* `addObject:forKey:`<br>
+  `addObjectsFromArray:forKey:`<br>
   将指定对象附加到数组末尾。
-* `addUniqueObject:forKey:` 和 `addUniqueObjectsFromArray:forKey:`
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。
-* `removeObject:forKey:` 和 `removeObjectsInArray:forKey:`
+* `addUniqueObject:forKey:`<br>
+  `addUniqueObjectsFromArray:forKey:`<br>
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
+* `removeObject:forKey:`<br>
+  `removeObjectsInArray:forKey:`<br>
   从数组字段中删除指定对象的所有实例。
 
-例如，给微博帖子添加 `tags` 字段：
+例如，给微博帖子添加 tags 字段：
 
-```objc
+``` objc
 [post addUniqueObjectsFromArray:[NSArray arrayWithObjects:@"编程", @"开发工具", nil] forKey:@"tags"];
 [post saveInBackground];
 ```
 
-###删除对象
+### 删除对象
 
 从 LeanCloud 中删除一个对象：
 
-```objc
+``` objc
 [myObject deleteInBackground];
 ```
 
@@ -367,7 +326,7 @@ post.fetchWhenSave = YES;
 
 `removeObjectForKey:` 方法会删除 AVObject 实例的单个属性。
 
-```objc
+``` objc
 // 删除 post 实例中 pubTimestamp 字段的值，因为我们可以直接使用 createdAt 这个属性
 [myObject removeObjectForKey:@"pubTimestamp"];
 
@@ -380,9 +339,10 @@ post.fetchWhenSave = YES;
 对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
 
 注：LeanCloud 云端是通过 Pointer 类型来解决这种数据引用的，并不会将数据 a 在数据 b 的表中再额外存储一份，这也可以保证数据的一致性。
+
 例如：一条微博信息可能会对应多条评论。创建一条微博信息并对应一条评论信息，你可以这样写：
 
-```objc
+``` objc
 // 创建微博、内容
 AVObject *myPost = [AVObject objectWithClassName:@"Post"];
 [myPost setObject:@"作为一个程序员，你认为回家以后要不要继续写代码？" forKey:@"content"];
@@ -400,7 +360,7 @@ AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
 
 你也可以通过 objectId 来关联已有的对象：
 
-```objc
+``` objc
 // 把评论跟 objectId 为 "5590cdfde4b00f7adb5860c8" 的微博关联起来
 [myComment setObject:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"]
               forKey:@"post"];
@@ -408,9 +368,9 @@ AVObject *myComment = [AVObject objectWithClassName:@"Comment"];
 
 默认情况下，在获取一个对象时，与其相关联的 `AVObject` 数据不会被一同返回。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法:
 
-```objc
+``` objc
 // 取回关联的微博实例
-AVObject *post = [fetchedComment objectForKey:@"post"];
+AVObject *post = [myComment objectForKey:@"post"];
 // 获取 post 的相关属性
 [post fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   // 取回微博帖子内容
@@ -422,7 +382,7 @@ AVObject *post = [fetchedComment objectForKey:@"post"];
 
 例如，一个用户喜欢多篇微博，就可以用 `relationforKey:` 来保存这些微博。将一篇微博按顺序添加到列表，可这样做：
 
-```objc
+``` objc
 AVUser *user = [AVUser currentUser];
 AVRelation *relation = [user relationforKey:@"likes"];
 [relation addObject:post];
@@ -431,13 +391,13 @@ AVRelation *relation = [user relationforKey:@"likes"];
 
 从 `AVRelation` 中移除一篇喜欢的微博：
 
-```objc
+``` objc
 [relation removeObject:post];
 ```
 
 默认情况下，这个关系中的对象列表不会被同步返回，需要从 `query` 查询返回的 `AVQuery` 中调用 `findObjectsInBackgroundWithBlock:` 方法来获得关联对象列表（这里是微博，Post），如：
 
-```objc
+``` objc
 [[relation query] findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
   if (error) {
      // 呃，报错了
@@ -449,7 +409,7 @@ AVRelation *relation = [user relationforKey:@"likes"];
 
 如果只想要文章对象的子集，则要对 `AVQuery` 添加额外的限制，如：
 
-```objc
+``` objc
 AVQuery *query = [relation query];
 // 增加其他查询限制条件
 query.skip = 10;
@@ -458,7 +418,7 @@ query.limit = 10;
 
 如果想反向查询，比如，一篇微博被哪些用户喜欢过，可使用 `reverseQuery:` 来进行反向查询（同样，这也是直接使用 NSArray 作为属性值无法完成的），例如：
 
-```objc
+``` objc
 AVUser *user = [AVUser currentUser];
 AVRelation *relation = [user relationforKey:@"likes"];
 AVObject *post = [AVObject objectWithClassName:@"Post"];
@@ -479,13 +439,53 @@ AVQuery *query = [AVRelation reverseQuery:user.className relationKey:@"likes" ch
 
 **请阅读《[关系建模指南](./relation_guide.html)》来进一步了解关系类型。**
 
+### 批量操作
+
+为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行创建、更新、删除、获取。接口都在 AVObject 这个类下面：
+
+``` objc
+// 批量创建、更新
++ (BOOL)saveAll:(NSArray *)objects error:(NSError **)error;
++ (void)saveAllInBackground:(NSArray *)objects
+						  block:(AVBooleanResultBlock)block; 
+
+// 批量删除
++ (BOOL)deleteAll:(NSArray *)objects error:(NSError **)error;
++ (void)deleteAllInBackground:(NSArray *)objects
+                        block:(AVBooleanResultBlock)block;
+
+// 批量获取
++ (BOOL)fetchAll:(NSArray *)objects error:(NSError **)error;
++ (void)fetchAllInBackground:(NSArray *)objects
+                       block:(AVArrayResultBlock)block;                        
+```
+
+比如 `Post` 用 `isRead` 字段来表示是否已读。获取一组微博对象之后，把这组对象标记为已读的代码如下：
+
+``` 
+// 获取了一组 posts
+NSArray *posts;
+
+for (AVObject *post in posts) {
+    post[@"isRead"] = @(YES);
+}
+[AVObject saveAllInBackground:posts block:^(BOOL succeeded, NSError *error) {
+    if (error) {
+        // 网络错误
+    } else {
+        // 保存成功
+    }
+}];
+```
+
 ### 数据类型
 
 到目前为止，我们使用过的数据类型有 `NSString`、 `NSNumber`、 `AVObject`，LeanCloud 还支持 `NSDate` 和 `NSData`。
 
 此外，`NSDictionary` 和 `NSArray` 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。例如：
 
-```objc
+``` objc
+NSNumber *boolean = @(YES);
 NSNumber *number = [NSNumber numberWithInt:2014];
 NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
 NSDate *date = [NSDate date];
@@ -496,6 +496,7 @@ NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:number, @"
                                                                       nil];
 
 AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
+[testObject setObject:boolean    forKey:@"testBoolean"];
 [testObject setObject:number     forKey:@"testInteger"];
 [testObject setObject:string     forKey:@"testString"];
 [testObject setObject:date       forKey:@"testDate"];
@@ -521,7 +522,7 @@ AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
 
 例如，要查找指定 `pubUser` 发布的所有微博，可以使用 `whereKey:equalTo:` 方法来限定一个键和对应的值。
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -539,7 +540,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 
 如果已运行在后台线程中，用 `findObjects` 方法可阻塞调用进程：
 
-```objc
+``` objc
 // 以下代码仅可用于测试目的，或在后台线程之中运行
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
@@ -552,26 +553,26 @@ NSArray *postArray = [query findObjects];
 
 用 `whereKey:notEqualTo:` 搭配对应的键和值来过滤对象：
 
-```objc
+``` objc
 [query whereKey:@"pubUser" notEqualTo:@"LeanCloud官方客服"];
 ```
 
 一次查询可以设置多个约束条件，只有满足所有条件的对象才被返回，这相当于使用 AND 类型的查询条件。
 
-```objc
+``` objc
 [query whereKey:@"pubUser" notEqualTo:@"LeanCloud官方客服"];
 [query whereKey:@"pubUserCertificate" greaterThan:[NSNumber numberWithInt:3]];
 ```
 
 用 `limit` 属性来控制返回结果的数量，默认值 100，允许取值范围从 1 到 1000。
 
-```objc
+``` objc
 query.limit = 10; // 最多返回 10 条结果
 ```
 
 如果只需获取一个结果，直接使用 `getFirstObject` 或 `getFirstObjectInBackground`。
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"pubUser" equalTo:@"LeanCloud官方客服"];
 [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
@@ -586,30 +587,33 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 
 `skip` 用来跳过初始结果，这对分页非常有用：
 
-```objc
+``` objc
 query.skip = 10; // 跳过前 10 条结果
 ```
+
 对于适用的数据类型，如数字、字符串，可对返回结果进行排序：
 
-```objc
+``` objc
 // 按发帖时间升序排列
 [query orderByAscending:@"createdAt"];
 
 // 按发帖时间降序排列
 [query orderByDescending:@"createdAt"];
 ```
+
 一个查询可以使用多个排序键：
 
-```objc
+``` objc
 // 若上一个排序键相等，按发帖者认证等级升序排列
 [query addAscendingOrder:@"pubUserCertificate"];
 
 // 如果上一个排序键相等，按发帖者认证等级降序排列
 [query addDescendingOrder:@"pubUserCertificate"];
 ```
+
 对于适用的数据类型，检索中可以使用「比较」方法：
 
-```objc
+``` objc
 // 点赞数 < 50
 [query whereKey:@"upvotes" lessThan:[NSNumber numberWithInt:50]];
 
@@ -625,7 +629,7 @@ query.skip = 10; // 跳过前 10 条结果
 
 `whereKey:containedIn:` 可查询包含不同值的对象。它接受数组，可实现用单一查询来代替多个查询。
 
-```objc
+``` objc
 // 找出 “LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提” 三个账号的微博帖子
 NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
                                            @"LeanCloud江宏",
@@ -636,7 +640,7 @@ NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
 
 相反，要让查询不包含某些值的对象，则用 `whereKey:notContainedIn:` ：
 
-```objc
+``` objc
 // 找出除 “LeanCloud官方客服”，“LeanCloud江宏”，“滚滚艾买提” 三个账号以外的其他人的微博帖子
 NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
                                            @"LeanCloud江宏",
@@ -647,7 +651,7 @@ NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
 
 `whereKeyExists` 用来查询具备某一键集条件的对象，`whereKeyDoesNotExist` 正好相反。
 
-```objc
+``` objc
 // 找到有图片的微博
 [query whereKeyExists:@"images"];
 
@@ -659,7 +663,7 @@ NSArray *names = [NSArray arrayWithObjects:@"LeanCloud官方客服",
 
 例如，在微博这类应用中有三类数据：一个类是微博帖子信息（Post），另一个类是用户账户信息（AVUser），还有一个类是用户之间互相关注的信息（UserFollow），要找出当前用户关注的人发布的微博，则：
 
-```objc
+``` objc
 // 先找到当前登录用户关注的用户列表
 AVQuery *followeeQuery = [AVQuery queryWithClassName:@"UserFollow"];
 [followeeQuery whereKey:@"follower" equalTo:[AVUser currentUser]];
@@ -673,9 +677,10 @@ AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
 ```
 
 相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `whereKey:doesNotMatchKey:inQuery:` 。
+
 例如，找出当前用户没有关注的人发布的微博：
 
-```objc
+``` objc
 AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
 [postQuery whereKey:@"author" doesnotMatchesKey:@"followee" inQuery:followeeQuery];
 [postQuery findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
@@ -687,7 +692,7 @@ AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
 
 例如，让查询结果只包含 `pubUser` 和 `content` 字段（也可以是内置字段，如 `objectId`、 `createdAt` 或 `updatedAt`）：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query selectKeys:@[@"pubUser", @"content"]];
 NSArray *results = [query findObjects];
@@ -695,7 +700,7 @@ NSArray *results = [query findObjects];
 
 其余字段可以稍后对返回的对象调用 `fetchIfNeeded` 的变体来获取：
 
-```objc
+``` objc
 AVObject *object = (AVObject *)[results objectAtIndex:0];
 [object fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
   // 返回该对象的所有字段
@@ -706,14 +711,14 @@ AVObject *object = (AVObject *)[results objectAtIndex:0];
 
 当键值为数组类型时，`equalTo:` 可以从数组中找出包含单个值的对象：
 
-```objc
+``` objc
 // 找出 arrayKey 中包含 2 的对象
 [query whereKey:@"arrayKey" equalTo:[NSNumber numberWithInt:2]];
 ```
 
 `containsAllObjectsInArray:` 可以找到包含多个值的对象:
 
-```objc
+``` objc
 // 找出 arrayKey 中包含 2、3、4 的对象
 [query whereKey:@"arrayKey" containsAllObjectsInArray:@[@2, @3, @4]];
 ```
@@ -722,18 +727,19 @@ AVObject *object = (AVObject *)[results objectAtIndex:0];
 
 使用 `whereKey:hasPrefix:` 可以过滤出以特定字符串开头的结果，这有点像 MySQL 的 `LIKE` 条件。因为支持索引，所以该操作对于大数据集也很高效。
 
-```objc
+``` objc
 // 找出名字以 "LeanCloud" 开头的账户的微博帖子
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"pubUser" hasPrefix:@"LeanCloud"];
 ```
 
 ### 关系查询
+
 检索关系数据有几种方法。如果用某个属性去匹配一个已知的 `AVObject` 对象，仍然可以使用 `whereKey:equalTo:`，就像使用其他数据类型一样。
 
 例如，如果每条评论 `Comment` 的 `post` 字段都有一个 `Post` 微博对象，那么找出指定微博下的评论：
 
-```objc
+``` objc
 // 假设前面已建好了 myPost 这个 AVObject 对象
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 [query whereKey:@"post" equalTo:myPost];
@@ -745,7 +751,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 或通过 `objectId` 做关系查询：
 
-```objc
+``` objc
 [query whereKey:@"post"
         equalTo:[AVObject objectWithoutDataWithClassName:@"Post" objectId:@"5590cdfde4b00f7adb5860c8"];
 ```
@@ -754,7 +760,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 例如，找出所有带图片的微博的评论：
 
-```objc
+``` objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
 [innerQuery whereKeyExists:@"image"];
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
@@ -766,7 +772,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 相反，`whereKey:doesNotMatchQuery:` 可以找出一个对象的某个属性与另一个查询不匹配的结果。例如，找出所有 不带图片的文章的评论：
 
-```objc
+``` objc
 AVQuery *innerQuery = [AVQuery queryWithClassName:@"Post"];
 [innerQuery whereKeyExists:@"image"];
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
@@ -780,7 +786,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 在一些场景中，如果需要在一个查询中返回多个类型的关联属性，可以使用方法 `includeKey:`。例如，搜索最近的十条评论，并同时找出与之对应的文章：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
 
 // 找出最近刚创建的记录
@@ -802,9 +808,9 @@ query.limit = [NSNumber numberWithInt:10];
 }];
 ```
 
-**使用点（`.`）操作符可以检索多层级的数据**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
+**使用点（`.`）操作符可以检索多层级的数据（AVObject 对象）**。例如，在结果中加入评论所对应的微博，以及该微博的作者：
 
-```objc
+``` objc
 [query includeKey:@"post.author"];
 ```
 
@@ -812,7 +818,7 @@ query.limit = [NSNumber numberWithInt:10];
 
 还有一种情况，当某些对象包括多个键，而某些键的值包含的数据量又比较大，你并不希望返回所有的数据，只想要特定键所对应的数据，这时可以用 `selectKeys:`：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query selectKeys:@[@"pubUser"]];
 AVObject *result = [query getFirstObject];
@@ -821,13 +827,14 @@ AVObject *result = [query getFirstObject];
 只返回指定键对应的有限数据，而非所有数据，有助于节省网络带宽和计算资源。
 
 ### 缓存查询
+
 通常，将请求结果缓存到磁盘上是一种行之有效的方法，这样就算设备离线，应用刚刚打开，网络请求尚未完成时，数据也能显示出来。当缓存占用太多空间时，LeanCloud 会自动对其清理。
 
 默认的查询行为不使用缓存，需要通过 `query.cachePolicy` 来启用。例如，当网络不可用时，尝试网络连接并同时取回已缓存的数据:
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-query.cachePolicy = kPFCachePolicyNetworkElseCache;
+query.cachePolicy = kAVCachePolicyNetworkElseCache;
 
 //设置缓存有效期
 query.maxCacheAge = 24*3600;
@@ -841,39 +848,52 @@ query.maxCacheAge = 24*3600;
 }];
 
 ```
+
 LeanCloud 提供了几种不同的缓存策略：
 
-* `kPFCachePolicyIgnoreCache`
+* `kAVCachePolicyIgnoreCache`
+  
   **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-* `kPFCachePolicyCacheOnly`
+  
+* `kAVCachePolicyCacheOnly`
+  
   查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。
-* `kPFCachePolicyCacheElseNetwork`
+  
+* `kAVCachePolicyCacheElseNetwork`
+  
   查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyNetworkElseCache`
+  
+* `kAVCachePolicyNetworkElseCache`
+  
   查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-* `kPFCachePolicyCacheThenNetwork`
+  
+* `kAVCachePolicyCacheThenNetwork`
+  
   查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
 
 要控制缓存行为，可以使用 `AVQuery` 提供的相应方法：
 
 * 检查是否存在缓存查询结果：
-
-  ```objc
+  
+  ``` objc
   BOOL isInCache = [query hasCachedResult];
   ```
+  
 * 删除某一查询的任何缓存结果：
-
-  ```objc
+  
+  ``` objc
   [query clearCachedResult];
   ```
+  
 * 删除查询的所有缓存结果：
-
-  ```objc
+  
+  ``` objc
   [AVQuery clearAllCachedResults];
   ```
+  
 * 设定缓存结果的最长时限：
-
-  ```objc
+  
+  ``` objc
   query.maxCacheAge = 60 * 60 * 24; // 一天的总秒数
   ```
 
@@ -885,7 +905,7 @@ LeanCloud 提供了几种不同的缓存策略：
 
 例如，计算一下某位用户一共发布了多少条微博：
 
-```objc
+``` objc
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 [query whereKey:@"pubUser" equalTo:@"张三"];
 [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
@@ -903,11 +923,12 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 对含有超过 1000 个对象的类，使用计数操作很可能会导致响应超时，或返回数值近似精确，所以在构建程序时，应该尽量避免这样的操作。
 
 ### 复合查询
+
 如果想从多个查询中，找出与其中任意一个相匹配的对象，可以使用方法 `orQueryWithSubqueries:`。
 
 例如，找出赢了很多场比赛或者只赢了几场比赛的球员：
 
-```objc
+``` objc
 AVQuery *lotsOfWins = [AVQuery queryWithClassName:@"Player"];
 [lotsOfWins whereKey:@"wins" greaterThan:[NSNumber numberWithInt:150]];
 
@@ -924,9 +945,10 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
 注意：在复合查询的子查询中，不能使用非过滤性的约束（如 `limit`、 `skip`、`orderBy...:`、 `includeKey:`）。
 
 ### Cloud Query Language（CQL）查询
+
 我们还提供类似于 SQL 语言的查询语言 CQL，使用方法如下：
 
-```objc
+``` objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@", @"ATestClass"];
     AVCloudQueryResult *result = [AVQuery doCloudQueryWithCQL:cql];
     NSLog(@"results:%@", result.results);
@@ -938,7 +960,7 @@ AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:fewWin
 
 通常，查询语句会使用变量参数。为此，我们提供了与 Java JDBC 所使用的 `PreparedStatement` 占位符查询相类似的语法结构。
 
-```objc
+``` objc
     NSString *cql = [NSString stringWithFormat:@"select * from %@ where durability = ? and name = ?", @"ATestClass"];
     NSArray *pvalues =  @[@100, @"祈福"];
     [AVQuery doCloudQueryInBackgroundWithCQL:cql pvalues:pvalues callback:^(AVCloudQueryResult *result, NSError *error) {
@@ -969,15 +991,19 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 子类化是可选的，请对照下面的例子来加深理解：
 
-    AVObject *student = [AVObject objectWithClassName:@"Student"];
-    [student setObject:@"小明" forKey:@"name"];
-    [student saveInBackground];
+``` 
+AVObject *student = [AVObject objectWithClassName:@"Student"];
+[student setObject:@"小明" forKey:@"name"];
+[student saveInBackground];
+```
 
 可改写成:
 
-    Student *student = [Student object];
-    student.name = @"小明";
-    [student saveInBackground];
+``` 
+Student *student = [Student object];
+student.name = @"小明";
+[student saveInBackground];
+```
 
 这样代码看起来是不是更简洁呢？
 
@@ -988,11 +1014,11 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 1. 导入 `AVObject+Subclass.h`；
 2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
 3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
-4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**，所以建议放在 `ApplicationDelegate` 中，在 `[AVOSCloud setApplicationId:clientKey:]` 之前调用即可）。
+4. 在实例化子类之前调用 `[YourClass registerSubclass]`（**在应用当前生命周期中，只需要调用一次**。可在子类的 `+load` 方法或者 UIApplication 的 `-application:didFinishLaunchingWithOptions:` 方法里面调用。）。
 
 下面是实现 `Student` 子类化的例子:
 
-```objc
+``` objc
   //Student.h
   #import <AVOSCloud/AVOSCloud.h>
 
@@ -1036,7 +1062,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 请看下面的例子是怎么添加一个「年龄」属性：
 
-```objc
+``` objc
   //Student.h
   #import <AVOSCloud/AVOSCloud.h>
 
@@ -1058,31 +1084,50 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 ```
 
 这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
-```objc
+
+``` objc
 [student setAge:19]
 ```
 
 **注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
 
-`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `BOOL` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。下面这个属性也是同样的情况：
-
-```objc
-@property BOOL isTeamMember;
-```
+`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
 
 你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
 
+**注意** 子类中，对于 `BOOL` 类型的字段，SDK 在 3.1.3.2 之前会将其保存为 Number 类型，3.1.3.2 之后将其正确保存为 Bool 类型。详情请参考[这里](https://leancloud.cn/docs/ios_os_x_faq.html#为什么升级到_3_1_3_2_以上的版本时_BOOL_类型数据保存错误_)。
+
 注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
 
-```objc
+``` objc
 @interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends
+@property(retain) AVRelation *friends;
+  ......
+@end
+
+@implementation Student
+@dynamic friends;
   ......
 ```
 
+另外，值为 Pointer 的实例可用 `AVObject*` 来表示。例如，如果 `Student` 中 `bestFriend` 代表一个指向另一个 `Student` 的键，由于 Student 是一个 AVObject，因此在表示这个键的值的时候，可以用一个 `AVObject*` 来代替：
+
+``` objc
+@interface Student : AVUser <AVSubclassing>
+@property(nonatomic, strong) AVObject *bestFriend;
+ ......
+@end
+
+@implementation Student
+@dynamic bestFriend;
+  ......
+```
+
+提示：当需要更新的时候，最后都要记得加上 `[student save]` 或者对应的后台存储函数进行更新，才会同步至服务器。
+
 如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
 
-```objc
+``` objc
   @dynamic iconFile;
 
   - (UIImageView *)iconView {
@@ -1097,7 +1142,7 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
 
-```objc
+``` objc
 @interface Student : AVUser<AVSubclassing>
 @property (retain) NSString *displayName;
 @end
@@ -1113,12 +1158,14 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 登录时需要调用 `Student` 的登录方法才能通过 `currentUser` 得到这个子类:
 
-```objc
+``` objc
 [Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
-        Student *student = [AVUser currentUser];
-        studen.displayName = @"YOUR_DISPLAY_NAME";
+        Student *student = [Student currentUser];
+        student.displayName = @"YOUR_DISPLAY_NAME";
     }];
 ```
+
+同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
 
 ### 初始化子类
 
@@ -1130,9 +1177,9 @@ LeanCloud 设计的目标是让你的应用尽快运行起来。你可以用 `AV
 
 例如，查询年龄小于 21 岁的学生：
 
-```objc
+``` objc
   AVQuery *query = [Student query];
-  [query whereKey:@"age" lessThanOrEqualTo:@"21"];
+  [query whereKey:@"age" lessThanOrEqualTo:@(21)];
   [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
     if (!error) {
       Student *stu1 = [objects objectAtIndex:0];
@@ -1150,25 +1197,28 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 以下列举了几种在 LeanCloud 常见的 ACL 使用范例。
 
 ### 默认访问权限
+
 在没有显式指定的情况下，LeanCloud 中的每一个对象都会有一个默认的 ACL 值。这个值表示，所有的用户对这个对象都是可读可写的。此时在 LeanCloud 账户的「数据管理」列表中的 ACL 属性列，会看到这样的值：
 
-```json
+``` json
     {"*":{"read":true,"write":true}}
 ```
 
 对应的 Objective-C 代码是：
 
-```objc
+``` objc
     AVACL *acl = [AVACL ACL];
     [acl setPublicReadAccess:YES];
     [acl setPublicWriteAccess:YES];
 ```
+
 当然正如上文提到的，默认的 ACL 并不需要进行显式指定。
 
 ### 指定用户访问权限
+
 当一个用户在实现一个网盘类应用时，针对不同文件的私密性，用户就需要不同的文件访问权限。譬如公开的文件，每一个其他用户都有读的权限，然后仅仅只有创建者才拥有更改和删除的权限。
 
-```objc
+``` objc
 
     AVACL *acl = [AVACL ACL];
     [acl setPublicReadAccess:YES]; //此处设置的是所有人的可读权限
@@ -1183,9 +1233,10 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 当然用户也会上传一些隐私文件，只有这些文件的创建者才对这些文件拥有读写权限：
 
-```objc
+``` objc
     [acl setWriteAccess:YES forUser:[AVUser currentUser]];
 ```
+
 注：一旦显式设置了 ACL，默认的 ACL 就会被覆盖。
 
 ### 指定角色访问权限
@@ -1196,7 +1247,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 以工资系统为例，一家公司的工资系统，工资最终的归属者和公司的出纳们只对工资有读的权限，而公司的人事和老板才拥有全部的读写权限。当然你可以通过多次设置指定用户的访问权限来实现这一功能（多个用户的 ACL 设置是追加的而非覆盖）。
 
-```objc
+``` objc
     AVObect *salary = [AVObject objectWithClassName:@"Salary"];
     [salary setObject:@(2000000) forKey:@"value"];
 
@@ -1229,7 +1280,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 公司的员工可以成百上千，然而一个公司组织里的角色却能够在很长一段时间内保持相对稳定。
 
-```objc
+``` objc
     AVObect *salary = [AVObject objectWithClassName:@"Salary"];
     [salary setObject:@(2000000) forKey:@"value"];
 
@@ -1274,7 +1325,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 一家创业公司设有移动部门，该部门下面有不同的小组（Android 和 iOS），每个小组只对自己组的代码拥有「读写」权限，但他们同时对核心库代码拥有「读取」权限。
 
-```objc
+``` objc
     AVRole *androidTeam = [AVRole roleWithName:@"AndroidTeam"];
     AVRole *iOSTeam = [AVRole roleWithName:@"IOSTeam"];
     AVRole *mobileDev = [AVRole roleWithName:@"MobileDev"];
@@ -1312,6 +1363,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 ```
 
 
+
 ## 文件
 
 ### AVFile
@@ -1320,7 +1372,7 @@ ACL（Access Control List）是最灵活而且简单的应用数据安全管理�
 
 `AVFile` 的用法非常简单。首先把文件数据存到 `NSData` 中，然后用该 `NSData` 格式的数据来创建 `AVFile` 对象。下面以存储一个字符串为例：
 
-```objc
+``` objc
 NSData *data = [@"Working with LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
 AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 ```
@@ -1332,14 +1384,14 @@ AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 
 然后根据需要，调用相应的 `saveInBackground` 方法，将文件存到 LeanCloud 上：
 
-```objc
+``` objc
 [file saveInBackground];
 ```
 
 最终当文件存储完成后，你可以象操作其他数据那样，将 `AVFile` 关联到 `AVObject` 上。
 
-```objc
-AVObject *obj = [AVObject objectWithClassName:@"Post"]
+``` objc
+AVObject *obj = [AVObject objectWithClassName:@"Post"];
 [obj setObject:@"Joe Smit#花儿与少年# 迪拜疯狂之旅" forKey:@"content"];
 [obj setObject:file         forKey:@"attached"];
 [obj saveInBackground];
@@ -1347,12 +1399,12 @@ AVObject *obj = [AVObject objectWithClassName:@"Post"]
 
 重新获取该数据时，只需要调用 `AVFile` 的 `getData` 方法。
 
-```objc
+``` objc
 AVFile *attachment = [anotherObj objectForKey:@"attached"];
 NSData *binaryData = [attachment getData];
 ```
 
-也可以象 `AVObject` 那样，使用 `getData` 的异步版本。
+也可以像 `AVObject` 那样，使用 `getData` 的异步版本。
 
 **如果对象的某一属性是一个文件数组，那么在获取该属性的查询中，必须加上 `includeKey:` 来指定该属性名，否则，查询结果中该属性对应的值将是 `AVObject` 数组，而不是 `AVFile` 数组。**
 
@@ -1362,7 +1414,7 @@ NSData *binaryData = [attachment getData];
 
 例如，把名为 `image` 的 `UIImage` 对象保存到 `AVFile` 中：
 
-```objc
+``` objc
 NSData *imageData = UIImagePNGRepresentation(image);
 AVFile *imageFile = [AVFile fileWithName:@"image.png" data:imageData];
 [imageFile save];
@@ -1377,7 +1429,7 @@ AVObject *userPost = [AVObject objectWithClassName:@"Post"];
 
 使用 `saveInBackgroundWithBlock:progressBlock:` 和 `getDataInBackgroundWithBlock:progressBlock:` 可以获取 `AVFile` 的上传或下载进度。比如：
 
-```objc
+``` objc
 NSData *data = [@"Working at LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
 AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
@@ -1391,7 +1443,7 @@ AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 
 保存图像时，如果想在下载原图之前先得到缩略图，那么用我们的 API 实现起来会易如反掌：
 
-```objc
+``` objc
 AVFile *file = [AVFile fileWithURL:@"the-file-remote-url"];
 [file getThumbnail:YES width:100 height:100 withBlock:^(UIImage *image, NSError *error) {
     }];
@@ -1401,7 +1453,7 @@ AVFile *file = [AVFile fileWithURL:@"the-file-remote-url"];
 
 `AVFile` 的 `metaData` 属性，可以用来保存和获取该文件对象的元数据信息：
 
-```objc
+``` objc
 AVFile *file = [AVFile fileWithName:@"test.jpg" contentsAtPath:@"file-local-path"];
 [file.metaData setObject:@(100) forKey:@"width"];
 [file.metaData setObject:@(100) forKey:@"height"];
@@ -1414,7 +1466,7 @@ NSError *error = nil;
 
 当文件较多时，要把一些不需要的文件从 LeanCloud 上删除：
 
-```objc
+``` objc
 [file deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
 }];
 ```
@@ -1423,7 +1475,7 @@ NSError *error = nil;
 
 `AVFile` 也提供了清除缓存的方法：
 
-```objc
+``` objc
 //清除当前文件缓存
 - (void)clearCachedFile;
 
@@ -1434,6 +1486,50 @@ NSError *error = nil;
 + (BOOL)clearCacheMoreThanDays:(NSInteger)numberOfDays;
 
 ```
+
+### iOS 9 适配
+
+iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文件的 getData 之外的 API 都是支持 HTTPS 访问的。 现有两种方式解决这个问题。
+
+#### 项目中配置访问策略
+
+一是在项目中额外配置一下该接口的访问策略。选择项目的 Info.plist，右击以 Source Code 的方式打开。在 plist -> dict 节点中加入以下文本：
+
+``` 
+  <key>NSAppTransportSecurity</key>
+  <dict>
+    <key>NSExceptionDomains</key>
+    <dict>
+      <key>clouddn.com</key>
+      <dict>
+        <key>NSIncludesSubdomains</key>
+        <true/>
+        <key>NSTemporaryExceptionAllowsInsecureHTTPLoads</key>
+        <true/>
+      </dict>
+    </dict>
+  </dict>
+```
+
+或者在 Target 的 Info 标签中修改配置：
+
+![Info.plist Setting](images/ios_qiniu_http.png)
+
+如果是美国节点，请把上面的 `clouddn.com` 换成 `amazonaws.com`。
+
+也可以根据项目需要，允许所有的 HTTP 访问，更多可参考 [iOS 9 适配系列教程](https://github.com/ChenYilong/iOS9AdaptationTips)。
+
+#### 启用文件 SSL 域名
+
+另外一种方法是在网站控制台中进入相关的应用，点击上方的设置选项卡，勾选「启用文件 SSL 域名（对应 _File 中存储的文件）」选项。这样便启用了文件 SSL 域名，支持 HTTPS 访问。如图所示：
+
+![File SSL Config](images/ios_file_ssl_config.png)
+
+如果启用文件 SSL 域名前已经保存了许多文件，启用之后，这些文件的 URL 也会跟着变化，来支持 HTTPS 访问。
+
+这两种方式都能解决这个问题。但需要注意的是，实时通信组件 LeanMessage 也用了 AVFile 来保存消息的图片、音频等文件，并且把文件的地址写入到了消息内容中。开启了文件 SSL 域名后，历史消息中的文件地址将不会像控制台里 _File 表那样跟着改变。所以如果使用了实时通信组件并已上线，推荐使用方式一。
+
+
 
 ## 用户
 
@@ -1453,7 +1549,7 @@ NSError *error = nil;
 
 要求用户注册可能是应用程序要做的第一件事。下面的代码是一个典型的注册过程：
 
-```objc
+``` objc
 AVUser *user = [AVUser user];
 user.username = @"hjiang";
 user.password =  @"f32@ds*@&dsa";
@@ -1475,19 +1571,19 @@ user.email = @"hang@leancloud.rocks";
 
 请注意，我们使用的是 `signUpInBackgroundWithBlock` 方法，而不是 `saveInBackground` 方法。另外还有各种不同的 `signUp` 方法可供使用。
 
-像往常一样，我们建议，在可能的情况下，尽量使用异步版本的 `signUp` 方法，这样就不会影响到应用程序主 UI 线程的响应。具体方法请参考 [API 文档](api/iOS/index.html) 。
+像往常一样，我们建议，在可能的情况下，尽量使用异步版本的 `signUp` 方法，这样就不会影响到应用程序主 UI 线程的响应。具体方法请参考 [API 文档](/api-docs/iOS/index.html) 。
 
 如果注册不成功，请检查一下返回的错误对象。最有可能的情况是，用户名或电子邮件已经被另一个用户注册，此时可以提示用户尝试用不同的用户名进行注册，也可以要求用户用 Email 做为用户名注册。
 
 这样做的好处是，在用户提交信息时可以将输入的「用户名」默认设置为用户的 Email 地址，以后在用户忘记了密码的情况下，可以使用 LeanCloud 提供的「重置密码」功能。
 
-关于自定义邮件模板和验证链接，请参考这篇 [博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/) 。
+关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
 
 ### 登录
 
 让注册成功的用户登录到自己的账户，可以调用 `AVUser` 类的 `loginInBackground` 方法。
 
-```objc
+``` objc
 [AVUser logInWithUsernameInBackground:@"username" password:@"password" block:^(AVUser *user, NSError *error) {
     if (user != nil) {
 
@@ -1503,7 +1599,7 @@ user.email = @"hang@leancloud.rocks";
 
 每当用户成功注册或第一次成功登录后，就在本地磁盘中缓存下这 个用户对象，供下次调用：
 
-```objc
+``` objc
 AVUser *currentUser = [AVUser currentUser];
 if (currentUser != nil) {
     // 允许用户使用应用
@@ -1514,17 +1610,18 @@ if (currentUser != nil) {
 
 要清除缓存用户对象：
 
-```objc
+``` objc
 [AVUser logOut];  //清除缓存用户对象
 AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 ```
 
 ### 重置密码
+
 我们都知道，应用一旦加入账户密码系统，那么肯定会有用户忘记密码的情况发生。对于这种情况，我们为用户提供了一种安全重置密码的方法。
 
 重置密码的过程很简单，用户只需要输入注册的电子邮件地址即可：
 
-```objc
+``` objc
 [AVUser requestPasswordResetForEmailInBackground:@"myemail@example.com" block:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
 
@@ -1547,21 +1644,22 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 当用户系统中存在密码时，自然会有更改密码的需求。我们所提供的方法能够同时验证老密码和修改新密码：
 
-```objc
+``` objc
 [AVUser logInWithUsername:@"username" password:@"111111"]; //请确保用户当前的有效登录状态
 [[AVUser currentUser] updatePassword:@"111111" newPassword:@"123456" block:^(id object, NSError *error) {
     //处理结果
 }];
 ```
+
 如果要求更改密码的用户尚未登录、原密码错误或用户不存在，这些情况都会通过回调返回操作错误信息。
 
-###  手机号码验证
+### 手机号码验证
 
 如果在应用设置的 **应用选项** 中打开了 **验证注册用户手机号码** 选项，那么当用户在注册时填写完手机字段后，LeanCloud 会自动向该手机号码发送一条验证短信，用户输入验证码后，该用户即被标识为已经验证过手机了。
 
 以下代码将注册验证码发送到用户手机上：
 
-```objc
+``` objc
 	AVUser *user = [AVUser user];
 	user.username = @"hjiang";
 	user.password =  @"f32@ds*@&dsa";
@@ -1573,7 +1671,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 调用以下代码即可验证验证码:
 
-```objc
+``` objc
 	[AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
         //验证结果
     }];
@@ -1590,7 +1688,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 用「手机号码＋密码」来登录的方法：
 
-```objc
+``` objc
     [AVUser logInWithMobilePhoneNumberInBackground:@"18612340000" password:@"yourpassword" block:^(AVUser *user, NSError *error) {
 
     }];
@@ -1598,7 +1696,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 发送登录短信验证码：
 
-```objc
+``` objc
     [AVUser requestLoginSmsCode:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
 
     }];
@@ -1606,7 +1704,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 最后使用「短信验证码＋手机号码」进行登录：
 
-```objc
+``` objc
     [AVUser logInWithMobilePhoneNumberInBackground:@"18612340000" smsCode:smsCode block:^(AVUser *user, NSError *error) {
 
     }];
@@ -1616,7 +1714,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 与使用「电子邮件地址重置密码」类似，「手机号码重置密码」使用下面的方法来获取短信验证码：
 
-```objc
+``` objc
 [AVUser requestPasswordResetWithPhoneNumber:@"18612340000" block:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
 
@@ -1628,7 +1726,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 注意！用户需要先绑定手机号码，然后使用短信验证码来重置密码：
 
-```objc
+``` objc
 [AVUser resetPasswordWithSmsCode:@"123456" newPassword:@"password" block:^(BOOL succeeded, NSError *error) {
     if (succeeded) {
 
@@ -1640,9 +1738,11 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ### 查询
 
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+
 查询用户的信息，需要使用特殊的用户查询对象来完成：
 
-```objc
+``` objc
 AVQuery *query = [AVUser query];
 [query whereKey:@"gender" equalTo:@"female"];
 [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -1655,14 +1755,15 @@ AVQuery *query = [AVUser query];
 
 ```
 
-###浏览器中查看用户表
+### 浏览器中查看用户表
+
 用户表是一个特殊的表，专门存储 `AVUser` 对象。在浏览器端，打开 LeanCloud 账户页面的 **存储** 菜单，找到名为 `_User` 的表来查看数据。
 
 ### 匿名用户
 
 要创建匿名用户，可以使用 `AVAnonymousUtils` 来完成。通过如下代码，服务端会自动创建一个 `AVUser` 对象，其用户名为随机字符串。完成之后，此用户对象会被设置为 `currentUser`，之后的修改、保存、登出等操作都可以使用 `currentUser` 来完成。
 
-```objc
+``` objc
     [AVAnonymousUtils logInWithBlock:^(AVUser *user, NSError *error) {
         if (user) {
 
@@ -1673,18 +1774,20 @@ AVQuery *query = [AVUser query];
 ```
 
 ## 地理位置
+
 LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。只要将 `AVGeoPoint` 添加到 `AVObject` 中，那么在查询时，即可轻松实现如找出离当前用户最近的信息或地点的功能。
 
 ### 地理位置对象
+
 首先要创建一个 `AVGeoPoint` 对象。例如，创建一个北纬 39.9 度、东经 116.4 度的 `AVGeoPoint` 对象（LeanCloud 北京办公室所在地）：
 
-```objc
+``` objc
 AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 
 添加地理位置信息：
 
-```objc
+``` objc
 [postObject setObject:point forKey:@"location"];
 ```
 
@@ -1692,23 +1795,23 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 
 假设现在数据表中已保存了一些地理坐标数据，接下来使用 `AVQuery` 对象的 `whereNear` 方法来试着找出最接近某个点的信息：
 
-```objc
+``` objc
 AVObject *userObject = nil;
 AVGeoPoint *userLocation =  (AVGeoPoint *) [userObject objectForKey:@"location"];
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-[query whereKey:@"locaton" nearGeoPoint:userLocation];
+[query whereKey:@"location" nearGeoPoint:userLocation];
 //获取最接近用户地点的10条微博
 query.limit = 10;
 NSArray<AVObject *> nearPosts = [query findObjects];
 ```
 
-在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。
+在上面的代码中，`nearPosts` 返回的是与 `userLocation` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
 
 要查找指定距离范围内的数据，可使用 `whereWithinKilometers` 、 `whereWithinMiles` 或 `whereWithinRadians` 方法。
 
 要查找位于矩形范围内的信息，可使用 `whereWithinGeoBox` 来实现：
 
-```objc
+``` objc
 AVGeoPoint *point1 = [AVGeoPoint geoPointWithLatitude:39.97 longitude:116.33];
 AVGeoPoint *point2 = [AVGeoPoint geoPointWithLatitude:39.99 longitude:116.37];
 AVQuery *query = [AVQuery queryWithClassName:@"Post"];
@@ -1716,12 +1819,13 @@ AVQuery *query = [AVQuery queryWithClassName:@"Post"];
 NSArray<AVObject *> *posts = [query findObjects];
 ```
 
-###注意事项
+### 注意事项
+
 目前需要注意以下方面：
 
- * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
- * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
- * iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationWhenInUseUsageDescription` 的 键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
+* 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
+* 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
+* iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
 
 ## 调用云代码
 
@@ -1729,7 +1833,7 @@ NSArray<AVObject *> *posts = [query findObjects];
 
 使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
 
-```objc
+``` objc
     NSDictionary *parameters=@{...};
 
     [AVCloud callFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
@@ -1743,7 +1847,9 @@ NSArray<AVObject *> *posts = [query findObjects];
 
 云代码区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
 
-```objc
+``` objc
 [AVCloud setProductionMode:NO];
 ```
+
 其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
+

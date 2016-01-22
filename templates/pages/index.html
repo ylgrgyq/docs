@@ -1,8 +1,13 @@
 --- layout: download.swig ---
 <div class="home-full-width-content">
-  <div class="doc-home-title">
+  <div class="doc-home-title text-center">
     <h1 class="font-logo">LeanCloud Documentation</h1>
-    <h4>LeanCloud 官方开发者文档 <a href="leancloud-docs.tar.gz">离线下载</a></h4>
+    <h4>LeanCloud 官方开发者文档（<a href="leancloud-docs.tar.gz">离线下载</a>）</h4>
+    <form class="hero-search" role="search" action="/search.html" method="get">
+      <div class="form-group">
+        <input name="q" type="text" class="form-control input-lg" placeholder="搜索全部文档&hellip;">
+      </div>
+    </form>
   </div>
   <!-- .doc-home-title -->
 
@@ -18,7 +23,7 @@
     <div class="col-sm-3">
       <div class="doc-hero-links">
         <a href="quick-start-guide.html" class="doc-quick-start-btn">
-          <i class="icon icon-bulb"></i>
+          <i class="icon icon-signpost"></i>
           文档阅读指南
         </a>
       </div>
@@ -28,7 +33,7 @@
     <div class="col-sm-3">
       <div class="doc-hero-links">
         <a href="start.html" class="doc-quick-start-btn">
-          <i class="icon icon-package"></i>
+          <i class="icon icon-bulb"></i>
           快速入门
         </a>
       </div>
@@ -58,7 +63,7 @@
   <!-- .row -->
 
   <div class="row">
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>功能和服务概览</h2>
         <ul>
@@ -74,52 +79,55 @@
     </div>
     <!-- .col-md-4 -->
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>iOS / OS X SDK</h2>
         <ul>
           <li><a href="ios_os_x_guide.html">数据存储开发指南</a></li>
           <li><a href="ios_push_guide.html">消息推送开发指南</a></li>
           <li><a href="ios_push_cert.html">iOS 推送证书设置指南</a></li>
-          <li><a href="ios_realtime_v2.html">实时通信开发指南</a></li>
+          <li><a href="realtime_guide-ios.html">实时通信开发指南</a></li>
           <li><a href="relation_guide.html">关系建模指南</a></li>
+          <li><a href="acl_guide-ios.html">权限管理使用指南</a></li>
           <li><a href="ios_statistics.html">统计分析开发指南</a></li>
-          <li><a href="ios_os_x_sms_guide.html">短信验证使用指南</a></li>
+          <li><a href="sms_guide-ios.html">短信验证使用指南</a></li>
           <li><a href="ios_crashreporting_guide.html">崩溃报告使用指南</a></li>
           <li><a href="ios_os_x_faq.html">FAQ</a></li>
-          <li><a href="api/iOS/index.html" target="_blank">iOS SDK API</a></li>
+          <li><a href="/api-docs/iOS/index.html" target="_blank">iOS SDK API</a></li>
         </ul>
       </div>
     </div>
     <!-- .col-md-4 -->
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>Android SDK</h2>
         <ul>
           <li><a href="android_guide.html">数据存储开发指南</a></li>
           <li><a href="android_push_guide.html">消息推送开发指南</a></li>
-          <li><a href="android_realtime_v2.html">实时通信开发指南</a></li>
+          <li><a href="realtime_guide-android.html">实时通信开发指南</a></li>
+          <li><a href="acl_guide-android.html">权限管理使用指南</a></li>
           <li><a href="android_statistics.html">统计分析开发指南</a></li>
-          <li><a href="android_sms_guide.html">短信验证使用指南</a></li>
+          <li><a href="sms_guide-android.html">短信验证使用指南</a></li>
           <li><a href="android_faq.html">FAQ</a></li>
-          <li><a href="api/android/doc/index.html" target="_blank">Android SDK API</a></li>
+          <li><a href="/api-docs/android/index.html" target="_blank">Android SDK API</a></li>
         </ul>
       </div>
     </div>
     <!-- .col-md-4 -->
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>JavaScript SDK</h2>
         <ul>
           <li><a href="js_guide.html">数据存储开发指南</a></li>
           <li><a href="js_push.html">消息推送开发指南</a></li>
           <li><a href="js_realtime.html">实时通信开发指南</a></li>
-          <li><a href="js_sms_guide.html">短信验证使用指南</a></li>
+          <li><a href="acl_guide-js.html">权限管理使用指南</a></li>
           <li><a href="js_analytics.html">统计分析开发指南</a></li>
+          <li><a href="sms_guide-js.html">短信验证使用指南</a></li>
           <li><a href="js_faq.html">FAQ</a></li>
-          <li><a href="api/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
+          <li><a href="/api-docs/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
         </ul>
       </div>
     </div>
@@ -130,34 +138,34 @@
 <hr>
   <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>.NET / Unity3D</h2>
         <ul>
           <li><a href="dotnet_guide.html">.NET 数据存储开发指南</a></li>
           <li><a href="unity_guide.html">Unity3D 数据存储开发指南</a></li>
           <li><a href="dotnet_push_guide.html">WP8.0 消息推送开发指南</a></li>
-          <li><a href="dotnet_realtime.html">.NET 实时通信开发指南</a></li>
+          <li><a href="realtime_guide-dotnet.html">实时通信开发指南</a></li>
           <li><a href="unity_statistics.html">Unity3D 统计开发指南</a></li>
           <li><a href="dotnet_faq.html">FAQ</a></li>
-          <li><a href="api/dotnet/Help/index.html">.NET SDK API</a></li>
+          <li><a href="/api-docs/dotnet/Help/index.html">.NET SDK API</a></li>
         </ul>
       </div>
     </div>
     <!-- .col-md-4 -->
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>Python SDK</h2>
         <ul>
           <li><a href="python_guide.html">数据存储开发指南</a></li>
           <li><a href="python_faq.html">FAQ</a></li>
-          <li><a href="api/python/leancloud.html">Python SDK API</a></li>
+          <li><a href="/api-docs/python/leancloud.html">Python SDK API</a></li>
         </ul>
       </div>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>REST API 和开放平台</h2>
         <ul>
@@ -165,7 +173,7 @@
           <li><a href="rest_api.html#Push_通知">消息推送 API</a></li>
           <li><a href="realtime_rest_api.html">实时通信 API</a></li>
           <li><a href="rest_sms_api.html">短信验证 API</a></li>
-          <li><a href="rest_api.html#统计数据API">数据统计 API</a></li>
+          <li><a href="rest_api.html#统计数据_API">数据统计 API</a></li>
           <li><a href="error_code.html">错误码详解</a></li>
           <li><a href="cql_guide.html">CQL 查询语言详解</a></li>
           <li><a href="oauth2_provider.html">LeanCloud 开放平台接入</a></li>
@@ -174,7 +182,7 @@
     </div>
     <!-- .col-md-4 -->
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>云引擎（云代码）</h2>
         <ul>
@@ -183,6 +191,8 @@
           <li><a href="leanengine_guide-cloudcode.html">云引擎（旧版云代码环境）</a></li>
           <li><a href="leanengine_upgrade_3.html">云引擎 2.0 升级 3.0 指南</a></li>
           <li><a href="cloud_code_commandline.html">云引擎命令行工具</a></li>
+          <li><a href="acl_guide_leanengine.html">在云引擎中管理 ACL</a></li>
+          <li><a href="leancache_guide.html">LeanCache 使用指南</a></li>
           <li><a href="cloud_code_faq.html">FAQ</a></li>
           <li><a href="js_guide.html">JavaScript 指南</a></li>
         </ul>
@@ -194,7 +204,7 @@
 <hr>
   <div class="row">
 
-    <div class="col-md-3">
+    <div class="col-md-3 col-xs-6">
       <div class="link-block">
         <h2>其他组件</h2>
         <ul>
@@ -202,14 +212,14 @@
           <li><a href="app_search_guide.html">应用内搜索和 DeepLink 开发指南</a></li>
           <li><a href="app_data_share.html">应用之间数据共享（Class 绑定）</a></li>
           <li><a href="user_groups.html">用户群分析指南</a></li>
-          <li><a href="insight_guide.html">离线数据分析使用指南</a></li>
+          <li><a href="leaninsight_guide.html">离线数据分析使用指南</a></li>
           <li><a href="sns.html">第三方平台账号登录开发指南</a></li>
           <li><a href="feedback.html">用户反馈开发指南</a></li>
         </ul>
       </div>
     </div>
 
-   <div class="col-md-3">
+   <div class="col-md-3 col-xs-6">
      <div class="link-block">
        <h2>下载和其他</h2>
        <ul>
@@ -223,6 +233,5 @@
 
 
   </div>
-  <hr>
 
 </div>

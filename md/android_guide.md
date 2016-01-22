@@ -1,156 +1,28 @@
 # Android 开发指南
 
-如果你还没有安装 LeanCloud SDK ，请前往[快速入门指南](/start.html)。
+如果你还没有安装 LeanCloud SDK，请前往 [快速入门指南](/start.html)。
 
-如果你希望从项目里学习，请前往 [Android SDK Demos](https://github.com/leancloud/leancloud-demos#android) 。
+如果你希望从项目里学习，请前往 [Android SDK Demos](https://github.com/leancloud/leancloud-demos#android) 。其中，我们推荐与本指南配套的 [LeanStorageDemo-Android](https://github.com/leancloud/LeanStorageDemo-Android) 项目。
 
 ## 快速入门
 
-建议您在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议您在阅读本文档之前，阅读我们提供的 [快速入门](/start.html) 文档，获取 LeanCloud 使用的配置和第一印象。
 
-## 版本变迁
+## SDK 安装
 
-从 2.4.0 开始, 我们重新设计了 SDK 结构，优化了模块间的依赖关系，实现了分模块下载 SDK 的功能。新的 SDK 不再需要你一下导入所有包 --- 除了最基本的 avoscloud.jar 以外，其余的包括 avospush.jar, avosstatistics.jar 等都可以在用到该组件时才导入。
-
-## 模块与 SDK 包
-
-我们已经提供了官方的 maven 仓库：[http://mvn.leancloud.cn/nexus/](http://mvn.leancloud.cn/nexus/)，推荐大家使用。
-
-### Android Studio 用户
-
-从 2.6.10.3 开始, LeanCloud Android SDK可以使用gradle来进行包依赖管理，从而避免了因为包下载错误而带来的一些问题。
-
-在Android Studio的配置中间，您首先需要在项目下的build.gradle中配置成类似：
-
-```
-buildscript {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-
-    }
-    dependencies {
-        classpath 'com.android.tools.build:gradle:1.0.0'
-    }
-}
-
-allprojects {
-    repositories {
-        jcenter()
-	//这里是 LeanCloud 的包仓库
-        maven {
-            url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
-        }
-    }
-}
-```
-
-之后需要在app目录下的build.gradle中根据需要进行相应的配置：
-
-```
-android {
-    //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
-    }
-    lintOptions {
-        abortOnError false
-    }
-}
-
-dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
-
-    //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
-
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.2.0-leancloud'
-    
-    //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+@aar'
-
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
-
-    //avoscloud-sns 为 LeanCloud 第三方登陆包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
-
-    //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'    
-}
-```
-
-### Eclipse 用户
-
-Eclipse 用户依然可以在[SDK下载](https://leancloud.cn/docs/sdk_down.html)进行下载
-
-#### LeanCloud 基本存储模块
-
-* avoscloud-<版本号>.jar
-* android-async-http-1.4.6.jar
-* fastjson.jar (请一定要使用我们提供的 jar，针对原版有 bug 修正。)
-* httpmime-4.2.4.jar
-
-#### LeanCloud 推送模块和实时聊天模块
-
-* LeanCloud 基础存储模块
-* avospush-版本号.jar
-
-#### LeanCloud 统计模块
-
-* LeanCloud 基础存储模块
-* avosstatistics-版本号.jar
-* Java-WebSocket-1.2.0-leancloud.jar
-
-#### LeanCloud SNS 模块
-
-* LeanCloud 基础存储模块
-* weibo.sdk.android.sso.jar
-* qq.sdk.1.6.1.jar
-
-我们提供的下载包里包含了必须的依赖库，请务必使用我们提供的 jar 包，才能保证 SDK 的正常运行。特别是 fastjson 和 android-async-http 必须使用我们提供的版本，否则无法运行。
-
-**注：如果您需要使用美国站点，如果版本是 3.3 及以上，则不需要引入 SSL 证书。其他低版本的用户，请下载 [SSL 证书](https://download.leancloud.cn/sdk/android/current/avoscloud_us_ssl.bks)并拷贝到您的项目 `res/raw/` 目录下**
-
-
-## 简介
-
-LeanCloud 平台为移动应用提供了一个完整的后端解决方案，目标是让开发者不需要再编写和维护传统的服务器代码。我们提供的 SDK 开发包也非常轻量，让开发者用最简单的方式使用 LeanCloud 平台的服务。
-
-## 应用程序初始化
-
-以下为 LeanCloud Android SDK 需要的所有的权限，请检查你的 `AndroidManifest.xml`。此外千万不要忘记在 `AndroidManifest.xml` 中注明 application name。过去用户反馈的很多问题都是因为这一步没有正确配置导致的。
-
-```xml
-<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-<uses-permission android:name="android.permission.INTERNET"/>
-<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-<uses-permission android:name="android.permission.READ_PHONE_STATE" />
-<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-```
-
-在 LeanCloud 平台注册后，你创建的每个应用都有自己的 ID 和 Key，在你的代码中将凭此 ID 和 Key 来访问 LeanCloud 的服务。你可以在一个帐号中创建多个应用。
-
-在你的应用访问 LeanCloud 之前，你需要使用上述的 ID 和 Key 在代码中对 LeanCloud SDK 进行初始化。你需要继承 [`Application`](http://developer.android.com/reference/android/app/Application.html) 类，并且在 `onCreate()` 方法中调用 `AVOSCloud.initialize(this, '<AppId>', '<AppKey>')` 来进行初始化。
+我们提供了一个针对 Android SDK 详细的安装指南：[LeanCloud Android SDK 安装指南](sdk_setup-android.html)
 
 ## 数据的存储
 
-LeanCloud 的数据存储服务是建立在对象 --- `AVObject` 基础上的，每个 `AVObject` 包含若干属性，属性的值是与 JSON 格式兼容的数据。你不需要预先指定每个 `AVObject` 包含哪些属性，可以随时增加新的属性。
+LeanCloud 的数据存储服务是建立在对象 AVObject 基础上的，每个 AVObject 包含若干属性，属性的值是与 JSON 格式兼容的数据。你不需要预先指定每个 AVObject 包含哪些属性，可以随时增加新的属性。
 
-假如我们要实现一个类似于微博的社交 app，主要有三类数据：账户、帖子、评论。以微博的帖子为例，我们可以建立一个类名为 `Post` 的 `AVObject` 对象，包含下面几个属性：
+假如我们要实现一个类似于微博的社交应用，主要有三类数据：账户、帖子、评论。以微博的帖子为例，我们可以建立一个类名为 `Post` 的 AVObject 对象，包含下面几个属性：
 
 ```
 content: "每个Java程序员必备的8个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999
 ```
 
-属性名称必须是由字母、数字组成的字符串，属性的值可以是字符串、数字、布尔值、JSON 数组，甚至可以嵌套其他 `AVObject`。每个 `AVObject` 有一个类名，也是 Dashboard 里的数据表名。
+属性名称必须是由字母、数字组成的字符串，属性的值可以是字符串、数字、布尔值、JSON 数组，甚至可以嵌套其他 AVObject 。每个 AVObject 有一个类名，也是 Dashboard 里的数据表名。
 
 ### 保存对象
 
@@ -168,14 +40,14 @@ try {
 }
 ```
 
-成功运行以上代码后，数据就已经保存到 LeanCloud。为确认这一点，你可以用 LeanCloud 控制台的数据浏览器查看[该应用的数据](/data.html?appid={{appid}})，找到这个对象：
+成功运行以上代码后，数据就已经保存到 LeanCloud。为确认这一点，你可以用 LeanCloud 控制台的数据浏览器查看 [该应用的数据](/data.html?appid={{appid}})，找到这个对象：
 
 ```java
 objectId: "558e20cbe4b060308e3eb36c", content: "每个Java程序员必备的8个开发工具", pubUser: "LeanCloud官方客服", pubTimestamp: 1435541999,
 createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 ```
 
-因为 `AVObject` 是无模式的，后续你可以向 `Post` 里面增加新的属性，例如发布者信息中还包括头像、认证等级等：
+因为 AVObject 是无模式的，后续你可以向 `Post` 里面增加新的属性，例如发布者信息中还包括头像、认证等级等：
 
 ```java
 AVObject post = new AVObject("Post");
@@ -195,12 +67,24 @@ try {
 
 * 在运行以上代码时，如果云端（LeanCloud 的服务器，以下简称云端）不存在 `Post` 数据表，那么 LeanCloud 将根据你第一次（也就是运行的以上代码）保存的 `Post` 对象来创建数据表，并且插入相应数据。
 * 如果云端的这个应用中已经存在名为 `Post` 的数据表，而且也包括 `content`、`pubUser`、`pubTimestamp` 等属性，新加入属性的值的数据类型要和创建该属性时一致，否则保存数据将失败。
-* 每个 `AVObject` 对象有几个保存元数据的属性是不需要开发者指定的，包括 `objectId` 是每个成功保存的对象的唯一标识符。`createdAt` 和 `updatedAt` 是每个对象在服务器上创建和最后修改的时间。这些属性的创建和更新是由系统自动完成的，请不要在代码里使用这些属性来保存数据。
+* 每个 AVObject 对象有几个保存元数据的属性是不需要开发者指定的，包括 `objectId` 是每个成功保存的对象的唯一标识符。`createdAt` 和 `updatedAt` 是每个对象在服务器上创建和最后修改的时间。这些属性的创建和更新是由系统自动完成的，请不要在代码里使用这些属性来保存数据。
 * 在 Android 平台上，大部分的代码是在主线程上运行的，如果在主线程上进行耗时的阻塞性操作，如访问网络等，**你的代码可能会无法正常运行**，避免这个问题的方法是**把会导致阻塞的同步操作改为异步**，在一个后台线程运行，例如 `save()` 还有一个异步的版本 **`saveInBackground()`**，需要传入一个在异步操作完成后运行的回调函数。查询、更新、删除操作也都有对应的异步版本。
+
+**注意：以下为系统保留字段，不能作为属性名来使用。**
+
+```
+acl             error            pendingKeys
+ACL             fetchWhenSave    running
+className       id               updatedAt
+code            isDataReady      uuid
+createdAt       keyValues
+description     objectId
+```
+
 
 ### 数据检索
 
-使用 LeanCloud 查询数据比保存更容易。如果你已经知道某条数据的 `objectId`，可以使用 `AVQuery` 直接检索到一个完整的 `AVObject`：
+使用 LeanCloud 查询数据比保存更容易。如果你已经知道某条数据的 `objectId`，可以使用 AVQuery  直接检索到一个完整的 AVObject ：
 
 ```java
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
@@ -212,17 +96,17 @@ try {
 }
 ```
 
-要从检索到的 `AVObject` 实例中获取值，可以使用相应的数据类型的 `getType` 方法：
+要从检索到的 AVObject 实例中获取值，可以使用相应的数据类型的 `getType` 方法：
 
 ```
-int content = post.getString("content");
+String content = post.getString("content");
 String userName = post.getString("pubUser");
 int userVerified = post.getInt("pubUserCertificate");
 ```
 
 ### 在后台工作
 
-在 Android 平台上，大部分代码是在主线程上运行的，如果在主线程上进行耗时的阻塞性操作，例如查询大量数据，你的代码可能无法正常运行。避免这个风险的办法是变同步为异步，LeanCloud SDK 提供了现成的异步解决方案。例如，我们使用 `saveInBackground` 方法来在一个后台线程中保存之前的 `AVObject` 对象：
+在 Android 平台上，大部分代码是在主线程上运行的，如果在主线程上进行耗时的阻塞性操作，例如查询大量数据，你的代码可能无法正常运行。避免这个风险的办法是变同步为异步，LeanCloud SDK 提供了现成的异步解决方案。例如，我们使用 `saveInBackground` 方法来在一个后台线程中保存之前的 AVObject 对象：
 
 ```java
 post.saveInBackground();
@@ -246,7 +130,7 @@ post.saveInBackground(new SaveCallback() {
 
 `SaveCallback()` 中的代码将在获取数据完成后在主线程上运行，可以在其中进行更新用户界面等操作。
 
-`AVQuery` 的 `getInBackground` 方法是从云端获取数据的异步方法，也提供类似的回调类。以获取 `Post` 对象为例：
+AVQuery  的 `getInBackground` 方法是从云端获取数据的异步方法，也提供类似的回调类。以获取 `Post` 对象为例：
 
 ```java
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
@@ -263,7 +147,7 @@ query.getInBackground("558e20cbe4b060308e3eb36c", new GetCallback<AVObject>() {
 
 ### 更新对象
 
-更新保存在云端的对象也是非常简单的。首先获取到要更新的 `AVObject` 实例，进行修改后再保存即可。例如：
+更新保存在云端的对象也是非常简单的。首先获取到要更新的 AVObject 实例，进行修改后再保存即可。例如：
 
 ```java
 String tableName = "Post";
@@ -285,9 +169,25 @@ post.saveInBackground(new SaveCallback() {
 });
 ```
 
+
+**请注意，LeanCloud 上的更新对象都是针对单个对象，获得对象的 objectId 主键才可以去更新对象。服务端判断一个对象是新增还是更新，是根据有没有 objectId 来决定的。**
+
+上面的例子是先查询出对象，然后修改属性，调用 saveInBackground 保存。
+
+如果你已经知道了 objectId（例如从查询后的列表页进入一个详情页面，传入了 objectId），想要修改一个对象，也可以采用类似下面的代码来更新对象属性：
+
+```java
+// 知道 objectId，创建 AVObject
+AVObject post = AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8");
+//更新属性
+post.put("content","每个Java程序员必备的8个开发工具 —— http://itindex.net/detail/52950-java-%E5%BC%80%E5%8F%91-%E5%B7%A5%E5%85%B7");
+//保存
+post.saveInBackground();
+```
+
 ### 计数器
 
-许多应用都需要实现计数器功能 -- 比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
+许多应用都需要实现计数器功能——比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？LeanCloud 提供了便捷的原子操作来实现计数器：
 
 ```java
 AVObject post = new AVObject("Post");
@@ -352,6 +252,7 @@ AVObject.deleteAll(objects);
 对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
 
 注：LeanCloud 云端是通过 Pointer 类型来解决这种数据引用的，并不会将数据 a 在数据 b 的表中再额外存储一份，这也可以保证数据的一致性。
+
 例如：一条微博信息可能会对应多条评论。创建一条微博信息并对应一条评论信息，你可以这样写：
 
 ```java
@@ -378,7 +279,7 @@ myComment.saveInBackground();
 myComment.put("post", AVObject.createWithoutData("Post", "5590cdfde4b00f7adb5860c8"));
 ```
 
-默认情况下，当你获取一个对象的时候，关联的 `AVObject` 不会被获取。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法（下面的例子假设已经通过 `AVQuery` 得到了 Comment 的实例）:
+默认情况下，当你获取一个对象的时候，关联的 AVObject 不会被获取。这些对象除了 `objectId` 之外，其他属性值都是空的，要得到关联对象的全部属性数据，需要再次调用 `fetch` 系方法（下面的例子假设已经通过 AVQuery  得到了 Comment 的实例）:
 
 ```java
 fetchedComment.getAVObject("post")
@@ -389,7 +290,7 @@ fetchedComment.getAVObject("post")
     });
 ```
 
-还有另外一种复杂的情况，你可以使用 `AVRelation` 来建模多对多关系。这有点像 List 链表，但是区别之处在于，在获取附加属性的时候，`AVRelation` 不需要同步获取关联的所有 `AVObject` 实例。这使得 `AVRelation` 比链表的方式可以支持更多实例，读取方式也更加灵活。例如，一个 `User` 可以喜欢很多 `Post`。这种情况下，就可以用 `getRelation` 方法保存一个用户喜欢的所有 `Post` 集合。为了新增一个喜欢的 `Post`，你可以这样做：
+还有另外一种复杂的情况，你可以使用 AVRelation 来建模多对多关系。这有点像 List 链表，但是区别之处在于，在获取附加属性的时候，AVRelation 不需要同步获取关联的所有 AVObject 实例。这使得 AVRelation 比链表的方式可以支持更多实例，读取方式也更加灵活。例如，一个 `User` 可以喜欢很多 `Post`。这种情况下，就可以用 `getRelation` 方法保存一个用户喜欢的所有 `Post` 集合。为了新增一个喜欢的 `Post`，你可以这样做：
 
 ```java
 AVUser user = AVUser.getCurrentUser();
@@ -404,7 +305,7 @@ user.saveInBackground();
 relation.remove(post);
 ```
 
-默认情况下，处于关系中的对象集合不会被同步获取到。你可以通过 `getQuery` 方法返回的 `AVQuery` 对象，使用它的 `findInBackground` 方法来获取 Post 链表，像这样：
+默认情况下，处于关系中的对象集合不会被同步获取到。你可以通过 `getQuery` 方法返回的 AVQuery  对象，使用它的 `findInBackground` 方法来获取 Post 链表，像这样：
 
 ```java
 relation.getQuery().findInBackground(new FindCallback<AVObject>() {
@@ -418,7 +319,7 @@ relation.getQuery().findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-如果你只想获取链表的一个子集合，你可以添加更多的约束条件到 `getQuery` 返回 `AVQuery` 对象上（这一点是直接使用 List 作为属性值做不到的），例如：
+如果你只想获取链表的一个子集合，你可以添加更多的约束条件到 `getQuery` 返回 AVQuery  对象上（这一点是直接使用 List 作为属性值做不到的），例如：
 
 ```java
 AVQuery<AVObject> query = relation.getQuery();
@@ -440,20 +341,21 @@ userQuery.findInBackground(new FindCallback<AVObject>() {
         });
 ```
 
-`AVRelation.reverseQuery`返回的 `AVQuery` 对象还可以添加更多的查询约束条件。
+`AVRelation.reverseQuery` 返回的 AVQuery  对象还可以添加更多的查询约束条件。
 
-更多关于 `AVQuery` 的信息，请看本指南的查询部分。查询的时候，一个 `AVRelation` 对象运作起来像一个对象链表，因此任何你作用在链表上的查询（除了 include），都可以作用在 `AVRelation`上。
+更多关于 AVQuery 的信息，请看本指南的查询部分。查询的时候，一个 AVRelation 对象运作起来像一个对象链表，因此任何你作用在链表上的查询（除了 include），都可以作用在 AVRelation 上。
 
 ### 数据类型
 
-目前为止，我们支持的数据类型有 `String`、`Int`、`Boolean` 以及 `AVObject` 对象类型。同时 LeanCloud 也支持 `java.util.Date`、`byte[]`数组、`JSONObject`、`JSONArray` 数据类型。
-你可以在 `JSONArray` 对象中嵌套 `JSONObject` 对象存储在一个 `AVObject` 中。
-以下是一些例子：
+目前为止，我们支持的数据类型有 String、Int、Boolean、Float、Double、BigDecimal 以及 AVObject 对象类型。同时 LeanCloud 也支持 java.util.Date、byte[] 数组、JSONObject、JSONArray 数据类型。
+你可以在 JSONArray 对象中嵌套 JSONObject 对象存储在一个 AVObject 中：
 
 
 ```java
 int myNumber = 2014;
-String myString = "famous film name is " + myNumber;
+double myDoubleNumber = 0.618;
+float myFloatNumber = 1.1f;
+String myString = "出身年份：" + myNumber;
 Date myDate = new Date();
 
 JSONArray myArray = new JSONArray();
@@ -468,6 +370,8 @@ byte[] myData = { 2, 3, 5, 8, 13 };
 
 AVObject testDataObject = new AVObject("DataTypeTest");
 testDataObject.put("testInteger", myNumber);
+testDataObject.put("testDouble", myDoubleNumber);
+testDataObject.put("testFloat", myFloatNumber);
 testDataObject.put("testString", myString);
 testDataObject.put("testDate", myDate);
 testDataObject.put("testData", myData);
@@ -477,15 +381,14 @@ testDataObject.put("testNull", JSONObject.NULL);
 testDataObject.saveInBackground();
 ```
 
-
-我们不建议存储较大的二进制数据，如图像或文件不应使用 `AVObject` 的 byte[] 字段类型。`AVObject` 的大小**不应超过 128 KB**。如果需要存储较大的文件类型如图像、文件、音乐，可以使用 `AVFile` 对象来存储，具体使用方法可见 [AVFile 指南部分](#%E6%96%87%E4%BB%B6)。
+我们不建议存储较大的二进制数据，如图像或文件不应使用 AVObject 的 byte[] 字段类型。 AVObject  的大小**不应超过 128 KB**。如果需要存储较大的文件类型如图像、文件、音乐，可以使用 AVFile 对象来存储，具体使用方法可见 [AVFile 指南部分](#%E6%96%87%E4%BB%B6)。
 关于处理数据的更多信息，可查看开发指南的数据安全部分。
 
 ### AVObject 序列化与反序列化
 
-在 v3.4 版本之前，想要在不同的组件中间传递 `AVObject` 数据，我们比较推荐的方式是，首先将 objectId-object pair 存入全局唯一的 Map 中，然后把 objectId 通过 Intent 传递到下一个组件中，最后新组件再从全局唯一的 Map 中通过 objectId 拿到 object 实例。
-而在 v3.4 版本之后， `AVObject` 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的组件中间传递 `AVObject` 对象实例。
-同时 `AVObject` 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。
+在 v3.4 版本之前，想要在不同的组件中间传递 AVObject 数据，我们比较推荐的方式是，首先将 objectId-object pair 存入全局唯一的 Map 中，然后把 objectId 通过 Intent 传递到下一个组件中，最后新组件再从全局唯一的 Map 中通过 objectId 拿到 object 实例。
+而在 v3.4 版本之后， AVObject 实现了原生的 `Parcelable` 接口，以支持通过 Intent 在不同的组件中间传递 AVObject 对象实例。
+同时 AVObject 也可以通过 `avobject.toString()` 与 `AVObject.parseAVObject(String str)` 方法来进行序列化与反序列化。
 ```java
 AVObject child = new AVObject("child");
 child.put("intVal",123);
@@ -502,8 +405,8 @@ try{
 ## 查询
 
 ### 基本查询
-在许多情况下，`getInBackground` 是不能检索到符合你的要求的数据对象的。`AVQuery` 提供了不同的方法来查询不同条件的数据。
-使用 `AVQuery` 时，先创建一个 `AVQuery` 对象，然后添加不同的条件，使用 `findInBackground` 方法结合`FindCallback` 回调类来查询与条件匹配的 `AVObject` 数据。例如，查询指定人员的微博信息，使用 `whereEqualTo` 方法来添加条件值：
+在许多情况下，`getInBackground` 是不能检索到符合你的要求的数据对象的。AVQuery 提供了不同的方法来查询不同条件的数据。
+使用 AVQuery 时，先创建一个 AVQuery 对象，然后添加不同的条件，使用 `findInBackground` 方法结合 `FindCallback` 回调类来查询与条件匹配的 AVObject 数据。例如，查询指定人员的微博信息，使用 `whereEqualTo` 方法来添加条件值：
 
 ```java
 AVQuery<AVObject> query = new AVQuery<AVObject>("Post");
@@ -533,13 +436,14 @@ try {
 ```
 
 ### 查询条件
-如果要过滤掉特定键的值时可以使用 `whereNotEqualTo` 方法。比如需要查询 `pubUser` 不等于 「LeanCloud官方客服」 的数据时可以这样写：
+
+如果要过滤掉特定键的值时可以使用 `whereNotEqualTo` 方法。比如需要查询 `pubUser` 不等于 「LeanCloud官方客服」的数据时可以这样写：
 
 ```java
 query.whereNotEqualTo("pubUser", "LeanCloud官方客服");
 ```
 
-当然，你可以在你的查询操作中添加多个约束条件（这些条件是 and 关系），来查询符合你要求的数据。
+当然，你可以在查询操作中添加多个约束条件，来过滤符合要求的数据。这些条件之间是 and 关系，即 `where a == b and c == d`。若想用 or 关系来组织约束条件，要使用 [复合查询](#复合查询)。
 
 ```java
 DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -582,14 +486,14 @@ query.whereGreaterThan("pubUserCertificate", 4);
 query.whereGreaterThanOrEqualTo("pubUserCertificate", 4);
 ```
 
-如果你想查询匹配几个不同值的数据，如：要查询 「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」 三个账号的微博时，你可以使用whereContainedIn（类似SQL中的in查询）方法来实现。
+如果你想查询匹配几个不同值的数据，如：要查询「LeanCloud官方客服、LeanCloud江宏、滚滚艾买提」三个账号的微博时，你可以使用 `whereContainedIn`（类似 SQL 中的 in 查询）方法来实现。
 
 ```java
 String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"};
 query.whereContainedIn("pubUser", Arrays.asList(names));
 ```
 
-相反，你想查询排除「LeanCloud官方客服」，「LeanCloud江宏」，「滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
+相反，你想查询排除「LeanCloud官方客服、LeanCloud江宏、滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用 
 `whereNotContainedIn` 方法来实现。
 
 ```java
@@ -597,8 +501,17 @@ String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"}
 query.whereNotContainedIn("pubUser", Arrays.asList(names));
 ```
 
-对字符串值的查询
-查询包含字符串的值，有几种方法。你可以使用任何正确的正则表达式来检索相匹配的值，使用 `whereMatches` 方法：
+### 查询字符串值
+
+使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
+
+```java
+//查找出所有 username 以 LeanCloud 开头的用户
+AVQuery<AVObject> query = AVQuery.getQuery("_User");
+query.whereStartsWith("username", "LeanCloud");
+```
+
+`whereMatches` 方法允许使用正则表达式来检索相匹配的值：
 
 ```java
 // 比较用户名字段的值是以大写字母和数字开头
@@ -612,22 +525,23 @@ query.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-查询字符串中包含“XX“内容，可用如下方法：
+查询字符串中包含 XX 内容，可用如下方法：
 
 ```java
-// 查询 pubUser 字段的值中包含“LeanCloud“字的数据
+// 查询 pubUser 字段的值中包含 "LeanCloud" 字的数据
 AVQuery query = new AVQuery("Post");
 query.whereContains("pubUser", "LeanCloud");
 
-// 查询 pubUser 字段的值是以“LeanCloud“字开头的数据
+// 查询 pubUser 字段的值是以 "LeanCloud" 字开头的数据
 AVQuery query = new AVQuery("Post");
 query.whereStartsWith("pubUser", "LeanCloud");
 
-// 查询 pubUser 字段的值是以“LeanCloud“字结尾的数据
+// 查询 pubUser 字段的值是以 "LeanCloud" 字结尾的数据
 AVQuery query = new AVQuery("Post");
 query.whereEndsWith("pubUser", "LeanCloud");
 ```
-### 数组值的查询
+
+### 查询数组值
 
 如果一个 Key 对应的值是一个数组，你可以查询 Key 的数组包含了数字 208 的所有对象，通过：
 
@@ -636,7 +550,7 @@ query.whereEndsWith("pubUser", "LeanCloud");
 query.whereEqualTo("arrayKey", 208);
 ```
 
-同样，你可以查询出 Key 的数组同时包含了 2，3 和 4 的所有对象：
+同样，你可以查询出 Key 的数组同时包含了 2、3、4 的所有对象：
 
 ```java
 //查找出所有 arrayKey 对应的数组同时包含了数字 2,3,4 的所有对象。
@@ -645,16 +559,6 @@ numbers.add(2);
 numbers.add(3);
 numbers.add(4);
 query.whereContainsAll("arrayKey", numbers);
-```
-
-### 字符串的查询
-
-使用 `whereStartsWith` 方法来限制字符串的值以另一个字符串开头。非常类似 MySQL 的 `LIKE` 查询，这样的查询会走索引，因此对于大数据集也一样高效：
-
-```java
-//查找出所有 username 以 LeanCloud 开头的用户
-AVQuery<AVObject> query = AVQuery.getQuery("_User");
-query.whereStartsWith("username", "LeanCloud");
 ```
 
 ### 查询对象个数
@@ -680,9 +584,9 @@ query.countInBackground(new CountCallback() {
 
 对于超过 1000 个对象的查询，这种计数请求可能被超时限制。他们可能遇到超时错误或者返回一个近似的值。因此，请仔细设计你的应用架构来避免依赖这种计数查询。
 
-
 ### 关系查询
-有好几种方式可以发起关系数据的查询。如果你想获取某个字段匹配特定 `AVObject` 的实例列表，你可以像查询其他数据类型那样使用 `whereEqualTo` 来查询。例如，如果每个 `Comment` 对象都包含一个 `Post` 对象（在 `post` 字段上），你可以获取特定 `Post` 的所有 `Comment` 列表：
+
+有好几种方式可以发起关系数据的查询。如果你想获取某个字段匹配特定 AVObject 的实例列表，你可以像查询其他数据类型那样使用 `whereEqualTo` 来查询。例如，如果每个 `Comment` 对象都包含一个 `Post` 对象（在 `post` 字段上），你可以获取特定 `Post` 的所有 `Comment` 列表：
 
 ```java
 // 假设 AVObject myPost 已经在前面创建
@@ -695,7 +599,7 @@ query.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-如果你想查询对象列表，它们的某个字段包含了一个 `AVObject`，并且这个 `AVObject` 匹配一个不同的查询，你可以使用 `whereMatchesQuery` 嵌套查询方法。请注意，默认的 limit 限制 100 也同样作用在内部查询上。因此如果是大规模的数据查询，你可能需要仔细构造你的查询对象来获取想要的行为。例如，为了查询有图片附件的 Post 的评论列表：
+如果你想查询对象列表，它们的某个字段包含了一个 AVObject ，并且这个 AVObject 匹配一个不同的查询，你可以使用 `whereMatchesQuery` 嵌套查询方法。请注意，默认的 limit 限制 100 也同样作用在内部查询上。因此如果是大规模的数据查询，你可能需要仔细构造你的查询对象来获取想要的行为。例如，为了查询有图片附件的 Post 的评论列表：
 
 ```java
 AVQuery<AVObject> innerQuery = AVQuery.getQuery("Post");
@@ -746,14 +650,13 @@ query.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-你可以使用 `dot`（英语句号）操作符来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
+你可以使用点操作符（半角句号）来多层 include 内嵌的对象。比如，你同时想 include 一个 `Comment` 的 `post` 里的 `pubUser`（作者）对象（假设 pubUser 对应的值是 AVUser 实例），你可以这样做：
 
 ```java
 query.include("post.pubUser");
 ```
 
-`AVQuery` 的 `include` 方法可以被多次调用，每次调用的字段可以不一样。同样，上面所述的这些方法也可以作用在`AVQuery` 的其他方法，例如 `getFirst` 和 `getInBackground` 上。
-
+AVQuery 的 `include` 方法可以被多次调用，每次调用的字段可以不一样。同样，上面所述的这些方法也可以作用在 AVQuery  的其他方法，例如 `getFirst` 和 `getInBackground` 上。
 
 ### 缓存查询
 
@@ -775,49 +678,51 @@ public void done(List<AVObject> objList, AVException e) {
 
 LeanCloud 提供了几种不同的缓存策略：
 
-* IGNORE_CACHE ： 默认的缓存策略，查询不走缓存，查询结果也不存储在缓存。
-* CACHE_ONLY ： 查询只从缓存获取，不走网络。如果缓存中没有结果，引发一个 `AVException`。
-* NETWORK_ONLY ： 查询不走缓存，从网路中获取，但是查询结果会写入缓存。
-* CACHE_ELSE_NETWORK ： 查询首先尝试从缓存中获取，如果失败，则从网络获取，如果两者都失败，则引发一个 `AVException`。
-* NETWORK_ELSE_CACHE ： 查询首先尝试从网络获取，如果失败，则从缓存中查找；如果两者都失败，则应发一个 `AVException`。
-* CACHE_THEN_NETWORK ： 查询首先尝试从缓存中获取，然后再从网络获取。在这种情况下，`FindCallback` 会被实际调用两次 -- 首先是缓存的结果，其次是网络查询的结果。这个缓存策略只能用在异步的 `findInBackground` 方法中。
+策略|说明
+---|---
+`IGNORE_CACHE`|默认的缓存策略，查询不走缓存，查询结果也不存储在缓存。
+`CACHE_ONLY`|查询只从缓存获取，不走网络。如果缓存中没有结果，引发一个 AVException。
+`NETWORK_ONLY`|查询不走缓存，从网路中获取，但是查询结果会写入缓存。
+<code style="white-space:nowrap;">CACHE_ELSE_NETWORK</code>|查询首先尝试从缓存中获取，如果失败，则从网络获取，如果两者都失败，则引发一个 AVException。
+`NETWORK_ELSE_CACHE`|查询首先尝试从网络获取，如果失败，则从缓存中查找；如果两者都失败，则应发一个 AVException。
+`CACHE_THEN_NETWORK`|查询首先尝试从缓存中获取，然后再从网络获取。在这种情况下，`FindCallback` 会被实际调用两次：首先是缓存的结果，其次是网络查询的结果。这个缓存策略只能用在异步的 `findInBackground` 方法中。
 
-如果你想控制缓存的行为。你可以使用 `AVQuery` 提供的方法来操作缓存。你可以在缓存上做如下这些操作：
+如果你想控制缓存的行为。你可以使用 AVQuery  提供的方法来操作缓存。你可以在缓存上做如下这些操作：
 
 * 检查查询是否有缓存结果：
 
-```java
-boolean isInCache = query.hasCachedResult();
-```
+  ```java
+  boolean isInCache = query.hasCachedResult();
+  ```
 
 * 删除查询的任何缓存结果：
 
-```java
-query.clearCachedResult();
-```
+  ```java
+  query.clearCachedResult();
+  ```
 
 * 清空所有查询的缓存结果：
 
-```java
-AVQuery.clearAllCachedResults();
-```
+  ```java
+  AVQuery.clearAllCachedResults();
+  ```
 * 控制缓存结果的最大存活时间（毫秒为单位）：
 
-```java
-query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
-```
+  ```java
+  query.setMaxCacheAge(TimeUnit.DAYS.toMillis(1));
+  ```
 
-查询缓存也同时可以用在 `AVQuery` 的 `getFirst()`和 `getInBackground()`方法上。
+查询缓存也同时可以用在 AVQuery  的 `getFirst()` 和 `getInBackground()` 方法上。
 
 #### Last-Modified 选项
 在网络请求中间 `Last-Modified` 一般是标注在 http 响应中，用来表示该资源在服务器端的最后修改时间。在 LeanCloud 中间，我们也提供了这个选项来提升缓存的准确性、提高网络效率。
 当你通过 `AVOSCloud.setLastModifyEnabled(boolean enable)`来激活这个选项时，所有的对象和它们所对应的 `Last-Modified` 时间都会被缓存起来。
-当某个 `AVObject` 对象再次被发起一个 get 请求时，请求中就会带着 `Last-Modified` 信息，服务器端则会校验双方的 `Last-Modified` 信息。如果双方的 `Last-Modified` 时间一致，则说明自上次 get 请求之后，服务器端的数据并没有被修改，所以服务器不再需要将对象重新返回，客户端直接取缓存内对象返回即可，从而节省了网络资源。反之，则与平时一样，服务器返回该对象数据和对应的 `Last-Modified` 信息，由客户端更新缓存内容并返回，从而保证了缓存的正确性。
-** 注：该功能现在正处于 beta 阶段，请谨慎使用 **
+当某个 AVObject 对象再次被发起一个 get 请求时，请求中就会带着 `Last-Modified` 信息，服务器端则会校验双方的 `Last-Modified` 信息。如果双方的 `Last-Modified` 时间一致，则说明自上次 get 请求之后，服务器端的数据并没有被修改，所以服务器不再需要将对象重新返回，客户端直接取缓存内对象返回即可，从而节省了网络资源。反之，则与平时一样，服务器返回该对象数据和对应的 `Last-Modified` 信息，由客户端更新缓存内容并返回，从而保证了缓存的正确性。
+** 注：该功能现在正处于 beta 阶段，请谨慎使用**。
 
 ### 复合查询
 
-如果你想查找对象匹配所有查询条件中的一个，你可以使用 `AVQuery.or` 方法来构建一个复合的"或"查询。例如，你想查询出企业官方账号和个人账号的微博，可以这样:
+如果你想查找对象匹配所有查询条件中的一个，你可以使用 `AVQuery.or` 方法来构建一个复合的「或」查询。例如，你想查询出企业官方账号和个人账号的微博，可以这样:
 
 ```java
 AVQuery<AVObject> officialPosts = AVQuery.getQuery("Post");
@@ -838,9 +743,9 @@ mainQuery.findInBackground(new FindCallback<AVObject>() {
 });
 ```
 
-你还可以添加更多的约束条件到新创建的 `AVQuery` 实例上，表示一个 `and` 查询操作。
+你还可以添加更多的约束条件到新创建的 AVQuery  实例上，表示一个 `and` 查询操作。
 
-请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`，`skip`，`orderBy`...，`include` 等。
+请注意，我们在复合查询的子查询里不支持非过滤性的查询，例如 `setLimit`、`skip`、`orderBy`、`include` 等。
 
 ### 删除查询结果
 
@@ -853,8 +758,7 @@ query.deleteAll();
 ### CQL 查询
 Cloud Query Language（简称 CQL） 是 LeanCloud 为查询 API 定制的一套类似 SQL 查询语法的子集和变种，主要目的是降低大家学习 LeanCloud 查询的 API 的成本，可以使用传统的 SQL 语法来查询 LeanCloud 应用内的数据。
 
-这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](./cql_guide.html)。
-你可以通过一下方法来进行调用
+这里只是示范在 Android 中的调用方法，具体的 CQL 语法，请参考 [Cloud Query Language 详细指南](./cql_guide.html)。你可以通过以下方法来进行调用：
 
 ```java
 AVQuery.doCloudQueryInBackground("select * from ObjectTest", new CloudQueryCallback<AVCloudQueryResult>(){
@@ -927,14 +831,14 @@ post.setPubUserCertificate(3);
 
 ### 子类化 AVObject
 
-创建一个 `AVObject` 的子类很简单：
+创建一个 AVObject 的子类很简单：
 
-* 首先声明一个子类继承自 `AVobject`。
-* 添加`@AVClassName`注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
-* 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 `AVObject` 的字段。
+* 首先声明一个子类继承自 AVObject 。
+* 添加 `@AVClassName` 注解。它的值必须是一个字符串，也就是你过去传入 AVObject 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名。
+* 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 AVObject 的字段。
 * 在你的应用初始化的地方，在调用 `AVOSCloud.initialize()` 之前注册子类 `AVObject.registerSubclass(YourClass.class)`。
 
-下列代码成功实现并注册了 `AVObject` 的子类 `Post`:
+下列代码成功实现并注册了 AVObject 的子类 `Post`:
 
 ```java
 // Post.java
@@ -960,11 +864,11 @@ public class App extends Application {
 }
 ```
 
-### 访问器，修改器和方法
+### 访问器、修改器和方法
 
-添加方法到 `AVObject` 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
+添加方法到 AVObject 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
 
-你可以很容易地添加访问器和修改器到你的 `AVObject` 子类。像平常那样声明字段的 `getter` 和 `setter` 方法，但是通过 `AVobject` 的 `get` 和 `put` 方法来实现它们。下面是这个例子为 `Post` 类创建了一个 `content` 的字段：
+你可以很容易地添加访问器和修改器到你的 AVObject 子类。像平常那样声明字段的 `getter` 和 `setter` 方法，但是通过 AVObject 的 `get` 和 `put` 方法来实现它们。下面是这个例子为 `Post` 类创建了一个 `content` 的字段：
 
 ```java
 // Post.java
@@ -997,7 +901,7 @@ public void takeAccusation() {
 
 ### 初始化子类
 
-你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 `AVObject` 中的字段，这个默认构造函数将会被 SDK 使用来创建子类的强类型的对象。
+你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 AVObject 中的字段，这个默认构造函数将会被 SDK 使用来创建子类的强类型的对象。
 
 要创建一个到现有对象的引用，可以使用 `AVObject.createWithoutData()`:
 
@@ -1007,11 +911,10 @@ Post postReference = AVObject.createWithoutData(Post.class, post.getObjectId());
 
 ### 子类的序列化与反序列化
 
-在 v3.4 版本以后，如果希望 `AVObject` 子类也支持 `Parcelable`,则需要至少满足一下几个要求：
+在 v3.4 版本以后，如果希望 AVObject 子类也支持 Parcelable，则需要至少满足以下几个要求：
 
-* 确保子类有一个 public 并且参数为 Parcel的构造函数，并且在内部调用父类的该构造函数
-
-* 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`
+* 确保子类有一个 public 并且参数为 Parcel 的构造函数，并且在内部调用父类的该构造函数。
+* 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`。
 
 ```java
 // Post.java
@@ -1020,7 +923,7 @@ public class Post extends AVObject {
   public Post(){
   }
   
-  public Post(Parcle in){
+  public Post(Parcel in){
     super(in);
   }
   //此处为我们的默认实现，当然你也可以自行实现
@@ -1039,7 +942,7 @@ query.whereEqualTo("pubUser", AVUser.getCurrentUser().getUsername());
 query.findInBackground(new FindCallback<Post>() {
   @Override
   public void done(List<Post> results, AVException e) {
-    for (Armor a : results) {
+    for (Post a : results) {
       // ...
     }
   }
@@ -1048,7 +951,7 @@ query.findInBackground(new FindCallback<Post>() {
 
 ### AVUser 的子类化
 
-`AVUser` 作为 `AVObject` 的子类，同样允许子类化，你可以定义自己的 `User` 对象，不过比起 `AVObject` 子类化会更简单一些，只要继承 `AVUser` 就可以了：
+AVUser 作为 AVObject 的子类，同样允许子类化，你可以定义自己的 User 对象，不过比起 AVObject 子类化会更简单一些，只要继承 AVUser 就可以了：
 
 ```java
 import com.avos.avoscloud.AVObject;
@@ -1065,9 +968,15 @@ public class MyUser extends AVUser {
 }
 ```
 
-不需要添加 `@AVClassname` 注解，所有 `AVUser` 的子类的类名都是内建的`_User`。同样也不需要注册 `MyUser`。
+不需要添加 `@AVClassname` 注解，所有 AVUser 的子类的类名都是内建的 `_User`。同样也不需要注册 `MyUser`。
 
-注册跟普通的 `AVUser` 对象没有什么不同，但是登陆如果希望返回自定义的子类，必须这样：
+当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 `AVOSCloud.initialize()` 之前添加：
+
+```
+AVUser.alwaysUseSubUserClass(subUser.class);
+```
+
+注册跟普通的 AVUser 对象没有什么不同，但是登录如果希望返回自定义的子类，必须这样：
 
 ```java
 MyUser cloudUser = AVUser.logIn(username, password,
@@ -1232,25 +1141,21 @@ ACL(Access Control List)是最灵活和简单的应用数据安全管理方法�
 ## 文件
 ### 文件对象
 
-`AVFile` 可以让你的应用程序将文件存储到服务器中，比如常见的文件类型图像文件、影像文件、音乐文件和任何其他二进制数据都可以使用。
+AVFile 可以让你的应用程序将文件存储到服务器中，比如常见的文件类型图像文件、影像文件、音乐文件和任何其他二进制数据都可以使用。
 在这个例子中，我们将一段文本保存到服务器端：
 
 ```java
-AVFile avFile;
-try{
-       AVObject avObject = new AVObject("Post");
-       avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());
-       avFile.save();
-       avObject.put("content","#花儿与少年# 迪拜疯狂之旅");
-       avObject.put("attached", avFile);
-       avObject.saveInBackground();
-}catch(AVException  e){
-}
+AVFile avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());  
+avFile.saveInBackground();                                                 
+AVObject avObject = new AVObject("Post");                                  
+avObject.put("content", "#花儿与少年# 迪拜疯狂之旅");                             
+avObject.put("attached", avFile);                                          
+avObject.saveInBackground();                                               
 ```
 
-`AVFile` 构造函数的第一个参数指定文件名称，第二个构造函数接收一个 byte 数组，也就是将要上传文件的二进制。
+AVFile 构造函数的第一个参数指定文件名称，第二个参数接收一个 byte 数组，也就是将要上传文件的二进制。
 
-可以将 `AVFile` 直接存储到其他对象的某个属性里，后续可以取出来继续使用。
+可以将 AVFile 直接存储到其他对象的某个属性里，后续可以取出来继续使用。
 
 **如果将文件存储到对象的一个数组类型的属性内，那么必须在查询该对象的时候加上 include 该属性，否则查询出来的数组将是 AVObject 数组。**
 
@@ -1295,7 +1200,7 @@ file.saveInBackground(new SaveCallback() {
 
 ```java
 AVFile avFile = avObject.getAVFile("attached");
-AVFile.getDataInBackground(new GetDataCallback(){
+avFile.getDataInBackground(new GetDataCallback(){
   public void done(byte[] data, AVException e){
     //process data or exception.
   }
@@ -1310,7 +1215,7 @@ AVFile.getDataInBackground(new GetDataCallback(){
 
 ### 文件元信息
 
-`AVFile` 默认会存储文件大小和文件上传者 `objectId` 作为元信息：
+AVFile 默认会存储文件大小和文件上传者 `objectId` 作为元信息：
 
 ```java
 int size = avFile.getSize();
@@ -1330,7 +1235,7 @@ avFile.addMetaData("height", 200);
 
 默认情况下，文件的删除权限是不开放的，如果你想在客户端 SDK 中删除文件，你需要在数据管理平台找到 _File 表，进入 其他 -> 权限设置 菜单，勾选 delete 为所有用户都有此权限。
 
-删除文件通过一系列 `delete` 方法来实现，跟 `AVObject` 的删除类似：
+删除文件通过一系列 `delete` 方法来实现，跟 AVObject 的删除类似：
 
 ```java
 avFile.deleteInBackground();
@@ -1338,7 +1243,7 @@ avFile.deleteInBackground();
 
 ### 图片缩略图
 
-如果你上传的文件是一张图片，可以通过 `AVFile` 的 `getThumbnailUrl` 方法获取一张缩略图的 url，可以设置缩率图的高度、宽度、质量等信息：
+如果你上传的文件是一张图片，可以通过 AVFile 的 `getThumbnailUrl` 方法获取一张缩略图的 url，可以设置缩率图的高度、宽度、质量等信息：
 
 ```java
 //宽度200，高度100的缩略图
@@ -1349,7 +1254,7 @@ String url = file.getThumbnailUrl(false, 200, 100);
 
 ### 获取文件名
 
-有用户反映从服务器拿到的 `AVFile` 在获取文件名时调用 `getName()`方法的返回值跟 `getObjectId()`一致，而不是实际的文件名。实际上这个是我们早期版本为了兼容 `Parse` 有意为之的。为了保持兼容性考虑，我们不准备改变这个 API 的行为。
+有用户反映从服务器拿到的 AVFile 在获取文件名时调用 `getName()`方法的返回值跟 `getObjectId()`一致，而不是实际的文件名。实际上这个是我们早期版本为了兼容 `Parse` 有意为之的。为了保持兼容性考虑，我们不准备改变这个 API 的行为。
 如果你有取文件名的需求，你可以使用 `AVFile.getOriginalName()`;
 
 ### 文件列表
@@ -1358,6 +1263,7 @@ String url = file.getThumbnailUrl(false, 200, 100);
 
 ```java
     List<AVFile> fileList = new LinkedList<AVFile>();
+    // 假设 file1 和 file2 已提前通过 AVFile 保存到了云端
     fileList.add(file1);
     fileList.add(file2);
 
@@ -1367,20 +1273,20 @@ String url = file.getThumbnailUrl(false, 200, 100);
 ```
 
 ## 用户
-用户是一个应用程序的核心。对于个人开发者来说，能够让自己的应用程序积累到多的用户，就能给自己带来更多的创作动力。因此 LeanCloud 提供了一个专门的用户类，`AVUser` 来自动处理用户账户管理所需的功能。
+用户是一个应用程序的核心。对于个人开发者来说，能够让自己的应用程序积累到多的用户，就能给自己带来更多的创作动力。因此 LeanCloud 提供了一个专门的用户类，AVUser 来自动处理用户账户管理所需的功能。
 有了这个类，你就可以在你的应用程序中添加用户帐户功能。
 
-`AVUser` 是一个 `AVObject` 的子类，它继承了 `AVObject` 所有的方法，具有 `AVObject` 相同的功能。不同的是，`AVUser` 增加了一些特定的关于用户账户相关的功能。
+AVUser 是一个 AVObject 的子类，它继承了 AVObject 所有的方法，具有 AVObject 相同的功能。不同的是，AVUser 增加了一些特定的关于用户账户相关的功能。
 
 ### 属性
 
-`AVUser` 除了从 `AVObject` 继承的属性外，还有几个特定的属性：
+AVUser 除了从 AVObject 继承的属性外，还有几个特定的属性：
 
 * username: 用户的用户名（必需）。
 * password: 用户的密码（必需）。
 * email: 用户的电子邮件地址（可选）。
 
-和其他 `AVObject` 对象不同的是，在设置 `AVUser` 这些属性的时候不是使用的 `put` 方法，而是专门的 `setXXX` 方法。
+和其他 AVObject 对象不同的是，在设置 AVUser 这些属性的时候不是使用的 `put` 方法，而是专门的 `setXXX` 方法。
 
 ### 注册
 
@@ -1412,21 +1318,21 @@ user.signUpInBackground(new SignUpCallback() {
 
 如果注册不成功，你可以查看返回的错误对象。最有可能的情况是，用户名或电子邮件已经被另一个用户注册。这种情况你可以提示用户，要求他们尝试使用不同的用户名进行注册。
 
-你也可以要求用户使用 Email 做为用户名注册，这样做的好处是，你在提交信息的时候可以将输入的“用户名“默认设置为用户的 Email 地址，以后在用户忘记密码的情况下可以使用 LeanCloud 提供的重置密码功能。
+你也可以要求用户使用 Email 做为用户名注册，这样做的好处是，你在提交信息的时候可以将输入的「用户名」默认设置为用户的 Email 地址，以后在用户忘记密码的情况下可以使用 LeanCloud 提供的重置密码功能。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接请看博客文章[《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的云代码回调函数，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 登录
 
 当用户注册成功后，你需要让他们以后能够登录到他们的账户后使用应用。要做到这样一点，你可以使用
-`AVUser` 类的 `loginInBackground` 方法。
+AVUser 类的 `loginInBackground` 方法。
 
 ```java
 AVUser.logInInBackground("username", "password", new LogInCallback() {
     public void done(AVUser user, AVException e) {
-        if (user != null) {
+        if (e == null) {
             // 登录成功
         } else {
             // 登录失败
@@ -1481,9 +1387,9 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
  * 用户根据向导点击重置密码连接，打开一个特殊的页面，让他们输入一个新的密码。
  * 用户的密码已被重置为新输入的密码。
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的云代码回调函数，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 修改密码
 
@@ -1516,11 +1422,11 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
         });
 ```
 
-关于自定义邮件模板和验证链接请看这篇[博客](http://blog.leancloud.cn/blog/2014/01/09/zi-ding-yi-ying-yong-nei-yong-hu-zhong-she-mi-ma-he-you-xiang-yan-zheng-ye-mian/)。
+关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
 ###  手机号码验证
 
-在应用设置中打开`注册手机号码验证`选项后，当你在注册用户时，填写用户手机字段后，LeanCloud 会自动向该手机号码发送一个验证短信，用户在输入验证码以后，该用户就被表示为已经验证过手机。
+在 [控制台 /（选择应用）/ 设置 / 应用选项 / 短信](/app.html?appid={{appid}}#/permission) 中打开 **验证注册用户手机号码** 选项后，当你在注册用户时，如果提供了手机号码，LeanCloud 会自动向该手机号码发送一个验证短信，用户在输入验证码以后，该用户就被表示为已经验证过手机。
 
 以下代码就可发送注册验证码到用户手机:
 ```java
@@ -1537,7 +1443,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       public void done(AVException e) {
           //发送了验证码以后做点什么呢
       }
-    })
+    });
 ```
 
 调用以下代码即可验证验证码:
@@ -1553,7 +1459,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
     });
 ```
 
-验证成功后，用户的 `mobilePhoneVerified` 属性变为 true，并且调用云代码的 `AV.Cloud.onVerifed('sms', function)`方法。
+验证成功后，在控制台，用户的记录 `mobilePhoneVerified` 属性变为 true，并且调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1601,7 +1507,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
         });
 ```
 
-之后在用户受到重置密码的验证码之后，你可以调用这个方法来实现密码重置:
+之后在用户收到重置密码的验证码之后，你可以调用这个方法来实现密码重置:
 ```java
   AVUser.resetPasswordBySmsCodeInBackground(smsCode, newPassword, new UpdatePasswordCallback() {
       @Override
@@ -1612,18 +1518,20 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
       }
     });
 ```
-修改成功以后，用户就可以使用新密码登陆了
+修改成功以后，用户就可以使用新密码登录了。
 
 
 ### 查询
+
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
 
 查询用户，你需要使用特殊的用户查询对象来完成：
 
 ```java
 AVQuery<AVUser> query = AVUser.getQuery();
 query.whereEqualTo("gender", "female");
-query.findInBackground(new FindCallback<AVObject>() {
-    public void done(List<AVObject> objects, AVException e) {
+query.findInBackground(new FindCallback<AVUser>() {
+    public void done(List<AVUser> objects, AVException e) {
         if (e == null) {
             // 查询成功
         } else {
@@ -1651,10 +1559,10 @@ query.findInBackground(new FindCallback<AVObject>() {
 
 ### 浏览器中查看用户表
 
-User 表是一个特殊的表，专门存储 `AVUser` 对象。在浏览器端，你会看到一个 _User 表。
+User 表是一个特殊的表，专门存储 AVUser 对象。在浏览器端，你会看到一个 _User 表。
 
 ## 地理位置
-LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。你可以在 `AVObject` 的查询中添加一个 `AVGeoPoint` 的对象查询。你可以实现轻松查找出离当前用户最接近的信息或地点的功能。
+LeanCloud 允许用户根据地球的经度和纬度坐标进行基于地理位置的信息查询。你可以在 AVObject 的查询中添加一个 `AVGeoPoint` 的对象查询。你可以实现轻松查找出离当前用户最接近的信息或地点的功能。
 
 ### 地理位置对象
 
@@ -1672,7 +1580,7 @@ postObject.put("location", point);
 
 ### 地理查询
 
-现在，你的数据表中有了一定的地理坐标对象的数据，这样可以测试找出最接近某个点的信息了。你可以使用 `AVQuery` 对象的 `whereNear` 方法来这样做：
+现在，你的数据表中有了一定的地理坐标对象的数据，这样可以测试找出最接近某个点的信息了。你可以使用 AVQuery  对象的 `whereNear` 方法来这样做：
 
 ```java
 AVGeoPoint userLocation = (AVGeoPoint) userObject.get("location");
@@ -1682,8 +1590,10 @@ query.setLimit(10);            //获取最接近用户地点的10条微博
 ArrayList<AVObject> nearPosts = query.find();
 ```
 
-在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。
+在以上代码中，nearPosts 是一个返回的距离 userLocation 点（最近到最远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending()` 或 `orderByDescending()` 方法，则按距离排序会被新排序覆盖。**
+
 要限制查询指定距离范围的数据可以使用 `whereWithinKilometers`、`whereWithinMiles` 或 `whereWithinRadians` 方法。
+
 要查询一个矩形范围内的信息可以使用 `whereWithinGeoBox` 来实现：
 
 ```java
@@ -1698,9 +1608,10 @@ ArrayList<AVObject> posts = query.find();
 
 目前有几个需要注意的地方：
 
- * 每个 `AVObject` 数据对象中只能有一个 `AVGeoPoint` 对象。
+ * 每个 AVObject 数据对象中只能有一个 `AVGeoPoint` 对象。
  * 地理位置的点不能超过规定的范围。纬度的范围应该是在 -90.0 到 90.0 之间。经度的范围应该是在 -180.0 到 180.0 之间。如果你添加的经纬度超出了以上范围，将导致程序错误。
 
+<!--
 ## 短信验证API
 除了上文提到的短信登录与短信密码重置的功能外，我们也同时提供了与账号无关的短信服务。
 
@@ -1761,7 +1672,7 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 				    }
   })
 ```
-
+-->
 ## 调用云代码
 
 ### 调用函数
@@ -1794,4 +1705,4 @@ AVCloud.setProductionMode(false); //调用测试环境云代码
 默认为 true，也就是调用生产环境云代码函数。
 
 ## 代码混淆
-为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [这里](android_faq.html#代码混淆怎么做)。
+为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [常见问题 - 代码混淆](android_faq.html#代码混淆怎么做)。

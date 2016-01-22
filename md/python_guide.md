@@ -1,4 +1,4 @@
-# Python 指南
+# Python 数据存储开发指南
 
 
 ## 介绍
@@ -9,7 +9,7 @@ LeanCloud 是一个完整的平台解决方案，为你的应用提供全方位�
 
 ## 快速入门
 
-建议你在阅读本文档之前，阅读我们提供的[快速入门](https://leancloud.cn/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
+建议你在阅读本文档之前，阅读我们提供的[快速入门](/start.html)文档，获取 LeanCloud 使用的配置和第一印象。
 
 ### 兼容性
 
@@ -117,7 +117,7 @@ game_score.save()
 game_score = GameScore(score=42, playerName='Marvin')
 ```
 
-这时候登陆 LeanCloud 控制台查看，可以看到 GameScore 中新增一条数据。
+这时候登录 LeanCloud 控制台查看，可以看到 GameScore 中新增一条数据。
 
 另外所有 Object 子类对象，都有三个特殊字段，保存之后服务器会自动填充其中的数据。
 
@@ -135,6 +135,7 @@ game_score.updated_at    # 此对象最后更新的时间，类型为 datetime.d
 
 ```python
 from leancloud import Query
+# Query 构造函数的参数可以是字符串，也可以是一个 leancloud.Object 子类。
 query = Query(GameScore)
 game_score = query.get('520ca0bbe4b07e8e0e847e31')
 print game_score.get('playerName')
@@ -142,12 +143,15 @@ print game_score.get('playerName')
 
 ### 更新对象
 
-更新对象的时候，直接修改对象上对应字段的值，然后再调用`save`方法即可。
+更新对象的时候，直接修改对象上对应字段的值，然后再调用 `save` 方法即可。
 
 ```python
 from leancloud import Object
+# Object.extend('GameScore') 和 class GameScore(leancloud.Object): 
+# 的写法是一样的，返回的结果是一个 class，所以是变量名大写
 GameScore = Object.extend('GameScore')
 
+game_score = GameScore()
 game_score.set('score', 42)
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
@@ -165,6 +169,7 @@ game_score.save()
 from leancloud import Object
 GameScore = Object.extend('GameScore')
 
+game_score = GameScore()
 game_score.set('score', 42)
 game_score.set('cheatMode', False)
 game_score.set('playerName', 'Marvin')
@@ -455,12 +460,12 @@ query.contains_all("arrayKey", [2, 3, 4])
 
 ### 对字符串类型做查询
 
-使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的。
+使用 startswith 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的。
 
 ```python
 # Finds barbecue sauces that start with "Big Daddy's".
 query = leancloud.Query(BarbecueSauce)
-query.starts_with("name", "Big Daddy's")
+query.startswith("name", "Big Daddy's")
 ```
 
 ### 关系查询
@@ -570,15 +575,6 @@ results = mainQuery.find()
 你也可以使用 Query.and_ 对 Query 加入更多的条件，如同 AND 查询一样，这样得到所有查询结果的交集。
 
 请注意 **我们不会在组合查询的子查询中支持非过滤型的条件**（比如:limit, skip, ascending/descending, include）。
-
-### 删除查询结果
-
-如果你想将查询出来的对象都删除，或者删除符合查询条件的所有对象，可以调用 destroyAll 方法：
-
-```python
-query.destroy_all()
-# delete all objects by this query successfully.
-```
 
 ### CQL 查询语言
 
@@ -736,7 +732,7 @@ user.sign_up()
 
 ### 登录
 
-在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登陆。
+在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可 以使用 login 方法来进行登录。
 
 ```python
 User().login("myname", "mypass")

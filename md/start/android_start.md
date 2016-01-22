@@ -1,13 +1,6 @@
-<p><a id="link" class="btn btn-default" href="https://leancloud.cn/docs/sdk_down.html">下载 Android SDK</a></p>
+<p><a id="link" class="btn btn-default" href="sdk_down.html">下载 Android SDK</a></p>
 
 下载 SDK，将下载后的文件解压缩后的所有 jar 文件放入 Android 项目的 **libs** 目录。如果你们的项目没有 <b>libs</b> 目录，那么就在项目的根目录下创建一个，通过右键点击项目 Project，选择 **New**，接下来点击 **Folder** 菜单即可创建新目录。
-
-添加下列 `import` 语句到你的 Application 或主 Activity 类：
-
-```
-import com.avos.avoscloud.AVOSCloud;
-import com.avos.avoscloud.AVAnalytics;
-```
 
 在 Application 的 `onCreate` 方法调用 `AVOSCloud.initialize` 来设置您应用的 Application ID 和 Key：
 
@@ -18,7 +11,7 @@ public void onCreate() {
 }
 ```
 
-创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
+创建应用后，可以在 [控制台 > 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
 
 同时，你的应用需要请求 `INTERNET` 和 `ACCESS_NETWORK_STATE` 权限，如果没有设置，请添加下列两行到你的 `AndroidManifest.xml` 文件里的 `<application>` 标签前：
 

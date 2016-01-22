@@ -1,13 +1,14 @@
 // Basic styles
 body {
   position: relative;
+  font-size: 15px;
 }
 
 .doc-content {
 
   p,
   li {
-    line-height: 1.6;
+    line-height: 1.8;
     // Prepared for inline comment system
     position: relative;
     // padding-right: 50px;
@@ -20,6 +21,10 @@ body {
     &.on {
       background: #fffdd0;
     }
+  }
+
+  p {
+    margin-bottom: 1em;
   }
 
   pre {
@@ -56,14 +61,31 @@ body {
 // Headings
 .doc-content {
 
-  h1 {
-    font-size: 26px;
+  > h1 {
+    font-size: 32px;
     font-weight: 300;
-    padding-top: 20px;
+    padding-top: 90px;
     margin-top: 0px;
+    margin-bottom: 20px;
+    .font-logo;
+    font-weight: bold;
+
+    // We add extra space for top heading before GitHub contributers loaded
+    // This could help avoid FOUT issue when page is loading
+    @github-avatar-height: 24px;
+    @heading-margin-bottom-offset: 10px;
+    padding-bottom: (100px + @github-avatar-height + @heading-margin-bottom-offset + 3px) !important;
+    border-bottom: 1px solid @gray-lighter;
 
     a {
       color: #000;
+    }
+
+    // When GitHub contributers loaded, add a special class to remove extra space
+    &.github-contributors-loaded {
+      padding-bottom: 0 !important;
+      margin-bottom: @heading-margin-bottom-offset;
+      border-bottom: none;
     }
   }
 
@@ -131,24 +153,27 @@ body {
     .form-group {
       position: relative;
 
-
       input {
         border: none;
         border-radius: 0;
         height: 32px;
         padding-left: 34px;
+
+        &:focus {
+          box-shadow: none;
+        }
       }
 
       // Override icon styles
-      &:after {
+      &:before {
         position: absolute;
         display: block;
         top: 8px;
         left: 15px;
-        font-family: 'LeanCloud';
+        font-family: "ui-icon";
         font-size: 16px;
         line-height: 1;
-        content: "\e626";
+        content: @icon-search;
         width: 16px;
         height: 16px;
         pointer-events: none;
@@ -173,7 +198,7 @@ body {
     height: 17px;
     outline: none;
 
-    @media (max-width: 480px) {
+    @media (max-width: @screen-xs) {
       width: 120px;
     }
   }
@@ -181,7 +206,6 @@ body {
 
 // Homepage
 .doc-home-title {
-  text-align: center;
   padding: 60px 0 80px;
   font-weight: 300;
 
@@ -201,15 +225,18 @@ body {
     margin-top: 0;
     padding-top: 0;
   }
+
+  .hero-search {
+    max-width: 400px;
+    margin: 15px auto;
+  }
 }
 
 .doc-hero-links-wrap {
 }
 
 .doc-hero-links {
-  border: 1px solid #eee;
   text-align: center;
-  border-radius: @border-radius-base;
   margin-bottom: 20px;
 }
 
@@ -218,6 +245,7 @@ body {
   color: #000;
   padding: 30px;
   width: 100%;
+  border: 1px solid @gray-lighter;
   border-radius: @border-radius-base;
   font-size: 16px;
   font-weight: 300;
@@ -227,6 +255,7 @@ body {
     color: @link-color;
     background: #fff;
     text-decoration: none;
+    border-color: @brand-primary;
   }
 
   i {
@@ -253,8 +282,9 @@ body {
     list-style: none;
 
     li {
-      line-height: 2.2;
+      line-height: 1.4;
       font-size: 15px;
+      margin-bottom: .6em;
     }
   }
 }
@@ -269,6 +299,13 @@ body {
   // Date: Oct 11, 2014, 9:57 AM
   transform: translate3d(0, 0, 0);
 
+  &.expand-all {
+
+    ol {
+      max-height: 500000px !important;
+    }
+  }
+
   &.affix {
     top: 0;
     position: fixed !important;
@@ -278,7 +315,7 @@ body {
     }
 
     // Affix fix for mobile devices
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
       position: static !important;
 
       #toc {
@@ -290,9 +327,12 @@ body {
   &.affix,
   &.affix-bottom {
 
-    #toc .back-to-top {
-      opacity: 1;
-      pointer-events: auto;
+    #toc .sidebar-meta {
+
+      .back-to-top {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
   }
 
@@ -300,7 +340,7 @@ body {
   &.affix-top,
   &.affix-bottom {
 
-    @media (max-width: 992px) {
+    @media (max-width: @screen-sm-max) {
 
       #toc > li > ul ul {
         display: block;
@@ -344,7 +384,7 @@ body {
 .sidebar-affix-shadow {
   .clearfix;
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     display: none;
   }
 
@@ -394,19 +434,24 @@ body {
   width: 100%;
   padding: 10px 0 20px 0;
 
-  .back-to-top {
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity .2s ease;
+  .sidebar-meta {
+    padding-top: 20px;
 
     a {
+      display: inline;
       font-size: 12px;
-      border-right: none;
-      padding-left: 10px;
+      border: none !important;
+      padding: 4px;
+    }
+
+    .back-to-top {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease;
     }
   }
 
-  @media (max-width: (@screen-sm - 1px)) {
+  @media (max-width: @screen-xs-max) {
     position: static;
     padding: 0 0 20px;
     border-bottom: 1px solid #eee;
@@ -522,7 +567,7 @@ ul#toc,#toc li {
 }
 #toc > li >ol >li > ol a{
   font-size: 13px;
-  padding-left: 20px;
+  padding-left: 15px;
   padding-right: 10px;
 }
 
@@ -537,20 +582,14 @@ ul#toc,#toc li {
 }
 
 .docs-meta {
-  float: right;
   overflow: auto;
-  padding-left: 15px;
-  margin-top: 20px;
+  margin-top: 17px;
   color: @gray-lighter;
-
-  @media (max-width: @screen-sm) {
-    display: none;
-  }
 
   .icon {
     color: #000;
     font-size: 24px;
-    vertical-align: -5px;
+    vertical-align: -3px;
   }
 
   a {
@@ -564,10 +603,43 @@ ul#toc,#toc li {
   }
 }
 
+.github-contributors {
+  .list-unstyled;
+  padding-bottom: 100px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid @gray-lighter;
+
+  li {
+    display: inline;
+    margin-right: 4px;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    a {
+
+      img {
+        @s: 24px;
+        width: @s;
+        height: @s;
+        border-radius: @border-radius-base;
+      }
+    }
+  }
+}
+
 // Main content
 .doc-content {
   width: 100%;
-  padding-left: 16px;
+
+  &.with-comment {
+    padding-left: 16px;
+
+    @media (max-width: @screen-sm-max) {
+      padding-left: 0;
+    }
+  }
 
   @media (max-width: 640px) {
     margin-top: 20px;
@@ -587,8 +659,12 @@ ul#toc,#toc li {
 #toc ol ol ol ol ol{
   display: none;
 }
-#toc ol li{
+#toc ol li {
   padding-left: 10px;
+}
+
+#toc > li > ol > li {
+  padding-left: 0;
 }
 
 // Download section
@@ -617,7 +693,7 @@ ul#toc,#toc li {
     margin-right: 10px;
     float: left;
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
       margin-right: 0;
       margin-bottom: 10px;
       float: none;
@@ -763,7 +839,7 @@ h1 {
 
   > li {
 
-    @media (max-width: (@screen-sm - 1px)) {
+    @media (max-width: @screen-xs-max) {
 
       .btn {
         margin-bottom: 15px;
@@ -788,11 +864,13 @@ h1 {
     border: 1px solid @gray-lighter;
     border-radius: 4px;
 
-    @media(max-width: (@screen-sm - 1px)) {
+    @media(max-width: @screen-xs-max) {
       margin: 15px 0 0;
     }
 
     h1 {
+      font-size: 24px;
+      .font-logo;
       padding-top: 0;
       margin-top: 0;
     }
@@ -1038,4 +1116,3 @@ blockquote{
     // overflow: scroll;
   }
 }
-

@@ -7,6 +7,7 @@
   transition: border-color .2s ease;
 
   &.ace_focus {
+    .form-focus();
     border-color: @input-border-focus;
   }
 }
@@ -33,5 +34,46 @@
     .placeholder {
       color: @gray-lighter;
     }
+  }
+}
+
+// app-push-set.html
+.msg-certs-title,
+.msg-certs-filename {
+  width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// msg-list.html
+.sms-list {
+
+  .sms-list-content {
+  }
+
+  .sms-list-phone,
+  .sms-list-status,
+  .sms-list-date {
+    white-space: nowrap;
+  }
+}
+
+// Used by custom pagination select element
+.custom-input-sm {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  font-size: 12px;
+  line-height: 1.5;
+  border-radius: 3px;
+}
+
+.form-splitter {
+  height: 34px;
+  border-right: 1px solid #eee;
+  margin: 0 12px;
+
+  @media (max-width: @screen-xs-max) {
+    display: none;
   }
 }

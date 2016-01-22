@@ -7,6 +7,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
     function($scope, $http, $timeout, $compile,$rootScope) {
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
+        $scope.masterkey = "{{masterkey}}";
         $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){
@@ -26,6 +27,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
                         if($scope.pageState.currentApp&&$scope.pageState.currentApp.app_id){
                             $scope.appid = $scope.pageState.currentApp.app_id;
                             $scope.appkey = $scope.pageState.currentApp.app_key;
+                            $scope.masterkey = $scope.pageState.currentApp.master_key;
                         }
                     });
                     $scope.apps = data;

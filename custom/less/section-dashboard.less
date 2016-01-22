@@ -27,8 +27,10 @@
   .app-item-meta {
     padding: 8px 15px 6px;
 
-    .label {
-      vertical-align: 0;
+    .icon-team-bold {
+      color: @link-color;
+      vertical-align: middle;
+      font-size: 17px;
     }
 
     .app-item-settings {
@@ -65,9 +67,11 @@
     }
 
     .figure {
+      .font-logo;
       font-size: 26px;
-      font-weight: 300;
       line-height: 1.1;
+      color: @gray;
+      transition: color .2s ease;
     }
 
     .text-label {
@@ -84,23 +88,6 @@
 
     @media (max-width: @screen-sm-max) {
       // opacity: 1;
-    }
-
-    > a {
-
-      .dashboard-subnav-text {
-        // display: none;
-
-        // Show text for large screens
-        @media (min-width: @screen-xs) {
-          // display: inline;
-        }
-
-        // Hide text for small to medium screens
-        @media (max-width: @screen-sm-max) and (min-width: @screen-sm) {
-          // display: none;
-        }
-      }
     }
 
     > a,
@@ -199,6 +186,13 @@
     border-color: @link-color;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .06);
 
+    .app-item-stats {
+
+      .figure {
+        color: @link-color;
+      }
+    }
+
     .app-item-settings {
       color: @gray-light;
     }
@@ -250,7 +244,6 @@
 }
 
 .load-block {
-  font-weight: normal;
   font-size: 13px;
   color: lighten(@gray-light, 10%);
 }
@@ -324,4 +317,9 @@
       margin-right: 0;
     }
   }
+}
+
+#cell-edit.error{
+  border: 1px solid red;
+  border-radius: 2px;
 }
