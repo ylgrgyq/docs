@@ -61,7 +61,7 @@ monkey.patch_all()  # 或者只 patch 指定的模块
 
 关于 gevent 的详细介绍，可以参考[gevent 官方文档](http://www.gevent.org/)。
 
-另外如果你使用我们的云代码环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
+另外如果你使用我们的云引擎环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
 
 ## 初始化
 

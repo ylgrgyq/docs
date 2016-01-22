@@ -6,7 +6,7 @@
 
 ## 怎么添加第三方模块
 
-云引擎 2.0 开始支持添加第三方模块（请参考 [云引擎指南 - 升级到 2.0](leanengine_guide-cloudcode.html#云代码_2_0_版)），只需要像普通的 Node.js 项目那样，在项目根目录创建文件 `package.json`，下面是一个范例：
+云引擎 2.0 开始支持添加第三方模块（请参考 [云引擎指南 - 升级到 2.0](leanengine_guide-cloudcode.html#云引擎_2_0_版)），只需要像普通的 Node.js 项目那样，在项目根目录创建文件 `package.json`，下面是一个范例：
 
 ``` 
 {
@@ -37,7 +37,7 @@ npm install
 var async = require('async');
 ```
 
-**注意**：命令行工具部署时是不会上传 `node_modules` 目录，因为云代码服务器会根据 `package.json` 的内容自动下载三方包。所以也建议将 `node_modules` 目录添加到 `.gitignore` 中，使其不加入版本控制。
+**注意**：命令行工具部署时是不会上传 `node_modules` 目录，因为云引擎服务器会根据 `package.json` 的内容自动下载三方包。所以也建议将 `node_modules` 目录添加到 `.gitignore` 中，使其不加入版本控制。
 
 ## Maximum call stack size exceeded 如何解决？
 

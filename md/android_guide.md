@@ -1322,7 +1322,7 @@ user.signUpInBackground(new SignUpCallback() {
 
 关于自定义邮件模板和验证链接请看博客文章[《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云引擎回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 登录
 
@@ -1389,7 +1389,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云引擎回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 修改密码
 
@@ -1459,7 +1459,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
     });
 ```
 
-验证成功后，在控制台，用户的记录 `mobilePhoneVerified` 属性变为 true，并且调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
+验证成功后，在控制台，用户的记录 `mobilePhoneVerified` 属性变为 true，并且调用云引擎的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1673,11 +1673,11 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
   })
 ```
 -->
-## 调用云代码
+## 调用云引擎
 
 ### 调用函数
 
-使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
+使用 `AVCloud` 类的静态方法来调用云引擎中定义的函数：
 
 ```java
  Map<String,Object> parameters = ......
@@ -1696,13 +1696,13 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 
 ### 生产环境和测试环境
 
-云代码区分测试环境和生产环境，在SDK里指定调用的云代码环境，可以通过 `setProductionMode` 方法：
+云引擎区分测试环境和生产环境，在SDK里指定调用的云引擎环境，可以通过 `setProductionMode` 方法：
 
 ```java
-AVCloud.setProductionMode(false); //调用测试环境云代码
+AVCloud.setProductionMode(false); //调用测试环境云引擎
 ```
 
-默认为 true，也就是调用生产环境云代码函数。
+默认为 true，也就是调用生产环境云引擎函数。
 
 ## 代码混淆
 为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [常见问题 - 代码混淆](android_faq.html#代码混淆怎么做)。

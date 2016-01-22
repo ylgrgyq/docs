@@ -1276,7 +1276,7 @@ public class Signature {
 * nonce 随机字符串 nonce
 * signedPeerIds 放行的 clientId 列表，v2 中已经**废弃不用**
 
-下面的代码展示了基于 LeanCloud 云代码进行签名时，客户端的实现片段，你可以参考它来完成自己的逻辑实现：
+下面的代码展示了基于 LeanCloud 云引擎进行签名时，客户端的实现片段，你可以参考它来完成自己的逻辑实现：
 
 ```
 public class KeepAliveSignatureFactory implements SignatureFactory {
