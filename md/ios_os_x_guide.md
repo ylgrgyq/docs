@@ -1834,7 +1834,7 @@ NSArray<AVObject *> *posts = [query findObjects];
 使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
 
 ``` objc
-    NSDictionary *parameters=@{...};
+    NSDictionary *parameters = @{...};
 
     [AVCloud callFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
         // 执行结果
@@ -1842,6 +1842,22 @@ NSArray<AVObject *> *posts = [query findObjects];
 ```
 
 `aFunctionName` 是函数的名称，`parameters` 是传入的函数参数，`block` 对象作为调用结果的回调传入。
+
+### RPC 云引擎调用
+
+上文提到的 `+[AVCloud callFunctionInBackground:withParameters:block:]` 方法返回的结果是 `NSDictionary` 对象，而不是 `AVObject` 对象。为了实现直接返回 `AVObject` 对象，iOS SDK 在 v3.1.6.6 中加入了 RPC 调用。
+
+RPC 云引擎调用的方法签名以 `rpc` 方法打头，例如 `+[AVCloud rpcFunctionInBackground:withParameters:block:]`，除此之外，还有其他的变种。
+
+以下是 RPC 云引擎调用的一个示例：
+
+``` objc
+    NSDictionary *parameters = @{...};
+
+    [AVCloud rpcFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
+        // 执行结果
+    }];
+```
 
 ### 区分生产环境调用
 
