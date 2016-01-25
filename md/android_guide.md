@@ -493,7 +493,7 @@ String[] names = {"LeanCloud官方客服", "LeanCloud江宏", "滚滚艾买提"}
 query.whereContainedIn("pubUser", Arrays.asList(names));
 ```
 
-相反，你想查询排除「LeanCloud官方客服、LeanCloud江宏、滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用 
+相反，你想查询排除「LeanCloud官方客服、LeanCloud江宏、滚滚艾买提」这三个账号的其他人的微博（类似 SQL 中的 `not in` 查询），你可以使用
 `whereNotContainedIn` 方法来实现。
 
 ```java
@@ -922,7 +922,7 @@ Post postReference = AVObject.createWithoutData(Post.class, post.getObjectId());
 public class Post extends AVObject {
   public Post(){
   }
-  
+
   public Post(Parcel in){
     super(in);
   }
@@ -1145,12 +1145,12 @@ AVFile 可以让你的应用程序将文件存储到服务器中，比如常见�
 在这个例子中，我们将一段文本保存到服务器端：
 
 ```java
-AVFile avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());  
-avFile.saveInBackground();                                                 
-AVObject avObject = new AVObject("Post");                                  
-avObject.put("content", "#花儿与少年# 迪拜疯狂之旅");                             
-avObject.put("attached", avFile);                                          
-avObject.saveInBackground();                                               
+AVFile avFile = new AVFile("walking in Dubai", "hello Dubai".getBytes());
+avFile.saveInBackground();
+AVObject avObject = new AVObject("Post");
+avObject.put("content", "#花儿与少年# 迪拜疯狂之旅");
+avObject.put("attached", avFile);
+avObject.saveInBackground();
 ```
 
 AVFile 构造函数的第一个参数指定文件名称，第二个参数接收一个 byte 数组，也就是将要上传文件的二进制。
@@ -1693,6 +1693,25 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 ```
 
 `publishPost` 是函数的名称，`parameters` 是传入的函数参数，`FunctionCallback` 对象作为调用结果的回调传入。
+
+### rpc 调用函数
+
+上文提到的 `callFunction` 方法的返回并不支持 AVObject 类型的解析，很多用户不得不通过 HashMap 来返回结果。考虑到这个因素，我们在 v3.10.2 提供了 `rpcFunction` 以支持 AVObject 类型。
+
+``` java
+    AVObject post = new AVObject("Post");
+    post.put("title", "新增 RPC 远程过程调用功能");
+    post.save();
+
+    AVCloud.rpcFunctionInBackground("publishPost", complexObject,
+        new FunctionCallback<AVObject>() {
+          @Override
+          public void done(AVObject object, AVException e) {
+            Assert.assertNull(e);
+          }
+        });
+
+```
 
 ### 生产环境和测试环境
 
