@@ -921,6 +921,7 @@ Post postReference = AVObject.createWithoutData(Post.class, post.getObjectId());
 @AVClassName("Post")
 public class Post extends AVObject {
   public Post(){
+    super();
   }
 
   public Post(Parcel in){
