@@ -36,6 +36,10 @@
 
 {% block run_in_local_command %}{% endblock %}
 
+窗口会提示输入 Master Key，该信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
+
+<div class="callout callout-info">复制粘贴 Master Key 后，窗口不会有任何显示，直接按回车键确认即可。</div>
+
 应用即可启动运行：<http://localhost:3000>
 
 可以通过下列命令确认云函数工作正常，该函数定义在 {% block cloud_func_file %}{% endblock %} 文件中：
@@ -52,13 +56,13 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 
 ### 部署到云引擎
 
-部署到测试环境：
+部署到预备环境：
 
 ```
 $ avoscloud deploy
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://dev.${your_app_domain}.avosapps.com` 访问你应用的测试环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的预备环境。
 
 部署到生产环境：
 
@@ -66,7 +70,7 @@ $ avoscloud deploy
 $ avoscloud publish
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.avosapps.com` 访问你应用的生产环境。
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.leanapp.cn` 访问你应用的生产环境。
 
 通过下列命令可以确认云函数在云引擎上工作正常：
 
@@ -91,10 +95,10 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 LC_APP_ID|当前应用的 App Id
 LC_APP_KEY|当前应用的 App Key
 LC_APP_MASTER_KEY|当前应用的 Master Key
-LC_APP_ENV|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>测试环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
+LC_APP_ENV|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>预备环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
 LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
 
-**提示**：如果在客户端想调用云引擎的测试环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; `AV.setProduction(production)`](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求测试环境；设置为 `1` 将请求生产环境，默认为 `1`。
+**提示**：如果在客户端想调用云引擎的预备环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; `AV.setProduction(production)`](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 production 设置为 `0` 则该 SDK 将请求预备环境；设置为 `1` 将请求生产环境，默认为 `1`。
 
 ### 安装
 
@@ -119,12 +123,12 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 * 应用有 Android、iOS 甚至 Windows Phone 客户端，但是很多业务逻辑都是一样的，你希望能将这部分逻辑抽取出来，只维护一份。
 * 有些逻辑希望能够较灵活的调整（比如某些个性化列表的排序规则），但又不想频繁的更新和发布移动客户端。
 * 有些逻辑需要的数据量很大，或者运算成本高（比如某些统计汇总需求），你不希望在移动客户端进行运算，因为这样会消耗大量的网络流量和手机运算能力。
-* 你希望能在特定操作时触发一段逻辑（我们称为 Hook 函数），比如：用户注册后对该用户增加一些信息记录用于统计；或某业务数据发生变化后希望做一些别的业务操作。这些代码不适合放在移动客户端（比如因为上面提到的几个原因）。
+* 当应用执行特定操作时，由云端系统自动触发一段逻辑（称为 [Hook 函数](#Hook_函数)），比如：用户注册后对该用户增加一些信息记录用于统计；或某业务数据发生变化后希望做一些别的业务操作。这些代码不适合放在移动客户端（比如因为上面提到的几个原因）。
 * 你希望有能有定时任务，比如每天凌晨清理垃圾注册账号等等。
 
 这时，你可以使用云引擎的云函数。云函数是一段部署在服务端的代码，编写 JavaScript 或者 Python 代码，并部署到我们的平台上，可以很好的完成上述需求。
 
-你可以使用 {{ "" if environment == "python" else "[在线定义函数](#在线定义函数) 或者 "}}[项目定义函数](#项目定义函数) 来开发云函数：前者很方便快捷，不需要涉及项目依赖、部署等问题；后者可以提供更为强大的灵活性和自主性。
+你可以使用 {{ "" if environment == "python" else "[在线定义函数](#在线定义函数) 或者 "}}[项目定义函数](#项目定义函数) 来开发云函数。{{ "" if environment == "python" else "在线定义函数操作方便，不需要涉及项目依赖和部署等问题；项目定义函数可以提供更多的灵活性和自主性。"}}
 
 示例项目中 {% block cloud_func_file %}{% endblock %} 文件定义了一个很简单的 `hello` 云函数。现在让我们看一个明显较复杂的例子来展示云引擎的用途。在云端进行计算的一个重要理由是，你不需要将大量的数据发送到设备上做计算，而是将这些计算放到服务端，并返回结果这一点点信息就好。
 
@@ -146,7 +150,7 @@ LC_APP_PORT|当前应用开放给外网的端口，只有监听此端口，用�
 
 `averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须给 `request.params.movie` 提供参数。
 
-### 调用云函数
+### REST API 调用云函数
 
 云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云引擎」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
 
@@ -178,7 +182,9 @@ https://leancloud.cn/1.1/functions/averageStars
 }
 ```
 
-#### 调用已定义的函数
+如有需要，也可以 [自定义错误响应码](#错误响应码)。 
+
+### 云引擎调用云函数
 
 在云引擎中也可以使用 {% block runFuncName %}{% endblock %} 调用 {% block defineFuncName %}{% endblock %} 定义的云函数：
 
@@ -186,69 +192,73 @@ https://leancloud.cn/1.1/functions/averageStars
 
 API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
-### beforeSave
+### Hook 函数
 
-在某些情况下，你可能不想简单地丢弃无效的数据，而是想先清理一下再保存，`beforeSave` 可以帮你做到这一点。
+Hook 函数本质上是云函数，但它有固定的名称，定义之后会**由系统**在特定事件或操作（如数据保存前、保存后，数据更新前、更新后等等）发生时**自动触发**，而不是由开发者来控制其触发时机。
 
-在我们电影评分的例子里，你可能想保证评论不要过长，太长的单个评论可能难以显示。我们可以使用 `beforeSave` 来截断评论到 140 个字符：
+使用 Hook 函数需要注意 [防止死循环调用](#防止死循环调用)。
+
+#### {{hook_before_save}}
+
+在将对象保存到云端数据表之前，可以对数据做一些清理或验证。例如，一条电影评论不能过长，否则界面上显示不开，需要将其截断至 140 个字符：
 
 {% block beforeSaveExample %}{% endblock %}
 
-### afterSave
+#### {{hook_after_save}}
 
-如果想在保存对象后做一些动作，如发送一条推送通知，则可以通过 `afterSave` 函数来实现。例如，当一条留言保存后再更新一下这篇帖子的评论总数：
+在数据保存后触发指定操作，比如当一条留言保存后再更新一下所属帖子的评论总数：
 
 {% block afterSaveExample %}{% endblock %}
 
-在用户注册成功之后如果你想做一些事情可以定义以下函数：
+再如，在用户注册成功之后，给用户增加一个新的属性 from 并保存：
 
 {% block afterSaveExample2 %}{% endblock %}
 
-如果 `afterSave` 函数调用失败，save 请求仍然会返回成功应答给客户端。`afterSave` 发生的任何错误，都将记录到云引擎日志里。
+如果 `afterSave` 函数调用失败，save 请求仍然会返回成功应答给客户端。`afterSave` 发生的任何错误，都将记录到云引擎日志里，可以到 [控制台 / 存储 / 云引擎 / 日志](https://leancloud.cn/cloud.html?appid={{appid}}#/log) 中查看。
 
-### beforeUpdate
+#### {{hook_before_update}}
 
 {% block beforeUpdate %}
-同样，除了保存对象之外，更新一个对象也是很常见的操作，我们允许你在更新对象前执行特定的动作，这是通过 `beforeUpdate` 函数实现的，你可以在这个 Hook 中知道哪些字段被修改了，还可以在特定情况下拒绝这次修改：
+在更新对象前执行操作，这时你可以知道哪些字段已被修改，还可以在特定情况下拒绝本次修改：
 
 {% block beforeUpdateExample %}{% endblock %}
 
 **注意**：传入的对象是一个尚未保存到数据库的临时对象，并不保证与最终储存到数据库的对象完全相同，这是因为修改中可能包含自增、数组增改、关系增改等原子操作。
 {% endblock %}
 
-### afterUpdate
+#### {{hook_after_update}}
 
-你还可以在在更新对象后执行特定的动作，这是通过 `afterUpdate` 函数实现的。比如每次修改文章后简单地记录日志：
+在更新对象后执行特定的动作，比如每次修改文章后记录下日志：
 
 {% block afterUpdateExample %}{% endblock %}
 
-###  beforeDelete
+#### {{hook_before_delete}}
 
-很多时候，你希望在删除一个对象前做一些检查工作。比如你要在删除一个相册（Album）前，去检测这个相册里的图片（Photo）是不是已经都被删除了，这都可以通过 `beforeDelete` 函数来定义一个 Hook（callback）函数来做这些检查。示例代码：
+在删除一个对象之前做一些检查工作，比如在删除一个相册 Album 前，先检查一下该相册中还有没有照片 Photo：
 
 {% block beforeDeleteExample %}{% endblock %}
 
-###  afterDelete
+#### {{hook_after_delete}}
 
-另一些情况下，你可能希望在一个对象被删除后执行操作，例如递减计数、删除关联对象等。同样以相册为例，这次我们不在 `beforeDelete`  中检查是否相册中还有照片，而是在相册删除后，同时删除相册中的照片，这是通过 `afterDelete` 函数来实现：
+在被删一个对象后执行操作，例如递减计数、删除关联对象等等。同样以相册为例，这次我们不在删除相册前检查是否还有照片，而是在删除后，同时删除相册中的照片：
 
 {% block afterDeleteExample %}{% endblock %}
 
-### onVerified
+#### {{hook_on_verified}}
 
-很多时候，你希望在用户通过邮箱或者短信验证的时候对该用户做一些其他操作，可以增加 `onVerified`函数：
+当用户通过邮箱或者短信验证时，对该用户执行特定操作。比如：
 
 {% block onVerifiedExample %}{% endblock %}
 
-函数的第一个参数是验证类型：短信验证为 `sms`，邮箱验证为 `email`。另外，数据库中相关的验证字段，如 `emailVerified` 不需要修改，我们已经为你更新完成。
+函数的第一个参数是验证类型。短信验证为 `sms`，邮箱验证为 `email`。另外，数据库中相关的验证字段，如 `emailVerified` 不需要修改，系统会自动更新。
 
-### onLogin
+#### {{hook_on_login}}
 
-有些时候你可能需要禁止一些用户登录（比如黑名单内的用户），可以定义以下函数：
+在用户登录之时执行指定操作，比如禁止在黑名单上的用户登录：
 
 {% block onLoginExample %}{% endblock %}
 
-### 实时通信相关函数
+#### 实时通信 Hook 函数
 
 请阅读 [实时通信概览 &middot; 云引擎 Hook](realtime_v2.html#云引擎_Hook) 来了解以下函数的具体用法：
 
@@ -258,6 +268,53 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 - `_conversationAdd`
 - `_conversationRemove`
 
+#### 防止死循环调用
+
+在实际使用中有这样一种场景：在 `Post` 类的 `afterUpdate` Hook 函数中，对传入的 `Post` 对象做了修改并且保存，而这个保存动作又会再次触发 `afterUpdate`，由此形成死循环。针对这种情况，我们为所有 Hook 函数传入的 `request.object` 对象做了处理，以阻止死循环调用的产生。
+
+不过请注意，以下情况还需要开发者自行处理：
+
+- 对传入的 `request.object` 对象进行 `fetch` 操作。
+- 重新构造传入的 `request.object` 对象，如使用 `AV.Object.createWithoutData()` 方法。
+
+对于使用上述方式产生的对象，请根据需要自行调用以下 API：
+
+- `object.disableBeforeHook()` 或 
+- `object.disableAfterHook()` 
+
+这样，对象的保存或删除动作就不会再次触发相关的 Hook 函数。
+
+```javascript
+AV.Cloud.afterUpdate('Post', function(request) {
+    // 直接修改并保存对象不会再次触发 afterUpdate Hook 函数
+    request.object.set('foo', 'bar');
+    request.object.save().then(function(obj) {
+      // 你的业务逻辑
+    });
+
+    // 如果有 fetch 操作，则需要在新获得的对象上调用相关的 disable 方法
+    // 来确保不会再次触发 Hook 函数
+    request.object.fetch().then(function(obj) {
+      obj.disableAfterHook();
+      obj.set('foo', 'bar');
+      return obj.save();
+    }).then(function(obj) {
+      // 你的业务逻辑
+    });
+
+    // 如果是其他方式构建对象，则需要在新构建的对象上调用相关的 disable 方法
+    // 来确保不会再次触发 Hook 函数
+    var obj = AV.Object.createWithoutData('Post', request.object.id);
+    obj.disableAfterHook();
+    obj.set('foo', 'bar');
+    obj.save().then(function(obj) {
+      // 你的业务逻辑
+    });
+  });
+```
+
+**提示**：云引擎从 [0.3.0](https://github.com/leancloud/leanengine-node-sdk/blob/master/CHANGELOG.md#v030-20151231) 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
+
 ### 错误响应码
 
 {% block errorCodeExample %}{% endblock %}
@@ -266,7 +323,15 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 
 {% block errorCodeExample2 %}{% endblock %}
 
-客户端收到的响应： `{"code":123,"error":"custom error message"}`
+客户端收到的响应： `{"code":123,"error":"自定义错误信息"}`
+
+#### Hook 函数的区别
+
+为 `{{hook_before_save}}` 这类的 hook 函数定义错误码，需要这样：
+
+{% block errorCodeExampleForHooks %}{% endblock %}
+
+客户端收到的响应为：`Cloud Code validation failed. Error detail : {"code":123, "message": "自定义错误信息"}`，然后通过**截取字符串**的方式取出错误信息，再转换成需要的对象。
 
 ## 发送 HTTP 请求
 
@@ -280,7 +345,7 @@ API 参数详解参见 {% block runFuncApiLink %}{% endblock %}。
 ---|---
 <span style="white-space: nowrap;">定义函数</span>|云引擎的简单模式，可以直接在线维护云引擎方法。
 定时任务|可以设置一些定时任务，比如每天凌晨清理无用数据等。
-<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到测试环境或者生产环境。
+<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到预备环境或者生产环境。
 日志|用于查看云引擎项目的日志
 统计|用于查看云引擎项目的一些数据统计
 设置|用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
@@ -339,19 +404,19 @@ if (name) {
 **若想发送 HTTP 请求，请参考下文的 [发送 HTTP 请求](#发送_HTTP_请求)**。
 
 
-点击保存后，云引擎会在后台编译、保存，并将代码部署到「测试环境」，这个过程可能需要十几秒钟的时间，请耐心等待。过程全部完成后，页面上方会提示「已更新到测试环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
+点击保存后，云引擎会在后台编译、保存，并将代码部署到预备环境，这个过程可能需要十几秒钟的时间，请耐心等待。过程全部完成后，页面上方会提示「已更新到预备环境」；如果有错误（比如编译错误）则会出现类似提示：`加载代码出错: SyntaxError: Unexpected token )`。
 
 ### 发布
 
-如果函数部署「测试环境」成功，就可以点击 **发布** 按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
+如果函数部署「预备环境」成功，就可以点击 **发布** 按钮将函数发布到「生产环境」。同样该过程可能需要十几秒钟的时间，请耐心等待。全部完成后，页面上方会提示「已发布到生产环境」。
 
 ### 同步
 
-对于某个函数，可能生产环境运行一个版本，而测试环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的 **测试环境** 按钮会变成蓝色：
+对于某个函数，可能生产环境运行一个版本，而预备环境正在开发一个新的版本，两个环境的代码是不一致的，这时函数列表页面相关函数的 **预备环境** 按钮会变成蓝色：
 
 ![image](images/cloud_code_snippet_diff_version.png)
 
-当你在测试环境开发完成，点击 **发布** 后，两个环境的代码将会统一，这时 **测试环境** 按钮变为灰色。
+当你在预备环境开发完成，点击 **发布** 后，两个环境的代码将会统一，这时 **预备环境** 按钮变为灰色。
 
 ### 测试
 
@@ -371,7 +436,7 @@ if (name) {
 
 ### 删除
 
-如果你确定某个函数已经不再需要，可以在函数列表页面点击 **删除** 按钮将其删除。**删除后该函数和其所有历史记录都将被删除，而且不能恢复。**删除动作会重新部署测试和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
+如果你确定某个函数已经不再需要，可以在函数列表页面点击 **删除** 按钮将其删除。**删除后该函数和其所有历史记录都将被删除，而且不能恢复。**删除动作会重新部署预备和生产环境，这个过程可能需要十几秒钟的时间，请耐心等待。
 {% endif %}
 
 ## 项目定义函数
@@ -435,7 +500,7 @@ git push -u origin master
 
 ![image](images/csdn_code3.png)
 
-下一步，部署源码到测试环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到预备环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -475,7 +540,7 @@ git push -u origin master
 
 ![image](images/cloud_code_github_deploy_key.png)
 
-下一步，部署源码到测试环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
+下一步，部署源码到预备环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -574,7 +639,7 @@ crontab 的基本语法是：
 
 ### 定时器数量
 
-开发环境和测试环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
+生产环境和预备环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
 
 ### 超时
 
@@ -600,7 +665,7 @@ crontab 的基本语法是：
 
 这一切都需要你去创建一个 web 应用，并且从 VPS 厂商那里购买一个虚拟主机来运行 web 应用，你可能还需要去购买一个域名。
 
-不过现在，云引擎为你提供了网站托管功能，可以让你为应用设置一个二级域名 `xxx.avosapps.com`（美国区为 `xxx.avosapps.us` ），并把你的 web 应用部署到该域名之下运行，同时支持静态资源和动态请求服务。
+不过现在，云引擎为你提供了网站托管功能，可以让你为应用设置一个二级域名 `${your_app_domain}.leanapp.cn`（美国区为 `${your_app_domain}.avosapps.us` ），并把你的 web 应用部署到该域名之下运行，同时支持静态资源和动态请求服务。
 
 ### 设置域名
 
@@ -610,7 +675,7 @@ crontab 的基本语法是：
 
 上面将应用的二级域名设置为 **myapp**，设置之后，你应该可以马上访问：
 
-- http://myapp.avosapps.com
+- http://myapp.leanapp.cn
 - http://myapp.avosapps.us
 
 可能因为 DNS 生效延迟暂时不可访问，请耐心等待或者尝试刷新 DNS 缓存，如果还没有部署，你看到的应该是一个 404 页面。
@@ -627,7 +692,7 @@ crontab 的基本语法是：
 
 其他用户如果需要为应用绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.cn>，或者从控制台菜单中选择 [帮助 / 技术支持](https://ticket.leancloud.cn/)，通过工单来提出申请：
 
-* 你已经绑定的 avosapps.com 或 avosapps.us 二级子域名（请参考设置域名）
+* 你已经绑定的 leanapp.cn 或 avosapps.us 二级子域名（请参考设置域名）
 * 要绑定的域名（必须是你名下的域名）
 * 你的注册邮箱（必须与发送者的邮箱一致）
 * 你想要绑定的 App Id（该应用必须位于注册邮箱的用户名下）
@@ -635,7 +700,7 @@ crontab 的基本语法是：
 
 我们会在 3 个工作日内完成审核，如果审核通过将为你绑定域名。请在绑定操作完成后配置 DNS：
 
-- 将要绑定域名的 CNAME 或者 A 记录指向 avosapps.com（国内）或 avosapps.us（美国）
+- 将要绑定域名的 CNAME 或者 A 记录指向 leanapp.cn（国内）或 avosapps.us（美国）
 
 #### 域名备案流程
 
@@ -790,23 +855,23 @@ WAP<br/>
 {% block custom_session %}
 {% endblock %}
 
-### 启用 HTTPS
+### 自动重定向到 HTTPS
 
 为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
-因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.avosapps.com` 的网站通过 https 访问，你只要这样：
+因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.leanapp.cn` 的网站通过 https 访问，你只要这样：
 
 {% block https_redirect %}{% endblock %}
 
-部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过 HTTPS 访问。测试环境的域名仍然不会启用 HTTPS。
+部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过 HTTPS 访问。
 
-### 测试环境和开发环境
+### 预备环境和开发环境
 
-前面已经谈到云引擎的测试和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于 网站托管 就没有办法通过这个HTTP头来方便的区分。
+前面已经谈到云引擎的预备和生产环境之间的区别，可以通过 HTTP 头部 `X-LC-Prod` 来区分。但是对于网站托管就没有办法通过这个 HTTP 头来区分了。
 
-因此，我们其实为每个应用创建了两个域名，除了 `xxx.avosapps.com` 之外，每个应用还有 `dev.xxx.avosapps.com` 域名作为测试环境的域名。
+因此，我们其实为每个应用创建了两个域名，除了 `${your_app_domain}.leanapp.cn` 之外，每个应用还有 `stg-${your_app_domain}.leanapp.cn` 域名作为预备环境的域名。
 
-部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** / **部署到生产环境** 按钮切换之后，可以在 `xxx.avosapps.com` 看到最新的运行结果。
+部署的测试代码将运行在这个域名之上，在测试通过之后，通过菜单 **部署** > **部署到生产环境** 按钮切换之后，可以在 `${your_app_domain}.leanapp.cn` 看到最新的运行结果。
 
 ## 第三方平台接入
 
@@ -822,15 +887,15 @@ WAP<br/>
 
 ## 运行环境区分
 
-云引擎区分「测试环境」和「生产环境」，两个环境虽然使用 [不同的二级域名](#部署到云引擎)，但是使用相同的数据源。代码在测试环境测试通过后，再部署到生产环境是更安全的做法。
+云引擎区分「预备环境」和「生产环境」，两个环境虽然使用 [不同的二级域名](#部署到云引擎)，但是使用相同的数据源。代码在预备环境测试通过后，再部署到生产环境是更安全的做法。
 
-有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、测试环境或生产环境），从而做不同的处理：
+有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、预备环境或生产环境），从而做不同的处理：
 
 {% block get_env %}{% endblock %}
 
 你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
 
-* 0 表示调用测试环境
+* 0 表示调用预备环境
 * 1 表示调用生产环境
 
 具体到 SDK 内的调用，请看各个平台的 SDK 指南。
@@ -841,7 +906,7 @@ WAP<br/>
 {"code":1,"error":"The cloud code isn't deployed for prod 1."}
 ```
 
-这个错误通常是只是部署了测试环境。通过点击菜单 **Git 部署** / **部署到生产环境** / **部署**，可以将开发环境的当前版本的代码部署到生产环境：
+这个错误通常是只是部署了预备环境。通过点击菜单 **Git 部署** / **部署到生产环境** / **部署**，可以将开发环境的当前版本的代码部署到生产环境：
 
 ![image](images/cloud_code_deploy_prod.png)
 

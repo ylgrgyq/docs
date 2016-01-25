@@ -132,8 +132,6 @@ var conversationObj;
 realtimeObj = AV.realtime({
     appId: appId,
     clientId: clientId,
-    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-    encodeHTML: true,
     // 是否开启服务器端认证
     // auth: authFun,
     // 是否使用其他地区的节点
@@ -257,23 +255,42 @@ message 事件回调函数传入参数中的 cid 字段，即是该 Conversation
 
 详细请看《[实时通信开发指南 - 权限和认证](realtime_v2.html#权限和认证)》。
 
+另外，在 [Demo1](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中，我们也增加了一个实际的例子。
+
 ### 防御 XSS
 
-Web 端实现任何可以将用户输入直接输出到界面上的应用都要注意防止产生 XSS（跨站脚本攻击），实时通信 SDK 支持在 SDK 层面开启这个防御，但是我们默认不开启，所以你可以在实例化 realtimeObject 的时候，开启这个选项。
+Web 端实现任何可以将用户输入直接输出到界面上的应用，都要注意防止产生 XSS（跨站脚本攻击）。实时通信 SDK 为了保证数据上的纯净性及功能的纯净，没有在 SDK 层面做 HTML 字符的转义。所以当你实现一个 Web 产品时，一定要对用户的输出做字符串 HTML 转义。当然现在的很多 Web 端框架已经自带防御 XSS 的功能，比如 jQuery、Angular、React 等。
 
-注意：我们没有对 clientId 做任何过滤，也不建议直接输出 clientId，如果你要输出 clientId 到 Web 页面中，记得要自己手工做 HTML 转义，防止 XSS。
+注意：不仅要对内容，如果界面上会显示 clientId，也要做 HTML 过滤。
+
+如果你没有使用任何框架来防御 XSS，可以使用如下代码，用来过滤某个字符串中的 HTML 字符。
 
 ```javascript
-// 创建实时通信实例（支持单页多实例）
-var appId = '{{appid}}';
-realtimeObj = AV.realtime({
-    appId: appId,
-    clientId: clientId,
-    // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-    encodeHTML: true
-    // 是否开启服务器端认证
-    // auth: authFun
-});
+
+// HTML 转义方法，可以防止 XSS
+tool.encodeHTML = function(string) {
+  var encodeHTML = function(str) {
+    if (typeof(str) === 'string') {
+      return str.replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    } else {
+      // 数字
+      return str;
+    }
+  };
+
+  // Object 类型
+  if (typeof(string) === 'object') {
+    for (var key in string) {
+      string[key] = tool.encodeHTML(string[key]);
+    }
+    return string;
+  } else {
+    // 非 Object 类型
+    return encodeHTML(string);
+  }
+};
 ```
 
 ## 与 iOS、Android 等客户端通信
@@ -341,7 +358,7 @@ roomObj.send({
 // 发送自定义类型数据
 roomObj.send({
     _lctype: 123,
-    data: {
+    attr: {
       test: 'abc'
     }
 }, function(data) {
@@ -378,12 +395,10 @@ AV.realtime(options, callback)
 ---|---|---|---|---
 **options**|Object|必须||配置实时通信服务所需的必要参数。其中包括：
 &nbsp;&nbsp;&nbsp;&nbsp; appId|String|必须||应用的 appId，在 **控制台** > **设置** > **基本信息** 中可以查看。
-&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读 [实时通信概览 &middot; 权限和认证](realtime_v2.html#权限和认证)，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/tree/master/demo) 中的示例。
+&nbsp;&nbsp;&nbsp;&nbsp; authFun|Function|||可以传入权限认证的方法，每次当建立连接的时候就会去服务器请求认证，<br/>或者许可之后才能建立连接，详细阅读 [实时通信概览 &middot; 权限和认证](realtime_v2.html#权限和认证)，<br/>也可以参考 [Demo](https://github.com/leancloud/js-realtime-sdk/blob/master/demo/demo1/test.js#L248) 中的示例。
 &nbsp;&nbsp;&nbsp;&nbsp; clientId|String|必须||当前客户端的唯一 id，用来标示当前客户端。
 &nbsp;&nbsp;&nbsp;&nbsp; secure|Boolean||true|是否关闭 WebSocket 的安全链接，即由 wss 协议转为 ws 协议，关闭 SSL 保护。<br/>默认开启 true，false 为关闭。
-&nbsp;&nbsp;&nbsp;&nbsp; region|String||cn|选择服务部署的节点，如果是美国节点，则设置为 `us`，如果是国内节点，则设置为 `cn`
-&nbsp;&nbsp;&nbsp;&nbsp; encodeHTML|Boolean||false|是否开启 HTML 转义，在 SDK 层面直接防御 XSS（跨站脚本攻击）。<br/>该选项默认为关闭 false，true 为开启。
-
+&nbsp;&nbsp;&nbsp;&nbsp; region|String||cn|选择服务部署的节点，如果是美国节点，则设置为 `us`，如果是国内节点，则设置为 `cn`。
 
 <!-- &nbsp; 用来维护层级，请勿去掉。-->
 
@@ -401,8 +416,6 @@ var realtimeObject = AV.realtime({
    appId: appId,
    // clientId 是自定义的名字，当前客户端可以理解的名字
    clientId: clientId,
-   // 是否开启 HTML 转义，SDK 层面开启防御 XSS
-   encodeHTML: true,
    // auth 是权限校验的方法函数
    // auth: authFun,
    // 是否使用美国节点
@@ -417,7 +430,7 @@ var realtimeObject = AV.realtime({
 realtimeObject.on('open', function() {
    console.log('与服务器连接成功！');
 });
-// http://jsplay.avosapps.com/rot/embed?js,console
+// http://jsplay.leanapp.cn/rot/embed?js,console
 ```
 
 ### AV.realtime.version
@@ -932,7 +945,8 @@ RealtimeObject.query(options, callback)
 参数|类型|约束|默认|说明
 ---|---|---|---|---
 **options**|Object|||一些配置参数
-&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|是否要去掉内置大字段（成员列表、静音列表、当前用户静音的状态）。
+&nbsp;&nbsp;&nbsp;&nbsp; compact|Boolean||false|去掉大字段（成员列表、静音列表、当前用户静音的状态），需要 2.4.0 以上版本。
+&nbsp;&nbsp;&nbsp;&nbsp; withLastMessages|Boolean||false|同时返回对话的最后一条消息，需要 2.4.0 以上版本。
 &nbsp;&nbsp;&nbsp;&nbsp; limit|Number||10|一次获取的条目数量
 &nbsp;&nbsp;&nbsp;&nbsp; skip|Number||0|跳过多少个索引，比如 skip: 1000，就是从 1001 开始查询。
 &nbsp;&nbsp;&nbsp;&nbsp; sort|String||-lm|默认为最近对话反序，排序字段
@@ -1026,7 +1040,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1077,7 +1091,7 @@ var room = realtimeObject.room({
         'LeanCloud01',
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1127,7 +1141,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1178,7 +1192,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1229,7 +1243,7 @@ var room = realtimeObject.room({
     members: [
         'LeanCloud02'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1281,7 +1295,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1381,7 +1395,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1429,7 +1443,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1476,7 +1490,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1534,7 +1548,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1632,7 +1646,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1680,7 +1694,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });
@@ -1837,7 +1851,7 @@ var room = realtimeObject.room({
         'LeanCloud02',
         'LeanCloud03'
     ],
-    data: {
+    attr: {
         title: 'testTitle'
     }
 });

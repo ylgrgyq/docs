@@ -31,12 +31,12 @@ timeZone| |设备设定的时区
 
 ### Notification
 
-对应消息菜单里的推送记录，表示一条推送消息，它包括下列属性：
+对应 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 里的一条记录，表示一条推送消息，它包括下列属性：
 
 名称|适用平台|描述
 ---|---|---
 data| |本次推送的消息内容，JSON 对象。
-invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/CommunicatingWIthAPS.html#//apple_ref/doc/uid/TP40008194-CH101-SW12) 错误。**如果这个数字过大，请留意证书是否正常。**
+invalidTokens|iOS|本次推送遇到多少次由 APNS 返回的 [INVALID TOKEN](https://developer.apple.com/library/mac/technotes/tn2265/_index.html#//apple_ref/doc/uid/DTS40010376-CH1-TNTAG32) 错误。**如果这个数字过大，请留意证书是否正常。**
 prod|iOS|使用什么环境证书。**dev** 表示开发证书，**prod** 表示生产环境证书。
 status| |本次推送的状态，**in-queue** 表示仍然在队列，**done** 表示完成，**scheduled** 表示定时推送任务等待触发中。
 devices| |本次推送的接收设备数目，注意这个数字并不表示实际送达，而是说当时符合查询条件的、并且已经推送给 Apple APNS 或者 Android Push Server 的总设备数。
@@ -47,18 +47,22 @@ errors| | 本次推送过程中的错误信息。
 
 推送本质上是根据一个 query 条件来查询 _Installation 表里符合条件的设备，然后将消息推送给设备。因为 `_Installation` 是一个可以完全自定义属性的 Key-Value Object，因此可以实现各种复杂条件推送，例如频道订阅、地理位置信息推送、特定用户推送等。
 
-这里重点说明一下 **subscribers** 这个属性，它的值表示我们查找出来的符合条件的 Installation 数量。当值为 0 时，表示没有找到任何符合目标条件的设备，这时自然所有人都收不到推送通知；当值不为 0 时，仅仅说明找到了这么多符合条件的设备，但并不保证这些设备都能收到推送通知。
+这里重点说明一下 **devices** 这个属性，它的值表示我们查找出来的符合条件的 Installation 数量。当值为 0 时，表示没有找到任何符合目标条件的设备，这时自然所有人都收不到推送通知；当值不为 0 时，仅仅说明找到了这么多符合条件的设备，但并不保证这些设备都能收到推送通知。
 
 ## iOS 消息推送
+
 请阅读 [iOS 推送开发文档](./ios_push_guide.html)。
 
 ## Android 消息推送
+
 请阅读 [Android 推送开发文档](./android_push_guide.html)。
 
 ## Windows Phone 消息推送
+
 请阅读 [Windows Phone 推送开发文档](./dotnet_push_guide.html)。
 
 ## 云代码和 JavaScript 创建推送
+
 请阅读 [JavaScript SDK 指南 - Push 通知](./js_guide.html#Push_通知)。
 我们还提供单独的 [JavaScript 推送客户端](https://github.com/leancloud/js-push-sdk/) 用于在网页中收发推送。
 
@@ -70,7 +74,7 @@ errors| | 本次推送过程中的错误信息。
 
 #### 保存 Installation
 
-##### 保存 iOS 设备的 DeviceToken
+##### DeviceToken
 
 iOS 设备通常使用 DeviceToken 来唯一标识一台设备。
 
@@ -89,9 +93,9 @@ curl -X POST \
   https://leancloud.cn/1.1/installations
 ```
 
-##### 保存 Android 设备的 installationId
+##### installationId
 
-对于 Android 设备，LeanCloud SDK 会自动生成 uuid 作为 installationId 保存到 LeanCloud。使用 REST API 来保存  installationId 的方法如下：
+对于 Android 设备，LeanCloud SDK 会自动生成 uuid 作为 installationId 保存到云端。使用 REST API 来保存  installationId 的方法如下：
 
 ```sh
 curl -X POST \
@@ -112,7 +116,7 @@ curl -X POST \
 
 ##### 订阅和退订频道
 
-通过设置 `channels` 属性来订阅某个推送频道：
+通过设置 `channels` 属性来订阅某个推送频道，下面假设 `mrmBZvsErB` 是待操作 Installation 对象的 objectId：
 
 ```sh
 curl -X PUT \
@@ -145,7 +149,9 @@ curl -X PUT \
 
 `channels` 本质上是数组属性，因此可以使用标准 [REST API](./rest_api.html#数组) 操作。
 
-#### 自定义属性
+#### 添加自定义属性
+
+假设 `mrmBZvsErB` 是待操作 Installation 对象的 objectId，待添加的自定义属性是 **userObjectId**，值为 `<用户的 objectId>`：
 
 ```sh
 curl -X PUT \
@@ -172,20 +178,29 @@ prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产�
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
 
->我们建议给 iOS 设备的推送都设置过期时间，才能保证推送的当时如果用户设置了飞行模式，在关闭飞行模式之后可以收到推送消息，可以参考 [Stackoverflow 帖子](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。
+#### 开发证书推送
+
+为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。
+
+#### 过期时间
+
+我们建议给 iOS 设备的推送都设置过期时间，这样才能保证在推送的当时，如果用户与 APNs 之间的连接恰好断开（如关闭了手机网络、设置了飞行模式等)，在连接恢复之后消息过期之前，用户仍然可以收到推送消息。可以参考 [Stackoverflow &middot; Push notification is not being delivered when iPhone comes back online](http://stackoverflow.com/questions/24026544/push-notification-is-not-being-delivered-when-iphone-comes-back-online)。
+
+过期时间的用法请参考 [过期时间和定期推送](#过期时间和定期推送)。
 
 #### 消息内容 Data
 
-对于 iOS 设备，`data` 属性可以是：
+对于 iOS 设备，data 属性可以是：
 
 ```
 {
   "data": {
    "alert":             "消息内容",
    "category":          "通知分类名称",
-   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
+   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串  'Increment'（大小写敏感）",
    "sound":             "声音文件名，前提在应用里存在",
-   "content-available": "如果你在使用 Newsstand, 设置为1来开始一次后台下载"
+   "content-available": "如果使用 Newsstand，设置为 1 来开始一次后台下载",
+   "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
   }
 }
 ```
@@ -216,12 +231,13 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
 {
   "data":{
     "alert":      "消息内容",
-    "title":      "显示在通知栏的标题"
+    "title":      "显示在通知栏的标题",
+    "custom-key": "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
   }
 }
 ```
 
-如果自定义 Receiver，需要设置 `action`，当然也可以自己加属性了:
+如果自定义 Receiver，需要设置 `action`：
 
 ```
 {
@@ -229,7 +245,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
     "alert":      "消息内容",
     "title":      "显示在通知栏的标题",
     "action":     "com.your_company.push",
-    "fromUserId": "自定义属性"
+    "custom-key": "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
   }
 }
 ```
@@ -255,13 +271,14 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
       "alert":             "消息内容",
       "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
       "sound":             "声音文件名，前提在应用里存在",
-      "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载"
+      "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载",
+      "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
     },
     "android": {
       "alert":             "消息内容",
       "title":             "显示在通知栏的标题",
       "action":            "com.your_company.push",
-      "fromUserId":        "自定义属性"
+      "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
     },
     "wp":{
       "alert":             "消息内容",
@@ -293,7 +310,7 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 
 后文会举一些例子，更多例子请参考 [REST API](./rest_api.html#查询) 查询文档。
 
-#### expiration_time、expiration_interval 和 push_time
+#### 过期时间和定时推送
 
 `expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 是一个 UTC 时间的字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ`。
 
@@ -317,7 +334,7 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 }
 ```
 
-`push_time` 是定期推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ` 的 UTC 时间，也可以结合 `expiration_interval`设定过期时间：
+`push_time` 是定时推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ` 的 UTC 时间，也可以结合 `expiration_interval` 设定过期时间：
 
 ```
 {
@@ -561,7 +578,65 @@ curl -X GET \
 
 其中 URL 里的 `:objectId` 替换成 `/push` 接口返回的 objectId 。
 
-将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)
+将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)。
+
+### 定时推送任务查询和取消
+
+可以使用 **master key** 查询当前正在等待推送的定时推送任务：
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{masterkey}},master"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/scheduledPushMessages
+ ```
+ 
+查询出来的结果类似：
+
+```json
+{
+  "results": [
+    {
+      "id": 1,
+      "expire_time": 1373912050838,
+      "push_msg": {
+        "through?": null,
+        "app-id": "OLnulS0MaC7EEyAJ0uA7uKEF-gzGzoHsz",
+        "where": {
+          "sort": {
+            "createdAt": 1
+          },
+          "query": {
+            "installationId": "just-for-test",
+            "valid": true
+          }
+        },
+        "prod": "prod",
+        "api-version": "1.1",
+        "msg": {
+          "message": "test msg"
+        },
+        "id": "XRs9jmWnLd0GH2EH",
+        "notificationId": "mhWjvHvJARB6Q6ni"
+      },
+      "createdAt": "2016-01-21T00:47:46.000Z"
+    }
+  ]
+}
+``` 
+
+其中 `push_msg` 就是该推送消息的详情，`expire_time` 是消息设定推送时间的 unix 时间戳。
+
+取消一个定时推送任务，要使用返回结果中最外层的 id。以上面的结果为例，即为 `results[0].id`，而不是 `results[0].push_msg.id`:
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}"          \
+  -H "X-LC-Key: {{masterkey}},master"        \
+  -H "Content-Type: application/json" \
+  https://leancloud.cn/1.1/scheduledPushMessages/:id
+```
 
 ## Installation 自动过期和清理
 
@@ -594,8 +669,8 @@ curl -X GET \
 * 当在一个已经存在的 Apple ID 上启用推送，请记得重新生成 **provisioning profile**，并到 XCode Organizer 更新。
 * 生产环境的推送证书必须在提交到 App Store 之前启用推送并生成，否则你需要重新提交 App Store。
 * 请在提交 App Store 之前，使用 Ad Hoc Profile 测试生产环境推送，这种情况下的配置最接近于 App Store。
-* 检查 _Notifcation 表的 `subscribers` 和 `status`，确认推送状态和接收设备数目正常。
-
+* 检查消息菜单里的推送记录中的 `devices` 和 `status`，确认推送状态和接收设备数目正常。
+* 检查消息菜单里的推送记录中的 `invalidTokens` 字段，如果该数字异常大，可能证书选择错误，跟设备 build 的 provisioning profile 不匹配。
 
 ### Android 排查建议
 

@@ -460,12 +460,12 @@ query.contains_all("arrayKey", [2, 3, 4])
 
 ### 对字符串类型做查询
 
-使用 start_with 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的。
+使用 startswith 来限制属性值以一个特定的字符串开头，这和 MySQL 的 LIKE 操作 符很像，因为有索引所以对于大的数据集这个操作也是很高效的。
 
 ```python
 # Finds barbecue sauces that start with "Big Daddy's".
 query = leancloud.Query(BarbecueSauce)
-query.starts_with("name", "Big Daddy's")
+query.startswith("name", "Big Daddy's")
 ```
 
 ### 关系查询

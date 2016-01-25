@@ -8,7 +8,7 @@
 
 * 一个完整的社交应用 `LeanChat`，类似微信，[LeanChat-Android](https://github.com/leancloud/leanchat-android)，[LeanChat-iOS](https://github.com/leancloud/leanchat-ios)
 * [JavaScript Demo](https://github.com/leancloud/leanmessage-javascript-sdk/tree/master/demo)
-* 便于调试的 [在线测试工具](http://chat.avosapps.com/)。
+* 便于调试的 [在线测试工具](http://chat.leanapp.cn/)。
 
 
 ## 功能和特性
@@ -113,8 +113,8 @@ Session 中的几个动词：
 
 ## 权限和认证
 
-为了满足开发者对权限和认证的需求，我们设计了签名的概念。你可以在
-LeanCloud 应用控制台 -> 设置 -> 应用选项中强制启用签名。启用后，所有的
+为了满足开发者对权限和认证的需求，我们设计了签名的概念。你可以在 
+[控制台 > 设置 > 应用选项 > 聊天、推送 / **聊天服务，启用签名认证**](/app.html?appid={{appid}}#/permission) 中强制启用签名。启用后，所有的
 Session open 和 watch 行为都需要包含签名，这样你可以对用户的登录以及他
 可以关注哪些用户，进而可以给哪些用户发消息进行充分的控制。
 

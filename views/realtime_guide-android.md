@@ -797,7 +797,7 @@ conv.sendMessage(msg,AVIMConversation.RECEIPT_MESSAGE_FLAG);
 要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
 ```
-AVIMClient.setOfflineMessagePush(boolean isOnlyCount);
+AVIMClient.setOfflineMessagePush(true);
 ```
 
 然后实现 AVIMConversationEventHandler 的代理方法 `onOfflineMessagesUnread` 来从服务端取回未读消息：
@@ -1049,7 +1049,7 @@ jerry.open(new AVIMClientCallback() {
    * @param name 对话的名字
    * @param attributes 对话的额外属性
    * @param isTransient 是否是暂态对话
-   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
+   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
    *                 为 false 时，则一直为创建新的对话
    *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
    *                 为 true 时，仅 members 为有效查询条件
@@ -1059,13 +1059,15 @@ jerry.open(new AVIMClientCallback() {
       final Map<String, Object> attributes, final boolean isTransient, final boolean isUnique,
       final AVIMConversationCreatedCallback callback)
 ```
-各个参数的含义如下：
-* members - 表示对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知
-* name - 表示对话的名字，主要是用于标记对话，让用户更好地识别对话
-* attributes - 表示额外属性
-* isTransient - 用于标注是否是临时对话
-* isUnique - 是否创建唯一对话，当 isUnique 为 true 时，如果当前已经有相同成员的对话存在则返回该对话，否则才创建新的对话，在 createConversation的多个重写中，没有 isUnique 参数的情况下，该值默认为 false
+参数说明：
 
+* members - 对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知。
+* name - 对话的名字，主要是用于标记对话，让用户更好地识别对话。
+* attributes - 额外属性
+* isTransient - 是否为 [暂态对话](#聊天室)
+* isUnique - 是否创建唯一对话，当 `isUnique` 为 true 时，如果当前已经有**相同成员**的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
+
+<div class="callout callout-info">由于暂态对话不支持创建唯一对话，所以将 `isTransient` 和 `isUnique` 同时设为 true 时并不会产生预期效果。</div>
 {% endblock %}
 
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
@@ -1292,7 +1294,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getConversationQuery();
+	  AVIMConversationQuery query = client.getQuery();
 	  query.setLimit(1);
 	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
@@ -1950,7 +1952,7 @@ private void TomQueryWithLimit() {
 
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
-{% block create_query_instance_method %}`AVIMClient.getConversationQuery()`{% endblock %}
+{% block create_query_instance_method %}`AVIMClient.getQuery()`{% endblock %}
 
 {% block chatroom_query_single %}
 
@@ -1962,8 +1964,8 @@ private void TomQueryWithLimit() {
     public void done(AVIMClient client, AVIMException e) {
       if (e == null) {
         //登录成功
-        //查询attr.topic为"奔跑吧，兄弟"的暂存聊天室
-        AVIMConversationQuery query = client.getConversationQuery();
+        //查询 attr.topic 为 "奔跑吧，兄弟" 的暂存聊天室
+        AVIMConversationQuery query = client.getQuery();
         query.whereEqualTo("attr.topic", "奔跑吧，兄弟");
         query.whereEqualTo("tr", true);
         //获取第一个对话

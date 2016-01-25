@@ -1,12 +1,10 @@
 # 离线数据分析使用指南
 
-## 简介
-
 针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了部分兼容 SQL 语法的离线数据分析功能。离线数据分析的数据来源是**前一天的数据备份**，并非最新的在线数据，在这里进行的任何操作都不会对应用的线上数据产生影响。
 
-## 启用离线数据分析
+当一个应用的所有数据表（即存储功能中的 Class）的总记录条数超过 10,000 时，离线数据分析功能将自动开启。云端准备离线数据的过程一般会持续数分钟或更长时间。记录数少于一万而无法使用离线数据分析的应用，可以使用 API 或直接在 [数据存储页面](/data.html?appid={{appid}}#/) 进行处理。
 
-为了启用离线数据分析，开发者需要在控制台的 [应用选项](/data.html?appid={{appid}}#/permission) 中勾选 **启用离线数据分析**。该选项一旦被设置，LeanCloud 会为开发者准备离线数据，这个过程一般会消耗数分钟或更多时间。如果一切顺利，你可以通过 **存储** >  **离线数据分析** 这个路径进入离线数据分析页面。如果不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们的工程师。
+离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 
 ## 类似 SQL 的查询分析语法
 
@@ -183,7 +181,7 @@ select count(*) as `count`, pubUser from Post group by pubUser
 
 ## 云引擎和 JavaScript SDK 对离线分析的支持
 
-JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，请参考 [《权限说明》](./leanengine_guide-cloudcode.html#权限说明)。**
+JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，请参考 [《权限说明》](leanengine_guide-cloudcode.html#权限说明)。**
 
 ### Job 启动
 

@@ -4,7 +4,7 @@
 
 * iOS 的 [AVConstants](/api-docs/iOS/docs/AVConstants.html)。
 * iOS v3.1.5 及之后的版本，网络请求操作相关的错误码，比如：28 表示请求超时、7 表示连接服务器失败，这些请参考 [**libcurl error codes**](http://curl.haxx.se/libcurl/c/libcurl-errors.html)。
-* Android 的 [AVException](/api-docs/android/doc/index.html)。
+* Android 的 [AVException](/api-docs/android/index.html)。
 
 ## 实时通信错误码
 
@@ -297,6 +297,16 @@
 
 * 信息 - `Fail to execute operation on storage.`
 * 含义 - 插入数据库失败，一般是数据格式或者内部错误，通常错误里包含更具体的错误信息。
+
+## 304
+
+* 信息 - `Database error.`
+* 含义 - 数据操作错误，一般是语法错误或者内部异常，请及时联系我们。
+
+## 305
+
+* 信息 - `No effect on updating/deleting a document.`
+* 含义 - 根据 where 条件更新或者删除对象不起作用，通常是因为条件不满足。
 
 ## 401
 

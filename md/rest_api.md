@@ -16,11 +16,18 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 1.1 | 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
 1.0|存在时间不准确的 Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
 
-## 快速参考
+## API 域名
 
-所有的 API 访问都是通过 HTTPS 进行的。API 访问需要在 <https://leancloud.cn> 域名下，相对路径前缀 __/1.1/__ 表明现在使用的是第 1.1 版的 API。
+所有 API 访问都通过 HTTPS 进行。API 访问域名为：
 
-在线测试 API，请打开 <https://leancloud.cn/apionline/>。
+- **中国节点**：<https://api.leancloud.cn> 
+- **美国节点**：<https://us-api.leancloud.cn>
+ 
+域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
+
+### 在线测试
+
+[API 在线测试工具](https://leancloud.cn/apionline/)，目前仅支持调试**中国节点**下的应用。
 
 ### 对象
 
@@ -408,38 +415,89 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP header 的 Content-Type 需要设置为 `application/json`。
 
-用户验证是通过 HTTP header 来进行的，__X-LC-Id__ 标明正在运行的是哪个 App 程序，而 __X-LC-Key__ 用来授权鉴定 endpoint。在下面的例子中，你的 App 的 key 被包含在命令中，你可以使用下拉框来切换显示其他 App 的示例代码。
+用户验证通过 HTTP header 来进行，**X-LC-Id** 标明正在运行的是哪个应用，**X-LC-Key** 用来授权鉴定 endpoint：
+
+```
+curl -X PUT \
+  -H "X-LC-Id: FFnN2hso42Wego3pWq4X5qlu" \
+  -H "X-LC-Key: UtOCzqb67d3sN12Kts4URwy8" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "更新一篇博客的内容"}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
 
 对于 JavaScript 使用，LeanCloud 支持跨域资源共享，所以你可以将这些 header 同 XMLHttpRequest 一同使用。
 
-
 #### 更安全的鉴权方式
 
-我们服务端目前支持一种新的 API 鉴权方式，用户仍然需要传递 X-LC-Id 的 HTTP 头表示 App id，但是不需要再传递 X-LC-Key。
+我们还支持一种新的 API 鉴权方式，即在 HTTP header 中使用 **X-LC-Sign** 来代替 **X-LC-Key**，以降低 App Key 的泄露风险。例如：
 
-取而代之的，增加了新 HTTP 头部 X-LC-Sign，它的值要求是一个形如 `sign,timestamp[,master]` 的字符串，其中：
+```
+curl -X PUT \
+  -H "X-LC-Id: FFnN2hso42Wego3pWq4X5qlu" \
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+  -H "Content-Type: application/json" \
+  -d '{"content": "在 HTTP header 中使用 X-LC-Sign 来更新一篇博客的内容"}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+**X-LC-Sign** 的值是由 `sign,timestamp[,master]` 组成的字符串：
 
 取值|约束|描述
 ---|---|---
-sign|必须|将 timestamp 加上 App key（或者 master key）组成的字符串，在对它做 MD5 签名后的结果。
-timestamp|必须|客户端产生本次请求的 unix 时间戳，精确到毫秒。
-master | |字符串 `"master"`，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
+sign|必须|将 timestamp 加上 App Key 或 Master Key 组成的字符串，再对它做 MD5 签名后的结果。
+timestamp|必须|客户端产生本次请求的 unix 时间戳（UTC），精确到**毫秒**。
+master |可选|字符串 `"master"`，当使用 master key 签名请求的时候，必须加上这个后缀明确说明是使用 master key。
 
-我们举个例子来说明，假设应用的：
+举例来说，假设应用的信息如下：
 
-* App id：`mdx1l0uh1p08tdpsk8ffn4uxjh2bbhl86rebrk3muph08qx7`
-* App key：`n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo`
-* Master key：`h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2`
+<table border="0" cellspacing="0" cellpadding="0">
+  <tbody>
+    <tr>
+      <td scope="row">App Id</td>
+      <td><code>FFnN2hso42Wego3pWq4X5qlu</code></td>
+    </tr>
+    <tr>
+      <td scope="row">App Key</td>
+      <td><code>UtOCzqb67d3sN12Kts4URwy8</code></td>
+    </tr>
+    <tr>
+      <td scope="row">Master Key</td>
+      <td><code>DyJegPlemooo4X1tg94gQkw1</code></td>
+    </tr>
+    <tr>
+      <td scope="row">请求时间</td>
+      <td>2016-01-17 15:15:43.466</td>
+    </tr>
+    <tr>
+      <td scope="row">timestamp</td>
+      <td><code>1453014943466</code></td>
+    </tr>
+  </tbody>
+</table>
 
-那么：
+**使用 App Key 来计算 sign**：
 
-* **X-LC-Sign: 28ad0513f8788d58bb0f7caa0af23400,1389085779854**  
-  表示请求时间戳为 `1389085779854`，
-  签名为 `28ad0513f8788d58bb0f7caa0af23400`，
-  签名是通过对 `1389085779854n35a5fdhawz56y24pjn3u9d5zp9r1nhpebrxyyu359cq0ddo` 的字符串做 md5sum 得到，也就是时间戳加上 app key 组成的字符串做 MD5 签名。
-* **X-LC-Sign: c884fe684c17c972eb4e33bc8b29cb5b,1389085779854,master**    
-  表示使用 master key 产生签名，时间戳仍然是 `1389085779854`，
-  签名是通过对 `1389085779854h2ln3ffyfzysxmkl4p3ja7ih0y6sq5knsa2j0qnm1blk2rn2` 做 md5sum 得到，最后的 `master` 告诉服务器这个签名是使用 master key 产生的。
+>md5( timestamp + App Key ) <br/>
+= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
+
+```sh
+  -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
+```
+
+**使用 Master Key 来计算 sign**：
+
+>md5( timestamp + Master Key )<br/>
+= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
+= e074720658078c898aa0d4b1b82bdf4b
+
+```sh
+  -H "X-LC-Sign: e074720658078c898aa0d4b1b82bdf4b,1453014943466,master" \
+```
+
+（最后加上 **master** 来告诉服务器这个签名是使用 master key 生成的。）
+
+<div class="callout callout-danger">使用 master key 将绕过所有权限校验，应该确保只在可控环境中使用，比如自行开发的管理平台，并且要完全避免泄露。因此，以上两种计算 sign 的方法可以根据实际情况来选择一种使用。</div>
 
 ### 响应格式
 
@@ -611,6 +669,29 @@ curl -X PUT \
 
 这样就将对象里的 **upvotes**（表示被用户点赞的次数）分数加 1，其中 **amount** 指定递增的数字大小，如果为负数，就变成递减。
 
+除了 Increment，我们也提供了 Decrement 操作用于递减（等价于 Increment 一个负数）。
+
+#### 位运算
+
+如果文档的某个列是整型，可以使用我们提供的位运算操作符，来对这个列做原子的位运算：
+
+* BitAnd 与运算。
+* BitOr 或运算。
+* BitXor 异或运算。
+
+例如:
+
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"flags":{"__op":"BitOr","value": 0x0000000000000004}}' \
+  https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
+```
+
+
 #### 数组
 
 为了存储数组型数据，LeanCloud 提供 3 种操作来原子性地更改一个数组字段：
@@ -761,7 +842,7 @@ curl -X POST \
 
 ### 数据类型
 
-到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
+到现在为止我们只使用了可以被标准 JSON 编码的值，LeanCloud 移动客户端 SDK library 同样支持日期、二进制数据和关系型数据。在 REST API 中，这些值都被编码了，同时有一个 `__type` 字段（注意：**前缀是两个下划线**）来标示出它们的类型，所以如果你采用正确的编码的话就可以读或者写这些字段。
 
 <a id="datatype_date" name="datatype_date"></a>**Date** 类型包含了一个 iso 字段，其值是一个 UTC 时间戳，以 ISO 8601 格式和毫秒级的精度来存储的时间值，格式为：`YYYY-MM-DDTHH:MM:SS.MMMZ`：
 
@@ -1228,7 +1309,7 @@ curl -X GET \
 
 注册一个新用户与创建一个新的普通对象之间的不同点在于 username 和 password 字段都是必需的。password 字段会以和其他的字段不一样的方式处理，它在储存时会被加密而且永远不会被返回给任何来自客户端的请求。
 
-你可以让 LeanCloud 自动帮你验证邮件地址，做法是进入 [应用控制台](/app.html?appid={{appid}}#/permission)，选择 **设置** > **应用选项** > **邮箱**，勾选「启用注册用户邮箱验证」。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
+你可以让 LeanCloud 自动验证邮件地址，做法是进入 [控制台 > **设置** > **应用选项**](/app.html?appid={{appid}}#/permission)，勾选 **用户账号** 下的 **用户注册时，发送验证邮件**。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
 
 为了注册一个新的用户，需要向 user 路径发送一个 POST 请求，你可以加入一个新的字段，例如，创建一个新的用户有一个电话号码:
 
@@ -1336,117 +1417,6 @@ curl -X POST \
 ### 手机号码验证
 
 请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
-
-<!--
-在应用设置里你还可以选择开启注册手机码号验证功能（设置路径：进入应用控制台 > **设置** > **应用选项** > **短信**，打开「验证注册用户手机号码」），当注册的时候用户填写 mobilePhoneNumber 字段，LeanCloud 云端将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的 mobilePhoneNumberVerified 属性将设置为 true。
-
-**请注意，每个账户只有 100 条免费的短信额度，超过后每发送一条短信都将实时扣费，请保证账户内短信余额充足。**
-
-假设你在开启注册手机号码验证选项后，注册下列用户：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"hang@leancloud.rocks","password":"whateverpassword","mobilePhoneNumber":"13613613613"}' \
-  https://api.leancloud.cn/1.1/users
-```
-
-那么在注册成功后，LeanCloud 将向 `136xxxxxxxx` 发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/{6位数字验证码}
-```
-
-其中 URL 中最后一部分就是 6 位验证数字。
-
-验证成功后，用户的 mobilePhoneNumberVerified 将变为 true，并调用云引擎的 `AV.Cloud.onVerified(type, function)` 方法，type 设置为 `sms`。
-
-### 请求手机号码验证
-
-用户除了被动等待收到验证码短信之外，或者短信意外没有收到的情况下，开发者可以主动要求发送验证码短信：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestMobilePhoneVerify
-```
-
-### 手机号码短信登录
-
-在验证号码后，用户可以采用短信验证码登录，来避免繁琐的输入密码的过程，请求发送登录验证码：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestLoginSmsCode
-```
-
-在用户收到短信验证码之后，可以输入该验证码加上手机号码来登录应用：
-
-```sh
-curl -X GET \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -G \
-  --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
-  --data-urlencode 'smsCode=123456' \
-  https://api.leancloud.cn/1.1/login
-```
-
-也可以采用手机号码和密码的方式登录：
-
-```sh
-curl -X GET \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -G \
-  --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
-  --data-urlencode 'password=whateverpassword' \
-  https://api.leancloud.cn/1.1/login
-```
-
-### 使用短信验证码重置用户密码
-
-如果用户使用手机号码注册，你也许希望也能通过手机短信来实现「重置密码」功能，通过：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
-```
-
-发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的 mobilePhoneNumber。
-
-用户收到验证码后，调用 `PUT /1.1/resetPasswordBySmsCode/<code>` 来设置新的密码：
-
-```sh
-curl -X PUT \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"password": "new password"}' \
-  https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
-```
-
-修改成功后，就可以用新密码登录了。
-
--->
 
 ### 获取用户
 
@@ -2625,7 +2595,7 @@ curl -X GET \
 格式概览如下：
 
 ```
-curl -i X POST \
+curl -i -X POST \
 -H "Content-Type: application/json" \
 -H "X-LC-Id: {{appid}}" \
 -H "X-LC-Key: {{appkey}}" \
@@ -2826,7 +2796,7 @@ curl -X GET \
 获取服务端当前日期时间可以通过 `/date` API:
 
 ```
-curl -i X GET \
+curl -i -X GET \
     -H "X-LC-Id: {{appid}}" \
     -H "X-LC-Key: {{appkey}}" \
     https://api.leancloud.cn/1.1/date

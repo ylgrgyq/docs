@@ -1,5 +1,13 @@
 {% extends "./leanengine_guide.tmpl" %}
 {% set environment = "python" %}
+{% set hook_before_save   = "before_save" %}
+{% set hook_after_save    = "after_save" %}
+{% set hook_before_update = "before_update" %}
+{% set hook_after_update  = "after_update" %}
+{% set hook_before_delete = "before_delete" %}
+{% set hook_after_delete  = "after_delete" %}
+{% set hook_on_verified   = "on_verified" %}
+{% set hook_on_login      = "on_login" %}
 
 {% block quick_start_create_project %}
 从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
@@ -21,14 +29,14 @@ $ avoscloud add <APP-NAME> <APP-ID>
 {% block runtime_env %}**注意**：目前云引擎的 Python 版本为 2.7，请你最好使用此版本的 Python 进行开发。Python 3 的支持正在开发中。{% endblock %}
 
 {% block demo %}
-* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。（在线演示：<http://python.avosapps.com/>）
+* [python-getting-started](https://github.com/leancloud/python-getting-started)：这是一个非常简单的 Python Web 的项目，可以作为大家的项目模板。（在线演示：<http://python.leanapp.cn/>）
 {% endblock %}
 
 {% block run_in_local_command %}
 安装依赖：
 
 ```
-$ pip install -Ur requirements.txt
+$ sudo pip install -Ur requirements.txt
 ```
 
 启动应用：
@@ -203,7 +211,7 @@ def after_user_save(user):
 {% endblock %}
 
 {% block beforeUpdate %}
-Python SDK 即将支持这个 Hook。
+Python SDK 尚未支持这个 Hook。
 {% endblock %}
 
 {% block afterUpdateExample %}
@@ -272,7 +280,7 @@ def on_login(user):
 {% endblock %}
 
 {% block errorCodeExample %}
-有些时候你希望能自己定义错误响应码。如果您的云引擎抛出了 `LeanCloudError`（数据存储 API 会抛出此异常），会直接返回以 `LeanCloudError` 的错误码和原因返回给客户端。若想自定义错误码，可以自行构造 `LeanEngineError`，将 `code` 与 `error` 传入。否则 `code` 为 1， `message` 为错误对象的字符串形式。比如下列代码：
+错误响应码允许自定义。云引擎抛出的  `LeanCloudError`（数据存储 API 会抛出此异常）会直接将错误码和原因返回给客户端。若想自定义错误码，可以自行构造 `LeanEngineError`，将 `code` 与 `error` 传入。否则 `code` 为 1， `message` 为错误对象的字符串形式。
 
 ```python
 @engine.define
@@ -287,7 +295,21 @@ from leancloud import LeanEngineError
 
 @engine.define
 def custom_error_code(**params):
-    raise LeanEngineError(123, 'custom error message')
+    raise LeanEngineError(123, '自定义错误信息')
+```
+{% endblock %}
+
+{% block errorCodeExampleForHooks %}
+```python
+@engine.before_save('Review')  # Review 为需要 hook 的 class 的名称
+def before_review_save(review):
+    comment = review.get('comment')
+    if not comment:
+      # 使用 json.dumps() 将对象转为 JSON 字串
+      raise leancloud.LeanEngineError(json.dumps({
+        'code': 123,
+        'message': '自定义错误信息', 
+    }))
 ```
 {% endblock %}
 
@@ -382,7 +404,7 @@ import os
 if os.environ.get('LC_APP_PROD') == '1':
     # 当前为生产环境
 elif os.environ.get('LC_APP_PROD') == '0':
-    # 当前为测试环境
+    # 当前为预备环境
 else:
     # 当前为开发环境
 ```

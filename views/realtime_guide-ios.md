@@ -602,8 +602,8 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 {% block customMessage_create %}
 继承于 `AVIMTypedMessage`，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
-* 实现 `AVIMTypedMessageSubclassing` 协议
-* 子类将自身类型进行注册，一般可在 application 的 `applicationDelegate` 方法里面调用 `[YourClass registerSubclass]`;
+* 实现 `AVIMTypedMessageSubclassing` 协议；
+* 子类将自身类型进行注册，一般可在子类的 `+load` 方法或者 UIApplication 的 `-application:didFinishLaunchingWithOptions:` 方法里面调用 `[YourClass registerSubclass]`。
 {% endblock %}
 
 {% block messagePolicy_received_method %} `conversation:didReceiveCommonMessage:` {% endblock %}
@@ -676,14 +676,16 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 
 各参数含义如下：
 
-* name － 表示对话名字，可以指定任意有意义的名字，也可不填。
-* clientIds － 表示对话初始成员，可不填。如果填写了初始成员，则 LeanCloud 云端会直接给这些成员发出邀请，省掉再专门发一次邀请请求。
-* attributes － 表示额外属性，Dictionary，支持任意的 key/value，可不填。
-* options － 对话选项，允许使用 `|` 进行组合，支持一下选项：
-    1. `AVIMConversationOptionNone`，表示普通对话；
-    2. `AVIMConversationOptionTransient`，表示聊天室，具体可以参见[后文](#创建开放聊天室)；
-    3. `AVIMConversationOptionUnique`，根据成员（clientIds）创建原子对话。如果没有这个选项，服务端会为相同的 clientIds 创建新的对话。
-* callback － 结果回调，在操作结束之后调用，通知开发者成功与否。
+* **name** － 表示对话名字，可以指定任意有意义的名字，也可不填。
+* **clientIds** － 表示对话初始成员，可不填。如果填写了初始成员，则 LeanCloud 云端会直接给这些成员发出邀请，省掉再专门发一次邀请请求。
+* **attributes** － 表示额外属性，Dictionary，支持任意的 key/value，可不填。
+* **options** － 对话选项：
+    1. `AVIMConversationOptionTransient`：聊天室，具体可以参见[创建开放聊天室](#创建开放聊天室)；
+    2. `AVIMConversationOptionNone`：普通对话；
+    3. `AVIMConversationOptionUnique`：根据成员（clientIds）创建原子对话。如果没有这个选项，服务端会为相同的 clientIds 创建新的对话。clientIds 即 \_Conversation 表的 **m** 字段。
+    
+  其中，`AVIMConversationOptionNone` 和 `AVIMConversationOptionUnique` 可以使用 `|` 来组合使用，其他选项则不允许。
+* **callback** － 结果回调，在操作结束之后调用，通知开发者成功与否。
 {% endblock %}
 
 {% block event_memberJoin %} `membersAdded` {% endblock %}

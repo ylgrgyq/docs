@@ -1,4 +1,13 @@
 {% extends "./leanengine_guide.tmpl" %}
+{% set environment        = "node" %}
+{% set hook_before_save   = "beforeSave" %}
+{% set hook_after_save    = "afterSave" %}
+{% set hook_before_update = "beforeUpdate" %}
+{% set hook_after_update  = "afterUpdate" %}
+{% set hook_before_delete = "beforeDelete" %}
+{% set hook_after_delete  = "afterDelete" %}
+{% set hook_on_verified   = "onVerified" %}
+{% set hook_on_login      = "onLogin" %}
 
 {% block quick_start_create_project %}
 从 Github 迁出实例项目，该项目可以作为一个你应用的基础：
@@ -16,12 +25,24 @@ $ avoscloud add <appName> <appId>
 {% endblock %}
 
 {% block demo %}
-* [node-js-getting-started](https://github.com/leancloud/node-js-getting-started)：这是一个非常简单的基于 Express 4 的项目，可以作为大家的项目模板。（在线演示：<http://node.avosapps.com/>） 
-* [leanengine-todo-demo](https://github.com/leancloud/leanengine-todo-demo)：这是一个稍微复杂点的项目，是上一个项目的扩展，演示了基本的用户注册、会话管理、业务数据的增删查改、简单的 ACL 使用。这个项目可以作为初学云引擎和 [JavaScript SDK](js_guide.html) 使用。（在线演示：<http://todo-demo.avosapps.com/>）
+* [node-js-getting-started](https://github.com/leancloud/node-js-getting-started)：这是一个非常简单的基于 Express 4 的项目，可以作为大家的项目模板。（在线演示：<http://node.leanapp.cn/>） 
+* [leanengine-todo-demo](https://github.com/leancloud/leanengine-todo-demo)：这是一个稍微复杂点的项目，是上一个项目的扩展，演示了基本的用户注册、会话管理、业务数据的增删查改、简单的 ACL 使用。这个项目可以作为初学云引擎和 [JavaScript SDK](js_guide.html) 使用。（在线演示：<http://todo-demo.leanapp.cn/>）
 * [LeanEngine-Full-Stack](https://github.com/leancloud/LeanEngine-Full-Stack) ：该项目是基于云引擎的 Web 全栈开发的技术解决方案，比较大型的 Web 项目可以使用这个结构实现从 0 到 1 的敏捷开发。
 {% endblock %}
 
-{% block runtime_env %}**注意**：目前云引擎的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10 。{% endblock %}
+{% block runtime_env %}
+**注意**：
+- 目前云引擎的 Node.js 版本为 0.12，请你最好使用此版本进行开发，至少不要低于 0.10。
+- 由于云引擎尚未支持 Node.js 4.x 版本，如果希望使用 ECMAScript 6 所提供的新语法，请在项目的 `package.json` 中为 node 加入 `--harmony` 参数，例如：
+  
+  ```json
+  ...
+  "scripts": {
+    "start": "node --harmony server.js"
+  },
+  ...
+  ```
+{% endblock %}
 
 {% block run_in_local_command %}
 安装依赖：
@@ -191,7 +212,6 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% block afterSaveExample2 %}
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
-  //输出信息请到「控制台 /（选择应用）/ 存储 / 云引擎 / 日志」中查看
   console.log(request.object);
   request.object.set('from','LeanCloud');
   request.object.save(null,{success:function(user)
@@ -306,7 +326,7 @@ AV.Cloud.onLogin(function(request, response) {
 {% endblock %}
 
 {% block errorCodeExample %}
-有些时候你希望能自己定义错误响应码。云引擎方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 1， `message` 为错误对象的字符串形式。比如下列代码：
+错误响应码允许自定义。云引擎方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 body 以这两个属性为准，否则 `code` 为 1， `message` 为错误对象的字符串形式。比如：
 
 ```
 AV.Cloud.define('errorCode', function(req, res) {
@@ -323,6 +343,18 @@ AV.Cloud.define('errorCode', function(req, res) {
 ```
 AV.Cloud.define('customErrorCode', function(req, res) {
   res.error({code: 123, message: 'custom error message'});
+});
+```
+{% endblock %}
+
+{% block errorCodeExampleForHooks %}
+```
+AV.Cloud.beforeSave('Review', function(request, response) {
+  // 使用 JSON.stringify() 将 object 变为字符串
+  response.error(JSON.stringify({
+    code: 123,
+    message: '自定义错误信息'
+  }));
 });
 ```
 {% endblock %}
@@ -701,7 +733,7 @@ if (NODE_ENV === 'development') {
 } else if(NODE_ENV == 'production') {
   // 当前环境为「生产环境」，是线上正式运行的环境
 } else {
-  // 当前环境为「测试环境」
+  // 当前环境为「预备环境」
 }
 ```
 {% endblock %}
