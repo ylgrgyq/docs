@@ -1,261 +1,136 @@
 {% extends "./relation_guide.tmpl" %}
 
-{% block docTitle %}
-# iOS 关系建模指南
-{% endblock %}
+{% set platform = 'iOS / OS X' %}
 
-{% block postPointToAVUser %}
+{% block code_city_point_to_province %}
 
 ```objc
-AVObject *post= [AVObject objectWithClassName:@"Post"];
-[post setObject:[AVUser currentUser] forKey:@"potedBy"];
+    AVObject *GuangZhou = [[AVObject alloc] initWithClassName:@"City"];// 广州
+    [GuangZhou setObject:@"name" forKey:@"广州"];
+
+    AVObject *GuangDong = [[AVObject alloc] initWithClassName:@"Province"];// 广东
+    [GuangDong setObject:@"name" forKey:@"广东"];
+    
+    [GuangZhou setObject:GuangDong forKey:@"dependent"];// 为广州设置 dependent 属性为广东
+
+    [GuangZhou saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
+        if (succeeded) {
+            {
+                // 广州被保存成功
+            }
+        }
+    }];
+    // 广东无需被单独保存，因为在保存广州的时候已经上传到服务端。
 ```
 {% endblock %}
 
-{% block queryPostByAVUser %}
+{% block code_city_point_to_province_with_objectId %}
 
 ```objc
-AVQuery *postQuery = [AVQuery queryWithClassName:@"Post"];
-[postQuery whereKey:@"potedBy" equalTo:[AVUser currentUser]];
-```
-{% endblock %}
-
-
-{% block queryCreaterForPost %}
-
-```objc
-// 假定我们已经从服务端 fetch 了一个 Post 对象
-AVObject *post = ...
- 
-// 获取 Post 的发送者
-AVUser *postedBy = [post objectForKey@"postedBy"];
-```
-{% endblock %}
-
-{% block addTopicListToAVUser %}
-
-```objc
-// 新建一些话题对象
-AVObject *nba = ...
-AVObject *warcraft = ...
-AVObject *dota2 = ...
-AVObject *show = ...
- 
-// 把这些话题对象都放到一个数组里面
-NSArray *topics = @[nba, warcraft, dota2, show];
- 
-// 将话题数组直接保存在 AVUser 的一个属性中
-[[AVUser currentUser] setObject:topics forKey:@"topicList"];
-```
-{% endblock %}
-
-{% block getTopicListFromAVUser %}
-
-```objc
-NSArray *topics = [[AVUser currentUser] objectForKey:@"topicList"];
-```
-{% endblock %}
-
-{% block queryIncludeTopicList %}
-
-```objc
-// 新建一个 AVQuery 对象用来查询 AVUser
-AVQuery *userQuery = [AVUser query];
- 
-// 在这里可以构建一个有效的查询
-// 比如你可以查询所有在 2015年6月9号注册的微博用户
- 
-// 然后调用 AVQuery includeKey 的方法，明确告知服务端本次查询要求返回 topicList 里面的内容
-[userQuery includeKey:@"topicList"];
- 
-// 执行查询
-[userQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects 就是查询 AVUser 的集合
-    // 它的包含的每一个 AVUser 在 topicList 字段上都有对应的值
-}];
-```
-{% endblock %}
-
-
-{% block queryAVUserContainsTopic %}
-```objc
-// 构建一个关注了 nba 话题的查询，用来查询符合条件的 AVUser
-[userQuery whereKey:@"topicList" equalTo:nba];
- 
-// 或者使用包含查询也可以实现等同的效果
-[userQuery whereKey:@"topicList" containedIn:arrayOfTopics];
-```
-{% endblock %}
-
-{% block studentAVRelationCourse %}
-
-以下代码是实现 Book 和 Author 之间的关系的，请替换成实现 学生和课程 之间的关系的代码。注释请注意替换。
-
-```objc
-// let’s say we have a few objects representing Author objects
-AVObject *authorOne = …
-AVObject *authorTwo = …
-AVObject *authorThree = …
-
-// now we create a book object
-AVObject *book= [AVObject objectWithClassName:@"Book"];
- 
-// now let’s associate the authors with the book
-// remember, we created a "authors" relation on Book
-AVRelation *relation = [book relationforKey:@"authors"];
-// make sure these objects should be saved to server before adding to relation
-[relation addObject:authorOne];
-[relation addObject:authorTwo];
-[relation addObject:authorThree];
- 
-// now save the book object
-[book saveInBackground];
+    // 假设 GuangDong 的 objectId 为 56545c5b00b09f857a603632
+    AVObject *GuangDong = [AVObject objectWithoutDataWithClassName:@"Province" objectId:@"56545c5b00b09f857a603632"];    
+    AVObject *DongGuan = [[AVObject alloc] initWithClassName:@"City"];// 东莞
+    [DongGuan setObject:@"name" forKey:@"东莞"];
+    
+    [DongGuan setObject:GuangDong forKey:@"dependent"];// 为东莞设置 dependent 属性为广东
 ```
 
-** 注意： ** 这里 authorOne, authorTwo, authorThree 必需已经保存到云端之后才能添加到 relation，否则 [book saveInBackground] 会报错。
 {% endblock %}
-
-{% block queryStudentByCourse %}
+{% block code_fetch_province_by_city %}
 
 ```objc
-// suppose we have a book object
-AVObject *book = ...
- 
-// create a relation based on the authors key
-AVRelation *relation = [book relationforKey:@"authors"];
- 
-// generate a query based on that relation
-AVQuery *query = [relation query];
- 
-// now execute the query
+    // 假设东莞作为 City 对象存储的时候它的 objectId 是 568e743c00b09aa22162b11f，这个  objectId 可以在控制台查看
+    AVObject *DongGuan = [AVObject objectWithoutDataWithClassName:@"City" objectId:@"568e743c00b09aa22162b11f"];
+    NSArray *keys = [NSArray arrayWithObjects:@"dependent", nil];
+    [DongGuan fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
+         // 获取广东省
+         AVObject *province = [object objectForKey:@"dependent"];
+    }];
 ```
 {% endblock %}
-
-{% block queryCoursesByStudent %}
-
-```objc
-// suppose we have a author object, for which we want to get all books
-AVObject *author = ...
- 
-// first we will create a query on the Book object
-AVQuery *query = [AVQuery queryWithClassName:@"Book"];
- 
-// now we will query the authors relation to see if the author object 
-// we have is contained therein
-[query whereKey:@"authors" equalTo:author];
-```
-{% endblock %}
-
-{% block  relationTableStudentCourse%}
+{% block code_query_province_by_city %}
 
 ```objc
-// suppose we have a user we want to follow
-AVUser *otherUser = ...
- 
-// create an entry in the Follow table
-AVObject *follow = [AVObject objectWithClassName:@"Follow"];
-[follow setObject:[AVUser currentUser]  forKey:@"from"];
-[follow setObject:otherUser forKey:@"to"];
-[follow setObject:[NSDate date] forKey:@"date"];
-[follow saveInBackground];
-```
-{% endblock %}
-
-{% block relationTableQueryStudentInCourse %}
-
-```objc
-// set up the query on the Follow table
-AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
-[query whereKey:@"from" equalTo:[AVUser currentUser]];
- 
-// execute the query
-[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-  for(AVObject *o in objects) {
-    // o is an entry in the Follow table
-    // to get the user, we get the object with the to key
-    AVUser *otherUser = [o objectForKey:@"to"];
- 
-    // to get the time when we followed this user, get the date key
-    NSDate *when = [o objectForKey:@"date"];
-  }
-}];
-```
-{% endblock %}
-
-{% block relationTableQueryCourseOfStudent %}
-
-```objc
-// set up the query on the Follow table
-AVQuery *query = [AVQuery queryWithClassName:@"Follow"];
-[query whereKey:@"to" equalTo:[AVUser currentUser]];
- 
-// execute the query
-[query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-  for(AVObject *o in objects) {
-    // o is an entry in the Follow table
-    // to get the user, we get the object with the from key
-    AVUser *otherUser = [o objectForKey:@"from"];
- 
-    // to get the time the user was followed, get the date key
-    NSDate *when = [o objectForKey:@"date"];
-  }
-}];
+    AVQuery *query = [AVQuery queryWithClassName:@"City"];
+    
+    // 查询名字是广州的城市
+    [query whereKey:@"name" equalTo:@"广州"];
+    
+    // 找出对应城市的省份
+    [query includeKey:@"dependent"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *cities, NSError *error) {
+        // cities 的结果为 name 等于广州的城市的集合，当然我们知道现实中只存在一个广州市
+        for (AVObject *city in cities) {
+            // 并不需要网络访问
+            // 获取对应的省份
+            AVObject *province = [city objectForKey:@"dependent"];
+        }
+    }];
 ```
 
 {% endblock %}
 
-{% block addFocusTagsForAVUserUsingArray %}
+{% block code_query_city_by_province %}
 
 ```objc
-// let's say we have an author
-AVObject *author = ...
- 
-// and let's also say we have an book
-AVObject *book = ...
- 
-// add the author to the authors list for the book
-[book addObject:author forKey:@"authors"];
+    // 假设 GuangDong 的 objectId 为 56545c5b00b09f857a603632
+    AVObject *GuangDong = [AVObject objectWithoutDataWithClassName:@"Province" objectId:@"56545c5b00b09f857a603632"];
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"City"];
+    
+    [query whereKey:@"dependent" equalTo:GuangDong];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *cities, NSError *error) {
+        for (AVObject *city in cities) {
+             // cities 的结果为广东省下辖的所有城市
+        }
+    }];
 ```
 {% endblock %}
-
-
-{% block queryFocusTagsForAVUserUsingInclude %}
+{% block code_save_cityList_array %}
 
 ```objc
-// set up our query for the Book object
-AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
- 
-// configure any constraints on your query...
-// tell the query to fetch all of the Author objects along with the Book
-[bookQuery includeKey:@"authors"];
- 
-// execute the query
-[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects is all of the Book objects, and their associated 
-    // Author objects, too
-}];
-```
-{% endblock %}
+    AVObject *GuangDong = [[AVObject alloc] initWithClassName:@"Province"];// 广东
+    [GuangDong setObject:@"name" forKey:@"广东"];
+    
+    AVObject *GuangZhou = [[AVObject alloc] initWithClassName:@"City"];// 广州
+    [GuangZhou setObject:@"name" forKey:@"广州"];
 
-{% block queryAVUserFocusHotTag %}
+    AVObject *ShenZhen = [[AVObject alloc] initWithClassName:@"City"];// 深圳
+    [ShenZhen setObject:@"name" forKey:@"深圳"];
 
-```objc
-// suppose we have an Author object
-AVObject *author = ...
- 
-// set up our query for the Book object
-AVQuery *bookQuery = [AVQuery queryWithClassName:@"Book"];
- 
-// configure any constraints on your query...
-[bookQuery whereKey:@"authors" equalTo:author];
- 
-// tell the query to fetch all of the Author objects along with the Book
-[bookQuery includeKey:@"authors"];
- 
-// execute the query
-[bookQuery findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    // objects is all of the Book objects, and their associated Author objects, too
-}];
+    // 把广州和深圳放置在一个数组里面，然后把这个数组设置为广东的 cityList 属性
+    [GuangDong addUniqueObjectsFromArray:[NSArray arrayWithObjects:GuangZhou, ShenZhen, nil] forKey:@"cityList"];
+    
+    // 只要保存 GuangDong 即可，它关联的对象都会一并被保存在服务端。
+    [GuangDong saveInBackground];
 ```
 
 {% endblock %}
+
+{% block code_get_cityList_array %}{% endblock %}
+
+{% block code_query_province_include_cityList %}{% endblock %}
+
+{% block code_query_province_by_city_with_containsIn %}{% endblock %}
+
+{% block code_save_student_related_to_course_with_relation %}{% endblock %}
+
+{% block code_save_course_related_to_student_with_relation %}{% endblock %}
+
+{% block code_query_student_by_course %}{% endblock %}
+
+{% block code_query_courses_by_student %}{% endblock %}
+
+{% block code_save_relationTable_student_with_course %}{% endblock %}
+
+{% block code_query_relationTable_students_in_course %}{% endblock %}
+
+{% block code_query_relationTable_courses_by_student %}{% endblock %}
+
+{% block code_save_courses_using_arrays %}{% endblock %}
+
+{% block code_query_courses_by_include %}{% endblock %}
+
+{% block code_query_using_array_contains %}{% endblock %}
