@@ -1655,7 +1655,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ### 手机号码验证
 
-如果在应用设置的 **应用选项** 中打开了 **验证注册用户手机号码** 选项，那么当用户在注册时填写完手机字段后，LeanCloud 会自动向该手机号码发送一条验证短信，用户输入验证码后，该用户即被标识为已经验证过手机了。
+如果在[控制台 > 设置 > 应用选项 > 用户账号](/app.html?appid={{appid}}#/permission) 中打开了 **用户注册时，向注册手机号码发送验证短信** 选项，那么当用户在注册时填写完手机字段后，LeanCloud 会自动向该手机号码发送一条验证短信，用户输入验证码后，该用户即被标识为已经验证过手机了。
 
 以下代码将注册验证码发送到用户手机上：
 
@@ -1834,7 +1834,7 @@ NSArray<AVObject *> *posts = [query findObjects];
 使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
 
 ``` objc
-    NSDictionary *parameters=@{...};
+    NSDictionary *parameters = @{...};
 
     [AVCloud callFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
         // 执行结果
@@ -1842,6 +1842,22 @@ NSArray<AVObject *> *posts = [query findObjects];
 ```
 
 `aFunctionName` 是函数的名称，`parameters` 是传入的函数参数，`block` 对象作为调用结果的回调传入。
+
+### RPC 云引擎调用
+
+上文提到的 `+[AVCloud callFunctionInBackground:withParameters:block:]` 方法返回的结果是 `NSDictionary` 对象，而不是 `AVObject` 对象。为了实现直接返回 `AVObject` 对象，iOS SDK 在 v3.1.6.6 中加入了 RPC 调用。
+
+RPC 云引擎调用的方法签名以 `rpc` 方法打头，例如 `+[AVCloud rpcFunctionInBackground:withParameters:block:]`，除此之外，还有其他的变种。
+
+以下是 RPC 云引擎调用的一个示例：
+
+``` objc
+    NSDictionary *parameters = @{...};
+
+    [AVCloud rpcFunctionInBackground:@"aFunctionName" withParameters:parameters block:^(id object, NSError *error) {
+        // 执行结果
+    }];
+```
 
 ### 区分生产环境调用
 

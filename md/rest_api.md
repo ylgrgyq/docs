@@ -1309,7 +1309,7 @@ curl -X GET \
 
 注册一个新用户与创建一个新的普通对象之间的不同点在于 username 和 password 字段都是必需的。password 字段会以和其他的字段不一样的方式处理，它在储存时会被加密而且永远不会被返回给任何来自客户端的请求。
 
-你可以让 LeanCloud 自动帮你验证邮件地址，做法是进入 [应用控制台](/app.html?appid={{appid}}#/permission)，选择 **设置** > **应用选项** > **邮箱**，勾选「启用注册用户邮箱验证」。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
+你可以让 LeanCloud 自动验证邮件地址，做法是进入 [控制台 > **设置** > **应用选项**](/app.html?appid={{appid}}#/permission)，勾选 **用户账号** 下的 **用户注册时，发送验证邮件**。这项设置启用了的话，所有填写了 email 的用户在注册时都会产生一个 email 验证地址，并发回到用户邮箱，用户打开邮箱点击了验证链接之后，用户表里 `emailVerified` 属性值会被设为 true。你可以在 `emailVerified` 字段上查看用户的 email 是否已经通过验证。
 
 为了注册一个新的用户，需要向 user 路径发送一个 POST 请求，你可以加入一个新的字段，例如，创建一个新的用户有一个电话号码:
 
@@ -1417,117 +1417,6 @@ curl -X POST \
 ### 手机号码验证
 
 请参考 [短信服务 REST API 详解 - 用户账户与手机号码验证](rest_sms_api.html#用户账户与手机号码验证)。
-
-<!--
-在应用设置里你还可以选择开启注册手机码号验证功能（设置路径：进入应用控制台 > **设置** > **应用选项** > **短信**，打开「验证注册用户手机号码」），当注册的时候用户填写 mobilePhoneNumber 字段，LeanCloud 云端将向该手机号码发送一条附带验证码的验证短信，用户在输入验证码后调用  LeanCloud  的 API 验证通过后，用户的 mobilePhoneNumberVerified 属性将设置为 true。
-
-**请注意，每个账户只有 100 条免费的短信额度，超过后每发送一条短信都将实时扣费，请保证账户内短信余额充足。**
-
-假设你在开启注册手机号码验证选项后，注册下列用户：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"username":"hang@leancloud.rocks","password":"whateverpassword","mobilePhoneNumber":"13613613613"}' \
-  https://api.leancloud.cn/1.1/users
-```
-
-那么在注册成功后，LeanCloud 将向 `136xxxxxxxx` 发送一条验证短信。开发者提供一个输入框让用户输入这个验证短信中附带的验证码，开发者调用下列 API 来确认验证码正确：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/{6位数字验证码}
-```
-
-其中 URL 中最后一部分就是 6 位验证数字。
-
-验证成功后，用户的 mobilePhoneNumberVerified 将变为 true，并调用云引擎的 `AV.Cloud.onVerified(type, function)` 方法，type 设置为 `sms`。
-
-### 请求手机号码验证
-
-用户除了被动等待收到验证码短信之外，或者短信意外没有收到的情况下，开发者可以主动要求发送验证码短信：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestMobilePhoneVerify
-```
-
-### 手机号码短信登录
-
-在验证号码后，用户可以采用短信验证码登录，来避免繁琐的输入密码的过程，请求发送登录验证码：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestLoginSmsCode
-```
-
-在用户收到短信验证码之后，可以输入该验证码加上手机号码来登录应用：
-
-```sh
-curl -X GET \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -G \
-  --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
-  --data-urlencode 'smsCode=123456' \
-  https://api.leancloud.cn/1.1/login
-```
-
-也可以采用手机号码和密码的方式登录：
-
-```sh
-curl -X GET \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -G \
-  --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
-  --data-urlencode 'password=whateverpassword' \
-  https://api.leancloud.cn/1.1/login
-```
-
-### 使用短信验证码重置用户密码
-
-如果用户使用手机号码注册，你也许希望也能通过手机短信来实现「重置密码」功能，通过：
-
-```sh
-curl -X POST \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
-```
-
-发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的 mobilePhoneNumber。
-
-用户收到验证码后，调用 `PUT /1.1/resetPasswordBySmsCode/<code>` 来设置新的密码：
-
-```sh
-curl -X PUT \
-  -H "X-LC-Id: {{appid}}" \
-  -H "X-LC-Key: {{appkey}}" \
-  -H "Content-Type: application/json" \
-  -d '{"password": "new password"}' \
-  https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
-```
-
-修改成功后，就可以用新密码登录了。
-
--->
 
 ### 获取用户
 
