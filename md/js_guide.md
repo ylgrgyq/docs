@@ -170,7 +170,7 @@ post.save({
 
 ```javascript
 var query = new AV.Query(Post);
-quer.get('558e20cbe4b060308e3eb36c').then(function(post) {
+query.get('558e20cbe4b060308e3eb36c').then(function(post) {
   // 成功获得实例
   var content = post.get('content');
   var username = post.get('pubUser');
@@ -902,7 +902,7 @@ query.destroyAll().then(function() {
 
 ```javascript
 AV.Query.doCloudQuery('select * from Post').then(function(data) {
-  //results 是查询返回的结果，AV.Object 列表
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
   var results = data.results;
   //do something with results...
 }, function(error) {
@@ -913,7 +913,7 @@ AV.Query.doCloudQuery('select * from Post').then(function(data) {
 //查询认证等级大于 2 的账户的微博，并返回前100条。
 AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>2')
 .then(function(data) {
-  //results 是查询返回的结果，AV.Object 列表
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
   var results = data.results;
   //count 表示符合查询条件的总记录数
   var count = data.count;
@@ -938,7 +938,7 @@ CQL 语法请参考 [CQL 详细指南](./cql_guide.html)。
 //查询认证等级大于 3 的账户的微博，并返回前10条。
 AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? limit ?',[3,10])
 .then(function(data) {
-  //results 是查询返回的结果，AV.Object 列表
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
   var results = data.results;
   //count 表示符合查询条件的总记录数
   var count = data.count;
@@ -956,12 +956,12 @@ AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? li
 除了回调函数之外，每一个在 LeanCloud JavaScript SDK 中的异步方法都会返回一个
  `Promise`。使用 `Promise`，你的代码可以比原来的嵌套 callback 的方法看起来优雅得多。
 
-```
+```javascript
 // 这是一个比较完整的例子，具体方法可以看下面的文档
 // 查询某个 AV.Object 实例，之后进行修改
 var query = new AV.Query('TestObject');
 query.equalTo('name', 'hjiang');
-// find 方法是一个异步方法，会返回一个 Prmise，之后可以使用 then 方法
+// find 方法是一个异步方法，会返回一个 Promise，之后可以使用 then 方法
 query.find().then(function(results) {
   // 返回一个符合条件的 list
   var obj = results[0];
@@ -1274,7 +1274,7 @@ query.find().then(function(results) {
 
 它只接受数组形式的 promise 输入，并且如果有任何一个 promise 失败，它就会直接调用错误处理器，而不是等待所有 promise 完成，其次是它的 resolve 结果返回的是数组。例如：
 
-```javscript
+```javascript
 AV.Promise.all([
   timerPromisefy(1),
   timerPromisefy(32),
@@ -1282,7 +1282,7 @@ AV.Promise.all([
   timerPromisefy(128)
 ]).then(function (values) {
   //values 数组为 [1, 32, 64, 128]
-})
+});
 //测试下失败的例子
 AV.Promise.when(
   timerPromisefy(1),
@@ -1874,7 +1874,7 @@ AV.User.requestPasswordReset('email@example.com').then(function() {
 
 **短信重置密码**：
 
-```
+```javascript
 // 短信重置
 AV.User.requestPasswordResetBySmsCode('18212346648').then(function() {
   // 密码重置请求已成功发送
@@ -2173,7 +2173,8 @@ query.find().then(function(posts) {
 error 会在任何一种在与 LeanCloud 的网络连接发生错误的时候调用。这些错误信息一般会反映连接到云端时出现的一些问题，或者处理请求的操作时遇到的一些问题。我们可以看下另一个例子。在下面的代码中我们想要获取一个不存在的 objectId。LeanCloud 会返回一个错误，所以这里就是我们怎样在你的 callback 里处理错误。
 
 ```javascript
-var query = new AV.Query(Note);
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
 query.get('aBcDeFgH').then(function(results) {
   // This function will *not* be called.
   console.log('Everything went fine!');
@@ -2189,7 +2190,8 @@ query.get('aBcDeFgH').then(function(results) {
 查询在无法连接到 LeanCloud 的时候同样有可能失败。下面是同样的 callback，但是有一些其他的代码来处理这种情况：
 
 ```javascript
-var query = new AV.Query(Note);
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
 query.get('thisObjectIdDoesntExist').then(function(results) {
   // This function will *not* be called.
   console.log('Everything went fine!');
