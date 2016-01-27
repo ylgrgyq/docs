@@ -89,6 +89,41 @@ createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
    
    在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
 
+### 保存选项
+
+`AVObject` 对象在保存时，还可以指定一些选项。这些选项用来修饰保存动作。
+
+保存选项是通过 `AVSaveOption` 对象表示的，其中，每一个属性表示一个具体选项。目前支持以下保存选项：
+
+```objc
+@interface AVSaveOption : NSObject
+
+@property (nonatomic, assign) BOOL     fetchWhenSave;
+@property (nonatomic, strong) AVQuery *query;
+
+@end
+```
+
+* `fetchWhenSave` 选项表示对象保存后，服务端返回该对象在服务端的最新数据；
+* `query` 选项表示当 `query` 中的条件满足后才能被保存；否则不能保存，并返回错误码 305。
+
+如果要指定保存选项，可以调用 `AVObject` 的带有 `option` 参数的保存接口：
+
+例如，如果需要指定当某个 object 的 `foo` 字段为 `bar` 时才保存，可以这样写：
+
+```objc
+AVSaveOption *option = [[AVSaveOption alloc] init];
+
+AVQuery *query = [[AVQuery alloc] init];
+[query whereKey:@"foo" equalTo:@"bar"];
+
+option.query = query;
+
+[object saveInBackgroundWithOption:option block:^(BOOL succeeded, NSError *error) {
+    // Your code
+}];
+```
+
 ### 检索对象
 
 将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以查询到对应的 `AVObject` 实例：
