@@ -1571,7 +1571,12 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 ```
 {% endblock %}
 
-{# TODO: 2015-12-03 尚未实现 disable_im_cache，隐藏「客户端聊天记录缓存」 #}
+{% block disable_im_cache %}
+```objc
+@property (nonatomic, assign) BOOL messageQueryCacheEnabled;
+```
+{% endblock %}
+
 {% block text_im_history_cache %}{% endblock %}
 
 {% block networkStatus %}
