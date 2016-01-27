@@ -6,10 +6,10 @@
 
 ```objc
     AVObject *GuangZhou = [[AVObject alloc] initWithClassName:@"City"];// 广州
-    [GuangZhou setObject:@"name" forKey:@"广州"];
+    [GuangZhou setObject:@"广州" forKey:@"name"];
 
     AVObject *GuangDong = [[AVObject alloc] initWithClassName:@"Province"];// 广东
-    [GuangDong setObject:@"name" forKey:@"广东"];
+    [GuangDong setObject:@"广东" forKey:@"name"];
     
     [GuangZhou setObject:GuangDong forKey:@"dependent"];// 为广州设置 dependent 属性为广东
 
@@ -30,7 +30,7 @@
     // 假设 GuangDong 的 objectId 为 56545c5b00b09f857a603632
     AVObject *GuangDong = [AVObject objectWithoutDataWithClassName:@"Province" objectId:@"56545c5b00b09f857a603632"];    
     AVObject *DongGuan = [[AVObject alloc] initWithClassName:@"City"];// 东莞
-    [DongGuan setObject:@"name" forKey:@"东莞"];
+    [DongGuan setObject:@"东莞" forKey:@"name"];
     
     [DongGuan setObject:GuangDong forKey:@"dependent"];// 为东莞设置 dependent 属性为广东
 ```
@@ -92,45 +92,293 @@
 
 ```objc
     AVObject *GuangDong = [[AVObject alloc] initWithClassName:@"Province"];// 广东
-    [GuangDong setObject:@"name" forKey:@"广东"];
+    [GuangDong setObject:@"广东" forKey:@"name"];
     
     AVObject *GuangZhou = [[AVObject alloc] initWithClassName:@"City"];// 广州
-    [GuangZhou setObject:@"name" forKey:@"广州"];
+    [GuangZhou setObject:@"广州" forKey:@"name"];
 
     AVObject *ShenZhen = [[AVObject alloc] initWithClassName:@"City"];// 深圳
-    [ShenZhen setObject:@"name" forKey:@"深圳"];
-
-    // 把广州和深圳放置在一个数组里面，然后把这个数组设置为广东的 cityList 属性
-    [GuangDong addUniqueObjectsFromArray:[NSArray arrayWithObjects:GuangZhou, ShenZhen, nil] forKey:@"cityList"];
+    [ShenZhen setObject:@"深圳" forKey:@"name"];
     
-    // 只要保存 GuangDong 即可，它关联的对象都会一并被保存在服务端。
-    [GuangDong saveInBackground];
+    // 把广州和深圳放置在一个数组里面，然后把这个数组设置为广东的 cityList 属性
+    NSArray *cityList = [NSArray arrayWithObjects:GuangZhou, ShenZhen, nil];
+    
+    [AVObject saveAllInBackground:cityList block:^(BOOL succeeded, NSError *error) {
+               [GuangDong addUniqueObjectsFromArray:[NSArray arrayWithObjects:GuangZhou, ShenZhen, nil] forKey:@"cityList"];
+        
+        // 只要保存 GuangDong 即可，它关联的对象都会一并被保存在服务端。
+        [GuangDong saveInBackground];
+    }];
 ```
 
 {% endblock %}
 
-{% block code_get_cityList_array %}{% endblock %}
+{% block code_get_cityList_array %}
 
-{% block code_query_province_include_cityList %}{% endblock %}
+```objc
+    // 假设 GuangDong 的 objectId 是 56a740071532bc0053f335e6
+    AVObject *GuangDong = [AVObject objectWithoutDataWithClassName:@"Province" objectId:@"56a740071532bc0053f335e6"];
+    [GuangDong fetchIfNeededWithKeys:[NSArray arrayWithObjects:@"cityList",nil]];
+    [GuangDong fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
+        NSArray *cityList = [GuangDong objectForKey:@"cityList"];
+        for (AVObject *city in cityList) {
+             // cityList 的结果为广东省下辖的所有城市
+             // 下面可以打印出所有城市的 objectId
+             NSLog(@"objectId: %@", city.objectId);
+             // 下面可以打印出所有城市的 name
+             NSLog(@"name: %@", [city objectForKey:@"name"]);
+        }
+    }];
+```
 
-{% block code_query_province_by_city_with_containsIn %}{% endblock %}
+{% endblock %}
 
-{% block code_save_student_related_to_course_with_relation %}{% endblock %}
+{% block code_query_province_include_cityList %}
 
-{% block code_save_course_related_to_student_with_relation %}{% endblock %}
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Province"];
+    
+    [query whereKey:@"name" equalTo:@"广东"];
+    
+    // 以下这条语句是关键语句
+    [query includeKey:@"cityList"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 是查询 Province 这张表的结果，因为我们是根据 name 查询的，表中 name  等于广东的有且只有一个数据
+        // 因此这个集合有且只有一个数据
+        for (AVObject *province in objects) {
+             NSArray *cityList = [province objectForKey:@"cityList"];
+            for (AVObject *city in cityList) {
+                // cityList 的结果为广东省下辖的所有城市
+                // 下面可以打印出所有城市的 objectId
+                NSLog(@"objectId: %@", city.objectId);
+                // 下面可以打印出所有城市的 name
+                NSLog(@"name: %@", [city objectForKey:@"name"]);
+            }
+        }
+    }];
+```
+{% endblock %}
 
-{% block code_query_student_by_course %}{% endblock %}
+{% block code_query_province_by_city_with_containsIn %}
 
-{% block code_query_courses_by_student %}{% endblock %}
+```objc
+    AVObject *NanJing = [AVObject objectWithoutDataWithClassName:@"City" objectId:@"56a74006d342d30054168a29"];
+    
+    AVQuery *query = [AVQuery queryWithClassName:@"Province"];
+    [query whereKey:@"cityList" equalTo:NanJing];
+    
+    [query getFirstObjectInBackgroundWithBlock:^(AVObject *provice, NSError *error) {
+        // provice 就是查询出来的省份，这里使用 getFirstObjectInBackgroundWithBlock 这个借口原因是我们默认情况下「南京」只可能属于一个省份
+         NSLog(@"name: %@", [provice objectForKey:@"name"]);
+        // 上述语句理论上会打印出「江苏」
+    }];
+```
+{% endblock %}
 
-{% block code_save_relationTable_student_with_course %}{% endblock %}
+{% block code_save_student_related_to_course_with_relation %}
 
-{% block code_query_relationTable_students_in_course %}{% endblock %}
+```objc
+    AVObject *studentTom = [[AVObject alloc] initWithClassName:@"Student"];// 学生 Tom
+    [studentTom setObject:@"Tom" forKey:@"name"];
+    
+    AVObject *courseLinearAlgebra = [[AVObject alloc] initWithClassName:@"Course"];// 线性代数
+    [courseLinearAlgebra setObject:@"Linear Algebra" forKey:@"name"];
+    
+    AVObject *courseObjectOrientedProgramming = [[AVObject alloc] initWithClassName:@"Course"];// 面对对象程序设计
+    [courseObjectOrientedProgramming setObject:@"Object-Oriented Programming" forKey:@"name"];
+    
+    AVObject *courseOperatingSystem = [[AVObject alloc] initWithClassName:@"Course"];// 操作系统
+    [courseOperatingSystem setObject:@"Operating System" forKey:@"name"];
+    
+    AVRelation *relation = [studentTom relationforKey:@"coursesChoosing"];// 新建一个 AVRelation，用来保存所选的课程
+    
+    [relation addObject:courseLinearAlgebra];
+    [relation addObject:courseObjectOrientedProgramming];
+    [relation addObject:courseOperatingSystem];
+    
+    // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
+    [studentTom saveInBackground];
+```
+{% endblock %}
 
-{% block code_query_relationTable_courses_by_student %}{% endblock %}
+{% block code_query_student_by_course %}
 
-{% block code_save_courses_using_arrays %}{% endblock %}
+```objc
+    // 假设 Tom 被保存到云端之后的 objectId 是 562da3fdddb2084a8a576d49
+    AVObject *studentTom = [AVObject objectWithoutDataWithClassName:@"Student" objectId:@"562da3fdddb2084a8a576d49"];
+    
+    // 读取 AVRelation 对象
+    AVRelation *relation = [studentTom relationforKey:@"coursesChoosing"];
+    
+    // 获取关系查询
+    AVQuery *query = [relation query];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *courses, NSError *error) {
+        // courses 就是当前学生 Tom 所选择的所有课程
+        for (AVObject *course in courses) {
+            // 打印 course 的 objectId 以及 name
+            NSLog(@"objectId: %@", course.objectId);
+            NSLog(@"name: %@", [course objectForKey:@"name"]);
+        }
+    }];
+```
+{% endblock %}
 
-{% block code_query_courses_by_include %}{% endblock %}
+{% block code_query_courses_by_student %}
 
-{% block code_query_using_array_contains %}{% endblock %}
+```objc
+    // 微积分课程
+    AVObject *courseCalculus = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"562da3fdddb2084a8a576d49"];
+    
+    // 构建 Student 的查询
+    AVQuery *query = [AVQuery queryWithClassName:@"Student"];
+    
+    // 查询条件
+    [query whereKey:@"coursesChoosing" equalTo:courseCalculus];
+    
+    // 执行查询
+    [query findObjectsInBackgroundWithBlock:^(NSArray *students, NSError *error) {
+        // students 就是所有选择了微积分的学生
+        for (AVObject *student in students) {
+            // 打印 student 的 objectId 以及 name
+            NSLog(@"objectId: %@", student.objectId);
+            NSLog(@"name: %@", [student objectForKey:@"name"]);
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_save_relationTable_student_with_course %}
+
+```objc
+    AVObject *studentTom = [[AVObject alloc] initWithClassName:@"Student"];// 学生 Tom
+    [studentTom setObject:@"Tom" forKey:@"name"];
+    
+    AVObject *courseLinearAlgebra = [[AVObject alloc] initWithClassName:@"Course"];// 线性代数
+    [courseLinearAlgebra setObject:@"Linear Algebra" forKey:@"name"];
+
+    AVObject *courseChoosingTom= [[AVObject alloc] initWithClassName:@"CourseChoosing"];// 选课表对象
+    
+    // 设置关联
+    [courseChoosingTom setObject:studentTom forKey:@"student"];
+    [courseChoosingTom setObject:courseLinearAlgebra forKey:@"course"];
+    
+    // 设置学习周期
+    [courseChoosingTom setObject: [NSArray arrayWithObjects:@"2016-02-19",@"2016-04-21",nil] forKey:@"duration"];
+    // 获取操作平台
+    [courseChoosingTom setObject: @"iOS" forKey:@"platform"];
+    
+    // 保存选课表对象
+    [courseChoosingTom saveInBackground];
+```
+{% endblock %}
+
+{% block code_query_relationTable_students_in_course %}
+
+```objc
+    // 微积分课程
+    AVObject *courseCalculus = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"562da3fdddb2084a8a576d49"];
+    
+    // 构建 CourseChoosing 的查询
+    AVQuery *query = [AVQuery queryWithClassName:@"CourseChoosing"];
+    
+    // 查询所有选择了线性代数的学生
+    [query whereKey:@"course" equalTo:courseCalculus];
+    
+    // 执行查询
+    [query findObjectsInBackgroundWithBlock:^(NSArray *courseChoosings, NSError *error) {
+        // courseChoosings 是所有 course 等于线性代数的选课对象
+        // 然后遍历过程中可以访问每一个选课对象的 student,course,duration,platform 等属性
+        for (AVObject *courseChoosing in courseChoosings) {
+            AVObject *student =[courseChoosing objectForKey:@"student"];
+            AVObject *course =[courseChoosing objectForKey:@"course"];
+            NSArray *duration = [courseChoosing objectForKey:@"duration"];
+            NSLog(@"platform: %@", [courseChoosing objectForKey:@"platform"]);
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_query_relationTable_courses_by_student %}
+
+```objc
+    AVObject *studentTom = [AVObject objectWithoutDataWithClassName:@"Student" objectId:@"562da3fc00b0bf37b117c250"];
+    [query whereKey:@"student" equalTo:studentTom];
+```
+{% endblock %}
+
+{% block code_save_courses_using_arrays %}
+
+```objc
+    AVObject *studentTom = [[AVObject alloc] initWithClassName:@"Student"];// 学生 Tom
+    [studentTom setObject:@"Tom" forKey:@"name"];
+    
+    AVObject *courseLinearAlgebra = [[AVObject alloc] initWithClassName:@"Course"];// 线性代数
+    [courseLinearAlgebra setObject:@"Linear Algebra" forKey:@"name"];
+    
+    AVObject *courseObjectOrientedProgramming = [[AVObject alloc] initWithClassName:@"Course"];// 面对对象程序设计
+    [courseObjectOrientedProgramming setObject:@"Object-Oriented Programming" forKey:@"name"];
+    
+    AVObject *courseOperatingSystem = [[AVObject alloc] initWithClassName:@"Course"];// 操作系统
+    [courseOperatingSystem setObject:@"Operating System" forKey:@"name"];
+    
+    // 所选课程的数组
+    NSArray *courses =  [NSArray arrayWithObjects:courseLinearAlgebra,courseObjectOrientedProgramming,courseOperatingSystem,nil];
+    
+    // 使用属性名字 coursesChoosing 保存所选课程的数组
+    [studentTom setObject:courses forKey:@"coursesChoosing"];
+    
+    // 保存在云端
+    [studentTom saveInBackground];
+```
+{% endblock %}
+
+{% block code_query_courses_by_include %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Student"];
+    
+    [query whereKey:@"name" equalTo:@"Tom"];
+    
+    // 以下这条语句是关键语句
+    [query includeKey:@"coursesChoosing"];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        // objects 是查询 Student 这张表的结果，因为我们是根据 name 查询的，我们假设表中 name  等于 Tom 的学生有且只有一个数据
+        // 因此这个集合有且只有一个数据
+        for (AVObject *tom in objects) {
+            NSArray *coursesChoosingArray = [tom objectForKey:@"coursesChoosing"];
+            for (AVObject *course in coursesChoosingArray) {
+                // coursesChoosingArray 的结果为 Tom 选修的所有课程
+                // 下面可以打印出所有课程的 objectId
+                NSLog(@"objectId: %@", course.objectId);
+                // 下面可以打印出所有课程的 name
+                NSLog(@"name: %@", [course objectForKey:@"name"]);
+            }
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_query_using_array_contains %}
+
+```objc
+    // 假设线性代数的 objectId 是 562da3fd60b2c1e233c9b250
+    AVObject *courseLinearAlgebra = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"562da3fd60b2c1e233c9b250"];
+    
+    // 构建针对 Student 这张表的查询
+    AVQuery *query = [AVQuery queryWithClassName:@"Student"];
+    [query whereKey:@"coursesChoosing" equalTo:courseLinearAlgebra];
+    
+    [query findObjectsInBackgroundWithBlock:^(NSArray *students, NSError *error) {
+        // students 即为所有选择了线性代数这门课的学生
+        for (AVObject *student in students) {
+            // 下面可以打印出所有学生的 objectId
+            NSLog(@"objectId: %@", student.objectId);
+            // 下面可以打印出学生的 name
+            NSLog(@"name: %@", [student objectForKey:@"name"]);
+        }
+    }];
+```
+{% endblock %}

@@ -52,20 +52,17 @@ LeanCloud中 有 4 种方式构建对象之间的关系：
 {% block code_save_cityList_array %}{% endblock %}
 
 #### Arrays 查询
-如果我们需要获取这些 `City` 对象，仅仅需要一行代码：
+如果我们需要获取这些 `City` 对象，需要如下代码：
 
 {% block code_get_cityList_array %}{% endblock %}
 
-如果要在查询某一个省份的时候，顺便也把所有下辖的城市也获取到本地就可以在构建查询的时候设置 `includeKey`同时获取 `cityList` 列中存放的 `City` 对象：
+如果要在查询某一个省份的时候，顺便也把所有下辖的城市也获取到本地就可以在构建查询的时候使用 `Include` 操作，这样就可以通过一次查询同时获取 `cityList` 列中存放的 `City` 对象结合：
 
 {% block code_query_province_include_cityList %}{% endblock %}
 
 我们同样也可以根据已知的城市来查询它所属的上级省份，例如，我们想找出南京所属的省份，可以使用如下代码：
 
 {% block code_query_province_by_city_with_containsIn %}{% endblock %}
-
-
-#### 一对多关系最佳实践
 
 ## 多对多关系
 现在让我们来处理多对多关系。假设我们有一个读书应用，我们需要对 `Book` 对象和 `Author` 对象建模。如我们所知，一个作者可以写多本书，一本书也可以有多个作者。这是一个典型的多对多关系，你必须选择使用 Arrays， Relation 或创建自己的关联表来实现这种关系。
@@ -88,11 +85,6 @@ LeanCloud中 有 4 种方式构建对象之间的关系：
 
 {% block code_save_student_related_to_course_with_relation %}{% endblock %}
 
-以下代码实现的需求是为一门课程安排多个学生：
-
-{% block code_save_course_related_to_student_with_relation %}{% endblock %}
-本质上上述两段代码几乎是镜像的，如此做的原因是为了方便介绍查询。
-
 #### Relation 的查询
 要获取某个课程的所有学生，使用如下查询即可：
 
@@ -103,15 +95,15 @@ LeanCloud中 有 4 种方式构建对象之间的关系：
 {% block code_query_courses_by_student %}{% endblock %}
 
 ### 使用关联表实现多对多关系
-也许某些情况下，我们需要知道更多关系的附加信息。比如学生选课的系统中，如果你想知道学生何时选修的这门课，或者想知道学生选修是通过手机选修还是通过网站操作的，这个时候单独使用 `AVRelation` 就无法满足需求，因为 `AVRelation` 不支持额外的自定义属性，此时我们可以使用传统的数据库设计方法：关联表。
+也许某些情况下，我们需要知道更多关系的附加信息。比如学生选课的系统中，如果你想知道学生打算选修的这门课进行多长时间的学习，或者想知道学生选修是通过手机选修还是通过网站操作的，这个时候单独使用 `AVRelation` 就无法满足需求，因为 `AVRelation` 不支持额外的自定义属性，此时我们可以使用传统的数据库设计方法：关联表。
 
 为了实现这个需求，我们创建一个独立的表保存 `Student` 和 `Course` 的关系，暂且叫做 `CourseChoosing` 的表，然后它有以下几个字段：
 
 ```
 1.course ： Course 指针实例
 2.student： Student 指针实例
-3.date：选修的时间，Date 类型
-4.platform：操作时使用的设备，String 类型
+3.duration：该学生选修这门课程的为期，数组类型，例如：["2016-02-19","2016-04-21"]表示选修开始和结束的时间点
+4.platform：操作时使用的设备，String 类型，例如：iOS
 ```
 如此，实现选修功能的代码如下：
 
@@ -121,7 +113,7 @@ LeanCloud中 有 4 种方式构建对象之间的关系：
 
 {% block code_query_relationTable_students_in_course %}{% endblock %}
 
-同样，我们也可以很简单地查询某一个学生选修的所有课程：
+同样，我们也可以很简单地查询某一个学生选修的所有课程，针对上述代码的只变换查询条件即可：
 
 {% block code_query_relationTable_courses_by_student %}{% endblock %}
 
@@ -132,7 +124,7 @@ LeanCloud中 有 4 种方式构建对象之间的关系：
 
 {% block code_save_courses_using_arrays %}{% endblock %}
 
-当查询某一个学生选修的所有课程，则在查询的时候需要使用 `include` 操作来获取对应的数组值： 
+当查询某一个学生选修的所有课程，则在查询的时候需要使用 `Include` 操作来获取对应的数组值： 
 
 {% block code_query_courses_by_include %}{% endblock %}
 
