@@ -13,6 +13,7 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 下图为 LeanCache 和云引擎配合使用的架构：
 
 <div style="max-width:620px" data
+
 -fix><img src="images/leancache_arch.png" class="img-responsive" alt=""></div>
 
 如果使用得当，LeanCache 不仅可以极大地提高性能，还能**降低成本**，因为某些高频率的查询不需要走存储服务（存储服务按调用次数收费）。
@@ -42,15 +43,15 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 目前我们支持如下几种策略：
 
-策略|说明
----|---
-`noeviction`|不删除，当内存满时，直接返回错误。
-`allkeys-lru`|优先删除最近最少使用的 key，以释放内存。
-`volatile-lru`|优先删除设定了过期时间的 key 中最近最少使用的 key，以释放内存。
-`allkeys-random`|随机删除一个 key，以释放内存。
-<code class="text-nowrap">volatile-random</code>|从设定了过期时间的 key 中随机删除一个，以释放内存。
-`volatile-ttl`|从设定了过期时间的 key 中删除最老的 key，以释放内存。
-  
+| 策略                                       | 说明                                   |
+| ---------------------------------------- | ------------------------------------ |
+| `noeviction`                             | 不删除，当内存满时，直接返回错误。                    |
+| `allkeys-lru`                            | 优先删除最近最少使用的 key，以释放内存。               |
+| `volatile-lru`                           | 优先删除设定了过期时间的 key 中最近最少使用的 key，以释放内存。 |
+| `allkeys-random`                         | 随机删除一个 key，以释放内存。                    |
+| <code class="text-nowrap">volatile-random</code> | 从设定了过期时间的 key 中随机删除一个，以释放内存。         |
+| `volatile-ttl`                           | 从设定了过期时间的 key 中删除最老的 key，以释放内存。      |
+
 请注意，如果所有的 key 都不设置过期时间，那么 `volatile-lru`、`volatile-random`、`volatile-ttl` 这三种策略会等同于 `noeviction`（不删除）。更详细的内容请参考 [Using Redis as an LRU cache](http://redis.io/topics/lru-cache)。
 
 <div class="callout callout-info">LeanCache 实例一旦生成后，该属性不可修改。</div>
@@ -77,22 +78,23 @@ LeanCache 不提供外网直接访问。如果需要进行简单的数据操作�
 
 可以通过下列命令查询当前应用有哪些 LeanCache 实例：
 
-``` 
+``` shell
 avoscloud redis list
 ```
 
 可以通过下列命令创建一个交互式的 client：
 
-``` 
+``` shell
 avoscloud redis <实例名称>
 ```
+
 
 
 ### 在云引擎中使用（Node.js 环境）
 
 首先添加相关依赖到云引擎应用中：
 
-``` 
+``` json
 "dependencies": {
   ...
   "redis": "2.2.x",
@@ -102,15 +104,19 @@ avoscloud redis <实例名称>
 
 然后可以使用下列代码获取 Redis 连接：
 
-``` 
+``` javascript
 var client = require('redis').createClient(process.env['REDIS_URL_<实例名称>']);
+// 建议增加 client 的 on error 事件处理，否则可能因为网络波动或 redis server 主从切换等原因造成短暂不可用导致应用进程退出。
+client.on('error', function(err) {
+  return console.error('redis err: %s', err);
+});
 ```
 
 ### 在云引擎中使用（Python 环境）
 
 首先添加相关依赖到云引擎应用的 `requirements.txt` 中：
 
-``` 
+``` python
 Flask>=0.10.1
 leancloud-sdk>=1.0.9
 ...
@@ -119,7 +125,7 @@ redis
 
 然后可以使用下列代码获取 Redis 连接：
 
-``` 
+``` python
 import os
 import redis
 
@@ -140,7 +146,7 @@ LeanCache 实例在开发者账户内全局可见，并不与某个应用固定�
 
 下面是使用 redis-benchmark 测试一个典型的容量为 2 GB 的 LeanCache 实例的性能表现：
 
-``` 
+``` shell
 $ redis-benchmark -n 100000 -q
 PING_INLINE: 69783.67 requests per second
 PING_BULK: 68306.01 requests per second
@@ -192,19 +198,20 @@ MSET (10 keys): 60096.15 requests per second
 
 因为用户可能需要随时调整 LeanCache 实例的容量，所以为了方便计算，我们按照每个实例当天所使用的「最大容量」来结算，而不是「实际使用容量」。不同容量的 LeanCache 实例的价格如下：
 
-容量 | 每日
----:|---:
-128 MB|1 元
-256 MB|1.5 元
-512 MB|3 元
-1 GB|5 元
-2 GB|10 元
-4 GB|20 元
-8 GB|50 元
+|     容量 |    每日 |
+| -----: | ----: |
+| 128 MB |   1 元 |
+| 256 MB | 1.5 元 |
+| 512 MB |   3 元 |
+|   1 GB |   5 元 |
+|   2 GB |  10 元 |
+|   4 GB |  20 元 |
+|   8 GB |  50 元 |
 
 ### 费用计算
 
 LeanCache 采取按天扣费，使用时间不足一天按一天收费，次日凌晨系统从账户余额中扣费。付费范围包括当前账户下
+
 隶属于每个应用的所有 LeanCache 实例，取每个实例当天使用的最大容量的价格，累计相加计算出总的使用费用。
 
 如果在系统扣费之时，账户没有充足余额，那么在扣费当天的上午 10 点，账户内所有应用使用的**全部实例会停止服务**，但数据仍会保留，期限为 1 个月。
