@@ -114,7 +114,7 @@ import AVOSCloudIM
 
 {% endblock %}
 
-{% block sdk_using_north_america_node %}
+{% block sdk_switching_node %}
 
 ```
 // applicationId 即 App Id，clientKey 是 App Key。

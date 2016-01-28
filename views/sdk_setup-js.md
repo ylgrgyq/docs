@@ -86,7 +86,7 @@ AV.initialize('{{appid}}', '{{appkey}}');
 
 {% endblock %}
 
-{% block sdk_using_north_america_node %}
+{% block sdk_switching_node %}
 ```javascript
 //参数依次为 AppId, AppKey
 AV.initialize('{{appid}}', '{{appkey}}');
