@@ -215,9 +215,7 @@ public class MyLeanCloudApp extends Application {
 
 {% endblock %}
 
-{% block sdk_using_north_america_node %}
-只要在调用 `AVOSCloud.initialize` 之后调用一下 `AVOSCloud.useAVCloudUS()` 即可，如下：
-
+{% block sdk_switching_node %}
 ```java
 public class MyLeanCloudApp extends Application {
 
@@ -231,9 +229,7 @@ public class MyLeanCloudApp extends Application {
         AVOSCloud.useAVCloudUS();
     }
 }
-
 ```
-
 {% endblock %}
 
 {% block save_a_hello_world %}
