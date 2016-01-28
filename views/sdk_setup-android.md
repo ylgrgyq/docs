@@ -65,28 +65,26 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
+    compile ('com.android.support:support-v4:21.0.3')
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
 
-    //avoscloud-push、Java-WebSocket、protobuf 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.3.1-leancloud'
-    compile 'com.google.protobuf:protobuf-java:2.6.1'
+    //avoscloud-push 为推送与实时聊天需要的包
+    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
 
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+'
+    compile ('cn.leancloud.android:avoscloud-statistics:v3.+')
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
+    compile ('cn.leancloud.android:avoscloud-feedback:v3.+@aar')
 
     //avoscloud-sns 为 LeanCloud 第三方登录包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
+    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'
+    compile ('cn.leancloud.android:avoscloud-search:v3.+@aar')
 }
 ```
 
