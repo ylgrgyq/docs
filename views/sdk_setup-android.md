@@ -65,27 +65,26 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
+    compile ('com.android.support:support-v4:21.0.3')
 
     //avoscloud-sdk 为 LeanCloud基础包
-    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
 
-    //avoscloud-push 与 Java-WebSocket 为推送与IM需要的包
-    compile 'cn.leancloud.android:avoscloud-push:v3.+@aar'
-    compile 'cn.leancloud.android:Java-WebSocket:1.3.1-leancloud'
+    //avoscloud-push 为推送与实时聊天需要的包
+    compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
 
     //avoscloud-statistics 为 LeanCloud 统计包
-    compile 'cn.leancloud.android:avoscloud-statistics:v3.+'
+    compile ('cn.leancloud.android:avoscloud-statistics:v3.+')
 
     //avoscloud-feedback 为 LeanCloud 用户反馈包
-    compile 'cn.leancloud.android:avoscloud-feedback:v3.+@aar'
+    compile ('cn.leancloud.android:avoscloud-feedback:v3.+@aar')
 
     //avoscloud-sns 为 LeanCloud 第三方登录包
-    compile 'cn.leancloud.android:avoscloud-sns:v3.+@aar'
-    compile 'cn.leancloud.android:qq-sdk:1.6.1-leancloud'
+    compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
+    compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
 
     //avoscloud-search 为 LeanCloud 应用内搜索包
-    compile 'cn.leancloud.android:avoscloud-search:v3.+@aar'
+    compile ('cn.leancloud.android:avoscloud-search:v3.+@aar')
 }
 ```
 
@@ -112,7 +111,8 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 ├── avoscloud-statistics-{version-number}.jar   // LeanCloud 统计模块
 ├── fastjson.jar                                // LeanCloud 基本存储模块
 ├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
-├── Java-WebSocket-1.2.0-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
+├── Java-WebSocket-1.3.1-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
+├── protobuf-java-2.6.1.jar                     // LeanCloud 推送模块和实时聊天模块
 ├── okhttp-2.6.0-leancloud.jar                  // LeanCloud 基本存储模块
 ├── okio-1.6.0-leancloud.jar                    // LeanCloud 基本存储模块
 ├── qq.sdk.1.6.1.jar                            // LeanCloud SNS 模块
@@ -133,7 +133,8 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 
 * LeanCloud 基础存储模块
 * `avospush-<版本号>.jar`
-* `Java-WebSocket-1.2.0-leancloud.jar`
+* `Java-WebSocket-1.3.1-leancloud.jar`
+* `protobuf-java-2.6.1.jar`
 
 ##### LeanCloud 统计模块
 
