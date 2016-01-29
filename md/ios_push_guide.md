@@ -14,35 +14,47 @@
 
 ## 保存 Installation
 
-在保存 installation 前，要先通过下列代码获取用户推送权限：
+在保存 installation 前，要先从 APNs 注册推送所需的 device token。可以选择使用 SDK 中提供的接口，也可以使用 Cocoa Touch 提供的原生接口。SDK 提供的接口封装了原生接口在不同版本 iOS 系统上的差异。
+
+`+[AVOSCloudIM registerForRemoteNotification]` 接口是一个快捷方法：
 
 ```objc
-// Before iOS 8:
-- (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    ...
-    // Register for push notifications
-    [application registerForRemoteNotificationTypes:
-                                UIRemoteNotificationTypeBadge |
-                                UIRemoteNotificationTypeAlert |
-                                UIRemoteNotificationTypeSound];
-    ...
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AVOSCloudIM registerForRemoteNotification];
 }
 ```
 
+上面的代码等价于以下代码：
+
 ```objc
-//For iOS 8:
-- (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    ...
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
-                                            | UIUserNotificationTypeBadge
-                                            | UIUserNotificationTypeSound
-                                                                             categories:nil];
-    [application registerUserNotificationSettings:settings];
-    [application registerForRemoteNotifications];
-    ...
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
+        UIRemoteNotificationType types = UIRemoteNotificationTypeBadge |
+                                         UIRemoteNotificationTypeAlert |
+                                         UIRemoteNotificationTypeSound;
+        [application registerForRemoteNotificationTypes:types];
+    } else {
+        UIUserNotificationType types = UIUserNotificationTypeAlert |
+                                       UIUserNotificationTypeBadge |
+                                       UIUserNotificationTypeSound;
+
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+
+        [application registerUserNotificationSettings:settings];
+        [application registerForRemoteNotifications];
+    }
 }
+```
+
+除此之外，还可以使用 SDK 提供的更灵活的接口来注册不同类型的通知：
+
+```objc
+@interface AVOSCloudIM : NSObject
+
++ (void)registerForRemoteNotificationTypes:(NSUInteger)types categories:(NSSet *)categories AVIM_TV_UNAVAILABLE AVIM_WATCH_UNAVAILABLE;
+
+@end
 ```
 
 在 iOS 设备中，Installation 的类是 AVInstallation，并且是 AVObject 的子类，使用同样的 API 存储和查询。如果要访问当前应用的 Installation 对象，可以通过 `[AVInstallation currentInstallation]` 方法。当你第一次保存 AVInstallation 的时候，它会插入 `_Installation` 表，你可以在 [数据管理](/data.html?appid={{appid}}) 平台看到和查询。当 deviceToken 一被保存，你就可以向这台设备推送消息了。

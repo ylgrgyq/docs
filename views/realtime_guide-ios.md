@@ -1571,7 +1571,12 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 ```
 {% endblock %}
 
-{# TODO: 2015-12-03 尚未实现 disable_im_cache，隐藏「客户端聊天记录缓存」 #}
+{% block disable_im_cache %}
+```objc
+@property (nonatomic, assign) BOOL messageQueryCacheEnabled;
+```
+{% endblock %}
+
 {% block text_im_history_cache %}{% endblock %}
 
 {% block networkStatus %}
@@ -1710,6 +1715,43 @@ AVIMClient *currentClient = [[AVIMClient alloc] initWithClientId:@"Tom" tag:@"Mo
     }
 };
 ```
+
+为了更灵活地控制登录过程，我们在登录接口上增加了一个选项，以下是方法签名：
+
+```objc
+- (void)openWithOption:(AVIMClientOpenOption *)option callback:(AVIMBooleanResultBlock)callback;
+```
+
+登录选项由 `AVIMClientOpenOption` 对象表示，其中的每一个属性表示具体的选项，目前支持以下选项：
+
+```objc
+@interface AVIMClientOpenOption : NSObject
+
+@property (nonatomic, assign) BOOL force;
+
+@end
+```
+
+`force` 选项设置登录动作的强制性。自然地，登录动作也区分成两种不同的类型，即强制登录和非强制登录。
+
+* 强制登录表示这个动作是强制的，不管当前设备有没有被其他设备踢下线过，都强制性地登录。
+* 非强制登录表示这个动作是非强制的，如果当前设备曾被其他设备踢下线过，登录会返回错误。
+
+将 `force` 设置为 `YES` 表示强制登录；设置为 `NO` 表示非强制登录。例如，如果希望实现强制登录，代码可以写成：
+
+```objc
+self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+AVIMClientOpenOption *option = [[AVIMClientOpenOption alloc] init];
+option.force = YES;
+
+[self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+    // Your code
+}];
+```
+
+如果 `option` 设置为 nil，或者使用 `-[AVIMClient openWithCallback:]` 方法进行登录，默认的登录类型为非强制登录。
+
 {% endblock %}
 
 {% block code_set_query_policy %}
