@@ -312,11 +312,11 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 云引擎如何上传文件
 
-请参考这篇博文 [《在云代码中处理上传文件》](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [云引擎指南 - 上传文件](leanengine_guide-cloudcode.html#上传文件) 中的相关内容。
+请参考这篇博文 [《在云引擎中处理上传文件》](http://blog.leancloud.cn/blog/2013/11/23/zai-yun-dai-ma-zhong-chu-li-shang-chuan-wen-jian/)，或者 [云引擎指南 - 上传文件](leanengine_guide-cloudcode.html#上传文件) 中的相关内容。
 
 ### 云引擎中如何处理用户登录和 Cookie
 
-请参考这篇博文 [《在云代码中处理用户登录》](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云引擎指南](leanengine_guide-cloudcode.html#处理用户登录和登出) 中的相关内容。
+请参考这篇博文 [《在云引擎中处理用户登录》](http://blog.leancloud.cn/blog/2013/12/16/zai-yun-dai-ma-zhong-chu-li-yong-hu-deng-lu/)，或者 [云引擎指南](leanengine_guide-cloudcode.html#处理用户登录和登出) 中的相关内容。
 
 
 ### 云引擎的二级域名多久生效
@@ -325,7 +325,7 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 ### 云引擎二级域名可以启用 HTTPS 吗
 
-请参考这篇博文 [《为云代码托管网站启用 HTTPS》](http://blog.leancloud.cn/blog/2013/12/20/wei-yun-dai-ma-tuo-guan-wang-zhan-qi-yong-https/)。
+请参考这篇博文 [《为云引擎托管网站启用 HTTPS》](http://blog.leancloud.cn/blog/2013/12/20/wei-yun-dai-ma-tuo-guan-wang-zhan-qi-yong-https/)。
 
 ### 云引擎 Web Hosting 备案
 

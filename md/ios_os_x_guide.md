@@ -1712,7 +1712,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     }];
 ```
 
-验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
+验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云引擎的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1862,11 +1862,11 @@ NSArray<AVObject *> *posts = [query findObjects];
 * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
 * iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
 
-## 调用云代码
+## 调用云引擎
 
-### 调用云代码函数
+### 调用云引擎函数
 
-使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
+使用 `AVCloud` 类的静态方法来调用云引擎中定义的函数：
 
 ``` objc
     NSDictionary *parameters = @{...};
@@ -1896,11 +1896,11 @@ RPC 云引擎调用的方法签名以 `rpc` 方法打头，例如 `+[AVCloud rpc
 
 ### 区分生产环境调用
 
-云代码区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
+云引擎区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
 
 ``` objc
 [AVCloud setProductionMode:NO];
 ```
 
-其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
+其中 `NO` 表示「测试环境」，默认调用生产环境云引擎。
 

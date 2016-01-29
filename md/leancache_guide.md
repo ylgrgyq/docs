@@ -132,9 +132,9 @@ import redis
 r = redis.from_url(os.environ.get("REDIS_URL_<实例名称>"))
 ```
 
-### 在云引擎中使用（旧版云代码环境）
+### 在云引擎中使用（旧版云引擎环境）
 
-旧版云代码环境不支持 LeanCache，建议升级到云引擎 3.0 Node.js 环境，升级文档详见 [云引擎 2.0 升级 3.0 指南](leanengine_upgrade_3.html)。
+旧版云引擎环境不支持 LeanCache，建议升级到云引擎 3.0 Node.js 环境，升级文档详见 [云引擎 2.0 升级 3.0 指南](leanengine_upgrade_3.html)。
 
 ### 多应用间共享使用
 

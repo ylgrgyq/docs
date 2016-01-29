@@ -272,7 +272,7 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 3.0 项目将这样的文件命名为 `$PROJECT_DIR/cloud.js`，所以你需要将 `$PROJECT_DIR/cloud/main.js` 移动并更名为 `$PROJECT_DIR/cloud.js`。
 
-**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云代码](leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](leanengine_guide-node.html#项目约束)。
+**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云引擎](leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](leanengine_guide-node.html#项目约束)。
 
 如果是最基本的 2.0 项目的代码，那它的内容可能是这样：
 
