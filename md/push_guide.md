@@ -312,18 +312,18 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 
 #### 过期时间和定时推送
 
-`expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 是一个 UTC 时间的字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ`。
+`expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 是一个 UTC 时间的字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ`。
 
 ```
 {
-      "expiration_time": "2015-11-11T00:51:13Z",
+      "expiration_time": "2016-01-28T00:07:29.773Z",
       "data": {
-        "alert": "过期时间为北京时间 11 月 11 号 8:51。"
+        "alert": "过期时间为北京时间 1 月 28 日 8:07。"
       }
 }
 ```
 
-`expiration_interval` 也可以用于指定过期时间，不过这是一个相对时间，以*秒为单位*，从 API 调用时间点开始计算起：
+`expiration_interval` 也可以用于指定过期时间，不过这是一个相对时间，以**秒**为单位，从 API 调用时间点开始计算起：
 
 ```
 {
@@ -334,14 +334,14 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 }
 ```
 
-`push_time` 是定时推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ` 的 UTC 时间，也可以结合 `expiration_interval` 设定过期时间：
+`push_time` 是定时推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ` 的 UTC 时间，也可以结合 `expiration_interval` 设定过期时间：
 
 ```
 {
-      "push_time":           "2015-11-11T00:51:13.931ZZ",
+      "push_time":           "2016-01-28T00:07:29.773Z",
       "expiration_interval": "86400",
       "data": {
-        "alert": "北京时间 11 月 11 号 8:51 发送这条推送，24 小时后过期"
+        "alert": "北京时间 1 月 28 日 8:07 发送这条推送，24 小时后过期"
       }
 }
 ```
