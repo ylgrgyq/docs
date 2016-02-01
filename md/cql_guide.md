@@ -503,7 +503,7 @@ CQL 提供了一些内置函数来方便地创建 pointer、geopoint 等类型�
 
 <table>
   <tr><th>Name</th><th>Operation</th></tr>
-  <tr><td>date('YYYY-MM-DDTHH:MM:SS.MMMMZ')</td><td>创建日期类型</td></tr>
+  <tr><td>date('YYYY-MM-DDTHH:MM:SS.MMMZ')</td><td>创建日期类型</td></tr>
   <tr><td>pointer(className, objectId)</td><td>创建 Pointer</td></tr>
   <tr><td>geopoint(经度, 纬度)</td><td>创建 GeoPoint</td></tr>
   <tr><td>file(objectId)</td><td>创建 file 类型</td></tr>
