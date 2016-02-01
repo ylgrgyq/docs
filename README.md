@@ -104,7 +104,7 @@ $ grunt server
 {# 这是注释，用 <!-- --> 无效 #} 
 
 {% if numUsers < 5 %}...{% endif %}
-{% if i == 0 %}...{% endif %}
+{% if i != "String" %}...{% endif %}
 {% if users and showUsers %}...{% endif %}
 {% if i == 0 and not hideFirst %}...{% endif %}
 {% if (x < 5 or y < 5) and foo %}...{% endif %}
