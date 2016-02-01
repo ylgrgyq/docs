@@ -1577,8 +1577,6 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 ```
 {% endblock %}
 
-{% block text_im_history_cache %}{% endblock %}
-
 {% block networkStatus %}
 与网络相关的通知（网络断开、恢复等）要采用 `AVIMClientDelegate` 代理方式来实现，主要接口如下：
 
