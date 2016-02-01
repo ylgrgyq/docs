@@ -548,7 +548,7 @@ Key（属性名）必须是字母和数字组成的字符串，Value（属性值
 }
 ```
 
-createdAt 和 updatedAt 都是 UTC 时间戳，以 ISO 8601 标准和毫秒级精度储存：`YYYY-MM-DDTHH:MM:SS.MMMMZ`。objectId 是一个字符串，在类中可以唯一标识一个实例。
+createdAt 和 updatedAt 都是 UTC 时间戳，以 ISO 8601 标准和毫秒级精度储存：`YYYY-MM-DDTHH:MM:SS.MMMZ`。objectId 是一个字符串，在类中可以唯一标识一个实例。
 在 REST API 中，class 级的操作都是通过一个带类名的资源路径（URL）来标识的。例如，如果类名是 Post，那么 class 的 URL 就是：
 
 ```

@@ -202,7 +202,7 @@ puts sign
 来传入访问令牌。
 
 所有开放 API 都以 `https://leancloud.cn/1.1/open` 为前缀。
-所有日期格式都为`YYYY-MM-DDTHH:MM:SS.MMMMZ`。
+所有日期格式都为`YYYY-MM-DDTHH:MM:SS.MMMZ`。
 
 请求和应答都以 JSON 格式传输，请求请设置 `Content-Type: applicaiton/json;charset=utf-8` 的 HTTP 头。字符串编码为`UTF-8`。
 
