@@ -1573,11 +1573,28 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 
 {% block disable_im_cache %}
 ```objc
-@property (nonatomic, assign) BOOL messageQueryCacheEnabled;
+- (void)tomQueryMessagesWithLimitAndIgnoreCache {
+    // Tom 创建了一个 client，用自己的名字作为 clientId
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+    // Tom 关闭了 SDK 内建的消息缓存功能，忽略本地缓存。
+    self.client.messageQueryCacheEnabled = NO;
+
+    // Tom 打开 client
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        // Tom 创建查询会话的 query
+        AVIMConversationQuery *query = [self.client conversationQuery];
+        // Tom 获取 id 为 2f08e882f2a11ef07902eeb510d4223b 的会话
+        [query getConversationById:@"2f08e882f2a11ef07902eeb510d4223b" callback:^(AVIMConversation *conversation, NSError *error) {
+            // 查询对话中最后 10 条消息，由于之前关闭了消息缓存功能，查询会走网络请求。
+            [conversation queryMessagesWithLimit:10 callback:^(NSArray *objects, NSError *error) {
+                NSLog(@"查询成功！");
+            }];
+        }];
+    }];
+}
 ```
 {% endblock %}
-
-{% block text_im_history_cache %}{% endblock %}
 
 {% block networkStatus %}
 与网络相关的通知（网络断开、恢复等）要采用 `AVIMClientDelegate` 代理方式来实现，主要接口如下：
