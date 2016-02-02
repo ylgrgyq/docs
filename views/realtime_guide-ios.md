@@ -1415,7 +1415,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
     [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
         // Tom 创建名称为 「HelloKitty PK 加菲猫」的会话
         [self.client createConversationWithName:@"HelloKitty PK 加菲猫" clientIds:@[] attributes:nil options:AVIMConversationOptionTransient callback:^(AVIMConversation *conversation, NSError *error) {
-            if (succeeded) {
+            if (!error) {
                 NSLog(@"创建成功！");
             }
         }];
