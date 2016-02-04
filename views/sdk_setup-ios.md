@@ -8,7 +8,7 @@
 #### CocoaPods
 [CocoaPods](http://www.cocoapods.org/) 是开发 OS X 和 iOS 应用程序的一个第三方库的依赖管理工具。利用 [CocoaPods](http://www.cocoapods.org/)，可以定义自己的依赖关系 (称作 pods)，并且随着时间的推移，它会让整个开发环境中对第三方库的版本管理变得非常方便。
 
-首先确保开发环境中已经安装了 Ruby（一般安装了 XCode，Ruby 会被自动安装上），如果没有安装请执行以下命令行：
+首先确保开发环境中已经安装了 Ruby（一般安装了 Xcode，Ruby 会被自动安装上），如果没有安装请执行以下命令行：
 
 ```sh
 $ sudo gem install cocoapods
@@ -25,7 +25,7 @@ $ gem sources -l
 https://ruby.taobao.org
 ```
 
-然后再安装 CocoaPods，
+然后再安装 CocoaPods：
 
 ```sh
 $ sudo gem install cocoapods
@@ -33,13 +33,65 @@ $ sudo gem install cocoapods
 
 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
-  ```sh
-  pod 'AVOSCloud'//数据存储，短信等基础服务模块
-  pod 'AVOSCloudIM'//实时通信模块
-  // 根据实际需要选择引入的 SDK 模块
-  ```
+注意：请根据实际需要选择模块。譬如，项目用不到 IM 功能，则没有必要集成 AVOSCloudIM 模块。
 
-执行命令 `pod install --verbose` 安装 SDK。如果本地安装过 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
+```sh
+# 静态库 pods
+pod 'AVOSCloud'               # 数据存储，短信，云引擎调用等基础服务模块
+pod 'AVOSCloudIM'             # 实时通信模块
+pod 'AVOSCloudCrashReporting' # 错误报告模块
+```
+
+我们同时提供了动态库和静态库。每个模块都有两个对应的 pod。以上列出的是静态库 pod。如果希望集成动态库，则可以在 Podfile 中添加以下内容：
+
+```sh
+use_frameworks!
+
+# 动态库 pods
+pod 'AVOSCloudDynamic'               # 数据存储，短信，云引擎调用等基础服务模块
+pod 'AVOSCloudIMDynamic'             # 实时通信模块
+pod 'AVOSCloudCrashReportingDynamic' # 错误报告模块
+```
+
+执行命令 `pod install --verbose` 安装 SDK。如果本地安装过最新版本的 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。
+
+### 导入模块
+
+SDK 集成完毕后，就可以将模块导入到您的项目中了。导入的方式取决于项目的语言类型。项目的语言类型是在创建项目时选择的。
+
+#### 导入 Objective-C 项目
+
+如果项目的语言类型是 Objective-C，则非常简单，只需要在合适的地方导入头文件。譬如，希望在某个源文件中使用 AVOSCloud 基础模块，则可以像这样导入：
+
+```objc
+#import <AVOSCloud/AVOSCloud.h>
+```
+
+此外，还可以在项目的 `pch` 文件中导入。这样就可以全局访问 AVOSCloud 基础模块，不用在单个文件中导入了。
+
+#### 导入 Swift 项目
+
+如果项目的语言类型是 Swift，则要看集成的是静态库还是动态库。如果集成的动态库，则只需要在源文件中直接导入即可：
+
+```swift
+import AVOSCloud
+```
+
+如果在 Swift 项目中集成了静态库，则需要一个额外的步骤：
+
+首先，需要为项目创建桥接头文件（Bridging Header），具体步骤可以参考这篇博客：[使用 Swift 和 LeanCloud 构建 iOS 应用](https://blog.leancloud.cn/1407/)。
+
+然后，在桥接头文件中使用 Objective-C 的语法导入模块的头文件：
+
+```objc
+#import <AVOSCloud/AVOSCloud.h>
+```
+
+注意，不用在 Swift 源文件中导入，因为目前 Xcode 还无法处理这种情况。
+
+完成上述步骤，就可以在 Swift 源文件中访问了。
+
+#### 参考资料
 
 相关资料：《[CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)》
 
@@ -63,13 +115,13 @@ $ sudo gem install cocoapods
 这里要特别注意如下几点：
 
 * 手动添加下列依赖库：
-  * SystemConfiguration.framework
-  * MobileCoreServices.framework
-  * CoreTelephony.framework
-  * CoreLocation.framework
-  * libicucore.dylib
+  * SystemConfiguration
+  * MobileCoreServices
+  * CoreTelephony
+  * CoreLocation
+  * libicucore
 
-* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++.dylib**。
+* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++**。
 
 * 在 Target 的 **Build Settings** 中，为 **Other Linker Flags** 增加：
   * `-lz`
