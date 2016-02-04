@@ -79,7 +79,7 @@ import AVOSCloud
 
 如果在 Swift 项目中集成了静态库，则需要一个额外的步骤：
 
-首先，需要为项目创建桥接头文件（Bridging Header），具体步骤可以参考这篇博客：[使用 Swift 和 LeanCloud 构建 iOS 应用][https://blog.leancloud.cn/1407/]。
+首先，需要为项目创建桥接头文件（Bridging Header），具体步骤可以参考这篇博客：[使用 Swift 和 LeanCloud 构建 iOS 应用](https://blog.leancloud.cn/1407/)。
 
 然后，在桥接头文件中使用 Objective-C 的语法导入模块的头文件：
 
@@ -121,7 +121,7 @@ import AVOSCloud
   * CoreLocation
   * libicucore
 
-* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++.dylib**。
+* 如果使用 [崩溃报告 AVOSCloudCrashReporting](./ios_crashreporting_guide.html)，还需额外添加 **libc++**。
 
 * 在 Target 的 **Build Settings** 中，为 **Other Linker Flags** 增加：
   * `-lz`
