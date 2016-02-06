@@ -1527,7 +1527,7 @@ function uploadFile (req, res) {
         base64data.push(buffer);
       });
     }).on('finish', function() {
-      const f = new AV.File(pubFileName, {
+      var f = new AV.File(pubFileName, {
         // 仅上传第一个文件（多个文件循环创建）
         base64: base64data[0]
       });
