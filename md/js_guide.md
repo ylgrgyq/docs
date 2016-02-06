@@ -1502,6 +1502,7 @@ function uploadPhoto() {
 ```
 
 ```javascript
+// 服务端代码，基于 Nodejs、Express
 var AV = require('leanengine');
 // 服务端需要使用 connect-busboy（通过 npm install 安装）
 var busboy = require('connect-busboy');
