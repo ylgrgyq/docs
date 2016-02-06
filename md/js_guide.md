@@ -1453,6 +1453,7 @@ avFile.save().then(function(obj) {
 ```javascript
 var post = new AV.Object('Post');
 post.set('content', '#花儿与少年# 迪拜疯狂之旅');
+// fileObject 是一个实例化的 AV.File 对象
 post.set('image', fileObject);
 post.save().then(function(obj) {
   // 数据保存成功
@@ -1467,7 +1468,7 @@ post.save().then(function(obj) {
 
 如果仅是想简单的上传，可以直接在 Web 前端使用 AV.File 上面的相关方法。但真实使用场景中，还有很多开发者需要自行实现一个上传接口，对数据做更多的处理。
 
-以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Nodejs 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](https://leancloud.cn/docs/leanengine_guide-node.html)」，非常出色的 Nodejs 环境。
+以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](https://leancloud.cn/docs/leanengine_guide-node.html)」，非常出色的 Node.js 环境。
 
 ```html
 // 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
@@ -1502,7 +1503,7 @@ function uploadPhoto() {
 ```
 
 ```javascript
-// 服务端代码，基于 Nodejs、Express
+// 服务端代码，基于 Node.js、Express
 var AV = require('leanengine');
 // 服务端需要使用 connect-busboy（通过 npm install 安装）
 var busboy = require('connect-busboy');
