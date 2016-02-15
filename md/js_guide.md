@@ -1216,7 +1216,7 @@ function timerPromisefy(delay) {
       resolve(delay);
     }, delay);
    });
-};
+}
 
 var startDate = Date.now();
 
@@ -1284,16 +1284,18 @@ AV.Promise.all([
   //values 数组为 [1, 32, 64, 128]
 });
 //测试下失败的例子
-AV.Promise.when(
+AV.Promise.all([
   timerPromisefy(1),
   timerPromisefy(32),
   AV.Promise.error('test error'),
   timerPromisefy(128)
-).then(function () {
+]).then(function () {
   //不会执行
 }, function(error){
   console.dir(error);  //print 'test error'
 });
+
+//http://jsplay.avosapps.com/zuy/embed?js,console
 ```
 
 ### race 方法
