@@ -1856,6 +1856,19 @@ AV.User.logOut();
 var currentUser = AV.User.current();  // this will now be null
 ```
 
+### SessionToken
+用户成功注册或登录后，服务器会返回 sessionToken，用来认证该用户随后的请求，你可以通过 `AV.User.current()._sessionToken` 来获取当前登录用户的 sessionToken。在知道用户的 sessionToken 的情况下，可以使用 `AV.User.become()` 方法来以该用户身份登录。
+
+```javascript
+AV.User.become(sessionToken).then(function (user) {
+  // The current user is changed.
+}, function (error) {
+  // Login failed.
+});
+```
+
+这种方式适用于需要传递用户登录状态的情况，比如 Hybrid 应用中使用 native SDK 登录后在 WebView 中自动登录，或者在 server 端处理用户请求时以该用户身份登录。因为获取了 sessionToken 就得到了该用户的账户访问权限，请在使用这种方式登录时注意不要泄露 sessionToken。
+
 ### 用户对象的安全
 
 AV.User 类默认就是受保护的，在 AV.User 中保存的数据只能被创建它的用户所修改，但可以被任意客户端所读取。
