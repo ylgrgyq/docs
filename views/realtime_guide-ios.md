@@ -1794,4 +1794,4 @@ option.force = YES;
 ```
 {% endblock %}
 
-{% block link_avquery_chache %} [存储指南 &middot; AVQuery 缓存查询](ios_os_x_guide.html#缓存查询) 一节。{% endblock %}
+{% block link_avquery_chache %} [存储指南 &middot; AVQuery 缓存查询](leanstorage_guide-ios.html#缓存查询) 一节。{% endblock %}
