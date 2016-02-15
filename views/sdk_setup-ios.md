@@ -1,6 +1,7 @@
 {% extends "./sdk_setup.tmpl" %}
 {% block language %}iOS / OS X{% endblock %} 
 {% set command_install_cocoapods = "$ sudo gem install cocoapods" %}
+{% set code_import_sdk_core = "#import <AVOSCloud/AVOSCloud.h>" %}
 
 {% block libs_tool_automatic %}
 [CocoaPods](http://www.cocoapods.org/) 是开发 OS X 和 iOS 应用程序的一个第三方库的依赖管理工具，通过它可以定义自己的依赖关系（称作 pods），并且随着时间的推移，它会让整个开发环境中对第三方库的版本管理变得非常方便。具体可以参考 [CocoaPods 安装和使用教程](http://code4app.com/article/cocoapods-install-usage)。
@@ -62,7 +63,7 @@ SDK 集成完毕后，就可以将模块导入到项目中了。导入的方式�
 如果项目的语言类型是 Objective-C，只需要在合适的地方导入头文件。譬如，希望在某个源文件中使用 AVOSCloud 基础模块，则可以这样导入：
 
 ```objc
-#import <AVOSCloud/AVOSCloud.h>
+{{code_import_sdk_core| safe}}
 ```
 
 此外，还可以在项目的 `pch` 文件中导入。这样就可以全局访问 AVOSCloud 基础模块，不用在单个文件中导入了。
@@ -75,19 +76,17 @@ SDK 集成完毕后，就可以将模块导入到项目中了。导入的方式�
 import AVOSCloud
 ```
 
-如果在 Swift 项目中集成了静态库，则需要一个额外的步骤：
-
-首先，需要为项目创建桥接头文件（Bridging Header），具体步骤可以参考这篇博客：[使用 Swift 和 LeanCloud 构建 iOS 应用](https://blog.leancloud.cn/1407/)。
-
-然后，在桥接头文件中使用 Objective-C 的语法导入模块的头文件：
+如果是集成**静态库**，则需要先为项目创建一个桥接头文件 Bridging Header（[步骤见附录](#创建桥接头文件)），然后在该桥接头文件中使用 Objective-C 的语法来导入模块的头文件：
 
 ```objc
-#import <AVOSCloud/AVOSCloud.h>
+{{code_import_sdk_core| safe}}
 ```
 
-注意，不用在 Swift 源文件中导入，因为目前 Xcode 还无法处理这种情况。
+再编译运行一下项目，确认一切是否正常。
 
-完成上述步骤，就可以在 Swift 源文件中访问了。
+<div class="callout callout-info">注意：不要在 Swift 源文件中导入，因为目前 Xcode 还无法处理这种情况。</div>
+
+完成上述步骤，就可以在 Swift 源文件中使用 Objective-C 的类和方法了。
 {% endblock %}
 
 {% block import_sdk %}
@@ -184,6 +183,19 @@ AVObject *post = [AVObject objectWithClassName:@"TestObject"];
 
 {% block permission_access_network_config %}{% endblock %}
 
-{% block platform_specific_faq %}{% endblock %}
+{% block platform_specific_faq %}
+## 附录
 
+### 创建桥接头文件
 
+要在 Swift 项目中使用 Objective-C 的类和方法，则需要创建一个 Objective-C 桥接头文件（bridging header），把在 Swift 中要使用的 Objective-C 的头文件都包含进来。
+
+首先在项目中创建一个临时的 Objective-C 类文件（如 `Dummy.m`），Xcode 将询问是否要创建一个桥接头文件：
+
+<img src="images/bridgingheader_2x.png" width="592" height="168">
+
+点击 **Create Bridging Header** 后，Xcode 会生成一个以 `-Bridging-Header.h` 结尾的新文件（假设项目名称为 MyApp，则新文件名为 `MyApp-Bridging-Header.h`），此时 `Dummy.m` 文件的使命已经完成，可以安全删除了。
+
+你也可以选择手工创建桥接头文件，并手工配置编译设置（File > New > File > (iOS, watchOS, tvOS, or OS X) > Source > Header File），详细步骤请参考 [Apple Developer Docs &middot; Swift and Objective-C in the Same Project](
+https://developer.apple.com/library/ios/documentation/Swift/Conceptual/BuildingCocoaApps/MixandMatch.html#//apple_ref/doc/uid/TP40014216-CH10-ID122)。
+{% endblock %}
