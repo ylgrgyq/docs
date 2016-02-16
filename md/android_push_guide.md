@@ -264,4 +264,12 @@ public class MyActivity extends Activity {
 }
 ```
 
+如果要区分应用是由「推送」打开的这种情况，还需要为 `Intent` 增加 `PUSH_INTENT_KEY` 参数，该统计会记入 [请求分析 > Push 打开](/apistat.html?appid={{appid}}#/_appOpenWithPush) 中：
+
+```
+        Intent intent = getIntent();
+        intent.putExtra(AVConstants.PUSH_INTENT_KEY, 1);
+        AVAnalytics.trackAppOpened(intent);
+```
+
 你可以在 [请求分析](/apistat.html?appid={{appid}}#/_appOpenWithPush) 菜单里看到通知和应用的打开情况。
