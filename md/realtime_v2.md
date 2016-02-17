@@ -344,8 +344,12 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
   消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * **_receiversOffline**<br/>
   消息发送完成，存在离线的收件人。
+* **_messageSent**<br/>
+  消息发送完成。
 * **_conversationStart**<br/>
   创建对话，在签名校验（如果开启）之后，实际创建之前。
+* **_conversationStarted**<br/>
+  创建对话完成。
 * **_conversationAdd**<br/>
   向对话添加成员，在签名校验（如果开启）之后，实际加入之前，包括主动加入和被其他用户加入两种情况。
 * **_conversationRemove**<br/>
@@ -436,6 +440,31 @@ offlinePeers|可选|数组，筛选过的推送收件人。
 pushMessage|可选|推送内容，支持自定义 JSON 结构。
 force|可选|如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false。
 
+### `_messageSent`
+
+在消息发送完成后执行，对消息发送性能没有影响，可以用来执行相对耗时的逻辑。
+
+### 参数
+
+参数	| 说明
+----- | ------
+fromPeer	| 消息发送者的 ID
+convId	| 消息所属对话的 ID
+msgId | 消息 id
+onlinePeers	| 当前在线发送的用户 id
+offlinePeers | 当前离线的用户 id
+transient	| 是否是 transient 消息
+system | 是否是 system conversation
+bin | 是否是二进制消息
+content	| 消息体字符串
+receipt	| 是否要求回执
+timestamp	| 服务器收到消息的时间戳（毫秒）
+sourceIP	| 消息发送者的 IP
+
+### 返回
+
+这个 hook 不会对返回值进行检查。只需返回 `{}` 即可。
+
 ### `_conversationStart`
 
 在创建对话时调用，发生在签名验证之后、创建对话之前。
@@ -454,6 +483,20 @@ attr | 创建对话时的额外属性
 --- | ---|---
 reject |可选|是否拒绝，默认为 **false**。
 code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整型错误码。
+
+### `_conversationStarted`
+
+对话创建后调用
+
+### 参数
+
+参数 | 说明
+--- | ---
+convId | 新生成的对话 Id
+
+### 返回
+
+这个 hook 不对返回值进行处理，只需返回 `{}` 即可。
 
 ### `_conversationAdd`
 
