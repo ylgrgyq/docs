@@ -197,7 +197,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
   "data": {
    "alert":             "消息内容",
    "category":          "通知分类名称",
-   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串  'Increment'（大小写敏感）",
+   "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串 "Increment"（大小写敏感）,
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": "如果使用 Newsstand，设置为 1 来开始一次后台下载",
    "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
@@ -269,7 +269,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
   "data":{
     "ios": {
       "alert":             "消息内容",
-      "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
+      "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 "Increment" 这个字符串（大小写敏感）,
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载",
       "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
@@ -591,7 +591,7 @@ curl -X GET \
   -H "Content-Type: application/json" \
   https://leancloud.cn/1.1/scheduledPushMessages
  ```
- 
+
 查询出来的结果类似：
 
 ```json
@@ -624,7 +624,7 @@ curl -X GET \
     }
   ]
 }
-``` 
+```
 
 其中 `push_msg` 就是该推送消息的详情，`expire_time` 是消息设定推送时间的 unix 时间戳。
 
