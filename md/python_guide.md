@@ -196,13 +196,6 @@ game_score.save()
 game_score.destroy()
 ```
 
-批量删除对象可以使用 `leancloud.Object.destroy_all()` 方法：
-
-```python
-objects = [obj1, obj2, obj3]
-leancloud.Object.destroy_all(objects)
-```
-
 ### 关系数据
 
 leancloud 后端存储支持一对一，一对多，多对多数据建模。
