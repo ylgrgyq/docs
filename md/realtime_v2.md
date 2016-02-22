@@ -656,7 +656,8 @@ data | 消息内容
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
 `4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](https://leanticket.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
-`4302`|<code class="text-nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
+`4301`|`CONVERSATION_API_FAILED`|上游 API 调用异常，请查看报错信息了解错误详情
+`4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
 `4305`|`CONVERSATION_REJECTED_BY_APP`|对话操作被应用的云引擎 Hook 拒绝
