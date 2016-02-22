@@ -465,6 +465,16 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 {% endblock %}
 
 {% block message_sent_ack %}
+调用 `sendMessage` 方法时，在 options 中传入 `AVIMMessageSendOptionRequestReceipt`：
+
+```objc
+[conversation sendMessage:message options:AVIMMessageSendOptionRequestReceipt callback:^(BOOL succeeded, NSError *error) {
+  if (succeeded) {
+    NSLog(@"发送成功！需要回执");
+  }
+}];
+```
+
 监听消息是否已送达实现 `conversation:messageDelivered` 即可。
 ```objc
 - (void)conversation:(AVIMConversation *)conversation messageDelivered:(AVIMMessage *)message{
