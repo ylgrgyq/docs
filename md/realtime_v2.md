@@ -243,7 +243,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ![image](images/realtime_ios_push.png)
 
-此外，您还可以设置声音等推送属性，具体的字段可以参考[这里的结构](./push_guide.html#消息内容_Data)。
+此外，您还可以设置声音等推送属性，具体的字段可以参考[推送 &middot; 消息内容 Data](./push_guide.html#消息内容_Data)。
 
 ##### 动态内容
 
