@@ -13,6 +13,7 @@
 {% set hook_on_login      = "onLogin" %}
 
 {% block beforeSaveExample %}
+
 ```javascript
 AV.Cloud.beforeSave('Review', function(request, response) {
   var comment = request.object.get('comment');
@@ -32,6 +33,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 {% endblock %}
 
 {% block afterSaveExample %}
+
 ```javascript
 AV.Cloud.afterSave('Comment', function(request) {
   var query = new AV.Query('Post');
@@ -49,6 +51,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 {% endblock %}
 
 {% block afterSaveExample2 %}
+
 ```javascript
 AV.Cloud.afterSave('_User', function(request) {
   console.log(request.object);
@@ -66,6 +69,7 @@ AV.Cloud.afterSave('_User', function(request) {
 {% endblock %}
 
 {% block beforeUpdateExample %}
+
 ```javascript
 AV.Cloud.beforeUpdate('Review', function(request, response) {
   // 如果 comment 字段被修改了，检查该字段的长度
@@ -89,6 +93,7 @@ AV.Cloud.beforeUpdate('Review', function(request, response) {
 {% endblock %}
 
 {% block afterUpdateExample %}
+
 ```javascript
 AV.Cloud.afterUpdate('Article', function(request) {
    console.log('Updated article,the id is :' + request.object.id);
@@ -97,6 +102,7 @@ AV.Cloud.afterUpdate('Article', function(request) {
 {% endblock %}
 
 {% block beforeDeleteExample %}
+
 ```javascript
 AV.Cloud.beforeDelete('Album', function(request, response) {
   //查询Photo中还有没有属于这个相册的照片
@@ -122,6 +128,7 @@ AV.Cloud.beforeDelete('Album', function(request, response) {
 {% endblock %}
 
 {% block afterDeleteExample %}
+
 ```javascript
 AV.Cloud.afterDelete('Album', function(request) {
   var query = new AV.Query('Photo');
@@ -141,6 +148,7 @@ AV.Cloud.afterDelete('Album', function(request) {
 {% endblock %}
 
 {% block onVerifiedExample %}
+
 ```javascript
 AV.Cloud.onVerified('sms', function(request, response) {
     console.log('onVerified: sms, user: ' + request.object);
@@ -149,6 +157,7 @@ AV.Cloud.onVerified('sms', function(request, response) {
 {% endblock %}
 
 {% block onLoginExample %}
+
 ```javascript
 AV.Cloud.onLogin(function(request, response) {
   // 因为此时用户还没有登录，所以用户信息是保存在 request.object 对象中
