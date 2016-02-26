@@ -91,7 +91,7 @@ nonce | 可选 | 签名随机字符串（签名参数）
 signature_ts | 可选 | 签名时间戳（签名参数）
 signature | 可选 | 签名时间戳（签名参数）
 
-为了保证获取聊天记录的安全性，可以开启签名认证（[控制台 > 设置 > **应用选项** > **聊天、推送** > 
+为了保证获取聊天记录的安全性，可以开启签名认证（[控制台 > 设置 > **应用选项** > **聊天、推送** >
 **聊天记录查询，启用签名认证**](/app.html?appid={{appid}}#/permission)）。了解更详细的签名规则请参考 [聊天签名方法](realtime_v2.html#开启对话签名)。签名参数仅在开启应用选项后有效，如果没有开启选项，就不需要传签名参数。
 
 签名采用 Hmac-sha1 算法，输出字节流的十六进制字符串 (hex dump)，签名的 key 必须是应用的 master key，签名的消息格式如下：
@@ -184,6 +184,22 @@ curl -X DELETE \
 convid | 对话 id
 msgid | 消息 id
 timestamp | 消息时间戳
+
+## 强制修改聊天记录
+
+修改一条聊天记录，要求使用 master key 授权。
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -d '"{"msg-id":"4XC_IHK+Ry6CXzIPq_nc7Q","conv-id":"5667070f60b2298fdddb683700000000","ack-at":1449683354932,"is-conv":true,"from":"5666d78c60b204d588fd63aa","bin":false,"timestamp":1449661888571,"is-room":false,"from-ip":"223.104.9.13","to":"5667070f60b2298fdddb6837","data":"{\"_lctype\":-1,\"_lctext\":\"\u771f\u4e0d\u61c2\"}"}"'
+  https://leancloud.cn/1.1/rtm/messages/logs
+```
+
+这里传入的数据格式与消息记录返回的格式完全一致，只需要按照实际的需求修改相应的字段即可。
+
+注意此处仅能修改服务器端的消息记录，并不能修改客户端缓存的消息记录。
 
 ### 构建对话 ID
 
