@@ -211,7 +211,18 @@ def after_user_save(user):
 {% endblock %}
 
 {% block beforeUpdate %}
-Python SDK 尚未支持这个 Hook。
+```python
+@engine.before_update('Review')
+def before_hook_object_update(obj):
+    # 如果 comment 字段被修改了，检查该字段的长度
+    assert obj.updated_keys == ['clientValue']
+    if 'comment' not in obj.updated_keys:
+        # comment 字段没有修改，跳过检查
+        return
+    if len(obj.get('comment')) > 140:
+        # 拒绝过长的修改
+        raise engine.LeanEngineError(message='comment 长度不得超过 140 个字符')
+```
 {% endblock %}
 
 {% block afterUpdateExample %}
@@ -408,4 +419,43 @@ elif os.environ.get('LC_APP_PROD') == '0':
 else:
     # 当前为开发环境
 ```
+{% endblock %}
+
+{% block hookDeadLoop %}
+#### 防止死循环调用
+
+在实际使用中有这样一种场景：在 `Post` 类的 `{{hook_after_update}}` Hook 函数中，对传入的 `Post` 对象做了修改并且保存，而这个保存动作又会再次触发 `{{hook_after_update}}`，由此形成死循环。针对这种情况，我们为所有 Hook 函数传入的 `leancloud.Object` 对象做了处理，以阻止死循环调用的产生。
+
+不过请注意，以下情况还需要开发者自行处理：
+
+- 对传入的 `leancloud.Object` 对象进行 `fetch` 操作。
+- 重新构造传入的 `leancloud.Object` 对象，如使用 `leancloud.Object.create_without_data()` 方法。
+
+对于使用上述方式产生的对象，请根据需要自行调用以下 API：
+
+- `leancloud.Object.disable_before_hook()` 或 
+- `leancloud.Object.disable_after_hook()` 
+
+这样，对象的保存或删除动作就不会再次触发相关的 Hook 函数。
+
+```python
+@engine.after_update('Post')
+def after_post_update(post):
+    # 直接修改并保存对象不会再次触发 after update hook 函数
+    post.set('foo', 'bar')
+    post.save()
+
+    # 如果有 fetch 操作，则需要在新获得的对象上调用相关的 disable 方法
+    # 来确保不会再次触发 Hook 函数
+    post.fetch()
+    post.disable_after_hook()
+    post.set('foo', 'bar')
+
+    # 如果是其他方式构建对象，则需要在新构建的对象上调用相关的 disable 方法
+    # 来确保不会再次触发 Hook 函数
+    post = leancloud.Object.extend('Post').create_without_data(post.id)
+    post.disable_after_hook()
+    post.save()
+```
+
 {% endblock %}

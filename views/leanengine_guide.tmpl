@@ -268,6 +268,8 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 - `_conversationAdd`
 - `_conversationRemove`
 
+{% block hookDeadLoop %}
+
 #### 防止死循环调用
 
 在实际使用中有这样一种场景：在 `Post` 类的 `afterUpdate` Hook 函数中，对传入的 `Post` 对象做了修改并且保存，而这个保存动作又会再次触发 `afterUpdate`，由此形成死循环。针对这种情况，我们为所有 Hook 函数传入的 `request.object` 对象做了处理，以阻止死循环调用的产生。
@@ -314,6 +316,7 @@ AV.Cloud.afterUpdate('Post', function(request) {
 ```
 
 **提示**：云引擎 Node.js 环境从 [0.3.0](https://github.com/leancloud/leanengine-node-sdk/blob/master/CHANGELOG.md#v030-20151231) 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
+{% endblock %}
 
 ### 错误响应码
 
