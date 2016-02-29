@@ -211,7 +211,18 @@ def after_user_save(user):
 {% endblock %}
 
 {% block beforeUpdate %}
-Python SDK 尚未支持这个 Hook。
+```python
+@engine.before_update('Review')
+def before_hook_object_update(obj):
+    # 如果 comment 字段被修改了，检查该字段的长度
+    assert obj.updated_keys == ['clientValue']
+    if 'comment' not in obj.updated_keys:
+        # comment 字段没有修改，跳过检查
+        return
+    if len(obj.get('comment')) > 140:
+        # 拒绝过长的修改
+        raise engine.LeanEngineError(message='comment 长度不得超过 140 个字符')
+```
 {% endblock %}
 
 {% block afterUpdateExample %}
