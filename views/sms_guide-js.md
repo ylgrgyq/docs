@@ -76,7 +76,7 @@ AV.Cloud.verifySmsCode('6位数字验证码', '11 位手机号码').then(functio
 ```javascript
 AV.Cloud.requestSmsCode({
   mobilePhoneNumber: '186xxxxxxxx',
-  template: "Notice_Template",
+  template: 'Notice_Template',
   service_name: '月度周刊',
   order_id: '7623432424540'
 }).then(function(){
