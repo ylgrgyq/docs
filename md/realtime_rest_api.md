@@ -78,6 +78,15 @@ curl -X GET \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 
+该接口可以在 URL 中添加不同的参数，实现获取某对话的聊天记录、获取某用户发送的聊天记录、获取应用所有聊天记录和获取系统对话聊天记录等功能。例如：
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593
+```
+
 ### 获取某个对话的聊天记录
 
 参数 | 约束 | 说明
