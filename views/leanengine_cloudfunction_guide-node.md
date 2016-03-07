@@ -193,3 +193,51 @@ AV.Cloud.onLogin(function(request, response) {
   });
 ```
 {% endblock %}
+
+{% block timerLegacy %}
+**原来提供的 `AV.Cloud.setInterval` 和 `AV.Cloud.cronjob` 都已经废弃，这两个函数的功能变成和 `AV.Cloud.define` 一样，已经定义的任务会自动帮你做转换并启动。**
+{% endblock %}
+
+{% block timerExample %}
+```javascript
+AV.Cloud.define('log_timer', function(req, res){
+    console.log('Log in timer.');
+    return res.success();
+});
+```
+{% endblock %}
+
+{% block timerExample2 %}
+```javascript
+AV.Cloud.define('push_timer', function(req, res){
+  AV.Push.send({
+        channels: [ 'Public' ],
+        data: {
+            alert: 'Public message'
+        }
+    });
+   return res.success();
+});
+```
+{% endblock %}
+
+{% block masterKeyInit %}
+```javascript
+//参数依次为 AppId, AppKey, MasterKey
+AV.initialize('{{appid}}', '{{appkey}}', '{{masterkey}}');
+AV.Cloud.useMasterKey();
+```
+{% endblock %}
+
+{% block masterKeyInitLegacy %}
+**注意：**云引擎 2.0 版本已经默认使用 master key 初始化 SDK，所以不需要额外初始化。
+{% endblock %}
+
+{% block loggerExample %}
+```javascript
+AV.Cloud.define('Logger', function(request, response) {
+  console.log(request.params);
+  response.success();
+});
+```
+{% endblock %}
