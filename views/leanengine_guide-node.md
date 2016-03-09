@@ -618,9 +618,10 @@ app.post('/upload', function(req, res){
 });
 ```
 
-上传成功后，即可在数据管理平台里看到你所上传的文件。{% endblock %}
-{% block cookie_session %}
+上传成功后，即可在数据管理平台里看到你所上传的文件。
+{% endblock %}
 
+{% block cookie_session %}
 ### 处理用户登录和登出
 
 要让云引擎支持 LeanCloud 用户体系的 Session，在 app.js 里添加下列代码：
@@ -738,7 +739,8 @@ if (NODE_ENV === 'development') {
 ```
 {% endblock %}
 
-{% block project_start %}### 项目启动
+{% block project_start %}
+### 项目启动
 
 如果 `$PROJECT_DIR/package.json` 文件有类似下面的声明：
 

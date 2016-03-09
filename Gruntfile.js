@@ -196,10 +196,10 @@ module.exports = function(grunt) {
     },
     connect: {
       options: {
-        port: 3000,
+        port: 4000,
         hostname: "0.0.0.0",
         open: {
-          target: "http://localhost:3000"
+          target: "http://localhost:4000"
         }
       },
       proxies: [

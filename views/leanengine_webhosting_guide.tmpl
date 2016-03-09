@@ -1,0 +1,317 @@
+# 网站托管开发指南-{{platformName}}
+
+网站托管是云引擎({{productName}})的一个子模块，请确保阅读本文档之前，已经阅读了[云引擎服务概览](leanengine_overview.html)。
+ 
+云引擎（{{productName}}）是 LeanCloud 推出的服务端托管平台。为了统一名称，本文中出现的 {{productName}} 均代指云引擎。
+
+网站托管指的是 {{productName}} 提供编程语言的运行时，让开发者可以自由的部署自己的代码运行在 {{productName}} 云端。
+
+更直接的方式是推荐您阅读 [Demo](#Demo) 这一章节的内容来快速的部署一个小项目到云端，运行起来。
+
+## 网站托管支持的语言
+{% block link_to_other_languages %}{% endblock %}
+
+## Demo
+{% block demo %}{% endblock %}
+
+## 创建项目
+在本地创建项目需要使用 LeanCloud 官方命令行工具，详细请查阅：[云引擎命令行工具使用详解](cloud_code_commandline.html)
+
+请确保您已经在本地机器上可以成功运行命令行工具。
+
+### 默认项目
+使用命令行工具创建的项目模板是一个空项目，它的结构如下：
+
+{% block default_project_construction %}{% endblock %}
+
+### 从项目模板创建
+{% block based_on_project_template %}{% endblock %}
+
+## 本地运行
+{% block run_in_local_command %}{% endblock %}
+
+窗口会提示输入 Master Key，该信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
+
+<div class="callout callout-info">复制粘贴 Master Key 后，窗口不会有任何显示，直接按回车键确认即可。</div>
+
+应用即可启动运行：<http://localhost:3000>
+
+### 新建一个 Todo
+用浏览器打开:<http://localhost:3000/todos>
+
+然后在输入框输入：点个外卖
+
+然后打开控制台，选择对应的应用，可以看到，在 Todo 表中会有一个新的记录，它的 `content` 列的值就是刚才输入的「点个外卖」。
+
+详细的实现细节请阅读源代码，里面有完整的代码以及注释帮助开发者理解如何在 {{productName}} 上编写符合自己项目需求的代码。
+
+## 部署到云端
+
+部署到预备环境：
+
+```
+$ avoscloud deploy
+```
+
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的预备环境。
+
+部署到生产环境：
+
+```
+$ avoscloud publish
+```
+
+如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.leanapp.cn` 访问你应用的生产环境。
+
+关于设置域名的详细解释请参看[设置域名](#设置域名)这一章节的详细内容。
+
+## 线上调试
+打开浏览器，直接访问 `http://${your_app_domain}.leanapp.cn` ，可以看看是否能访问到网站的首页，它的首页应该会打印如下内容：
+
+```
+LeanEngine
+
+这是 LeanEngine 的示例应用
+
+当前时间：Mon Feb 01 2016 18:23:36 GMT+0800 (CST)
+
+一个简单的「TODO 列表」示例
+```
+
+{% block annotation_cloud_function_online_debug %}
+{% endblock %}
+
+## 自定义 API
+{{productName}} 允许开发者自定义基于 HTTP（HTTPS） 的 API。
+例如，开发者如果想实现一个获取服务端时间的 API，可以在代码中如下做：
+
+{% block custom_api_random_string %}
+
+{% endblock %}
+
+然后再次部署到线上，顺序执行以下几条命令行：
+
+```sh
+$ avoscloud deploy
+```
+
+```sh
+$ avoscloud publish
+```
+
+然后再访问线上的地址：`http://${your_app_domain}.leanapp.cn/time`
+就可以测试该 API 是否生效。
+
+然后你可以通过 iOS 或者 Android 的代码构建一个 HTTP 请求来使用这个 API 来获取服务端的时间了。
+
+## 使用 LeanStorage 
+{% block use_leanstorage %}{% endblock %}
+
+## {{productName}} 支持的开发框架
+{% block supported_frameworks %}{% endblock %}
+
+## 设置域名
+
+首先，你需要到 [云引擎 / 设置](/cloud.html?appid={{appid}}#/conf) 页面找到 **Web 主机域名**，在这里填写你的域名：
+
+![image](images/cloud_code_web_setting.png)
+
+上面将应用的二级域名设置为 **myapp**，设置之后，你应该可以马上访问：
+
+- http://myapp.leanapp.cn
+- http://myapp.avosapps.us
+
+可能因为 DNS 生效延迟暂时不可访问，请耐心等待或者尝试刷新 DNS 缓存，如果还没有部署，你看到的应该是一个 404 页面。
+
+## 绑定独立域名
+
+只有主域名需要备案，二级子域名不需要备案。独立域名要根据 Web 主机域名来解析，绑定完成后 Web 主机域名不可变更，否则会导致独立域名绑定失效。
+
+### 主域名
+
+仅使用云引擎托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与应用绑定的相关手续。
+{{productName}} 
+**请注意，根据政策法规要求，在完成绑定独立域名前，请不要将独立域名解析到云引擎**。
+
+其他用户如果需要为应用绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.cn>，或者从控制台菜单中选择 [帮助 / 技术支持](https://ticket.leancloud.cn/)，通过工单来提出申请：
+
+* 你已经绑定的 leanapp.cn 或 avosapps.us 二级子域名（请参考设置域名）
+* 要绑定的域名（必须是你名下的域名）
+* 你的注册邮箱（必须与发送者的邮箱一致）
+* 你想要绑定的 App Id（该应用必须位于注册邮箱的用户名下）
+* 你的域名的备案信息（**国内必须可以在工信部查询到，美国区不需要**）
+
+我们会在 3 个工作日内完成审核，如果审核通过将为你绑定域名。请在绑定操作完成后配置 DNS：
+
+- 将要绑定域名的 CNAME 或者 A 记录指向 leanapp.cn（国内）或 avosapps.us（美国）
+
+### 域名备案流程
+
+**域名备案的前置条件：云引擎已经部署，并且网站内容和备案申请的内容一致。**
+
+仅使用 {{productName}} 托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
+
+其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
+
+1. 请提供相应资料，我们来录入；完成后提供备案订单号给你，请在联系备案服务商时提供。
+2. 请携带资料去 [备案提供商的核验点](#isp_inspection_office) 拍照；如果不方便，备案服务商会安排给你邮寄幕布，进行拍照验证，完成后请将其他资料签字盖章后一起邮寄给备案提供商。
+3. 提交备案到（公司所在地）管局（通信管理局）审核。
+
+<div class="callout callout-info">请注意：国内各地管局对备案的政策有差别，如北京地区对域名后缀有限制，陕西地区需要提交组织机构代码证，山东地区要求服务器必须托管在山东省内（因此我们无法为山东地区用户备案）等。具体请查询当地管局。</div>
+
+#### 第一步
+
+请提交以下资料，我们来帮你录入到系统：
+
+1. 单位名称、单位注册地址、单位通信地址、营业执照号码、营业执照副本扫描件；
+2. 企业法人姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、QQ 号码；
+3. 如果网站负责人和法人不为同一人话，还需要提供网站负责人的姓名、身份证号码、身份证扫描件电子档（正反面需在一起）、邮箱、手机号、座机电话（归属地为公司所在地）、联系地址（可以为单位通信地址）、QQ 号码；
+4. 网站名称（4 个汉字及以上）、首页地址、域名（可多个）、域名证书（可多个）
+5. 网站服务内容，请在以下列表中选择一项：
+  <div class="row">
+  <div class="col-sm-3">
+综合门户<br/>
+搜索引擎<br/>
+单位门户网站<br/>
+网络游戏<br/>
+网络广告<br/>
+即时通讯<br/>
+网上邮局<br/>
+网络新闻<br/>
+  </div>
+  <div class="col-sm-3">
+博客/个人空间<br/>
+网络广告/信息<br/>
+网络购物<br/>
+网上支付<br/>
+网上银行<br/>
+网上炒股/股票基金<br/>
+网络影视<br/>
+网络图片<br/>
+  </div>
+  <div class="col-sm-3">
+网络软件/下载<br/>
+网上求职<br/>
+网上交友/婚介<br/>
+网上房产<br/>
+网络教育<br/>
+网站建设<br/>
+WAP<br/>
+其它<br/>
+  </div>
+  <div class="col-sm-3">
+  </div>
+</div><br/>
+6. 网站语言，请在以下列表中选择一项：
+   <div class="row">
+  <div class="col-sm-3">
+中文简体<br/>
+中文繁体<br/>
+维吾尔语<br/>
+哈萨克语<br/>
+柯尔克孜语<br/>
+蒙古语<br/>
+  </div>
+  <div class="col-sm-3">
+藏语<br/>
+壮语<br/>
+朝鲜语<br/>
+彝语<br/>
+苗语<br/>
+英语<br/>
+  </div>
+  <div class="col-sm-3">
+日语<br/>
+法语<br/>
+俄罗斯语<br/>
+西班牙语<br/>
+阿拉伯语<br/>
+  </div>
+  <div class="col-sm-3">
+  </div>
+</div><br/>
+7. [绑定独立域名](#绑定独立域名) 所需的信息。
+8. 如果需要邮寄幕布，请提供你的地址、电话及联系人名字。
+
+如果企业之前已经备案过其他网站，即备案主体已经存在，此时还应向我们提供备案密码，我们才能完成资料录入工作。
+
+#### 第二步
+
+请去备案提供商的核验点拍照，或者提供你的地址，我们的备案接入商来给你邮寄幕布，因为幕布数量的关系，这里可能需要排队。以下资料需要准备：
+
+1. 企业营业执照副本复印件，盖公章；
+2. 企业法人身份证复印件（正反面复印在一张纸上），盖公章；
+3. 网站负责人身份证复印件（正反面复印在一张纸上），盖公章（如果和企业法人是同一人的话，此条可忽略）；
+4. 网站备案信息真实性核验单（[下载填写样例](https://beianv2.ucloud.cn/files/%E7%BD%91%E7%AB%99%E7%9C%9F%E5%AE%9E%E6%80%A7%E6%A0%B8%E9%AA%8C%E5%8D%95%E6%A0%B7%E4%BE%8B.zip)）
+5. 网络安全责任书（[下载填写样例](https://beianv2.ucloud.cn/files/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%8D%8F%E8%AE%AE%E4%B9%A6.zip)）
+6. 法人授权书复印件（[下载填写样例](https://beianv2.ucloud.cn/files/%E6%B3%95%E4%BA%BA%E6%8E%88%E6%9D%83%E4%B9%A6.zip)）
+
+<a id="isp_inspection_office" name="isp_inspection_office"></a>**备案拍照核验点地址：**
+
+城市|地址|预约电话
+---|---|---
+北京|北京市海淀区海淀北二街中关村 SOHO B 区—510 室|15901173539
+上海|上海市杨浦区隆昌路 619 号城市概念创意园区 8 号楼北区 A01 室|021-65012912
+深圳|深圳市南山区科技中二路威盛科技大厦 602 室|13794465215
+青岛|青岛市崂山区松岭路 169 号蓝色硅谷软件中心 202 室|0532-67788606-8810<br/> 0532-83842530-8810
+
+<a id="isp_mailing" name="isp_mailing"></a>**备案资料邮寄地址：**
+
+<div class="row">
+  <div class="col-sm-6">
+<p><strong>北京</strong></p>
+北京市海淀区中关村 SOHO 510 室<br/>
+网站备案部<br/>
+010-59718403<br/>
+  </div>
+  <div class="col-sm-6">
+<p><strong>上海</strong></p>
+上海市杨浦区隆昌路 619 号城市概念 8 号楼北区 A01<br/>
+备案组<br/>
+021-55509888<br/>
+</div>
+</div>
+
+#### 第三步
+
+由我们和备案接入商来完成。备案完成后，我们再执行绑定操作。
+
+以上任何一个步骤有疑问都可以直接发邮件给 support@leancloud.rocks 进行询问，我们会有专人负责跟进和回答相关问题。
+
+## 获取客户端 IP
+
+如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip` 字段获取，实例代码如下：
+
+{% block code_get_client_ip_address %}{% endblock %}
+
+## 上传文件
+托管在 {{productName}} 的网站项目可以直接使用内置的 LeanCloud {{sdk_name}} SDK 的 API 文件相关的接口直接处理文件的上传。
+
+假设前端 HTML 代码如下：
+
+```html
+<form enctype="multipart/form-data" method="post" action="/upload">
+  <input type="file" name="iconImage">
+  <input type="submit" name="submit" value="submit">
+</form>
+```
+
+{% block upload_file_special_middleware %}{% endblock %}
+
+接下来定义文件上传的处理函数，构建一个 Form 对象，并将 req 作为参数进行解析，会将请求中的文件保存到临时文件目录，并构造 files 对象：
+
+{% block code_upload_file_sdk_function %}{% endblock %}
+
+{% block cookie_session %}{% endblock %}
+
+{% block custom_session %}{% endblock %}
+
+## 自动重定向到 HTTPS
+
+为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的 {{productName}} 支持网站托管，同样会有这样的需求。
+
+因此我们在 {{productName}} 中提供了一个新的 middleware 来强制让你的 `${your_app_domain}.leanapp.cn` 的网站通过 https 访问，你只要这样：
+
+{% block https_redirect %}{% endblock %}
+
+部署并发布到生产环境之后，访问你的 {{productName}} 网站二级域名都会强制通过 HTTPS 访问。
