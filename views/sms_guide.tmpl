@@ -50,7 +50,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
   关闭：调用 AVUser 注册相关的接口不会发送短信。
 
 - 用户账号 > **未验证手机号码的用户，禁止登录**<br/>
-  开启：未验证手机号的 `AVUser` 不能使用「手机号+密码」以及「手机号+短信验证码」的方式登录，但是<span style="border-bottom:1px solid #333; padding-bottom:2px">用户名搭配密码的登录方式不会失败</span>。<br/>
+  开启：未验证手机号的 `AVUser` 不能使用「手机号 + 密码」以及「手机号 + 短信验证码」的方式登录，但是<u>用户名搭配密码的登录方式不会失败</u>。<br/>
   关闭：不会对登录接口造成任何影响。
 
 - 用户账号 > **未验证手机号码的用户，允许以短信重置密码**<br/> 
@@ -177,9 +177,9 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 #### 模板变量
 
-模板可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>自定义变量</span>，如上例中的 <code ng-non-bindable>{{service_name}}</code> 和 <code ng-non-bindable>{{order_id}}</code>，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
+模板可以使用<u>自定义变量</u>，如上例中的 <code ng-non-bindable>{{service_name}}</code> 和 <code ng-non-bindable>{{order_id}}</code>，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
 
-模板还可以使用<span class="text-underline" style="border-bottom: 1px solid #333; padding-bottom: 2px;" data-fix>系统预留变量</span>，在发送短信发送时，它们会被自动填充：
+模板还可以使用<u>系统预留变量</u>，在发送短信发送时，它们会被自动填充：
 
 <pre ng-non-bindable><code>欢迎注册{{name}}应用！请使用验证码 {{code}} 来完成注册。该验证码将在{{ttl}}分钟后失效，请尽快使用。
 </code></pre>
