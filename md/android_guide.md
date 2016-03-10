@@ -83,10 +83,13 @@ description     objectId
 
 #### 保存选项
 
-当 `AVObject` 在本地做一些更改操作的同时，该对象有可能在远端被另外一个用户被更改并且保存，这个时候我们有可能会需要在保存之前根据该对象的某一个属性的值来判断本地的这次修改是否有效，如果无效则可能需要放弃本次修改。
-这个功能原本可以通过 `AVQuery` 和 `AVObject` 分两步来完成，但是这样就无法保证原子性从而导致并发问题。
+`AVObject` 对象在保存时可以通过设置`AVSaveOption`来指定保存选项。`AVSaveOption`有以下属性支持
 
-现在我们可以在保存的时候传入 `AVSaveOption` 参数来来完成这个功能：
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | BOOL | 对象成功保存后，自动返回该对象在服务端的最新数据。用途请参考 [更新后获取最新值](#更新后获取最新值)。
+`query` | AVQuery  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `AVQuery` 和 `AVObject` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突，[示例如下]。
+
 
 ``` java
 
@@ -105,8 +108,6 @@ description     objectId
       Assert.assertEquals(305, e.getCode());
     }
 ```
-
-同时 AVSaveOption 还提供了 fetchWhenSave 选项来支持 fetchWhenSave 功能
 
 ### 数据检索
 
