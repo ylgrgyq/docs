@@ -50,7 +50,7 @@ module.exports = function(grunt) {
         livereload: 35738
       },
       md: {
-        files: ["md/*.md"],
+        files: ["md/**"],
         tasks: ['copy:md', 'markdown', 'assemble']
       },
       asset: {
