@@ -274,6 +274,35 @@ List<AVObject> objects = ...
 AVObject.deleteAll(objects);
 ```
 
+#### 删除选项
+
+和保存选项一样，在删除某个对象的时候，可能需要做对象中的属性值进行校验，如果不满足条件则放弃删除操作。对于这样的需求，我们可以在删除的时候传入 `AVDeleteOption` 参数来来完成这个功能：
+
+``` java
+
+    AVObject object = new AVObject("post");
+    object.put("upvotes", 1);
+    object.save();
+
+    AVQuery query = new AVQuery("ObjectDeleteWithOption");
+    query.whereEqualTo("upvotes", 2);
+    AVDeleteOption option = new AVDeleteOption();
+    option.query(query);
+    try {
+      object.delete(option); //本次删除不会成功，因为不满足 AVDeleteOption 里面的 query 条件
+    } catch (AVException e) {
+      Assert.assertEquals(305, e.getCode());
+    }
+
+    query.whereEqualTo("upvotes", 1);
+    object.deleteInBackground(option, new DeleteCallback() {
+      @Override
+      public void done(AVException e) {
+        Assert.assertNull(e);//本次操作就可以成功删除对象
+      }
+    });
+```
+
 ### 关联数据
 
 对象可以与其他对象相联系。如前面所述，我们可以把一个 AVObject 的实例 a，当成另一个 AVObject 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像数据库中的主外键关系一样。
