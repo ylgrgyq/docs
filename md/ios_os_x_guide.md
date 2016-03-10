@@ -100,7 +100,7 @@ createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 
 每个保存选项实质上是 `AVSaveOption` 对象的一个属性，使用时调用 `AVObject` 的带有 `option` 参数的保存接口即可。
 
-【示例】<a id="saveoption_query_example" name="saveoption_query_example"></a>：一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 的内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时它的 version 值为 3，那么当 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或应用自定义的业务逻辑。
+【示例】<a id="saveoption_query_example" name="saveoption_query_example"></a>：一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 的内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时它的 version 值为 3，那么当用户 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或应用自定义的业务逻辑。
 
 ```objc
 // 假设 version 值已提前获取

@@ -673,15 +673,14 @@ postQuery.find().then(function(results) {
 });
 ```
 
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。
-例如，找出当前用户没有关注的人发布的微博：
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。例如，找出当前用户没有关注的人发布的微博：
 
 ```javascript
 // Post 和 userQuery 在上段代码中已声明
 var postQuery = new AV.Query(Post);
 postQuery.doesNotMatchKeyInQuery('author', 'followee', userQuery);
 postQuery.find().then(function(results) {
-  // 得到当前用户关注的人发布的微博
+  // 得到当前用户未关注的人发布的微博
   console.log(results);
 }, function(error) {
   // 失败
@@ -833,7 +832,7 @@ query.find().then(function(comments) {
  的 author，你可以这样做:
 
 ```javascript
-query.include(['post.author']);
+query.include(['post.author']); //数组，支持传入多个字段
 ```
 
 你可以多次使用 `include` 来构建一个有多个字段的查询，这项功能同样适用于
