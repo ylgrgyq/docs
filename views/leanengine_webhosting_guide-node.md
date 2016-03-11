@@ -7,11 +7,8 @@
 
 
 {% block link_to_other_languages %}
-#### Python
-如果您是 Python 开发者请查阅 [云引擎开发指南-Python](leanengine_guide_v2-python.html)
-
-#### PHP
-如果您是 PHP 开发者请查阅 [云引擎开发指南-PHP](leanengine_guide_v2-php.html)
+- Python：[云引擎开发指南-Python](leanengine_guide_v2-python.html)
+- PHP：[云引擎开发指南-PHP](leanengine_guide_v2-php.html)
 {% endblock %}
 
 {% block demo %}

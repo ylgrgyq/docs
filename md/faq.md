@@ -9,7 +9,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 ### 获取客服支持有哪些途径
 
 * 到免费的[用户社区](https://forum.leancloud.cn/) 进行提问。
-* 购买 [技术支持](/bill.html#/bill/general)，进入 [工单系统](https://ticket.leancloud.cn/) 来提交问题。
+* 购买 [技术支持](/bill.html#/bill/general)，进入 [工单系统](https://leanticket.cn/) 来提交问题。
 * 发送邮件到 <support@leancloud.rocks> 获取帮助。
 * 紧急情况拨打客服电话：010-82800646。
 
