@@ -53,6 +53,8 @@
 
 选择某个 Class 后即展示当前 Class 相关数据，以及相关功能的操作菜单。
 
+增加 Class 时，名称不允许以下划线开头。以下划线开头的数据表均为系统内置表。
+
 #### 数据浏览
 
 可以通过下面的方法更方便的浏览数据
@@ -86,7 +88,21 @@
 * 在单元格编辑模式下，Tab 保存更改，并切换到下一个单元格，Enter 保存修改。
 
 #### 列属性
-包括对列的一些操作，包括排序，重命名，编辑属性等。点击每个列右侧向下箭头触发相关菜单。
+包括对列的一些操作，包括排序，重命名，编辑属性等。点击每个列右侧向下箭头触发相关菜单。列属性默认值举例如下：
+
+类型|示例
+---|---
+Number|数字，`100`、`3.1415`
+String|字符串，例如 `LeanCloud`
+Boolean|布尔值，`true/false`
+Date|UTC 时间字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ`，如 `2015-06-29T01:39:35.931Z`。
+Pointer|对象指针，JSON 格式，例如 `{"__type":"Pointer","className":"_User","objectId":"51c3ba67e4b0f0e851c16221"}`。三个属性缺一不可，并且 className 必须跟列的 className 保持一致。
+GeoPoint|经纬度，JSON 格式，例如 `{"__type": "GeoPoint","latitude": 39.9,"longitude": 116.4}`。
+Array|数组，JSON 格式，例如 `[1, 2 , 3, 'hello world']`。
+Object|对象，JSON 格式，例如 `{"name": "LeanCloud", "URL": "https://leancloud.cn"}`。
+**Relation**|关联关系，**不支持默认值。**
+Any|上述除了 Relation 之外的任何类型的默认值都可以。
+
 
 #### 数据导入
 在页面左侧「数据」链接右侧旁边，点击小齿轮图标即可看到「数据导入」菜单，请参考文档 [导入数据](data_security.html#导入数据)。

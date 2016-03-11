@@ -12,6 +12,15 @@ AV.initialize('{{appid}}', '{{appkey}}');
 // 初始化 param1：应用 id、param2：应用 key
 ```
 
+SDK 的初始化方法默认使用中国大陆节点，切换到其他可用节点的方法是：
+
+```
+// 初始化 param1：应用 id、param2：应用 key
+AV.initialize('{{appid}}', '{{appkey}}');
+// 启用美国节点
+AV.useAVCloudUS();
+```
+
 创建应用后，可以在 [控制台 - 应用设置](/app.html?appid={{appid}}#/key) 里面找到应用对应的 id 和 key。
 
 开始测试。初始化后加入下面代码：

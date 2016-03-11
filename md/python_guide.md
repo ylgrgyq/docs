@@ -196,6 +196,13 @@ game_score.save()
 game_score.destroy()
 ```
 
+批量删除对象可以使用 `leancloud.Object.destroy_all()` 方法：
+
+```python
+objects = [obj1, obj2, obj3]
+leancloud.Object.destroy_all(objects)
+```
+
 ### 关系数据
 
 leancloud 后端存储支持一对一，一对多，多对多数据建模。
@@ -685,7 +692,7 @@ thumbnail_url = file.get_thumbnail_url(width='100', height='100')
 
 ### 删除文件
 
-获取了一个 File 对象之后，只要调用 destory 方法即可在服务器上删除此 File 对象。
+获取了一个 File 对象之后，只要调用 `destroy` 方法即可在服务器上删除此 File 对象。
 
 ## 用户
 

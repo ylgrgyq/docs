@@ -1430,6 +1430,7 @@ await client.ConnectAsync();//Tom 登录客户端
 
 {% block avoidCreatingDuplicateConversation %}>提示：每次调用 `CreateConversationAsync()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 conversationMembers 和 name 也是如此。因此必要时可以先使用 `AVIMConversationQuery` 进行查询，避免重复创建。{% endblock %}
 
+{# 2016-02-01 待 .NET 实现 disable_im_cache 再将以下 block 删除 #}
 {% block text_im_history_cache %}{% endblock %}
 
 {% block text_single_endpoint_login %}{% endblock %}

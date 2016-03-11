@@ -673,15 +673,14 @@ postQuery.find().then(function(results) {
 });
 ```
 
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。
-例如，找出当前用户没有关注的人发布的微博：
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。例如，找出当前用户没有关注的人发布的微博：
 
 ```javascript
 // Post 和 userQuery 在上段代码中已声明
 var postQuery = new AV.Query(Post);
 postQuery.doesNotMatchKeyInQuery('author', 'followee', userQuery);
 postQuery.find().then(function(results) {
-  // 得到当前用户关注的人发布的微博
+  // 得到当前用户未关注的人发布的微博
   console.log(results);
 }, function(error) {
   // 失败
@@ -833,7 +832,7 @@ query.find().then(function(comments) {
  的 author，你可以这样做:
 
 ```javascript
-query.include(['post.author']);
+query.include(['post.author']); //数组，支持传入多个字段
 ```
 
 你可以多次使用 `include` 来构建一个有多个字段的查询，这项功能同样适用于
@@ -1216,7 +1215,7 @@ function timerPromisefy(delay) {
       resolve(delay);
     }, delay);
    });
-};
+}
 
 var startDate = Date.now();
 
@@ -1284,16 +1283,18 @@ AV.Promise.all([
   //values 数组为 [1, 32, 64, 128]
 });
 //测试下失败的例子
-AV.Promise.when(
+AV.Promise.all([
   timerPromisefy(1),
   timerPromisefy(32),
   AV.Promise.error('test error'),
   timerPromisefy(128)
-).then(function () {
+]).then(function () {
   //不会执行
 }, function(error){
   console.dir(error);  //print 'test error'
 });
+
+//http://jsplay.avosapps.com/zuy/embed?js,console
 ```
 
 ### race 方法
@@ -1360,6 +1361,13 @@ AV.Promise.setDebugError(true);
 ```javascript
 var base64 = '6K+077yM5L2g5Li65LuA5LmI6KaB56C06Kej5oiR77yf';
 var file = new AV.File('myfile.txt', { base64: base64 });
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 另外，也可以用一个 byte 数组来新建一个文件。
@@ -1384,6 +1392,13 @@ if (fileUploadControl.files.length > 0) {
   var name = 'avatar.jpg';
 
   var avFile = new AV.File(name, file);
+  avFile.save().then(function(obj) {
+    // 数据保存成功
+    console.log(obj.url());
+  }, function(err) {
+    // 数据保存失败
+    console.log(err);
+  });
 }
 ```
 
@@ -1397,6 +1412,13 @@ if (fileUploadControl.files.length > 0) {
 
 ```javascript
 var file = new AV.File('test.txt', new Buffer('hello world'));
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 因为 Node.js 对 IO 的读写经常都是经过 Buffer，通过支持 Buffer，我们的 SDK 也能很好地工作在 Node.js 环境。
@@ -1405,17 +1427,25 @@ var file = new AV.File('test.txt', new Buffer('hello world'));
 
 ```javascript
 var file = AV.File.withURL('test.jpg', 'images/permission.png');
-file.save();
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 下面你应该向 LeanCloud 上传你的文件了。就像 AV.Object 一样，有很多不同的
 save 方法，你可以按你想用的 callback 和 error 处理的方式来使用它们：
 
 ```javascript
-avFile.save().then(function() {
-  // The file has been saved to AV.
-}, function(error) {
-  // The file either could not be read, or could not be saved to AV.
+avFile.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
 });
 ```
 
@@ -1424,8 +1454,105 @@ avFile.save().then(function() {
 ```javascript
 var post = new AV.Object('Post');
 post.set('content', '#花儿与少年# 迪拜疯狂之旅');
-post.set('image', file);
-post.save();
+// fileObject 是一个实例化的 AV.File 对象
+post.set('image', fileObject);
+post.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
+```
+
+### 文件上传
+
+如果仅是想简单的上传，可以直接在 Web 前端使用 AV.File 上面的相关方法。但真实使用场景中，还有很多开发者需要自行实现一个上传接口，对数据做更多的处理。
+
+以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](https://leancloud.cn/docs/leanengine_guide-node.html)」，非常出色的 Node.js 环境。
+
+```html
+// 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
+<form id="upload-file-form" class="upload" enctype="multipart/form-data">
+  <input name="attachment" type="file" accept="image/gif, image/jpeg, image/png">
+</form>
+```
+
+```javascript
+// 前端代码，基于 jQuery
+function uploadPhoto() {
+  var uploadFormDom = $('#upload-file-form');
+  var uploadInputDom = uploadFormDom.find('input[type=file]');
+  // 获取浏览器 file 对象
+  var files = uploadInputDom[0].files;
+  // 创建 formData 对象
+  var formData = new window.FormData(uploadFormDom[0]);
+  if (files.length) {
+    $.ajax({
+      // 注意，这个 url 地址是一个例子，真实使用时需替换为自己的上传接口 url
+      url: 'https://leancloud.cn/xxx/xxx/upload',
+      method: 'post',
+      data: formData,
+      processData: false,
+      contentType: false
+    }).then((data) => {
+      // 上传成功，服务端设置返回
+      console.log(data);
+    });
+  }
+};
+```
+
+```javascript
+// 服务端代码，基于 Node.js、Express
+var AV = require('leanengine');
+// 服务端需要使用 connect-busboy（通过 npm install 安装）
+var busboy = require('connect-busboy');
+// 使用这个中间件
+app.use(busboy());
+
+// 上传接口方法（使用时自行配置到 router 中）
+function uploadFile (req, res) {
+  if (req.busboy) {
+    var base64data = [];
+    var pubFileName = '';
+    var pubMimeType = '';
+    req.busboy.on('file', (fieldname, file, fileName, encoding, mimeType) => {
+      var buffer = '';
+      pubFileName = fileName;
+      pubMimeType = mimeType;
+      file.setEncoding('base64');
+      file.on('data', function(data) {
+        buffer += data;
+      }).on('end', function() {
+        base64data.push(buffer);
+      });
+    }).on('finish', function() {
+      var f = new AV.File(pubFileName, {
+        // 仅上传第一个文件（多个文件循环创建）
+        base64: base64data[0]
+      });
+      try {
+        f.save().then(function(fileObj) {
+          // 向客户端返回数据
+          res.send({
+            fileId: fileObj.id,
+            fileName: fileObj.name(),
+            mimeType: fileObj.metaData().mime_type,
+            fileUrl: fileObj.url()
+          });
+        });
+      } catch (err) {
+        console.log('uploadFile - ' + err);
+        res.status(502);
+      }
+    })
+    req.pipe(req.busboy);
+  } else {
+    console.log('uploadFile - busboy undefined.');
+    res.status(502);
+  }
+};
 ```
 
 ### 获取文件的内容
@@ -1442,7 +1569,9 @@ $('avatarImg')[0].src = avatarPhoto.url();
 如果你想在云引擎中处理一个文件的数据， 你可以用我们的 http 网络库来获取这个文件。
 
 ```javascript
-AV.Cloud.httpRequest({ url: avatarPhoto.url() }).then(function(response) {
+AV.Cloud.httpRequest({
+  url: avatarPhoto.url()
+}).then(function(response) {
   // The file contents are in response.buffer.
 });
 ```
@@ -1725,6 +1854,19 @@ AV.User.logOut();
 
 var currentUser = AV.User.current();  // this will now be null
 ```
+
+### SessionToken
+用户成功注册或登录后，服务器会返回 sessionToken，用来认证该用户随后的请求，你可以通过 `AV.User.current()._sessionToken` 来获取当前登录用户的 sessionToken。在知道用户的 sessionToken 的情况下，可以使用 `AV.User.become()` 方法来以该用户身份登录。
+
+```javascript
+AV.User.become(sessionToken).then(function (user) {
+  // The current user is changed.
+}, function (error) {
+  // Login failed.
+});
+```
+
+这种方式适用于需要传递用户登录状态的情况，比如 Hybrid 应用中使用 native SDK 登录后在 WebView 中自动登录，或者在 server 端处理用户请求时以该用户身份登录。因为获取了 sessionToken 就得到了该用户的账户访问权限，请在使用这种方式登录时注意不要泄露 sessionToken。
 
 ### 用户对象的安全
 

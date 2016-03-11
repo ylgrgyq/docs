@@ -3,7 +3,6 @@
 {% block language %}JavaScript{% endblock %} 
 
 {% block libs_tool_automatic %}
-
 #### npm 安装
 
 LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 [云引擎](https://leancloud.cn/docs/leanengine_guide-node.html) 来搭建服务器端。
@@ -33,8 +32,6 @@ $ cnpm install leancloud-realtime --save
 
 #### bower 安装
 
-我们也支持 bower 安装：
-
 ```
 $ bower install leancloud-javascript-sdk --save
 ```
@@ -43,18 +40,16 @@ $ bower install leancloud-javascript-sdk --save
 
 ```html
 <script src="https://cdn1.lncld.net/static/js/av-mini-<版本号>.js"></script>
-<!-- 或者你只是用最核心的存储、推送等功能，可以使用精简版的 core.js -->
+<!-- 如果只用存储、推送等最核心的功能，可以使用精简版的 core.js -->
 <script src="https://cdn1.lncld.net/static/js/av-core-mini-<版本号>.js"></script>
 ```
 
 #### Web 安全
 
-如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**。配置方式为：进入 [控制台 /（选择应用）/ 设置 / 安全中心 / **Web 安全域名**](/app.html?appid={{appid}}#/security)。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
+如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**。配置方式为：进入 [控制台 / 设置 / 安全中心 / **Web 安全域名**](/app.html?appid={{appid}}#/security)。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
 
 具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
 {% endblock %}
-
-{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
 
 {% block import_sdk %}
 LeanCloud JavaScript SDK 是分模块使用的，可根据下列表格对应选择所需要的模块：

@@ -184,7 +184,7 @@ angular.module('app').controller('StartCtrl', [
                 demo: '/docs/sdk_down.html'
             },
             'ios': {
-                doc: '/docs/ios_os_x_guide.html',
+                doc: '/docs/leanstorage_guide-ios.html',
                 demo: '/docs/sdk_down.html'
             },
             'js': {

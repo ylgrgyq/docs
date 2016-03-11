@@ -1,10 +1,8 @@
 # LeanCache 使用指南
 
-## 介绍
+<div style="max-width:200px;margin: 0 0 20px 0;"><img src="images/redislogo.svg" class="img-responsive" alt=""></div>
 
-LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key-Value 内存存储。主要用作缓存数据的存储，也可以用作持久化数据的存储。
-
-对于以下场景非常合适：
+LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key-Value 内存存储，主要用作缓存数据的存储，也可以用作持久化数据的存储。它非常适合用于以下场景：
 
 * 某些数据量少，但是读写比例很高，比如某些应用的菜单可以通过后台调整，所有用户会频繁读取该信息。
 * 需要同步锁或者队列处理，比如秒杀、抢红包等场景。
@@ -12,11 +10,9 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 下图为 LeanCache 和云引擎配合使用的架构：
 
-<div style="max-width:620px" data
+<div style="max-width:620px"><img src="images/leancache_arch.png" class="img-responsive" alt=""></div>
 
--fix><img src="images/leancache_arch.png" class="img-responsive" alt=""></div>
-
-如果使用得当，LeanCache 不仅可以极大地提高性能，还能**降低成本**，因为某些高频率的查询不需要走存储服务（存储服务按调用次数收费）。
+恰当使用 LeanCache 不仅可以极大地提高应用的服务性能，还能**降低成本**，因为某些高频率的查询不需要走存储服务（存储服务按调用次数收费）。
 
 ## 主要特性
 
@@ -27,9 +23,9 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 ## 创建实例
 
-进入 [控制台 /<span class="text-muted">（选择应用）</span>/ 存储 / 云引擎 / LeanCache](/cloud.html?appid={{appid}}#/cache)，点击 **创建实例**，如下图所示：
+进入 [控制台 > 存储 > 云引擎 > LeanCache](/cloud.html?appid={{appid}}#/cache)，点击 **创建实例**，如下图所示：
 
-<div style="max-width: 620px;" data-fix><img src="images/leancache_controller.png" class="img-responsive" alt=""></div>
+<div style="max-width: 620px;"><img src="images/leancache_controller.png" class="img-responsive" alt=""></div>
 
 <div class="callout callout-info">LeanCache 实例一旦生成，就开始计费，因此请认真对待该操作。</div>
 
@@ -58,7 +54,7 @@ LeanCache 使用 [Redis](http://redis.io/) 来提供高性能、高可用的 Key
 
 ## 删除实例
 
-进入 [控制台/<span class="text-muted">（选择应用）</span>/ 存储 / 云引擎 / LeanCache](/cloud.html?appid={{appid}}#/cache)，在「当前应用的实例」下，点击每个实例右上角的齿轮图标（<i class="icon icon-gear"></i>），在出现的窗口底部，点击「删除」按钮。
+进入 [控制台 > 存储 > 云引擎 > LeanCache](/cloud.html?appid={{appid}}#/cache)，在「当前应用的实例」下，点击每个实例右上角的齿轮图标（<i class="icon icon-gear"></i>），在出现的窗口底部，点击「删除」按钮。
 
 删除「其他应用的可用实例」下的实例，有两种方式：点击每个实例的「隶属于」链接，切换到相应的应用下；或者从页面顶部的导航条，点击应用图标（<i class="icon icon-blank-app"></i>） 来切换应用。然后再按上一段的提示，进行删除操作。
 
@@ -183,7 +179,7 @@ MSET (10 keys): 60096.15 requests per second
 
 你可以在线扩大（或者缩小） LeanCache 实例的最大内存容量。整个过程可能会持续一段时间，在此期间 LeanCache 会中断几秒钟进行切换，其他时间都正常提供服务。
 
-<div class="callout callout-danger">缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成意料之外的结果。</div>
+<div class="callout callout-danger">缩小容量之前，请务必确认现有数据体积小于目标容量，否则可能造成数据丢失。</div>
 
 ## 多实例
 
@@ -210,9 +206,7 @@ MSET (10 keys): 60096.15 requests per second
 
 ### 费用计算
 
-LeanCache 采取按天扣费，使用时间不足一天按一天收费，次日凌晨系统从账户余额中扣费。付费范围包括当前账户下
-
-隶属于每个应用的所有 LeanCache 实例，取每个实例当天使用的最大容量的价格，累计相加计算出总的使用费用。
+LeanCache 采取按天扣费，使用时间不足一天按一天收费，次日凌晨系统从账户余额中扣费。付费范围包括当前账户下隶属于每个应用的所有 LeanCache 实例，取每个实例当天使用的最大容量的价格，累计相加计算出总的使用费用。
 
 如果在系统扣费之时，账户没有充足余额，那么在扣费当天的上午 10 点，账户内所有应用使用的**全部实例会停止服务**，但数据仍会保留，期限为 1 个月。
 

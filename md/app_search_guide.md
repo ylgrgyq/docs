@@ -32,7 +32,7 @@
 
 为了能够使用户直接从搜索结果打开你的应用，开发者需要使你的应用支持外部调用，我们使用 AppURL 来指向一个可以在应用里展现的 Class 数据，格式如下：
 
-``` 
+```
 {URL Scheme}://{ URL Host}/{ Resource Path}
 ```
 
@@ -56,7 +56,7 @@
 
 设置保存之后，你应该可以通过下列链接访问到你的应用信息：
 
-``` 
+```
 https://leancloud.cn/1.1/go/{your uri scheme}/
 ```
 
@@ -64,7 +64,7 @@ https://leancloud.cn/1.1/go/{your uri scheme}/
 
 例如我们的todo应用就是:
 
-``` 
+```
 https://leancloud.cn/1.1/go/com.avoscloud.todo
 ```
 
@@ -95,7 +95,7 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
   - android_pad_link
   - iphone_link
   - ipad_link
-  
+
   等等，也就是应用名称，和各种平台应用的下载链接。
 - **qrcode_uri** <br/>
   (String) 本页面的二维码图片链接，用户可以用扫描器扫描打开该页面。
@@ -117,25 +117,14 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
       <p><a href='{{app_uri}}' class="btn">直接打开应用</a></p>
     </div>
   </div>
-  <div class="section section-download">
+  <div class="section section-download" >
     <div class="section-inner">
       <p>或者下载应用:</p>
       <div >
-      {{#if applinks.iphone_link}}
         <p><a href='{{applinks.iphone_link}}'>iPhone 应用</a></p>
-      {{/if}}
-
-      {{#if applinks.ipad_link}}
         <p><a href='{{applinks.ipad_link}}'>iPad 应用</a></p>
-      {{/if}}
-
-      {{#if applinks.android_phone_link}}
         <p><a href='{{applinks.android_phone_link}}'>Android 手机应用</a></p>
-      {{/if}}
-
-      {{#if applinks.android_pad_link}}
         <p><a href='{{applinks.android_pad_link}}'>Android 平板应用</a></p>
-      {{/if}}
     </div>
   </div>
 </div>
@@ -143,7 +132,7 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
 
 在 LeanCloud 索引完成数据后，你应当可以通过下列URL访问到一条数据，如果在安装了 Todo Demo 应用的移动设备上访问下面这个URL，应该会打开应用展现这条 Todo 的内容:
 
-``` 
+```
 https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18
 
 ```
@@ -574,7 +563,7 @@ q 的查询走的是 elasticsearch 的 [query string 语法](http://www.elastics
 
 通配符其实是正则的简化，可以使用正则查询：
 
-``` 
+```
 name:/joh?n(ath[oa]n)/
 ```
 
@@ -589,18 +578,18 @@ name:/joh?n(ath[oa]n)/
 ##### 范围查询
 
 - 数字 1 到 5： `count:[1 TO 5]`
-  
+
 - 2012年内： `date:[2012-01-01 TO 2012-12-31]`
-  
+
 - 2012 年之前 ： `{* TO 2012-01-01}`
-  
+
   ​
 
 `[]` 表示闭区间，`{}` 表示开区间。
 
 还可以采用比较运算符：
 
-``` 
+```
 age:>10
 age:>=10
 age:<10
@@ -611,7 +600,7 @@ age:<=10
 
 查询可以使用括号分组：
 
-``` 
+```
 (quick OR brown) AND fox
 ```
 

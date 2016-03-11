@@ -5,9 +5,11 @@
 {% block libs_tool_automatic %}
 
 #### Gradle
+
 Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android Studio 进行开发的时候，它会自动在新建的项目中包含一个自带的命令行工具 **gradlew**。我们推荐开发者使用这个自带的命令行工具，这是因为 Gradle 存在版本兼容的问题，很多开发者即使正确配置了 Gradle 脚本，但由于使用了最新版本或不兼容的 Gradle 版本而仍然无法成功加载依赖包。
 
 ##### Android Studio
+
 使用 Android Studio 创建一个新的项目的时候，它的目录结构如下：
 
 ```
@@ -22,7 +24,7 @@ Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android
 └── settings.gradle
 ```
 
-首先打开 `./build.gradle` ，按照如下进行标准配置，请注意：这一步我们修改的是根目录下的 `build.gradle`:
+首先打开根目录下的 `build.gradle` 进行如下标准配置：
 
 ```
 buildscript {
@@ -50,7 +52,7 @@ allprojects {
 }
 ```
 
-然后打开 `./app/build.gradle`，按照如下进行标准配置，请注意：这一步我们修改的是 `app` 目录下的 `build.gradle` :
+然后打开 `app` 目录下的 `build.gradle` 进行如下配置：
 
 ```
 android {
@@ -93,22 +95,18 @@ dependencies {
 #### Eclipse
 
 Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步骤](#手动安装) 将 SDK 导入到项目里。
-
 {% endblock %}
 
-{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
-
 {% block import_sdk %}
-
-下载成功之后将获得如下几个 lib 包:
+下载文件成功解压缩后会得到如下文件：
 
 ```
-├── avoscloud-feedback-{version-number}.zip     // LeanCloud 用户反馈模块
-├── avoscloud-push-{version-number}.jar         // LeanCloud 推送模块和实时聊天模块
-├── avoscloud-sdk-{version-number}.jar          // LeanCloud 基本存储模块
-├── avoscloud-search-{version-number}.zip       // LeanCloud 应用内搜索模块
-├── avoscloud-sns-{version-number}.zip          // LeanCloud SNS 模块
-├── avoscloud-statistics-{version-number}.jar   // LeanCloud 统计模块
+├── avoscloud-feedback-<版本号>.zip     // LeanCloud 用户反馈模块
+├── avoscloud-push-<版本号>.jar         // LeanCloud 推送模块和实时聊天模块
+├── avoscloud-sdk-<版本号>.jar          // LeanCloud 基本存储模块
+├── avoscloud-search-<版本号>.zip       // LeanCloud 应用内搜索模块
+├── avoscloud-sns-<版本号>.zip          // LeanCloud SNS 模块
+├── avoscloud-statistics-<版本号>.jar   // LeanCloud 统计模块
 ├── fastjson.jar                                // LeanCloud 基本存储模块
 ├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
 ├── Java-WebSocket-1.3.1-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
@@ -156,10 +154,10 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
 
 1. 打开 **File** > **Project Structure** > **Modules** 对话框，点击 **Dependencies**；
-2. 点击下方的**小 + 号**，选择要导入的 SDK 包（xxxx.jar），记得 **Scope** 选为 **Compile**；
+2. 点击下方的 **+**（加号），选择要导入的 SDK 包（xxxx.jar），记得 **Scope** 选为 **Compile**；
 3. 重复第 2 步，直到所有需要的包均已正确导入。
 
-Eclipse 的导入与一般的 jar 导入无本质区别，不做赘述。
+Eclipse 的导入与一般的 jar 导入无本质区别，因此不再赘述。
 
 {% endblock %}
 

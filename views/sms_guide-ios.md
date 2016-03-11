@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block builtin_account_url %}
-ios_os_x_guide.html#用户
+leanstorage_guide-ios.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
