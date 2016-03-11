@@ -39,14 +39,52 @@ avoscloud new
 
 然后你进入刚才创建的应用当中，点击[设置](https://leancloud.cn/app.html?appid={{appid}}#/general)，找到 App ID 以及 Master Key（这两个最好复制保存在文本中）
 
-回到命令行工具，它会要求你输入 App ID 以及 Master Key，输入完成之后，可以看见在 `/usr/leancloud/wechat/` 下就创建了一个 LeanEngine 默认的模板项目，打开 `app.js` 文件，然后请打开如下 GitHub 上托管的完整的微信公众平台项目：[LeanEngine 微信自动问答机器人](https://github.com/leancloud/LeanEngine-WechatBot)，打开此项目下的 `app.js` 文件（建议克隆到本地）
+回到命令行工具，它会要求你输入 App ID 以及 Master Key，输入完成之后，可以看见在 `/usr/leancloud/wechat/` 下就创建了一个 LeanEngine 默认的模板项目，打开 `app.js` 文件，然后请打开如下 GitHub 上托管的完整的微信公众平台项目：[LeanEngine 微信自动问答机器人](https://github.com/leancloud/LeanEngine-WechatBot)，打开此项目下的 `wechatBot.js` 文件（建议克隆到本地）
 
-## 配置项目
-参照[app.js](https://github.com/leancloud/LeanEngine-WechatBot/blob/master/app.js) 的代码，建议直接复制拷贝所有内容，全部覆盖本地的(/usr/leancloud/wechat/app.js)里面的内容，然后找到关键的配置项修改。
+## 编写代码
+
+### 添加依赖包
+打开 `package.json` 文件，替换成如下内容：
+
+```js
+{
+  "name": "LeanEngine_Weixin_Sample",
+  "version": "1.0.0",
+  "description": "A sample Weixin server app using LeanEngine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "node",
+    "LeanCloud",
+    "LeanEngine",
+    "express",
+    "Weixin"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "async": "^1.5.2",
+    "body-parser": "1.12.3",
+    "cookie-parser": "^1.3.5",
+    "ejs": "2.3.1",
+    "express": "4.12.3",
+    "leanengine": "^0.4.0",
+    "request": "^2.69.0",
+    "strformat": "0.0.7",
+    "wechat": "^2.0.3",// 
+    "wechat-api": "^1.24.0"
+  }
+}
+```
+
+### wechatBot.js
+参照[wechatBot.js](https://github.com/leancloud/LeanEngine-WechatBot/blob/master/routes/wechatBot.js) 的代码，建议直接复制拷贝所有内容，全部覆盖本地的(/usr/leancloud/wechat/routes/wechatBot.js)里面的内容，如果没有的话就直接复制到对应的目录下，然后找到关键的配置项修改。
 此时需要打开微信公众号管理控制台，对应进行设置。
 
 然后下图是我用来做实验的公众号的设置，描红的部分是我的配置：
 ![wexin_config](http://ac-lhzo7z96.clouddn.com/1456390412452)
+
 ```js
 // 引用 wechat 库，详细请查看 https://github.com/node-webot/wechat
 var wechat = require('wechat');
@@ -71,6 +109,24 @@ EncodingAESKey(消息加密解密密钥)|  config.encodingAESKey
 var WechatAPI = require('wechat-api');
 var api = new WechatAPI('请把微信的 AppID 填写在这里',
   '请把微信的 Secret Key 填写在这里');
+```
+
+### app.js
+在根目录下的 `app.js`需要配置的是两行代码，如下：
+
+```js
+'use strict';
+……
+var wechat = require('./routes/wechatBot'); // 这一段必须拷贝到当前项目中，它是定义了一个路由集合
+……
+```
+
+
+然后在后面引用定义过的这个路由集合：
+
+```js
+// 可以将一类的路由单独保存在一个文件中
+app.use('/wechat', wechat);
 ```
 
 **微信的配置是实时验证的，假如你的服务器上并没有正确的进行验证，是无法配置成功的**
@@ -100,10 +156,3 @@ avoscloud publish
 ## 微信内验证
 关注自己所注册的微信公众号，打开之后，发送「你好」，看看是否能成功按照代码执行回复指定的内容。
 （正确的回复应该是：您好，大家好才是真的好！）
-
-
-
-
-
-
-
