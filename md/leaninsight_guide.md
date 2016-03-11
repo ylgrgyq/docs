@@ -4,7 +4,7 @@
 
 当一个应用的所有数据表（即存储功能中的 Class）的总记录条数超过 10,000 时，离线数据分析功能将自动开启。云端准备离线数据的过程一般会持续数分钟或更长时间。记录数少于一万而无法使用离线数据分析的应用，可以使用 API 或直接在 [数据存储页面](/data.html?appid={{appid}}#/) 进行处理。
 
-离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://ticket.leancloud.cn) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
+离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 
 ## 类似 SQL 的查询分析语法
 
