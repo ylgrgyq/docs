@@ -88,21 +88,20 @@
 * 在单元格编辑模式下，Tab 保存更改，并切换到下一个单元格，Enter 保存修改。
 
 #### 列属性
-包括对列的一些操作，包括排序，重命名，编辑属性等。点击每个列右侧向下箭头触发相关菜单。
+包括对列的一些操作，包括排序，重命名，编辑属性等。点击每个列右侧向下箭头触发相关菜单。列属性默认值举例如下：
 
-列属性默认值支持除了 Relation 之外的各种类型，举例如下：
-
-* Number，数字类型，如 100、3.1415 等。
-* String，字符串类型，例如 `LeanCloud` 。
-* Boolean，布尔值，也就是 true 或者 false。
-* Date，日期类型，可以是形如 `YYYY-MM-DDTHH:MM:SS.MMMZ` 格式的 **UTC 时间字符串**，例如 `2015-06-29T01:39:35.931Z`。
-* Pointer，默认值要求是 JSON 格式，类似 `{"__type":"Pointer","className":"_User","objectId":"51c3ba67e4b0f0e851c16221"}`，三个属性缺一不可，并且 className 必须跟列指定的 className 保持一致。
-* GeoPoint，经纬度，形如 `{"__type": "GeoPoint","latitude": 39.9,"longitude": 116.4}` 的 JSON 对象。
-* File，文件类型也是 JSON 格式，例如 `{"id": "543cbaede4b07db196f50f3c", "__type": "File"}`。
-* Array，数组类型也支持，同样是 JSON 格式 `[1,2,3, 'hello world']`
-* Object 就是 JSON Object —— `{"name": "LeanCloud", "URL": "https://leancloud.cn"}`
-* Relation 不支持默认值。
-* Any 就是上述除了 Relation 之外的任何类型的默认值都可以。
+类型|示例
+---|---
+Number|数字，`100`、`3.1415`
+String|字符串，例如 `LeanCloud`
+Boolean|布尔值，`true/false`
+Date|UTC 时间字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ`，如 `2015-06-29T01:39:35.931Z`。
+Pointer|对象指针，JSON 格式，例如 `{"__type":"Pointer","className":"_User","objectId":"51c3ba67e4b0f0e851c16221"}`。三个属性缺一不可，并且 className 必须跟列的 className 保持一致。
+GeoPoint|经纬度，JSON 格式，例如 `{"__type": "GeoPoint","latitude": 39.9,"longitude": 116.4}`。
+Array|数组，JSON 格式，例如 `[1, 2 , 3, 'hello world']`。
+Object|对象，JSON 格式，例如 `{"name": "LeanCloud", "URL": "https://leancloud.cn"}`。
+**Relation**|关联关系，**不支持默认值。**
+Any|上述除了 Relation 之外的任何类型的默认值都可以。
 
 
 #### 数据导入
