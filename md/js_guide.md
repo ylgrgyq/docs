@@ -350,7 +350,7 @@ myComment.set('post', myPost);
 
 // 这会将 myPost 和 myComment 一起保存起来
 myComment.save().then(function() {
-  // 删除成功
+  // 保存成功
 }, function(error) {
   // 失败
 });
