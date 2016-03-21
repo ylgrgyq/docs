@@ -32,24 +32,11 @@ https://ruby.taobao.org
 在项目根目录下创建一个名为 `Podfile` 的文件（无扩展名），并添加以下内容：
 
 - 请根据实际需要选择模块。譬如，项目用不到实时通信 IM 功能，则不必集成 AVOSCloudIM 模块。
-- 我们同时提供了动态库和静态库。每个模块都有两个对应的 pod。
 
-```sh
-# 静态库 pods
+```ruby
 pod 'AVOSCloud'               # 数据存储、短信、云引擎调用等基础服务模块
 pod 'AVOSCloudIM'             # 实时通信模块
 pod 'AVOSCloudCrashReporting' # 错误报告模块
-```
-
-以上列出的是静态库 pod。如果希望集成动态库，则可以在 Podfile 中添加以下内容：
-
-```sh
-use_frameworks!
-
-# 动态库 pods
-pod 'AVOSCloudDynamic'               # 数据存储、短信、云引擎调用等基础服务模块
-pod 'AVOSCloudIMDynamic'             # 实时通信模块
-pod 'AVOSCloudCrashReportingDynamic' # 错误报告模块
 ```
 
 执行命令 `pod install --verbose` 安装 SDK。如果本地安装过最新版本的 SDK，则可执行 `pod install --verbose --no-repo-update` 来加快安装速度。

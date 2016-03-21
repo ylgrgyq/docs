@@ -14,17 +14,9 @@ AVOSCloudSNS 是一个非常轻量的模块, 可以用最少一行代码就可�
 
 你可以通过 CocoaPods 引入 SDK，在 Podfile 中加入：
 
-```sh
-  pod 'LeanCloudSocial'  # 静态库方式引入，依赖 AVOSCloud 库
+```ruby
+pod 'LeanCloudSocial'  # 静态库方式引入，依赖 AVOSCloud 库
 ```
-
-或者使用动态库的方式引入 SDK：
-
-```sh
-  pod 'LeanCloudSocialDynamic'  # 动态库方式引入，依赖 AVOSCloudDynamic 库
-```
-
-动态库最低支持 iOS 8。如果你的项目是 Swift 项目或者仅支持 iOS 8.0 以上，推荐使用动态库。
 
 你也可以在开源项目上编译该组件加入到项目中，在根目录下执行 `./build-framework.sh` 即可。或者直接拖动源代码到项目中，源代码在 Classes 目录。
 

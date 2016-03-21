@@ -1,41 +1,23 @@
 #### 自动安装
 
-[CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化的简化安装过程。
+[CocoaPods](http://www.cocoapods.org) 是一个很好的依赖管理工具，我们推荐您使用这个方法来安装 SDK，最大化地简化安装过程。
 
-LeanCloud SDK for iOS 同时支持动态库和静态库，使用 CocoaPods 进行集成时要进行区分。
-
-如果使用 **静态库** 方式进行集成，则在 Podfile 中添加：
+首先，在项目根目录下的 Podfile 文件中添加以下 pods：
 
 ```ruby
-pod 'AVOSCloud'
-
-# 如果使用实时通信功能，可以添加：
-pod 'AVOSCloudIM'
-
-# 如果使用崩溃收集功能，可以添加：
-pod 'AVOSCloudCrashReporting'
+pod 'AVOSCloud'               # 数据存储、短信、云引擎调用等基础服务模块
+pod 'AVOSCloudIM'             # 实时通信模块
+pod 'AVOSCloudCrashReporting' # 错误报告模块
 ```
 
-如果使用 **动态库** 方式进行集成，则在 Podfile 中添加：
+然后在项目根目录执行 `pod install` 命令，就能将 LeanCloud iOS SDK 集成到您的项目中。
 
-```ruby
-use_frameworks!
-
-pod 'AVOSCloudDynamic'
-
-# 如果使用实时通信功能，可以添加：
-pod 'AVOSCloudIMDynamic'
-
-# 如果使用崩溃收集功能，可以添加：
-pod 'AVOSCloudCrashReportingDynamic'
-```
-
-然后在项目根目录执行 `pod install` 命令，就能将 LeanCloud SDK for iOS 集成到你的项目中。
+目前动态库还不能通过 CocoaPods 集成。如果您希望使用动态库，请手动集成。
 
 
 #### 手动安装
 
-你也可以手动将 LeanCloud SDK for iOS 集成到项目中。
+你也可以手动将 LeanCloud iOS SDK 集成到项目中。
 
 iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上，使用动态库是个不错的选择。
 
@@ -76,37 +58,6 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 然后切换到 Targets 的 General 选项卡，点击 **Embedded Binaries** 左下角的加号按钮，添加 frameworks：
 
 ![img](images/quick_start/ios/embedded_binaries.png)
-
-最后，由于 Xcode 对动态库的处理不当，导致提交审核时，iTunes Connect 校验失败。需要一个额外的步骤来纠正。
-
-在 Build Phases 选项卡中，添加一个 Run Script：
-
-![img](images/quick_start/ios/create_run_script.png)
-
-确保 Shell 是默认的 `/bin/sh`，然后将以下脚本粘贴进去：
-
-```sh
-APP_PATH="${TARGET_BUILD_DIR}/${WRAPPER_NAME}"
-
-find "$APP_PATH" -name '*.framework' -type d | while read -r FRAMEWORK; do
-    EXTRACTED_ARCHS=()
-
-    FRAMEWORK_EXECUTABLE_NAME=$(defaults read "$FRAMEWORK/Info.plist" CFBundleExecutable)
-    FRAMEWORK_EXECUTABLE_PATH="$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME"
-
-    for ARCH in $ARCHS; do
-        lipo -extract "$ARCH" "$FRAMEWORK_EXECUTABLE_PATH" -o "$FRAMEWORK_EXECUTABLE_PATH-$ARCH"
-        EXTRACTED_ARCHS+=("$FRAMEWORK_EXECUTABLE_PATH-$ARCH")
-    done
-
-    lipo -o "$FRAMEWORK_EXECUTABLE_PATH-merged" -create "${EXTRACTED_ARCHS[@]}"
-
-    mv "$FRAMEWORK_EXECUTABLE_PATH-merged" "$FRAMEWORK_EXECUTABLE_PATH"
-    rm "${EXTRACTED_ARCHS[@]}"
-
-    /usr/bin/codesign -f -s "${CODE_SIGN_IDENTITY}" $FRAMEWORK
-done
-```
 
 这样就集成完毕了。
 
@@ -156,6 +107,8 @@ done
   * `-lsqlite3` （IM 模块需要）
 
 ![img](images/quick_start/ios/all_load.png)
+
+这样就集成完毕了。
 
 #### 初始化 SDK
 
