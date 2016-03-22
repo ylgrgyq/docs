@@ -631,7 +631,7 @@ data | 消息内容
 
 ## 限制
 
-* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、建立/关闭连接等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
+* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、登录/退出服务等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
 * 客户端发送的单条消息大小不得超过 5 KB。
 * 目前单个普通对话的成员上限为 500 个。
 
@@ -639,12 +639,12 @@ data | 消息内容
 
 实时通信的错误码会以 SDK 异常或 WebSocket 关闭状态码的形式返回给客户端。当出现异常情况时，SDK 会输出状态码到日志里，以下是对部分状态码的简单说明：
 
-<!--2015-10-27 Da Li: add <code style="white-space:nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
+<!--2015-10-27 Da Li: add <code class="text-nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
 
 代码|消息|说明
 ---|---|---
 `0`| |websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
-<code style="white-space:nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+<code class="text-nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
 `4100`|`APP_NOT_AVAILABLE`|应用不存在或应用禁用了实时通信服务
 `4103`|`INVALID_LOGIN`|Client Id 格式错误，超过 64 个字符。
 `4105`|`SESSION_REQUIRED`|Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
@@ -654,7 +654,7 @@ data | 消息内容
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
 `4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](https://leanticket.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
-`4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
+`4302`|<code class="text-nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
 `4305`|`CONVERSATION_REJECTED_BY_APP`|对话操作被应用的云引擎 Hook 拒绝
