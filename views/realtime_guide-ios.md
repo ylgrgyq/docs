@@ -290,7 +290,7 @@ self.client = [[AVIMClient alloc] init];
 
 {% block videoMessage_local_sent %}
 ```objc
-- (void)tomSendVedioToJerry {
+- (void)tomSendVideoToJerry {
     // Tom 创建了一个 client，用自己的名字作为 clientId
     self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
 
@@ -315,7 +315,7 @@ self.client = [[AVIMClient alloc] init];
 
 {% block videoMessage_url_sent %}
 ```objc
-- (void)tomSendExternalVedioToJerry {
+- (void)tomSendExternalVideoToJerry {
     // Tom 创建了一个 client，用自己的名字作为 clientId
     self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
 
