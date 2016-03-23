@@ -58,7 +58,7 @@ $ avoscloud
 ```
 {% endblock %}
 
-{% block cloud_func_file %}`$PROJECT_DIR/cloud.js`{% endblock %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud.js`' %}
 
 {% block project_constraint %}
 云引擎Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件为整个项目的启动文件。
@@ -120,7 +120,7 @@ AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```
 {% endblock %}
 
-{% block sdk_guide_link %}[JavaScript SDK](./js_guide.html){% endblock %}
+{% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
 
 {% block cloudFuncExample %}
 ```javascript
@@ -715,9 +715,8 @@ app.get('/logout', function(req, res) {
 
 ### 自定义 session
 
-有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock %} 组件可以并存。{% endblock %}
-
-{% block cookie_session_middleware %}`AV.Cloud.CookieSession`{% endblock %}
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session)。该组件和 `AV.Cloud.CookieSession` 组件可以并存。
+{% endblock %}
 
 {% block https_redirect %}
 ```javascript

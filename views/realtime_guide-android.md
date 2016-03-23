@@ -912,34 +912,6 @@ friend.open(new AVIMClientCallback() {
 {% endblock %}
 
 {% block customMessage_create %}
-
-```
-AVIMClient tom = AVIMClient.getInstance("Tom");
-tom.open(new AVIMClientCallback() {
-    @Override
-    public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-            AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
-            Map<String, Object> attributes = new HashMap<String, Object>();
-            attributes.put("location", "拉萨布达拉宫");
-            attributes.put("Title", "这蓝天……我彻底是醉了");
-            msg.setAttrs(attributes);
-            client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
-                new AVIMConversationCallback() {
-                    @Override
-                    public void done(AVIMException e) {
-                        if (e == null) {
-                        // 发送成功
-                    }
-                }
-            });
-        }
-      }
-});
-```
-{% endblock %}
-
-{% block customMessage_create %}
 继承于 AVIMTypedMessage，开发者也可以扩展自己的富媒体消息。其要求和步骤是：
 
 * 实现新的消息类型，继承自 AVIMTypedMessage。这里需要注意两点：
