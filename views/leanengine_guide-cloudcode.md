@@ -162,7 +162,7 @@ $ avoscloud
 ```
 {% endblock %}
 
-{% block cloud_func_file %}`$PROJECT_DIR/cloud/main.js`{% endblock %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud/main.js`' %}
 
 {% block project_constraint %}
 云引擎 2.0 的项目必须有 `$PROJECT_DIR/cloud/main.js` 文件，该文件为整个项目的启动文件。
@@ -180,7 +180,7 @@ $ avoscloud
 因为云引擎 2.0 是运行在沙箱环境，所以不需要安装和初始化，直接可以在项目中使用。
 {% endblock %}
 
-{% block sdk_guide_link %}[JavaScript SDK](./js_guide.html){% endblock %}
+{% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
 
 {% block cloudFuncExample %}
 ```javascript
@@ -828,8 +828,6 @@ app.get('/logout', function(req, res) {
 
 注意： express 框架的 `express.session.MemoryStore` 在我们云引擎中是无法正常工作的，因为我们的云引擎是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
 {% endblock %}
-
-{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}
 
 {% block https_redirect %}
 ```javascript
