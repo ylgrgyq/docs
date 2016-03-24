@@ -94,7 +94,7 @@ LeanCloud 实时通信服务的特性主要有：
 **name**|name|String|可选|对话的名字，可为群组命名。
 **tr**|transient|Boolean|可选|是否为暂态对话
 **sys**|system|Boolean|可选|是否是系统对话
-**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话（仅用于内部使用，REST API 设置无效）
+**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话。<br/>（原子创建对话功能只能通过 SDK 调用创建对话接口实现，REST API 创建对话可以设置 unique 值，但无原子创建对话效果)
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
@@ -118,6 +118,7 @@ LeanCloud 实时通信服务的特性主要有：
 为了提高系统的灵活性，我们允许多个对话保持相同的成员，因此创建对话时系统总是默认创建新的对话。
 如果开发者希望使用固定的对话，可以在创建对话时设置相应 SDK 上的 `unique` 选项，系统将查找对应成员相同且 `unique` 选项为 true 的对话，如果找到即返回已有的对话，如果没有则自动创建。
 （注意，这种方式查找的对话仅对已经使用 `unique` 选项的对话有效，并且创建对话时不会触发 `_Conversation` 表在云引擎上的 `beforeSave` 等 hook）
+通过 REST API 创建对话也能带着 `unique` 参数，但 REST API 总是会创建新对话，只是带着 `unique` 参数后会将该参数值设置为新对话中 `unique` 选项的值，不会查找并返回具有相同成员的对话。
 
 对于应用中存在系统帐号的场景，我们建议您通过下文提到的[系统对话](#普通对话_Normal_Conversation_)来实现，以避免对单一帐号创建过多的对话影响您应用的性能。
 
