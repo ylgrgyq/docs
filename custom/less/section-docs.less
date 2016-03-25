@@ -24,8 +24,12 @@ body {
   }
 
   p {
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
   }
+
+  p+ul {
+    margin: -1em 0 1.5em 0;
+  }  
 
   pre {
     margin-bottom: 18px;
@@ -42,8 +46,39 @@ body {
   // text-underline
   u {
     text-decoration: none;
-	border-bottom: 1px solid #333;
-	padding-bottom: 2px;  
+    border-bottom: 1px solid #333;
+    padding-bottom: 2px;  
+  }
+
+  dt {
+    margin-top: 1.5em;
+  }
+
+  code {
+    background-color: rgba(0,0,0,0.04);
+    color: #808080;
+  }
+  pre code {
+    background-color: transparent;
+  }
+
+  a code, dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
+    color: inherit;
+    background-color: transparent;
+  }
+
+  samp {
+    font-size: 96%;
+    white-space: pre-wrap;
+  }
+
+  .prettyprint {
+
+    .com {
+      color: #999;
+      color: rgba(0,0,0,0.35);
+      font-style: normal;
+    }
   }
 }
 
@@ -51,7 +86,7 @@ body {
 .doc-content {
 
   table {
-    margin: 10px 0 15px 0;
+    margin: 1.8em 0;
     border-collapse: collapse;
   }
 
@@ -62,7 +97,9 @@ body {
 
   th {
     padding: 5px 10px;
+    white-space: nowrap;
   }
+
 }
 
 // Headings
