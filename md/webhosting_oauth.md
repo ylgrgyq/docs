@@ -12,23 +12,14 @@
 
 
 ### 获取微博应用 App ID 以及 App Secret
-登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **基本信息** 即可看到 App Key 和 App Secret，将其复制到一个临时的文本文件中以备后用。
+登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **基本信息** 即可看到 App Key 和 App Secret。
 
 <img width="960" alt="weibo_auth_appinfo" src="https://cloud.githubusercontent.com/assets/108758/13910528/a17117dc-ef5e-11e5-8469-2d1a9cb170a9.png">
 
-```
-登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **基本信息** 即可看到 App Key 和 App Secret。
-
-![weixin_web_management](../images/weibo_auth_appinfo.png)
-```
 ### 设置回调页
 登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **高级信息** > **OAuth2.0 授权设置** > 授权回调页、取消授权回调页；点击 **编辑**，输入相应的回调链接，如 `http://127.0.0.1:3000/weibo/auth/callback`。
 
 <img width="960" alt="weibo_auth_callback" src="https://cloud.githubusercontent.com/assets/108758/13910610/d7c83a08-ef5f-11e5-9e54-8170d4fe9c98.png">
-
-登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **高级信息** > **OAuth2.0 授权设置** > 授权回调页、取消授权回调页；点击 **编辑**，输入相应的回调链接，如 `http://127.0.0.1:3000/weibo/auth/callback`。
-
-![callback](../images/weibo_auth_callback.png)
 
 ## 创建项目
 在 [LeanCloud 控制台](https://leancloud.cn/applist.html#/apps)中创建一个应用，暂且叫做「Weibo_OAuth」
