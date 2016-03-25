@@ -1,39 +1,48 @@
 # 微博 OAuth 授权验证回调服务器开发指南
 
-阅读本文前，请确保您已准确理解了 [OAuth 2](http://oauth.net/2/) 以及 [微博登陆](http://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6)
+阅读本文前，请确保您已准确理解了 [OAuth 2](http://oauth.net/2/) 以及 [微博登录](http://open.weibo.com/wiki/%E6%8E%88%E6%9D%83%E6%9C%BA%E5%88%B6)
 
 ## 场景设定
 本文档的主要是指导开发者使用 LeanEngine 作为微博 OAuth 授权验证回调服务器，因此我们设定了一个场景，我们根据场景设定的需求逐步演示实现的过程。
 
-一个简单的场景如下就是实现微博登陆，然后发一条微博。
+一个简单的场景如下就是实现微博登录，然后发一条微博。
 
 ## 微博后台设置
 这一部分请参考[微博开放平台的文档](http://open.weibo.com/wiki/%E6%96%B0%E6%89%8B%E6%8C%87%E5%8D%97)
 
 
-### 获取微博应用 App ID 以及
-登陆到后台，打开一个应用截图如下：
+### 获取微博应用 App ID 以及 App Secret
+登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **基本信息** 即可看到 App Key 和 App Secret，将其复制到一个临时的文本文件中以备后用。
 
-![weixin_web_management](http://ac-lhzo7z96.clouddn.com/1457657552061)
+<img width="960" alt="weibo_auth_appinfo" src="https://cloud.githubusercontent.com/assets/108758/13910528/a17117dc-ef5e-11e5-8469-2d1a9cb170a9.png">
 
-图中被描红的部分请拷贝到一个临时的文本文件中即可，之后需要使用。
+```
+登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **基本信息** 即可看到 App Key 和 App Secret。
 
+![weixin_web_management](../images/weibo_auth_appinfo.png)
+```
 ### 设置回调页
-如下图：
-![callback](http://ac-lhzo7z96.clouddn.com/1457659588867)
+登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **高级信息** > **OAuth2.0 授权设置** > 授权回调页、取消授权回调页；点击 **编辑**，输入相应的回调链接，如 `http://127.0.0.1:3000/weibo/auth/callback`。
+
+<img width="960" alt="weibo_auth_callback" src="https://cloud.githubusercontent.com/assets/108758/13910610/d7c83a08-ef5f-11e5-9e54-8170d4fe9c98.png">
+
+登录到 [微博 &middot; 开放平台](http://open.weibo.com/) > **我的应用**，选择一个应用，再选择 **应用信息** > **高级信息** > **OAuth2.0 授权设置** > 授权回调页、取消授权回调页；点击 **编辑**，输入相应的回调链接，如 `http://127.0.0.1:3000/weibo/auth/callback`。
+
+![callback](../images/weibo_auth_callback.png)
 
 ## 创建项目
 在 [LeanCloud 控制台](https://leancloud.cn/applist.html#/apps)中创建一个应用，暂且叫做「Weibo_OAuth」
-在一个文件夹（比如/usr/leancloud/weibo_oauth/）下执行下列命令行工具：
+在本地创建一个项目文件夹（比如 `/usr/leancloud/weibo_oauth/`），并执行以下命令行：：
 
 ```bash
+cd /usr/leancloud/weibo_oauth/
 avoscloud new
 ```
 
-然后你进入刚才创建的应用当中，点击[设置](https://leancloud.cn/app.html?appid={{appid}}#/general)，找到 App ID 以及 Master Key（这两个最好复制保存在文本中）
+然后进入 [LeanCloud 控制台](/app.html)，选择刚才创建的应用，再选择 [**设置** > **应用 Key**](https://leancloud.cn/app.html?appid={{appid}}#/general)，找到 App ID 以及 Master Key 并复制。
 
 回到命令行工具，它会要求你输入 App ID 以及 Master Key，输入完成之后，可以看见在 `/usr/leancloud/weibo_oauth/` 下就创建了一个 LeanEngine 默认的模板项目，打开 `app.js` 文件，然后请打开如下 GitHub 上托管的完整的微博 OAuth 授权验证回调服务器项目：[使用 LeanEngine 托管国内 OAuth 回调服务器](https://github.com/leancloud/LeanEngine-OAuth-China/)，打开此项目下的 `app.js` 文件（建议克隆到本地）
-
+登录
 ## 编写代码
 ### 添加依赖包
 打开 `package.json` 文件，替换成如下内容：
@@ -69,7 +78,7 @@ avoscloud new
 }
 ```
 ### weibo.js
-参照[weibo.js](https://github.com/leancloud/LeanEngine-OAuth-China/blob/master/routes/weibo.js) 的代码，建议直接复制拷贝所有内容，全部覆盖本地的(/usr/leancloud/weibo_oauth/routes/weibo.js)里面的内容，如果没有的话就直接复制到对应的目录下，然后找到关键的配置项修改。
+参照[weibo.js](https://github.com/leancloud/LeanEngine-OAuth-China/blob/master/routes/weibo.js) 的代码，建议直接复制拷贝所有内容，全部覆盖本地的(`/usr/leancloud/weibo_oauth/routes/weibo.js`)里面的内容，如果没有的话就直接复制到对应的目录下，然后找到关键的配置项修改。
 
 ```js
 var router = require('express').Router(),
@@ -229,18 +238,18 @@ avoscloud
 然后就可以在本地完成授权 -> 回调 -> 发微博的流程
 
 ## 部署项目
-回到[控制台的中 LeanEngine 设置界面](https://leancloud.cn/cloud.html?appid={{appid}}#/conf)，找到设置二级域名的地方：
+回到 LeanCloud 控制台，选择刚创建的应用，再选择 [**存储** > **云引擎** > **设置** > Web 主机域名](/cloud.html?appid={{appid}}#/conf)，在这里为该应用设置二级域名。 
 
-![domain_setting](http://ac-lhzo7z96.clouddn.com/1456826436084)
+![domain_setting](http://ac-lhzo7z96.clouddn.comweibotest/1456826436084)
 
-设置域名为：weiboTest.leanapp.cn
+设置域名为：weibotest.leanapp.cn
 
 然后回到项目目录下，执行如下命令行：
 
 ```bash
 avoscloud deploy
 ``` 
-这个是部署到预备环境，并没有真正发布到外网的线上，如果 `deploy` 成功之后，可以之下如下命令行：
+这只是部署到预备环境，并没有真正发布到外网的线上，如果 deploy 成功之后，可以通过 `http://stg-weibotest.leanapp.cn` 来访问。若要正式对外发布到 `http://weibotest.leanapp.cn`，则执行如下命令行：
 
 ```bash
 avoscloud publish
@@ -250,7 +259,7 @@ avoscloud publish
 因为是要回调到外网地址，因此需要回到微博开放平台的后台设置页面修改回调地址：
 
 ```
-http://weiboTest.leanapp.cn/weibo/auth/callback
+http://weibotest.leanapp.cn/weibo/auth/callback
 ```
 而 `weibo.js` 中的配置项也需要对应的修改：
 
@@ -258,7 +267,7 @@ http://weiboTest.leanapp.cn/weibo/auth/callback
 passport.use(new WeiboStrategy({
     clientID: WEIBO_CLIENT_ID, // App ID
     clientSecret: WEIBO_CLIENT_SECRET, // App Secret
-    callbackURL: "http://weiboTest.leanapp.cn/weibo/auth/callback" //*此处也需要进行同样的设置*
+    callbackURL: "http://weibotest.leanapp.cn/weibo/auth/callback" //*此处也需要进行同样的设置*
     },
   function(accessToken, refreshToken, profile, done) {
 
@@ -275,5 +284,5 @@ passport.use(new WeiboStrategy({
 
 ## 云端测试
 
-打开你设置的二级域名的首页（当前实例是打开：http://weiboTest.leanapp.cn ），就可以进行实例测试了。
+打开你设置的二级域名的首页（当前实例是打开：http://weibotest.leanapp.cn ），就可以进行实例测试了。
 
