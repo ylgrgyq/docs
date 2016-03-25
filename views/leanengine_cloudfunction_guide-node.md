@@ -173,6 +173,41 @@ AV.Cloud.onLogin(function(request, response) {
 ```
 {% endblock %}
 
+{% block errorCodeExample %}
+错误响应码允许自定义。云引擎方法最终的错误对象如果有 `code` 和 `message` 属性，则响应的 body 以这两个属性为准，否则 `code` 为 1， `message` 为错误对象的字符串形式。比如：
+
+```
+AV.Cloud.define('errorCode', function(req, res) {
+  AV.User.logIn('NoThisUser', 'lalala', {
+    error: function(user, err) {
+      res.error(err);
+    }
+  });
+});
+```
+{% endblock %}
+
+{% block errorCodeExample2 %}
+```
+AV.Cloud.define('customErrorCode', function(req, res) {
+  res.error({code: 123, message: 'custom error message'});
+});
+```
+{% endblock %}
+
+{% block errorCodeExampleForHooks %}
+```
+AV.Cloud.beforeSave('Review', function(request, response) {
+  // 使用 JSON.stringify() 将 object 变为字符串
+  response.error(JSON.stringify({
+    code: 123,
+    message: '自定义错误信息'
+  }));
+});
+```
+{% endblock %}
+
+
 
 {% block code_averageStars_sample %}
 
