@@ -7,8 +7,8 @@
 
 
 {% block link_to_other_languages %}
-- Python：[云引擎开发指南-Python](leanengine_guide_v2-python.html)
-- PHP：[云引擎开发指南-PHP](leanengine_guide_v2-php.html)
+- [Python](leanengine_guide-python.html)
+<!-- - PHP：[云引擎开发指南-PHP](leanengine_guide_v2-php.html) -->
 {% endblock %}
 
 {% block demo %}
@@ -88,7 +88,7 @@ app.get('/time', function(req, res) {
 });
 ```
 
-然后打开浏览器，访问<http://localhost:3000/time>，浏览器应该会返回如下类似的内容：
+然后打开浏览器，访问 <http://localhost:3000/time>，浏览器应该会返回如下类似的内容：
 
 ```json
 {"currentTime":"2016-02-01T09:43:26.223Z"}
@@ -96,7 +96,7 @@ app.get('/time', function(req, res) {
 {% endblock %}
 
 {% block use_leanstorage %}
-{{productName}} 在 Node.js 的运行时中自动包含了 LeanCloud JavaScript SDK ，因此开发者可以很方便地直接使用 LeanStorage 作为自己的后端数据存储服务，相关文档请查阅：[LeanCloud JavaScript SDK](js_guide.html)
+{{productName}} 在 Node.js 的运行时中自动包含了 LeanCloud JavaScript SDK ，因此开发者可以很方便地直接使用 LeanStorage 作为自己的后端数据存储服务，相关文档请查阅：[LeanCloud JavaScript SDK](js_guide.html)。
 {% endblock %}
 
 {% block supported_frameworks %}
@@ -160,7 +160,7 @@ var app = express();
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
-使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将 AV.User 的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
+使用 `AV.Cloud.CookieSession` 中间件启用 CookieSession，注意传入一个 secret 用于 cookie 加密（必须）。它会自动将 `AV.User` 的登录信息记录到 cookie 里，用户每次访问会自动检查用户是否已经登录，如果已经登录，可以通过 `req.AV.user` 获取当前登录用户。
 
 `AV.Cloud.CookieSession` 支持的选项包括：
 
@@ -173,8 +173,8 @@ app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser
 
 **注意**：我们通常不建议在云引擎环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
 
-* 在云引擎方法中，通过 request.user 获取用户信息。
-* 在 webHosting 中，通过 req.AV.user 获取用户信息。
+* 在云引擎方法中，通过 `request.user` 获取用户信息。
+* 在网站托管中，通过 `req.AV.user` 获取用户信息。
 * 在后续的方法调用显示传递 user 对象。
 
 登录很简单：
@@ -208,7 +208,7 @@ app.get('/profile', function(req, res) {
   }
 });
 
-//调用此url来登出帐号
+//调用此 url 来登出账号
 app.get('/logout', function(req, res) {
   // AV.Cloud.CookieSession 将自动清除登录 cookie 信息
   AV.User.logOut();

@@ -1,5 +1,5 @@
 {% extends "./leanengine_guide.tmpl" %}
-{% set environment        = "node" %}
+{% set environment        = "node.js" %}
 {% set hook_before_save   = "beforeSave" %}
 {% set hook_after_save    = "afterSave" %}
 {% set hook_before_update = "beforeUpdate" %}
