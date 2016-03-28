@@ -82,7 +82,8 @@
 
 {% block code_saveoption_query_example %}
 ```objc
-// 假设 version 值已提前获取
+// 获取 version 值
+NSNumber *version = [object objectForKey:@"version"];
 
 AVSaveOption *option = [[AVSaveOption alloc] init];
 
