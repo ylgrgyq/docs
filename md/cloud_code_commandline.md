@@ -20,7 +20,7 @@ apt-get install nodejs
 
 提示：apt 提供的 Node.js 版本可能比较滞后，推荐从[官方网站](http://nodejs.org/)下载安装。
 
-在 Mac OSX 上，可以通过 [MacPort](http://www.macports.org/) 或者 [Homebrew](http://brew.sh/) 安装，terminal（终端）执行下列命令：
+在 Mac OSX 上，可以通过 [Homebrew](http://brew.sh/) 或者 [MacPort](http://www.macports.org/) 安装，terminal（终端）执行下列命令：
 
 ```sh
 sudo port install nodejs
