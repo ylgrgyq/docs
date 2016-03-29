@@ -451,7 +451,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 
 举例来说，假设应用的信息如下：
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="noheading">
   <tbody>
     <tr>
       <td scope="row">App Id</td>

@@ -245,7 +245,7 @@ playerName,player
 
 假设：
 
-<table width="100%" border="0" cellpadding="6">
+<table class="noheading">
   <tbody>
     <tr>
       <td nowrap>salt</td>
