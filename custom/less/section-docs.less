@@ -1,4 +1,6 @@
 // Basic styles
+@table-border: 1px solid #ebebeb;
+@table-radius: 3px;
 body {
   position: relative;
   font-size: 15px;
@@ -66,6 +68,10 @@ body {
     color: inherit;
     background-color: transparent;
   }
+  
+  dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
+    padding:0;
+  }
 
   samp {
     font-size: 96%;
@@ -87,17 +93,45 @@ body {
 
   table {
     margin: 1.8em 0;
-    border-collapse: collapse;
-  }
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+  
+    td, th {
+      padding: 8px 13px;
+      border-bottom: @table-border;
+      border-left: @table-border;
+      vertical-align: top;
+    }
 
-  td, th {
-    border: 1px solid #ddd;
-    padding: 3px 10px;
-  }
+    th {
+      white-space: nowrap;
+      background-color: #f7f7f7;
+    }
 
-  th {
-    padding: 5px 10px;
-    white-space: nowrap;
+    th, &.noheading tr:first-child td {
+      border-top: @table-border;
+    }
+    tr th:first-child, &.noheading tr:first-child td:first-child {
+      border-top-left-radius: @table-radius;
+    }
+
+    tr th:last-child, &.noheading tr:first-child td:last-child {
+      border-right: @table-border;
+      border-top-right-radius: @table-radius;
+    }
+
+    tr:last-child td:first-child {
+      border-bottom-left-radius: @table-radius;
+    }
+
+    tr:last-child td:last-child {
+      border-bottom-right-radius: @table-radius;
+    }
+
+    tr td:last-child {
+      border-right: @table-border;
+    }
   }
 
 }
