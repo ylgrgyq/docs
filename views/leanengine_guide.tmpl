@@ -344,15 +344,16 @@ AV.Cloud.afterUpdate('Post', function(request) {
 
 ## 云引擎管理控制台
 
-首先，请进入 [控制台 /（选择应用）/ 云引擎 / 管理](/cloud.html?appid={{appid}}#/online) 界面，可以看到左侧菜单：
+首先，请进入 [控制台 /（选择应用）/ 存储 / 云引擎](/cloud.html?appid={{appid}}#/leannode) 界面，可以看到左侧菜单：
 
 菜单项|说明
 ---|---
-<span style="white-space: nowrap;">定义函数</span>|云引擎的简单模式，可以直接在线维护云引擎方法。
+<span style="white-space: nowrap;">云引擎实例</span>|展示云引擎实例的运行状态，也可以增减新的实例。
+<span style="white-space: nowrap;">部署</span>|用于部署云引擎项目到预备环境或者生产环境。
 定时任务|可以设置一些定时任务，比如每天凌晨清理无用数据等。
-<span style="white-space: nowrap;">Git 部署</span>|用于部署云引擎项目到预备环境或者生产环境。
 日志|用于查看云引擎项目的日志
 统计|用于查看云引擎项目的一些数据统计
+LeanCache|用于查看云缓存项目的实例状态，并增减新的实例。
 设置|用来设置项目的源码仓库信息，包括从这里可以下载云引擎项目的初始框架代码，拷贝用于私有 git 仓库的 deploy key 等。
 
 {% if environment != "python" %}
@@ -586,7 +587,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 {% block timerExample %}{% endblock %}
 
-部署云引擎之后，进入 [控制台 > 存储 > 云引擎 > 在线编辑](/cloud.html?appid={{appid}}#/online)，在右侧页面中选择 **定时任务** > **创建定时器**，然后设定其所执行的函数名称、执行环境等等。
+部署云引擎之后，进入 [控制台 > 存储 > 云引擎 > 定时任务](/cloud.html?appid={{appid}}#/task)，在右侧页面中选择 **创建定时器**，然后设定其所执行的函数名称、执行环境等等。
 
 定时器创建后，其状态为**未运行**，需要点击 <span class="label label-default">启用</span> 来激活。之后其执行日志可以通过 [其它 > 日志](/cloud.html?appid={{appid}}#/log) 查看。
 
