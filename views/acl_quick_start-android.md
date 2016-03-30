@@ -28,4 +28,4 @@ post.saveInBackground();
 </pre>
 
 {% endblock %}
-{% block link_to_acl_guide %}[LeanCloud 权限管理使用规范](/acl_guide-android.html){% endblock %}
+{% block link_to_acl_guide %}[LeanCloud 权限管理使用规范](./acl_guide-android.html){% endblock %}
