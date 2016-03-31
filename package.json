@@ -22,7 +22,7 @@
   "devDependencies": {
     "assemble": "~0.4.33",
     "assemble-swig": "~0.1.0",
-    "autoprefixer": "^6.1.1",
+    "autoprefixer": "^6.3.4",
     "avoscloud-sdk": "^1.0.0-rc3",
     "body-parser": "^1.14.1",
     "cheerio": "^0.20.0",
