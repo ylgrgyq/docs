@@ -3,6 +3,13 @@
 {% set platformName = 'Node.js' %}
 {% set productName = 'LeanEngine' %}
 {% set storageName = 'LeanStorage' %}
+
+{% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud.js`' %}
+{% set runFuncName = '`AV.Cloud.run`' %}
+{% set defineFuncName = '`AV.Cloud.define`' %}
+{% set runFuncApiLink = '[AV.Cloud.run](/api-docs/javascript/symbols/AV.Cloud.html#.run)' %}
+
 {% set hook_before_save   = "beforeSave" %}
 {% set hook_after_save    = "afterSave" %}
 {% set hook_before_update = "beforeUpdate" %}
@@ -11,6 +18,51 @@
 {% set hook_after_delete  = "afterDelete" %}
 {% set hook_on_verified   = "onVerified" %}
 {% set hook_on_login      = "onLogin" %}
+
+{% block cloudFuncExample %}
+```javascript
+AV.Cloud.define('averageStars', function(request, response) {
+  var query = new AV.Query('Review');
+  query.equalTo('movie', request.params.movie);
+  query.find({
+    success: function(results) {
+      var sum = 0;
+      for (var i = 0; i < results.length; ++i) {
+        sum += results[i].get('stars');
+      }
+      response.success(sum / results.length);
+    },
+    error: function() {
+      response.error('查询失败');
+    }
+  });
+});
+```
+{% endblock %}
+
+{% block cloudFuncParams %}
+有两个参数会被传入到云函数：
+
+* **request**：包装了请求信息的请求对象，下列这些字段将被设置到 request 对象内：
+  * **params**：客户端发送的参数对象
+  * **user**：`AV.User` 对象，发起调用的用户，如果没有登录，则不会设置此对象。如果通过 REST API 调用时模拟用户登录，需要增加一个头信息 `X-AVOSCloud-Session-Token: <sessionToken>`，该 `sessionToken` 在用户登录或注册时服务端会返回。
+* **response**：应答对象，包含两个函数：
+  * **success**：这个函数可以接收一个额外的参数，表示返回给客户端的结果数据。这个参数对象可以是任意的 JSON 对象或数组，并且可以包含 `AV.Object` 对象。
+  * **error**：如果这个方法被调用，则表示发生了一个错误。它也接收一个额外的参数来传递给客户端，提供有意义的错误信息。
+{% endblock %}
+
+{% block runFuncExample %}
+```javascript
+AV.Cloud.run('averageStars', {movie: "夏洛特烦恼"}, {
+  success: function(data){
+    //调用成功，得到成功的应答data
+  },
+  error: function(err){
+    //处理调用失败
+  }
+});
+```
+{% endblock %}
 
 {% block beforeSaveExample %}
 
@@ -207,26 +259,24 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 ```
 {% endblock %}
 
+{% block online_editer %}
+## 在线编写云函数
 
+很多人使用 {{productName}} 是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护云函数的功能。
 
-{% block code_averageStars_sample %}
+使用此功能需要注意：
 
-```js
-  var query = new AV.Query('Review');
-  query.equalTo('movie', request.params.movie);
-  query.find({
-    success: function(results) {
-      var sum = 0;
-      for (var i = 0; i < results.length; ++i) {
-        sum += results[i].get('stars');
-      }
-      response.success(sum / results.length);
-    },
-    error: function() {
-      response.error('搜索失败');
-    }
-  });
-```
+* 会替代你之前 git 或者命令行部署的项目。
+* 暂不提供主机托管功能。
+
+在 [控制台 > 存储 > 云引擎 > 部署 > 在线编辑](/cloud.html?appid={{appid}}##/deploy/online) 标签页，可以：
+
+* 创建函数：指定函数类型，函数名称，函数体的具体代码，注释等信息，然后「保存」即可创建一个云函数。
+* 部署：选择要部署的环境，点击「部署」即可看到部署过程和结果。
+* 预览：会将所有函数汇总并生成一个完整的代码段，可以确认代码，或者将其保存为 `cloud.js` 覆盖项目模板的同名文件，即可快速的转换为使用项目部署。
+* 维护云函数：可以编辑已有云函数，查看保存历史，以及删除云函数。
+
+**提示**：云函数编辑之后需要重新部署才能生效。
 {% endblock %}
 
 {% block timerLegacy %}

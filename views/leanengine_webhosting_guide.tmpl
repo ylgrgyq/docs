@@ -4,115 +4,231 @@
 {% set var_app_domain = '{应用的域名}' %}
 # 网站托管开发指南 &middot; {{platformName}}
 
-<dl>
-  <dt>云引擎（{{productName}}）</dt>
-  <dd>LeanCloud 推出的服务端托管平台。</dd>
-  <dt>网站托管（Web Hosting）</dt>
-  <dd>云引擎提供编程语言的运行时，让开发者可以自由部署自己的代码运行在 {{productName}} 云端。</dd>
-</dl>
+使用你熟悉的语言开发一个 web 程序，提供静态和动态路由，开发一个 web 站点，拥有自己的二级域名；或者为移动应用提供一个介绍和下载页；或者开发一个管理员控制台。
 
 网站托管是云引擎的一个子模块，请确保在阅读本文档之前，你已阅读了 [云引擎服务概览](leanengine_overview.html)。
 
-我们推荐从 [Demo](#Demo) 入手，以便能快速将一个小项目部署到云端，实际运行起来。
+如果还不知道如何创建云引擎项目，本地调试并部署到云端，请阅读 [云引擎快速入门](leanengine_quickstart.html)。
 
-## 语言支持
-{% block link_to_other_languages %}{% endblock %}
+## 多语言支持
 
-## Demo
-{% block demo %}{% endblock %}
+云引擎支持多种语言的运行环境，你可以选择自己熟悉的语言开发应用：
 
-## 创建项目
-在本地创建项目需要使用 LeanCloud 官方命令行工具，详细请查阅 [云引擎命令行工具使用详解](cloud_code_commandline.html)。请确保你已经在本地机器上可以成功运行命令行工具。
+- [Node.js](leanengine_guide-node.html)
+- [Python](leanengine_guide-python.html)
+<!-- - PHP：[云引擎开发指南-PHP](leanengine_guide_v2-php.html) -->
 
-### 默认项目
-使用命令行工具创建的项目模板是一个空项目，它的结构如下：
+## 项目约束
 
-{% block default_project_construction %}{% endblock %}
+### 项目格式
 
-### 从项目模板创建
-{% block based_on_project_template %}{% endblock %}
+你的项目需要遵循一定格式才会被云引擎识别并运行。
 
-## 本地运行
-{% block run_in_local_command %}{% endblock %}
+{% block project_constraint %}{% endblock %}
 
-窗口会提示输入 Master Key，该信息可以在 [控制台 > 设置 > 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
+{% block project_start %}{% endblock %}
 
-<div class="callout callout-info">复制粘贴 Master Key 后，窗口不会有任何显示，直接按回车键确认即可。</div>
+### 健康监测
 
-应用即可启动运行 <http://localhost:3000>。
+云引擎项目在部署启动时，部署服务会对新启动的应用进行 `ping` 监测（每隔 1 秒请求一次，一共 15 次），请求 URL 为 `/__engine/1/ping`，如果响应的 `statusCode` 为 `200` 则认为新的节点启动成功，整个部署才会成功；否则会收到 **应用启动检测失败** 类型的错误信息，导致部署失败。
 
-### 新建一个 Todo
+{% block ping %}{% endblock %}
 
-1. 用浏览器打开 <http://localhost:3000/todos>，
-1. 在输入框输入：**点个外卖**；
-1. 打开控制台，选择对应的应用，可以看到在 Todo 表中会有一个新的记录，它的 `content` 列的值就是刚才输入的「点个外卖」。
+### Web 框架
 
-详细的实现细节请阅读源代码，开发者可以通过完整的代码和注释来了解如何在 {{productName}} 上编写符合自己项目需求的代码。
+{% block supported_frameworks%}{% endblock %}
 
-## 部署到云端
+### 环境变量
 
-部署到<u>预备环境</u>：
+云引擎平台提供下列环境变量供应用使用：
+
+变量名|说明
+---|---
+`LEANCLOUD_APP_ID`|当前应用的 App Id
+`LEANCLOUD_APP_KEY`|当前应用的 App Key
+`LEANCLOUD_APP_MASTER_KEY`|当前应用的 Master Key
+`LEANCLOUD_APP_ENV`|当前的应用环境：<ul><li>开发环境没有该环境变量，或值为 `development`（一般指本地开发）</li><li>预备环境值为 `stage`</li><li>生产环境值为 `production`</li></ul>
+`LEANCLOUD_APP_PORT`|当前应用开放给外网的端口，只有监听此端口，用户才可以访问到你的服务。
+`LEANCLOUD_APP_INSTANCE`|云引擎实例名称，在多实例环境可以通过此变量标示自己。
+`LEANCLOUD_REGION`|云引擎服务所在区域，值为 `CN` 或 `US`，分别表示国内节点和美国节点。
+
+**提示**：旧版云引擎使用的以 `LC_` 开头的环境变量（如 `LC_APP_ID`）已经被弃用。为了保证代码兼容性，`LC_` 变量在一段时间内依然有效，但未来可能会完全失效。为了避免报错，建议使用 `LEANCLOUD_` 变量来替换。
+
+**提示**：如果在客户端想调用云引擎的预备环境，各个 SDK 都有类似于 `setProduction` 的方法，比如 [JavaScript SDK &middot; AV.setProduction(production)](/api-docs/javascript/symbols/AV.html#.setProduction)，其中 `production` 设置为 `0` 则该 SDK 将请求预备环境；设置为 `1` 将请求生产环境，默认为 `1`。
+
+
+## 使用 LeanStorage 
+
+{% block use_leanstorage %}{% endblock %}
+
+## 部署
+
+### 使用命令行工具部署
+
+使用命令行工具可以非常方便地部署、发布应用，查看应用状态，查看日志，甚至支持多应用部署。具体使用请参考 [命令行工具指南](cloud_code_commandline.html)。
+
+除此之外，还可以使用 git 仓库部署。你需要将项目提交到一个 git 仓库，我们并不提供源码的版本管理功能，而是借助于 git 这个优秀的分布式版本管理工具。我们推荐你使用 [CSDN Code 平台](https://code.csdn.net/)、[Github](https://github.com/) 或者 [BitBucket](https://bitbucket.org/) 这样第三方的源码托管网站，也可以使用你自己搭建的 git 仓库（比如 [gitlab.org](http://gitlab.org/)）。
+
+### 使用 CSDN Code 托管源码
+
+CSDN Code 是国内非常优秀的源码托管平台，你可以使用这个平台提供公有仓库和有限的私有仓库完成对代码的管理功能。以下是该平台与 LeanCloud 云引擎结合的一个例子。
+
+首先在 CSDN Code 上创建一个项目：
+
+![image](images/csdn_code1.png)
+
+**提示**：在已经有项目代码的情况下，一般不推荐 **使用 README 文件初始化项目**。
+
+接下来按照给出的提示，将源代码 push 到这个代码仓中：
+
+```sh
+cd ${PROJECT_DIR}
+git init
+git add *
+git commit -m "first commit"
+git remote add origin git@code.csdn.net:${yourname}/test.git
+git push -u origin master
+```
+
+我们已经将源码成功推送到 CSDN Code 平台，接下来到 LeanCloud 云引擎的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
+
+![image](images/csdn_code2.png)
+
+添加 deploy key 到你的 CSDN Code 平台项目上（deploy key 是我们云引擎机器的 ssh public key）保存到 **项目设置** / **项目公钥** 中，创建新的一项 avoscloud：
+
+![image](images/csdn_code3.png)
+
+下一步，部署源码到预备环境，进入 [云引擎 / Git 部署](/cloud.html?appid={{appid}}#/deploy) 菜单，点击「部署到开发环境」的部署按钮：
+
+![image](images/cloud_code_5.png)
+
+部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
+
+
+### 使用 GitHub 托管源码
+
+使用 BitBucket 与此类似，不再赘述。
+
+[Github](https://github.com) 是一个非常优秀的源码托管平台，你可以使用它的免费账号，那将无法创建私有仓库（bucket 可以创建私有仓库），也可以付费成为高级用户，可以创建私有仓库。
+
+首先在 Github上创建一个项目，比如就叫 `test`：
+
+![image](images/github1.png)
+
+![image](images/github2.png)
+
+接下来按照 Github 给出的提示，我们将源码 push 到这个代码仓库：
+
+```sh
+cd ${PROJECT_DIR}
+git init
+git add *
+git commit -m "first commit"
+git remote add origin git@github.com:${yourname}/test.git
+git push -u origin master
+```
+
+到这一步我们已经将源码成功 push 到 Github，接下来到云引擎的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
+
+![image](images/cloud_code_4.png)
+
+并添加 deploy key 到你的 github 项目（deploy key 是我们云引擎机器的 ssh public key），如果你是私有项目，需要设置 deploy key，
+
+拷贝 **设置** 菜单里的 **Deploy key** 保存到 github setting 里的 deploy key，创建新的一项 avoscloud：
+
+![image](images/cloud_code_github_deploy_key.png)
+
+下一步，部署源码到预备环境，进入 **云引擎** / **Git 部署** 菜单，点击 **部署到开发环境** 的部署按钮：
+
+![image](images/cloud_code_5.png)
+
+部署成功后，可以看到开发环境版本号从 undeploy 变成了当前提交的源码版本号。
+
+### Gitlab 无法部署问题
+
+很多用户自己使用 [Gitlab](http://gitlab.org/)搭建了自己的源码仓库，有朋友会遇到无法部署到 LeanCloud 的问题，即使设置了 Deploy Key，却仍然要求输入密码。
+
+可能的原因和解决办法如下：
+
+* 确保你 gitlab 运行所在服务器的 /etc/shadow 文件里的 git（或者 gitlab）用户一行的 `!`修改为 `*`，原因参考 [Stackoverflow - SSH Key asks for password](http://stackoverflow.com/questions/15664561/ssh-key-asks-for-password)，并重启 SSH 服务：`sudo service ssh restart`。
+* 在拷贝 deploy key 时，确保没有多余的换行符号。
+* Gitlab 目前不支持有 comment 的 deploy key。早期 LeanCloud 用户生成的 deploy key 可能带 comment，这个 comment 是在 deploy key 的末尾 76 个字符长度的字符串，例如下面这个 deploy key：
 
 ```
-$ avoscloud deploy
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw== App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
-
-如果设置了 [二级域名](#设置域名)，即可通过 `http://stg-{{var_app_domain}}.leanapp.cn` 访问你应用的预备环境。
-
-部署到<u>生产环境</u>：
+其中最后 76 个字符：
 
 ```
-$ avoscloud publish
+App dxzag3zdjuxbbfufuy58x1mvjq93udpblx7qoq0g27z51cx3's cloud code deploy key
 ```
 
-如果设置了 [二级域名](#设置域名)，即可通过 `http://{{var_app_domain}}.leanapp.cn` 访问你应用的生产环境。
-
-详细内容请参看 [设置域名](#设置域名)。
-
-## 线上调试
-打开浏览器，直接访问 `http://{{var_app_domain}}.leanapp.cn` ，可以看看是否能访问到网站的首页，它的首页应该会打印如下内容：
+就是 comment，删除这段字符串后的 deploy key（如果没有这个字样的comment无需删除）保存到 gitlab 即可正常使用：
 
 ```
-LeanEngine
-
-这是 LeanEngine 的示例应用
-
-当前时间：Mon Feb 01 2016 18:23:36 GMT+0800 (CST)
-
-一个简单的「TODO 列表」示例
+ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy57jAP/lZXuosyPwtLolTwdyCXjuaDw9zNwHdweHfqOX0TlTQQSDBwsHL+ead/p6zBjn7VBL0YytyYIQDXbLUM5d1f+wUYwB+Cav6nM9PPdBckT9Nc1slVQ9ITBAqKZhNegUYehVRqxa+CtH7XjN7w7/UZ3oYAvqx3t6si5TuZObWoH/poRYJJ+GxTZFBY+BXaREWmFLbGW4O1jGW9olIZJ5/l9GkTgl7BCUWJE7kLK5m7+DYnkBrOiqMsyj+ChAm+o3gJZWr++AFZj/pToS6Vdwg1SD0FFjUTHPaxkUlNw==
 ```
 
-{% block annotation_cloud_function_online_debug %}
-{% endblock %}
 
-## 自定义 API
+
+## Web 组件
+
+### 自定义 API
 {{productName}} 允许开发者自定义基于 HTTP（HTTPS） 的 API。
 例如，开发者如果想实现一个获取服务端时间的 API，可以在代码中如下做：
 
 {% block custom_api_random_string %}
-
 {% endblock %}
 
-然后再次部署到线上，顺序执行以下几条命令行：
+然后打开浏览器，访问 <http://localhost:3000/time>，浏览器应该会返回如下类似的内容：
 
-```sh
-$ avoscloud deploy
+```json
+{"currentTime":"2016-02-01T09:43:26.223Z"}
 ```
 
-```sh
-$ avoscloud publish
+部署到云端后，你可以通过 `http://{{var_app_domain}}.leanapp.cn/time` 来访问该 API。你的 iOS 或者 Android 的程序就可以构建一个 HTTP 请求获取服务端时间了。当然还是建议使用各 SDK 内置的获取服务器时间的 API，这里的例子只是演示。
+
+### 发送 HTTP 请求
+
+{% block http_client %}{% endblock %}
+
+### 获取客户端 IP
+
+如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip` 字段获取，实例代码如下：
+
+{% block code_get_client_ip_address %}{% endblock %}
+
+### 上传文件
+托管在 {{productName}} 的网站项目可以直接使用内置的 LeanCloud {{sdk_name}} SDK 的 API 文件相关的接口直接处理文件的上传。
+
+假设前端 HTML 代码如下：
+
+```html
+<form enctype="multipart/form-data" method="post" action="/upload">
+  <input type="file" name="iconImage">
+  <input type="submit" name="submit" value="submit">
+</form>
 ```
 
-然后再访问线上的地址：`http://{{var_app_domain}}.leanapp.cn/time`
-就可以测试该 API 是否生效。
+{% block upload_file_special_middleware %}{% endblock %}
 
-然后你可以通过 iOS 或者 Android 的代码构建一个 HTTP 请求来使用这个 API 来获取服务端的时间了。
+接下来定义文件上传的处理函数，构建一个 Form 对象，并将 req 作为参数进行解析，会将请求中的文件保存到临时文件目录，并构造 files 对象：
 
-## 使用 LeanStorage 
-{% block use_leanstorage %}{% endblock %}
+{% block code_upload_file_sdk_function %}{% endblock %}
 
-## {{productName}} 支持的开发框架
-{% block supported_frameworks %}{% endblock %}
+{% block cookie_session %}{% endblock %}
+
+{% block custom_session %}{% endblock %}
+
+### 自动重定向到 HTTPS
+
+为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的 {{productName}} 支持网站托管，同样会有这样的需求。
+
+因此我们在 {{productName}} 中提供了一个新的 middleware 来强制让你的 `{{var_app_domain}}.leanapp.cn` 的网站通过 https 访问，你只要这样：
+
+{% block https_redirect %}{% endblock %}
+
+部署并发布到生产环境之后，访问你的 {{productName}} 网站二级域名都会强制通过 HTTPS 访问。
 
 ## 设置域名
 
@@ -282,40 +398,91 @@ WAP<br/>
 
 以上任何一个步骤有疑问都可以直接发邮件给 support@leancloud.rocks 进行询问，我们会有专人负责跟进和回答相关问题。
 
-## 获取客户端 IP
+## 运行环境定制
 
-如果你想获取客户端的 IP，可以直接从用户请求的 HTTP 头的 `x-real-ip` 字段获取，实例代码如下：
+{% block custom_runtime %}{% endblock %}
 
-{% block code_get_client_ip_address %}{% endblock %}
+## 预备环境和生产环境
 
-## 上传文件
-托管在 {{productName}} 的网站项目可以直接使用内置的 LeanCloud {{sdk_name}} SDK 的 API 文件相关的接口直接处理文件的上传。
+云引擎区分「预备环境」和「生产环境」， 它们拥有不同的域名:
 
-假设前端 HTML 代码如下：
+* 预备环境：`stg-${your_app_domain}.leanapp.cn`
+* 生产环境：`${your_app_domain}.leanapp.cn`
 
-```html
-<form enctype="multipart/form-data" method="post" action="/upload">
-  <input type="file" name="iconImage">
-  <input type="submit" name="submit" value="submit">
-</form>
+但是两个环境使用相同的数据源。代码在预备环境测试通过后，再部署到生产环境是更安全的做法。
+
+**提示**：[免费版](leanengine_plan.html#免费版) 没有预备环境。
+
+**提示**: 如果希望能有一个独立数据源的测试环境，建议单独创建一个应用。
+
+有些时候你可能需要知道当前云引擎运行在什么环境（开发环境、预备环境或生产环境），从而做不同的处理：
+
+{% block get_env %}{% endblock %}
+
+你应该注意到了，我们在请求云引擎的时候，通过 REST API 的特殊的 HTTP 头 `X-LC-Prod`，来区分调用的环境。
+
+* 0 表示调用预备环境
+* 1 表示调用生产环境
+
+具体到 SDK 内的调用，请看各个平台的 SDK 指南。
+
+有些时候请求云引擎时会提示 production 还没有部署：
+
+```json
+{"code":1,"error":"The cloud code isn't deployed for prod 1."}
 ```
 
-{% block upload_file_special_middleware %}{% endblock %}
+这个错误通常是只是部署了预备环境而没有部署生产环境导致的。
 
-接下来定义文件上传的处理函数，构建一个 Form 对象，并将 req 作为参数进行解析，会将请求中的文件保存到临时文件目录，并构造 files 对象：
+## 时区问题
 
-{% block code_upload_file_sdk_function %}{% endblock %}
+因为某些原因，云引擎 2.0 默认使用的是 UTC 时间，这给很多开发者带来了困惑，所以我们着重讨论下时区问题。
 
-{% block cookie_session %}{% endblock %}
+比如有这样一个时间：`2015-05-05T06:15:22.024Z` (ISO 8601 表示法)，最后末尾的 `Z` 表示该时间是 UTC 时间。
 
-{% block custom_session %}{% endblock %}
+上面的时间等价于：`2015-05-05T14:15:22.024+0800`，注意此时末尾是 `+0800` 表示该时间是东八区时间。这两个时间的「小时」部分相差了 8 小时。
 
-## 自动重定向到 HTTPS
+### 时区问题产生的原因
 
-为了安全性，我们可能会为网站加上 HTTPS 加密传输。我们的 {{productName}} 支持网站托管，同样会有这样的需求。
+很多开发者在时间处理上会忽略「时区」标志，导致最后总是莫名其妙的出现 8 小时的偏差。
 
-因此我们在 {{productName}} 中提供了一个新的 middleware 来强制让你的 `{{var_app_domain}}.leanapp.cn` 的网站通过 https 访问，你只要这样：
+【场景一】某开发者开发的应用使用云引擎的主机托管功能做了一个网站，其中有时间格式的表单提交。某用户使用浏览器访问该网站，提交表单，时间格式为：`2015-05-05 14:15:22.024`，注意该时间没有「时区」标志。因为这个时间是浏览器生成的，而该用户浏览器上的时间通常是东八区时间，所以该业务数据希望表达的时间是「东八区的 14 点」。
 
-{% block https_redirect %}{% endblock %}
+该时间 `2015-05-05 14:15:22.024` 提交到服务器，被转换为 Date 类型（JavaScript 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云引擎 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
 
-部署并发布到生产环境之后，访问你的 {{productName}} 网站二级域名都会强制通过 HTTPS 访问。
+解决上面的办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
+
+【场景二】从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。因为云引擎默认时区是 UTC，所以一些时间函数的返回结果如下：
+
+函数|结果
+---|---
+`toISOString`|2015-04-09T03:35:09.678Z
+`toLocaleString`|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`toUTCString`|Thu, 09 Apr 2015 03:35:09 GMT
+`toString`|Thu Apr 09 2015 03:35:09 GMT+0000 (UTC)
+`getHours`|3，如果将 getHours 的结果返回给浏览器，或者作为业务数据使用，则会出现 8 小时的偏差。
+
+如果需要获取小时数据，解决办法是使用第三方的组件，比如 [moment-timezone](http://momentjs.com/timezone/)，通过下面的方式可以获得东八区的小时时间：
+
+```javascript
+var time = moment(obj.createdAt).tz('Asia/Shanghai');
+console.log('toString', time.toString());
+console.log('getHours', time.hours())
+```
+
+### 云引擎 2.0 和云引擎时区的差异
+
+为了方便大家的使用，更加符合通常的习惯，云引擎运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
+
+{% block introduceCloudCodeV2 %}{% endblock %}
+[quartz_docs]: http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger  "Quartz 文档"
+
+## 日志
+
+[云引擎 / 日志](/cloud.html?appid={{appid}}#/log)，可以查看云引擎的部署和运行日志，还可以通过日志级别进行筛选。
+
+应用的日志可以直接输出到「标准输出」或者「标准错误」，这些信息会分别对应日志的 `info` 和 `error` 级别，比如下列代码会在 info 级别记录参数信息：
+
+{% block loggerExample %}{% endblock %}
+
+**注意**：日志单行最大 4096 个字符，多余部分会被丢弃；日志输出频率大于 600 条/分钟，多余的部分会被丢弃。
