@@ -149,7 +149,7 @@ import AVOSCloudIM
 [AVOSCloud setApplicationId:@"{{appid}}"
                   clientKey:@"{{appkey}}"];
 //如果使用美国站点，请加上这行代码 
-[AVOSCloud useAVCloudUS];
+[AVOSCloud setServiceRegion:AVServiceRegionUS];
 ```
 {% endblock %}
 
