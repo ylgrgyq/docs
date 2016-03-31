@@ -264,3 +264,25 @@ public class MyLeanCloudApp extends Application {
 {% block permission_access_network_config %}{% endblock %}
 
 {% block platform_specific_faq %}{% endblock %}
+
+{% block android_mutildex_issue %}
+### 运行中遇到 `NoClassDefFoundError` 异常
+一般来说遇到这个问题只有两种可能：
+第一种是 Android SDK 的间接依赖并没有能全部下载导致的，可以通过在 gradle 配置中显式指定 `transitive=true` 来解决这个问题:
+
+
+```
+
+dependencies {
+    compile 'com.android.support:multidex:'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
+}
+
+
+```
+
+第二种情况则是由在 v3.13.+ 以后 Android SDK 引入了 Google ProtoBuf 来提高实时通信模块的传输效率，随之而来的是类和方法数量的激增,超过了 Android 上存在着方法总数不能超过 65k 的上限而导致的。这个时候我们可以采用 Google 提出的[解决方案](http://developer.android.com/intl/zh-cn/tools/building/multidex.html#about)来解决这个问题。
+
+{% endblock%}
