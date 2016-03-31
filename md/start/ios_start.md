@@ -121,7 +121,7 @@ iOS 从 8.0 开始支持动态库，如果你的项目只支持 iOS 8 及以上�
 然后粘贴下列代码到 `application:didFinishLaunchingWithOptions` 函数内：
 
 ```
-//如果使用美国站点，请加上这行代码 [AVOSCloud useAVCloudUS];
+//如果使用美国站点，请加上这行代码 [AVOSCloud setServiceRegion:AVServiceRegionUS];
 [AVOSCloud setApplicationId:@"{{appid}}"
               clientKey:@"{{appkey}}"];
 ```
