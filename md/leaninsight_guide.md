@@ -1,4 +1,4 @@
-# 离线数据分析使用指南
+# 离线数据分析指南
 
 针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了部分兼容 SQL 语法的离线数据分析功能。离线数据分析的数据来源是**前一天的数据备份**，并非最新的在线数据，在这里进行的任何操作都不会对应用的线上数据产生影响。
 
@@ -6,28 +6,30 @@
 
 离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 
-## 类似 SQL 的查询分析语法
+## 查询限制
+- `_Conversation` 表的 **m** 和 **mu** 字段往往包含大量数组元素，容易引起计算节点故障，因此我们限制了对这些字段的查询。
+- `_User` 表的 **sessionToken**、**password**、**salt** 字段，因为安全原因也被限制查询。
+
+## 查询语法
 
 LeanCloud 的离线数据分析服务基于 Spark SQL，目前支持 HiveQL 的功能子集，常用的 HiveQL 功能都能正常使用，例如：
 
-### Hive 查询语法
+* `SELECT`
+* `GROUP BY`
+* `ORDER BY`
+* `CLUSTER BY`
+* `SORT BY`
 
-* SELECT
-* GROUP BY
-* ORDER BY
-* CLUSTER BY
-* SORT BY
+### `GROUP BY`
 
-**针对 `GROUP BY` 的特别说明**：
-
-有不少用户都有过 MySQL 的使用经验，这里主要是列举几种在 MySQL 中可用而在我们的服务（基于 Spark SQL）中却**会报错的 `GROUP BY` 用法**。
+有不少用户都有过 MySQL 的使用经验，这里主要是列举几种在 MySQL 中可用而在我们的服务（基于 Spark SQL）中<u>却会报错的 `GROUP BY` 用法</u>。
 
 ```
 SELECT * FROM table GROUP BY columnA;
 ```
 
 * MySQL：如果 columnA 这个字段有 10 种不同的值，那么这条查询语句得到的结果应该包含 10 行记录。
-* Spark SQL：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
+* **离线分析**：如果 table 只有 columnA 这个字段，那么查询结果和 MySQL 相同。相反，如果 table 包含不止 columnA 这个字段，查询会报错。
 
 
 ```
@@ -35,9 +37,9 @@ SELECT columnB FROM table GROUP BY columnA;
 ```
 
 * MySQL：同前一条查询差不多，返回正确结果。结果记录数由 columnA 值的种类决定。
-* Spark SQL：一定会报错。
+* **离线分析**：一定会报错。
 
-当且仅当 SELECT 后面的表达式（expressions）为聚合函数（aggregation function）或包含 `GROUP BY` 中的字段，Spark SQL 的查询才会合法。列举几个常见的合法查询：
+当且仅当 SELECT 后面的表达式（expressions）为聚合函数（aggregation function）或包含 `GROUP BY` 中的字段，离线分析的查询才会合法。列举几个常见的合法查询：
 
 ```
 SELECT columnA, count(columnB) as `count` FROM table GROUP BY columnA
@@ -45,11 +47,11 @@ SELECT columnA, count(*) as `count` FROM table GROUP BY columnA
 SELECT columnA, columnB FROM table GROUP BY columnA, columnB
 ```
 
-### Hive 运算符
+### 运算符
 
-* 关系运算符（`= ⇔ == <> < > >= <=`  ...）
+* 关系运算符（`= != <>  > < >= <=`  ...）
 * 算术运算符（`+ - * / %`  ...）
-* 逻辑运算符（`AND && OR ||`  ...）
+* 逻辑运算符（`AND && OR || NOT`  ...）
 
 ### 常用函数
 
@@ -131,21 +133,21 @@ CROSS JOIN
 SELECT col FROM ( SELECT a + b AS col from t1) t2
 ```
 
-### Hive 数据类型
+### 数据类型
 
-* TINYINT
-* SMALLINT
-* INT
-* BIGINT
-* BOOLEAN
-* FLOAT
-* DOUBLE
-* STRING
-* BINARY
-* TIMESTAMP
-* ARRAY<>
-* MAP<>
-* STRUCT<>
+* `TINYINT`
+* `SMALLINT`
+* `INT`
+* `BIGINT`
+* `BOOLEAN`
+* `FLOAT`
+* `DOUBLE`
+* `STRING`
+* `BINARY`
+* `TIMESTAMP`
+* `ARRAY<>`
+* `MAP<>`
+* `STRUCT<>`
 
 详细信息请参考 [Spark SQL Supported Hive Features](http://spark.apache.org/docs/latest/sql-programming-guide.html#supported-hive-features)。
 
@@ -155,7 +157,7 @@ SELECT col FROM ( SELECT a + b AS col from t1) t2
 
 * 简单的 SELECT 查询
 
-```
+```sql
 select * from Post
 
 select count(*) from _User
@@ -163,7 +165,7 @@ select count(*) from _User
 
 * 复杂的 SELECT 查询
 
-```
+```sql
 select * from Post where createdAt > '2014-12-10'
 
 select avg(age) from _User
@@ -179,7 +181,7 @@ select count(*) as `count`, pubUser from Post group by pubUser
 
 更多例子可以参考我们的博客文章[《LeanCloud 离线数据分析功能介绍》](https://blog.leancloud.cn/2559/)。
 
-## 云引擎和 JavaScript SDK 对离线分析的支持
+## 云引擎和 JavaScript SDK 调用
 
 JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线数据分析要求使用 Master Key，否则下面所述内容都没有权限运行，请参考 [《权限说明》](leanengine_guide-cloudcode.html#权限说明)。**
 
