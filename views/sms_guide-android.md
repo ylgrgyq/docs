@@ -107,7 +107,7 @@ android_guide.html#用户
         parameters.put("service_name", "月度周刊");
         parameters.put("order_id", "7623432424540");
         AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(),
-                "Notice_Template",
+                "Notice_Welcome",
                 parameters,
                 new RequestMobileCodeCallback() {
                     @Override
