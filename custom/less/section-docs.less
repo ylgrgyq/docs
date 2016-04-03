@@ -1,6 +1,7 @@
 // Basic styles
 @table-border: 1px solid #ebebeb;
 @table-radius: 3px;
+@bubble-color: #eee;
 body {
   position: relative;
   font-size: 15px;
@@ -48,7 +49,10 @@ body {
   // text-underline
   u {
     text-decoration: none;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    /* DO NOT USE short-hand syntax */
+    border-bottom-color: inherit;
     padding-bottom: 2px;  
   }
 
@@ -76,8 +80,32 @@ body {
   samp {
     font-size: 96%;
     white-space: pre-wrap;
-  }
+  
+    &.bubble {
+      position: relative;
+      width: 50%;
+      padding: 1em;
+      background: @bubble-color;
+      border-radius: 6px;
+      display:block;
 
+      &:after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 11px 11px 11px 0;
+        border-color: transparent @bubble-color;
+        display: block;
+        width: 0;
+        /* FF: DO NOT REMOVE HEIGHT */
+        height: 0;
+        z-index: 1;
+        left: -11px;
+        top: 31%;
+      }
+    }
+  }
+  
   .prettyprint {
 
     .com {
