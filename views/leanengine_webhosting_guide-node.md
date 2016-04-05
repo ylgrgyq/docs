@@ -90,7 +90,7 @@ app.get('/', function(req, res) {
 {% endblock %}
 
 {% block use_leanstorage %}
-{{fullName}} 使用 {{leanengine_middleware}} 来代替 [JavaScript SDK](https://github.com/leancloud/javascript-sdk) ，前者扩展了后者，并增加了 Cloud 函数和 Hook 函数的支持。因此开发者可以很方便地直接使用 LeanStorage 作为自己的后端数据存储服务，关于如何使用 LeanStorage 请查阅：[LeanCloud JavaScript SDK](js_guide.html)。
+{{fullName}} 使用 {{leanengine_middleware}} 来代替 [JavaScript SDK](https://github.com/leancloud/javascript-sdk) ，前者扩展了后者，并增加了云函数和 Hook 函数的支持。因此开发者可以很方便地直接使用 LeanStorage 作为自己的后端数据存储服务，关于如何使用 LeanStorage 请查阅：[LeanCloud JavaScript SDK](js_guide.html)。
 
 如果使用项目框架作为基础开发，{{leanengine_middleware}} 默认是配置好的，可以根据示例程序的方式直接使用。
 

@@ -259,7 +259,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 ```
 {% endblock %}
 
-{% block online_editer %}
+{% block online_editor %}
 ## 在线编写云函数
 
 很多人使用 {{productName}} 是为了在服务端提供一些个性化的方法供各终端调用，而不希望关心诸如代码托管、npm 依赖管理等问题。为此我们提供了在线维护云函数的功能。
@@ -269,7 +269,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 * 会替代你之前 git 或者命令行部署的项目。
 * 暂不提供主机托管功能。
 
-在 [控制台 > 存储 > 云引擎 > 部署 > 在线编辑](/cloud.html?appid={{appid}}##/deploy/online) 标签页，可以：
+在 [控制台 > 存储 > 云引擎 > 部署 > 在线编辑](/cloud.html?appid={{appid}}#/deploy/online) 标签页，可以：
 
 * 创建函数：指定函数类型，函数名称，函数体的具体代码，注释等信息，然后「保存」即可创建一个云函数。
 * 部署：选择要部署的环境，点击「部署」即可看到部署过程和结果。

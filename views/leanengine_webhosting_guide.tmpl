@@ -467,7 +467,7 @@ WAP<br/>
 ```javascript
 var time = moment(obj.createdAt).tz('Asia/Shanghai');
 console.log('toString', time.toString());
-console.log('getHours', time.hours())
+console.log('getHours', time.hours());
 ```
 
 ### 云引擎 2.0 和云引擎时区的差异
@@ -475,7 +475,6 @@ console.log('getHours', time.hours())
 为了方便大家的使用，更加符合通常的习惯，云引擎运行时环境（无沙箱的 Node.js 环境和 Python 环境）都是使用**东八区**作为默认时区。当然，我们仍然建议程序的时间字符串带有时区标志。
 
 {% block introduceCloudCodeV2 %}{% endblock %}
-[quartz_docs]: http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger  "Quartz 文档"
 
 ## 日志
 

@@ -1,3 +1,5 @@
+{% set quartz_docs_link = '[Quartz 文档（英文）](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger)' %}
+
 # 云函数开发指南 &middot; {{platformName}}
 
 云函数是云引擎（{{productName}}）的一个子模块，请确保阅读本文档之前，你已经阅读了 [云引擎服务概览](leanengine_overview.html)。
@@ -107,7 +109,7 @@ https://leancloud.cn/1.1/functions/averageStars
 ``` 
 上述命令行实际上就是向服务端发送一个 JSON 对象作为参数，参数的内容是告诉服务端要查询的电影的名字。
 
-### 错误响应码
+### 云函数错误响应码
 
 {% block errorCodeExample %}{% endblock %}
 
@@ -251,7 +253,7 @@ AV.Cloud.afterUpdate('Post', function(request) {
 **提示**：云引擎 Node.js 环境从 [0.3.0](https://github.com/leancloud/leanengine-node-sdk/blob/master/CHANGELOG.md#v030-20151231) 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
 {% endblock %}
 
-### 错误响应码
+### Hook 函数错误响应码
 
 为 `{{hook_before_save}}` 这类的 hook 函数定义错误码，需要这样：
 
@@ -265,7 +267,7 @@ Hook 函数的超时时间为 3 秒。如果 Hook 函数被其他的云函数调
 
 例如，如果一个 `beforeSave` 函数是被一个已经运行了 13 秒的云函数触发，那么 `beforeSave` 函数就只剩下 2 秒的时间来运行。
 
-{% block online_editer %}{% endblock %}
+{% block online_editor %}{% endblock %}
 
 ## 定时任务
 
@@ -277,13 +279,13 @@ Hook 函数的超时时间为 3 秒。如果 Hook 函数被其他的云函数调
 
 {% block timerExample %}{% endblock %}
 
-部署云引擎之后，进入 [控制台 > 存储 > 云引擎 > 在线编辑](/cloud.html?appid={{appid}}#/online)，在右侧页面中选择 **定时任务** > **创建定时器**，然后设定其所执行的函数名称、执行环境等等。
+部署云引擎之后，进入 [控制台 > 存储 > 云引擎 > 定时任务](/cloud.html?appid={{appid}}#/task)，点击 **创建定时器**，然后设定执行的函数名称、执行环境等等。
 
-定时器创建后，其状态为**未运行**，需要点击 <span class="label label-default">启用</span> 来激活。之后其执行日志可以通过 [其它 > 日志](/cloud.html?appid={{appid}}#/log) 查看。
+定时器创建后，其状态为**未运行**，需要点击 <span class="label label-default">启用</span> 来激活。之后其执行日志可以通过 [日志](/cloud.html?appid={{appid}}#/log) 查看。
 
 定时任务分为两类：
 
-* 使用 Cron 表达式（即[标准的 crontab 语法][quartz_docs]）安排调度
+* 使用 Cron 表达式安排调度
 * 以秒为单位的简单循环调度
  
 以 Cron 表达式为例，比如每周一早上 8 点准时发送推送消息给用户：
@@ -322,7 +324,7 @@ Cron 表达式的基本语法为：
 `W`|weekday|周一到周五的任意一天，离指定日期最近的非周末的那一天。<br/>`<日期>` 为 **15W** 即离 15 号最近的非周末的一天；如果 15 号是周六，任务则会在 14 号周五触发，如果 15 号是周日，则在 16 号周一触发，如果 15 号是周二，则周二当天触发。<br/><br/>`<日期>` 为 **1W**，如果 1 号是周六，任务则会在 3 号周一触发，因为不能向前跨月来计算天数。<br/><br/>在 `<日期>` 中 **W** 之前只能使用一个数值，不能使用多个值或范围。**LW** 可在 `<日期>` 中组合使用，表示每月最后一个非周末的一天。
 `#`|第 N 次|如 `<星期>` 为 **6#3** 代表每月第三个周五，**2#1** 为每月头一个周一，**4#5** 为每月第五个周三；如果当月没有第五周，则 **#5** 不会产生作用。
 
-各字段以空格或空白隔开。JAN-DEC、SUN-SAT 这些值不区分大小写，比如 MON 和 mon 效果一样。更详细的使用方法请参考 [Quartz 文档（英文）](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger  "Quartz 文档")
+各字段以空格或空白隔开。JAN-DEC、SUN-SAT 这些值不区分大小写，比如 MON 和 mon 效果一样。更详细的使用方法请参考 {{quartz_docs_link}} 。
 
 举例如下：
 

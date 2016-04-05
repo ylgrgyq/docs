@@ -6,7 +6,7 @@
 
 ### 使用命令行创建项目
 
-在本地创建项目需要使用 LeanCloud 官方命令行工具，请根据 [云引擎命令行工具使用详解-安装](https://leancloud.cn/docs/cloud_code_commandline.html#安装) 部分安装该工具，并保你已经在本地机器上可以成功运行命令行工具：
+在本地创建项目需要使用 LeanCloud 官方命令行工具，请根据 [云引擎命令行工具使用详解-安装](https://leancloud.cn/docs/cloud_code_commandline.html#安装) 部分安装该工具，并确保你已经在本地机器上可以成功运行命令行工具：
 
 ```
 $ lean -h
@@ -118,7 +118,7 @@ app.get('/', function(req, res) {
 $ lean deploy
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的预备环境。
+如果你设置了 [二级域名](leanengine_webhosting_guide-node.html#设置域名)，即可通过 `http://stg-${your_app_domain}.leanapp.cn` 访问你应用的预备环境。
 
 部署到生产环境：
 
@@ -126,7 +126,5 @@ $ lean deploy
 $ lean publish
 ```
 
-如果你设置了 [二级域名](#设置域名)，即可通过 `http://${your_app_domain}.leanapp.cn` 访问你应用的生产环境。
-
-关于设置域名的详细解释请参看[设置域名](#设置域名)这一章节的详细内容。
+如果你设置了 [二级域名](leanengine_webhosting_guide-node.html#设置域名)，即可通过 `http://${your_app_domain}.leanapp.cn` 访问你应用的生产环境。
 

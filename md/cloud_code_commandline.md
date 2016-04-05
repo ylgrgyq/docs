@@ -146,9 +146,9 @@ $ lean -h
     search <keywords...>                     根据关键字查询开发文档。
     new [options]                            创建云引擎项目。
     deploy [options]                         部署到云引擎。
-    publish [options]                        发布开发环境代码到生产环境。
+    publish [options]                        发布预备环境代码到生产环境。
     status [options]                         查询当前部署状态。
-    undeploy [options]                       从 LeanEngine 平台清除云引擎部署，包括生产环境和开发环境。
+    undeploy [options]                       从 LeanEngine 平台清除云引擎部署，包括生产环境和预备环境。
     logs [options]                           查看云引擎日志。
     image                                    应用镜像管理。
     instance                                 应用实例管理。
@@ -157,7 +157,7 @@ $ lean -h
     redis                                    LeanCache Redis 命令行。
     upload [options] <file-or-directory...>  导入文件到 LeanCloud 平台，如果是目录，则会将该目录下的文件递归导入。
     clear [options]                          清除本地状态，在输入 app id 或者 master key 错误的情况下使用。
-    help [cmd]                               display help for [cmd]
+    help [cmd]                               显示关于 [cmd] 命令的帮助信息。
 
   Options:
 
@@ -173,7 +173,7 @@ $ lean -V
 0.11.0
 ```
 
-后面我们都假定 `$ lean` 开始的都表示在终端里执行这个命令。
+后面凡是以 `$ lean` 开头的即表示在终端里执行这个命令。
 
 ## Bash Completion
 
@@ -185,12 +185,25 @@ source ~/.leancloud_completion.sh
 
 重启终端 bash，或者重新加载 profile 文件，就可以让 lean 命令拥有自动提示和完成功能（tab 按键提示）。
 
-**Mac 上建议通过 homebrew 安装 bash-completion。**
+### Mac 上安装 bash-completion
 
+Mac 上建议通过 homebrew 安装 bash-completion:
+
+```
+brew install bash-completion
+```
+
+请将下面的内容添加到 `~/.bash_profile` 文件中：
+
+```
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+```
 
 ## 创建项目
 
-在安装命令行工具后，除了从网站的云引擎菜单下载新应用项目框架之外，你也可以通过 `new` 命令来创建一个新的云引擎项目：
+在安装命令行工具后，除了下载我们在 Github 上维护的 [新应用项目框架（Node.js）](https://github.com/leancloud/node-js-getting-started) 之外，你也可以通过 `new` 命令来创建一个新的云引擎项目：
 
 ```sh
 $ lean new
@@ -268,7 +281,7 @@ $ lean up
 $ lean deploy
 ```
 
-请注意，这个命令将部署本地源码到远程平台的开发环境，无条件覆盖原来开发环境的版本（无论是从 Git 仓库部署或者还是本地部署）。
+请注意，这个命令将部署本地源码到远程平台的预备环境，无条件覆盖原来预备环境的版本（无论是从 Git 仓库部署或者还是本地部署）。
 
 如果部署成功，会打印部署后的状态：
 
@@ -310,13 +323,13 @@ $ lean -g deploy
 
 ## 发布
 
-开发环境如果测试没有问题，你希望将开发环境的云引擎代码切换到生产环境，你可以使用开发者平台的云引擎部署菜单做发布，也可以直接运行 `publish` 命令：
+预备环境如果测试没有问题，你希望将预备环境的云引擎代码切换到生产环境，你可以使用开发者平台的云引擎部署菜单做发布，也可以直接运行 `publish` 命令：
 
 ```sh
 $ lean publish
 ```
 
-就会将开发环境的云引擎代码发布到生产环境。
+就会将预备环境的云引擎代码发布到生产环境。
 
 ```sh
 [INFO]: Cloud Code Project Home Directory: /Users/dennis/programming/avos/new_app/
@@ -333,7 +346,7 @@ Production commit log  : 'Uploaded at 2014-10-10 13:54:26'
 
 ## 查看部署状态
 
-可以通过 `status` 命令查询当前生产环境和开发环境的部署状态：
+可以通过 `status` 命令查询当前生产环境和预备环境的部署状态：
 
 ```sh
 $ lean status
@@ -407,7 +420,7 @@ $ lean app list
 
 ```sh
 $ lean app
-You are not in a app.Please checkout <app>
+You are not in an app.Please checkout <app>
 ```
 
 我们明确切换到 `origin` 应用试试：
@@ -453,7 +466,7 @@ $ lean app list
 
 ```sh
 $ lean app checkout other_app
-Switced to app other_app
+Switched to app other_app
 ```
 
 切换成功后，执行 `deploy`、`publish`、`status`、`logs`等命令都将运行在 `other_app` 上。如果你过去没有部署过，第一次部署的时候会要求你输入新应用的 master key。
@@ -471,7 +484,7 @@ $ lean app
 $ lean deploy --app other_app
 ```
 
-这样就无需通过 checkout 切换应用，就可以部署项目到其他应用。`status`、`publish` 等应用相关的命令也同样支持 `-p` 选项。
+这样就无需通过 checkout 切换应用，就可以部署项目到其他应用。`status`、`publish` 等应用相关的命令也同样支持 `--app` 选项。
 
 ### 移除应用
 
