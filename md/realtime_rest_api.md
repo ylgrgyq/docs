@@ -260,6 +260,28 @@ no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户�
 
 目前你可以在一次调用中传入至多 20 个 Client ID。
 
+### 系统对话发送广播消息
+
+利用 REST API 可以发送广播消息给全部用户。
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_peer": "1a", "message": "helloworld", "conv_id": "..."}' \
+  https://leancloud.cn/1.1/rtm/broadcast
+```
+
+参数 | 约束 | 类型 | 说明
+---|---|---
+from_peer | | 字符串 | 消息的发件人 id
+conv_id | | 字符串 | 发送到对话 id，仅限于系统对话
+message || 字符串 |消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+valid_till | 可选 | 数字 | 过期时间，UTC 时间戳（毫秒），最长为 1 个月之后。默认值为 1 个月后。
+push | 可选 | 字符串或 JSON 对象 | 附带的推送内容，如果设置，iOS 和 WindowsPhone 用户会收到这条推送通知。Push 的格式与[推送 REST API 消息内容](/push_guide.html#消息内容_Data) 中的格式一致
+
+
 ### 富媒体消息格式说明
 富媒体消息的参数格式相对于普通文本来说，仅仅是将 message 参数换成了一个 JSON **字符串**。
 
