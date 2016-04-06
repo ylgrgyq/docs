@@ -52,5 +52,5 @@ var AV = require('avoscloud-sdk');
 AV.initialize('{{appid}}', '{{appkey}}');
 ```
 
-LeanCloud 同时也提供了一个完整的 Nodejs 环境，我们称之为 LeanEngine，更推荐基于 LeanEngine 来实现并部署 Nodejs 相关的代码。详细请参考[云引擎文档](https://leancloud.cn/docs/leanengine_guide-node.html) 。
+LeanCloud 同时也提供了一个完整的 Nodejs 环境，我们称之为 LeanEngine，更推荐基于 LeanEngine 来实现并部署 Nodejs 相关的代码。详细请参考[云引擎文档](/docs/leanengine_overview.html) 。
 

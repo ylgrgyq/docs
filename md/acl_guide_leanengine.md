@@ -2,8 +2,8 @@
 
 云引擎（LeanEngine）提供给开发者自定义云端逻辑的接口，例如开发者想记录每一个用户登录系统的时间，打印一下日志，以备之后的查询和分析，那么云引擎提供的接口就可以实现这一需求，详细的操作请查看：
 
-* [云引擎 Node 环境](/leanengine_guide-node.html)
-* [云引擎 Python 环境](/leanengine_guide-python.html)
+* [云引擎 Node 环境](leanengine_cloudfunction_guide-node.html)
+* [云引擎 Python 环境](leanengine_guide-python.html)
 
 提到以上这个需求是为了让开发者更好的理解一下的需求描述：
 
@@ -12,7 +12,7 @@
 我们从一个简单的实例入手：
 我们希望每发一篇帖子，不管是从 iOS 还是 Android，还是任意客户端发出的，都希望 Administrator 具备对它有读写权限。
 
-第一步，我们需要编写我们的云引擎 Hook 函数（关于云引擎 Hook 函数介绍请查看 [Save AVObject 前执行操作](/leanengine_guide-node.html#Save_前执行操作)）：
+第一步，我们需要编写我们的云引擎 Hook 函数（关于云引擎 Hook 函数介绍请查看 [Save AVObject 前执行操作](leanengine_cloudfunction_guide-node.html#beforeSave)）：
 
 **Node**
 
@@ -50,7 +50,7 @@ AV.Cloud.beforeSave('Post', function(request, response) {
 });
 ```
 
-第二步，部署代码到云端（[如何部署](leanengine_guide-node.html#部署)）。
+第二步，部署代码到云端（[如何部署](leanengine_webhosting_guide-node.html#部署)）。
 
 第三步，在客户端客户端保存一个 `Post` 对象：
 

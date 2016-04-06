@@ -78,6 +78,16 @@ app.use('/__engine/1/ping', function(req, res) {
 
 {% block supported_frameworks %}
 {{fullName}} 支持任意 [Node.js](https://nodejs.org) 的 Web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 Node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LC_APP_PORT`。
+
+```js
+var express = require('express');
+var AV = require('leanengine');
+
+var app = express();
+
+app.use(AV.Cloud);
+app.listen(process.env.LC_APP_PORT);
+```
 {% endblock %}
 
 {% block code_get_client_ip_address %}

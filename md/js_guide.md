@@ -10,7 +10,7 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](/api-docs/javascript/)，本指南并没有完全覆盖所有的 API 调用。
 
-该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
+该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](leanengine_overview.html)。
 
 ## 快速入门
 
@@ -1493,7 +1493,7 @@ post.save().then(function(obj) {
 
 如果仅是想简单的上传，可以直接在 Web 前端使用 AV.File 上面的相关方法。但真实使用场景中，还有很多开发者需要自行实现一个上传接口，对数据做更多的处理。
 
-以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](https://leancloud.cn/docs/leanengine_guide-node.html)」，非常出色的 Node.js 环境。
+以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](leanengine_overview.html)」，非常出色的 Node.js 环境。
 
 ```html
 // 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
@@ -2201,7 +2201,7 @@ AV.Cloud.run('hello', {}).then(function(result) {
 });
 ```
 
-你可以参考我们的 [云函数指南](leanengine_guide-node.html#云函数) 来进一步了解这部分功能。
+你可以参考我们的 [云函数指南](leanengine_cloudfunction_guide-node.html) 来进一步了解这部分功能。
 
 ## Push 通知
 

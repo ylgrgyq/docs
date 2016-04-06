@@ -2249,9 +2249,9 @@ curl -X POST \
 }
 ```
 
-**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的 leanengine**
+**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的云引擎**
 
-你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
+你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_cloudfunction_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ## 地理查询
 

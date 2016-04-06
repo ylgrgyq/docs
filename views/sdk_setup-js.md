@@ -5,7 +5,7 @@
 {% block libs_tool_automatic %}
 #### npm 安装
 
-LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 [云引擎](https://leancloud.cn/docs/leanengine_guide-node.html) 来搭建服务器端。
+LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 [云引擎](leanengine_overview.html) 来搭建服务器端。
 
 ```
 # 存储服务
