@@ -302,7 +302,7 @@ AV._useMasterKey = true;
 
 ### Web 端会暴露 App Key 和 App Id，怎么保证安全性？
 首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_安全域名) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
-理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_guide-node.html)。
+理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_overview.html)。
 
 ## 消息推送
 
@@ -441,7 +441,7 @@ var client = require('redis').createClient(process.env['REDIS_URL_mycache']);
 如果日志已打出，则继续检查函数是否成功，检查控制台上是否有错误信息被打印出。如果是 before 类 Hook，需要保证 Hook 函数在 15 秒内调用 `response.success` 或 `response.error`， 否则会被系统认为超时。
 
 > 相关文档
-* [云引擎指南：Hook 函数](leanengine_guide-node.html#Hook_函数)
+* [云引擎指南：Hook 函数](leanengine_cloudfunction_guide-node.html#Hook_函数)
 
 ### 使用命令行工具在本地调试时提示 `Error: listen EADDRINUSE :::3000`, 无法访问应用
 `listen EADDRINUSE :::3000` 表示你的程序默认使用的 3000 端口被其他应用占用了，可以按照下面的方法找到并关闭占用 3000 端口的程序：
@@ -459,7 +459,7 @@ avoscloud -P 3002
 ### 云函数如何获取 Header、如何响应 GET 方法？
 不建议在 Header 中传递信息，云函数可以说是 LeanCloud 所提供的一种 RPC 的封装，这种封装的目的是隐藏掉底层使用 HTTP 协议的细节，所以建议将所有的参数都放在 Body 中、只使用 POST 方法请求。
  
-如果希望能够充分利用 HTTP 提供的语义化特征，可以考虑使用云引擎的「[网站托管](leanengine_guide-node.html#使用框架)」功能，自行来处理 HTTP 请求。
+如果希望能够充分利用 HTTP 提供的语义化特征，可以考虑使用云引擎的「[网站托管](leanengine_webhosting_guide-node.html#Web_框架)」功能，自行来处理 HTTP 请求。
 
 ## 文件
 
