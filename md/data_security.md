@@ -88,17 +88,17 @@ LeanCloud 目前会每天备份一次应用数据，防止用户误操作删除�
 
 在平台内部，LeanCloud 将数据存储为 JSON，因此所有能被转换成 JSON 的数据类型都可以保存在 LeanCloud 平台上。并且，框架还可以处理日期、Bytes 以及文件类型。总结来说，对象中字段允许的类型包括：
 
-类型|说明
----|---
-String|字符串
-Number|数字
-Boolean|布尔类型
-Array|数组
-Object|对象，或者 Pointer 
-Date|日期
-Bytes|Base64 编码的二进制数据
-File|文件
-Null|空值
+| 类型      | 说明              |
+| ------- | --------------- |
+| String  | 字符串             |
+| Number  | 数字              |
+| Boolean | 布尔类型            |
+| Array   | 数组              |
+| Object  | 对象，或者 Pointer   |
+| Date    | 日期              |
+| Bytes   | Base64 编码的二进制数据 |
+| File    | 文件              |
+| Null    | 空值              |
 
 Object 类型简单地表示每个字段的值都可以由能 JSON 编码的内嵌对象组合而成。凡是对象的键（key） 包含 `$` 或者 `.`，或者同时有 `__type` 键，都是框架内保留用来做一些额外处理的特殊键，因此请不要在你的对象中使用这样的 Key。
 
@@ -240,8 +240,8 @@ playerName,player
 1. 创建 SHA-512 加密算法 hasher
 2. 使用 salt 和 password（原始密码） 调用 hasher.update
 3. 获取加密后的值 `hv`
-3. 重复 512 次调用 `hasher.update(hv)`，每次hv都更新为最新的 `hasher.digest` 加密值
-4. 最终的 hv 值做 base64 编码，保存为 password
+4. 重复 512 次调用 `hasher.update(hv)`，每次hv都更新为最新的 `hasher.digest` 加密值
+5. 最终的 hv 值做 base64 编码，保存为 password
 
 假设：
 
