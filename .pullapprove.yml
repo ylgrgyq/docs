@@ -6,6 +6,7 @@ reviewers:
   required: 1
   members:
     - hjiang
+    - jwfing
     - leeyeh
     - myleslee
     - sparanoid
