@@ -29,13 +29,14 @@ AV.useAVCloudUS();
 var TestObject = AV.Object.extend('TestObject');
 var testObject = new TestObject();
 testObject.save({
-  foo: 'bar'
-}, {
-  success: function(object) {
-    alert('LeanCloud works!');
-  }
+  testabc: 'abc123'
+}).then(function() {
+  alert('LeanCloud works!');
+}).catch(function(err) {
+  alert('error:' + err);
 });
 ```
+
 大功告成，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 TestObject 的相关数据。
 
 如果你希望在 [Node.js](http://nodejs.org/) 环境使用 JavaScript SDK 也可以，使用 npm 安装 SDK：
