@@ -1,8 +1,8 @@
 # 离线数据分析指南
 
-针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了部分兼容 SQL 语法的离线数据分析功能。离线数据分析的数据来源是**前一天的数据备份**，并非最新的在线数据，在这里进行的任何操作都不会对应用的线上数据产生影响。
+针对大规模数据的分析任务一般都比较耗时。LeanCloud 为开发者提供了部分兼容 SQL 语法的离线数据分析功能。所谓「离线分析」，是指运行分析程序的机器和服务 API 请求的机器是分开的，这样可以尽量减少线上集群的压力，也就是说，使用离线分析并不会影响或牺牲线上正式数据的访问性能。
 
-当一个应用的所有数据表（即存储功能中的 Class）的总记录条数超过 10,000 时，离线数据分析功能将自动开启。云端准备离线数据的过程一般会持续数分钟或更长时间。记录数少于一万而无法使用离线数据分析的应用，可以使用 API 或直接在 [数据存储页面](/data.html?appid={{appid}}#/) 进行处理。
+离线分析的数据来源，对于普通表来说就是线上实时数据，而对于[日志表](https://blog.leancloud.cn/3838/)则是**前一天的数据备份（并非最新的在线数据）**，这一点需要大家注意。同时，离线分析仅支持 SELECT 语句，不支持 UPDATE、INSERT、DELETE 等语句，所以它不会更新或修改数据源，开发者可以放心使用。
 
 离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 
@@ -57,64 +57,64 @@ SELECT columnA, columnB FROM table GROUP BY columnA, columnB
 
 #### 字符串类
 
-函数|描述
-:---|:---
-`instr`|返回一个字符串在另一个字符串中首次出现的位置
-`length`|字符串长度
-`printf`|格式化输出
-...|...
+| 函数       | 描述                     |
+| :------- | :--------------------- |
+| `instr`  | 返回一个字符串在另一个字符串中首次出现的位置 |
+| `length` | 字符串长度                  |
+| `printf` | 格式化输出                  |
+| ...      | ...                    |
 
 #### 计算类
 
-函数|描述
-:---|:---
-`abs`|绝对值
-`acos`|反余弦
-`asin`|反正弦
-`bin`|二进制
-`ceil`|向上取整
-`ceiling`|向上取整
-`conv`|进制转换
-`cos`|余弦
-`exp`|自然指数
-`floor`|向下取整
-`hex`|十六进制
-`ln`|自然对数
-`log`|对数
-`log10`|以 10 为底对数
-`log2`|以 2 为底对数
-`negative`|negative 
-`pmod`|正取余
-`positive`|positive 
-`pow`|幂运算
-`power`|幂运算
-`rand`|取随机数
-`round`|取整
-`sin`|正弦
-`sqrt`|开平方
-`unhex`|反转十六进制
-...|...
+| 函数         | 描述        |
+| :--------- | :-------- |
+| `abs`      | 绝对值       |
+| `acos`     | 反余弦       |
+| `asin`     | 反正弦       |
+| `bin`      | 二进制       |
+| `ceil`     | 向上取整      |
+| `ceiling`  | 向上取整      |
+| `conv`     | 进制转换      |
+| `cos`      | 余弦        |
+| `exp`      | 自然指数      |
+| `floor`    | 向下取整      |
+| `hex`      | 十六进制      |
+| `ln`       | 自然对数      |
+| `log`      | 对数        |
+| `log10`    | 以 10 为底对数 |
+| `log2`     | 以 2 为底对数  |
+| `negative` | negative  |
+| `pmod`     | 正取余       |
+| `positive` | positive  |
+| `pow`      | 幂运算       |
+| `power`    | 幂运算       |
+| `rand`     | 取随机数      |
+| `round`    | 取整        |
+| `sin`      | 正弦        |
+| `sqrt`     | 开平方       |
+| `unhex`    | 反转十六进制    |
+| ...        | ...       |
 
 #### 日期类
 
-函数|描述
-:---|:---
-`date_add`|日期增加
-`date_sub`|日期减少
-`datediff`|日期比较
-`day`|日期转天
-`from_unixtime`|UNIX 时间戳转日期
-`hour`|日期转小时
-`minute`|日期转分钟
-`month`|日期转月
-`second`|日期转秒
-`to_date`|日期时间转日期
-`unix_timestamp`|获取当前 UNIX 时间戳
-`unix_timestamp`|日期转 UNIX 时间戳
-`unix_timestamp`|指定格式日期转 UNIX 时间戳
-`weekofyear`|日期转周
-`year`|日期转年
-...|...
+| 函数               | 描述               |
+| :--------------- | :--------------- |
+| `date_add`       | 日期增加             |
+| `date_sub`       | 日期减少             |
+| `datediff`       | 日期比较             |
+| `day`            | 日期转天             |
+| `from_unixtime`  | UNIX 时间戳转日期      |
+| `hour`           | 日期转小时            |
+| `minute`         | 日期转分钟            |
+| `month`          | 日期转月             |
+| `second`         | 日期转秒             |
+| `to_date`        | 日期时间转日期          |
+| `unix_timestamp` | 获取当前 UNIX 时间戳    |
+| `unix_timestamp` | 日期转 UNIX 时间戳     |
+| `unix_timestamp` | 指定格式日期转 UNIX 时间戳 |
+| `weekofyear`     | 日期转周             |
+| `year`           | 日期转年             |
+| ...              | ...              |
 
 更详尽的 Hive 运算符和内置函数，可以参考 [Hive Language Manual - Built-in Operators](https://cwiki.apache.org/confluence/display/Hive/LanguageManual+UDF#LanguageManualUDF-Built-inOperators)。
 
@@ -217,7 +217,7 @@ JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线
 AV.Insight.on('end', function(err, result) {
     console.dir(result);
 });
- ```
+```
 
 目前仅支持 `end` 事件，当 job 完成（可能成功或者失败）就通知到这个 hook 函数，结果 result 里会包含 job id 以及任务状态信息：
 
@@ -238,7 +238,7 @@ AV.Insight.on('end', function(err, result) {
 
 在知道任务 id 的情况下（startJob 返回或者云引擎监听到任务完成），可以主动查询本次任务的结果：
 
-```js
+​```js
   var id = '已知任务 id';
   var q = new AV.Insight.JobQuery(id);
   q.find().then(function(result) {
@@ -250,7 +250,7 @@ AV.Insight.on('end', function(err, result) {
 
 result 是一个 JSON 对象，形如：
 
-```js
+​```js
 {  
   "id":         "976c94ef0847f4ff3a65e661bf7b809a", //任务 id 
   "status":     "OK", //任务状态 
