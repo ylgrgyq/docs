@@ -40,6 +40,17 @@
 ```
 {% endblock %}
 
+{% block code_save_object_by_cql %}
+
+```objc
+    // 执行 CQL 语句实现新增一个 TodoFolder 对象
+    [AVQuery doCloudQueryInBackgroundWithCQL:@"insert into TodoFolder(name, priority) values('工作', 1) " callback:^(AVCloudQueryResult *result, NSError *error) {
+        // 如果 error 为空，说明保存成功
+        
+    }];
+```
+{% endblock %}
+
 {% block code_quick_save_a_todo %}
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
@@ -197,6 +208,17 @@ option.query = query;
 ```
 {% endblock %}
 
+{% block code_update_object_by_cql %}
+
+```objc
+    // 执行 CQL 语句实现更新一个 TodoFolder 对象
+    [AVQuery doCloudQueryInBackgroundWithCQL:@"update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'" callback:^(AVCloudQueryResult *result, NSError *error) {
+        // 如果 error 为空，说明保存成功
+        
+    }];
+```
+{% endblock %}
+
 {% block code_atomic_operation_increment %}
 ```objc
     AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
@@ -301,6 +323,17 @@ option.query = query;
 
 ```objc
     [todo deleteInBackground];
+```
+{% endblock %}
+
+{% block code_delete_todo_by_cql %}
+
+```objc
+    // 执行 CQL 语句实现删除一个 Todo 对象
+    [AVQuery doCloudQueryInBackgroundWithCQL:@"delete from Todo where objectId='558e20cbe4b060308e3eb36c'" callback:^(AVCloudQueryResult *result, NSError *error) {
+        // 如果 error 为空，说明保存成功
+        
+    }];
 ```
 {% endblock %}
 
@@ -807,6 +840,26 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
+{% block code_query_comment_match_query_todoFolder %}
+
+```objc
+    // 构建内嵌查询
+    AVQuery *innerQuery = [AVQuery queryWithClassName:@"TodoFolder"];
+    [innerQuery whereKey:@"likes" greaterThan:@20];
+    // 将内嵌查询赋予目标查询
+    AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
+    // 执行内嵌操作
+    [query whereKey:@"targetTodoFolder" matchesQuery:innerQuery];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
+        // comments 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
+    }];
+    
+    // 注意如果要做相反的查询可以使用
+    [query whereKey:@"targetTodoFolder" doesNotMatchQuery:innerQuery];
+    // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
+```
+{% endblock %}
+
 {% block code_query_find_first_object %}
 
 ```objc
@@ -840,6 +893,24 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 {% endblock %}
 
+{% block code_query_select_keys %}
+
+```objc
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query selectKeys:@[@"title", @"content"]];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        for(AVObject *avObject in objects){
+
+            NSString *title = avObject[@"title"];// 读取 title
+            NSString *content = avObject[@"content"]; // 读取 content
+            
+            // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
+            NSString *location = [avObject objectForKey:@"location"];
+        }
+    }];
+```
+{% endblock %}
+
 {% block code_query_count %}
 
 ```objc
@@ -867,8 +938,11 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endblock %}
 
 {% block code_query_orderby_on_multiple_keys %}
+
+```objc
 [query addAscendingOrder:@"priority"];
 [query addDescendingOrder:@"createdAt"];
+```
 {% endblock %}
 
 {% block code_query_with_or %}
@@ -900,6 +974,28 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
         // 返回 priority 小于 3 并且 status 等于 0 的 Todo
     }];
+```
+{% endblock %}
+
+{% block code_query_where_keys_exist %}
+
+```objc
+    // 存储一个带有图片的 Todo 到 LeanCloud 云端
+    AVFile *aTodoAttachmentImage = [AVFile fileWithURL:@("http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg")];
+    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+    [todo setObject:aTodoAttachmentImage forKey:@"images"];
+    [todo setObject:@"记得买过年回家的火车票！！！" forKey:@"content"];
+    [todo saveInBackground];
+    
+    // 使用非空值查询获取有图片的 Todo
+    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+    [query whereKeyExists:@"images"];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+       // objects 返回的就是有图片的 Todo 集合
+    }];
+    
+    // 使用空值查询获取没有图片的 Todo
+    [query whereKeyDoesNotExist:@"images"];
 ```
 {% endblock %}
 
