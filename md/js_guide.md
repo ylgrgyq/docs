@@ -254,7 +254,7 @@ post.save().then(function() {
 post.increment('upvotes');
 post.save().then(function() {
   // 保存成功
-}, function(erro) {
+}, function(error) {
   // 失败
 });
 ```
