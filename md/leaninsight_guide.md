@@ -196,7 +196,7 @@ JavaScript SDK 0.5.5 版本开始支持离线数据分析。**请注意，离线
         }
    }).done(function(id) {
       //返回 job id
-   }).catch(function(err)){
+   }).catch(function(err){
       //发生错误
    });
 ```
