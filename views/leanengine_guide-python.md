@@ -46,7 +46,7 @@ $ avoscloud
 ```
 {% endblock %}
 
-{% block cloud_func_file %}`$PROJECT_DIR/cloud.py`{% endblock %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud.py`' %}
 
 {% block ping %}
 云引擎中间件内置了该 URL 的处理，只需要将中间件添加到请求的处理链路中即可：
@@ -108,7 +108,7 @@ engine = leancloud.Engine(app)
 之后请在 wsgi.py 中将 engine 赋值给 application（而不是之前的 Flask 实例）。
 {% endblock %}
 
-{% block sdk_guide_link %}[Python SDK](./python_guide.html){% endblock %}
+{% set sdk_guide_link = '[Python SDK](./python_guide.html)' %}
 
 {% block cloudFuncExample %}
 ```python
@@ -392,8 +392,6 @@ application = Engine(wsgi_func)
 
 {% block custom_session %}
 {% endblock %}
-
-{% block cookie_session_middleware %}TODO{% endblock %}
 
 {% block https_redirect %}
 

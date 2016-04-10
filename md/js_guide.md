@@ -10,7 +10,7 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](/api-docs/javascript/)，本指南并没有完全覆盖所有的 API 调用。
 
-该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
+该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](leanengine_overview.html)。
 
 ## 快速入门
 
@@ -246,6 +246,30 @@ post.save().then(function() {
 
 这个方法在对象被并发修改的时候特别有用，可以得到更新后对象的最新状态。例如维护一个计数器的场景，每次 `save` 后得到最新的计数。
 
+#### 保存选项
+
+从 0.6.10 / 1.0.0-rc8 起，`AV.Object` 对象在保存时可以通过设置 `options` 参数来指定保存选项。该参数支持以下选项：
+
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | Boolean | 对象成功保存后，自动返回该对象在服务端的最新数据。
+`query` | AV.Query  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以分 query 和 save 两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突。
+
+以下为 `query` 选项的用法：
+
+```javascript
+new AV.Query('Clazz').first().then(instance=> {
+  var currentVersion = instance.version; // 13
+  instance.set('version', currentVersion + 1);
+  return instance.save(null, {
+    query: new AV.Query('Clazz').equalTo('version', currentVersion)
+  });
+}).then(instance => { /* success */ }, error => {
+  // 试图更新时 version 不是 13 了，更新失败
+});
+```
+
+
 #### 计数器
 
 许多应用都需要实现计数器功能，比如一条微博，我们需要记录有多少人喜欢或者转发了它。但可能很多次喜欢都是同时发生的，如果在每个客户端都直接把它们读到的计数值增加之后再写回去，那么极容易引发冲突和覆盖，导致最终结果不准。这时候怎么办？我们提供了便捷的原子操作来实现计数器：
@@ -254,7 +278,7 @@ post.save().then(function() {
 post.increment('upvotes');
 post.save().then(function() {
   // 保存成功
-}, function(erro) {
+}, function(error) {
   // 失败
 });
 ```
@@ -350,7 +374,7 @@ myComment.set('post', myPost);
 
 // 这会将 myPost 和 myComment 一起保存起来
 myComment.save().then(function() {
-  // 删除成功
+  // 保存成功
 }, function(error) {
   // 失败
 });
@@ -673,15 +697,14 @@ postQuery.find().then(function(results) {
 });
 ```
 
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。
-例如，找出当前用户没有关注的人发布的微博：
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。例如，找出当前用户没有关注的人发布的微博：
 
 ```javascript
 // Post 和 userQuery 在上段代码中已声明
 var postQuery = new AV.Query(Post);
 postQuery.doesNotMatchKeyInQuery('author', 'followee', userQuery);
 postQuery.find().then(function(results) {
-  // 得到当前用户关注的人发布的微博
+  // 得到当前用户未关注的人发布的微博
   console.log(results);
 }, function(error) {
   // 失败
@@ -833,7 +856,7 @@ query.find().then(function(comments) {
  的 author，你可以这样做:
 
 ```javascript
-query.include(['post.author']);
+query.include(['post.author']); //数组，支持传入多个字段
 ```
 
 你可以多次使用 `include` 来构建一个有多个字段的查询，这项功能同样适用于
@@ -1470,7 +1493,7 @@ post.save().then(function(obj) {
 
 如果仅是想简单的上传，可以直接在 Web 前端使用 AV.File 上面的相关方法。但真实使用场景中，还有很多开发者需要自行实现一个上传接口，对数据做更多的处理。
 
-以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](https://leancloud.cn/docs/leanengine_guide-node.html)」，非常出色的 Node.js 环境。
+以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](leanengine_overview.html)」，非常出色的 Node.js 环境。
 
 ```html
 // 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
@@ -1958,7 +1981,7 @@ privateNote.setACL(new AV.ACL(AV.User.current()));
 privateNote.save();
 ```
 
-这个 note 只能由当前的用户所访问，但是对用户登录的设备没有限制，只要是相同的用户就可以了。这项功能对于你如果想让用户再任何其他的设备上保存和访问数据十分有用，比如说一个私人的 todo list 应用。
+这个 note 只能由当前的用户所访问，但是对用户登录的设备没有限制，只要是相同的用户就可以了。这项功能对于让用户在任何其他的设备上保存和访问数据十分有用，比如说一个私人的 todo list 应用。
 
 权限也能在使用者的基础上授予，你可以通过 setReadAccess 和 setWriteAccess 方法独立的向 AV.ACL 中添加权限。比如，假设你有一条消息想要发送给一个组里的多个用户，他们中的每一个都有读和写的权限：
 
@@ -2178,7 +2201,7 @@ AV.Cloud.run('hello', {}).then(function(result) {
 });
 ```
 
-你可以参考我们的 [云函数指南](leanengine_guide-node.html#云函数) 来进一步了解这部分功能。
+你可以参考我们的 [云函数指南](leanengine_cloudfunction_guide-node.html) 来进一步了解这部分功能。
 
 ## Push 通知
 

@@ -78,6 +78,15 @@ curl -X GET \
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 
+该接口可以在 URL 中添加不同的参数，实现获取某对话的聊天记录、获取某用户发送的聊天记录、获取应用所有聊天记录和获取系统对话聊天记录等功能。例如：
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://leancloud.cn/1.1/rtm/messages/logs?convid=219946ef32e40c515d33ae6975a5c593
+```
+
 ### 获取某个对话的聊天记录
 
 参数 | 约束 | 说明
@@ -91,8 +100,7 @@ nonce | 可选 | 签名随机字符串（签名参数）
 signature_ts | 可选 | 签名时间戳（签名参数）
 signature | 可选 | 签名时间戳（签名参数）
 
-为了保证获取聊天记录的安全性，可以开启签名认证（[控制台 > 设置 > **应用选项** > **聊天、推送** >
-**聊天记录查询，启用签名认证**](/app.html?appid={{appid}}#/permission)）。了解更详细的签名规则请参考 [聊天签名方法](realtime_v2.html#开启对话签名)。签名参数仅在开启应用选项后有效，如果没有开启选项，就不需要传签名参数。
+为了保证获取聊天记录的安全性，可以开启签名认证（[控制台 > 设置 > **应用选项** > **聊天、推送** > **聊天记录查询，启用签名认证**](/app.html?appid={{appid}}#/permission)）。了解更详细的签名规则请参考 [聊天签名方法](realtime_v2.html#开启对话签名)。签名参数仅在开启应用选项后有效，如果没有开启选项，就不需要传签名参数。
 
 签名采用 Hmac-sha1 算法，输出字节流的十六进制字符串 (hex dump)，签名的 key 必须是应用的 master key，签名的消息格式如下：
 
@@ -193,7 +201,7 @@ timestamp | 消息时间戳
 curl -X PUT \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
-  -d '"{"msg-id":"4XC_IHK+Ry6CXzIPq_nc7Q","conv-id":"5667070f60b2298fdddb683700000000","ack-at":1449683354932,"is-conv":true,"from":"5666d78c60b204d588fd63aa","bin":false,"timestamp":1449661888571,"is-room":false,"from-ip":"223.104.9.13","to":"5667070f60b2298fdddb6837","data":"{\"_lctype\":-1,\"_lctext\":\"\u771f\u4e0d\u61c2\"}"}"'
+  -d '{"msg-id":"4XC_IHK+Ry6CXzIPq_nc7Q","conv-id":"5667070f60b2298fdddb683700000000","ack-at":1449683354932,"is-conv":true,"from":"5666d78c60b204d588fd63aa","bin":false,"timestamp":1449661888571,"is-room":false,"from-ip":"223.104.9.13","to":"5667070f60b2298fdddb6837","data":"{\"_lctype\":-1,\"_lctext\":\"\u771f\u4e0d\u61c2\"}"}'
   https://leancloud.cn/1.1/rtm/messages/logs
 ```
 
@@ -201,9 +209,9 @@ curl -X PUT \
 
 注意此处仅能修改服务器端的消息记录，并不能修改客户端缓存的消息记录。
 
-## 取未读消息数
+## 未收取消息数
 
-您可以从服务器端通过 REST API 调用获取实时通信中，某个 Client ID 的未读消息数。
+您可以从服务器端通过 REST API 调用获取实时通信中，某个 Client ID 的未收取的消息数。
 
 ```sh
 curl -X GET \

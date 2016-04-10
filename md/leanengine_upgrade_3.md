@@ -106,7 +106,7 @@ npm install leanengine --save
 第 1 ~ 10 行，引入 `leanengine` 依赖，并使用环境变量里面的 appId 和 appKey 等信息初始化 `AV` 对象。
 
 * **提示**：2.0 项目直接由沙箱环境提供 `AV` 对象，而 3.0 项目需要手动初始化。前者虽然方便，但略微违反直觉（因为普通的 Node.js 项目全局空间是不会有 `AV` 对象的）。手动初始化还可以做更明确的控制，比如「是否使用 MasterKey 初始化 `AV` 对象，使得 LeanEngine 项目拥有完全权限，不受 ACL 限制等」。
-* 如果想了解具体有哪些环境变量，可以参考 [云引擎指南 - 环境变量](./leanengine_guide-node.html#环境变量)。
+* 如果想了解具体有哪些环境变量，可以参考 [云引擎指南 - 环境变量](./leanengine_webhosting_guide-node.html#环境变量)。
 
 ### 提供 Web 服务
 
@@ -268,11 +268,11 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 ##云函数
 
-2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [云函数](leanengine_guide-node.html#云函数)。
+2.0 项目启动文件是 `$PROJECT_DIR/cloud/main.js`，一般情况会在该文件会使用 `AV.Cloud.define` 或者 `AV.Cloud.beforeSave` 等方法定义很多 [云函数](leanengine_cloudfunction_guide-node.html)。
 
 3.0 项目将这样的文件命名为 `$PROJECT_DIR/cloud.js`，所以你需要将 `$PROJECT_DIR/cloud/main.js` 移动并更名为 `$PROJECT_DIR/cloud.js`。
 
-**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云引擎](leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](leanengine_guide-node.html#项目约束)。
+**注意**：3.0 项目中**不能**存在 `$PROJECT_DIR/cloud/main.js` 文件，否则会被当做 2.0 的项目加载并运行。2.0 和 3.0 的项目约束可以分别参考 [云引擎指南 - 旧版云引擎](leanengine_guide-cloudcode.html#项目约束) 和 [云引擎指南 - Node.js 环境](leanengine_webhosting_guide-node.html#项目约束)。
 
 如果是最基本的 2.0 项目的代码，那它的内容可能是这样：
 
@@ -318,7 +318,7 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 我们在第 6 行引入 `cloud` 模块，然后在第 12 行使用该中间件。
 
-**注意**：`cloud` 模块必须引入，而且应该在 Express 的中间件链尽量靠前的位置。因为该中间件会提供一个健康监测的 URL，LeanEngine 监控服务会根据该 URL 的响应判断应用是否启动成功。放在后面很容易被其他的 router 替代，导致响应不是预期而认为启动失败。关于健康监测的详细信息请参考 [云引擎指南 - Node.js 环境](./leanengine_guide-node.html#健康监测)。
+**注意**：`cloud` 模块必须引入，而且应该在 Express 的中间件链尽量靠前的位置。因为该中间件会提供一个健康监测的 URL，LeanEngine 监控服务会根据该 URL 的响应判断应用是否启动成功。放在后面很容易被其他的 router 替代，导致响应不是预期而认为启动失败。关于健康监测的详细信息请参考 [云引擎指南 - Node.js 环境](./leanengine_webhosting_guide-node.html#健康监测)。
 
 ## 移除 global.json
 
@@ -326,7 +326,7 @@ app 模块保存在 `$PROJECT_DIR/app.js` 文件，是应用主要文件之一�
 
 ## 默认时区
 
-服务端 2.0 项目环境默认使用 UTC 时区，这给很多开发者带来了困惑。3.0 项目环境将默认时区改为东八区，在 [时区问题](leanengine_guide-node.html#时区问题) 部分详细讨论这个问题。
+服务端 2.0 项目环境默认使用 UTC 时区，这给很多开发者带来了困惑。3.0 项目环境将默认时区改为东八区，在 [时区问题](leanengine_webhosting_guide-node.html#时区问题) 部分详细讨论这个问题。
 
 ## cookie-session 中间件
 
@@ -344,7 +344,7 @@ app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: false
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
-即不需要在引入 `avos-express-cookie-session` 中间件，不需要使用 `cookieParser`，直接使用 `AV.Cloud.CookieSession` 的方式来配置，具体信息参见 [云引擎指南 - 处理用户登录和登出](./leanengine_guide-node.html#处理用户登录和登出)
+即不需要在引入 `avos-express-cookie-session` 中间件，不需要使用 `cookieParser`，直接使用 `AV.Cloud.CookieSession` 的方式来配置，具体信息参见 [云引擎指南 - 处理用户登录和登出](./leanengine_webhosting_guide-node.html#处理用户登录和登出)
 
 ## 本地运行
 

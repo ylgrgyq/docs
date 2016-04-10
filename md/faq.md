@@ -9,7 +9,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 ### 获取客服支持有哪些途径
 
 * 到免费的[用户社区](https://forum.leancloud.cn/) 进行提问。
-* 购买 [技术支持](/bill.html#/bill/general)，进入 [工单系统](https://ticket.leancloud.cn/) 来提交问题。
+* 购买 [技术支持](/bill.html#/bill/general)，进入 [工单系统](https://leanticket.cn/) 来提交问题。
 * 发送邮件到 <support@leancloud.rocks> 获取帮助。
 * 紧急情况拨打客服电话：010-82800646。
 
@@ -103,8 +103,6 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 默认情况下，每个应用同一时刻的**并发请求上限为 100**（即同一时刻最多可以同时处理 100 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
 
-对于从控制台或者使用 JavaScript SDK 上传文件（包括云引擎内），我们限制每秒最多上传 1 个文件，一分钟内最多上传 30 个文件。
-
 ### API 调用次数的计算
 
 对于「数据存储」来说，每次 create 和 update 一条数据算一次请求，如调用一次 `object.saveInBackground` 算一次 API 请求。
@@ -162,6 +160,32 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 ### 应用内用户的密码需要加密吗
 
 不需要加密密码，我们的服务端已使用随机生成的 salt，自动对密码做了加密。 如果用户忘记了密码，可以调用 `requestResetPassword` 方法（具体查看 SDK 的 AVUser 用法），向用户注册的邮箱发送邮件，用户以此可自行重设密码。 在整个过程中，密码都不会有明文保存的问题，密码也不会在客户端保存，只是会保存 sessionToken 来标示用户的登录状态。
+
+### 查询结果默认最多只能返回1000条数据，当我需要的数据量超过了1000该怎么办？
+可以通过每次变更查询条件，来继续从上一次的断点获取新的结果，譬如：
+* 第一次查询，createdAt 时间在 2015-12-01 00:00:00 之后的 1000 条数据（最后一条的 createdAt 值是 x）；
+* 第二次查询，createdAt 在 x 之后的 1000 条数据（最后一条的 createdAt 是 y）；
+* 第三次查询，createdAt 在 y 之后的 1000 条数据（最后一条是 z）；
+* …… 以此类推。
+
+### 当数据量越来越来大时，怎么加快查询速度？
+与使用传统的数据库一样，查询优化主要靠索引实现。索引就像字典里的目录，能帮助你在海量的文字中更快速地查词。
+
+目前索引提供 3 种排序方案：正序、倒序和 2dsphere。
+前面两种很好理解，就是按大小或者英文字母的顺序来排列。场景比如，你的某一张表记录着许多商品，其中一个字段是商品价格。以该字段建好索引后，可以加快在查询时，相对应的正序或者倒序数据的返回速度。第三种，是适用于地理位置经纬度的数据（控制台上的 GeoPoint 型字段）。移动场景中的常见需求都可能会用到地理位置，比如查找附近的其他用户。这时候就可以利用 2dsphere 来加快查询。
+
+原则：数据量少时，不建索引。多的时候请记住，因为索引也占空间，以此来换取更少的查询时间。针对每张表的情况，写少读多就多建索引, 写多读少就少建索引。
+提示：数据表的默认四个字段 objectId / ACL / createdAt / updatedAt 是自带索引的，但是在勾选时，可以作为联合索引来使用。并且，如果单表数据超过 1 万条以上，请联系我们来创建。
+操作：进入[控制台 > 存储](/data.html?appid={{appid}}#/_File)，选定一张表之后，点击右侧的「其他」下拉菜单，然后选择「索引」，然后根据你的查询需要建立好索引。
+
+
+### LeanCloud 查询支持 `Sum`, `Group By`, `Distinct` 这种函数吗？
+LeanCloud 数据存储的查询接口不支持这些函数，可以查询到客户端后，在客户端中自己写逻辑进行这些操作。
+
+如果要进行数据分析，可以使用我们的「[离线数据分析](./leaninsight_guide.html)」功能。
+
+### sessionToken 在什么情况下会失效？
+如果在控制台的应用选项中勾选了「密码修改后，强制客户端重新登录」，则用户修改密码后， sessionToken 会变更，需要重新登录。如果没有勾选这个选项，Token 就不会改变。当新建应用时，这个选项默认是被勾上的。
 
 ## 控制台相关
 
@@ -252,11 +276,33 @@ LeanCloud 依赖的 Framework 包括：
 
 请用 `AVObject` 的 `getCreatedAt` 方法；获取 `updatedAt` 用 `getUpdatedAt`。
 
+### client.open() 操作为什么没有被调用？
+
+请检查 AndroidManifest.xml 配置，确认 receiver 和 service 写在了 application 标签里，并且与 activity 平级。它们与 activity 同为四大组件之一，需要写在一起。
+
+### Anroid 设备每次启动时，installationId 为什么总会改变？如何才能不改变？
+可能有以下两种原因导致这种情况：
+* SDK 版本过旧，installationId 的生成逻辑在版本更迭中有修改。请更新至最新版本。
+* 代码混淆引起的，注意在 proguard 文件中添加 [LeanCloud SDK 的混淆排除](android_faq.html#代码混淆怎么做)。
+
+
 ## JavaScript SDK
 
 ### 有没有同步 API
 
 JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](js_guide.html#promise) 来减少 callback 嵌套过多的问题。
+
+### 在 AV.initialize 中用了 Master Key，但发出去的 AJAX 请求返回 206
+目前 JavaScript SDK 在浏览器（而不是 Node）中工作时，是不会发送 Master Key 的，因为我们不鼓励在浏览器中使用 Master Key，Master Key 代表着对数据的最高权限，只应当在后端程序中使用。
+
+如果你的应用的确是内部应用（做好了相关的安全措施，外部访问不到），可以在 `AV.initialize`之后增加下面的代码来让 JavaScript SDK 发送 Master Key：
+```
+AV._useMasterKey = true;
+``` 
+
+### Web 端会暴露 App Key 和 App Id，怎么保证安全性？
+首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_安全域名) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
+理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_overview.html)。
 
 ## 消息推送
 
@@ -272,11 +318,31 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 
 暂不提供在同一个 App 里同时上传开发证书和生产证书。推荐创建单独的测试 App，可以利用数据导出和导入来快速模拟生产环境。
 
+### 有一些 iOS 设备收不到推送，到控制台查看推送记录，发现 invalidTokens的 数量大于0，是怎么回事？
+
+invalidTokens 的数量由以下两部分组成：
+* 选择的设备与选择的证书不匹配时，会增加 invalidTokens 的数量，例如使用开发证书给生产证书的设备推送。
+* 目标设备移除或重装了对应的 App。
+
+针对第一种情况，请检查 APNS 证书是否过期，并检查是否使用了正确的证书类型。
+
+更多推送问题排查，请参考：
+[推送问题排查](push_guide.html#推送问题排查)。
+
+
 ### Android 消息接收能不能自定义 Receiver 不弹出通知
 
 可以。请参考 [消息推送开发指南](push_guide.html#消息内容_Data)。
 
 如果要自定义 receiver，必须在消息的 data 里带上自定义的 action。LeanCloud 在接收到消息后，将广播 action 为您定义的值的 intent 事件，您的 receiver 里也必须带上 `intent-filter` 来捕获该 action 值的 intent 事件。
+
+### Android 应用进程被杀掉后无法收到推送消息
+iOS 能做到这点，是因为当应用进程关闭后，Apple 和设备的系统之间还会存在连接，这条连接跟应用无关，所以无论应用是否被杀掉，消息都能发送到 APNs 再通过这条连接发送到设备。 但对 Android 来说，如果是国内用户，因为众所周知的原因，Google 和设备之间的这条连接是无法使用的，所以应用只能自己去保持连接并在后台持续运行，一旦后台进程被杀掉，就无法收到推送消息了。
+
+
+LeanCloud 的美国节点即将提供 GCM 支持，如果应用的服务对象主要是国外用户，可以通过 [GCM (Google Cloud Messaging)](https://developers.google.com/cloud-messaging/) 来克服上述问题。
+国内节点的应用依然很难避免这个问题，因为无法建立系统级别的长连接去收消息。不过 LeanCloud SDK 已经采取了各种办法保持应用在后台运行，能保证在大部分情况下都能收到消息。
+
 
 ## 统计
 
@@ -334,6 +400,66 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 只有网站类的才需要备案，并且在主域名已备案的情况下，二级子域名不需要备案。
 
 如果主站需要托管在我们这边，而且主站还没经过备案，请参考文档 [云引擎指南 - 域名备案流程](leanengine_guide-cloudcode.html#域名备案流程) 部分来了解具体的备案流程。
+
+### 如何在本地调试依赖 LeanCache 的应用？
+首先你需要在本地运行一个 redis-server:
+ 
+* Mac 运行 `brew install redis` 安装，然后用 `redis-server` 启动
+* Debian/Ubuntu 运行 `apt-get install redis-server`, CentOS/RHEL 运行 `yum install redis`
+* Windows 尚无官方支持，可以下载 [微软的分支版本](https://github.com/MSOpenTech/redis/releases) 安装包。
+
+默认情况下，在本地运行时程序没有 LeanCache 的环境变量，因此会使用本地的 Redis 服务器。
+
+```javascript
+// `process.env['REDIS_URL_mycache']` 为 undefined, 会连接默认的 127.0.0.1:6379
+var client = require('redis').createClient(process.env['REDIS_URL_mycache']);
+```
+> 相关文档
+* [Redis 官方文档](http://redis.io/documentation)
+* [LeanCache 使用指南](leancache_guide.html)
+
+### 为什么在控制台通过在线定义函数或项目定义函数中的 Class Hook 没有被运行？
+首先确认一下 Hook 被调用的时机是否与你的理解一致：
+ 
+* beforeSave - 对象保存（创建）之前
+* afterSave - 对象保存（创建）之后
+* beforeUpdate - 对象更新之前
+* afterUpdate - 对象更新之后
+* beforeDelete - 对象删除之前
+* afterDelete - 对象删除之后
+* onVerified - 用户通过邮箱或手机验证后
+* onLogin - 用户在进行登录操作时
+
+然后检查 Hook 函数是否被执行过：
+
+可以先在 Hook 函数的入口打印一行日志，然后进行操作，再到 [云引擎日志](/cloud.html?appid={{appid}}#/log) 中检查该行日志是否被打印出来，如果没有看到日志原因可能包括：
+
+* 代码没有被部署到正确的应用
+* 代码没有被部署到生产环境（或没有部署成功）
+* Hook 的类名不正确
+
+如果日志已打出，则继续检查函数是否成功，检查控制台上是否有错误信息被打印出。如果是 before 类 Hook，需要保证 Hook 函数在 15 秒内调用 `response.success` 或 `response.error`， 否则会被系统认为超时。
+
+> 相关文档
+* [云引擎指南：Hook 函数](leanengine_cloudfunction_guide-node.html#Hook_函数)
+
+### 使用命令行工具在本地调试时提示 `Error: listen EADDRINUSE :::3000`, 无法访问应用
+`listen EADDRINUSE :::3000` 表示你的程序默认使用的 3000 端口被其他应用占用了，可以按照下面的方法找到并关闭占用 3000 端口的程序：
+ 
+* [Mac 使用 lsof 和 kill](http://stackoverflow.com/questions/3855127/find-and-kill-process-locking-port-3000-on-mac)
+* [Linux 使用 fuser](http://stackoverflow.com/questions/11583562/how-to-kill-a-process-running-on-particular-port-in-linux)
+* [Windows 使用 netstat 和 taskkill](http://stackoverflow.com/questions/6204003/kill-a-process-by-looking-up-the-port-being-used-by-it-from-a-bat)
+
+也可以修改命令行工具默认使用的 3000 端口：
+```
+avoscloud -P 3002
+```
+`avoscloud -h` 可以获取帮助信息
+
+### 云函数如何获取 Header、如何响应 GET 方法？
+不建议在 Header 中传递信息，云函数可以说是 LeanCloud 所提供的一种 RPC 的封装，这种封装的目的是隐藏掉底层使用 HTTP 协议的细节，所以建议将所有的参数都放在 Body 中、只使用 POST 方法请求。
+ 
+如果希望能够充分利用 HTTP 提供的语义化特征，可以考虑使用云引擎的「[网站托管](leanengine_webhosting_guide-node.html#Web_框架)」功能，自行来处理 HTTP 请求。
 
 ## 文件
 

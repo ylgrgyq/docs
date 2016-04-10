@@ -91,36 +91,31 @@ createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
 
 ### 保存选项
 
-`AVObject` 对象在保存时，还可以指定一些选项。这些选项用来修饰保存动作。
+`AVObject` 对象在保存时可以使用以下选项：
 
-保存选项是通过 `AVSaveOption` 对象表示的，其中，每一个属性表示一个具体选项。目前支持以下保存选项：
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | BOOL | 对象成功保存后，自动返回该对象在服务端的最新数据。用途请参考 [计数器](#计数器)。
+`query` | AVQuery  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `AVQuery` 和 `AVObject` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突，[示例如下](#saveoption_query_example)。
 
-```objc
-@interface AVSaveOption : NSObject
+每个保存选项实质上是 `AVSaveOption` 对象的一个属性，使用时调用 `AVObject` 的带有 `option` 参数的保存接口即可。
 
-@property (nonatomic, assign) BOOL     fetchWhenSave;
-@property (nonatomic, strong) AVQuery *query;
-
-@end
-```
-
-* `fetchWhenSave` 选项表示对象保存后，服务端返回该对象在服务端的最新数据；
-* `query` 选项表示当 `query` 中的条件满足后才能被保存；否则不能保存，并返回错误码 305。
-
-如果要指定保存选项，可以调用 `AVObject` 的带有 `option` 参数的保存接口：
-
-例如，如果需要指定当某个 object 的 `foo` 字段为 `bar` 时才保存，可以这样写：
+【示例】<a id="saveoption_query_example" name="saveoption_query_example"></a>：一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 的内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时它的 version 值为 3，那么当用户 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或应用自定义的业务逻辑。
 
 ```objc
+// 假设 version 值已提前获取
+
 AVSaveOption *option = [[AVSaveOption alloc] init];
 
 AVQuery *query = [[AVQuery alloc] init];
-[query whereKey:@"foo" equalTo:@"bar"];
+[query whereKey:@"version" equalTo:version];
 
 option.query = query;
 
 [object saveInBackgroundWithOption:option block:^(BOOL succeeded, NSError *error) {
-    // Your code
+    if ( error.code == 305 ){
+      NSLog(@"无法保存修改，wiki 已被他人更新。");
+    }
 }];
 ```
 

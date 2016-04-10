@@ -290,7 +290,7 @@ self.client = [[AVIMClient alloc] init];
 
 {% block videoMessage_local_sent %}
 ```objc
-- (void)tomSendVedioToJerry {
+- (void)tomSendVideoToJerry {
     // Tom 创建了一个 client，用自己的名字作为 clientId
     self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
 
@@ -315,7 +315,7 @@ self.client = [[AVIMClient alloc] init];
 
 {% block videoMessage_url_sent %}
 ```objc
-- (void)tomSendExternalVedioToJerry {
+- (void)tomSendExternalVideoToJerry {
     // Tom 创建了一个 client，用自己的名字作为 clientId
     self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
 
@@ -487,8 +487,6 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 
 {% block messagePolicy_received_intro %}{% endblock %}
 
-{% block messagePolicy_received %}{% endblock %}
-
 {% block message_unread %}
 要开启未读消息，需要在 AVOSCloud 初始化语句后面加上：
 
@@ -550,7 +548,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 <!-- >TODO: 举例说明如何使用这样的数字类型 -->
 {% endblock %}
 
-{% block attributes %}`AVIMTypedMessage.attributes`{% endblock %}
+{% set attributes = '`AVIMTypedMessage.attributes`' %}
 
 {% block attributes_property %}attributes{% endblock %}
 

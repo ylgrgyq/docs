@@ -29,13 +29,14 @@ AV.useAVCloudUS();
 var TestObject = AV.Object.extend('TestObject');
 var testObject = new TestObject();
 testObject.save({
-  foo: 'bar'
-}, {
-  success: function(object) {
-    alert('LeanCloud works!');
-  }
+  testabc: 'abc123'
+}).then(function() {
+  alert('LeanCloud works!');
+}).catch(function(err) {
+  alert('error:' + err);
 });
 ```
+
 大功告成，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 TestObject 的相关数据。
 
 如果你希望在 [Node.js](http://nodejs.org/) 环境使用 JavaScript SDK 也可以，使用 npm 安装 SDK：
@@ -51,5 +52,5 @@ var AV = require('avoscloud-sdk');
 AV.initialize('{{appid}}', '{{appkey}}');
 ```
 
-LeanCloud 同时也提供了一个完整的 Nodejs 环境，我们称之为 LeanEngine，更推荐基于 LeanEngine 来实现并部署 Nodejs 相关的代码。详细请参考[云引擎文档](https://leancloud.cn/docs/leanengine_guide-node.html) 。
+LeanCloud 同时也提供了一个完整的 Nodejs 环境，我们称之为 LeanEngine，更推荐基于 LeanEngine 来实现并部署 Nodejs 相关的代码。详细请参考[云引擎文档](/docs/leanengine_overview.html) 。
 

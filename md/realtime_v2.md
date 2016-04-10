@@ -94,7 +94,7 @@ LeanCloud 实时通信服务的特性主要有：
 **name**|name|String|可选|对话的名字，可为群组命名。
 **tr**|transient|Boolean|可选|是否为暂态对话
 **sys**|system|Boolean|可选|是否是系统对话
-**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话（仅用于内部使用，REST API 设置无效）
+**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话。<br/>（原子创建对话功能只能通过 SDK 调用创建对话接口实现，REST API 创建对话可以设置 unique 值，但无原子创建对话效果)
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
@@ -118,6 +118,8 @@ LeanCloud 实时通信服务的特性主要有：
 为了提高系统的灵活性，我们允许多个对话保持相同的成员，因此创建对话时系统总是默认创建新的对话。
 如果开发者希望使用固定的对话，可以在创建对话时设置相应 SDK 上的 `unique` 选项，系统将查找对应成员相同且 `unique` 选项为 true 的对话，如果找到即返回已有的对话，如果没有则自动创建。
 （注意，这种方式查找的对话仅对已经使用 `unique` 选项的对话有效，并且创建对话时不会触发 `_Conversation` 表在云引擎上的 `beforeSave` 等 hook）
+
+通过 REST API 创建对话也能带着 `unique` 参数，但 REST API 总是会创建新对话，只是带着 `unique` 参数后会将该参数值设置为新对话中 `unique` 选项的值，不会查找并返回具有相同成员的对话。
 
 对于应用中存在系统帐号的场景，我们建议您通过下文提到的[系统对话](#普通对话_Normal_Conversation_)来实现，以避免对单一帐号创建过多的对话影响您应用的性能。
 
@@ -287,7 +289,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 3. 客户端获得签名后，编码到请求中，发给 LeanCloud 实时通信服务器；
 4. 实时通信服务器对请求的内容和签名做一遍验证，确认这个操作是被应用服务器允许的，进而执行后续的实际操作。
 
-签名采用 **Hmac-sha1** 算法，输出字节流的十六进制字符串（hex dump）。针对不同的请求，需要拼装不同组合的字符串，加上 UTC timestamp 以及随机字符串作为签名的消息。
+签名采用 **Hmac-sha1** 算法，输出字节流的十六进制字符串（hex dump）。针对不同的请求，开发者需要拼装不同组合的字符串，加上 UTC timestamp 以及随机字符串作为签名的消息。
 
 ### 云引擎签名范例
 
@@ -296,7 +298,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ### 用户登录的签名
 
-签名采用 ，签名的消息格式如下：
+签名的消息格式如下，注意 `clientid` 与 `timestamp` 之间是<u>两个冒号</u>：
 
 ```
 appid:clientid::timestamp:nonce
@@ -309,7 +311,7 @@ clientid|登录时使用的 clientId
 timestamp|当前的 UTC 时间距离 unix epoch 的**秒数**
 nonce|随机字符串
 
->注意：签名的 key **必须** 是应用的 master key，你可以 [控制台 > **设置** > **应用 Key**](/app.html?appid={{appid}}#/key) 里找到。**请保护好 master key，不要泄露给任何无关人员。**
+>注意：签名的 key **必须** 是应用的 master key，你可以 [控制台 > 设置 > 应用 Key](/app.html?appid={{appid}}#/key) 里找到。**请保护好 master key，不要泄露给任何无关人员。**
 
 开发者可以实现自己的 SignatureFactory，调用远程服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在 LeanCloud 云引擎上通过 **网站托管** 来实现自己的签名接口。在移动应用中直接做签名的作法 **非常危险**，它可能导致你的 **master key** 泄漏。
 
@@ -332,7 +334,7 @@ appid:clientid:sorted_member_ids:timestamp:nonce
 appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 ```
 
-* appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对加入群的情况，这里 sorted_member_ids 是空字符串。
+* appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对创建群的情况，这里 sorted_member_ids 是空字符串。
 * convid - 此次行为关联的对话 id。
 * action - 此次行为的动作，分为 **add** （加群和邀请）与 **remove** （踢出群）两种，但出于兼容考虑，签名时分别使用常量 **invite** 和 **kick** 来进行表示。
 
@@ -631,7 +633,7 @@ data | 消息内容
 
 ## 限制
 
-* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、建立/关闭连接等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
+* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、登录服务、退出服务等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
 * 客户端发送的单条消息大小不得超过 5 KB。
 * 目前单个普通对话的成员上限为 500 个。
 
@@ -639,21 +641,22 @@ data | 消息内容
 
 实时通信的错误码会以 SDK 异常或 WebSocket 关闭状态码的形式返回给客户端。当出现异常情况时，SDK 会输出状态码到日志里，以下是对部分状态码的简单说明：
 
-<!--2015-10-27 Da Li: add <code style="white-space:nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
+<!--2015-10-27 Da Li: add <code class="text-nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
 
 代码|消息|说明
 ---|---|---
 `0`| |websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
-<code style="white-space:nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+<code class="text-nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
 `4100`|`APP_NOT_AVAILABLE`|应用不存在或应用禁用了实时通信服务
 `4103`|`INVALID_LOGIN`|Client Id 格式错误，超过 64 个字符。
 `4105`|`SESSION_REQUIRED`|Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
 `4107`|`READ_TIMEOUT`|读超时，服务器端长时间没有收到客户端的数据，切断连接。SDK 包装了心跳包的机制，出现此错误通常是网络问题。SDK 会自动重连，无需人工干预。
-`4108`|`LOGIN_TIMEOUT`|登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以 [创建工单](http://ticket.leancloud.cn/)，由我们技术顾问来给出建议。
+`4108`|`LOGIN_TIMEOUT`|登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以 [创建工单](https://leanticket.cn/)，由我们技术顾问来给出建议。
 `4109`|`FRAME_TOO_LONG`|包过长。消息大小超过 5 KB，请缩短消息或者拆分消息。
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
-`4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
+`4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](https://leanticket.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
+`4301`|`CONVERSATION_API_FAILED`|上游 API 调用异常，请查看报错信息了解错误详情
 `4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
@@ -661,7 +664,12 @@ data | 消息内容
 `4306`|`CONVERSATION_UPDATE_FAILED`|更新对话操作失败
 `4307`|`CONVERSATION_READ_ONLY`|该对话为只读，不能更新或增删成员。
 `4308`|`CONVERSATION_NOT_ALLOWED`|该对话禁止当前用户发送消息
-`4401`|`INVALID_MESSAGING_TARGET`|发送消息的对话不存在，或当前用户不在对话中。
+`4309`|`CONVERSATION_UPDATE_REJECT`|更新对话的请求被拒绝，当前用户不在对话中
+`4310`|`CONVERSATION_QUERY_FAILED`|查询对话失败，常见于慢查询导致的超时或受其他慢查询导致的数据库响应慢
+`4311`|`CONVERSATION_LOG_FAILED`|拉取对话消息记录失败，常见与超时的情况
+`4312`|`CONVERSATION_LOG_REJECT`|拉去对话消息记录被拒绝，当前用户不再对话中
+`4313`|`SYSTEM_CONVERSATION_REQUIRED`|该功能仅对系统对话有效
+`4401`|`INVALID_MESSAGING_TARGET`|发送消息的对话不存在，或当前用户不在对话中
 `4402`|`MESSAGE_REJECTED_BY_APP`|发送的消息被应用的云引擎 Hook 拒绝
 
 ## 常见问题 FAQ

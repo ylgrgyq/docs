@@ -1,4 +1,7 @@
 // Basic styles
+@table-border: 1px solid #ebebeb;
+@table-radius: 3px;
+@bubble-color: #eee;
 body {
   position: relative;
   font-size: 15px;
@@ -24,8 +27,12 @@ body {
   }
 
   p {
-    margin-bottom: 1em;
+    margin-bottom: 1.5em;
   }
+
+  p+ul {
+    margin: -1em 0 1.5em 0;
+  }  
 
   pre {
     margin-bottom: 18px;
@@ -38,24 +45,123 @@ body {
     vertical-align: super;
     line-height: 0;
   }
+  
+  // text-underline
+  u {
+    text-decoration: none;
+    border-bottom: 1px;
+    border-bottom-style: solid;
+    /* DO NOT USE short-hand syntax */
+    border-bottom-color: inherit;
+    padding-bottom: 2px;  
+  }
+
+  dt {
+    margin-top: 1.5em;
+  }
+
+  code {
+    background-color: rgba(0,0,0,0.04);
+    color: #808080;
+  }
+  pre code {
+    background-color: transparent;
+  }
+
+  a code, dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
+    color: inherit;
+    background-color: transparent;
+  }
+  
+  dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
+    padding:0;
+  }
+
+  samp {
+    font-size: 96%;
+    white-space: pre-wrap;
+  
+    &.bubble {
+      position: relative;
+      width: 50%;
+      padding: 1em;
+      background: @bubble-color;
+      border-radius: 6px;
+      display:block;
+
+      &:after {
+        content: '';
+        position: absolute;
+        border-style: solid;
+        border-width: 11px 11px 11px 0;
+        border-color: transparent @bubble-color;
+        display: block;
+        width: 0;
+        /* FF: DO NOT REMOVE HEIGHT */
+        height: 0;
+        z-index: 1;
+        left: -11px;
+        top: 31%;
+      }
+    }
+  }
+  
+  .prettyprint {
+
+    .com {
+      color: #999;
+      color: rgba(0,0,0,0.35);
+      font-style: normal;
+    }
+  }
 }
 
 // Tables
 .doc-content {
 
   table {
-    margin: 10px 0 15px 0;
-    border-collapse: collapse;
+    margin: 1.8em 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+  
+    td, th {
+      padding: 8px 13px;
+      border-bottom: @table-border;
+      border-left: @table-border;
+      vertical-align: top;
+    }
+
+    th {
+      white-space: nowrap;
+      background-color: #f7f7f7;
+    }
+
+    th, &.noheading tr:first-child td {
+      border-top: @table-border;
+    }
+    tr th:first-child, &.noheading tr:first-child td:first-child {
+      border-top-left-radius: @table-radius;
+    }
+
+    tr th:last-child, &.noheading tr:first-child td:last-child {
+      border-right: @table-border;
+      border-top-right-radius: @table-radius;
+    }
+
+    tr:last-child td:first-child {
+      border-bottom-left-radius: @table-radius;
+    }
+
+    tr:last-child td:last-child {
+      border-bottom-right-radius: @table-radius;
+    }
+
+    tr td:last-child {
+      border-right: @table-border;
+    }
   }
 
-  td, th {
-    border: 1px solid #ddd;
-    padding: 3px 10px;
-  }
-
-  th {
-    padding: 5px 10px;
-  }
 }
 
 // Headings

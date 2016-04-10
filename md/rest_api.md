@@ -451,7 +451,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 
 举例来说，假设应用的信息如下：
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="noheading">
   <tbody>
     <tr>
       <td scope="row">App Id</td>
@@ -479,7 +479,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 **使用 App Key 来计算 sign**：
 
 >md5( timestamp + App Key ) <br/>
-= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
+= md5( <code><u>1453014943466</u>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
 
 ```sh
   -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
@@ -488,7 +488,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 **使用 Master Key 来计算 sign**：
 
 >md5( timestamp + Master Key )<br/>
-= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
+= md5( <code><u>1453014943466</u>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
 = e074720658078c898aa0d4b1b82bdf4b
 
 ```sh
@@ -2249,9 +2249,9 @@ curl -X POST \
 }
 ```
 
-**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的 leanengine**
+**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的云引擎**
 
-你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
+你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_cloudfunction_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ## 地理查询
 

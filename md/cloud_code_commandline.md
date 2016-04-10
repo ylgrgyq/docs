@@ -20,7 +20,7 @@ apt-get install nodejs
 
 提示：apt 提供的 Node.js 版本可能比较滞后，推荐从[官方网站](http://nodejs.org/)下载安装。
 
-在 Mac OSX 上，可以通过 [MacPort](http://www.macports.org/) 或者 [Homebrew](http://brew.sh/) 安装，terminal（终端）执行下列命令：
+在 Mac OSX 上，可以通过 [Homebrew](http://brew.sh/) 或者 [MacPort](http://www.macports.org/) 安装，terminal（终端）执行下列命令：
 
 ```sh
 sudo port install nodejs
@@ -132,52 +132,48 @@ npm install -g avoscloud-code --registry=https://r.cnpmjs.org
 
 ## 使用
 
-安装成功之后，直接在 terminal（终端）运行 `avoscloud -h`，输出帮助信息：
+安装成功之后，直接在 terminal（终端）运行 `lean -h`，输出帮助信息：
 
 ```sh
-$ avoscloud -h
-Usage: avoscloud [选项] <命令>
+$ lean -h
 
-  有效的命令列表包括:
-    deploy:                     部署云引擎代码到 LeanCloud 平台开发环境
-    undeploy:                   从 LeanCloud 平台清除云引擎部署，包括生产环境和开发环境
-    status:                     查询当前部署状态
-    search <keyword>:           根据关键字查询开发文档
-    publish:                    发布开发环境代码到生产环境
-    new:                        创建云引擎项目
-    logs:                       查看云引擎日志
-    clear:                      清除本地状态，在输入 app id 或者 master key 错误的情况下使用
-    upload <file-or-directory>: 导入文件到 LeanCloud 平台，如果是目录，则会将该目录下的文件递归导入。
-    app [list]:                 显示当前应用，deploy、status 等命令运行在当前应用上，如果加上 list ，则显示所有的应用信息。
-    checkout <app>:             切换到一个应用，deploy、status 等命令将运行在该应用上。
-    add <app>:                  添加一个应用。
-    rm <app>:                   移除一个应用。
-    cql:                        进入 CQL 查询交互。
+  Usage: lean [options] [command]
+
+
+  Commands:
+
+    up [options]                             本地启动云引擎应用。
+    search <keywords...>                     根据关键字查询开发文档。
+    new [options]                            创建云引擎项目。
+    deploy [options]                         部署到云引擎。
+    publish [options]                        发布预备环境代码到生产环境。
+    status [options]                         查询当前部署状态。
+    undeploy [options]                       从 LeanEngine 平台清除云引擎部署，包括生产环境和预备环境。
+    logs [options]                           查看云引擎日志。
+    image                                    应用镜像管理。
+    instance                                 应用实例管理。
+    app                                      多应用管理，可以使用一个云引擎项目关联多个 LeanCloud 应用。
+    cql [options]                            进入 CQL 查询交互。
+    redis                                    LeanCache Redis 命令行。
+    upload [options] <file-or-directory...>  导入文件到 LeanCloud 平台，如果是目录，则会将该目录下的文件递归导入。
+    clear [options]                          清除本地状态，在输入 app id 或者 master key 错误的情况下使用。
+    help [cmd]                               显示关于 [cmd] 命令的帮助信息。
 
   Options:
 
-    -h, --help                 output usage information
-    -V, --version              output the version number
-    -f, --filepath <path>      本地云引擎项目根路径，默认是当前目录。
-    -g, --git                  使用定义在管理平台的 git 仓库或者 -u 指定的 git 仓库部署云引擎代码，默认使用本地代码部署。
-    -p, --project <app>        命令运行在指定应用上，默认运行在当前应用或者 origin 应用上。
-    -l, --local                使用本地代码部署云引擎代码，该选项是默认选中。
-    -o, --log <log>            本次部署的提交日志，仅对从本地部署有效。
-    -n, --lines <lines>        查看多少行最新的云引擎日志，默认 10 行。
-    -t, --tailf                自动刷新云引擎日志，结合 logs 命令使用。
-    -r, --revision <revision>  git 的版本号，仅对从 git 仓库部署有效。
-    -P, --port <port>          指定本地调试的端口，默认 3000。
+    -h, --help     output usage information
+    -V, --version  output the version number
 ```
 
 可以通过 `-V` 选项查看版本：
 
 
 ```sh
-$ avoscloud -V
-0.6.1
+$ lean -V
+0.11.0
 ```
 
-后面我们都假定 `$ avoscloud` 开始的都表示在终端里执行这个命令。
+后面凡是以 `$ lean` 开头的即表示在终端里执行这个命令。
 
 ## Bash Completion
 
@@ -187,17 +183,30 @@ $ avoscloud -V
 source ~/.leancloud_completion.sh
 ```
 
-重启终端 bash，或者重新加载 profile 文件，就可以让 avoscloud 命令拥有自动提示和完成功能（tab 按键提示）。
+重启终端 bash，或者重新加载 profile 文件，就可以让 lean 命令拥有自动提示和完成功能（tab 按键提示）。
 
-**Mac 上建议通过 homebrew 安装 bash-completion。**
+### Mac 上安装 bash-completion
 
+Mac 上建议通过 homebrew 安装 bash-completion:
+
+```
+brew install bash-completion
+```
+
+请将下面的内容添加到 `~/.bash_profile` 文件中：
+
+```
+if [ -f $(brew --prefix)/etc/bash_completion ]; then
+  . $(brew --prefix)/etc/bash_completion
+fi
+```
 
 ## 创建项目
 
-在安装命令行工具后，除了从网站的云引擎菜单下载新应用项目框架之外，你也可以通过 `new` 命令来创建一个新的云引擎项目：
+在安装命令行工具后，除了下载我们在 Github 上维护的 [新应用项目框架（Node.js）](https://github.com/leancloud/node-js-getting-started) 之外，你也可以通过 `new` 命令来创建一个新的云引擎项目：
 
 ```sh
-$ avoscloud new
+$ lean new
 ```
 
 窗口会提示输入应用的 Id 和 Master Key，该信息可以在 [控制台 / 设置 / 应用 Key](/app.html?appid={{appid}}#/key) 中找到。
@@ -207,16 +216,25 @@ $ avoscloud new
 接下来选择项目语言，确认后一个新的云引擎项目框架就被创建出来了：
 
 ```sh
-Creating project...
-  new_app/
-  new_app/README.md
-  new_app/config/
-  new_app/config/global.json
-  new_app/public/
-  new_app/public/index.html
-  new_app/cloud/
-  new_app/cloud/main.js
-Project created!
+开始输入应用信息，这些信息可以从'开发者平台的应用设置 -> 应用 key'里找到。
+正在创建项目 ...
+  .gitignore
+  .jshintrc
+  app.js
+  cloud.js
+  package.json
+  public/
+  public/stylesheets/
+  public/stylesheets/style.css
+  README.md
+  routes/
+  routes/todos.js
+  server.js
+  views/
+  views/error.ejs
+  views/index.ejs
+  views/todos.ejs
+项目创建完成！
 ```
 
 进入 `new_app` 目录就可以看到新建立的项目。
@@ -238,16 +256,20 @@ $ npm install
 启动应用：
 
 ```sh
-$ avoscloud
+$ lean up
 ``` 
-提示输入应用的 Master Key，粘贴后窗口不会有任何显示，直接回车，即可在本机调试云引擎。
+可能会提示输入应用的 Master Key，粘贴后窗口不会有任何显示，直接回车，即可在本机调试云引擎。
 
-* 通过浏览器打开 [http://localhost:3000/avos](http://localhost:3000/avos)，进入云引擎函数和 Class Hook 函数调试界面。
-* 通过浏览器打开 [http://localhost:3000](http://localhost:3000)，可以看到 public 目录的 index.html 页面的内容。
+* 通过浏览器打开 <http://localhost:3000>，进入 web 应用的首页。
+* 通过浏览器打开 <http://localhost:3001>，进入云引擎云函数和 Hook 函数调试界面。
 
-avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
+`lean up` 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监视文件变更，修改代码后会自动重启进程，无需手工重启命令行工具就可以看到代码的最新效果。
 
-更多关于云引擎开发，请参考 [云引擎开发指南](leanengine_guide-node.html) 。
+**提示**: 如果想变更启动端口个，可以使用 `lean up -P 3333` 的方式来指定。
+
+**提示**：命令行工具所有自命令都可以通过 `-h` 参数来查看详细的参数说明信息，比如 `lean up -h`。
+
+更多关于云引擎开发，请参考 [云引擎服务总览](leanengine_overview.html) 。
 
 ## 部署
 
@@ -256,10 +278,10 @@ avoscloud 命令包装了 [nodemon](https://github.com/remy/nodemon)，它会监
 在你开发和本地测试云引擎项目通过后，你可以直接将本地源码推送到 LeanCloud 云引擎平台运行，只要执行 `deploy` 命令：
 
 ```sh
-$ avoscloud deploy
+$ lean deploy
 ```
 
-请注意，这个命令将部署本地源码到远程平台的开发环境，无条件覆盖原来开发环境的版本（无论是从 Git 仓库部署或者还是本地部署）。
+请注意，这个命令将部署本地源码到远程平台的预备环境，无条件覆盖原来预备环境的版本（无论是从 Git 仓库部署或者还是本地部署）。
 
 如果部署成功，会打印部署后的状态：
 
@@ -282,7 +304,7 @@ Production commit log  : 'Uploaded at 2014-10-09 16:56:06'
 默认部署日志是 `Updated at YYYY-MM-DD HH:mm:ss` 的时间戳日志，你可以通过 `-o` 选项来提供更详细的部署日志：
 
 ```sh
-$ avoscloud deploy -o '测试本地推送部署'
+$ lean deploy -o '测试本地推送部署'
 ```
 
 部署之后，你可以通过 curl 命令，或者访问你设置的 `${your_app_domain}.leanapp.cn` 的二级域名对应的专用测试域名 `stg-${your_app_domain}.leanapp.cn` 测试你的云引擎代码。
@@ -292,7 +314,7 @@ $ avoscloud deploy -o '测试本地推送部署'
 如果你的代码是保存在某个 Git 仓库，例如 [Github](https://github.com) 上，你也可以请求 LeanCloud 平台从 Git 仓库获取源码并自动部署，这个操作可以在云引擎的部署菜单里完成，也可以在本地执行 `deploy` 命令和 `-g` 选项配合完成：
 
 ```sh
-$ avoscloud -g deploy
+$ lean -g deploy
 ```
 
 * `-g` 选项指定要求从 Git 仓库部署，Git 仓库地址必须已经在云引擎菜单里保存。
@@ -301,13 +323,13 @@ $ avoscloud -g deploy
 
 ## 发布
 
-开发环境如果测试没有问题，你希望将开发环境的云引擎代码切换到生产环境，你可以使用开发者平台的云引擎部署菜单做发布，也可以直接运行 `publish` 命令：
+预备环境如果测试没有问题，你希望将预备环境的云引擎代码切换到生产环境，你可以使用开发者平台的云引擎部署菜单做发布，也可以直接运行 `publish` 命令：
 
 ```sh
-$ avoscloud publish
+$ lean publish
 ```
 
-就会将开发环境的云引擎代码发布到生产环境。
+就会将预备环境的云引擎代码发布到生产环境。
 
 ```sh
 [INFO]: Cloud Code Project Home Directory: /Users/dennis/programming/avos/new_app/
@@ -324,10 +346,10 @@ Production commit log  : 'Uploaded at 2014-10-10 13:54:26'
 
 ## 查看部署状态
 
-可以通过 `status` 命令查询当前生产环境和开发环境的部署状态：
+可以通过 `status` 命令查询当前生产环境和预备环境的部署状态：
 
 ```sh
-$ avoscloud status
+$ lean status
 [INFO]: Cloud Code Project Home Directory: /Users/dennis/programming/avos/new_app/
 [INFO]: Current App: origin <app id>
 Cloud code status is:
@@ -342,7 +364,7 @@ Production commit log  : 'Uploaded at 2014-10-10 13:54:26'
 通过 `undeploy` 命令，可以将云引擎代码彻底从 LeanCloud 平台移除（包括代码、版本信息、提交日志等）：
 
 ```sh
-$ avoscloud undeploy
+$ lean undeploy
 ```
 
 **请慎重执行此操作**。
@@ -352,7 +374,7 @@ $ avoscloud undeploy
 使用 `logs` 命令可以查询云引擎最新日志：
 
 ```sh
-$ avoscloud logs
+$ lean logs
 [INFO]: Cloud Code Project Home Directory: /Users/dennis/programming/avos/new_app/
 [INFO]: Current App: origin 7104en0u071tcb5d1tr2juxa499ouvdn1gm5szq47nqzt06q
 [2014-10-09T16:56:32.279Z] [production] -- info:  undefined
@@ -369,13 +391,13 @@ $ avoscloud logs
 可以通过 `-n` 选项设定返回的日志数目，例如返回最近的 100 条
 
 ```sh
-$ avoscloud -n 100 logs
+$ lean -n 100 logs
 ```
 
 也可以加上 `-t` 选项来自动滚动更新日志，类似`tailf`命令的效果：
 
 ```sh
-$ avoscloud -t logs
+$ lean -t logs
 ```
 
 当有新的云引擎日志产生，都会自动填充到屏幕下方。
@@ -383,30 +405,30 @@ $ avoscloud -t logs
 
 ## 多应用管理
 
-从 0.5.0 版本开始，我们为 avoscloud 添加了多应用管理功能，类似 git 的多分支功能。使用这个功能，允许你将同一个云引擎项目部署到多个 LeanCloud 应用上，**但是仅限于云引擎 2.0 项目使用**。
+从 0.5.0 版本开始，我们为 lean 添加了多应用管理功能，类似 git 的多分支功能。使用这个功能，允许你将同一个云引擎项目部署到多个 LeanCloud 应用上，**但是仅限于云引擎 2.0 项目使用**。
 
 ### 查看应用状态
 
-使用 `avoscloud app list` 可以查看当前应用列表，默认情况下应该显示 `config/global.json` 里设定的应用：
+使用 `lean app list` 可以查看当前应用列表，默认情况下应该显示 `config/global.json` 里设定的应用：
 
 ```sh
-$ avoscloud app list
+$ lean app list
   origin <config/global.json 里的 applicationId>
 ```
 
-执行 `avoscloud app` 查看当前应用，因为目前没有明确指定，会告诉你：
+执行 `lean app` 查看当前应用，因为目前没有明确指定，会告诉你：
 
 ```sh
-$ avoscloud app
-You are not in a app.Please checkout <app>
+$ lean app
+You are not in an app.Please checkout <app>
 ```
 
 我们明确切换到 `origin` 应用试试：
 
 ```sh
-$ avoscloud checkout origin
+$ lean app checkout origin
 Switced to app origin
-$ avoscloud app
+$ lean app
 * origin <config/global.json 里的 applicationId>
 ```
 
@@ -417,7 +439,7 @@ $ avoscloud app
 如果你想将 new_app 发布到其他 LeanCloud 应用，你可以通过 `add` 命令来添加一个应用：
 
 ```sh
-$ avoscloud add other_app <other app 的应用 id>
+$ lean app add other_app <other app 的应用 id>
 ```
 
 `add` 接收两个参数，第一个是应用的名称，用于后续的显示和切换，第二个是新应用的 id，可以在应用设置的应用 Key 信息里找到。
@@ -431,7 +453,7 @@ Added a new app: other_app -- <应用 id>
 通过 `app list` 命令将看到两个应用：
 
 ```sh
-$ avoscloud app list
+$ lean app list
 * origin    7104en0u071tcb5d1tr2juxa499ouvdn1gm5szq47nqzt06q
   other_app 1qdney6b5qg2i69t79yq941krrwdu3glt0ot69re6w7xv6lf
 ```
@@ -443,8 +465,8 @@ $ avoscloud app list
 从当前应用切换到另一个应用，可以使用 `checkout <应用名称>`:
 
 ```sh
-$ avoscloud checkout other_app
-Switced to app other_app
+$ lean app checkout other_app
+Switched to app other_app
 ```
 
 切换成功后，执行 `deploy`、`publish`、`status`、`logs`等命令都将运行在 `other_app` 上。如果你过去没有部署过，第一次部署的时候会要求你输入新应用的 master key。
@@ -452,31 +474,31 @@ Switced to app other_app
 通过 `app` 命令可以看到当前应用已经是 `other_app`:
 
 ```sh
-$ avoscloud app
+$ lean app
 * other_app <应用 id>
 ```
 
-如果你想在不切换应用的情况下去部署云引擎到其他应用，也可以通过 `-p` 选项来指定，例如:
+如果你想在不切换应用的情况下去部署云引擎到其他应用，也可以通过 `--app` 选项来指定，例如:
 
 ```sh
-$ avoscloud deploy -p other_app
+$ lean deploy --app other_app
 ```
 
-这样就无需通过 checkout 切换应用，就可以部署项目到其他应用。`status`、`publish` 等应用相关的命令也同样支持 `-p` 选项。
+这样就无需通过 checkout 切换应用，就可以部署项目到其他应用。`status`、`publish` 等应用相关的命令也同样支持 `--app` 选项。
 
 ### 移除应用
 
 同样，你可以删除一个应用，使用  `rm` 命令：
 
 ```sh
-$ avoscloud rm other_app
+$ lean app rm other_app
 Removed app: other_app
 ```
 
 通过 `app list` 确认已经删除：
 
 ```sh
-$ avoscloud app list
+$ lean app list
   origin 7104en0u071tcb5d1tr2juxa499ouvdn1gm5szq47nqzt06q
 ```
 
@@ -485,7 +507,7 @@ $ avoscloud app list
 如果你有一些文件希望上传到 LeanCloud 平台上，可以通过 `upload` 命令，既可以上传单个文件，也可以批量上传一个目录下（包括子目录）下的所有文件。
 
 ```sh
-$ avoscloud upload public/index.html
+$ lean upload public/index.html
 Uploads /Users/dennis/programming/avos/new_app/public/index.html successfully at: http://ac-7104en0u.qiniudn.com/f9e13e69-10a2-1742-5e5a-8e71de75b9fc.html
 ```
 
@@ -494,7 +516,7 @@ Uploads /Users/dennis/programming/avos/new_app/public/index.html successfully at
 上传 images 目录下的所有文件：
 
 ```sh
-avoscloud upload images/
+$ lean upload images/
 ```
 
 ## CQL 交互查询
@@ -502,7 +524,7 @@ avoscloud upload images/
 0.6.1 版本开始，我们支持 cql 命令来进入交互查询界面：
 
 ```sh
-avoscloud cql
+$ lean cql
 ```
 
 使用 [CQL](./cql_guide.html) 语言做查询，结果如图：
@@ -514,7 +536,7 @@ avoscloud cql
 为了方便开发阶段查询资料或者文档，可以使用 `search` 命令：
 
 ```sh
-$ avoscloud search AVObject
+$ lean search AVObject
 ```
 
 这将打开浏览器，显示[搜索结果](/search.html?q=AVObject)。
@@ -522,7 +544,7 @@ $ avoscloud search AVObject
 也可以查询多个关键字，空格隔开即可：
 
 ```sh
-$ avoscloud search 云引擎 命令行
+$ lean search 云引擎 命令行
 ```
 
 

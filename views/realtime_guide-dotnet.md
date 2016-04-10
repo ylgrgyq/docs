@@ -319,29 +319,6 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 
 ##### 发送通用文件消息
 
-{% block fileMessage_sent %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 打开本地文件夹
-- 读取本地文件 leancloud.doc，构造 AVFile
-- 发送
-```
-{% endblock %}
-
-##### 接收通用文件消息
-
-{% block fileMessage_received_intro %}
-```
-- 文件元信息提取/列表 [messageId, FileUrl, Size]
-```
-{% endblock %}
-
-{% endblock %}
-
-
-{% block fileMessage_sent %}
 ```c#
 public async void SendDocAsync()
 {
@@ -356,10 +333,11 @@ public async void SendDocAsync()
     await conversation.SendFileMessageAsync(fileMessage);//发送
 }
 ```
-{% endblock %}
 
-{% block fileMessage_received_intro %}
+##### 接收通用文件消息
+
 与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+
 {% endblock %}
 
 {% block locationMessage_new %}
@@ -695,38 +673,6 @@ public async void InitiativeJoinAsync()
 
 * 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会激发 `AVIMClient` 层级上的回调，代码如下:
 
-{% block conversation_membersChanged %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break;
-```
-{% endblock %}
-
-* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会激发 `AVIMClient` 层级上的回调，也会激发 `AVIMConversation` 层级上相关回调，代码如下：
-
-{% block conversation_memebersJoined %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break; 
-- ------------ 以上与上例相同 ---------------
-- 获取对话对象 Id = 551260efe4b01608686c3e0f
-- 设置 OnMembersJoined 响应
-- 获取本次加入的 ClientIds //还是只有 Tom 一人，所以这样就可以直接读取到 Tom 的 clientId
-```
-{% endblock %}
-{% endblock %}
-
-{% block conversation_membersChanged %}
 ```c#
 public async void BobOnTomJoined_S1()
 {
@@ -748,9 +694,9 @@ public async void BobOnTomJoined_S1()
     };
 }
 ```
-{% endblock %}
 
-{% block conversation_memebersJoined %}
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会激发 `AVIMClient` 层级上的回调，也会激发 `AVIMConversation` 层级上相关回调，代码如下：
+
 ```c#
 public async void BobOnTomJoined_S2()
 {
@@ -1060,18 +1006,6 @@ public static string InsertAttrPrefix(this string key)
 
 ```c#
 AVIMConversationQuery query = client.GetQuery().WhereEqualTo("topic".InsertAttrPrefix(), "movie");//这样就可以实现自动为 `topic` 添加 `attr.` 前缀的效果的效果。
-```
-{% endblock %}
-
-{% block conversation_query_notEqualTo %}
-```c#
-public async void WhereNotEqualTo_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereNotEqualTo("attr.type", "private");//构建 type 不等于 movie 的查询
-    var result = await query.FindAsync();//执行查询
-}
 ```
 {% endblock %}
 
