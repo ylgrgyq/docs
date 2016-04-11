@@ -224,6 +224,65 @@ $(function() {
   setTimeout(function() {
     updateSidebarAffixShadowWidth();
   }, 400);
+
+
+
+  var $codeBlocks = $('.prettyprint');
+  var langLabelMap = {
+    'lang-swift': 'Swift',
+    'lang-objc': 'Objective-C'
+  };
+
+  $.each($codeBlocks, function () {
+    var $current = $(this);
+    var $next = $current.next('.prettyprint');
+    var currentCodeClass = $current.children().attr('class');
+    var nextCodeClass = $next.children().attr('class');
+    var tabToggleDom = `
+      <div class="code-lang-toggles">
+        <div class="toggle-item">
+          <a class="toggle" data-toggle-lang="${currentCodeClass}" href="#">${langLabelMap[currentCodeClass]}</a>
+        </div>
+        <div class="toggle-item">
+          <a class="toggle" data-toggle-lang="${nextCodeClass}" href="#">${langLabelMap[nextCodeClass]}</a>
+        </div>
+      </div>
+    `;
+
+    if (nextCodeClass) {
+      if (currentCodeClass !== nextCodeClass) {
+        console.log('hidding ' + nextCodeClass);
+
+        // hide silbing element
+        $next.hide();
+
+        // append toggle
+        $('<div/>', {
+          class: "toogles",
+          id: "rooms-filter-support",
+          html: tabToggleDom
+        }).insertAfter($next);
+      }
+    }
+  });
+
+  $('.code-lang-toggles .toggle').click(function (e) {
+    e.preventDefault();
+    var targetLang = $(this).data('toggle-lang');
+    console.log(targetLang);
+
+    $.each($codeBlocks, function () {
+      var $current = $(this);
+      var currentCodeClass = $current.children().attr('class');
+
+      if (currentCodeClass === targetLang) {
+        $current.show();
+      } else {
+        $current.hide();
+      }
+    });
+  });
+
 });
 
 // If the cursor is off the sidebar, scrolls to parent active heading
