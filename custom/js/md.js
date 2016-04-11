@@ -255,21 +255,12 @@ var codeBlockTabber = (function() {
 
       // prepare toggler DOM
       $.each(nextAllLangs, function (i, lang) {
-        tabToggleDoms.push(`
-          <div class="toggle-item">
-            <a class="toggle" data-toggle-lang="${lang}" href="#">${langLabelMap[lang]}</a>
-          </div>
-        `);
+        tabToggleDoms.push('\
+          <div class="toggle-item">\
+            <a class="toggle" data-toggle-lang="' + lang + '" href="#">' + langLabelMap[lang] + '</a>\
+          </div>\
+        ');
       });
-
-      var tabToggleDom = `
-        <div class="toggle-item">
-          <a class="toggle" data-toggle-lang="${currentCodeClass}" href="#">${langLabelMap[currentCodeClass]}</a>
-        </div>
-        <div class="toggle-item">
-          <a class="toggle" data-toggle-lang="${nextCodeClass}" href="#">${langLabelMap[nextCodeClass]}</a>
-        </div>
-      `;
 
       if (nextCodeClass) {
         $current.addClass('codeblock-toggle-enabled');
