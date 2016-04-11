@@ -237,6 +237,11 @@ $(function() {
   var langLabelMap = {
     'lang-swift': 'Swift',
     'lang-objc': 'Objective-C',
+    'lang-objective-c': 'Objective-C',
+    'lang-php': 'PHP',
+    'lang-javascript': 'JavaScript',
+    'lang-js': 'JavaScript',
+    'lang-python': 'Python',
     'lang-java': 'Java'
   };
 
@@ -274,13 +279,11 @@ $(function() {
     });
 
     var tabToggleDom = `
-      <div class="code-lang-toggles">
-        <div class="toggle-item">
-          <a class="toggle" data-toggle-lang="${currentCodeClass}" href="#">${langLabelMap[currentCodeClass]}</a>
-        </div>
-        <div class="toggle-item">
-          <a class="toggle" data-toggle-lang="${nextCodeClass}" href="#">${langLabelMap[nextCodeClass]}</a>
-        </div>
+      <div class="toggle-item">
+        <a class="toggle" data-toggle-lang="${currentCodeClass}" href="#">${langLabelMap[currentCodeClass]}</a>
+      </div>
+      <div class="toggle-item">
+        <a class="toggle" data-toggle-lang="${nextCodeClass}" href="#">${langLabelMap[nextCodeClass]}</a>
       </div>
     `;
 
@@ -318,8 +321,7 @@ $(function() {
 
           // append toggle
           $('<div/>', {
-            class: "toogles",
-            id: "rooms-filter-support",
+            class: "code-lang-toggles",
             html: tabToggleDom
           }).insertAfter($next);
 
@@ -331,9 +333,12 @@ $(function() {
   $('.code-lang-toggles .toggle').click(function (e) {
     e.preventDefault();
     var targetLang = $(this).data('toggle-lang');
-    console.log(targetLang);
+    var $blocks = $('.codeblock-toggle-enabled');
 
-    $blocks = $('.codeblock-toggle-enabled');
+    console.log('switching to ' + targetLang);
+
+    $('.code-lang-toggles .toggle').removeClass('active');
+    $('.code-lang-toggles .toggle[data-toggle-lang=' + targetLang + ']').addClass('active');
 
     $.each($blocks, function () {
       var $current = $(this);
