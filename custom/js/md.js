@@ -226,18 +226,53 @@ $(function() {
   }, 400);
 
 
+  function uniqArr(a) {
+    var seen = {};
+    return a.filter(function(item) {
+      return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+  }
 
   var $codeBlocks = $('.prettyprint');
   var langLabelMap = {
     'lang-swift': 'Swift',
-    'lang-objc': 'Objective-C'
+    'lang-objc': 'Objective-C',
+    'lang-java': 'Java'
   };
 
   $.each($codeBlocks, function () {
     var $current = $(this);
-    var $next = $current.next('.prettyprint');
     var currentCodeClass = $current.children().attr('class');
+
+    var $next = $current.next('.prettyprint');
+    var $nextAll;
     var nextCodeClass = $next.children().attr('class');
+    var nextAllLangs = [currentCodeClass];
+    var tabToggleDoms = [];
+
+    // if next element is prettyprint, find all next prettyprint blocks
+    if ($next.length) {
+      $nextAll = $current.nextUntil('*:not(pre)');
+    }
+
+    // if $nextAll exists, (next codeblocks more than 1 in this situation)
+    // push lang tags to a temporary array
+    if ($nextAll) {
+      $.each($nextAll, function () {
+        var lang = $(this).children().attr('class');
+        nextAllLangs.push(lang);
+      });
+    }
+
+    // prepare toggler DOM
+    $.each(nextAllLangs, function (i, lang) {
+      tabToggleDoms.push(`
+        <div class="toggle-item">
+          <a class="toggle" data-toggle-lang="${lang}" href="#">${langLabelMap[lang]}</a>
+        </div>
+      `);
+    });
+
     var tabToggleDom = `
       <div class="code-lang-toggles">
         <div class="toggle-item">
@@ -250,18 +285,45 @@ $(function() {
     `;
 
     if (nextCodeClass) {
+      $current.addClass('codeblock-toggle-enabled');
+
       if (currentCodeClass !== nextCodeClass) {
-        console.log('hidding ' + nextCodeClass);
+        var langCounter = uniqArr(nextAllLangs).length - 1;
 
-        // hide silbing element
-        $next.hide();
+        // more than one codeblocks?
+        if (langCounter > 1) {
 
-        // append toggle
-        $('<div/>', {
-          class: "toogles",
-          id: "rooms-filter-support",
-          html: tabToggleDom
-        }).insertAfter($next);
+          // hide silbing element
+          $.each($nextAll, function () {
+            $(this).addClass('codeblock-toggle-enabled');
+            $(this).hide();
+          });
+
+          // append toggle
+          $('<div/>', {
+            class: "code-lang-toggles",
+            html: tabToggleDoms.join('')
+          }).insertAfter($next);
+
+        }
+
+        // only one codeblock?
+        else {
+
+          console.log('hidding ' + nextCodeClass);
+
+          // hide silbing element
+          $next.addClass('codeblock-toggle-enabled');
+          $next.hide();
+
+          // append toggle
+          $('<div/>', {
+            class: "toogles",
+            id: "rooms-filter-support",
+            html: tabToggleDom
+          }).insertAfter($next);
+
+        }
       }
     }
   });
@@ -271,7 +333,9 @@ $(function() {
     var targetLang = $(this).data('toggle-lang');
     console.log(targetLang);
 
-    $.each($codeBlocks, function () {
+    $blocks = $('.codeblock-toggle-enabled');
+
+    $.each($blocks, function () {
       var $current = $(this);
       var currentCodeClass = $current.children().attr('class');
 
