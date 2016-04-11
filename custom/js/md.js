@@ -203,6 +203,119 @@ var initScrollHistoryState = function() {
   console.log(location.origin + location.pathname + activeItem);
 };
 
+var codeBlockTabber = (function() {
+  'use strict';
+
+  // save some bytes
+  var w = window,
+      d = document;
+
+  function uniqArr(a) {
+    var seen = {};
+    return a.filter(function(item) {
+      return seen.hasOwnProperty(item) ? false : (seen[item] = true);
+    });
+  }
+
+  function checkCodeBlocks() {
+    var $codeBlocks = $('.prettyprint');
+    var langLabelMap = {
+      'lang-swift': 'Swift',
+      'lang-objc': 'Objective-C',
+      'lang-objective-c': 'Objective-C',
+      'lang-php': 'PHP',
+      'lang-javascript': 'JavaScript',
+      'lang-js': 'JavaScript',
+      'lang-python': 'Python',
+      'lang-java': 'Java'
+    };
+
+    $.each($codeBlocks, function () {
+      var $current = $(this);
+      var currentCodeClass = $current.children().attr('class');
+
+      var $nextAll = $current.nextUntil('*:not(pre)');
+      var nextCodeClass = $current.next('.prettyprint').children().attr('class');
+      var nextAllLangs = [currentCodeClass];
+      var tabToggleDoms = [];
+      var isFirstBlock = true;
+
+      // if $nextAll exists, push lang tags to a temporary array
+      if ($nextAll) {
+        $.each($nextAll, function () {
+          var lang = $(this).children().attr('class');
+          nextAllLangs.push(lang);
+        });
+      }
+
+      // if it's the very first code block of current scope
+      if ($current.prev().hasClass('prettyprint')) {
+        isFirstBlock = false;
+      }
+
+      // prepare toggler DOM
+      $.each(nextAllLangs, function (i, lang) {
+        tabToggleDoms.push('\
+          <div class="toggle-item">\
+            <a class="toggle" data-toggle-lang="' + lang + '" href="#">' + langLabelMap[lang] + '</a>\
+          </div>\
+        ');
+      });
+
+      if (nextCodeClass) {
+        $current.addClass('codeblock-toggle-enabled');
+
+        if (currentCodeClass !== nextCodeClass) {
+          var langCounter = uniqArr(nextAllLangs).length - 1;
+
+          // hide silbing element
+          $.each($nextAll, function () {
+            $(this).addClass('codeblock-toggle-enabled');
+            $(this).hide();
+          });
+
+          // append toggle
+          if (isFirstBlock) {
+            $('<div/>', {
+              class: "code-lang-toggles",
+              html: tabToggleDoms.join('')
+            }).insertAfter($nextAll.last());
+          }
+
+          $('.code-lang-toggles .toggle-item:first-child .toggle').addClass('active');
+        }
+      }
+    });
+
+    $('.code-lang-toggles .toggle').click(function (e) {
+      e.preventDefault();
+      var targetLang = $(this).data('toggle-lang');
+      var $blocks = $('.codeblock-toggle-enabled');
+
+      console.log('switching to ' + targetLang);
+
+      $('.code-lang-toggles .toggle').removeClass('active');
+      $('.code-lang-toggles .toggle[data-toggle-lang=' + targetLang + ']').addClass('active');
+
+      $.each($blocks, function () {
+        var $current = $(this);
+        var currentCodeClass = $current.children().attr('class');
+
+        if (currentCodeClass === targetLang) {
+          $current.show();
+        } else {
+          $current.hide();
+        }
+      });
+    });
+  }
+
+  return {
+    start: checkCodeBlocks
+  };
+
+})();
+
 $(function() {
   prettyPrepare(); // prepare elements that need to be prettified
   refactDom();//
@@ -212,6 +325,7 @@ $(function() {
   addSidebarHoverListener();
   initGitHubLinks();
   sidebarExpandAll();
+  codeBlockTabber.start();
   getGitHubContributors();
   // initSmoothScroll();
 
@@ -224,6 +338,7 @@ $(function() {
   setTimeout(function() {
     updateSidebarAffixShadowWidth();
   }, 400);
+
 });
 
 // If the cursor is off the sidebar, scrolls to parent active heading

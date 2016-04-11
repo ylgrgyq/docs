@@ -32,7 +32,7 @@ body {
 
   p+ul {
     margin: -1em 0 1.5em 0;
-  }  
+  }
 
   pre {
     margin-bottom: 18px;
@@ -45,7 +45,7 @@ body {
     vertical-align: super;
     line-height: 0;
   }
-  
+
   // text-underline
   u {
     text-decoration: none;
@@ -53,7 +53,7 @@ body {
     border-bottom-style: solid;
     /* DO NOT USE short-hand syntax */
     border-bottom-color: inherit;
-    padding-bottom: 2px;  
+    padding-bottom: 2px;
   }
 
   dt {
@@ -72,7 +72,7 @@ body {
     color: inherit;
     background-color: transparent;
   }
-  
+
   dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
     padding:0;
   }
@@ -80,7 +80,7 @@ body {
   samp {
     font-size: 96%;
     white-space: pre-wrap;
-  
+
     &.bubble {
       position: relative;
       width: 50%;
@@ -105,7 +105,7 @@ body {
       }
     }
   }
-  
+
   .prettyprint {
 
     .com {
@@ -124,7 +124,7 @@ body {
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
-  
+
     td, th {
       padding: 8px 13px;
       border-bottom: @table-border;
@@ -1220,5 +1220,42 @@ blockquote{
     // width: 100%;
     // height: 100%;
     // overflow: scroll;
+  }
+}
+
+.code-lang-toggles {
+  overflow: auto;
+  margin-top: -10px;
+  margin-bottom: 18px;
+
+  .toggle-item {
+    float: left;
+
+    .toggle {
+      position: relative;
+      display: inline-block;
+      padding: 2px 10px;
+      font-size: 14px;
+      border: 1px solid;
+      margin-right: -1px;
+      color: @gray-light;
+      text-decoration: none;
+
+      &:hover,
+      &:focus,
+      &.active {
+        color: @link-color;
+        z-index: 1;
+      }
+    }
+
+    &:first-child .toggle {
+      border-radius: @border-radius-base 0 0 @border-radius-base;
+    }
+
+    &:last-child .toggle {
+      border-radius: 0 @border-radius-base @border-radius-base 0;
+      margin-right: 0;
+    }
   }
 }
