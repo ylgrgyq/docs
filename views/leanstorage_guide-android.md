@@ -1370,7 +1370,7 @@ public class MyUser extends AVUser {
 }
 ```
 
-不需要添加 @AVClassname 注解，所有 AVUser 的子类的类名都是内建的 _User。同样也不需要注册 MyUser。
+不需要添加 @AVClassname 注解，所有 AVUser 的子类的类名都是内建的 `_User`。同样也不需要注册 MyUser。
 
 当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 AVOSCloud.initialize() 之前添加：
 
