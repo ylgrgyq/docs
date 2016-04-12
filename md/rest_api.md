@@ -1975,7 +1975,7 @@ curl -X PUT \
 
 ## 文件
 
-对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./cloud_code_commandline.html)。
+对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./leanengine_cli.html)。
 
 **通过 REST API 上传文件受到三个限制**：
 

@@ -40,7 +40,7 @@
 <li><a href="js_guide.html">JavaScript 数据存储指南</a></li>
 <li><a href="leanengine_guide-node.html">云引擎指南（Node.js）</a></li>
 <li><a href="leanengine_guide-python.html">云引擎指南（Python）</a></li>
-<li><a href="cloud_code_commandline.html">云引擎命令行工具</a></li>
+<li><a href="leanengine_cli.html">云引擎命令行工具</a></li>
 
 ## 你是 PHP 开发者？
 
