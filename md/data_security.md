@@ -107,6 +107,8 @@ https:
 在 WebView 中使用，建议通过 WebView 去加载一个部署好的、有域名的 Web，然后缓存在本地，这样可以通过 **Web 安全域名** 来做限制。
 
 如果在前端使用 JavaScript SDK，当你打算正式发布出去的时候，请务必配置 **Web 安全域名**，方法是进入 [控制台 > 设置 > 安全中心 > **Web 安全域名**](/app.html?appid={{appid}}#/security)。
+
+
 ![image](images/security/web-host.png)
 
 ## 安全中心
@@ -144,7 +146,7 @@ LeanCloud 目前会每天备份一次应用数据，防止用户误操作删除�
 
 ### SSL 加密传输
 
-首先，我们所有的 API 请求都通过 [SSL加密传输](http://zh.wikipedia.org/wiki/%E5%AE%89%E5%85%A8%E5%A5%97%E6%8E%A5%E5%B1%82)，保证传输过程中的数据安全性和可靠性。并且，我们的 iOS／Android SDK 还加入了防范中间人攻击的
+首先，我们所有的 API 请求都通过 [SSL加密传输](http://zh.wikipedia.org/wiki/%E5%AE%89%E5%85%A8%E5%A5%97%E6%8E%A5%E5%B1%82)，保证传输过程中的数据安全性和可靠性。并且，我们的 iOS／Android SDK 还加入了防范中间人攻击的措施，彻底排除网络抓包和嗅探的威胁。
 
 ### 第三方加固
 
