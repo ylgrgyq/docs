@@ -96,8 +96,8 @@
 ## 你要导入导出数据？
 
 <ul>
-<li><a href="./data_security.html#导入数据">导入数据</a></li>
-<li><a href="./data_security.html#导出数据">导出数据</a></li>
+<li><a href="./dashboard_guide.html#本地数据导入_LeanCloud">导入数据</a></li>
+<li><a href="./dashboard_guide.html#云端数据导出到本地">导出数据</a></li>
  </ul>
 
 ## 常见问题
