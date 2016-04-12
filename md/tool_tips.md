@@ -35,7 +35,7 @@
 * 你可以在数据管理平台的 _File 表的 **url** 列点击上传按钮，直接上传文件。
 * 文件 API 提供元数据存储和缩略图功能，请参考 SDK 开发指南。更多缩略图选项可以使用 [七牛 API](http://docs.qiniu.com/api/v6/image-process.html) 做 URL 转换得到。
 * 文件如果存储为其他对象的数组属性，那么需要在 query 或者 fetch 的时候 `includeKey` 该字段。
-* [云引擎命令行工具](cloud_code_commandline.html) 提供文件批量上传命令 upload，可以用于上传现有资源文件到 LeanCloud 平台。
+* [云引擎命令行工具](leanengine_cli.html) 提供文件批量上传命令 upload，可以用于上传现有资源文件到 LeanCloud 平台。
 * 文件没有大小限制，文件在 SDK 下载成功后将自动缓存在本地。
 
 ## 统计
@@ -85,8 +85,8 @@
 
 ## 云引擎
 
-* 云引擎提供 [命令行工具](cloud_code_commandline.html)，方便部署、发布、调试云引擎项目。
-* 云引擎支持一份代码部署多个应用，只要使用相同的 git 仓库即可。另外 [命令行工具](cloud_code_commandline.html#多应用管理) 提供强力支持。
+* 云引擎提供 [命令行工具](leanengine_cli.html)，方便部署、发布、调试云引擎项目。
+* 云引擎支持一份代码部署多个应用，只要使用相同的 git 仓库即可。另外 [命令行工具](leanengine_cli.html#多应用管理) 提供强力支持。
 * 云引擎菜单提供统计功能，查看你的云引擎项目调用状况。
 * 云引擎提供 [定时任务](leanengine_guide-cloudcode.html#定时任务)，特定的时刻，做特定的事情。
 * 云引擎提供 [HTTP 客户端](leanengine_guide-cloudcode.html#发送_HTTP_请求)，抓取第三方数据。

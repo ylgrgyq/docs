@@ -6,7 +6,7 @@
 
 ### 使用命令行创建项目
 
-在本地创建项目需要使用 LeanCloud 官方命令行工具，请根据 [云引擎命令行工具使用详解-安装](https://leancloud.cn/docs/cloud_code_commandline.html#安装) 部分安装该工具，并确保你已经在本地机器上可以成功运行命令行工具：
+在本地创建项目需要使用 LeanCloud 官方命令行工具，请根据 [云引擎命令行工具使用详解-安装](https://leancloud.cn/docs/leanengine_cli.html#安装) 部分安装该工具，并确保你已经在本地机器上可以成功运行命令行工具：
 
 ```
 $ lean -h

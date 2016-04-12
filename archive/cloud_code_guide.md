@@ -127,7 +127,7 @@ if (name) {
 
 推荐安装基于 Node.js 的 avoscloud 命令行工具，通过该工具可以创建、部署、发布、回滚、查询云引擎，并且支持多应用管理。
 
-详细请查看 [云引擎命令行工具详解](./cloud_code_commandline.html)。
+详细请查看 [云引擎命令行工具详解](./leanengine_cli.html)。
 
 ### 项目框架
 
@@ -347,7 +347,7 @@ curl -X POST -H 'Content-Type:application/json' \
 
 其中 `MyUser` 是 className，beforeSave 指定调用 `MyUser` 定义的 beforeSave 函数，其他函数类似。
 
-更多使用参考 [云引擎命令行工具详解](./cloud_code_commandline.html)。
+更多使用参考 [云引擎命令行工具详解](./leanengine_cli.html)。
 
 ### 测试环境和生产环境
 
