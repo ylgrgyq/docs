@@ -10,7 +10,7 @@
 
 <div class="callout callout-info">如果前端使用的是 JavaScript SDK，请务必配置 <strong>Web 安全域名</strong>，来防止其他人盗用你的服务器资源。配置方式：进入 [控制台 /<span class="text-muted">（选择应用）</span>/ 设置 / 安全中心](/app.html?appid={{appid}}#/security)，找到 **Web 安全域名**。</div>
 
-详细内容请查看 [数据和安全 &middot; Web 安全域名](data_security.html#Web_安全域名)。
+详细内容请查看 [数据和安全 &middot; Web 安全域名](data_security.html#Web_应用安全设置)。
 
 ## 通过 bower 安装
 

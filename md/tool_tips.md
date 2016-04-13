@@ -6,7 +6,7 @@
 * 添加列的时候可以设置必选、默认值、隐藏等属性。
 * 列名旁边的下拉框，可以删除、重命名和编辑列属性。
 * 在不同应用之间可以共享 class 数据，例如共享 _User 表实现单点登录，参考 [应用间数据共享文档](app_data_share.html)。
-* 数据菜单左下角有 **数据导入** 菜单，可以导入符合我们 [预先定义格式](data_security.html#导入数据) 的遗留系统的数据到 LeanCloud 平台。
+* 数据菜单左下角有 **数据导入** 菜单，可以导入符合我们 [预先定义格式](dashboard_guide.html#本地数据导入_LeanCloud) 的遗留系统的数据到 LeanCloud 平台。
 * 查询的时候如果想将关联 Pointer 类型带入查询结果，请使用 AV.Query 的 `includeKey` 方法指定字段名称。
 * 查询可以指定 skip 和 limit 做分页查询。
 * 你可以使用类似 SQL 的语法来查询 LeanCloud 数据，参考 [CQL 详细指南](cql_guide.html)。

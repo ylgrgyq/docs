@@ -316,7 +316,7 @@
 ## 403
 
 * 信息 - `Forbidden to xxx by class permissions`
-* 含义 - 操作被禁止，因为 [Class 权限限制](./data_security.html#Class_级别的权限)。
+* 含义 - 操作被禁止，因为 [Class 权限限制](./data_security.html#Class_级别的_ACL)。
 
 ## 502
 
