@@ -1495,12 +1495,14 @@ post.save().then(function(obj) {
 
 以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](leanengine_overview.html)」，非常出色的 Node.js 环境。
 
+前端页面（比如:fileUpload.html）：
 ```html
 // 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
 <form id="upload-file-form" class="upload" enctype="multipart/form-data">
   <input name="attachment" type="file" accept="image/gif, image/jpeg, image/png">
 </form>
 ```
+纯前端调用方式：
 
 ```javascript
 // 前端代码，基于 jQuery
@@ -1526,6 +1528,8 @@ function uploadPhoto() {
   }
 };
 ```
+
+在服务端可以编写如下代码：
 
 ```javascript
 // 服务端代码，基于 Node.js、Express
