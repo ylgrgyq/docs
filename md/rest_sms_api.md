@@ -184,18 +184,18 @@ LeanCloud 提供了内建的账户系统，方便开发者快速接入。我们�
 
 ### 使用手机号码注册或登录
 
-现在很多应用都喜欢让用户直接输入手机号码注册，如果手机号码存在则自动登录，我们也提供了一个新 API： `POST /usersByMobilePhone` 来处理:
+用户直接输入手机号码来注册账户，如果手机号码已存在则自动登录。`POST /usersByMobilePhone` 既用于注册也用于登录：
 
 ```sh
 curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"6 位短信验证码"}' \
+  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"123456"}' \
   https://api.leancloud.cn/1.1/usersByMobilePhone
 ```
 
-其中 `mobilePhoneNumber` 就是手机号码，而 `smsCode` 是使用 [短信验证 API](#短信验证_API) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
+其中 `mobilePhoneNumber` 是手机号码，`smsCode` 是使用 [短信验证 API](#短信验证_API) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
 
 注册或者登录成功后，返回的应答与登录接口相似：
 
@@ -212,6 +212,18 @@ curl -X POST \
 ```
 
 如果是第一次注册，将默认设置 `mobilePhoneVerified` 属性为 `true`。
+
+使用手机验证码注册时，并不需要传入密码 `password`，云端也会默认使用空密码，代表不可以用密码来登录。如果需要在**注册的同时设置一个密码**，则增加传入 `password` 参数即可：
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: xxxx" \
+  -H "X-LC-Key: xxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"123456", "password": "密码"}' \
+  https://api.leancloud.cn/1.1/usersByMobilePhone
+```
+`password` 这个参数只在注册时起作用，如果是登录则会被忽略。
 
 ### 手机号码验证
 
