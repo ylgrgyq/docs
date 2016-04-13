@@ -22,6 +22,7 @@
 {% set fileObjectName ="AVFile" %}
 {% set dateType= "Date" %}
 {% set byteType= "byte[]" %}
+{% set funtionName_whereKeyHasPrefix = "whereStartsWith()" %}
 
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
@@ -49,6 +50,43 @@
                     // 存储成功
                 } else {
                     // 失败的话，请检查网络环境以及 SDK 配置是否正确
+                }
+            }
+        });
+```
+{% endblock %}
+
+{% block code_save_object_by_cql %}
+
+```java
+        // 执行 CQL 语句实现新增一个 TodoFolder 对象
+        AVQuery.doCloudQueryInBackground("insert into TodoFolder(name, priority) values('工作', 1)", new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                // 如果 e 为空，说明保存成功
+            }
+        });
+```
+{% endblock %}
+
+{% block code_saveoption_query_example %}
+
+```java
+        // 获取 version 值
+        int version = avObject.getInt("version");
+
+        AVSaveOption avSaveOption = new AVSaveOption();
+
+        AVQuery<AVObject> query = new AVQuery<>("Wiki");
+        query.whereEqualTo("version", version);
+
+        avSaveOption.query(query);
+
+        avObject.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e.getCode() == 305) {
+                    Log.d(TAG, "无法保存修改，wiki 已被他人更新。");
                 }
             }
         });
@@ -152,6 +190,19 @@
             @Override
             public void done(AVObject avObject, AVException e) {
                 // 调用 fetchIfNeededInBackground 和 refreshInBackground 效果是一样的。
+            }
+        });
+```
+{% endblock %}
+
+{% block code_update_object_by_cql %}
+
+```java
+        // 执行 CQL 语句实现更新一个 TodoFolder 对象
+        AVQuery.doCloudQueryInBackground("update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'", new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                // 如果 e 为空，说明保存成功
             }
         });
 ```
@@ -511,6 +562,7 @@ fetchAllInBackground()
 {% endblock %}
 
 {% block code_file_delete %}
+
 ``` java
         file.deleteInBackground(new DeleteCallback() {
             @Override
@@ -521,11 +573,7 @@ fetchAllInBackground()
 ```
 {% endblock %}
 
-{% block code_cache_operations_file %}
-``` java
-
-```
-{% endblock %}
+{% block code_cache_operations_file %}{% endblock %}
 
 {% block code_create_query_by_className %}
 
@@ -840,6 +888,93 @@ fetchAllInBackground()
 
 {% endblock %}
 
+{% block code_query_comment_match_query_todoFolder %}
+
+```java
+        // 构建内嵌查询
+        AVQuery<AVObject> innerQuery = new AVQuery<>("TodoFolder");
+        innerQuery.whereGreaterThan("liks", 20);
+        // 将内嵌查询赋予目标查询
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        // 执行内嵌操作
+        query.whereMatchesQuery("targetTodoFolder", innerQuery);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
+            }
+        });
+
+        // 注意如果要做相反的查询可以使用
+        query.whereDoesNotMatchQuery("targetTodoFolder", innerQuery);
+        // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
+```
+{% endblock %}
+
+{% block code_query_select_keys %}
+
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.selectKeys(Arrays.asList("title", "content"));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    String title = avObject.getString("title");
+                    String content = avObject.getString("content");
+
+                    // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
+                    String location = avObject.getString("location");
+                }
+            }
+        });
+```
+{% endblock %}
+
+{% block code_query_orderby %}
+``` java
+        // 按时间，升序排列
+        query.orderByAscending("createdAt");
+
+        // 按时间，降序排列
+        query.orderByDescending("createdAt");
+```
+{% endblock %}
+
+{% block code_query_orderby_on_multiple_keys %}
+
+```java
+        query.addAscendingOrder("priority");
+        query.addDescendingOrder("createdAt");
+```
+{% endblock %}
+
+{% block code_query_where_keys_exist %}
+
+```java
+        // 存储一个带有图片的 Todo 到 LeanCloud 云端
+        AVFile aTodoAttachmentImage = new AVFile("test.jpg", "http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg", new HashMap<String, Object>());
+        AVObject todo = new AVObject("Todo");
+        todo.put("images", aTodoAttachmentImage);
+        todo.put("content", "记得买过年回家的火车票！！！");
+        todo.saveInBackground();
+        
+        // 使用非空值查询获取有图片的 Todo
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereExists("images");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 返回的就是有图片的 Todo 集合
+            }
+        });
+
+        // 使用空值查询获取没有图片的 Todo
+        query.whereDoesNotExist("images");
+
+```
+{% endblock %}
+
 {% block code_query_with_or %}
 
 ```java
@@ -873,6 +1008,19 @@ fetchAllInBackground()
             @Override
             public void done(List<AVObject> list, AVException e) {
                 // 返回 priority 小于 3 并且 status 等于 0 的 Todo
+            }
+        });
+```
+{% endblock %}
+
+{% block code_delete_todo_by_cql %}
+
+```java
+        // 执行 CQL 语句实现删除一个 Todo 对象
+        AVQuery.doCloudQueryInBackground("delete from Todo where objectId='558e20cbe4b060308e3eb36c'", new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                // 如果 e 为空，说明保存成功
             }
         });
 ```

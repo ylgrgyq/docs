@@ -395,10 +395,6 @@ SDK 接口可以下载文件并把它缓存起来，只要文件的 URL 不变�
 
 {% block code_file_delete %}{% endblock %}
 
-### 清除缓存
-
-`AVFile` 也提供了清除缓存的方法：
-
 {% block code_cache_operations_file %}{% endblock %}
 
 {% block text_https_access_for_ios9 %}{% endblock %}
@@ -500,7 +496,7 @@ SDK 接口可以下载文件并把它缓存起来，只要文件的 URL 不变�
 假如有一个 Todo 会在 8:30、9:30、10:30 响起闹钟，它是不会被查询出来的。
 
 #### 字符串查询
-使用 `whereKey:hasPrefix:` 可以过滤出以特定字符串开头的结果，这有点像 SQL 的 LIKE 条件。因为支持索引，所以该操作对于大数据集也很高效。
+使用 `{{funtionName_whereKeyHasPrefix}}` 可以过滤出以特定字符串开头的结果，这有点像 SQL 的 LIKE 条件。因为支持索引，所以该操作对于大数据集也很高效。
 
 {% block code_query_whereHasPrefix %}{% endblock %}
 
