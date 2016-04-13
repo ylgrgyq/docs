@@ -191,7 +191,7 @@ LeanCloud 数据存储的查询接口不支持这些函数，可以查询到客�
 
 ### 如何导入或者导出数据？
 
-请参考《数据与安全》文档的 [导入数据](./data_security.html#导入数据) 和 [导出数据](./data_security.html#导出数据) 部分。
+请参考《数据与安全》文档的 [导入数据](./dashboard_guide.html#本地数据导入_LeanCloud) 和 [导出数据](./dashboard_guide.html#云端数据导出到本地) 部分。
 
 
 ### 如何在 App 邮件内完全使用自己的品牌
@@ -301,7 +301,7 @@ AV._useMasterKey = true;
 ``` 
 
 ### Web 端会暴露 App Key 和 App Id，怎么保证安全性？
-首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_安全域名) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
+首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_应用安全设置) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
 理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_overview.html)。
 
 ## 消息推送

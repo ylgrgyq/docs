@@ -55,7 +55,8 @@
 - 导入数据到某个 Class，把本地文件内所有的数据都导入到同一个 Class 中去。所以如果我们本地有多个 Class 的数据，需要按照 Class 类别分成多个文件依次导入。
 - 导入数据到某个 Class 的 Relation。Relation 是 LeanCloud 数据模型中实现多对多映射的一种方式，细节可以参看[这里的说明](./storage_overview.html#数据关联)。在导入 Relation 的时候，我们需要原 Class 名字、关联 Class 名字、关联属性名等信息。
 
-<div class="callout callout-info">数据文件的扩展名必须是 `.csv` 或者 `.json` 结尾，我们以此来判断导入数据的类型。</div>
+<div class="callout callout-info">
+<ul><li>数据文件的扩展名必须是 `.csv` 或者 `.json` 结尾，我们以此来判断导入数据的类型。</li><li>数据导入不会触发任何 [云引擎 hook 函数](leanengine_cloudfunction_guide-node.html#Hook_函数)。</li></div>
 
 ##### JSON 文件格式
 
@@ -173,7 +174,7 @@ LeanCloud 不会把大家强制绑定到自己平台上，所以我们也提供�
 - 登录用户（表示只有成功调用 login 的 AVUser 拥有访问权限）
 - 指定用户（表示只有少数固定的 AVUser 拥有访问权限）
 
-具体的权限设置可以参考[文档](./data_security.html#Class_级别的权限)。
+具体的权限设置可以参考[文档](./data_security.html#Class_级别的_ACL)。
 
 #### 批量清理一个 Class 下的数据
 进入 **存储 > 数据** 页面，再进入右侧的数据展示区域，点击上排操作菜单中的「其它」菜单项，可以看到两种批量清理数据的方式：

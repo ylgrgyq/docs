@@ -70,7 +70,7 @@ LeanCache 不提供外网直接访问。如果需要进行简单的数据操作�
 
 ### 在命令行工具中使用
 
-**提示**：[命令行工具](cloud_code_commandline.html) 在 v0.8.0 增加了 redis 命令来支持 LeanCache 的操作。
+**提示**：[命令行工具](leanengine_cli.html) 在 v0.8.0 增加了 redis 命令来支持 LeanCache 的操作。
 
 可以通过下列命令查询当前应用有哪些 LeanCache 实例：
 
