@@ -22,10 +22,10 @@ md/leanengine_cloudfunction*.md
 md/leanengine_webhosting*.md
 md/leanstorage_guide*.md
 md/realtime_guide*.md
+!md/realtime_guide-js.md
 md/relation_guide*.md
 md/sdk_setup*.md
 md/sms_guide*.md
 md/test.md
 
 views/test.md
-
