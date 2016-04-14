@@ -258,13 +258,13 @@ post.save().then(function() {
 以下为 `query` 选项的用法：
 
 ```javascript
-new AV.Query('Clazz').first().then(instance=> {
+new AV.Query('Clazz').first().then(function(instance) {
   var currentVersion = instance.version; // 13
   instance.set('version', currentVersion + 1);
   return instance.save(null, {
     query: new AV.Query('Clazz').equalTo('version', currentVersion)
   });
-}).then(instance => { /* success */ }, error => {
+}).then(function(instance) { /* success */ }, function(error) {
   // 试图更新时 version 不是 13 了，更新失败
 });
 ```
