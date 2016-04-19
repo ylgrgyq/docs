@@ -47,42 +47,97 @@ Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电�
 
 #### iOS /OS X SDK 调用云函数
 
-在 iOS SDK 中，`AVCloud` 里面提供了一系列的静态方法实现客户端调用云函数，实例代码如下：
+在 iOS SDK 中，`AVCloud` 提供了一系列的静态方法实现客户端调用云函数：
 
 ```objc
      // 构建传递给服务端的参数字典
      NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼" forKey:@"movie"];
     
-    // 调用指定名称的云函数，并且传递参数
+    // 调用指定名称的云函数 averageStars，并且传递参数
     [AVCloud callFunctionInBackground:@"averageStars" withParameters:dicParameters block:^(id object, NSError *error) {
         // 执行结果
     }];
 ```
 
-运行上述代码请确保已经正确安装了 LeanCloud iOS / OS SDK，详细请点击[LeanCloud iOS / OS X SDK 安装指南](sdk_setup-ios.html)。
+##### RPC 调用云函数
+
+`+[AVCloud callFunctionInBackground:withParameters:block:]` 方法返回的结果是 `NSDictionary` 对象，而不是 `AVObject` 对象。为了实现直接返回 `AVObject` 对象，iOS SDK 在 v3.1.6.6 中加入了 RPC 调用。
+
+RPC 调用云函数的方法签名以 `rpc` 开头，例如 `+[AVCloud rpcFunctionInBackground:withParameters:block:]`，除此之外，还有其他的变种。
+
+```objc
+    NSDictionary *parameters = @{...};
+
+    [AVCloud rpcFunctionInBackground:@"averageStars" withParameters:parameters block:^(id object, NSError *error) {
+        // 执行结果
+    }];
+```
+
+##### 切换云引擎环境
+
+云引擎区分「预备环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
+
+```objc
+//
+[AVCloud setProductionMode:NO];
+```
+
+其中 `NO` 表示「预备环境」，默认调用生产环境。
+
+
+运行上述代码请确保已经正确安装了 LeanCloud iOS / OS SDK，详细请点击 [iOS / OS X SDK 安装指南](sdk_setup-ios.html)。
+
 
 #### Android SDK 调用云函数
 
 {% block code_client_sdk_callfuntion %}{% endblock %}
-在 Android SDK 中，`AVCloud` 里面提供了一系列的静态方法实现客户端调用云函数，实例代码如下：
-
+在 Android SDK 中，`AVCloud` 里面提供了一系列的静态方法实现客户端调用云函数。
 
 ```java
     // 构建参数
     Map<String, String> dicParameters = new HashMap<String, String>();
     dicParameters.put("movie", "夏洛特烦恼");
 
-    // 调用云函数
-    AVCloud.callFunctionInBackground("publishPost", dicParameters, new FunctionCallback() {
+    // 调用云函数 averageStars
+    AVCloud.callFunctionInBackground("averageStars", dicParameters, new FunctionCallback() {
         public void done(Object object, AVException e) {
             if (e == null) {
                 // 处理返回结果
             } else {
-                // 处理一场报错
+                // 处理报错
             }
         }
     });
 ```
+##### RPC 调用云函数
+
+`callFunction` 方法的返回并不支持 `AVObject` 类型的解析，很多用户不得不通过 HashMap 来返回结果。考虑到这个因素，我们在 v3.10.2 提供了 `rpcFunction` 以支持 `AVObject` 类型。
+
+```java
+    AVObject movie = new AVObject("Movie");
+    movie.put("title", "夏洛特烦恼");
+    movie.save();
+
+    AVCloud.rpcFunctionInBackground("averageStars", movie,
+        new FunctionCallback<AVObject>() {
+          @Override
+          public void done(AVObject object, AVException e) {
+            Assert.assertNull(e);
+          }
+        });
+```
+
+##### 切换云引擎环境
+
+云引擎区分「预备环境」和「生产环境」，使用 `setProductionMode` 方法可以切换环境：
+
+```java
+AVCloud.setProductionMode(false); //调用预备环境
+```
+
+默认为 true，也就是调用生产环境的云引擎函数。
+
+
 运行上述代码请确保已经正确安装了 LeanCloud Android SDK，详细请点击[LeanCloud Android SDK 安装指南](sdk_setup-android.html)。
 
 #### 云引擎调用云函数
