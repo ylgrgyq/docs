@@ -22,7 +22,7 @@
 {% set fileObjectName ="AVFile" %}
 {% set dateType= "NSDate" %}
 {% set byteType= "NSData" %}
-
+{% set funtionName_whereKeyHasPrefix = "whereKey:hasPrefix:" %}
 
 {# --End--变量定义，主模板使用的单词和短语在所有子模板都必须赋值 #}
 
@@ -540,6 +540,11 @@ NSError *error = nil;
 {% endblock %}
 
 {% block code_cache_operations_file %}
+
+### 清除缓存
+
+`AVFile` 也提供了清除缓存的方法：
+
 ``` objc
 //清除当前文件缓存
 - (void)clearCachedFile;
