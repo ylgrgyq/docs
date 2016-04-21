@@ -13,7 +13,7 @@
 ## 你是 Android 程序员？
 
 * [快速入门](/start.html)
-<li><a href="android_guide.html">Android 数据存储指南</a></li>
+<li><a href="leanstorage_guide-android.html">Android 数据存储指南</a></li>
 <li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
 <li><a href="/api-docs/android/index.html" target="_blank">Android SDK API</a></li>
@@ -56,7 +56,7 @@
 
 <ul>
 <li><a href="leanstorage_guide-ios.html">iOS / OS X 数据存储指南</a></li>
-<li><a href="android_guide.html">Android 数据存储指南</a></li>
+<li><a href="leanstorage_guide-android.html">Android 数据存储指南</a></li>
 <li><a href="unity_guide.html">Unity3D 数据存储指南</a></li>
 <li><a href="dotnet_guide.html">.NET 数据存储指南</a></li>
 <li><a href="js_guide.html">JavaScript 数据存储指南</a></li>

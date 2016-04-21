@@ -2168,6 +2168,6 @@ public class AVImClientManager extends AVIMClientEventHandler {
 ```
 {% endblock %}
 
-{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。
+{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](leanstorage_guide-android.html#缓存查询) 一节。
 {% endblock %}
 

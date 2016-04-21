@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block builtin_account_url %}
-android_guide.html#用户
+leanstorage_guide-android.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
