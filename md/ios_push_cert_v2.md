@@ -63,13 +63,15 @@
   ![guide to create a CSR](images/ios_cert_v2/guide_to_create_a_csr.png)
 
   根据它的说明创建 Certificate Signing Request。
+  
   ![how to create a CSR](images/ios_cert_v2/how_to_create_a_csr.png)
  7. 点击下图中的 “Choose File” 按钮：
   ![upload CSR File](images/ios_cert_v2/upload_csr_file.png)
  8. 上传刚刚生成的 .certSigningRequest 文件 生成 APNs Push Certificate。
  9. 下载证书。
- 10. 双击打开证书，证书打开时会启动 钥匙串访问工具。
-  在 钥匙串访问 中你的证书会显示在 “证书” 中，注意选择左下角的 “证书” 和左上角 “登录”。
+ 10. 双击打开证书，证书打开时会启动钥匙串访问工具。
+  在钥匙串访问工具中，你的证书会显示在 “证书” 中，注意选择左下角的 “证书” 和左上角 “登录”。
+
 
    ![confirm create cer success](images/ios_cert_v2/confirm_create_cer_success.png)
 
