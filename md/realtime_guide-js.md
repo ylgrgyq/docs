@@ -22,7 +22,7 @@ JavaScript 实时通信 SDK 支持如下运行时：
 - React Native
   - iOS 0.22+
   - Android 0.25+
-  
+
 如果需要支持 IE10 或以下版本，请使用 versoin 2。
 
 ### 文档贡献
@@ -94,7 +94,7 @@ realtime.register([ImageMessage]);
 
 如果是在 Node.js 中使用，需要按以下方法进行初始化：
 ```javascript
-var AV = require('avoscloud-sdk')
+var AV = require('avoscloud-sdk');
 var Realtime = require('leancloud-realtime').Realtime;
 var ImageMessage = require('leancloud-realtime-typed-messages').ImageMessage;
 
@@ -116,7 +116,7 @@ realtime.register([ImageMessage]);
 Tom 想给 Jerry 发一条消息，实现代码如下：
 
 ```javascript
-// Tom 用自己的名字作为clientId，获取AVIMClient对象实例
+// Tom 用自己的名字作为 clientId，获取 IMClient 对象实例
 realtime.createIMClient('Tom').then(function(tom) {
   // 创建与Jerry之间的对话
   return tom.createConversation({
@@ -453,12 +453,34 @@ client.on('unreadmessages', function unreadMessagesEventHandler(payload, convers
   console.log(payload);
   // {
   //   count: 4,
-  //   lastMessageId: "UagNXHK0RHqIvM_VB7Injg ",
+  //   lastMessageId: "UagNXHK0RHqIvM_VB7Injg",
   //   lastMessageTimestamp: [object Date],
   // }
 })
 
 // http://jsplay.avosapps.com/xuc/embed?js,console
+```
+
+如果有多个对话有未读消息，这个事件会被派发多次，对应的 conversation 的未读消息数（`conversation.unreadMessagesCount`）会自动更新，此时开发者可以在对话列表界面上更新这些对话的未读消息数量。
+
+当用户点击进入某个对话时，开发者需要做两件事：
+
+0. 拉取消息记录，参见[聊天记录](#聊天记录)
+0. 调用 `Conversation#markAsRead` 标记该会话为已读：
+
+```javascript
+conversation.markAsRead().then(function(conversation) {
+  console.log('对话已标记为已读');
+}).catch(console.error.bind(console));
+```
+
+此时，当前用户其他在线的客户端会收到 `unreadmessages` 消息，将该会话的未读消息数更新为 0。
+
+除了 `Conversation#markAsRead`，SDK 还提供了 `IMClient#markAllAsRead` 方法来批量标记对话为已读：
+```javascript
+client.markAllAsRead([conversation]).then(function() {
+  console.log('对话已全部标记已读');
+}).catch(console.error.bind(console));
 ```
 
 #### 离线消息推送
@@ -553,7 +575,7 @@ client.on('message', function(message) {
 举个例子，实现一个在 [暂态消息](#暂态消息) 中提出的 OperationMessage：
 
 ```javascript
-// TypedMessage, messageType, messageField 都是有 leancloud-realtime 这个包提供的
+// TypedMessage, messageType, messageField 都是由 leancloud-realtime 这个包提供的
 // 在浏览器中则是 var { TypedMessage, messageType, messageField } = AV;
 var { TypedMessage, messageType, messageField } = require('leancloud-realtime');
 var inherit = require('inherit');
@@ -783,7 +805,7 @@ conversation.count().then(function(membersCount) {
 
 ### 对话的属性管理
 
-对话实例（AVIMConversation）与控制台中 `_Conversation` 表是一一对应的，默认提供的属性的对应关系如下：
+对话实例（Conversation）与控制台中 `_Conversation` 表是一一对应的，默认提供的属性的对应关系如下：
 
 
 Conversation 属性名 | _Conversation 字段|含义
@@ -833,7 +855,7 @@ black.getConversation(CONVERSATION_ID).then(function(conversation) {
   return conversation.save();
 }).then(function(conversation) {
   console.log('更新成功。name: ' + conversation.name);
-}).catch(console.error.bind(console));;
+}).catch(console.error.bind(console));
 ```
 
 
@@ -855,7 +877,7 @@ black.getConversation(CONVERSATION_ID).then(function(conversation) {
   return conversation.mute();
 }).then(function(conversation) {
   console.log('静音成功');
-}).catch(console.error.bind(console));;
+}).catch(console.error.bind(console));
 ```
 
 
@@ -993,7 +1015,7 @@ query.equalTo('attr.topic','movie');
 ```
 
 
-目前条件查询只针对 `AVIMConversation` 对象的自定义属性进行操作，也就是针对 `_Conversation` 表中的 `attr` 字段进行查询。
+目前条件查询只针对 `Conversation` 对象的自定义属性进行操作，也就是针对 `_Conversation` 表中的 `attr` 字段进行查询。
 
 
 
@@ -1018,7 +1040,7 @@ query.greaterThan('attr.age',18);
 #### 正则匹配查询
 
 
-匹配查询是指在 `AVIMConversationQuery` 的查询条件中使用正则表达式来匹配数据。
+匹配查询是指在 `ConversationQuery` 的查询条件中使用正则表达式来匹配数据。
 
 
 比如要查询所有 language 是中文的对话：
@@ -1203,11 +1225,10 @@ JavaScript SDK 没有客户端聊天记录缓存机制
 当网络连接出现中断、恢复等状态变化时，SDK 会在 Realtime 实例上派发以下事件：
 
 
-与网络相关的通知（网络断开、恢复等）会由 `AVIMClientEventHandler` 做出响应，接口函数有：
 
 * `disconnect`：网络连接断开，此时聊天服务不可用。
-* `retry`：正在重试。
-* `reconnectfail`：尝试重连失败，此时聊天服务仍不可用。
+* `schedule`：计划在一段时间后尝试重连，此时聊天服务仍不可用。
+* `retry`：正在重连。
 * `reconnect`：网络连接恢复，此时聊天服务可用。
 
 在网络中断的情况下，所有的消息收发和对话操作都会出现问题。
@@ -1216,19 +1237,34 @@ JavaScript SDK 没有客户端聊天记录缓存机制
 realtime.on('disconnect', function() {
   console.log('网络连接已断开');
 });
-realtime.on('retry', function(attemptsNumber) {
-  console.log('正在进行第' + attemptsNumber + '次重连');
+realtime.on('schedule', function(attempt, delay) {
+  console.log(delay + 'ms 后进行第' + (attempt + 1) + '次重连');
 });
-realtime.on('reconnectfail', function(attemptsNumber, nextAttemptIn) {
-  console.log('第' + attemptsNumber + '次重连失败，' + nextAttemptIn + 'ms 后进行第' + (attemptsNumber + 1) + '次重连');
+realtime.on('retry', function(attempt) {
+  console.log('正在进行第' + attempt + '次重连');
 });
 realtime.on('disconnect', function() {
   console.log('网络连接已恢复');
 });
 ```
 
+在 `schedule` 与 `retry` 事件之间，开发者可以调用 `Realtime#retry()` 方法手动进行重连。下面显示的是一次典型的断线重连过程中 SDK 在 Realtime 实例上派发的事件：
 
->注意：网络状态在短时间内很可能会发生频繁变化，但这并不代表对话的接收与发送一定会受到影响，因此开发者在处理此类事件响应时，比如更新 UI，要适应加入更多的逻辑判断，以免影响用户的使用体验。
+```
+disconnect
+schedule (attempt=0, delay=1000)
+retry (attempt=0)
+schedule (attempt=1, delay=2000)
+retry (attempt=1)
+schedule (attempt=2, delay=4000)
+// call realtime.retry()
+retry (attempt=0)
+schedule (attempt=1, delay=2000)
+retry (attempt=1)
+reconnect
+```
+
+>注意：网络状态在短时间内很可能会发生频繁变化，但这并不代表对话的接收与发送一定会受到影响，因此开发者在处理此类事件响应时，比如更新 UI，要适当加入更多的逻辑判断，以免影响用户的使用体验。
 
 ## 退出登录
 
@@ -1256,7 +1292,7 @@ tom.close().then(function() {
 我们强烈推荐启用签名，具体步骤是 [控制台 > 设置 > 应用选项](/app.html?appid={{appid}}#/permission)，勾选 **聊天、推送** 下的 **聊天服务，启用签名认证**。
 
 
-客户端这边究竟该如何使用呢？我们只需要实现 signature 工厂方法，然后作为参数在实例化 IMClient 即可
+客户端这边究竟该如何使用呢？我们只需要实现 signature 工厂方法，然后作为参数实例化 IMClient 即可
 
 设定了 signature 工厂方法后，对于需要鉴权的操作，实时通信 SDK 与服务器端通讯的时候都会带上应用自己生成的 Signature 信息，LeanCloud 云端会使用 app 的 masterKey 来验证信息的有效性，保证聊天渠道的安全。
 
@@ -1265,21 +1301,23 @@ tom.close().then(function() {
 ```javascript
 /**
  * IMClient 登录签名工厂
- * 
+ *
  * @param {String} clientId 登录用户 ID
- * @return {{ signature: String, timestamp: Number, nonce: String }} signatureResult 
+ * @return {{ signature: String, timestamp: Number, nonce: String }} signatureResult
+ */
 var signatureFactory = function(clientId) {
   // to be implemented
 };
-  
+
 /**
  * Conversation 相关操作签名工厂
- * 
- * @param {String} conversationId 
+ *
+ * @param {String} conversationId
  * @param {String} clientId 当前用户 ID
  * @param {String[]} targetIds 此次操作的目标用户 IDs
  * @param {String} action  此次行为的动作，可能的值为 crete（创建会话）、add（加群和邀请）和 remove（踢出群）之一
- * @return {{ signature: String, timestamp: Number, nonce: String }} signatureResult 
+ * @return {{ signature: String, timestamp: Number, nonce: String }} signatureResult
+ */
 var conversationSignatureFactory = function(clientId) {
   // to be implemented
 };
@@ -1352,7 +1390,7 @@ realtime.createIMClient('Tom', {
 ```javascript
 realtime.createIMClient('Tom', null, 'Web').then(function(tom) {
   console.log('Tom 登录');
-});;
+});
 ```
 
 
