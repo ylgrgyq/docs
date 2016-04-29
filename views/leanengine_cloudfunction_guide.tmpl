@@ -45,14 +45,14 @@ Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电�
 
 ### SDK 调用云函数
 
-在 LeanCloud 各个版本的 SDK 中，都提供了调用云函数的接口示例代码如下：
+LeanCloud 各个语言版本的 SDK 都提供了调用云函数的接口。
 
 
 ```objc
-    //在 iOS SDK 中，`AVCloud` 提供了一系列的静态方法实现客户端调用云函数：
+    // 在 iOS SDK 中，AVCloud 提供了一系列静态方法来实现客户端调用云函数
     // 构建传递给服务端的参数字典
      NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼" 
-                                                              forKey:@"movie"];
+                                                               forKey:@"movie"];
 
     // 调用指定名称的云函数 averageStars，并且传递参数
     [AVCloud callFunctionInBackground:@"averageStars" 
@@ -66,7 +66,7 @@ Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电�
     }];
 ```
 ```java
-    //在 Android SDK 中，`AVCloud` 里面提供了一系列的静态方法实现客户端调用云函数：
+    // 在 Android SDK 中，AVCloud 提供了一系列的静态方法来实现客户端调用云函数
     // 构建参数
     Map<String, String> dicParameters = new HashMap<String, String>();
     dicParameters.put("movie", "夏洛特烦恼");
@@ -83,24 +83,24 @@ Cloud 函数接收 JSON 格式的请求对象，我们可以用它来传入电�
     });
 ```
 ```js
-  // 在 JavaScript 中 AV.Cloud 里面提供了一些列的方法实现调用云函数：
+  // 在 JavaScript 中 AV.Cloud 提供了一系列方法来调用云函数
   var paramsJson = {
     movie: "夏洛特烦恼"
   };
   AV.Cloud.run('averageStars', paramsJson, {
     success: function(data) {
-      //调用成功，得到成功的应答data
+      // 调用成功，得到成功的应答 data
     },
     error: function(err) {
-      //处理调用失败
+      // 处理调用失败
     }
   });
 
 ```
 ### 通过 REST API 调用云函数
-[REST API 调用云函数](rest_api.html#云函数-1) 是 LeanCloud 云端提供的统一的访问云函数的接口，所有的客户端 SDK 也都是封装了这个接口实现对云函数进行调用。
+[REST API 调用云函数](rest_api.html#云函数-1) 是 LeanCloud 云端提供的统一的访问云函数的接口，所有的客户端 SDK 也都是封装了这个接口从而实现对云函数的调用。
 
-关于调试工具，我们推荐的工具有：[Postman](http://www.getpostman.com/) 以及 [Paw](#https://luckymarmot.com/paw) ，他们可以帮助开发者更方便地调试 Web API。
+关于调试工具，我们推荐的工具有：[Postman](http://www.getpostman.com/) 以及 [Paw](#https://luckymarmot.com/paw) ，它们可以帮助开发者更方便地调试 Web API。
 
 假设没有以上工具，也可以使用命令行进行调试：
 
@@ -112,7 +112,7 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8" \
        -d '{"movie":"夏洛特烦恼"}' \
 https://leancloud.cn/1.1/functions/averageStars
 ```
-上述命令行实际上就是向服务端发送一个 JSON 对象作为参数，参数的内容是告诉服务端要查询的电影的名字。
+上述命令行实际上就是向云端发送一个 JSON 对象作为参数，参数的内容是要查询的电影的名字。
 
 ### 云引擎调用云函数
 
@@ -124,10 +124,10 @@ https://leancloud.cn/1.1/functions/averageStars
   };
   AV.Cloud.run('averageStars', paramsJson, {
     success: function(data) {
-      //调用成功，得到成功的应答data
+      // 调用成功，得到成功的应答data
     },
     error: function(err) {
-      //处理调用失败
+      // 处理调用失败
     }
   });
 ```
@@ -137,7 +137,7 @@ API 参数详解参见 {{ runFuncApiLink }}。
 
 ### RPC 调用云函数
 
-RPC 调用云函数指的云引擎会在这种调用方式下，自动的为 Http Response Body 做序列化，而 SDK 调用之后拿回的返回结果就是一个完整的 `AVObject`:
+RPC 调用云函数是指：云引擎会在这种调用方式下自动为 Http Response Body 做序列化，而 SDK 调用之后拿回的返回结果就是一个完整的 `AVObject`。
 
 ```objc
     NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼" 
@@ -173,10 +173,10 @@ RPC 调用云函数指的云引擎会在这种调用方式下，自动的为 Htt
 云引擎区分「预备环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
 
 ```objc
-[AVCloud setProductionMode:NO];//调用预备环境
+[AVCloud setProductionMode:NO]; // 调用预备环境
 ```
 ```java
-AVCloud.setProductionMode(false); //调用预备环境
+AVCloud.setProductionMode(false); // 调用预备环境
 ```
 
 ### 云函数错误响应码
