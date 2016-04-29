@@ -13,8 +13,8 @@
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
-  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/) (可与 iOS/Android 版 LeanMessageDemo 通信)
-  * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
+  * [Simple Chatroom](https://leancloud.github.io/js-realtime-sdk/demo/simple-chatroom/)（[源码](https://github.com/leancloud/js-realtime-sdk/tree/next/demo/simple-chatroom)）
+  * [LeanMessageDemo Web 版](https://github.com/leancloud/LeanMessage-Demo)
 
 关于这些项目的更多介绍、截图预览，可见 [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) 。
 
@@ -570,7 +570,7 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 
 ##  JavaScript 开发指南
 
-参考 [JavaScript 实时通信开发指南](js_realtime.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
+参考 [JavaScript 实时通信开发指南](realtime_guide-js.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
 
 ## REST API
 
