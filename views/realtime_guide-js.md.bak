@@ -1,111 +1,79 @@
 {% extends "./realtime_guide.tmpl" %}
+{% set platform_name = 'JavaScript' %}
+{% set doc_title = 'JavaScript' %}
+{% set sdk_name = 'JavaScript SDK' %}
 
-{% set platform_name = 'Android' %}
-{% set doc_title = 'Android' %}
-{% set sdk_name = 'Android SDK' %}
-
-{% block setup_init %}
-请参考详细的 [Android SDK 安装指南](sdk_setup-android.html)。
-{% endblock %}
-
-{% block demo %}
-* [LeanMessage](https://github.com/leancloud/LeanMessage-Demo)（推荐）
-* [LeanChat](https://github.com/leancloud/leanchat-android)
-{% endblock %}
-
-{% block oneOnOneChat_sent %}
+{% block setup_init %}首先使用 npm 安装 SDK：
 ```
-  public void sendMessageToJerryFromTom() {
-    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    // 与服务器连接
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          // 创建与Jerry之间的对话
-          client.createConversation(Arrays.asList("Jerry"), "Tom & Jerry", null,
-              new AVIMConversationCreatedCallback() {
-
-                @Override
-                public void done(AVIMConversation conversation, AVIMException e) {
-                  if (e == null) {
-                    AVIMTextMessage msg = new AVIMTextMessage();
-                    msg.setText("耗子，起床！");
-                    // 发送消息
-                    conversation.sendMessage(msg, new AVIMConversationCallback() {
-
-                      @Override
-                      public void done(AVIMException e) {
-                        if (e == null) {
-                          Log.d("Tom & Jerry", "发送成功！");
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-        }
-      }
-    });
-  }
+$ npm install leancloud-realtime@next --save
 ```
-{% endblock %}
 
-{% block oneOnOneChat_received %}
-
+然后在浏览器中加载以下 script：
 ```
-public class MyApplication extends Application{
- public static class CustomMessageHandler extends AVIMMessageHandler{
-   //接收到消息后的处理逻辑 
-   @Override
-   public void onMessage(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
-     if(message instanceof AVIMTextMessage){
-       Log.d("Tom & Jerry",((AVIMTextMessage)message).getText());
-     }
-   }
-   
-   public void onMessageReceipt(AVIMMessage message,AVIMConversation conversation,AVIMClient client){
-   
-   }
- }	
- public void onCreate(){
-   ...
-   AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");   
-   //注册默认的消息处理逻辑
-   AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
-   ...
- }
-...
-public void jerryReceiveMsgFromTom(){
-  //Jerry登录
-  AVIMClient jerry = AVIMClient.getInstance("Jerry");
-  jerry.open(new AVIMClientCallback(){
-  
-    @Override
-    public void done(AVIMClient client,AVIMException e){
-    	if(e==null){
-    	 ...//登录成功后的逻辑
-    	}
-    }
+<script src="./node_modules/leancloud-realtime/dist/bundle.browser.js"></script>
+```
+最后进行初始化：
+```
+var realtime = AV.Realtime({
+  appId: '{{appid}}',
+  appKey: '{{appkey}}',
+  region: 'cn', // 美国节点为 "us"
+});
+```
+
+如果是在 Node.js 中使用，需要按以下方法进行初始化：
+```
+var Realtime = require('leancloud-realtime').Realtime;
+var realtime = new Realtime({
+  appId: '{{appid}}',
+  appKey: '{{appkey}}',
+  region: 'cn', // 美国节点为 "us"
+});
+```
+
+如果是在 React Native 中使用，需要指定 noBinary 为 true：
+```
+import { Realtime } from 'leancloud-realtime';
+const realtime = new Realtime({
+  appId: '{{appid}}',
+  appKey: '{{appkey}}',
+  region: 'cn', // 美国节点为 "us"
+  noBinary: true,
+});
+```{% endblock %}
+
+{% block demo %}// TODO{% endblock %}
+
+{% block oneOnOneChat_sent %}```
+// Tom 用自己的名字作为clientId，获取AVIMClient对象实例
+realtime.createIMClient('Tom').then(function(tom) {
+  // 创建与Jerry之间的对话
+  return tom.createConversation({
+    members: ['Jerry'],
+    name: 'Tom & Jerry',
   });
-}
-}
-```
-{% endblock %}
+}).then(function(conversation) {
+  // 发送消息
+  return conversation.send(new AV.TextMessage('耗子，起床！'));
+}).then(function(message) {
+  console.log('Tom & Jerry', '发送成功！');
+}).catch(console.error);
 
-{% block androidMessageHandler %}
-#### MessageHandler 的处理逻辑
+// https://jsplay.avosapps.com/fuq/embed?js,console
+```{% endblock %}
 
-在 Android SDK 中接收消息的 AVIMMessageHandler 在 AVIMMessageManager 中进行注册时有两个不同的方法： `registerDefaultMessageHandler` 和 `registerMessageHandler`。
+{% block oneOnOneChat_received %}```
+// Jerry 登录
+realtime.createIMClient('Jerry').then(function(jerry) {
+  jerry.on('message', function(message, conversation) {
+    console.log('Message received: ' + message.text);
+  });
+}).catch(console.error);
 
-当客户端收到一条消息的时候，会优先根据消息类型通知当前所有注册的对应类型的普通的 `messageHandler`,如果发现当前没有任何注册的普通的 `messageHandler`，才会去通知 `defaultMessageHandler`。
+// https://jsplay.avosapps.com/nuh/embed?js,console
+```{% endblock %}
 
-在 `AVIMMessageManager` 中多次注册 `defaultMessageHandler` ，只有最后一次调用的才是有效的；而通过 `registerMessageHandler` 注册的 `AVIMMessageHandler`，则是可以同存的。
-
-通过在 UI 组件（比如 Activity）的 `onResume` 方法中间去调用 `registerMessageHandler`,而在 `onPaused` 方法中间调用 `unregisterMessageHandler` 的组合，让对应的 `messageHandler` 处理当前页面的处理逻辑；而当没有页面时，则通过 defaultMessageHandler 去发送 `Notification`。
-
-{% endblock %}
+{% block androidMessageHandler %}{% endblock %}
 
 {% block oneOnOneChat_received_steps %}
 接收消息之前，需要先定义好自己的 `AVIMMessageHandler` 来响应新消息到达的通知，如上例中的 `CustomMessageHandler`。然后通过 `AVIMMessageManager.registerMessageHandler()` 函数来实现绑定。`AVIMMessageManager` 类中还有一个方法 `registerDefaultMessageHandler()` 则用来指定全局默认的消息处理 handler。
@@ -115,94 +83,44 @@ public void jerryReceiveMsgFromTom(){
 然后通过 `AVIMMessageHandler.onMessage()` 函数来接收消息。
 {% endblock %}
 
-{% block groupChat_sent %}
-```
-  public void sendMessageToJerryFromTom() {
-    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    // 与服务器连接
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          // 创建与 Jerry，Bob,Harry,William 之间的对话
-          client.createConversation(Arrays.asList("Jerry","Bob","Harry","William"), "Tom & Jerry & friedns", null,
-              new AVIMConversationCreatedCallback() {
+{% block groupChat_sent %}```
+// Tom 用自己的名字作为 clientId，获取 Client 对象实例
+realtime.createIMClient('Tom').then(function(tom) {
+  // 创建与 Jerry,Bob,Harry,William 之间的对话
+  return tom.createConversation({
+    members: ['Jerry', 'Bob', 'Harry', 'William'],
+    name: 'Tom & Jerry & friedns',
+  })
+}).then(function(conversation) {
+  // 发送消息
+  return conversation.send(new AV.TextMessage('你们在哪儿？'));
+}).then(function(message) {
+  console.log('发送成功！');
+}).catch(console.error);
 
-                @Override
-                public void done(AVIMConversation conversation, AVIMException e) {
-                  if (e == null) {
-                    AVIMTextMessage msg = new AVIMTextMessage();
-                    msg.setText("你们在哪儿？");
-                    // 发送消息
-                    conversation.sendMessage(msg, new AVIMConversationCallback() {
+// https://jsplay.avosapps.com/vep/embed?js,console
+```{% endblock %}
 
-                      @Override
-                      public void done(AVIMException e) {
-                        if (e == null) {
-                          Log.d("Tom & Jerry", "发送成功！");
-                        }
-                      }
-                    });
-                  }
-                }
-              });
-        }
-      }
-    });
-  }
-```
-{% endblock %}
+{% block groupChat_received %}```
 
-{% block groupChat_received %}
-```
-public class MyApplication extends Application{
-  public void onCreate(){
-   ...
-   AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
-   //这里指定只处理AVIMTextMessage类型的消息
-   AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class,new CustomMessageHanlder());
-  }
-}
-
-- CustomMessageHandler.java
-public class CustomMessageHandler<AVIMTextMessage> implements AVTypedMessageHandler{
- 
-  @Override
-  public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
-    Log.d("Tom & Jerry",msg.getText();)//你们在哪儿?
+// Bob 登录
+realtime.createIMClient('Bob').then(function(bob) {
+  bob.on('message', function(message, conversation) {
+    console.log('[Bob] received a message from [' + message.from + ']: ' + message.text);
     // 收到消息之后一般的做法是做 UI 展现，示例代码在此处做消息回复，仅为了演示收到消息之后的操作，仅供参考。
-    AVIMTextMessage reply = new AVIMTextMessage();
-    reply.setText("Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
-    conv.sendMessage(reply,new AVIMConversationCallback(){
-  	   public void done(AVIMException e){
-  	     if(e==null){
-  	     //回复成功!
-  	     }
-  	   }
-  	 });
-  }
-  
-public void onMessageReceipt(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
-  
-}
-}
+    conversation.send(new AV.TextMessage('Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？'));
+  });
+}).catch(console.error);
 
+// William 登录
+realtime.createIMClient('William').then(function(william) {
+  william.on('message', function(message, conversation) {
+    console.log('[William] received a message from [' + message.from + ']: ' + message.text);
+  });
+}).catch(console.error);
 
-- SomeActivity.java
-public void loginAsBob(){
-	AVIMClient bob = AVIMClient.getInstance("Bob");
-	//Bob登录
-	bob.open(new AVIMClientCallback(){
-	  public void done(AVIMClient client,AVIMException e){
-	  	if(e==null){
-	  		//登录成功
-	  	}
-	  }
-	});
-}
-```
-{% endblock %}
+// https://jsplay.avosapps.com/coz/embed?js,console
+```{% endblock %}
 
 {% block imageMessage_local_sent %}
 
@@ -211,14 +129,14 @@ public void sendImage(String filePath){
   AVIMClient tom = AVIMClient.getInstance("Tom");
 
   tom.open(new AVIMClientCallback(){
-  
+
     @Override
     public void done(AVIMClient client,AVIMException e){
       if(e==null){
       //登录成功
       // 创建对话，默认创建者是在包含在成员列表中的
       client.createConversation(Arrays.asList("Jerry"),new AVIMConversationCreatedCallback(){
-      
+
         @Override
         public void done(AVIMConversation conv,AVIMException e){
           if(e==null){
@@ -228,7 +146,7 @@ public void sendImage(String filePath){
             attributes.put("location","旧金山");
             picture.setAttribute(attributes);
             conv.sendMessage(picture,new AVIMConversationCallback(){
-              
+
               @Override
               public void done(AVIMException e){
                 if(e==null){
@@ -292,7 +210,7 @@ AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
           @Override
           public void onMessage(AVIMImageMessage msg, AVIMConversation conv, AVIMClient client) {
           	//只处理 Jerry 这个客户端的消息
-          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
+          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息
             if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
                 String fromClientId = msg.getFrom();
                 String messageId = msg.getMessageId();
@@ -313,7 +231,7 @@ AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
             }
           }
         });
-        
+
     AVIMClient jerry = AVIMClient.getInstance("Jerry");
     jerry.open(new AVIMClientCallback() {
       @Override
@@ -357,7 +275,7 @@ AVIMMessageManager.registerMessageHandler(AVIMImageMessage.class,
         }
       }
     });
-``` 
+```
 {% endblock %}
 
 {% block audioMessage_url_sent %}
@@ -401,7 +319,7 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
           @Override
           public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
           	//只处理 Jerry 这个客户端的消息
-          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息	
+          	//并且来自 conversationId 为 55117292e4b065f7ee9edd29 的conversation 的消息
             if ("Jerry".equals(client.getClientId()) && "55117292e4b065f7ee9edd29".equals(conv.getConversationId())) {
                 String fromClientId = msg.getFrom();
                 String messageId = msg.getMessageId();
@@ -416,7 +334,7 @@ AVIMMessageManager.registerMessageHandler(AVIMAudioMessage.class,
             }
           }
         });
-        
+
     AVIMClient jerry = AVIMClient.getInstance("Jerry");
     jerry.open(new AVIMClientCallback() {
       @Override
@@ -654,7 +572,7 @@ SDK 内部在接收消息时的处理逻辑是这样的：
 ```
 //自定义的消息类型，用于发送和接收所有的用户操作消息
 - AVIMOperationMessage.java
- 
+
 //指定type类型，可以根据实际换成其他正整数
 @AVIMMessageType(type = 1)
 public class AVIMOperationMessage extends AVIMTypedMessage {
@@ -690,7 +608,7 @@ tom.open(new AVIMClientCallback() {
           AVIMOperationMessage msg = new AVIMOperationMessage();
           msg.setOp("keyboard inputing");
           // AVIMConversation.TRANSIENT_MESSAGE_FLAG 表示该条消息为暂态消息
-          // 
+          //
           conv.sendMessage(msg, AVIMConversation.TRANSIENT_MESSAGE_FLAG,
               new AVIMConversationCallback() {
                 @Override
@@ -711,7 +629,7 @@ tom.open(new AVIMClientCallback() {
 ```
 //自定义的消息类型，用于发送和接收所有的用户操作消息
 - AVIMOperationMessage.java
- 
+
 //指定type类型，可以根据实际换成其他正整数
 @AVIMMessageType(type = 1)
 public class AVIMOperationMessage extends AVIMTypedMessage {
@@ -750,7 +668,7 @@ AVIMMessageManager.registerMessageHandler(AVIMOperationMessage.class,
             }
         }
 });
-        
+
 // 登录操作，建立和服务端的连接，开始接收消息
 AVIMClient jerry = AVIMClient.getInstance("Jerry");
 jerry.open(new AVIMClientCallback() {
@@ -764,7 +682,7 @@ jerry.open(new AVIMClientCallback() {
 ```
 {% endblock %}
 
-{% block offlineMessage_android %}>**Android 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
+{% block offlineMessage_android %}>**JavaScript 聊天服务是和后台的推送服务共享连接的，所以只要有网络就永远在线，不需要专门做推送。**消息达到后，你可以根据用户的设置来判断是否需要弹出通知。网络断开时，我们为每个对话保存 20 条离线消息。{% endblock %}
 
 {% block message_sent_ack %}
 
@@ -807,7 +725,7 @@ onOfflineMessagesUnread(AVIMClient client, AVIMConversation conversation, int un
   //如果有多个 conversation 有未读消息，此函数会执行多次
   if (unreadCount > 0) {
     // 可以根据 readCount 更新 UI
-    
+
     // 也可以拉取对应的未读消息
     conversation.queryMessages(unreadCount, new AVIMMessagesQueryCallback() {
       @Override
@@ -836,9 +754,9 @@ onOfflineMessagesUnread(AVIMClient client, AVIMConversation conversation, int un
 属性|描述|类型
 ---|---|---
 content|String|消息内容
-clientId|String|指消息发送者的 clientId 
+clientId|String|指消息发送者的 clientId
 conversationId|String|消息所属对话 id
-messageId|String|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id 
+messageId|String|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
 timestamp|long|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
 receiptTimestamp|long| 消息被对方接收到的时间。消息被接收之后，由 LeanCloud 云端赋予的全局的时间戳。
 status|AVIMMessageStatus 枚举|消息状态，有五种取值：<br/><br/>`AVIMMessageStatusNone`（未知）<br/>`AVIMMessageStatusSending`（发送中）<br/>`AVIMMessageStatusSent`（发送成功）<br/>`AVIMMessageStatusReceipt`（被接收）<br/>`AVIMMessageStatusFailed`（失败）
@@ -853,7 +771,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
 视频消息|-4
 位置消息|-5
 文件消息|-6
- 
+
 {% endblock %}
 
 {% block attributes %}`AVIMTypedMessage.attributes`{% endblock %}
@@ -950,35 +868,7 @@ public class AVIMTextMessage extends AVIMTypedMessage {
 ```
 {% endblock %}
 
-{% block api_send_message_method_intro %}
-#### 消息发送接口
-在 Android SDK 中，发送消息的方法是：`AVIMConversation.sendMessage`，它最核心的一个重载声明如下：
-
-```
-/**
- *
- * @param message 发送的消息实体，可以是任何 AVIMMessage 子类
- * @param messageFlag AVIMConversation.TRANSIENT_MESSAGE_FLAG(0)：暂态消息，只有在消息发送时，对方也是在线的才能收到这条消息；
- *                    AVIMConversation.NONTRANSIENT_MESSAGE_FLAG(1)：非暂态消息，当消息发送时，对方不在线的话，消息会变成离线消息；
- *                    AVIMConversation.RECEIPT_MESSAGE_FLAG(17)：回执消息，当消息送到到对方以后，发送方会收到消息回执说明消息已经成功达到接收方
- * @param callback 消息发送之后的回调，发送异常或者发送成功都可以在回调里进行操作
- */
-public void sendMessage(final AVIMMessage message, final int messageFlag, final AVIMConversationCallback callback)
-```
-为了满足通用需求，SDK 还提供了一个更为常用的重载声明：
-
-```
-/**
- *
- * @param message 发送的消息实体，可以是任何 AVIMMessage 子类
- * @param callback 消息发送之后的回调，发送异常或者发送成功都可以在回调里进行操作
- */
-public void sendMessage(AVIMMessage message, AVIMConversationCallback callback)
-```
-
-其实本质上，调用 `sendMessage(message, callback)` 就等价于调用 `sendMessage(message,1, callback)` ，因为一般情况下消息存在的形式多以**非暂态**消息为主
-
-{% endblock %}
+{% block api_send_message_method_intro %}{% endblock %}
 
 {% block messagePolicy_sent_method %} `AVIMClient.OnMessageReceived` {% endblock %}
 
@@ -1011,36 +901,27 @@ jerry.open(new AVIMClientCallback() {
 
 {% block conversation_creation_api %}
 ### 创建对话
-创建对话的接口在 `AVIMClient` 中共有 4 个方法重写，下面我们以参数最详尽的这个重写来说明其中每个参数的意义。
 
 ```
-  /**
-   * 创建或查询一个已有 conversation
-   *
-   * @param members 对话的成员
-   * @param name 对话的名字
-   * @param attributes 对话的额外属性
-   * @param isTransient 是否是暂态对话
-   * @param isUnique 如果已经存在符合条件的对话，是否返回已有对话
-   *                 为 false 时，则一直为创建新的对话
-   *                 为 true 时，则先查询，如果已有符合条件的对话，则返回已有的，否则，创建新的并返回
-   *                 为 true 时，仅 members 为有效查询条件
-   * @param callback
-   */
-  public void createConversation(final List<String> members, final String name,
-      final Map<String, Object> attributes, final boolean isTransient, final boolean isUnique,
-      final AVIMConversationCreatedCallback callback)
+jerry.createConversation({
+  members: ['Bob', 'Harry', 'William'],
+  name: '周末滑雪',
+  attributes: {
+    location: '42.86335,140.6843287',
+  },
+  transient: false,
+  unique: false,
+});
 ```
 参数说明：
 
 * members - 对话的初始成员列表。在对话创建成功后，这些成员会收到和邀请加入对话一样的相应通知。
 * name - 对话的名字，主要是用于标记对话，让用户更好地识别对话。
 * attributes - 额外属性
-* isTransient - 是否为 [暂态对话](#聊天室)
-* isUnique - 是否创建唯一对话，当 `isUnique` 为 true 时，如果当前已经有**相同成员**的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
+* transient - 是否为 [暂态对话](#聊天室)
+* unique - 是否创建唯一对话，当其为 true 时，如果当前已经有**相同成员**的对话存在则返回该对话，否则会创建新的对话。该值默认为 false。
 
-<div class="callout callout-info">由于暂态对话不支持创建唯一对话，所以将 `isTransient` 和 `isUnique` 同时设为 true 时并不会产生预期效果。</div>
-{% endblock %}
+<div class="callout callout-info">由于暂态对话不支持创建唯一对话，所以将 `transient` 和 `unique` 同时设为 true 时并不会产生预期效果。</div>{% endblock %}
 
 {% block event_memberJoin %} `onMemberJoined` {% endblock %}
 
@@ -1059,7 +940,7 @@ jerry.open(new AVIMClientCallback() {
 {% block api_method_conversation_kick %} `AVIMConversation.removeMembersWithClientIds`{% endblock %}
 
 {% block conversation_members_change_notice_intro %}
-在 Android 中，开发者需要实现 `AVIMConversationEventHandler` 代理，并且为 `AVIMClient` 指定该代理的一个实例。
+在 JavaScript 中，开发者需要实现 `AVIMConversationEventHandler` 代理，并且为 `AVIMClient` 指定该代理的一个实例。
 
 `AVIMConversationEventHandler` 的实现和定义在下一节[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
 
@@ -1175,8 +1056,8 @@ public class CustomConversationEventHandler extends AVIMConversationEventHandler
 
 No.|邀请者|被邀请者|其他人
 ---|---|---|---
-1|发出请求 addMembers| | 
-2| |收到 onInvited 通知| 
+1|发出请求 addMembers| |
+2| |收到 onInvited 通知|
 3|收到 onMemberJoined 通知| | 收到 onMemberJoined 通知
 {% endblock %}
 
@@ -1202,7 +1083,7 @@ tom.open(new AVIMClientCallback(){
 			      if(e==null){
 			      //退出成功
 			      }
-			    } 
+			    }
 			  });
 			  }
 			}
@@ -1210,7 +1091,7 @@ tom.open(new AVIMClientCallback(){
 	  }
 	}
 });
-``` 
+```
 {% endblock %}
 
 {% block conversation_kick %}
@@ -1230,7 +1111,7 @@ william.open(new AVIMClientCallback(){
 			  if(e==null){
 			  //加入成功
 			  conv.kickMembers(Arrays.asList("Harry"),new AVIMConversationCallback(){
-			  
+
 			  	 @Override
 			    public void done(AVIMException e){
 			    }
@@ -1249,8 +1130,8 @@ william.open(new AVIMClientCallback(){
 
 No.|操作者（管理员）|被踢者|其他人
 ---|---|---|---
-1|发出请求 kickMembers| | 
-2| |收到 onKicked 通知| 
+1|发出请求 kickMembers| |
+2| |收到 onKicked 通知|
 3|收到 onMemberLeft 通知| |收到 onMemberLeft 通知
 {% endblock %}
 
@@ -1275,7 +1156,7 @@ tom.open(new AVIMClientCallback(){
            if(convs!=null && !convs.isEmpty()){
              AVIMConversation conv = convs.get(0);
              conv.getMemberCount(new AVIMConversationMemberCountCallback(){
-               
+
                @Override
                public void done(Integer count,AVIMException e){			
                if(e==null){						
@@ -1318,7 +1199,7 @@ tom.open(new AVIMClientCallback(){
 	  //登录成功
 	  client.createConversation(Arrays.asList("Black"),"喵星人",null,
 	           new AVIMConversationCreatedCallback(){
-	           
+
 	             @Override
 	             public void done(AVIMConversation conv,AVIMException e){
 	               if(e==null){
@@ -1346,7 +1227,7 @@ black.open(new AVIMClientCallback(){
 	  AVIMConversation conv = client.getConversation("55117292e4b065f7ee9edd29");
 	  conv.setName("聪明的喵星人");
 	  conv.updateInfoInBackground(new AVIMConversationCallback(){
-	    
+
 	    @Override
 	    public void done(AVIMException e){	    
 	      if(e==null){
@@ -1372,7 +1253,7 @@ tom.open(new AVIMClientCallback(){
 	  //登录成功
 	  AVIMConversation conv = client.getConversation("551260efe4b01608686c3e0f");
 	  conv.mute(new AVIMConversationCallback(){
-	  
+
 	    @Override
 	    public void done(AVIMException e){
 	      if(e==null){
@@ -1485,7 +1366,7 @@ query.findInBackground(new AVIMConversationQueryCallback(){
     //注意：按每个对话的最后更新日期（收到最后一条消息的时间）倒序排列
 	}
 	}
-});	
+});
 ```
 {% endblock %}
 
@@ -1522,7 +1403,7 @@ conversationQuery.whereEqualTo("topic", "DOTA2");
 ```
 特别注意：
 
-> 因为 Android 会自动添加 attr 前缀进行查询构建，所以在设置自定义属性的时候，**禁止**使用以下：`name`,`lm`,`c`,`tr`,`m`,`objectId`等已被默认属性占用的 key 值。
+> 因为 JavaScript 会自动添加 attr 前缀进行查询构建，所以在设置自定义属性的时候，**禁止**使用以下：`name`,`lm`,`c`,`tr`,`m`,`objectId`等已被默认属性占用的 key 值。
 
 {% endblock %}
 
@@ -1666,7 +1547,7 @@ tom.open(new AVIMClientCallback(){
 	  AVIMConversationQuery query = client.getQuery();
 	  query.whereNotEqualTo("attr.type","private");
 	  query.setLimit(50);//limit 设为 50 ,默认为 10 个
-	  
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1695,7 +1576,7 @@ tom.open(new AVIMClientCallback(){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
 	  query.whereGreaterThan("attr.age",18);
-	  
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1727,8 +1608,8 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  query.whereMatches("attr.language","[\\u4e00-\\u9fa5]"); //attr.language 是中文字符 
-	  
+	  query.whereMatches("attr.language","[\\u4e00-\\u9fa5]"); //attr.language 是中文字符
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1756,10 +1637,10 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  
+
 	  //查询attr.keywords 包含 「教育」的Conversation
-	  query.whereContains("attr.keywords","教育"); 
-	  
+	  query.whereContains("attr.keywords","教育");
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1787,10 +1668,10 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  
+
 	  //查询对话成员有 Bob 和 Jerry的Conversation
 	  query.withMembers(Arrays.as("Bob","Jerry"));
-	  
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1818,11 +1699,11 @@ tom.open(new AVIMClientCallback(){
 	  if(e==null){
 	  //登录成功
 	  AVIMConversationQuery query = client.getQuery();
-	  
+
 	  //查询 attr.keywords 包含 「教育」并且 attr.age 小于 18 的对话
 	  query.whereContains("attr.keywords", "教育");
 	  query.whereLessThan("attr.age", 18);
-	  
+
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1867,7 +1748,7 @@ tom.open(new AVIMClientCallback(){
 	    new AVIMConversationCreatedCallback(){
 	      @Override
 	      public void done(AVIMConversation conv,AVIMException e){
-	        
+
 	      }
 	    });
 	  }
@@ -1885,7 +1766,7 @@ tom.open(new AVIMClientCallback(){
 private void TomQueryWithLimit() {
   AVIMClient tom = AVIMClient.getInstance("Tom");
   tom.open(new AVIMClientCallback() {
-    
+
     @Override
     public void done(AVIMClient client, AVIMException e) {
       if (e == null) {
@@ -1901,7 +1782,7 @@ private void TomQueryWithLimit() {
                 AVIMConversation conv = convs.get(0);
                 //获取第一个对话的
                 conv.getMemberCount(new AVIMConversationMemberCountCallback() {
-                  
+
                   @Override
                   public void done(Integer count, AVIMException e) {
                     if (e == null) {
@@ -1982,7 +1863,7 @@ private void TomQueryWithLimit() {
 ```
 AVIMClient tom = AVIMClient.getInstance("Tom");
 tom.open(new AVIMClientCallback(){
-  
+
   @Override
   public void done(AVIMClient client,AVIMException e){
   	if(e==null){
@@ -2016,7 +1897,7 @@ tom.open(new AVIMClientCallback(){
 
   /**
    * 实现AVIMConversation相关的签名计算
-   * 
+   *
    * @param conversationId
    * @param clientId
    * @param targetIds - 此次操作的member的clientIds
@@ -2162,12 +2043,24 @@ public class AVImClientManager extends AVIMClientEventHandler {
     query.findInBackground(new AVIMConversationQueryCallback() {
       @Override
       public void done(List<AVIMConversation> conversations, AVIMException e) {
-        
+
       }
     });
 ```
 {% endblock %}
 
-{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](leanstorage_guide-android.html#缓存查询) 一节。
+{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。
 {% endblock %}
 
+{% block supportedRuntime %}目前我们的 JavaScript 实时通信支持如下运行时：
+
+- 浏览器/WebView
+  - IE 10+
+  - Chrome 31+
+  - Firefox latest
+  - iOS 8.0+
+  - Android 4.4+
+- Node.js 0.12+
+- React Native 0.22+{% endblock %}
+
+{% block avoidCreatingDuplicateConversation %}>提示：每次调用 `createConversation()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 members 和 name 也是如此。如果想要不重复创建相同成员的对话，请参阅 [常见问题](#常见问题) 。{% endblock %}

@@ -3,6 +3,7 @@
 {% set platformName = 'Node.js' %}
 {% set productName = 'LeanEngine' %}
 {% set storageName = 'LeanStorage' %}
+{% set leanengine_middleware = '[LeanEngine Node.js SDK](https://github.com/leancloud/leanengine-node-sdk)' %}
 
 {% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
 {% set cloud_func_file = '`$PROJECT_DIR/cloud.js`' %}
@@ -20,6 +21,7 @@
 {% set hook_on_login      = "onLogin" %}
 
 {% block cloudFuncExample %}
+
 ```javascript
 AV.Cloud.define('averageStars', function(request, response) {
   var query = new AV.Query('Review');
@@ -52,6 +54,7 @@ AV.Cloud.define('averageStars', function(request, response) {
 {% endblock %}
 
 {% block runFuncExample %}
+
 ```javascript
 AV.Cloud.run('averageStars', {movie: "夏洛特烦恼"}, {
   success: function(data){
@@ -140,7 +143,7 @@ AV.Cloud.beforeUpdate('Review', function(request, response) {
 
 请注意：
 
-* 需要将 `leanengine` 中间件升级至 0.2.0 版本以上才能使用这个功能。
+* 需要将 {{leanengine_middleware}} 中间件升级至 0.2.0 版本以上才能使用这个功能。
 * 不要修改 `request.object`，因为对它的改动并不会保存到数据库，但可以用 `response.error` 返回一个错误，拒绝这次修改。
 {% endblock %}
 
@@ -284,6 +287,7 @@ AV.Cloud.beforeSave('Review', function(request, response) {
 {% endblock %}
 
 {% block timerExample %}
+
 ```javascript
 AV.Cloud.define('log_timer', function(req, res){
     console.log('Log in timer.');
@@ -293,6 +297,7 @@ AV.Cloud.define('log_timer', function(req, res){
 {% endblock %}
 
 {% block timerExample2 %}
+
 ```javascript
 AV.Cloud.define('push_timer', function(req, res){
   AV.Push.send({
@@ -307,6 +312,7 @@ AV.Cloud.define('push_timer', function(req, res){
 {% endblock %}
 
 {% block masterKeyInit %}
+
 ```javascript
 //参数依次为 AppId, AppKey, MasterKey
 AV.initialize('{{appid}}', '{{appkey}}', '{{masterkey}}');
@@ -319,6 +325,7 @@ AV.Cloud.useMasterKey();
 {% endblock %}
 
 {% block loggerExample %}
+
 ```javascript
 AV.Cloud.define('Logger', function(request, response) {
   console.log(request.params);

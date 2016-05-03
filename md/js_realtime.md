@@ -1,4 +1,27 @@
-# JavaScript 实时通信开发指南
+# JavaScript 实时通信开发指南（version 2）
+
+## 版本状态
+
+<div class="callout callout-info">本文档介绍 JavaScript Realtime SDK version 2 的安装与使用。v2 目前为维护状态，将仅得到安全更新，不会增加新的功能。</div>
+
+目前 SDK 的最新版本是 version 3。与 v2 相比，v3 的主要改进有：
+* 提供了面向对象的，与其他平台 SDK 统一的 API
+* Promise 化的异步 API
+* 新的事件模型
+* 完善的异常机制
+* 可扩展的消息类型系统
+* 新增对以下特性的支持：
+  * 单点登录
+  * 「未读消息通知」模式
+  * 对话查询条件构造器
+* 增强了断线重连的可靠性
+* 采用了二进制协议，减少了传输消息时的流量消耗
+
+需要指出的是：
+* v3 不兼容 v2 的 API
+* v3 停止了对 IE10 及以下版本的支持。如果需要支持这些运行环境请使用 v2。
+
+v3 的详细的使用文档请参考[《JavaScript 实时通信开发指南》](./realtime_guide-js.html)。
 
 ## 简介
 

@@ -108,7 +108,7 @@ signature | 可选 | 签名时间戳（签名参数）
 appid:peerid:convid:nonce:signature_ts
 ```
 
-返回数据格式，JSON 数组，按消息记录从新到旧排序。
+返回数据格式，JSON 数组，按消息记录从新到旧排序。**注意**：系统广播不会出现在消息记录 API 的结果中。
 
 ```json
 [
@@ -140,17 +140,6 @@ msg-id | 消息 id
 is-conv | 是否是 v2 中对话模型的消息
 from-ip | 消息的来源 IP
 ack-at | 消息接收者返回的确认到达服务器的 Unix 时间戳（毫秒）
-
-### 获取某个用户发送的聊天记录
-
-此接口仅支持 master key [鉴权认证](rest_api.html#更安全的鉴权方式)，建议仅在服务端使用。
-
-参数 | 约束 | 说明
---- | --- | ---
-from | **必须** | 发送人 id
-max_ts | 可选 | 查询起始的时间戳，返回小于这个时间（不包含）的记录。默认是当前时间。
-msgid | 可选 | 起始的消息 id，与 max_ts 一起作为查询的起点。
-limit | 可选 | 返回条数限制，默认 100 条，最大 1000 条。
 
 ### 获取应用的所有聊天记录
 
@@ -238,7 +227,7 @@ curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
   -H "Content-Type: application/json" \
-  -d '{"from_peer": "1a", "message": "helloworld", "conv_id": "...", "transient": false}' \
+  -d '{"from_peer": "1a", "message": "{\"_lctype\":-1,\"_lctext\":\"这是一个纯文本消息\",\"_lcattrs\":{\"a\":\"_lcattrs 是用来存储用户自定义的一些键值对\"}}", "conv_id": "...", "transient": false}' \
   https://leancloud.cn/1.1/rtm/messages
 ```
 
@@ -259,6 +248,38 @@ no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户�
 利用 REST API 通过系统对话给用户发消息时，除了 conv_id 需要设置为对应系统对话的 ID 以外，还需要设置 to_peers（数组）指定实际接收消息的 Client ID。
 
 目前你可以在一次调用中传入至多 20 个 Client ID。
+
+### 系统对话发送广播消息
+
+利用 REST API 可以发送广播消息给全部用户。
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_peer": "1a", "message": "{\"_lctype\":-1,\"_lctext\":\"这是一个纯文本消息\",\"_lcattrs\":{\"a\":\"_lcattrs 是用来存储用户自定义的一些键值对\"}}", "conv_id": "..."}' \
+  https://leancloud.cn/1.1/rtm/broadcast
+```
+
+参数 | 约束 | 类型 | 说明
+---|---|---|---
+from_peer | | 字符串 | 消息的发件人 id
+conv_id | | 字符串 | 发送到对话 id，仅限于系统对话
+message | | 字符串 |消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+valid_till | 可选 | 数字 | 过期时间，UTC 时间戳（毫秒），最长为 1 个月之后。默认值为 1 个月后。
+push | 可选 | 字符串或 JSON 对象 | 附带的推送内容，如果设置，**所有** iOS 和 Windows Phone 用户会收到这条推送通知。
+
+Push 的格式与[推送 REST API 消息内容](push_guide.html#消息内容_Data) 中 `data` 下面的部分一致。如果您需要指定开发证书推送，需要在 push 的 json 中设置 `"_profile": "dev"`，例如：
+
+```
+{
+   "alert": "消息内容",
+   "category": "通知分类名称",
+   "badge": "Increment",
+   "_profile": "dev"
+}
+```
 
 ### 富媒体消息格式说明
 富媒体消息的参数格式相对于普通文本来说，仅仅是将 message 参数换成了一个 JSON **字符串**。

@@ -46,10 +46,10 @@
 - **应用 URL Scheme**：支持外部调用的 URL scheme，我们强制要求采用**域名反转**的方式，类似 Java 语言的 package 命名机制。假设你的应用的域名为 `myapp.company.com`，那么我们要求的 scheme 就是形如 `com.company.myapp` 的字符串。例如我们的 Todo Demo 设置的scheme为 `com.avoscloud.todo`。如果你没有域名，那么我们推荐你使用 `com.avoscloud.{appId的前8位}` 来作为 Scheme。我们会在保存的时候检测scheme是否冲突。
 - **应用 URL Host**：支持外部调用的 URL Host，可不设置，但是我们推荐默认值使用 `avoscloud`，防止跟其他 AppURL 提供商冲突。
 
-其他一些属性，都是用于设置你的应用的下载地址，例如:
+其他一些属性，都是用于设置你的应用的下载地址，例如：
 
-- iPhone 应用下载地址 -- 你的应用的 iPhone 版本的 App Store 下载链接，或者你的网站链接。
-- iPad 应用下载地址 -- 你的应用的 iPad 版本的 App Store 下载链接，或者你的网站链接。
+- iPhone 应用下载地址：你的应用的 iPhone 版本的 App Store 下载链接，或者你的网站链接。
+- iPad 应用下载地址：你的应用的 iPad 版本的 App Store 下载链接，或者你的网站链接。
 - ……
 
 这些链接都是可选的，当用户没有安装你的应用的时候，无法直接从搜索结果打开应用，将展示这些下载链接给用户下载你的应用。
@@ -62,7 +62,7 @@ https://leancloud.cn/1.1/go/{your uri scheme}/
 
 查看到你的 App URL 应用设置信息。
 
-例如我们的todo应用就是:
+例如，我们的 todo 应用就是：
 
 ```
 https://leancloud.cn/1.1/go/com.avoscloud.todo
@@ -72,7 +72,7 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
 
 在设置了应用内搜索，选择了适当的 URL Scheme 之后，你需要选择至少一个 Class 为它开启应用内搜索。开启后，该 Class 的数据将被 LeanCloud 自动建立索引，并且可以调用我们的搜索组件或者 API 搜索到内容。
 
-** 请注意，启用了搜索的 Class 数据，仍然只能被该应用的认证过的 API 搜索到，其次，搜索结果仍然遵循我们提供的 ACL 机制，如果你为 Class 里的Object设定了合理的ACL，那么搜搜结果也将遵循这些 ACL 值，保护你的数据安全。**
+**请注意，启用了搜索的 Class 数据，仍然只能被该应用的认证过的 API 搜索到。其次，搜索结果仍然遵循我们提供的 ACL 机制，如果你为 Class 里的 Object 设定了合理的 ACL，那么搜索结果也将遵循这些 ACL 值，保护你的数据安全。**
 
 在 Class 的 **其他** 菜单里新增了应用内搜索菜单，打开的截图如下：
 
@@ -130,24 +130,24 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo
 </div>
 ```
 
-在 LeanCloud 索引完成数据后，你应当可以通过下列URL访问到一条数据，如果在安装了 Todo Demo 应用的移动设备上访问下面这个URL，应该会打开应用展现这条 Todo 的内容:
+在 LeanCloud 索引完成数据后，你应当可以通过下列 URL 访问到一条数据，如果在安装了 Todo Demo 应用的移动设备上访问下面这个URL，应该会打开应用展现这条 Todo 的内容:
 
 ```
 https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18
 
 ```
 
-如果直接在 PC 浏览器[打开](https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18?render=true)，看到的应该是数据渲染页面，如图：
+如果直接在 PC 浏览器打开 <https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c9a18?render=true>，看到的应该是数据渲染页面，如图：
 
 ![image](images/todo_render.png)
 
 ### 第二步：使 App 支持外部调用
 
-在设置了和启用了 Class 应用内搜索之后，接下来，你需要让你的应用响应搜索结果的 URL 调用。
+在设置了和启用了 Class 应用内搜索之后，你需要让你的应用响应搜索结果的 URL 调用。
 
 #### Android 应用支持外部调用
 
-在 Android 里，我们可以通过为 Activity 注册 `intent-filter` 来实现。以我们的 Todo Demo 为例，我们想在 `CreateTodo` 这个 Activity 里面展现搜索出来的某一条 Todo 内容，在`AndroidManifest.xml`注册`intent-filter`配置如下
+在 Android 里，我们可以通过为 Activity 注册 `intent-filter` 来实现。以我们的 Todo Demo 为例，我们想在 `CreateTodo` 这个 Activity 里面展现搜索出来的某一条 Todo 内容，在 `AndroidManifest.xml` 注册 `intent-filter` 配置如下
 
 ``` xml
 <activity android:name="com.avos.demo.CreateTodo" >
@@ -163,16 +163,12 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c
 </activity>
 ```
 
-其中:
+- `android:scheme`：设置为你为应用选择的 URL Scheme，这里是 `com.avoscloud.todo`
+- `android:host`：设置为你为应用选择的 URL Host，默认为 `avoscloud`。
+- `android:pathPrefix`：具体的资源路径前缀，搜索结果的URL具体路径都将展现为`/classes/{className}/{objectId}`，这里的 className 就是 `Todo`，因此路径前缀为 `classes/Todo/`。
+- `action`：必须设置为`android.intent.action.VIEW`，并且加入 `DEFAULT` 和 `BROWSABLE` 的 Category。
 
-- android:scheme 设置为你为应用选择的 URL Scheme，这里是`com.avoscloud.todo`
-- android:host 设置为你为应用选择的 URL Host，默认为`avoscloud`。
-- android:pathPrefix  具体的资源路径前缀，搜索结果的URL具体路径都将展现为`/classes/{className}/{objectId}`，这里的 className 就是 `Todo`，因此路径前缀为`classes/Todo/`。
-- action必须设置为`android.intent.action.VIEW`，并且加入`DEFAULT`和`BROWSABLE`的Category。
-
-接下来在 `CreateTodo` Activity的`onCreate`方法里我们接收这个 action 并获取 URL 展现数据：
-
-
+接下来在 `CreateTodo` Activity的 `onCreate` 方法里我们接收这个 action 并获取 URL 展现数据：
 
 ``` java
    Intent intent = getIntent();
@@ -203,9 +199,7 @@ https://leancloud.cn/1.1/go/com.avoscloud.todo/classes/Todo/5371f3a9e4b02f7aee2c
 	}
 ```
 
-
-
-我们通过 adb 的 am 命令来测试配置是否有效，如果能够正常地调用`CreateTodo`页面，那证明配置正确：
+我们通过 adb 的 am 命令来测试配置是否有效，如果能够正常地调用 `CreateTodo`页面，则证明配置正确：
 
 ``` sh
 adb shell am start -W -a "android.intent.action.VIEW" -d "yourUri" yourPackageName
@@ -219,23 +213,22 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
   com.avos.demo
 ```
 
-如果一切正常的话，这将直接打开应用并在`CreateTodo`里展现 objectId 为`536cf746e4b0d914a19ec9b3`的 Todo 对象数据数据。
-
+如果一切正常的话，这将直接打开应用并在 `CreateTodo` 里展现 objectId 为 `536cf746e4b0d914a19ec9b3` 的 Todo 对象数据数据。
 
 
 #### iOS 应用支持外部调用
 
-你可以通过编辑应用 [information property list](http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Introduction/Introduction.html)，使得你的应用可以处理 URL Scheme. 下图展示了如何为你的应用注册 URL Scheme.
+你可以通过编辑应用 [information property list](http://developer.apple.com/library/ios/#documentation/general/Reference/InfoPlistKeyReference/Introduction/Introduction.html)，使得你的应用可以处理 URL Scheme。下图展示了如何为你的应用注册 URL Scheme。
 
 ![image](images/ios_register_url_scheme.png)
 
-需要注意的是，你这里的 URL Scheme 应该和你在我们网站上面设置的 URL Scheme保持一致。
+需要注意的是，你这里的 URL Scheme 应该和你在我们网站上面设置的 URL Scheme 保持一致。
 
 注册完了 URL Scheme，你还需要实现 [application method openURL](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplication_Class/Reference/Reference.html#jumpTo_37) 。对于 TodoDemo，应该按照如下方法实现。
 
 ``` objc
 /*
- * 与 Android 类似，这里的url.path 应该是 “com.avoscloud.todo://avoscloud/classes/Todo/5371f3a9e4b02f7aee2c9a18”
+ * 与 Android 类似，这里的 url.path 应该是 "com.avoscloud.todo://avoscloud/classes/Todo/5371f3a9e4b02f7aee2c9a18"
  */
 (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
     NSString *objectId = [url.path lastPathComponent];
@@ -251,24 +244,23 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
 ```
 
 
-
 ### 第三步：在应用内集成搜索组件
 
 #### Android 集成
 
 ##### 导入SDK
 
-你可以从 sdk_down.html 页面下载`应用内搜索`模块,解压缩avossearch.zip压缩包，将libs下的`avossearch-v{version}.jar`包加入你的libs下面。
+下载 [应用内搜索模块](sdk_down.html)，解压缩 `avossearch.zip`，将 `libs` 下的 `avossearch-v{version}.jar` 包加入你的 `libs` 下面。
 
-之后，你需要将res下的资源文件夹拷贝并且合并到你工程的res目录下，更改资源文件的内容并不影响SDK工作，但是请不要改动资源的文件名和文件内资源ID。
+之后，你需要将 `res` 下的资源文件夹拷贝并且合并到你工程的 `res` 目录下，更改资源文件的内容并不影响 SDK 工作，但是请不要改动资源的文件名和文件内资源 ID。
 
-- 应用内搜索组件的资源文件都以avoscloud_search打头。*
+应用内搜索组件的资源文件都以 `avoscloud_search` 开头。
 
 ##### 添加代码，实现基础功能
 
 ###### 配置 AndroidManifest.xml
 
-打开AndroidManifest.xml文件，在里面添加需要用到的activity和需要的权限:
+打开 `AndroidManifest.xml` 文件，在里面添加需要用到的 activity 和需要的权限:
 
 ``` xml
 <uses-permission android:name="android.permission.INTERNET" />
@@ -280,7 +272,7 @@ adb shell am start -W -a "android.intent.action.VIEW"  \
 	</application>
 ```
 
-*注：由于一些UI的原因，应用内搜索的最低API level要求是12，如你需要更低的版本支持，请参照文档中的高级定制部分进行开发。*
+注：由于一些 UI 的原因，**应用内搜索的最低 API level 要求是 12**，如你需要更低的版本支持，请参照文档中的高级定制部分进行开发。
 
 ###### 添加代码实现基础的应用内搜索功能
 
@@ -292,14 +284,14 @@ searchQuery.search();//即可打开一个显式搜索结果的Activity
 
 ###### 结果排序
 
-`AVSearchQuery`支持排序，通过`orderByAscending`和`orderByDescending`传入要排序的字段，就可以实现按照升序或者降序排序搜索结果。多字段排序，通过`addAscendingOrder`和`addDescendingOrder`来添加多个排序字段。大体上，这块 API 调用跟 `AVQuery`是类似的：
+`AVSearchQuery` 支持排序，通过 `orderByAscending` 和 `orderByDescending` 传入要排序的字段，就可以实现按照升序或者降序排序搜索结果。多字段排序，通过 `addAscendingOrder` 和 `addDescendingOrder` 来添加多个排序字段。大体上，这块 API 调用跟 `AVQuery` 是类似的：
 
 ``` java
 AVSearchQuery searchQuery = new AVSearchQuery("keyword");
 searchQuery.orderByAscending("score"); //根据score字段升序排序。
 ```
 
-更复杂的排序功能，例如根据地理位置信息远近来排序，或者排序的字段是一个数组，你想使用数组内的最高值来排序等，都需要通过`AVSearchSortBuilder`来定制。
+更复杂的排序功能，例如根据地理位置信息远近来排序，或者排序的字段是一个数组，你想使用数组内的最高值来排序等，都需要通过 `AVSearchSortBuilder` 来定制。
 
 根据地理信息位置排序：
 
@@ -316,11 +308,9 @@ builder.orderByDescending("scores","max","last");
 searchQuery.setSortBuilder(builder);
 ```
 
-更多方法请参考 API doc。
+更多方法请参考 API 文档。
 
-
-
-##### 　高级指定指南
+##### 高级指定指南
 
 由于每个应用的数据、UI展现要求都有很大的差别，所以单一的搜索组件界面仅仅能够满足较为简单的要求，所以我们将数据接口开放出来以便你能够方便的定制属于你自己的应用内搜索结果页面。
 
@@ -347,13 +337,13 @@ searchQuery.setSortBuilder(builder);
 	  });
 ```
 
-你也可以参考我们的SearchActivity来更好的指定你自己的搜索结果页面。`https://github.com/leancloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java`
+你也可以参考 [我们的 `SearchActivity`](`https://github.com/leancloud/avoscloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java) 来更好的指定你自己的搜索结果页面。
 
 ##### 分页查询
 
-通过`findInBackgroud`方法做定制查询的话，如果需要分页，你仅仅需要通过多次调用同一个`AVSearchQuery`的`findInBackgroud`即可实现翻页效果，它将返回下一页搜索结果，直到末尾。
+通过 `findInBackgroud` 方法做定制查询的话，如果需要分页，你仅仅需要通过多次调用同一个 `AVSearchQuery` 的 `findInBackgroud` 即可实现翻页效果，它将返回下一页搜索结果，直到末尾。
 
-搜索结果的文档总数可以通过`AVSearchQuery`的`getHits`方法得到。
+搜索结果的文档总数可以通过 `AVSearchQuery` 的 `getHits` 方法得到。
 
 ##### 查询语法简介
 
@@ -384,7 +374,7 @@ query.setQuery("age:(>=10 AND < 20)");//搜索年龄在[10,20)区间内的数据
   query.setQuery("qu?c*k");//此处?代表一个字符，*代表0个或者多个字符。类似正则表达式通配符
 ```
 
-更多更详细的语法资料，你可以参考 Elasticsearch 文档中 [Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)一节。
+更多更详细的语法资料，你可以参考 Elasticsearch 文档中 [Query-String-Syntax](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax) 一节。
 
 #### iOS 集成
 
@@ -413,7 +403,7 @@ searchQuery.fields = @[@"field1", @"field2"];
 
 有关查询语法，可以参考上文 Android 部分的介绍。
 
-对于分页，这里需要特别做出说明。因为每次请求都有 limit 限制，所以一次请求可能并不能获取到所有满足条件的记录。你可以多次调用同一个`AVSearchQuery` 的 `findObjects` 或者 `findInBackground` 获取余下的记录。另外，`hits` 属性用于标示所有满足查询条件的记录数。
+对于分页，这里需要特别做出说明。因为每次请求都有 limit 限制，所以一次请求可能并不能获取到所有满足条件的记录。你可以多次调用同一个 `AVSearchQuery` 的 `findObjects` 或者 `findInBackground` 获取余下的记录。另外，`hits` 属性用于标示所有满足查询条件的记录数。
 
 ``` objc
 /*!
@@ -467,11 +457,9 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
 
 ## 搜索 API
 
-
-
 我们提供一个 `/1.1/search/select` 来做应用内搜索，前提是你参考前面的文档，启用了应用内搜索。
 
-假设你对 GameScore 类启用了应用内搜索，你就可以尝试传入关键字来搜索，比如查询关键字`dennis`，限定返回结果 200 个，并且按照`score`降序排序：
+假设你对 GameScore 类启用了应用内搜索，你就可以尝试传入关键字来搜索，比如查询关键字 `dennis`，限定返回结果 200 个，并且按照 `score` 降序排序：
 
 ``` sh
 curl -X GET \
@@ -503,28 +491,30 @@ sid: "cXVlcnlUaGVuRmV0Y2g7Mzs0NDpWX0NFUmFjY1JtMnpaRDFrNUlBcTNnOzQzOlZfQ0VSYWNjUm
 
 查询的参数支持：
 
-- limit 返回集合大小，默认100，最大1000
-- sid: 第一次查询结果中返回的 sid 值，用于分页，对应于elasticsearch中的scoll id，可选
-- q: 查询文本，支持类似google的搜索语法，必须
-- fields: 逗号隔开的字段列表，可选，查询的字段列表
-- highlights: 高亮字段，可以是通配符 `*`，也可以是字段列表逗号隔开的字符串，可选。如果加入，返回结果会多出_highlight属性，表示高亮的搜索结果内容，关键字用`em`标签括起来。
-- clazz: 类名，可选，如果没有指定，则搜索所有启用了应用内搜索的 class
-- order: 排序字段，形如`-score,createdAt`逗号隔开的字段，负号表示倒序，可以多个字段组合排序，可选。
-- include: 关联查询内联的 Pointer 字段列表，逗号隔开，形如 `user,comment` 的字符串。**仅支持 include Pointer 类型**
-- sort: 复杂排序字段，例如地理位置信息排序，见下文描述。
+参数|约束|说明
+---|---|---
+`limit`||返回集合大小，默认 100，最大 1000
+`sid`|可选|第一次查询结果中返回的 sid 值，用于分页，对应于 elasticsearch 中的 scoll id。
+`q`|必须|查询文本，支持类似 google 的搜索语法。
+`fields`|可选|逗号隔开的字段列表，查询的字段列表
+<code class="text-nowrap">highlights</code>|可选|高亮字段，可以是通配符 `*`，也可以是字段列表逗号隔开的字符串。如果加入，返回结果会多出 `_highlight` 属性，表示高亮的搜索结果内容，关键字用 `em` 标签括起来。
+`clazz`|可选|类名，如果没有指定，则搜索所有启用了应用内搜索的 class。
+`order`|可选|排序字段，形如 `-score,createdAt` 逗号隔开的字段，负号表示倒序，可以多个字段组合排序。
+`include`||关联查询内联的 Pointer 字段列表，逗号隔开，形如 `user,comment` 的字符串。**仅支持 include Pointer 类型**。
+`sort`||复杂排序字段，例如地理位置信息排序，见下文描述。
 
 返回结果属性介绍：
 
-- results 符合查询条件的结果文档。
-- hits  符合查询条件的文档总数
-- sid 标记本次查询结果，下次查询继续传入这个 sid 用于查找后续的数据，用来支持翻页查询。
+- `results`：符合查询条件的结果文档。
+- `hits`：符合查询条件的文档总数
+- `sid`：标记本次查询结果，下次查询继续传入这个 sid 用于查找后续的数据，用来支持翻页查询。
 
 返回结果 results 列表里是一个一个的对象，字段是你在应用内搜索设置里启用的字段列表，并且有两个特殊字段：
 
 - `_app_url`: 应用内搜索结果在网站上的链接。
 - `_deeplink`: 应用内搜索的程序调用 URL，也就是 deeplink。
 
-最外层的`sid`用来标记本次查询结果，下次查询继续传入这个 sid 将翻页查找后 200 条数据：
+最外层的 `sid` 用来标记本次查询结果，下次查询继续传入这个 sid 将翻页查找后 200 条数据：
 
 ``` sh
 curl -X GET \
@@ -535,29 +525,27 @@ curl -X GET \
 
 直到返回结果为空。
 
-
-
 ### q 查询语法举例
 
 q 的查询走的是 elasticsearch 的 [query string 语法](http://www.elasticsearch.org/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-syntax)。建议详细阅读这个文档。这里简单做个举例说明。
 
 查询的关键字保留字符包括： `+ - = && || > < ! ( ) { } [ ] ^ " ~ * ? : \ /`，当出现这些字符的时候，请对这些保留字符做 URL Escape 转义。
 
-##### 基础查询语法
+#### 基础查询语法
 
-- 查询某个关键字，例如`可乐`。
-- 查询多个关键字，例如`可口 可乐`，空格隔开，返回的结果默认按照文本相关性排序，其他排序方法请参考上文中的 [order](#搜索_API) 和下文中的 [sort](#复杂排序)。
-- 查询某个短语，例如 `"lady gaga"`，注意用双引号括起来，这样才能保证查询出来的相关对象里的相关内容的关键字也是按照 `lady gaga` 的顺序出现。
-- 根据字段查询，例如根据 nickname 字段查询：`nickename:逃跑计划`
-- 复合查询，AND 或者 OR，例如 `nickname:(逃跑计划 OR 夜空中最亮的星)`
+- 查询某个关键字，例如 `可乐`。
+- 查询**多个关键字**，例如 `可口 可乐`，空格隔开，返回的结果默认按照文本相关性排序，其他排序方法请参考上文中的 [order](#搜索_API) 和下文中的 [sort](#复杂排序)。
+- 查询某个**短语**，例如 `"lady gaga"`，注意用双引号括起来，这样才能保证查询出来的相关对象里的相关内容的关键字也是按照 `lady gaga` 的顺序出现。
+- 根据**字段查询**，例如根据 nickname 字段查询：`nickename:逃跑计划`。
 - 根据字段查询，也可以是短语，记得加双引号在短语两侧： `nickename:"lady gaga"`
-- 假设 book 字段是 object 类型，那么可以根据内嵌字段来查询，例如 `book.name:clojure OR book.content:clojure`，也可以用通配符简写为 `book.\*:clojure`。
+- **复合查询**，AND 或者 OR，例如 `nickname:(逃跑计划 OR 夜空中最亮的星)`
+- 假设 book 字段是 object 类型，那么可以根据**内嵌字段**来查询，例如 `book.name:clojure OR book.content:clojure`，也可以用通配符简写为 `book.\*:clojure`。
 - 查询没有 title 的对象： `_missing_:title`。
-- 查询有 title 字段并且不是 null 的对象： `_exists_:title`。
+- 查询有 title 字段并且不是 null 的对象：`_exists_:title`。
 
 **上面举例根据字段查询，前提是这些字段在 class 的应用内搜索设置里启用了索引。**
 
-##### 通配符和正则查询
+#### 通配符和正则查询
 
 `qu?ck bro*` 就是一个通配符查询，`?` 表示一个单个字符，而 `*` 表示 0 个或者多个字符。
 
@@ -569,21 +557,24 @@ name:/joh?n(ath[oa]n)/
 
 正则的语法参考 [正则语法](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-regexp-query.html#regexp-syntax)。
 
-##### 模糊查询(Fuzziness)
+#### 模糊查询
 
-根据文本距离相似度来查询，例如 `quikc~`，默认根据 [Damerau-Levenshtein 文本距离算法](http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance)来查找最多两次变换的匹配项。
+根据文本距离相似度（Fuzziness）来查询。例如 `quikc~`，默认根据 [Damerau-Levenshtein 文本距离算法](http://en.wikipedia.org/wiki/Damerau-Levenshtein_distance)来查找最多两次变换的匹配项。
 
 例如这个查询可以匹配 `quick`、`qukic`、`qukci` 等。
 
-##### 范围查询
+#### 范围查询
 
-- 数字 1 到 5： `count:[1 TO 5]`
+```
+// 数字 1 到 5：
+count:[1 TO 5]
 
-- 2012年内： `date:[2012-01-01 TO 2012-12-31]`
+// 2012年内
+date:[2012-01-01 TO 2012-12-31]
 
-- 2012 年之前 ： `{* TO 2012-01-01}`
-
-  ​
+//2012 年之前
+{* TO 2012-01-01}
+```
 
 `[]` 表示闭区间，`{}` 表示开区间。
 
@@ -596,7 +587,7 @@ age:<10
 age:<=10
 ```
 
-##### 查询分组
+#### 查询分组
 
 查询可以使用括号分组：
 
@@ -604,18 +595,16 @@ age:<=10
 (quick OR brown) AND fox
 ```
 
-##### 特殊类型字段说明
+#### 特殊类型字段说明
 
 - objectId 在应用内搜索的类型为 string，因此可以按照字符串查询： `objectId: 558e20cbe4b060308e3eb36c`，不过这个没有特别必要了，你可以直接走 SDK 查询，效率更好。
 - createdAt 和 updatedAt 映射为 date 类型，例如 `createdAt:["2015-07-30T00:00:00.000Z" TO "2015-08-15T00:00:00.000Z"]` 或者 `updatedAt: [2012-01-01 TO 2012-12-31]`
 - 除了createdAt 和 updatedAt之外的 Date 字段类型，需要加上 `.iso` 后缀做查询： `birthday.iso: [2012-01-01 TO 2012-12-31]`
 - Pointer 类型，可以采用 `字段名.objectId` 的方式来查询： `player.objectId: 558e20cbe4b060308e3eb36c and player.className: Player`，pointer 只有这两个属性，应用内搜索不会 include 其他属性。
 - Relation 字段的查询不支持。
-- File 字段，可以根据 url 或者 id 来查询： `avartar.url: "https://leancloud.cn/docs/app_search_guide.html#搜索_API"`，无法根据文件内容做全文搜索。
+- File 字段，可以根据 url 或者 id 来查询：`avartar.url: "https://leancloud.cn/docs/app_search_guide.html#搜索_API"`，无法根据文件内容做全文搜索。
 
 ### 复杂排序
-
-
 
 假设你要排序的字段是一个数组，比如分数数组`scores`，你想根据平均分来倒序排序，并且没有分数的排最后，那么可以传入：
 
@@ -629,11 +618,11 @@ age:<=10
 {"scores":{"order":"desc","mode":"avg","missing":"_last"}}
 ```
 
-排序的字段作为key，字段可以设定下列选项：
+排序的字段作为 key，字段可以设定下列选项：
 
-- order  `asc`表示升序，`desc`表示降序
-- mode 如果该字段是多值属性或者数组，那么可以选择按照最小值(`min`)、最大值(`max`)、总和(`sum`)或者平均值(`sum`)来排序。
-- missing 决定缺失该字段的文档排序在开始还是最后，可以选择`_last`或者`_first`，或者指定一个默认值。
+- `order`：`asc` 表示升序，`desc` 表示降序
+- `mode`：如果该字段是多值属性或者数组，那么可以选择按照最小值 `min`、最大值 `max`、总和 `sum` 或者平均值 `avg` 来排序。
+- `missing`：决定缺失该字段的文档排序在开始还是最后，可以选择 `_last` 或者 `_first`，或者指定一个默认值。
 
 多个字段排序就类似：
 
@@ -648,13 +637,9 @@ age:<=10
 ]
 ```
 
-
-
 ### 地理位置信息查询
 
-
-
-如果 class 里某个列是 `GeoPoint`类型，那么可以根据这个字段的地理位置远近来排序，例如假设字段 `location` 保存的是 `GeoPoint`类型，那么查询 `[39.9, 116.4]` 附近的玩家可以通过设定 sort 为：
+如果 class 里某个列是 `GeoPoint` 类型，那么可以根据这个字段的地理位置远近来排序，例如假设字段 `location` 保存的是 `GeoPoint`类型，那么查询 `[39.9, 116.4]` 附近的玩家可以通过设定 sort 为：
 
 ``` json
 {
@@ -667,9 +652,4 @@ age:<=10
 }
 ```
 
-`order` 和  `mode` 含义跟上述复杂排序里的一致，`unit`用来指定距离单位，例如`km`表示千米，`m`表示米，`cm`表示厘米等。
-
-
-
-
-
+`order` 和  `mode` 含义跟上述复杂排序里的一致，`unit` 用来指定距离单位，例如 `km` 表示千米，`m` 表示米，`cm` 表示厘米等。

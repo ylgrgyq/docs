@@ -16,11 +16,11 @@
 
 在保存 installation 前，要先从 APNs 注册推送所需的 device token。可以选择使用 SDK 中提供的接口，也可以使用 Cocoa Touch 提供的原生接口。SDK 提供的接口封装了原生接口在不同版本 iOS 系统上的差异。
 
-`+[AVOSCloudIM registerForRemoteNotification]` 接口是一个快捷方法：
+`+[AVOSCloud registerForRemoteNotification]` 接口是一个快捷方法：
 
 ```objc
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [AVOSCloudIM registerForRemoteNotification];
+    [AVOSCloud registerForRemoteNotification];
 }
 ```
 
@@ -50,7 +50,7 @@
 除此之外，还可以使用 SDK 提供的更灵活的接口来注册不同类型的通知：
 
 ```objc
-@interface AVOSCloudIM : NSObject
+@interface AVOSCloud : NSObject
 
 + (void)registerForRemoteNotificationTypes:(NSUInteger)types categories:(NSSet *)categories AVIM_TV_UNAVAILABLE AVIM_WATCH_UNAVAILABLE;
 
@@ -71,7 +71,7 @@ SDK 将以上逻辑封装成了简单的方法，以上代码等价于：
 
 ```objc
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [AVOSCloudIM handleRemoteNotificationsWithDeviceToken:deviceToken];
+    [AVOSCloud handleRemoteNotificationsWithDeviceToken:deviceToken];
 }
 ```
 
@@ -89,7 +89,7 @@ deviceProfile|设备对应的后台自定义证书名称，用于多证书推送
 
 ```objc
 - (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
-    [AVOSCloudIM handleRemoteNotificationsWithDeviceToken:deviceToken constructingInstallationWithBlock:^(AVInstallation *currentInstallation) {
+    [AVOSCloud handleRemoteNotificationsWithDeviceToken:deviceToken constructingInstallationWithBlock:^(AVInstallation *currentInstallation) {
         currentInstallation.deviceProfile = @"driver-push-certificate";
     }];
 }
@@ -434,7 +434,7 @@ AVPush *push = [[AVPush alloc] init];
 ```
 
 
-你可以阅读 [Apple 本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1) 来更多地了解推送通知。
+你可以阅读 [Apple 本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1) 来更多地了解推送通知。
 
 ## 跟踪推送和应用的打开情况
 

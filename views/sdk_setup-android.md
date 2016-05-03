@@ -69,23 +69,25 @@ android {
 dependencies {
     compile ('com.android.support:support-v4:21.0.3')
 
-    //avoscloud-sdk 为 LeanCloud基础包
+    // LeanCloud 基础包
     compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
 
-    //avoscloud-push 为推送与实时聊天需要的包
+    // 推送与实时聊天需要的包
     compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
 
-    //avoscloud-statistics 为 LeanCloud 统计包
+    // LeanCloud 统计包
     compile ('cn.leancloud.android:avoscloud-statistics:v3.+')
 
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
+    // LeanCloud 用户反馈包
     compile ('cn.leancloud.android:avoscloud-feedback:v3.+@aar')
 
-    //avoscloud-sns 为 LeanCloud 第三方登录包
+    // avoscloud-sns：LeanCloud 第三方登录包
     compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
     compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
+    // 目前新浪微博官方只提供 jar 包的集成方式
+    // 请手动下载新浪微博 SDK 的 jar 包，将其放在 libs 目录下进行集成
 
-    //avoscloud-search 为 LeanCloud 应用内搜索包
+    // LeanCloud 应用内搜索包
     compile ('cn.leancloud.android:avoscloud-search:v3.+@aar')
 }
 ```
