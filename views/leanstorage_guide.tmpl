@@ -246,7 +246,7 @@ description     objectId
 #### {{relationObjectName}}
 对象可以与其他对象相联系。如前面所述，我们可以把一个 {{baseObjectName}} 的实例 a，当成另一个 {{baseObjectName}} 实例 b 的属性值保存起来。这可以解决数据之间一对一或者一对多的关系映射，就像关系型数据库中的主外键关系一样。
 
-例如，一个 TodoFolder 包含多个 Todo ，可以用如下代码实现：
+例如，一个 TodoFolder 包含一个 Todo ，可以用如下代码实现：
 
 {% block code_relation_todoFolder_one_to_many_todo %}{% endblock %}
 
