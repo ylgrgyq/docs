@@ -1,0 +1,217 @@
+# LeanEngine Node SDK 0.x 到 1.0 升级指南
+
+因为我们打算做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser，兼容 Promise/A+，升级到 JavaScript SDK 1.0），因此我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0.
+
+## 升级到新版本
+
+你可以通过 NPM 安装: `npm install 'leanengine@^1.0.0-beta'`，或者添加到 `package.json`:
+
+```json
+{
+  "dependencies": {
+    "leanengine": "^1.0.0-beta"
+  }
+}
+```
+
+## 废弃 currentUser
+
+[leanengine](https://www.npmjs.com/package/leanengine) 是供云引擎访问 LeanCloud API 的 Node 模块，它内部依赖了 JavaScript SDK. 因此和在浏览器中不同，LeanEngine 是一个「多用户」的环境，作为服务器端程序需要同时处理来在不同用户的请求，这是因为 Node.js 本身的异步模型，这些来自不同用户的请求会交织在一起，在同一个全局作用域中运行。
+
+JavaScript SDK 提供了 `AV.User.current()` 和其他一些函数全局地设置或获取用户状态，当（通过 `AV.User.logIn` 或 `AV.User.become`）设置了用户状态，后续的所有请求都会附带上这个用户的 sessionToken, 以便服务器知道以哪个用户的权限去执行这次操作。
+
+在之前的版本中 leanengine 模块使用了 Node.js 的 [domain](https://nodejs.org/api/domain.html) 模块来模拟全局的用户状态，但在 Node.js 0.12 发布之前官方就已将 domain 模块 [标记为 Deprecated](https://github.com/nodejs/node/issues/66)，但并没有给出替代方案。在之后的 Node.js 版本中，对 domain 的支持时好时坏，ES6 中新增的 Promise 也没有考虑 domain, 云引擎几次出现串号的故障都与 Node.js 的 domain 模块有关。
+
+因此在 leanengine 的 1.0 版本中，我们完全去除了 `AV.User.current()` 等用到全局用户状态的 API, 转而在 express 的 request 和 response 对象上操作用户信息，而所有会发起网络的操作（如保存一个对象）都需要自行传递 sessionToken 作为参数，虽然这样带来了一些不便，但其实其他所有的 Node.js/express 应用都是这样编写的。
+
+在 leanengine 1.0 之后，`AV.User.current()` 永远返回 null 并打印一条警告，如需获取当前请求的用户需要使用 `request.currentUser`：
+
+```javascript
+// 云函数
+AV.Cloud.define('profile', function(request, response) {
+  response.success({
+    name: request.currentUser.get('name')
+  });
+});
+
+// 普通 Express 路由
+app.get('/profile', function(request, response) {
+  response.json({
+    name: request.currentUser.get('name')
+  });
+});
+```
+
+需要注意从 express 的request 对象上获取 currentUser 和 sessionToken 需要你启用了 CookieSession 中间件：
+
+```javascript
+app.use(AV.Cloud.CookieSession({ secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true }));
+```
+
+废弃 currentUser 后，AV.User.logIn 也不会全局地存储用户信息，只是会返回登录后的 User 对象，需要自行保存，例如实现一个自定义的登录接口：
+
+```javascript
+app.get('/login', function(request, response) {
+  AV.User.login(request.body.name, request.body.password).then(function(user) {
+    response.saveCurrentUser(user);
+    response.send();
+  });
+});
+```
+
+在云引擎中如果调用了 `AV.Cloud.useMasterKey()`（通常写在 `server.js` 中），则所有操作都会以 masterKey 的权限来执行（会跳过包括 ACL 在内的规则限制），因此你需要在进行操作前检查用户的权限，例如实现修改文章时需要检查用户是文章的所有者，否则将会存在安全风险：
+
+```javascript
+app.post('/updatePost', function(request, response) {
+  (new AV.Query('Post')).get(request.body.id).then(function(post) {
+    if (request.currentUser.id == post.owner_id) {
+      post.save({
+        title: request.body.title
+      }).then(function() {
+        res.send();
+      });
+    } else {
+      res.sendStatus(403);
+    }
+  }).catch(console.error);
+});
+```
+
+如果没有使用 `AV.Cloud.useMasterKey()`，则在进行数据查改时必须在 `AVQuery.find`、`AVObject.fetch`, `AVObject.save` 之类的函数的 options 参数中加入一个 sessionToken, 这个 sessionToken 可以从 request 对象或 user 对象上得到：request 和 user 分别新增了 sessionToken 属性 和 getSessionToken 方法。
+
+```javascript
+app.get('/friends', function(request, response) {
+  getFriends(request.currentUser).then(function(friends) {
+    response.json(friends);
+  }, console.error);
+});
+
+function getFriends(user, otherOptions) {
+  var query = new AV.Query('Friends');
+  return query.equalTo('user', user).find({
+    sessionToken: user.getSessionToken()
+  });
+}
+```
+
+如果没有传递 sessionToken, 则不向服务器发送 sessionToken, 相当于匿名访问，很有可能出现没有权限的情况。
+
+## Promise/A+（不兼容）
+
+新版本默认启用与 Promise/A+ 兼容的错误处理逻辑，相当于自动执行了 `AV.Promise.setPromisesAPlusCompliant(true);`，Promise 的行为变化包括：
+
+当在一个已经解决的 Promise 上调用 then 时，onFulfilled 和 onRejected 会被添加到事件队列中，异步地被执行（而不是之前同步地执行）：
+
+```javascript
+Promise.as('some value').then(function(v) {
+  console.log(v);
+});
+
+console.log('synchronous code');
+```
+
+之前版本的输出：
+
+```
+some value
+synchronous code
+```
+
+1.0 之后的输出：
+
+```
+synchronous code
+some value
+```
+
+当在一个已经解决的 Promise 上调用 then 时，如果 onFulfilled 和 onRejected 抛出了异常，那么会返回一个 rejected 的 Promise（而不是之前同步地抛出一个异常）：
+
+```javascript
+try {
+  Promise.as('some value').then(function(v) {
+    throw new Error('some exception');
+  }).then(function() {
+    console.log('resolved');
+  }, function(err) {
+    console.log('rejected', err);
+  });
+} catch (err) {
+  console.log('Caught error', err);
+}
+```
+
+之前版本的输出：
+
+```
+Caught error [Error: some exception]
+```
+
+1.0 之后的输出：
+
+```
+rejected [Error: some exception]
+```
+
+当在一个 rejected 的 Promise 上调用 then 时，如果 onRejected 没有抛出异常也没有返回一个 rejected 的 Promise, 则返回一个 resolved 的 Promise（而不是之前返回一个 rejected 的 Promise）：
+
+```javascript
+Promise.error(new Error('some exception')).then(null, function() {
+  // do nothings
+}).then(function() {
+  console.log('resolved');
+}, function() {
+  console.log('rejected');
+});
+```
+
+之前版本的输出：
+
+```
+rejected
+```
+
+1.0 之后的输出：
+
+```
+resolved
+```
+
+## 初始化方式
+
+我们将初始化方式从 `app.use(AV.Cloud)` 改为了 `app.use(AV.express())`，这个修改给未来在初始化方法中传入选项留出了空间；同时你也应该使用 JavaScript SDK 的新初始化方式：
+
+```
+var app = require('express')();
+var AV = require('leanengine');
+
+AV.init({
+  appId: process.env.APP_ID,
+  appKey: process.env.LC_APP_KEY,
+  masterKey: process.env.LC_APP_MASTER_KEY
+});
+
+app.use(AV.express());
+
+app.listen(process.env.LC_APP_PORT);
+```
+
+## 新增功能
+
+* `cors`, `domain-wrapper`, `fetch-user`, `health-check`, `parse-leancloud-headers` 这些中间件都被拆分到了单独的文件，你可以通过 `var fetchUser = require('leanengine/fetch-user')` 这样的方式使用它们。
+* 为了和 JavaScript 保持一致，添加了 `AV.Cloud.rpc`, 该函数实际上是 `AV.Cloud.run` 的一个别名。
+* `AV.Cloud.run` 支持了一个 `remote` 选项，可以像 JavaScript SDK 一样通过 HTTP API 来调用云函数，而不是进行一个本地的函数调用。
+* `AV.Cloud.define` 支持了一个 `fetchUser` 选项，允许在定义时指定该云函数不需要获取用户信息，减少 API 调用次数。
+* 添加了一份简单的 API 文档：<https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md>
+
+## 升级检查清单
+
+* 是否改用了 `app.use(AV.express())` 来初始化中间件。
+* 是否将所有使用 `AV.User.current` 的地方改为了从 `request.currentUser`（Express）或 `request.user`（云函数）获取或直接传递 user 对象。
+* 在 Express 中，是否在调用 `AV.User.logIn`、`AV.User.become`、`AV.Cloud.logInByIdAndSessionToken`、`AV.User.signUp`、`user.signUp` 之后手动调用了 `response.saveCurrentUser`。
+* useMasterKey 的情况下是否在所有需要权限的操作处检查了发起请求的客户端的权限。
+* 没有 useMasterKey 的情况下是否在所有需要权限的网络请求处手工传递了来自 `request.sessionToken` 或 `user.getSessionToken` 的 sessionToken.
+* 是否将所有 `AV.User.logOut` 改为了 `user.logOut` 这样的实例方法，并在之后手动调用了 `response.clearCurrentUser()`
+* 调用 `AV.Cloud.run` 处是否传了 user 或 sessionToken 参数。
+* 是否依赖于 `AV.File` 的 owner 属性，如果是的话是否在所有构造 AV.File 处的 data 参数中传了 owner.
+* 程序中是否用到了私有 API（下划线开头，如 `AV._old_Cloud`、`AV.User._saveCurrentUser`、`process.domain` 等），若有用到需要更慎重地评估升级后的行为。
+* 是否有前文 Promise/A+ 一节提到的用法，是否已经将其改成了符合 Promise/A+ 的用法。
