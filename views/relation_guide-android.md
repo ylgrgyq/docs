@@ -200,14 +200,10 @@
         AVObject studentTom = new AVObject("Student");// 学生 Tom
         studentTom.put("name", "Tom");
 
-        AVObject courseLinearAlgebra = new AVObject("Course");// 线性代数
-        courseLinearAlgebra.put("name", "Linear Algebra");
-
-        AVObject courseObjectOrientedProgramming = new AVObject("Course");// 面向对象程序设计
-        courseObjectOrientedProgramming.put("name", "Object-Oriented Programming");
-
-        AVObject courseOperatingSystem = new AVObject("Course");// 操作系统
-        courseOperatingSystem.put("name", "Operating System");
+        // Course 对象们，需要先保存成功，有 objectId
+        AVObject courseLinearAlgebra = AVObject.createWithoutData("Course", "5729a2f079bc44005cd32097");// 线性代数
+        AVObject courseObjectOrientedProgramming = AVObject.createWithoutData("Course", "5729a3011ea4930064aeeaed");// 面向对象程序设计
+        AVObject courseOperatingSystem = AVObject.createWithoutData("Course", "5729a3072e958a0069478ff1");// 操作系统
 
         AVRelation<AVObject> relation = studentTom.getRelation("coursesChosen");// 新建一个 AVRelation，用来保存所选的课程
 
@@ -215,7 +211,6 @@
         relation.add(courseObjectOrientedProgramming);
         relation.add(courseOperatingSystem);
 
-        // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
         studentTom.saveInBackground();
 ```
 {% endblock %}

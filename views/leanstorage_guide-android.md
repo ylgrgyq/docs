@@ -363,24 +363,22 @@ fetchAllInBackground()
 {% block code_relation_todoFolder_one_to_many_todo %}
 
 ```java
-        final AVObject todo1 = new AVObject("Todo");
-        todo1.put("title", "工程师周会");
-        todo1.put("content", "每周工程师会议，周一下午2点");
-        todo1.put("location", "会议室");
-        todo1.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
+        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
+        todoFolder.put("name", "工作");
+        todoFolder.put("priority", 1);
 
-                AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
-                todoFolder.put("name", "工作");
-                todoFolder.put("priority", 1);
+        // Todo 对象们，需要先保存成功，有 objectId
+        AVObject todo1 = AVObject.createWithoutData("Todo", "572875ca1532bc00628c2be9");
+        AVObject todo2 = AVObject.createWithoutData("Todo", "5728710d5bbb500062b2c650");
+        AVObject todo3 = AVObject.createWithoutData("Todo", "57286e932e958a00657d1c36");
 
-                AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
-                relation.add(todo1);
+        AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
+        relation.add(todo1);
+        relation.add(todo2);
+        relation.add(todo3);
+        // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
 
-                todoFolder.saveInBackground();
-            }
-        });
+        todoFolder.saveInBackground();
 ```
 {% endblock %}
 

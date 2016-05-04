@@ -340,21 +340,22 @@ option.query = query;
 {% block code_relation_todoFolder_one_to_many_todo %}
 
 ```objc
-    AVObject *todo1 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo1 setObject:@"工程师周会" forKey:@"title"];
-    [todo1 setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo1 setObject:@"会议室" forKey:@"location"];
-    [todo1 saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        
-        AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-        [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-        [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-        
-        AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
-        [relation addObject:todo1];
-        
-        [todoFolder saveInBackground];// 保存到云端
-    }];
+    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
+    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
+    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
+    
+    // Todo 对象们，需要先保存成功，有 objectId
+    AVObject *todo1 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"572875ca1532bc00628c2be9"];
+    AVObject *todo2 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5728710d5bbb500062b2c650"];
+    AVObject *todo3 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"57286e932e958a00657d1c36"];
+    
+    AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
+    [relation addObject:todo1];
+    [relation addObject:todo2];
+    [relation addObject:todo3];
+    // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+    
+    [todoFolder saveInBackground];// 保存到云端
 ```
 {% endblock %}
 
