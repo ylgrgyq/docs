@@ -1,6 +1,18 @@
 # LeanEngine Node SDK 0.x 到 1.0 升级指南
 
-因为我们需要做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser，兼容 Promise/A+，升级到 JavaScript SDK 1.0），所以我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0.
+因为我们需要做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser、兼容 Promise/A+、升级到 JavaScript SDK 1.0），所以我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0，在本文末尾还有一份 [升级检查清单](#升级检查清单)。
+
+## 新特性
+
+* 提供了新的初始化方式，可以在初始化时传入参数，详见下文的 [初始化方式](#初始化方式)。
+* （细微不兼容）更新至 [JavaScript SDK 1.0](https://github.com/leancloud/javascript-sdk/releases)。
+* （不兼容）彻底废弃了 currentUser，默认开启 keepAlive（将会提高并发性能）、兼容了 Node.js 4 内建的 Promise，详见下文的 [废弃 currentUser](#废弃_currentUser)。
+* （不兼容）默认启用与 Promise/A+ 兼容的错误处理逻辑，详见下文的 [Promise/A+](#Promise_A_)。
+* `cors`, `fetch-user`, `health-check`, `parse-leancloud-headers` 等中间件都被拆分到了单独的文件，可以通过 `var fetchUser = require('leanengine/cors')` 这样的方式使用它们。
+* `AV.Cloud.run` 支持了一个 `remote` 选项，可以像 JavaScript SDK 一样通过 HTTP API 来调用云函数，而不是进行一个本地的函数调用。
+* `AV.Cloud.define` 支持了一个 `fetchUser` 选项，允许在定义时指定该云函数不需要获取用户信息，减少 API 调用次数。
+
+我们还为 Node SDK 添加了一份简单的 [API 文档](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md)。
 
 ## 升级到新版本
 
@@ -12,6 +24,25 @@
     "leanengine": "^1.0.0-beta"
   }
 }
+```
+
+## 初始化方式
+
+我们将初始化方式从 `app.use(AV.Cloud)` 改为了 `app.use(AV.express())`，这个修改给未来在初始化方法中传入选项留出了空间；同时你也应该使用 JavaScript SDK 的新初始化方式：
+
+```
+var app = require('express')();
+var AV = require('leanengine');
+
+AV.init({
+  appId: process.env.APP_ID,
+  appKey: process.env.LC_APP_KEY,
+  masterKey: process.env.LC_APP_MASTER_KEY
+});
+
+app.use(AV.express());
+
+app.listen(process.env.LC_APP_PORT);
 ```
 
 ## 废弃 currentUser
@@ -96,7 +127,7 @@ function getFriends(user, otherOptions) {
 
 如果没有传递 sessionToken, 则不向服务器发送 sessionToken, 相当于匿名访问，很有可能出现没有权限的情况。
 
-## Promise/A+（不兼容）
+## Promise/A+
 
 新版本默认启用与 Promise/A+ 兼容的错误处理逻辑，相当于自动执行了 `AV.Promise.setPromisesAPlusCompliant(true);`，Promise 的行为变化包括：
 
@@ -175,33 +206,6 @@ rejected
 ```
 resolved
 ```
-
-## 初始化方式
-
-我们将初始化方式从 `app.use(AV.Cloud)` 改为了 `app.use(AV.express())`，这个修改给未来在初始化方法中传入选项留出了空间；同时你也应该使用 JavaScript SDK 的新初始化方式：
-
-```
-var app = require('express')();
-var AV = require('leanengine');
-
-AV.init({
-  appId: process.env.APP_ID,
-  appKey: process.env.LC_APP_KEY,
-  masterKey: process.env.LC_APP_MASTER_KEY
-});
-
-app.use(AV.express());
-
-app.listen(process.env.LC_APP_PORT);
-```
-
-## 新增功能
-
-* `cors`, `domain-wrapper`, `fetch-user`, `health-check`, `parse-leancloud-headers` 这些中间件都被拆分到了单独的文件，你可以通过 `var fetchUser = require('leanengine/fetch-user')` 这样的方式使用它们。
-* 为了和 JavaScript 保持一致，添加了 `AV.Cloud.rpc`, 该函数实际上是 `AV.Cloud.run` 的一个别名。
-* `AV.Cloud.run` 支持了一个 `remote` 选项，可以像 JavaScript SDK 一样通过 HTTP API 来调用云函数，而不是进行一个本地的函数调用。
-* `AV.Cloud.define` 支持了一个 `fetchUser` 选项，允许在定义时指定该云函数不需要获取用户信息，减少 API 调用次数。
-* 添加了一份简单的 API 文档：<https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md>
 
 ## 升级检查清单
 
