@@ -1,6 +1,6 @@
-# LeanEngine Node SDK 0.x 到 1.0 升级指南
+# 升级到云引擎 Node.js SDK 1.0
 
-因为我们需要做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser、兼容 Promise/A+、升级到 JavaScript SDK 1.0），所以我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0，在本文末尾还有一份 [升级检查清单](#升级检查清单)。
+云引擎 Node.js SDK 1.0 包含有与之前版本不相兼容的修改和重要更新，如废弃了 currentUser、与 Promise/A+ 兼容、JavaScript SDK 升级到 1.0 等等，开发者需要按照以下指导操作，以确保平稳升级到这一版本，在本文末尾还有一份 [升级检查清单](#升级检查清单)。
 
 ## 新特性
 
@@ -10,13 +10,13 @@
 * （不兼容）默认启用与 Promise/A+ 兼容的错误处理逻辑，详见下文的 [Promise/A+](#Promise_A_)。
 * `cors`, `fetch-user`, `health-check`, `parse-leancloud-headers` 等中间件都被拆分到了单独的文件，可以通过 `var fetchUser = require('leanengine/cors')` 这样的方式使用它们。
 * `AV.Cloud.run` 支持了一个 `remote` 选项，可以像 JavaScript SDK 一样通过 HTTP API 来调用云函数，而不是进行一个本地的函数调用。
-* `AV.Cloud.define` 支持了一个 `fetchUser` 选项，允许在定义时指定该云函数不需要获取用户信息，减少 API 调用次数。
+* `AV.Cloud.define` 支持了一个 `fetchUser` 选项，指定为 false 时该云函数不会去获取用户信息，可以减少 API 调用次数。
 
 我们还为 Node SDK 添加了一份简单的 [API 文档](https://github.com/leancloud/leanengine-node-sdk/blob/master/API.md)。
 
 ## 升级到新版本
 
-你可以通过 NPM 安装: `npm install 'leanengine@^1.0.0-beta' --save`，或者添加到 `package.json`:
+你可以通过 NPM 安装: `npm install 'leanengine@^1.0.0-beta' --save`，或者在 `package.json` 中添加以下内容：
 
 ```json
 {
@@ -47,15 +47,15 @@ app.listen(process.env.LC_APP_PORT);
 
 ## 废弃 currentUser
 
-[leanengine](https://www.npmjs.com/package/leanengine) 是供云引擎访问 LeanCloud API 的 Node 模块，它内部依赖了 JavaScript SDK. 但和在浏览器中不同，LeanEngine 是一个「多用户」的环境，作为服务器端程序需要同时处理来自不同用户的请求。而 Node.js 本身是异步模型，这些来自不同用户的请求会交织在一起，在同一个全局作用域中运行。
+云引擎 Node.js SDK 是供云引擎访问 LeanCloud API 的 Node 模块，它内部依赖了 JavaScript SDK. 但和在浏览器中不同，云引擎是一个「多用户」的环境，作为服务器端程序需要同时处理来自不同用户的请求。而 Node.js 本身是异步模型，这些来自不同用户的请求会交织在一起，在同一个全局作用域中运行。
 
 JavaScript SDK 提供了 `AV.User.current()` 和其他一些函数全局地设置或获取用户状态，当（通过 `AV.User.logIn` 或 `AV.User.become`）设置了用户状态，后续的所有请求都会附带上这个用户的 sessionToken, 以便服务器知道以哪个用户的权限去执行这次操作。
 
-在之前的版本中 leanengine 模块使用了 Node.js 的 [domain](https://nodejs.org/api/domain.html) 模块来模拟全局的用户状态，但在 Node.js 0.12 发布之前官方就已将 domain 模块 [标记为 Deprecated](https://github.com/nodejs/node/issues/66)，但并没有给出替代方案。在之后的 Node.js 版本中，对 domain 的支持时好时坏，ES6 中新增的 Promise 也没有考虑 domain, 云引擎几次出现串号的故障都与 Node.js 的 domain 模块有关。
+在之前的版本中 Node.js SDK 使用了 Node.js 的 [domain](https://nodejs.org/api/domain.html) 模块来模拟全局的用户状态，但在 Node.js 0.12 发布之前官方就已将 domain 模块 [标记为 Deprecated](https://github.com/nodejs/node/issues/66)，但并没有给出替代方案。在之后的 Node.js 版本中，对 domain 的支持时好时坏，ES6 中新增的 Promise 也没有考虑 domain，这样就很容易给云引擎带来隐患。
 
-因此在 leanengine 的 1.0 版本中，我们完全去除了 `AV.User.current()` 等用到全局用户状态的 API, 转而在 express 的 request 和 response 对象上操作用户信息。同时你也需要在所有会发起网络的操作（如保存一个对象）都需要自行传递 sessionToken 作为参数；当然如果你在云引擎中用 `AV.Cloud.useMasterKey()` 关闭了权限检查，那么所有操作都是使用 masterKey 发起的，就不需要传递 sessionToken 了。
+因此在 Node.js SDK 的 1.0 版本中，我们完全去除了 `AV.User.current()` 等用到全局用户状态的 API, 转而在 express 的 request 和 response 对象上操作用户信息。同时你也需要在所有会发起网络的操作（如保存一个对象）都需要自行传递 sessionToken 作为参数；当然如果你在云引擎中用 `AV.Cloud.useMasterKey()` 关闭了权限检查，那么所有操作都是使用 masterKey 发起的，就不需要传递 sessionToken 了。
 
-在 leanengine 1.0 之后，`AV.User.current()` 永远返回 null 并打印一条警告，如需获取当前请求的用户需要使用 `request.currentUser`：
+在 Node.js SDK 1.0 之后，`AV.User.current()` 永远返回 null 并打印一条警告，如需获取当前请求的用户需要使用 `request.currentUser`：
 
 ```javascript
 // 云函数
