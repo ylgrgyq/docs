@@ -1,10 +1,10 @@
 # LeanEngine Node SDK 0.x 到 1.0 升级指南
 
-因为我们打算做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser，兼容 Promise/A+，升级到 JavaScript SDK 1.0），因此我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0.
+因为我们需要做几个非常重要的、但和之前版本不兼容的修改（废弃 currentUser，兼容 Promise/A+，升级到 JavaScript SDK 1.0），所以我们将 Node SDK 的版本升级到 1.0, 本文将介绍新版本包含的修改，并指导大家如何升级到 1.0.
 
 ## 升级到新版本
 
-你可以通过 NPM 安装: `npm install 'leanengine@^1.0.0-beta'`，或者添加到 `package.json`:
+你可以通过 NPM 安装: `npm install 'leanengine@^1.0.0-beta' --save`，或者添加到 `package.json`:
 
 ```json
 {
@@ -16,13 +16,13 @@
 
 ## 废弃 currentUser
 
-[leanengine](https://www.npmjs.com/package/leanengine) 是供云引擎访问 LeanCloud API 的 Node 模块，它内部依赖了 JavaScript SDK. 因此和在浏览器中不同，LeanEngine 是一个「多用户」的环境，作为服务器端程序需要同时处理来在不同用户的请求，这是因为 Node.js 本身的异步模型，这些来自不同用户的请求会交织在一起，在同一个全局作用域中运行。
+[leanengine](https://www.npmjs.com/package/leanengine) 是供云引擎访问 LeanCloud API 的 Node 模块，它内部依赖了 JavaScript SDK. 但和在浏览器中不同，LeanEngine 是一个「多用户」的环境，作为服务器端程序需要同时处理来自不同用户的请求。而 Node.js 本身是异步模型，这些来自不同用户的请求会交织在一起，在同一个全局作用域中运行。
 
 JavaScript SDK 提供了 `AV.User.current()` 和其他一些函数全局地设置或获取用户状态，当（通过 `AV.User.logIn` 或 `AV.User.become`）设置了用户状态，后续的所有请求都会附带上这个用户的 sessionToken, 以便服务器知道以哪个用户的权限去执行这次操作。
 
 在之前的版本中 leanengine 模块使用了 Node.js 的 [domain](https://nodejs.org/api/domain.html) 模块来模拟全局的用户状态，但在 Node.js 0.12 发布之前官方就已将 domain 模块 [标记为 Deprecated](https://github.com/nodejs/node/issues/66)，但并没有给出替代方案。在之后的 Node.js 版本中，对 domain 的支持时好时坏，ES6 中新增的 Promise 也没有考虑 domain, 云引擎几次出现串号的故障都与 Node.js 的 domain 模块有关。
 
-因此在 leanengine 的 1.0 版本中，我们完全去除了 `AV.User.current()` 等用到全局用户状态的 API, 转而在 express 的 request 和 response 对象上操作用户信息，而所有会发起网络的操作（如保存一个对象）都需要自行传递 sessionToken 作为参数，虽然这样带来了一些不便，但其实其他所有的 Node.js/express 应用都是这样编写的。
+因此在 leanengine 的 1.0 版本中，我们完全去除了 `AV.User.current()` 等用到全局用户状态的 API, 转而在 express 的 request 和 response 对象上操作用户信息。同时你也需要在所有会发起网络的操作（如保存一个对象）都需要自行传递 sessionToken 作为参数；当然如果你在云引擎中用 `AV.Cloud.useMasterKey()` 关闭了权限检查，那么所有操作都是使用 masterKey 发起的，就不需要传递 sessionToken 了。
 
 在 leanengine 1.0 之后，`AV.User.current()` 永远返回 null 并打印一条警告，如需获取当前请求的用户需要使用 `request.currentUser`：
 
@@ -42,13 +42,13 @@ app.get('/profile', function(request, response) {
 });
 ```
 
-需要注意从 express 的request 对象上获取 currentUser 和 sessionToken 需要你启用了 CookieSession 中间件：
+需要注意从 express 的 request 对象上获取 currentUser 和 sessionToken 需要你启用了 CookieSession 中间件：
 
 ```javascript
-app.use(AV.Cloud.CookieSession({ secret: '05XgTktKPMkU', maxAge: 3600000, fetchUser: true }));
+app.use(AV.Cloud.CookieSession({ secret: '<put random string here>', maxAge: 3600000, fetchUser: true }));
 ```
 
-废弃 currentUser 后，AV.User.logIn 也不会全局地存储用户信息，只是会返回登录后的 User 对象，需要自行保存，例如实现一个自定义的登录接口：
+废弃 currentUser 后，AV.User.logIn 也不会全局地存储用户信息，只是会返回登录后的 User 对象，需要自行用 saveCurrentUser 写入 Cookie 来在请求间保持登录状态，例如实现一个自定义的登录接口：
 
 ```javascript
 app.get('/login', function(request, response) {
@@ -65,7 +65,7 @@ app.get('/login', function(request, response) {
 app.post('/updatePost', function(request, response) {
   (new AV.Query('Post')).get(request.body.id).then(function(post) {
     if (request.currentUser.id == post.owner_id) {
-      post.save({
+      return post.save({
         title: request.body.title
       }).then(function() {
         res.send();
@@ -206,10 +206,10 @@ app.listen(process.env.LC_APP_PORT);
 ## 升级检查清单
 
 * 是否改用了 `app.use(AV.express())` 来初始化中间件。
-* 是否将所有使用 `AV.User.current` 的地方改为了从 `request.currentUser`（Express）或 `request.user`（云函数）获取或直接传递 user 对象。
+* 是否将所有使用 `AV.User.current` 的地方改为了从 `request.currentUser` 获取或直接传递 user 对象。
 * 在 Express 中，是否在调用 `AV.User.logIn`、`AV.User.become`、`AV.Cloud.logInByIdAndSessionToken`、`AV.User.signUp`、`user.signUp` 之后手动调用了 `response.saveCurrentUser`。
 * useMasterKey 的情况下是否在所有需要权限的操作处检查了发起请求的客户端的权限。
-* 没有 useMasterKey 的情况下是否在所有需要权限的网络请求处手工传递了来自 `request.sessionToken` 或 `user.getSessionToken` 的 sessionToken.
+* 没有 useMasterKey 的情况下是否在所有需要权限的网络请求处（`file.destroy`、`Object.saveAll`，`Object.destroyAll`、`object.fetch`、`object.save`、`object.destroy`, `Query.doCloudQuery`、`query.find`、`query.destroyAll`、`query.get`、`query.count`、`query.first`、`searchQuery.find`、`Status.sendStatusToFollowers`、`Status.sendPrivateStatus`、`Status.countUnreadStatuses`、`status.destroy`、`status.send`、`user.follow`、`user.unfollow`、`user.updatePassword`）手工传递了来自 `request.sessionToken` 或 `user.getSessionToken` 的 sessionToken.
 * 是否将所有 `AV.User.logOut` 改为了 `user.logOut` 这样的实例方法，并在之后手动调用了 `response.clearCurrentUser()`
 * 调用 `AV.Cloud.run` 处是否传了 user 或 sessionToken 参数。
 * 是否依赖于 `AV.File` 的 owner 属性，如果是的话是否在所有构造 AV.File 处的 data 参数中传了 owner.
