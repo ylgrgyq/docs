@@ -35,14 +35,14 @@ var app = require('express')();
 var AV = require('leanengine');
 
 AV.init({
-  appId: process.env.APP_ID,
-  appKey: process.env.LC_APP_KEY,
-  masterKey: process.env.LC_APP_MASTER_KEY
+  appId: process.env.LEANCLOUD_APP_ID,
+  appKey: process.env.LEANCLOUD_APP_KEY,
+  masterKey: process.env.LEANCLOUD_APP_MASTER_KEY
 });
 
 app.use(AV.express());
 
-app.listen(process.env.LC_APP_PORT);
+app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 
 ## 废弃 currentUser
@@ -209,13 +209,13 @@ resolved
 
 ## 升级检查清单
 
-* 是否改用了 `app.use(AV.express())` 来初始化中间件。
-* 是否将所有使用 `AV.User.current` 的地方改为了从 `request.currentUser` 获取或直接传递 user 对象。
-* 在 Express 中，是否在调用 `AV.User.logIn`、`AV.User.become`、`AV.Cloud.logInByIdAndSessionToken`、`AV.User.signUp`、`user.signUp` 之后手动调用了 `response.saveCurrentUser`。
-* useMasterKey 的情况下是否在所有需要权限的操作处检查了发起请求的客户端的权限。
-* 没有 useMasterKey 的情况下是否在所有需要权限的网络请求处（`file.destroy`、`Object.saveAll`，`Object.destroyAll`、`object.fetch`、`object.save`、`object.destroy`, `Query.doCloudQuery`、`query.find`、`query.destroyAll`、`query.get`、`query.count`、`query.first`、`searchQuery.find`、`Status.sendStatusToFollowers`、`Status.sendPrivateStatus`、`Status.countUnreadStatuses`、`status.destroy`、`status.send`、`user.follow`、`user.unfollow`、`user.updatePassword`）手工传递了来自 `request.sessionToken` 或 `user.getSessionToken` 的 sessionToken.
-* 是否将所有 `AV.User.logOut` 改为了 `user.logOut` 这样的实例方法，并在之后手动调用了 `response.clearCurrentUser()`
-* 调用 `AV.Cloud.run` 处是否传了 user 或 sessionToken 参数。
-* 是否依赖于 `AV.File` 的 owner 属性，如果是的话是否在所有构造 AV.File 处的 data 参数中传了 owner.
-* 程序中是否用到了私有 API（下划线开头，如 `AV._old_Cloud`、`AV.User._saveCurrentUser`、`process.domain` 等），若有用到需要更慎重地评估升级后的行为。
-* 是否有前文 Promise/A+ 一节提到的用法，是否已经将其改成了符合 Promise/A+ 的用法。
+* 改用 `app.use(AV.express())` 来初始化 Node SDK。
+* 将所有使用 `AV.User.current` 的地方改为从 `request.currentUser` 获取或直接传递 user 对象。
+* 在 Express 中，当调用 `AV.User.logIn`、`AV.User.become`、`AV.Cloud.logInByIdAndSessionToken`、`AV.User.signUp`、`user.signUp` 之后手动调用 `response.saveCurrentUser`。
+* 在 Express 中，将所有 `AV.User.logOut` 改为了 `user.logOut` 这样的实例方法，并在之后手动调用 `response.clearCurrentUser()`。
+* 在 useMasterKey 的情况下，在所有需要权限的操作处检查了发起请求的客户端的权限。
+* 没有 useMasterKey 的情况下，在所有需要权限的网络请求处（`file.destroy`、`Object.saveAll`，`Object.destroyAll`、`object.fetch`、`object.save`、`object.destroy`, `Query.doCloudQuery`、`query.find`、`query.destroyAll`、`query.get`、`query.count`、`query.first`、`searchQuery.find`、`Status.sendStatusToFollowers`、`Status.sendPrivateStatus`、`Status.countUnreadStatuses`、`status.destroy`、`status.send`、`user.follow`、`user.unfollow`、`user.updatePassword`）手工传递来自 `request.sessionToken` 或 `user.getSessionToken` 的 sessionToken.
+* 如果依赖于 `AV.File` 的 owner 属性，需要在所有构造 `AV.File` 处的 data 参数中传递 owner.
+* 在调用 `AV.Cloud.run` 处传递 user 或 sessionToken 参数。
+* 检查是否用到了私有 API（下划线开头，`AV._old_Cloud`、`AV.User._saveCurrentUser`，以及 `process.domain` 等），若有用到请发工单或在论坛联系我们。
+* 按照 [Promise/A+](#Promise_A_) 一节，将 Promise 的错误处理逻辑改为符合 Promise/A+ 标准的用法。
