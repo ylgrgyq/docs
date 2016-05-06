@@ -400,7 +400,7 @@ Apple 未来可能会修改推送证书的名字前缀，我们会及时更新�
 
 请参考 [Quartz 文档](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger)。
 
-### 云端代码都支持哪些语言
+### 云引擎都支持哪些语言
 
 目前支持 Node.js 和 Python 运行环境，未来可能还会引入 PHP 等其他语言。
 
