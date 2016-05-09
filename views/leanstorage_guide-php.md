@@ -26,6 +26,28 @@ try {
 ```
 {% endblock %}
 
+{% block code_save_object_by_cql %}
+
+```php
+// 执行 CQL 语句实现新增一个 TodoFolder 对象
+
+try {
+    $result = LeanQuery::doCloudQuery("INSERT INTO TodoFolder(name, priority) values('工作', 1)");
+    // 保存成功
+} catch (CloudException $ex) {
+    // 保存失败
+}
+```
+
+{% endblock %}
+
+{% block code_saveoption_query_example %}
+
+```php
+// To be supported.
+```
+{% endblock %}
+
 {% block code_quick_save_a_todo_with_location %}
 
 ```php
@@ -116,40 +138,31 @@ $anotherTodo->fetch();
 {% block code_object_fetchWhenSave %}
 
 ```
-    todo.fetchWhenSave = true;// 设置 fetchWhenSave 为 true
-    [todo saveInBackground];// 如此
+// To be supported.
 ```
 {% endblock %}
 
 {% block code_object_fetch_with_keys %}
 
-```objc
-    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-    NSArray *keys = [NSArray arrayWithObjects:@"priority", @"content",nil];// 指定刷新的 key 数组
-    [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-        // theTodo 的 location 和 content 属性的值就是与服务端一致的
-        NSString *location = [object objectForKey:@"location"];
-            NSString *content = object[@"content"];
-    }];
+```php
+// To be supported
 ```
 {% endblock %}
 
 {% block code_update_todo_location %}
 
-```objc
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-            [todo setObject:@"二楼大会议室" forKey:@"location"];
-            [todo saveInBackground];
-        } else {
-            // 失败的话，请检查网络环境以及 SDK 配置是否正确
-        }
-    }];
+```php
+$todo = new LeanObject("Todo");
+$todo->set("title", "工程师周会");
+$todo->set("content", "每周工程师会议，周一下午2点");
+$todo->set("location", "会议室");
+try {
+    $todo->save();
+    $todo->set("location", "二楼大会议室");
+    $todo->save();
+} catch Exception $ex {
+    // 失败的话，请检查网络环境以及 SDK 配置是否正确
+}
 ```
 {% endblock %}
 
@@ -307,20 +320,23 @@ $anotherTodo->fetch();
 {% block code_data_type %}
 
 ```php
-$testObject = new LeanObject("DataTypeTest");
+$testObject = new LeanObject("DataTypes");
+$bytesArray = LeanBytes::createFromBase64Data(base64_encode("Hello world!"));
 $testObject->set("testBoolean", true);
-$testObject->set("testInteger", 2014);
-$testObject->set("testString", "famous film name is 2014");
+$testObject->set("testInteger", 2015);
+$testObject->set("testString", "2015 年度音乐排行");
+$testObject->set("testData", $bytesArray);
 $testObject->set("testDate", new \DateTime());
-$testObject->set("testArray", array("famous film name is 2014", 2014, null));
-$testObject->set("testDictionary", array("number" => 2014,
-                                         "string" => "famous film name is 2014"));
+$testObject->set("testArray", array("2015 年度音乐排行", 2015, null));
+$testObject->set("testAssociativeArray",
+                 array("number" => 2015,
+                       "string" => "2015 年度音乐排行"));
 $testObject->save();
 ```
 
-此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
+此外，Array 和 Associative Array 支持嵌套，这样在一个 LeanObject 中就可以使用它们来储存更多的结构化数据。
 
-我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
+我们**不推荐**在 `LeanObject` 中使用 `LeanBytes` 来储存大块的二进制数据，比如图片或整个文件。**每个 `LeanObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `LeanFile`。更多细节可以阅读本文 [文件](#文件) 部分。
 
 若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
 {% endblock %}
