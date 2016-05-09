@@ -1,32 +1,4 @@
-{# 指定继承模板 #}
 {% extends "./leanstorage_guide.tmpl" %}
-
-{# --Start--变量定义，主模板使用的单词，短语所有子模板都必须赋值 #}
-{% set cloudName ="LeanCloud" %}
-{% set productName ="LeanStorage" %}
-{% set platform_title ="PHP" %}
-{% set segment_code ="php" %}
-{% set sdk_name ="PHP SDK" %}
-{% set baseObjectName ="LeanObject" %}
-{% set objectIdName ="objectId" %}
-{% set updatedAtName ="updatedAt" %}
-{% set createdAtName ="createdAt" %}
-{% set backgroundFunctionTemplate ="xxxxInBackground" %}
-{% set saveEventuallyName ="saveEventually" %}
-{% set deleteEventuallyName ="deleteEventually" %}
-{% set relationObjectName ="LeanRelation" %}
-{% set pointerObjectName ="AVPointer" %}
-{% set baseQueryClassName ="LeanQuery" %}
-{% set geoPointObjectName ="LeanGeoPoint" %}
-{% set userObjectName ="LeanUser" %}
-{% set fileObjectName ="LeanFile" %}
-{% set dateType= "DateTime" %}
-{% set byteType= "NSData" %}
-
-
-{# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
-
-{# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
 {% block code_create_todo_object %}
 
@@ -74,9 +46,9 @@ try {
 {% block code_save_todo_folder %}
 
 ```php
-$todoFolder = new LeanObject("TodoFolder");
-$todoFolder->set("name",     "工作"); // 设置名称
-$todoFolder->set("priority", 1);      // 设置优先级
+$todoFolder = new LeanObject("TodoFolder"); // 构建对象
+$todoFolder->set("name",     "工作");       // 设置名称
+$todoFolder->set("priority", 1);            // 设置优先级
 
 try {
     $todoFolder->save();
@@ -98,50 +70,46 @@ $todo  = $query->get("558e20cbe4b060308e3eb36c");
 
 {% block code_save_callback_get_objectId %}
 
-```objc
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，服务端就会自动添加这个字段
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-            NSLog(@"%@",todo.objectId);// 保存成功之后，objectId 会自动从服务端加载到本地
-        } else {
-            // 失败的话，请检查网络环境以及 SDK 配置是否正确
-        }
-    }];
+```php
+$todo = new LeanObject("Todo");
+$todo->set("title",   "工程师周会");
+$todo->set("content", "每周工程师会议，周一下午2点");
+$todo->set("location", "会议室"); // 只要添加这一行代码，服务端就会自动添加这个字段
+try {
+    $todo->save();
+    // 保存成功之后，objectId 会自动加载到对象
+    $todo->getObjectId();
+} catch (CloudException $ex) {
+    // 失败的话，请检查网络环境以及 SDK 配置是否正确
+}
 ```
 {% endblock %}
 
 {% block code_access_todo_folder_properties %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c" block:^(AVObject *object, NSError *error) {
-        // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-        int priority = [[object objectForKey:@"priority"] intValue];
-        NSString *location = [object objectForKey:@"location"];
-        NSString *title = object[@"title"];
-        NSString *content = object[@"content"];
-        
-        // 获取三个特殊属性
-        NSString *objectId = object.objectId;
-        NSDate *updatedAt = object.updatedAt;
-        NSDate *createdAt = object.createdAt;
-    }];
+```php
+$query = new LeanQuery("Todo");
+$todo  = $query->get("558e20cbe4b060308e3eb36c");
+// $todo 就是 ID 为 558e20cbe4b060308e3eb36c 的对象实例
+
+$todo->get("location");
+$todo->get("title");
+$todo->get("content");
+
+// 获取三个特殊属性
+$todo->getObjectId();
+$todo->getUpdatedAt();
+$todo->getCreatedAt();
+
 ```
 {% endblock %}
 
 {% block code_object_fetch %}
-
-```objc
-    // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
-    AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
-        // 然后调用刷新的方法，将数据从服务端拉到本地
-    [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        // 调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果是一样的。
-    }];
+```php
+// 假如已知了 objectId 可以用如下的方式构建一个 LeanObject
+$anotherTodo = LeanObject::create("Todo", "5656e37660b2febec4b35ed7");
+// 然后调用刷新的方法，将数据提取到对象
+$anotherTodo->fetch();
 ```
 {% endblock %}
 
@@ -152,7 +120,6 @@ $todo  = $query->get("558e20cbe4b060308e3eb36c");
     [todo saveInBackground];// 如此
 ```
 {% endblock %}
-
 
 {% block code_object_fetch_with_keys %}
 
@@ -339,27 +306,16 @@ $todo  = $query->get("558e20cbe4b060308e3eb36c");
 
 {% block code_data_type %}
 
-```objc
-NSNumber *boolean = @(YES);
-NSNumber *number = [NSNumber numberWithInt:2014];
-NSString *string = [NSString stringWithFormat:@"famous film name is %i", number];
-NSDate *date = [NSDate date];
-NSData *data = [@"fooBar" dataUsingEncoding:NSUTF8StringEncoding];
-NSArray *array = [NSArray arrayWithObjects:string, number, nil]; // NSArray
-NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                              number,@"number",
-                              string, @"string",nil];
-                              // NSDictionary
-
-AVObject *testObject = [AVObject objectWithClassName:@"DataTypeTest"];
-[testObject setObject:boolean    forKey:@"testBoolean"];
-[testObject setObject:number     forKey:@"testInteger"];
-[testObject setObject:string     forKey:@"testString"];
-[testObject setObject:date       forKey:@"testDate"];
-[testObject setObject:data       forKey:@"testData"];
-[testObject setObject:array      forKey:@"testArray"];
-[testObject setObject:dictionary forKey:@"testDictionary"];
-[testObject saveInBackground];
+```php
+$testObject = new LeanObject("DataTypeTest");
+$testObject->set("testBoolean", true);
+$testObject->set("testInteger", 2014);
+$testObject->set("testString", "famous film name is 2014");
+$testObject->set("testDate", new \DateTime());
+$testObject->set("testArray", array("famous film name is 2014", 2014, null));
+$testObject->set("testDictionary", array("number" => 2014,
+                                         "string" => "famous film name is 2014"));
+$testObject->save();
 ```
 
 此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
@@ -413,7 +369,6 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
     [todoFolder saveInBackground];// 保存到服务端
 ```
 {% endblock %}
-
 
 {% block code_data_protocol_save_date %}{% endblock %}
 
@@ -916,8 +871,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```objc
     [query whereKey:@"whereCreated"  nearGeoPoint:point withinKilometers:2.0];
 ```
-{% endblock %} code_object_fetch_with_keys
-
+{% endblock %}
 
 {% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
 
@@ -1301,10 +1255,11 @@ student.name = @"小明";
   }];
 ```
 {% endblock %}
+
 {% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
+
 {% block link_to_status_system_doc %}[iOS / OS X 应用内社交模块](status_system.html#iOS_SDK){% endblock %}
+
 {% block link_to_sns_doc %}[iOS / OS X SNS 开发指南](sns.html#iOS_SNS_组件){% endblock %}
+
 {% block link_to_feedback_doc %}[iOS / OS X 用户反馈指南](feedback.html#iOS_反馈组件){% endblock %}
-
-{# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
-
