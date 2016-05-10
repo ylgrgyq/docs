@@ -4611,7 +4611,7 @@ body.news {
       background-repeat: no-repeat;
       background-position: center center;
 
-      @platforms: ios osx android js python unity dotnet;
+      @platforms: ios osx android js python unity dotnet php;
       @n: length(@platforms);
 
       .generate-platform-loop(@n, @i: 1) when (@i =< @n) {
@@ -4682,12 +4682,23 @@ body.news {
       line-height: 2;
     }
 
+    .footer {
+      padding: 40px 0 76px;
+    }
+
     &-storage {
 
       .hero-headline,
       .sub-feat-icon,
       .sub-feat-title {
         color: @homepage-link-1;
+      }
+
+      .footer .details-link {
+        &, &:hover, &:focus {
+          color: @homepage-link-1;
+          border-color: @homepage-link-1;
+        }
       }
 
       // .sub-feat-type {
@@ -4704,6 +4715,13 @@ body.news {
       .sub-feat-title {
         color: @homepage-link-2;
       }
+
+      .footer .details-link {
+        &, &:hover, &:focus {
+          color: @homepage-link-2;
+          border-color: @homepage-link-2;
+        }
+      }
     }
 
     &-analytics {
@@ -4713,6 +4731,13 @@ body.news {
       .sub-feat-title {
         color: @homepage-link-3;
       }
+
+      .footer .details-link {
+        &, &:hover, &:focus {
+          color: @homepage-link-3;
+          border-color: @homepage-link-3;
+        }
+      }
     }
 
     &-modules {
@@ -4721,6 +4746,13 @@ body.news {
       .sub-feat-icon,
       .sub-feat-title {
         color: @homepage-link-4;
+      }
+
+      .footer .details-link {
+        &, &:hover, &:focus {
+          color: @homepage-link-4;
+          border-color: @homepage-link-4;
+        }
       }
     }
   }
@@ -4783,7 +4815,6 @@ body.news {
   .intro-section-5 {
 
     .table-compare-wrap {
-      overflow: scroll;
       margin: 60px 0 90px;
 
       @media (max-width: @screen-xs-max) {
@@ -4791,14 +4822,14 @@ body.news {
         margin-left: -(@grid-gutter-width / 2);
         margin-right: -(@grid-gutter-width / 2);
         -webkit-overflow-scrolling: touch;
+
+        tbody {
+          min-width: 650px;
+        }
       }
     }
 
     .table-compare {
-
-      @media (max-width: @screen-xs) {
-        min-width: 800px;
-      }
 
       small,
       var {
@@ -5212,13 +5243,22 @@ body.news {
   left: 0;
   z-index: 10000;
   width: 100%;
-  background: fade(#fff, 80%);
+  background: fade(#fff, 96%);
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
   padding: 15px 0;
   opacity: .5;
   transition: all .6s ease;
   transform: translate3d(0, 100px, 0);
-  -webkit-backdrop-filter: blur(20px);
+
+  // Safari-only override
+  @supports (-webkit-backdrop-filter: blur(15px)) {
+
+    // TOOD: it seems a bug that Less won't create nested class for its parent.
+    .pricing-total-fixed {
+      background: fade(#fff, 60%);
+      -webkit-backdrop-filter: blur(15px);
+    }
+  }
 
   &.on {
     opacity: 1;
