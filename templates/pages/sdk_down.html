@@ -89,9 +89,12 @@
               </div>
             </div>
             <div class="col-sm-4" ng-repeat="m in download.osx.optional">
-              <label class="checkbox">
-                <input type="checkbox" name="osx" ng-model="downselect.osx[m.name]"> {{m.name}}
-              </label>
+              <div class="checkbox custom-control">
+                <label class="checkbox">
+                  <input type="checkbox" name="osx" ng-model="downselect.osx[m.name]">
+                  <span class="control-indicator"></span> {{m.name}}
+                </label>
+              </div>
             </div>
           </div>
 
