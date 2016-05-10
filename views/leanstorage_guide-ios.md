@@ -344,18 +344,35 @@ option.query = query;
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
     
-    // Todo 对象们，需要先保存成功，有 objectId
-    AVObject *todo1 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"572875ca1532bc00628c2be9"];
-    AVObject *todo2 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5728710d5bbb500062b2c650"];
-    AVObject *todo3 = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"57286e932e958a00657d1c36"];
+    AVObject *todo1 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo1 setObject:@"工程师周会" forKey:@"title"];
+    [todo1 setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
+    [todo1 setObject:@"会议室" forKey:@"location"];
     
-    AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
-    [relation addObject:todo1];
-    [relation addObject:todo2];
-    [relation addObject:todo3];
-    // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+    AVObject *todo2 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo2 setObject:@"维护文档" forKey:@"title"];
+    [todo2 setObject:@"每天 16：00 到 18：00 定期维护文档" forKey:@"content"];
+    [todo2 setObject:@"当前工位" forKey:@"location"];
     
-    [todoFolder saveInBackground];// 保存到云端
+    AVObject *todo3 = [[AVObject alloc] initWithClassName:@"Todo"];
+    [todo3 setObject:@"发布 SDK" forKey:@"title"];
+    [todo3 setObject:@"每周一下午 15：00" forKey:@"content"];
+    [todo3 setObject:@"SA 工位" forKey:@"location"];
+    
+    [AVObject saveAllInBackground:[NSArray arrayWithObjects:todo1,todo2,todo3,nil] block:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            // 网络错误
+        } else {
+            // 保存成功
+            AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
+            [relation addObject:todo1];
+            [relation addObject:todo2];
+            [relation addObject:todo3];
+            // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+            
+            [todoFolder saveInBackground];// 保存到云端
+        }
+    }];
 ```
 {% endblock %}
 

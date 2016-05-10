@@ -180,19 +180,29 @@
     AVObject *studentTom = [[AVObject alloc] initWithClassName:@"Student"];// 学生 Tom
     [studentTom setObject:@"Tom" forKey:@"name"];
     
-
-    // Course 对象们，需要先保存成功，有 objectId
-    AVObject *courseLinearAlgebra = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"5729a2f079bc44005cd32097"];// 线性代数
-    AVObject *courseObjectOrientedProgramming = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"5729a3011ea4930064aeeaed"];// 面向对象程序设计
-    AVObject *courseOperatingSystem = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"5729a3072e958a0069478ff1"];// 操作系统
+    AVObject *courseLinearAlgebra = [[AVObject alloc] initWithClassName:@"Course"];// 线性代数
+    [courseLinearAlgebra setObject:@"Linear Algebra" forKey:@"name"];
     
-    AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];// 新建一个 AVRelation，用来保存所选的课程
+    AVObject *courseObjectOrientedProgramming = [[AVObject alloc] initWithClassName:@"Course"];// 面向对象程序设计
+    [courseObjectOrientedProgramming setObject:@"Object-Oriented Programming" forKey:@"name"];
     
-    [relation addObject:courseLinearAlgebra];
-    [relation addObject:courseObjectOrientedProgramming];
-    [relation addObject:courseOperatingSystem];
-
-    [studentTom saveInBackground];
+    AVObject *courseOperatingSystem = [[AVObject alloc] initWithClassName:@"Course"];// 操作系统
+    [courseOperatingSystem setObject:@"Operating System" forKey:@"name"];
+    
+    [AVObject saveAllInBackground:[NSArray arrayWithObjects:courseLinearAlgebra,courseObjectOrientedProgramming,courseOperatingSystem,nil] block:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            // 网络错误
+        } else {
+            // 保存成功
+            AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];// 新建一个 AVRelation，用来保存所选的课程
+            [relation addObject:courseLinearAlgebra];
+            [relation addObject:courseObjectOrientedProgramming];
+            [relation addObject:courseOperatingSystem];
+            
+            // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
+            [studentTom saveInBackground];
+        }
+    }];
 ```
 {% endblock %}
 

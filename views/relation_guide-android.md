@@ -197,21 +197,29 @@
 {% block code_save_student_related_to_course_with_relation %}
 
 ```java
-        AVObject studentTom = new AVObject("Student");// 学生 Tom
+        final AVObject studentTom = new AVObject("Student");// 学生 Tom
         studentTom.put("name", "Tom");
 
-        // Course 对象们，需要先保存成功，有 objectId
-        AVObject courseLinearAlgebra = AVObject.createWithoutData("Course", "5729a2f079bc44005cd32097");// 线性代数
-        AVObject courseObjectOrientedProgramming = AVObject.createWithoutData("Course", "5729a3011ea4930064aeeaed");// 面向对象程序设计
-        AVObject courseOperatingSystem = AVObject.createWithoutData("Course", "5729a3072e958a0069478ff1");// 操作系统
+        final AVObject courseLinearAlgebra = new AVObject("Course");// 线性代数
+        courseLinearAlgebra.put("name", "Linear Algebra");
 
-        AVRelation<AVObject> relation = studentTom.getRelation("coursesChosen");// 新建一个 AVRelation，用来保存所选的课程
+        final AVObject courseObjectOrientedProgramming = new AVObject("Course");// 面向对象程序设计
+        courseObjectOrientedProgramming.put("name", "Object-Oriented Programming");
 
-        relation.add(courseLinearAlgebra);
-        relation.add(courseObjectOrientedProgramming);
-        relation.add(courseOperatingSystem);
+        final AVObject courseOperatingSystem = new AVObject("Course");// 操作系统
+        courseOperatingSystem.put("name", "Operating System");
 
-        studentTom.saveInBackground();
+        AVObject.saveAllInBackground(Arrays.asList(courseLinearAlgebra, courseObjectOrientedProgramming, courseOperatingSystem), new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVRelation<AVObject> relation = studentTom.getRelation("coursesChosen");// 新建一个 AVRelation，用来保存所选的课程
+                relation.add(courseLinearAlgebra);
+                relation.add(courseObjectOrientedProgramming);
+                relation.add(courseOperatingSystem);
+
+                studentTom.saveInBackground();
+            }
+        });
 ```
 {% endblock %}
 
