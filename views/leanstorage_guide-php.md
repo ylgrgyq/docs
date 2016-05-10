@@ -30,7 +30,6 @@ try {
 
 ```php
 // 执行 CQL 语句实现新增一个 TodoFolder 对象
-
 try {
     $result = LeanQuery::doCloudQuery("INSERT INTO TodoFolder(name, priority) values('工作', 1)");
     // 保存成功
@@ -45,8 +44,7 @@ try {
 
 ```php
 // To be supported.
-```
-{% endblock %}
+```{% endblock %}
 
 {% block code_quick_save_a_todo_with_location %}
 
@@ -69,8 +67,8 @@ try {
 
 ```php
 $todoFolder = new LeanObject("TodoFolder"); // 构建对象
-$todoFolder->set("name",     "工作");       // 设置名称
-$todoFolder->set("priority", 1);            // 设置优先级
+$todoFolder->set("name", "工作");           // 设置名称
+$todoFolder->set("priority", 1);           // 设置优先级
 
 try {
     $todoFolder->save();
@@ -135,6 +133,14 @@ $anotherTodo->fetch();
 ```
 {% endblock %}
 
+{% block code_update_object_by_cql %}
+
+```php
+        // 执行 CQL 语句实现更新一个 TodoFolder 对象
+        LeanCloud.doCloudquery("update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'");
+```
+{% endblock %}
+
 {% block code_object_fetchWhenSave %}
 
 ```
@@ -168,169 +174,151 @@ try {
 
 {% block code_atomic_operation_increment %}
 
-```objc
-    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-    [theTodo setObject:[NSNumber numberWithInt:0] forKey:@"views"]; //初始值为 0
-    [theTodo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        // 原子增加查看的次数
-        [theTodo incrementKey:@"views"];
-        theTodo.fetchWhenSave = true;
-        [theTodo saveInBackground];
-        // 也可以使用 incrementKey:byAmount: 来给 Number 类型字段累加一个特定数值。
-        [theTodo incrementKey:@"views" byAmount:@(5)];
-        [theTodo saveInBackground];
-        //saveInBackground 调用之后，如果成功的话，对象的计数器字段是当前系统最新值。
-    }];
+```php
+$theTodo = LeanObject::create("Todo", "564d7031e4b057f4f3006ad1");
+$theTodo->set("views", 0); //初始值为 0
+
+$theTodo->increment("views", 5); // 原子增加查看的次数
+$theTodo->save();
+
+$theTodo->increment("views"); // 默认加 1
+$theTodo->save();
 ```
+
 {% endblock %}
 
 {% block code_atomic_operation_array %}
 
-* `addObject:forKey:`<br>
-  `addObjectsFromArray:forKey:`<br>
+* `addIn()`<br>
   将指定对象附加到数组末尾。
-* `addUniqueObject:forKey:`<br>
-  `addUniqueObjectsFromArray:forKey:`<br>
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
-* `removeObject:forKey:`<br>
-  `removeObjectsInArray:forKey:`<br>
+* `addUniqueIn()`<br>
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。
+* `removeIn()`<br>
   从数组字段中删除指定对象的所有实例。
 
 {% endblock %}
 
 {% block code_set_array_value %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
-}
+```php
+$reminder1 = new \DateTime("2015-11-11 07:10:00");
+$reminder2 = new \DateTime("2015-11-11 07:20:00");
+$reminder3 = new \DateTime("2015-11-11 07:30:00");
 
--(void)addReminders{
-    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 07:10:00"];
-    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 07:20:00"];
-    NSDate *reminder3= [self getDateWithDateString:@"2015-11-11 07:30:00"];
-    
-    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,reminder3, nil];// 添加提醒时间
-    
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo addUniqueObjectsFromArray:reminders forKey:@"reminders"];
-    [todo saveInBackground];
-}
+$todo = new LeanObject("Todo");
+$todo->addUniqueIn("reminders", $reminder1);
+$todo->addUniqueIn("reminders", $reminder2);
+$todo->addUniqueIn("reminders", $reminder3);
 ```
+
 {% endblock %}
 
 {% block code_batch_operation %}
 
-```objc
+```php
 // 批量创建、更新
-+ (BOOL)saveAll:(NSArray *)objects error:(NSError **)error;
-+ (void)saveAllInBackground:(NSArray *)objects
-						  block:(AVBooleanResultBlock)block; 
+saveAll()
 
 // 批量删除
-+ (BOOL)deleteAll:(NSArray *)objects error:(NSError **)error;
-+ (void)deleteAllInBackground:(NSArray *)objects
-                        block:(AVBooleanResultBlock)block;
+destroyAll()
 
 // 批量获取
-+ (BOOL)fetchAll:(NSArray *)objects error:(NSError **)error;
-+ (void)fetchAllInBackground:(NSArray *)objects
-                       block:(AVArrayResultBlock)block;                        
+fetchAll()
 ```
 {% endblock %}
 
 {% block code_batch_set_todo_completed %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *todos = objects;
-        for (AVObject *todo in todos) {
-            todo[@"status"] = @1;
-        }
-        
-        [AVObject saveAllInBackground:todos block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                // 网络错误
-            } else {
-                // 保存成功
-            }
-        }];
-    }];
+```php
+$query = new LeanQuery("Todo");
+$todos = $query->find();
+
+forEach ($todos as $todo) {
+    $todo->set("status", 1);
+}
+try {
+    LeanObject::saveAll($todos);
+    // 保存成功
+} catch (CloudException $ex) {
+    // 保存失败
+}
 ```
 
 {% endblock %}
 
 {% block code_delete_todo_by_objectId %}
 
-```objc
-    [todo deleteInBackground];
+```php
+$todo->destroy();
 ```
+
 {% endblock %}
 
 {% block code_relation_todoFolder_one_to_many_todo %}
 
-```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    
-    AVObject *todo1 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo1 setObject:@"工程师周会" forKey:@"title"];
-    [todo1 setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo1 setObject:@"会议室" forKey:@"location"];
-    
-    AVObject *todo2 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo2 setObject:@"维护文档" forKey:@"title"];
-    [todo2 setObject:@"每天 16：00 到 18：00 定期维护文档" forKey:@"content"];
-    [todo2 setObject:@"当前工位" forKey:@"location"];
-    
-    AVObject *todo3 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo3 setObject:@"发布 SDK" forKey:@"title"];
-    [todo3 setObject:@"每周一下午 15：00" forKey:@"content"];
-    [todo3 setObject:@"SA 工位" forKey:@"location"];
-    
-    AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
-    [relation addObject:todo1];
-    [relation addObject:todo2];
-    [relation addObject:todo3];
-    // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
-    
-    [todoFolder saveInBackground];// 保存到云端
+```php
+        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
+        todoFolder.put("name", "工作");
+        todoFolder.put("priority", 1);
+
+        AVObject todo1 = new AVObject("Todo");
+        todo1.put("title", "工程师周会");
+        todo1.put("content", "每周工程师会议，周一下午2点");
+        todo1.put("location", "会议室");
+
+        AVObject todo2 = new AVObject("Todo");
+        todo2.put("title", "维护文档");
+        todo2.put("content", "每天 16：00 到 18：00 定期维护文档");
+        todo2.put("location", "当前工位");
+
+        AVObject todo3 = new AVObject("Todo");
+        todo3.put("title", "发布 SDK");
+        todo3.put("content", "每周一下午 15：00");
+        todo3.put("location", "SA 工位");
+
+        AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
+        relation.add(todo1);
+        relation.add(todo2);
+        relation.add(todo3);
+        // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+
+        todoFolder.saveInBackground();
 ```
 {% endblock %}
 
 {% block code_pointer_comment_one_to_many_todoFolder %}
 
-```objc
-    AVObject *comment = [[AVObject alloc] initWithClassName:@"Comment"];// 构建 Comment 对象
-    [comment setObject:@1 forKey:@"like"];// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
-    [comment setObject:@"content" forKey:@"这个太赞了！楼主，我也要这些游戏，咱们团购么？"];// 留言的内容
-    
-    // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
-    [comment setObject:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"] forKey:@"targetTodoFolder"];
-    // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
+```java
+        AVObject comment = new AVObject("Comment");// 构建 Comment 对象
+        comment.put("like", 1);// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
+        comment.put("content", "这个太赞了！楼主，我也要这些游戏，咱们团购么？");// 留言的内容
+
+        // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
+        comment.put("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
+        // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
 ```
 
 {% endblock %}
 
 {% block code_data_type %}
-
 ```php
-$testObject = new LeanObject("DataTypes");
+$bool = true;
+$number = 2015;
+$string = $number . " 年度音乐排行";
+$date = new \DateTime();
 $bytesArray = LeanBytes::createFromBase64Data(base64_encode("Hello world!"));
-$testObject->set("testBoolean", true);
-$testObject->set("testInteger", 2015);
-$testObject->set("testString", "2015 年度音乐排行");
+
+$testObject = new LeanObject("DataTypes");
+
+$testObject->set("testBoolean", $bool);
+$testObject->set("testInteger", $number);
+$testObject->set("testString", $string);
 $testObject->set("testData", $bytesArray);
-$testObject->set("testDate", new \DateTime());
-$testObject->set("testArray", array("2015 年度音乐排行", 2015, null));
+$testObject->set("testDate", $date);
+$testObject->set("testArray", array($string, $number));
 $testObject->set("testAssociativeArray",
-                 array("number" => 2015,
-                       "string" => "2015 年度音乐排行"));
+                 array("number" => $number,
+                       "string" => $string));
 $testObject->save();
 ```
 
@@ -339,34 +327,31 @@ $testObject->save();
 我们**不推荐**在 `LeanObject` 中使用 `LeanBytes` 来储存大块的二进制数据，比如图片或整个文件。**每个 `LeanObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `LeanFile`。更多细节可以阅读本文 [文件](#文件) 部分。
 
 若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
+
 {% endblock %}
 
 {% block code_create_geoPoint %}
 
-``` objc
-AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
+``` java
+        AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
 ```
 {% endblock %}
 
 {% block code_use_geoPoint %}
 
-``` objc
-[todo setObject:point forKey:@"whereCreated"];
+``` java
+        todo.put("whereCreated", point);
 ```
 {% endblock %}
 
 {% block code_serialize_baseObject_to_string %}
 
-```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登录的用户
-    NSMutableDictionary *serializedJSONDictionary = [todoFolder dictionaryForObject];//获取序列化后的字典
-    NSError * err;
-    NSData * jsonData = [NSJSONSerialization dataWithJSONObject:serializedJSONDictionary options:0 error:&err];//获取 JSON 数据
-    NSString *serializedString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];// 获取 JSON 字符串
-    // serializedString 的内容是：{"name":"工作","className":"TodoFolder","priority":1} 
+```java
+        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
+        todoFolder.put("name", "工作");// 设置名称
+        todoFolder.put("priority", 1);// 设置优先级
+        todoFolder.put("owner", AVUser.getCurrentUser());// 这里就是一个 Pointer 类型，指向当前登录的用户
+        String serializedString = todoFolder.toString();
 
 ```
 
@@ -374,15 +359,9 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 
 {% block code_deserialize_string_to_baseObject %}
 
-```objc
-    NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithCapacity:10];// 声明一个 NSMutableDictionary
-    [objectDictionary setObject:@"工作" forKey:@"name"];
-    [objectDictionary setObject:@1 forKey:@"priority"];
-    [objectDictionary setObject:@"TodoFolder" forKey:@"className"];
-    
-    AVObject *todoFolder = [AVObject objectWithDictionary:objectDictionary];// 由 NSMutableDictionary 转化一个 AVObject
-    
-    [todoFolder saveInBackground];// 保存到服务端
+```java
+        AVObject deserializedObject = AVObject.parseAVObject(serializedString);
+        deserializedObject.saveInBackground();// 保存到服务端
 ```
 {% endblock %}
 
@@ -390,65 +369,106 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 
 {% block code_create_avfile_by_stream_data %}
 
-```objc
-    NSData *data = [@"Working with LeanCloud is great!" dataUsingEncoding:NSUTF8StringEncoding];
-    AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
+```java
+        AVFile file = new AVFile("resume.txt","Working with LeanCloud is great!".getBytes());
 ```
 {% endblock %}
 
 {% block code_create_avfile_from_local_path %}
 
-```objc
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *imagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
-    AVFile *file = [AVFile fileWithName:fileName contentsAtPath: imagePath];
+```java
+        AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png", Environment.getExternalStorageDirectory() + "/LeanCloud.png");
 ```
 {% endblock %}
 
 {% block code_create_avfile_from_url %}
 
-```objc
-    AVFile *file =[AVFile fileWithURL:@"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"];
-    [file getData];// 注意这一步很重要，这是把图片从原始地址拉去到本地
+```java
+        AVFile file = new AVFile("test.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", new HashMap<String, Object>());
 ```
 {% endblock %}
 
 {% block code_upload_file %}
 
-```objc
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        NSLog(file.url);//返回一个唯一的 Url 地址
-    }];
+```java
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                Log.d(TAG, file.getUrl());//返回一个唯一的 Url 地址
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_upload_file_with_progress %}
 
-```objc
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-      // 成功或失败处理...
-    } progressBlock:^(int percentDone) {
-      // 上传进度数据，percentDone 介于 0 和 100。
-    }];
+```java
+        file.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                // 成功或失败处理...
+            }
+        }, new ProgressCallback() {
+            @Override
+            public void done(Integer integer) {
+                // 上传进度数据，integer 介于 0 和 100。
+            }
+        }); 
 ```
 {% endblock %}
 
 {% block code_download_file %}
 
-```objc
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        // data 就是文件的数据流
-    } progressBlock:^(NSInteger percentDone) {
-        //下载的进度数据，percentDone 介于 0 和 100。
-    }];
+```java 
+        file.getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] bytes, AVException e) {
+                // bytes 就是文件的数据流
+            }
+        }, new ProgressCallback() {
+            @Override
+            public void done(Integer integer) {
+                // 上传进度数据，integer 介于 0 和 100。
+            }
+        });
 ```
 {% endblock %}
 
+{% block code_file_image_thumbnail %}
+```java
+        AVFile file = new AVFile("test.jpg", "文件-url", new HashMap<String, Object>());
+        file.getThumbnailUrl(true, 100, 100);
+```
+{% endblock %}
+
+{% block code_file_metadata %}
+``` java
+        AVFile file = AVFile.withAbsoluteLocalPath("test.jpg", Environment.getExternalStorageDirectory() + "/xxx.jpg");
+        file.addMetaData("width", 100);
+        file.addMetaData("height", 100);
+        file.addMetaData("author", "LeanCloud");
+        file.saveInBackground();
+```
+{% endblock %}
+
+{% block code_file_delete %}
+
+``` java
+        file.deleteInBackground(new DeleteCallback() {
+            @Override
+            public void done(AVException e) {
+                
+            }
+        });
+```
+{% endblock %}
+
+{% block code_cache_operations_file %}{% endblock %}
+
 {% block code_create_query_by_className %}
 
-```objc
-AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
 ```
 {% endblock %}
 
@@ -456,32 +476,38 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 {% block code_create_query_by_avobject %}
 
-```objc
+```java
 
 ```
 {% endblock %}
 
 {% block code_priority_equalTo_zero_query %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *priorityEqualsZeroTodos = objects;// 符合 priority = 0 的 Todo 数组
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereEqualTo("priority", 0);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                List<AVObject> priorityEqualsZeroTodos = list;// 符合 priority = 0 的 Todo 数组
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query whereKey:@"priority" equalTo:@1];
-   // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       ...
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereEqualTo("priority", 0);
+        query.whereEqualTo("priority", 1);
+        // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                ...
+            }
+        });
 ```
 {% endblock %}
 
@@ -489,337 +515,455 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 逻辑操作 | AVQuery 方法|
 ---|---
 等于 | `equalTo`
-不等于 |  `notEqualTo` 
+不等于 |  `notEqualTo`
 大于 | `greaterThan`
-大于等于 | `greaterThanOrEqualTo` 
+大于等于 | `greaterThanOrEqualTo`
 小于 | `lessThan`
 小于等于 | `lessThanOrEqualTo`
 {% endblock %}
 
 {% block code_query_lessThan %}
 
-```objc
-[query whereKey:@"priority" lessThan:@2];
+```java
+        query.whereLessThan("priority", 2);
 ```
 {% endblock %}
 
 {% block code_query_greaterThanOrEqualTo %}
 
-```objc
-[query whereKey:@"priority" greaterThanOrEqualTo:@2];
+```java
+        query.whereGreaterThanOrEqualTo("priority", 2);
 ```
 {% endblock %}
 
 {% block code_query_with_regular_expression %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"title" matchesRegex:@"[\u4e00-\u9fa5]"];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereMatches("title","[\\u4e00-\\u9fa5]");
 ```
 {% endblock %}
 
 {% block code_query_with_contains_keyword %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"title" containsString:@"李总"];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereContains("title", "李总");
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword_using_regex %}
 
-```objc
-
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereMatches("title","^((?!机票).)*quot");
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
-    [query whereKey:@"title" notContainedIn:filterArray];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereNotContainedIn("title", Arrays.asList("出差", "休假"));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                List<AVObject> nearbyTodos = list;// 离这个位置最近的 10 个 Todo 对象
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_array_contains_using_equalsTo %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
-}
--(void)queryRemindersContains{
-    NSDate *reminder= [self getDateWithDateString:@"2015-11-11 08:30:00"];
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    
-    [query whereKey:@"reminders" equalTo:reminder];// equalTo: 可以找出数组中包含单个值的对象
-}
+```java
+    Date getDateWithDateString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateString);
+        return date;
+    }
+
+    void queryRemindersContains() {
+        Date reminder = getDateWithDateString("2015-11-11 08:30:00");
+
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+
+        // equalTo: 可以找出数组中包含单个值的对象
+        query.whereEqualTo("reminders", reminder);
+    }
 ```
 {% endblock %}
 
 {% block code_query_array_contains_all %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
-}
+```java
+    Date getDateWithDateString(String dateString) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = dateFormat.parse(dateString);
+        return date;
+    }
 
--(void)queryRemindersContainsAll{
-    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 08:30:00"];
-    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 09:30:00"];
+    void queryRemindersContainsAll() {
+        Date reminder1 = getDateWithDateString("2015-11-11 08:30:00");
+        Date reminder2 = getDateWithDateString("2015-11-11 09:30:00");
 
-    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,nil];// 构建查询时间点
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"reminders" containsAllObjectsInArray:reminders];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-    }];
-}
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereContainsAll("reminders", Arrays.asList(reminder1, reminder2));
+
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                
+            }
+        });
+    }
 ```
 {% endblock %}
 
 {% block code_query_whereHasPrefix %}
 
-```objc
-    // 找出开头是「早餐」的 Todo 
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"content" hasPrefix:@"早餐"];
+```java
+        // 找出开头是「早餐」的 Todo
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereStartsWith("content", "早餐");
 ```
 {% endblock %}
 
 {% block code_query_comment_by_todoFolder %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
-    [query whereKey:@"targetTodoFolder" equalTo:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"]];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        query.whereEqualTo("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
 ```
 {% endblock %}
 
 {% block code_create_tag_object %}
 
-```objc
-    AVObject *tag = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag setObject:@"今日必做" forKey:@"name"];// 设置名称
-    [tag saveInBackground];
+```java
+        AVObject tag = new AVObject("Tag");// 构建对象
+        tag.put("name", "今日必做");// 设置名称
+        tag.saveInBackground();
 ```
 {% endblock %}
 
 {% block code_create_family_with_tag %}
 
-```objc
-    AVObject *tag1 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag1 setObject:@"今日必做" forKey:@"name"];// 设置 Tag 名称
-    
-    AVObject *tag2 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag2 setObject:@"老婆吩咐" forKey:@"name"];// 设置 Tag 名称
-    
-    AVObject *tag3 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag3 setObject:@"十分重要" forKey:@"name"];// 设置 Tag 名称
+```java
+        AVObject tag1 = new AVObject("Tag");// 构建对象
+        tag1.put("name", "今日必做");// 设置 Tag 名称
 
-    
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"家庭" forKey:@"name"];// 设置 Todo 名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    
-    AVRelation *relation = [todoFolder relationforKey:@"tags"];// 新建一个 AVRelation
-    [relation addObject:tag1];
-    [relation addObject:tag2];
-    [relation addObject:tag3];
-    
-    [todoFolder saveInBackground];// 保存到云端
+        AVObject tag2 = new AVObject("Tag");// 构建对象
+        tag1.put("name", "老婆吩咐");// 设置 Tag 名称
+
+        AVObject tag3 = new AVObject("Tag");// 构建对象
+        tag1.put("name", "十分重要");// 设置 Tag 名称
+
+        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
+        todoFolder.put("name", "家庭");// 设置 Todo 名称
+        todoFolder.put("priority", 1);// 设置优先级
+
+        AVRelation<AVObject> relation = todoFolder.getRelation("tags");
+        relation.add(tag1);
+        relation.add(tag2);
+        relation.add(tag3);
+
+        todoFolder.saveInBackground();// 保存到云端
 ```
 {% endblock %}
 
 {% block code_query_tag_for_todoFolder %}
 
-```objc
-    AVObject *todoFolder = [AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5661047dddb299ad5f460166"];
-    AVRelation *relation = [todoFolder relationforKey:@"tags"];
-    AVQuery *query = [relation query];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       // objects 是一个 AVObject 的 NSArray，它包含所有当前 todoFolder 的 tags
-    }];
+```java
+        AVObject todoFolder = AVObject.createWithoutData("TodoFolder", "5661047dddb299ad5f460166");
+        AVRelation<AVObject> relation = todoFolder.getRelation("tags");
+        AVQuery<AVObject> query = relation.getQuery();
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 是一个 AVObject 的 List，它包含所有当前 todoFolder 的 tags
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_todoFolder_with_tag %}
 
-```objc
-    AVObject *tag = [AVObject objectWithoutDataWithClassName:@"Tag" objectId:@"5661031a60b204d55d3b7b89"];
-    
-    AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
-    
-    [query whereKey:@"tags" equalTo:tag];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        // objects 是一个 AVObject 的 NSArray
-        // objects 指的就是所有包含当前 tag 的 TodoFolder
-    }];
+```java
+        AVObject tag = AVObject.createWithoutData("Tag", "5661031a60b204d55d3b7b89");
+        AVQuery<AVObject> query = new AVQuery<>("TodoFolder");
+        query.whereEqualTo("tags", tag);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 是一个 AVObject 的 List
+                // list 指的就是所有包含当前 tag 的 TodoFolder
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_comment_include_todoFolder %}
 
-```objc
-    AVQuery *commentQuery = [AVQuery queryWithClassName:@"Comment"];
-    [commentQuery orderByDescending:@"createdAt"];
-    commentQuery.limit = 10;
-    [commentQuery includeKey:@"targetTodoFolder"];// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
-    
-    [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-        // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
-        for (AVObject *comment in comments) {
-            // 并不需要网络访问
-            AVObject *todoFolder = [comment objectForKey:@"targetTodoFolder"];
-        }
-    }];
+```java
+        AVQuery<AVObject> commentQuery = new AVQuery<>("Comment");
+        commentQuery.orderByDescending("createdAt");
+        commentQuery.limit(10);
+        commentQuery.include("targetTodoFolder");// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+        commentQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
+                for (AVObject comment : list) {
+                    // 并不需要网络访问
+                    AVObject todoFolder = comment.getAVObject("targetTodoFolder");
+                }
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_find_first_object %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        // object 就是符合条件的第一个 AVObject
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereEqualTo("priority",0);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                // object 就是符合条件的第一个 AVObject
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_set_query_limit %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSDate *now = [NSDate date];
-    [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
-    query.limit = 10; // 最多返回 10 条结果
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        Date now = new Date();
+        query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
+        query.limit(10);// 最多返回 10 条结果
 ```
 {% endblock %}
 
 {% block code_set_skip_for_pager %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSDate *now = [NSDate date];
-    [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
-    query.limit = 10; // 最多返回 10 条结果
-    query.skip = 20;  // 跳过 20 条结果
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        Date now = new Date();
+        query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
+        query.limit(10);// 最多返回 10 条结果
+        query.skip(20);// 跳过 20 条结果
 ```
 
 {% endblock %}
 
 {% block code_query_count %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"status" equalTo:@"1"];
-    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
-        if (!error) {
-            // 查询成功，输出计数
-            NSLog(@"今天完成了 %ld 条待办事项。", number);
-        } else {
-            // 查询失败
-        }
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereEqualTo("status", 0);
+        query.countInBackground(new CountCallback() {
+            @Override
+            public void done(int i, AVException e) {
+                if (e == null) {
+                    // 查询成功，输出计数
+                    Log.d(TAG, "今天完成了" + i + "条待办事项。");
+                } else {
+                    // 查询失败
+                }
+            }
+        });
 ```
 
 {% endblock %}
 
+{% block code_query_comment_match_query_todoFolder %}
+
+```java
+        // 构建内嵌查询
+        AVQuery<AVObject> innerQuery = new AVQuery<>("TodoFolder");
+        innerQuery.whereGreaterThan("liks", 20);
+        // 将内嵌查询赋予目标查询
+        AVQuery<AVObject> query = new AVQuery<>("Comment");
+        // 执行内嵌操作
+        query.whereMatchesQuery("targetTodoFolder", innerQuery);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
+            }
+        });
+
+        // 注意如果要做相反的查询可以使用
+        query.whereDoesNotMatchQuery("targetTodoFolder", innerQuery);
+        // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
+```
+{% endblock %}
+
+{% block code_query_select_keys %}
+
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.selectKeys(Arrays.asList("title", "content"));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    String title = avObject.getString("title");
+                    String content = avObject.getString("content");
+
+                    // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
+                    String location = avObject.getString("location");
+                }
+            }
+        });
+```
+{% endblock %}
+
+{% block code_query_orderby %}
+``` java
+        // 按时间，升序排列
+        query.orderByAscending("createdAt");
+
+        // 按时间，降序排列
+        query.orderByDescending("createdAt");
+```
+{% endblock %}
+
+{% block code_query_orderby_on_multiple_keys %}
+
+```java
+        query.addAscendingOrder("priority");
+        query.addDescendingOrder("createdAt");
+```
+{% endblock %}
+
+{% block code_query_where_keys_exist %}
+
+```java
+        // 存储一个带有图片的 Todo 到 LeanCloud 云端
+        AVFile aTodoAttachmentImage = new AVFile("test.jpg", "http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg", new HashMap<String, Object>());
+        AVObject todo = new AVObject("Todo");
+        todo.put("images", aTodoAttachmentImage);
+        todo.put("content", "记得买过年回家的火车票！！！");
+        todo.saveInBackground();
+        
+        // 使用非空值查询获取有图片的 Todo
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        query.whereExists("images");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // list 返回的就是有图片的 Todo 集合
+            }
+        });
+
+        // 使用空值查询获取没有图片的 Todo
+        query.whereDoesNotExist("images");
+
+```
+{% endblock %}
+
 {% block code_query_with_or %}
 
-```objc
-    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
-    [priorityQuery whereKey:@"priority" greaterThanOrEqualTo:[NSNumber numberWithInt:3]];
-    
-    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
-    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
-    
-    AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-        // 返回 priority 大于等于3 或 status 等于 1 的 Todo
-    }];
+```java
+        final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
+        priorityQuery.whereGreaterThanOrEqualTo("priority", 3);
+
+        final AVQuery<AVObject> statusQuery = new AVQuery<>("Todo");
+        statusQuery.whereEqualTo("status", 1);
+
+        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(priorityQuery, statusQuery));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // 返回 priority 大于等于3 或 status 等于 1 的 Todo
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_with_and %}
 
-```objc
-    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
-    [priorityQuery whereKey:@"priority" lessThan:[NSNumber numberWithInt:3]];
-    
-    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
-    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:0]];
-    
-    AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
-    
-    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-        // 返回 priority 小于 3 并且 status 等于 0 的 Todo
-    }];
+```java
+        final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
+        priorityQuery.whereLessThan("priority", 3);
+
+        final AVQuery<AVObject> statusQuery = new AVQuery<>("Todo");
+        statusQuery.whereEqualTo("status", 0);
+
+        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(priorityQuery, statusQuery));
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                // 返回 priority 小于 3 并且 status 等于 0 的 Todo
+            }
+        });
+```
+{% endblock %}
+
+{% block code_delete_todo_by_cql %}
+
+```php
+LeanQuery.doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb36c'");
 ```
 {% endblock %}
 
 {% block code_query_by_cql %}
 
-```objc
-    NSString *cql = [NSString stringWithFormat:@"select * from %@ where status = 1", @"Todo"];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
-    {
-        NSLog(@"results:%@", result.results);
-    }];
-    
-    
-    cql = [NSString stringWithFormat:@"select count(*) from %@ where priority = 0", @"Todo"];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
-    {
-       NSLog(@"count:%lu", (unsigned long)result.count);
-    }];
+```java
+        String cql = "select * from Todo where status = 1";
+        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                avCloudQueryResult.getResults();
+            }
+        });
+
+        cql = "select count(*) from Todo where priority = 0";
+        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                avCloudQueryResult.getCount();
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_query_by_cql_with_placeholder %}
 
-```objc
-    NSString *cql = [NSString stringWithFormat:@"select * from %@ where status = ? and priority = ?", @"Todo"];
-    NSArray *pvalues =  @[@0, @1];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql pvalues:pvalues callback:^(AVCloudQueryResult *result, NSError *error) {
-        if (!error) {
-            // 操作成功
-        } else {
-            NSLog(@"%@", error);
-        }
-    }];
+```java
+        String cql = " select * from Todo where status = ? and priority = ?";
+        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
+            @Override
+            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
+                if (e == null) {
+                    // 操作成功
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        }, Arrays.asList(0, 1));
 ```
 {% endblock %}
 
 {% block code_set_cache_policy %}
 
-```objc
-  AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-  query.cachePolicy = kAVCachePolicyNetworkElseCache;
-
-  //设置缓存有效期
-  query.maxCacheAge = 24*3600;
-
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      // 成功找到结果，先找网络再访问磁盘
-    } else {
-      // 无法访问网络，本次查询结果未做缓存
-    }
-  }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Post");
+        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
+        query.setMaxCacheAge(24 * 3600); //设置缓存有效期
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                if (e == null) {
+                    // 成功找到结果，先找网络再访问磁盘
+                } else {
+                    // 无法访问网络，本次查询结果未做缓存
+                }
+            }
+        });
 ```
 {% endblock %}
 
@@ -827,455 +971,459 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 策略枚举 | 含义及解释|
 ---|---
-`kAVCachePolicyIgnoreCache`| **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-`kAVCachePolicyCacheOnly` |  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。 
-`kAVCachePolicyCacheElseNetwork` |  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-`kAVCachePolicyNetworkElseCache` | 查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。 
-<code class="text-nowrap">`kAVCachePolicyCacheThenNetwork`</code> | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
+`IGNORE_CACHE`| **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
+`CACHE_ONLY` |  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVException`。
+`CACHE_ELSE_NETWORK` |  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVException`。
+`NETWORK_ELSE_CACHE` | 查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVException`。
+`CACHE_THEN_NETWORK` | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `find()` 同时使用。
 {% endblock %}
 
 {% block code_cache_operation %}
 
 * 检查是否存在缓存查询结果：
-  
-  ``` objc
-  BOOL isInCache = [query hasCachedResult];
-  ```
-  
-* 删除某一查询的任何缓存结果：
-  
-  ``` objc
-  [query clearCachedResult];
-  ```
-  
-* 删除查询的所有缓存结果：
-  
-  ``` objc
-  [AVQuery clearAllCachedResults];
-  ```
-  
-* 设定缓存结果的最长时限：
-  
-  ``` objc
-  query.maxCacheAge = 60 * 60 * 24; // 一天的总秒数
+
+  ``` java
+  boolean isInCache = query.hasCachedResult();
   ```
 
-查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirstObject` 和 `getObjectInBackground`。
+* 删除某一查询的任何缓存结果：
+
+  ``` java
+  query.clearCachedResult();
+  ```
+
+* 删除查询的所有缓存结果：
+
+  ``` java
+  AVQuery.clearAllCachedResults();
+  ```
+
+* 设定缓存结果的最长时限：
+
+  ``` java
+  query.setMaxCacheAge(60 * 60 * 24);// 一天的总秒数
+  ```
+
+查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirst()` 和 `getInBackground()`。
 {% endblock %}
 
 {% block code_query_geoPoint_near %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
-    query.limit = 10;
-    [query whereKey:@"whereCreated" nearGeoPoint:point];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
-    }];
+```java
+        AVQuery<AVObject> query = new AVQuery<>("Todo");
+        AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
+        query.limit(10);
+        query.whereNear("whereCreated", point);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                List<AVObject> nearbyTodos = list;// 离这个位置最近的 10 个 Todo 对象
+            }
+        });
 ```
 
-在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
+在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending` 或 `orderByDescending` 方法，则按距离排序会被新排序覆盖。**
 {% endblock %}
 
 {% block text_platform_geoPoint_notice %}
-* iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
 {% endblock %}
 
 {% block code_query_geoPoint_within %}
 
-```objc
-    [query whereKey:@"whereCreated"  nearGeoPoint:point withinKilometers:2.0];
+```java
+        query.whereWithinKilometers("whereCreated", point, 2.0);
 ```
 {% endblock %}
 
-{% block link_to_acl_doc %}[iOS / OS X 权限管理使用指南](acl_guide-ios.html){% endblock %}
+{% block link_to_acl_doc %}[Android 权限管理使用指南](acl_guide-android.html){% endblock %}
 
-{% block link_to_relation_guide_doc %}[iOS / OS X 关系建模指南](relation_guide-ios.html){% endblock %}
+{% block link_to_relation_guide_doc %}[Android 关系建模指南](relation_guide-android.html){% endblock %}
 
-{% block link_to_sms_guide_doc %}[iOS / OS X 短信服务使用指南](sms_guide-ios.html#注册验证){% endblock %}
+{% block link_to_sms_guide_doc %}[Android 短信服务使用指南](sms_guide-Android.html#注册验证){% endblock %}
 
 {% block code_send_sms_code_for_loginOrSignup %}
 
-```objc
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13577778888" callback:^(BOOL succeeded, NSError *error) {
-        // 发送失败可以查看 error 里面提供的信息
-    }];
+```java
+        AVOSCloud.requestSMSCodeInBackground("13577778888", new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                // 发送失败可以查看 e 里面提供的信息
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_verify_sms_code_for_loginOrSignup %}
 
-```objc
-    [AVUser signUpOrLoginWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"123456" block:^(AVUser *user, NSError *error) {
-       // 如果 error 为空就可以表示登录成功了，并且 user 是一个全新的用户
-    }];
+```java
+        AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "123456", new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                // 如果 e 为空就可以表示登录成功了，并且 user 是一个全新的用户
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_user_signUp_with_username_and_password %}
 
-```objc
-    AVUser *user = [AVUser user];// 新建 AVUser 对象实例
-    user.username = @"Tom";// 设置用户名
-    user.password =  @"cat!@#123";// 设置密码
-    user.email = @"tom@leancloud.cn";// 设置邮箱
-    
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 注册成功
-        } else {
-            // 失败的原因可能有多种，常见的是用户名已经存在。
-        }
-    }];
+```java
+        AVUser user = new AVUser();// 新建 AVUser 对象实例
+        user.setUsername("Tom");// 设置用户名
+        user.setPassword("cat!@#123");// 设置密码
+        user.setEmail("tom@leancloud.cn");// 设置邮箱
+        user.signUpInBackground(new SignUpCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
+                    // 注册成功
+                } else {
+                    // 失败的原因可能有多种，常见的是用户名已经存在。
+                }
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_username_and_password %}
 
-```objc
-  [AVUser logInWithUsernameInBackground:@"Tom" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
-      if (user != nil) {
-
-      } else {
-
-      }
-  }];
+```java
+        AVUser.logInInBackground("Tom", "cat!@#123", new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+         
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
-```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
-        
-    }];
+```java
+        AVUser.loginByMobilePhoneNumberInBackground("13577778888", "cat!@#123", new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_user_logIn_requestLoginSmsCode %}
 
-```objc
-    [AVUser requestLoginSmsCode:@"13577778888" withBlock:^(BOOL succeeded, NSError *error) {
-        
-    }];
+```java
+        AVUser.requestLoginSmsCodeInBackground("13577778888", new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_smsCode %}
 
-```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"238825" block:^(AVUser *user, NSError *error) {
-        
-    }];
+```java
+        AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "238825", new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser avUser, AVException e) {
+                
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_get_user_properties %}
 
-```objc
-    NSString *currentUsername = [AVUser currentUser].username;// 当前用户名
-    NSString *currentEmail = [AVUser currentUser].email; // 当前用户的邮箱
-    
-    // 请注意，以下代码无法获取密码
-    NSString *currentPassword = [AVUser currentUser].password;//  currentPassword 是 nil
+```java
+        String currentUsername = AVUser.getCurrentUser().getUsername();
+        String currentEmail = AVUser.getCurrentUser().getEmail();
+
+        // 请注意，以下代码无法获取密码
+        String currentPassword = AVUser.getCurrentUser().getPassword();// 无 getPassword() 此方法
 ```
 {% endblock %}
 
 {% block code_set_user_custom_properties %}
 
-```objc
-    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
-    [[AVUser currentUser] saveInBackground];
+```java
+        AVUser.getCurrentUser().put("age", 25);
+        AVUser.getCurrentUser().saveInBackground();
 ```
 {% endblock %}
 
 {% block code_update_user_custom_properties %}
 
-```objc
-    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
-    [[AVUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        [[AVUser currentUser] setObject:[NSNumber numberWithInt:27] forKey:@"age"];
-        [[AVUser currentUser] saveInBackground];
-    }];
+```java
+        AVUser.getCurrentUser().put("age", 25);
+        AVUser.getCurrentUser().saveInBackground(new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVUser.getCurrentUser().put("age", 27);
+                AVUser.getCurrentUser().saveInBackground();
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_reset_password_by_email %}
 
-``` objc
-[AVUser requestPasswordResetForEmailInBackground:@"myemail@example.com" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
+``` java
+        AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswordResetCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
 
-    } else {
-
-    }
-}];
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber %}
 
-``` objc
-[AVUser requestPasswordResetWithPhoneNumber:@"18612340000" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
+``` java
+        AVUser.requestPasswordResetBySmsCodeInBackground("18612340000", new RequestMobileCodeCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
 
-    } else {
-
-    }
-}];
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber_verify %}
 
-``` objc
-[AVUser resetPasswordWithSmsCode:@"123456" newPassword:@"password" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
+``` java
+        AVUser.resetPasswordBySmsCodeInBackground("123456", "password", new UpdatePasswordCallback() {
+            @Override
+            public void done(AVException e) {
+                if (e == null) {
 
-    } else {
-
-    }
-}];
+                } else {
+                    e.printStackTrace();
+                }
+            }
+        });
 ```
 {% endblock %}
 
 {% block code_current_user %}
 
-```objc
-  AVUser *currentUser = [AVUser currentUser];
-  if (currentUser != nil) {
-      // 跳转到首页
-  } else {
-      //缓存用户对象为空时，可打开用户注册界面…
-  }
+```java
+        AVUser currentUser = AVUser.getCurrentUser();
+        if (currentUser != null) {
+            // 跳转到首页
+        } else {
+            //缓存用户对象为空时，可打开用户注册界面…
+        }
 ```
 {% endblock %}
 
 {% block code_current_user_logout %}
 
-```objc
-  [AVUser logOut];  //清除缓存用户对象 
-  AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
+```java
+        AVUser.logOut();// 清除缓存用户对象
+        AVUser currentUser = AVUser.getCurrentUser();// 现在的 currentUser 是 null 了
 ```
 {% endblock %}
 
 {% block code_query_user %}
 
-```objc
-  AVQuery *userQuery = [AVQuery queryWithClassName:@"_User"];
+```java
+        AVQuery<AVUser> userQuery = new AVQuery<>("_User");
 ```
 {% endblock %}
 
 {% block text_subclass %}
 ## 子类化
-子类化推荐给进阶的开发者在进行代码重构的时候做参考。
-你可以用 `AVObject` 访问到所有的数据，用 `objectForKey:` 获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
+LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `AVObject.get` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
 
-子类化是可选的，请对照下面的例子来加深理解：
-
-``` 
-AVObject *student = [AVObject objectWithClassName:@"Student"];
-[student setObject:@"小明" forKey:@"name"];
-[student saveInBackground];
+```
+        AVObject student = new AVObject("Student");
+        student.put("name", "小明");
+        student.saveInBackground();
 ```
 
 可改写成:
 
-``` 
-Student *student = [Student object];
-student.name = @"小明";
-[student saveInBackground];
+```
+        Student student = new Student();
+        student.put("name", "小明");
+        student.saveInBackground();
 ```
 
 这样代码看起来是不是更简洁呢？
 
-### 子类化的实现
+### 子类化 AVObject
 
 要实现子类化，需要下面几个步骤：
 
-1. 导入 `AVObject+Subclass.h`；
-2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
-3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
-4. 在实例化子类之前调用 [YourClass registerSubclass]（**在应用当前生命周期中，只需要调用一次**。可在子类的 +load 方法或者 UIApplication 的 -application:didFinishLaunchingWithOptions: 方法里面调用）。
+1. 首先声明一个子类继承自 `AVObject`；
+2. 添加 `@AVClassName` 注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名；
+3. 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 `AVObject` 的字段；
+4. 在你的应用初始化的地方，在调用 `AVOSCloud.initialize()` 之前注册子类 `AVObject.registerSubclass(YourClass.class)`。
 
 下面是实现 `Student` 子类化的例子:
 
-``` objc
-  //Student.h
-  #import <AVOSCloud/AVOSCloud.h>
+``` java
+// Student.java
+import com.avos.avoscloud.AVClassName;
+import com.avos.avoscloud.AVObject;
 
-  @interface Student : AVObject <AVSubclassing>
-
-  @property(nonatomic,copy) NSString *name;
-
-  @end
-
-
-  //Student.m
-  #import "Student.h"
-
-  @implementation Student
-
-  @dynamic name;
-
-  + (NSString *)parseClassName {
-      return @"Student";
-  }
-
-  @end
-
-
-  // AppDelegate.m
-  #import <AVOSCloud/AVOSCloud.h>
-  #import "Student.h"
-
-  - (BOOL)application:(UIApplication *)application
-  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [Student registerSubclass];
-    [AVOSCloud setApplicationId:appid clientKey:appkey];
-  }
-```
-
-### 属性
-
-为 `AVObject` 的子类添加自定义的属性和方法，可以更好地将这个类的逻辑封装起来。用 `AVSubclassing` 可以把所有的相关逻辑放在一起，这样不必再使用不同的类来区分业务逻辑和存储转换逻辑了。
-
-`AVObject` 支持动态 synthesizer，就像 `NSManagedObject` 一样。先正常声明一个属性，只是在 .m 文件中把 `@synthesize` 变成 `@dynamic`。
-
-请看下面的例子是怎么添加一个「年龄」属性：
-
-``` objc
-  //Student.h
-  #import <AVOSCloud/AVOSCloud.h>
-
-  @interface Student : AVObject <AVSubclassing>
-
-  @property int age;
-
-  @end
-
-
-  //Student.m
-  #import "Student.h"
-
-  @implementation Student
-
-  @dynamic age;
-
-  ......
-```
-
-这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
-
-``` objc
-[student setAge:19]
-```
-
-**注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
-
-`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
-
-你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
-
-**注意** 子类中，对于 `BOOL` 类型的字段，SDK 在 3.1.3.2 之前会将其保存为 Number 类型，3.1.3.2 之后将其正确保存为 Bool 类型。详情请参考[这里](https://leancloud.cn/docs/ios_os_x_faq.html#为什么升级到_3_1_3_2_以上的版本时_BOOL_类型数据保存错误_)。
-
-注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
-
-``` objc
-@interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends;
-  ......
-@end
-
-@implementation Student
-@dynamic friends;
-  ......
-```
-
-另外，值为 Pointer 的实例可用 `AVObject*` 来表示。例如，如果 `Student` 中 `bestFriend` 代表一个指向另一个 `Student` 的键，由于 Student 是一个 AVObject，因此在表示这个键的值的时候，可以用一个 `AVObject*` 来代替：
-
-``` objc
-@interface Student : AVUser <AVSubclassing>
-@property(nonatomic, strong) AVObject *bestFriend;
- ......
-@end
-
-@implementation Student
-@dynamic bestFriend;
-  ......
-```
-
-提示：当需要更新的时候，最后都要记得加上 `[student save]` 或者对应的后台存储函数进行更新，才会同步至服务器。
-
-如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
-
-``` objc
-  @dynamic iconFile;
-
-  - (UIImageView *)iconView {
-    UIImageView *view = [[UIImageView alloc] initWithImage:kPlaceholderImage];
-    view.image = [UIImage imageNamed:self.iconFile];
-    return [view autorelease];
-  }
-
-```
-
-### 针对 AVUser 子类化的特别说明
-
-假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
-
-``` objc
-@interface Student : AVUser<AVSubclassing>
-@property (retain) NSString *displayName;
-@end
-
-
-@implementation Student
-@dynamic displayName;
-+ (NSString *)parseClassName {
-    return @"_User";
+@AVClassName("Student")
+public class Student extends AVObject {
 }
-@end
+
+// App.java
+import com.avos.avoscloud.AVOSCloud;
+import android.app.Application;
+
+public class App extends Application {
+  @Override
+  public void onCreate() {
+    super.onCreate();
+
+    AVObject.registerSubclass(Student.class);
+    AVOSCloud.initialize(this, "...", "...");
+  }
+}
 ```
 
-登录时需要调用 `Student` 的登录方法才能通过 `currentUser` 得到这个子类:
+### 访问器、修改器和方法
 
-``` objc
-[Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
-        Student *student = [Student currentUser];
-        student.displayName = @"YOUR_DISPLAY_NAME";
-    }];
+添加方法到 AVObject 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
+
+你可以很容易地添加访问器和修改器到你的 AVObject 子类。像平常那样声明字段的`getter` 和 `setter` 方法，但是通过 AVObject 的 `get` 和 `put` 方法来实现它们。下面是这个例子为 `Student` 类创建了一个 `content` 的字段：
+
+``` java
+// Student.java
+@AVClassName("Student")
+public class Student extends AVObject {
+  public String getContent() {
+    return getString("content");
+  }
+  public void setContent(String value) {
+    put("content", value);
+  }
+}
 ```
 
-同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
+现在你就可以使用 `student.getContent()` 方法来访问 `content` 字段，并通过 `student.setContent("blah blah blah")` 来修改它。这样就允许你的 IDE 提供代码自动完成功能，并且可以在编译时发现到类型错误。
++
+
+各种数据类型的访问器和修改器都可以这样被定义，使用各种 `get()` 方法的变种，例如 `getInt()`，`getAVFile()` 或者 `getMap()`。
++
+
+如果你不仅需要一个简单的访问器，而是有更复杂的逻辑，你可以实现自己的方法，例如：
+
+``` java
+ublic void takeAccusation() {
+  // 处理用户举报，当达到某个条数的时候，自动打上屏蔽标志
+  increment("accusation", 1);
+  if (getAccusation() > 50) {
+    setSpam(true);
+  }
+}
+```
 
 ### 初始化子类
 
-创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithoutDataWithObjectId:` 类方法。
+你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 AVObject 中的字段，这个默认构造函数将会被 SDK 使用来创建子类的强类型的对象。
 
-### 子类查询
 
-使用类方法 `query` 可以得到这个子类的查询对象。
+要创建一个到现有对象的引用，可以使用 `AVObject.createWithoutData()`:
 
-例如，查询年龄小于 21 岁的学生：
+```java
+Student postReference = AVObject.createWithoutData(Student.class, student.getObjectId());
+```
 
-``` objc
-  AVQuery *query = [Student query];
-  [query whereKey:@"age" lessThanOrEqualTo:@(21)];
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      Student *stu1 = [objects objectAtIndex:0];
+### 子类的序列化与反序列化
+
+在 v3.4 版本以后，如果希望 AVObject 子类也支持 Parcelable，则需要至少满足以下几个要求：
+1. 确保子类有一个 public 并且参数为 Parcel 的构造函数，并且在内部调用父类的该构造函数。
+2. 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`。
+
+```java
+// Stduent.java
+@AVClassName("Student")
+public class Student extends AVObject {
+  public Student(){
+    super();
+  }
+
+  public Student(Parcel in){
+    super(in);
+  }
+  //此处为我们的默认实现，当然你也可以自行实现
+  public static final Creator CREATOR = AVObjectCreator.instance;
+}
+```
+
+### 查询子类
+
+你可以通过 `AVObject.getQuery()` 或者 `AVQuery.getQuery` 的静态方法获取特定的子类的查询对象。下面的例子就查询了用户发表的所有微博列表：
+
+```java
+AVQuery<Student> query = AVObject.getQuery(Student.class);
+query.whereEqualTo("pubUser", AVUser.getCurrentUser().getUsername());
+query.findInBackground(new FindCallback<Student>() {
+  @Override
+  public void done(List<Student> results, AVException e) {
+    for (Student a : results) {
       // ...
     }
-  }];
+  }
+});
 ```
+### AVUser 的子类化
+
+AVUser 作为 AVObject 的子类，同样允许子类化，你可以定义自己的 User 对象，不过比起 AVObject 子类化会更简单一些，只要继承 AVUser 就可以了：
+
+```java
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVUser;
+
+public class MyUser extends AVUser {
+    public void setNickName(String name) {
+  this.put("nickName", name);
+    }
+
+    public String getNickName() {
+  return this.getString("nickName");
+    }
+}
+```
+
+不需要添加 @AVClassname 注解，所有 AVUser 的子类的类名都是内建的 `_User`。同样也不需要注册 MyUser。
+
+当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 AVOSCloud.initialize() 之前添加：
+
+```java
+AVUser.alwaysUseSubUserClass(subUser.class);
+```
+
+注册跟普通的 AVUser 对象没有什么不同，但是登录如果希望返回自定义的子类，必须这样：
+
+```java
+MyUser cloudUser = AVUser.logIn(username, password,
+        MyUser.class);
+```
+
+**注：由于 fastjson 内部的 bug，请在定义 AVUser 时不要定义跟 AVRelation 相关的 get 方法，如果一定要定义的话，请通过在 Class 上添加@JSONType(ignores = {"属性名"})的方式，将其注释为非序列化字段**。
+
 {% endblock %}
 
-{% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](in_app_search_guide-ios.html){% endblock %}
+{% block link_to_in_app_search_doc %}[Android 应用内搜索指南](app_search_guide.html){% endblock %}
 
-{% block link_to_status_system_doc %}[iOS / OS X 应用内社交模块](status_system.html#iOS_SDK){% endblock %}
+{% block link_to_status_system_doc %}[Android 应用内社交模块](status_system.html#Android_SDK){% endblock %}
 
-{% block link_to_sns_doc %}[iOS / OS X SNS 开发指南](sns.html#iOS_SNS_组件){% endblock %}
+{% block link_to_sns_doc %}[Android SNS 开发指南](sns.html#Android_SNS_组件){% endblock %}
 
-{% block link_to_feedback_doc %}[iOS / OS X 用户反馈指南](feedback.html#iOS_反馈组件){% endblock %}
+{% block link_to_feedback_doc %}[Android 用户反馈指南](feedback.html#Android_反馈组件){% endblock %}
