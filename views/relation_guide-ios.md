@@ -189,9 +189,9 @@
     AVObject *courseOperatingSystem = [[AVObject alloc] initWithClassName:@"Course"];// 操作系统
     [courseOperatingSystem setObject:@"Operating System" forKey:@"name"];
     
-    [AVObject saveAllInBackground:[NSArray arrayWithObjects:courseLinearAlgebra,courseObjectOrientedProgramming,courseOperatingSystem,nil] block:^(BOOL succeeded, NSError *error) {
+    [AVObject saveAllInBackground:@[courseLinearAlgebra,courseObjectOrientedProgramming,courseOperatingSystem] block:^(BOOL succeeded, NSError *error) {
         if (error) {
-            // 网络错误
+            // 出现错误
         } else {
             // 保存成功
             AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];// 新建一个 AVRelation，用来保存所选的课程
@@ -199,7 +199,6 @@
             [relation addObject:courseObjectOrientedProgramming];
             [relation addObject:courseOperatingSystem];
             
-            // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
             [studentTom saveInBackground];
         }
     }];

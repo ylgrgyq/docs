@@ -359,9 +359,9 @@ option.query = query;
     [todo3 setObject:@"每周一下午 15：00" forKey:@"content"];
     [todo3 setObject:@"SA 工位" forKey:@"location"];
     
-    [AVObject saveAllInBackground:[NSArray arrayWithObjects:todo1,todo2,todo3,nil] block:^(BOOL succeeded, NSError *error) {
+    [AVObject saveAllInBackground:@[todo1,todo2,todo3] block:^(BOOL succeeded, NSError *error) {
         if (error) {
-            // 网络错误
+            // 出现错误
         } else {
             // 保存成功
             AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
