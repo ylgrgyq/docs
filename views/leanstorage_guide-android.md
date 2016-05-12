@@ -221,13 +221,13 @@
 
 ```java
         AVObject theTodo = AVObject.createWithoutData("Todo", "564d7031e4b057f4f3006ad1");
-        String keys = "priority,content";// 指定刷新的 key 字符串
+        String keys = "priority,location";// 指定刷新的 key 字符串
         theTodo.fetchInBackground(keys, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 // theTodo 的 location 和 content 属性的值就是与服务端一致的
+                String priority = avObject.getString("priority");
                 String location = avObject.getString("location");
-                String content = avObject.getString("content");
             }
         });
 ```
