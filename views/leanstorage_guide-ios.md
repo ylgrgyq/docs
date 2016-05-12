@@ -181,11 +181,11 @@ option.query = query;
 
 ```objc
     AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-    NSArray *keys = [NSArray arrayWithObjects:@"priority", @"content",nil];// 指定刷新的 key 数组
+    NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location",nil];// 指定刷新的 key 数组
     [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-        // theTodo 的 location 和 content 属性的值就是与服务端一致的
-        NSString *location = [object objectForKey:@"location"];
-        NSString *content = object[@"content"];
+        // theTodo 的 priority 和 location 属性的值就是与服务端一致的
+        NSString *priority = [object objectForKey:@"priority"];
+        NSString *location = object[@"location"];
     }];
 ```
 {% endblock %}
