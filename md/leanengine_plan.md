@@ -61,7 +61,7 @@
 要了解实例资源的耗用程度，请阅读 [实例资源的使用量](#实例资源的使用量)。
 
 <div class="callout callout-info">
-**充分利用高规格实例的资源**
+**充分利用高规格实例的资源**<br/><br/>
 
 对于 Node.js 应用，默认单进程最大使用 CPU 为 100%，内存为 1.5 GB。如果实例规格远远大于此使用量，就会出现实例资源无法被充分利用的情况。这时可以使用 Node.js 的 [Cluster](https://nodejs.org/dist/latest-v4.x/docs/api/cluster.html) 模块，根据单进程资源占用情况和业务压力来决定启动几个 worker，让实例资源能被更充分地使用。
 </div>
