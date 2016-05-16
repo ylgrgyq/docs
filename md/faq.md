@@ -178,7 +178,7 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 
 操作：进入[控制台 > 存储](/data.html?appid={{appid}}#/_File)，选定一张表之后，点击右侧的「其他」下拉菜单，然后选择「索引」，然后根据你的查询需要建立好索引。
 
-提示：数据表的默认四个字段 objectId / ACL / createdAt / updatedAt 是自带索引的，但是在勾选时，可以作为联合索引来使用。并且，如果单表数据超过 1 万条以上，请将 App Id 和查询语句发送到 support@leancloud.cn，由我们来创建索引。
+提示：数据表的默认四个字段 objectId / ACL / createdAt / updatedAt 是自带索引的，但是在勾选时，可以作为联合索引来使用。并且，如果单表数据超过 1 万条以上，请将 App Id 和查询语句发送到 <support@leancloud.cn>，由我们来创建索引。
 
 ### LeanCloud 查询支持 `Sum`, `Group By`, `Distinct` 这种函数吗？
 LeanCloud 数据存储的查询接口不支持这些函数，可以查询到客户端后，在客户端中自己写逻辑进行这些操作。
@@ -345,31 +345,6 @@ LeanCloud 的美国节点即将提供 GCM 支持，如果应用的服务对象�
 国内节点的应用依然很难避免这个问题，因为无法建立系统级别的长连接去收消息。不过 LeanCloud SDK 已经采取了各种办法保持应用在后台运行，能保证在大部分情况下都能收到消息。
 
 
-### 为什么无法上传推送证书
-
-如果无法上传推送证书，通常是因为证书有问题。一般是由下列原因导致的：
-
-1. 证书不是推送证书；
-2. 证书导出格式有误。
-
-有两个办法来验证导出的证书是不是推送证书：
-
-1. 通过证书的名字来判断，推送证书的名字中会包含「Push Service」或者「Pass Type ID」；
-2. 配合真实设备来测试导出的证书是否有效。可以利用第三方工具，例如 [NWPusher](https://github.com/noodlewerk/NWPusher) 快速测试。
-
-目前 LeanCloud 只接受 p12 格式的证书。因此，在导出证书时，必须选择 p12 作为导出格式。
-
-上传证书时，LeanCloud 会进一步校验证书，帮助开发者发现错误。上传程序会检查证书的名字是否包含以下前缀：
-
-* "Apple Push Services"
-* "Apple Development IOS Push Services"
-* "Apple Production IOS Push Services"
-* "Pass Type ID"
-
-如果程序发现证书的名字中不包含以上前缀，就会校验失败，证书将无法上传。
-
-Apple 未来可能会修改推送证书的名字前缀，我们会及时更新前缀列表，同时也欢迎大家来补充。
-
 ## 统计
 
 ### 统计服务免费吗
@@ -395,10 +370,6 @@ Apple 未来可能会修改推送证书的名字前缀，我们会及时更新�
 可以在 **分析** > **Android（或者 iOS）统计** > **统计设置** > **数据发送策略** 的菜单里实时修改这些策略。
 
 ## 云引擎
-
-### 定时器 crontab 的语法
-
-请参考 [Quartz 文档](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger)。
 
 ### 云引擎都支持哪些语言
 
