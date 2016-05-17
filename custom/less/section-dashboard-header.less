@@ -217,13 +217,19 @@
 }
 
 .icon.has-news {
-  color: #ffba00;
-  text-shadow: 0 0 3px fade(#ffba00, 20%);
+  color: @brand-primary;
+  text-shadow: 0 0 3px fade(@brand-primary, 20%);
+  animation: news-icon-blink 1.4s ease infinite alternate;
 }
 
 @keyframes news-blink  {
   0%   { background: #fff; }
   100% { background: #ffba00; }
+}
+
+@keyframes news-icon-blink  {
+  0%   { color: @navbar-default-link-color; }
+  50% { color: @brand-primary; }
 }
 
 .new-feature-badge {
@@ -469,6 +475,14 @@
 }
 
 // App search (filter)
+.app-search-wrap {
+
+  @media (max-width: @screen-xs-max) {
+    margin-left: -@navbar-padding-horizontal;
+    margin-right: -@navbar-padding-horizontal;
+  }
+}
+
 .app-search {
   float: left;
   width: 130px;

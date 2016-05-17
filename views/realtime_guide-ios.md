@@ -1357,7 +1357,7 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
     [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
         // Tom 创建会话中有 Bob 和 Jerry 的查询
         AVIMConversationQuery *query = [self.client conversationQuery];
-        [query whereKey:@"m" containedIn:@[@"Bob", @"Jerry"]];
+        [query whereKey:@"m" containAllObjectsInArray:@[@"Bob", @"Jerry"]];
         // 执行查询
         [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
             NSLog(@"找到 %ld 个对话！", [objects count]);

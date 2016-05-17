@@ -33,7 +33,7 @@
         AVObject dongGuan = new AVObject("City");// 东莞
         dongGuan.put("name", "东莞");
 
-        dongGuan.put("dependent", dongGuan);// 为东莞设置 dependent 属性为广东
+        dongGuan.put("dependent", guangDong);// 为东莞设置 dependent 属性为广东
 ```
 
 {% endblock %}
@@ -197,26 +197,29 @@
 {% block code_save_student_related_to_course_with_relation %}
 
 ```java
-        AVObject studentTom = new AVObject("Student");// 学生 Tom
+        final AVObject studentTom = new AVObject("Student");// 学生 Tom
         studentTom.put("name", "Tom");
 
-        AVObject courseLinearAlgebra = new AVObject("Course");// 线性代数
+        final AVObject courseLinearAlgebra = new AVObject("Course");// 线性代数
         courseLinearAlgebra.put("name", "Linear Algebra");
 
-        AVObject courseObjectOrientedProgramming = new AVObject("Course");// 面向对象程序设计
+        final AVObject courseObjectOrientedProgramming = new AVObject("Course");// 面向对象程序设计
         courseObjectOrientedProgramming.put("name", "Object-Oriented Programming");
 
-        AVObject courseOperatingSystem = new AVObject("Course");// 操作系统
+        final AVObject courseOperatingSystem = new AVObject("Course");// 操作系统
         courseOperatingSystem.put("name", "Operating System");
 
-        AVRelation<AVObject> relation = studentTom.getRelation("coursesChosen");// 新建一个 AVRelation，用来保存所选的课程
+        AVObject.saveAllInBackground(Arrays.asList(courseLinearAlgebra, courseObjectOrientedProgramming, courseOperatingSystem), new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVRelation<AVObject> relation = studentTom.getRelation("coursesChosen");// 新建一个 AVRelation，用来保存所选的课程
+                relation.add(courseLinearAlgebra);
+                relation.add(courseObjectOrientedProgramming);
+                relation.add(courseOperatingSystem);
 
-        relation.add(courseLinearAlgebra);
-        relation.add(courseObjectOrientedProgramming);
-        relation.add(courseOperatingSystem);
-
-        // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
-        studentTom.saveInBackground();
+                studentTom.saveInBackground();
+            }
+        });
 ```
 {% endblock %}
 

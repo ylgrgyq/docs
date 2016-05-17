@@ -106,3 +106,28 @@
   - 在 LeanCloud 的推送服务中，不同类型的推送证书能够服务的环境略有不同，对应关系如下图所示：
     
     ![relation between cer and prod or dev](images/ios_cert_v2/relation_between_cer_and_prod_or_dev.png)
+
+## 上传证书失败
+
+如果无法上传推送证书，通常是因为证书有问题，一般由下列原因导致：
+
+1. 证书不是推送证书
+2. 证书导出格式有误
+
+验证导出的证书是不是推送证书有两种方法：
+
+1. 通过证书的名字来判断，推送证书的名字中会包含「Push Service」或者「Pass Type ID」。
+2. 配合真实设备来测试导出的证书是否有效。可以利用第三方工具，例如 [NWPusher](https://github.com/noodlewerk/NWPusher) 来快速测试。
+
+目前 LeanCloud 只接受 `p12` 格式的证书。因此在导出证书时，必须选择 `p12` 作为导出格式。
+
+上传证书时，LeanCloud 会进一步校验证书，帮助开发者发现错误。上传程序会检查证书的名字是否包含以下前缀：
+
+* `Apple Push Services`
+* `Apple Development IOS Push Services`
+* `Apple Production IOS Push Services`
+* `Pass Type ID`
+
+如果程序发现证书的名字中不包含以上前缀，则校验失败，证书将无法上传。
+
+Apple 未来可能会修改推送证书的名字前缀，我们会及时更新前缀列表，同时也欢迎大家来补充。

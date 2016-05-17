@@ -153,6 +153,34 @@
 
       .user-meta-wrap {
         line-height: 36px;
+
+        .user-name-text {
+          max-width: 100%;
+        }
+      }
+    }
+  }
+
+  // Related issue: https://github.com/leancloud/avfr/issues/546
+  &.list-collaborators-team-members {
+
+    .user-name {
+
+      .user-meta-wrap {
+        padding-right: 0;
+      }
+    }
+  }
+
+  // TODO: Larger text area for apps under current team in modal
+  // It's better to have an icon for every apps
+  // Related issue: https://github.com/leancloud/avfr/issues/546
+  &.list-collaborators-team-apps {
+
+    .user-name {
+
+      .user-meta-wrap {
+        width: 100%;
       }
     }
   }
@@ -160,7 +188,7 @@
   .user-meta-wrap.without-type {
 
     span {
-      line-height: 51px;
+      line-height: 45px;
     }
   }
 }

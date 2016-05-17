@@ -56,6 +56,14 @@
 @navbar-default-link-disabled-color:       #ccc;
 @navbar-default-link-disabled-bg:          transparent;
 
+//** Default label background color
+@label-default-bg:            @gray;
+@label-primary-bg:            @brand-primary;
+@label-success-bg:            @brand-success;
+@label-info-bg:               @brand-info;
+@label-warning-bg:            @brand-warning;
+@label-danger-bg:             @brand-danger;
+
 //** Global color for active items (e.g., navs or dropdowns).
 @component-active-color:    @brand-primary;
 //** Global background color for active items (e.g., navs or dropdowns).
@@ -94,7 +102,9 @@
 .button-variant(@color; @background; @border) {
   color: @color;
   background-color: @background;
+  background-image: linear-gradient(to bottom, lighten(@background, 10%) 0%, @background 100%);
   border-color: @border;
+  border-bottom-color: darken(@border, 5%);
 
   &:hover,
   &:focus,
@@ -105,6 +115,11 @@
     color: @color;
     background-color: darken(@background, 10%);
         border-color: darken(@border, 12%);
+  }
+
+  &.active,
+  &:active {
+    background-image: linear-gradient(to bottom, @background 0%, lighten(@background, 10%) 100%);
   }
 
   &:active,
@@ -143,6 +158,7 @@
 }
 
 .btn {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
 
   &:hover,
   &:focus,
@@ -158,6 +174,7 @@
   }
 
   &.btn-link {
+    box-shadow: none;
 
     &:active,
     &.active {
@@ -191,6 +208,15 @@
     }
   }
 
+  &.btn-link {
+
+    &:hover,
+    &:focus,
+    &.focus {
+      text-decoration: none;
+    }
+  }
+
   &.disabled,
   &[disabled] {
     opacity: .5;
@@ -201,12 +227,23 @@
 }
 
 .btn-group {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  border-radius: @border-radius-base;
+
+  .btn {
+    box-shadow: none;
+  }
 
   > .btn {
 
     &.btn-default {
-      background: #f5f5f5;
-      border-color: #f2f2f2;
+      border-color: @btn-default-border;
+      border-left-color: lighten(@btn-default-border, 5%);
+      border-bottom-color: darken(@btn-default-border, 5%);
+
+      &:first-child {
+        border-left-color: @btn-default-border;
+      }
 
       &:hover:not([disabled]),
       &:focus:not([disabled]) {
@@ -228,6 +265,7 @@
         color: @link-color;
         background: #fff;
         border-color: @link-color;
+        box-shadow: 0 1px 3px fade(@brand-primary, 20%);
       }
     }
 
@@ -240,6 +278,10 @@
         border-color: transparent;
       }
     }
+  }
+
+  > .btn-group {
+    box-shadow: none;
   }
 
   &.open {
@@ -425,6 +467,51 @@ table *,
   }
 }
 
+// A helper block inside Bootstrap Modals
+//
+// Usage:
+// <div class="modal-header">Modal title</div>
+// <div class="modal-help">Help text</div>
+// <div class="modal-body">Modal content</div>
+// <div class="modal-footer">Modal footer</div>
+//
+// or before footer:
+// <div class="modal-header">Modal title</div>
+// <div class="modal-body">Modal content</div>
+// <div class="modal-help">Help text</div>
+// <div class="modal-footer">Modal footer</div>
+//
+// or inside modal content:
+// <div class="modal-header">Modal title</div>
+// <div class="modal-body">
+//   <p>Modal content</p>
+//   <div class="modal-help">Help text</div>
+//   <p>Modal content</p>
+// </div>
+// <div class="modal-footer">Modal footer</div>
+
+.modal-help {
+  background: fade(@gray-light, 10%);
+  padding: 15px;
+
+  .modal-body & {
+    margin-left: -@modal-inner-padding;
+    margin-right: -@modal-inner-padding;
+  }
+
+  &.topmost {
+    margin-top: -@modal-inner-padding !important;
+  }
+
+  &.bottommost {
+    margin-bottom: -@modal-inner-padding !important;
+  }
+
+  &--warning {
+    background: lighten(@brand-danger, 34%);
+  }
+}
+
 //
 // Nav Tabs
 // --------------------------------------------------
@@ -490,8 +577,8 @@ table *,
 //
 // Forms
 // --------------------------------------------------
-.form-focus(@echeme: @brand-primary, @fade: 10%) {
-  box-shadow+: 0 0 0 3px fade(@echeme, @fade);
+.form-focus(@echeme: @brand-primary, @fade: 10%, @radius: 3px) {
+  box-shadow+: 0 0 0 @radius fade(@echeme, @fade);
 }
 
 @input-border: @btn-default-border;
@@ -604,55 +691,6 @@ textarea {
   }
 }
 
-.form-inline-alt {
-  // Used for inline forms inside .form-horizontal forms
-
-  .form-control {
-    display: inline-block;
-    width: 40%;
-    width: calc(~"50% - 10px");
-    margin-right: 10px;
-
-    & + .form-control {
-      margin-top: 0 !important;
-    }
-
-    &:last-child {
-      margin-right: 0;
-    }
-
-    // Make half-width inputs full-width for mobile screens
-    @media (max-width: @screen-xs) {
-      width: 100%;
-      margin-right: 0;
-
-      & + .form-control {
-        margin-top: 10px !important;
-      }
-    }
-  }
-
-  .close {
-    margin-top: 6px;
-  }
-
-  &.col-sm-9 {
-
-    .form-control {
-      width: (100% / 3 - 10px / 3);
-
-      @media (max-width: @screen-xs) {
-        width: 100%;
-        margin-right: 0;
-
-        & + .form-control {
-          margin-top: 10px !important;
-        }
-      }
-    }
-  }
-}
-
 
 //
 // Images
@@ -720,12 +758,28 @@ textarea {
 
   > li > a,
   > li > button {
+    color: @dropdown-link-color;
     border-color: transparent;
     font-weight: @font-weight-base;
 
     &:hover,
     &:focus {
       border-color: transparent;
+
+      &.disabled,
+      &[disabled],
+      &.text {
+        background: transparent;
+      }
+    }
+
+    &.disabled,
+    &[disabled] {
+      opacity: .5;
+    }
+
+    &.text {
+      cursor: default !important;
     }
   }
 
@@ -756,6 +810,24 @@ textarea {
         background: transparent;
       }
     }
+  }
+}
+
+.dropdown-danger {
+
+  &,
+  &:hover,
+  &:focus {
+    color: @brand-danger !important;
+  }
+}
+
+.dropdown-warning {
+
+  &,
+  &:hover,
+  &:focus {
+    color: @brand-warning !important;
   }
 }
 
@@ -851,7 +923,6 @@ textarea {
 
 code {
   font-size: 96%;
-  word-break: break-word;
   word-wrap: break-word;
 
   &.bstooltip {
@@ -902,6 +973,7 @@ hr {
 // Text
 // --------------------------------------------------
 
+.help-block,
 .text-muted {
 
   &.text-slide-down {
@@ -913,6 +985,11 @@ hr {
       max-height: 60px;
       padding-bottom: 12px;
     }
+  }
+
+  ol,
+  ul {
+    padding-left: 24px;
   }
 }
 
@@ -987,7 +1064,7 @@ hr {
 // --------------------------------------------------
 
 .panel {
-  .box-shadow(0 1px 2px rgba(0,0,0,.05));
+  .box-shadow(0 1px 2px rgba(0, 0, 0, .05));
 }
 
 .panel-title {
@@ -995,6 +1072,32 @@ hr {
 
   span {
     display: block;
+  }
+}
+
+.panel-group {
+  margin-bottom: @line-height-computed;
+
+  .panel {
+
+    + .panel {
+    }
+  }
+
+  .panel-heading {
+    background-image: linear-gradient(to bottom, #f5f5f5 0%, #fff 100%);
+    border-radius: @panel-border-radius;
+
+    + .panel-collapse > .panel-body,
+    + .panel-collapse > .list-group {
+      border-top: none;
+    }
+  }
+
+  .panel-footer {
+
+    + .panel-collapse .panel-body {
+    }
   }
 }
 
@@ -1043,8 +1146,9 @@ hr {
 .label {
   font-size: 85%;
   font-weight: @font-weight-base;
-  padding: .2em .6em .2em;
+  padding: .3em .6em .3em;
   border-radius: @border-radius-base;
+  border: none;
 }
 
 .label-variant(@color) {
@@ -1103,7 +1207,27 @@ hr {
 // Tables
 // --------------------------------------------------
 
+table {
+  word-break: normal;
+  display: block;
+  width: 100%;
+  overflow: auto;
+  word-break: keep-all;
+}
+
 .table {
+
+  @media (max-width: @screen-xs-max) {
+    display: block;
+    width: 100%;
+    overflow-x: scroll;
+
+    thead,
+    tbody {
+      display: block;
+      min-width: 1000px;
+    }
+  }
 
   thead {
     color: @gray-light;
@@ -1155,7 +1279,8 @@ hr {
     }
   }
 
-  &.table-without-head {
+  &.table-without-head,
+  &.table-headless {
 
     thead {
       display: none;
@@ -1216,6 +1341,70 @@ hr {
 
 
 //
+// Boxed Content
+// --------------------------------------------------
+.boxed-wrap {
+  @padding: 15px;
+  position: relative;
+  margin-bottom: 20px;
+  border-radius: @border-radius-base;
+
+  .boxed-header {
+    display: block;
+    padding: 12px @padding;
+    background-color: #f8f8f8;
+    border: 1px solid lighten(@gray-light, 25%);
+    border-bottom: 0;
+    border-radius: @border-radius-base @border-radius-base 0 0;
+
+    &,
+    & > h3,
+    & > h4 {
+      font-size: 15px;
+      font-weight: bold;
+    }
+
+    > * {
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  .boxed-group {
+    padding: @padding;
+    border: 1px solid lighten(@gray-light, 25%);
+    border-bottom: none;
+    .clearfix;
+
+    &:last-child {
+      border: 1px solid lighten(@gray-light, 25%);
+      border-radius: 0 0 @border-radius-base @border-radius-base;
+    }
+
+    > ul,
+    > ol {
+      padding-left: 20px;
+    }
+
+    > p,
+    > ul,
+    > ol,
+    > form {
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    > hr,
+    > form hr {
+      margin: @padding -@padding;
+    }
+  }
+}
+
+
+//
 // More Custom Defines
 // --------------------------------------------------
 
@@ -1229,8 +1418,8 @@ select.form-control {
   background-position: calc(~"100% - 8px");
   background-repeat: no-repeat;
   background-size: 10px 10px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  border: 1px solid @btn-default-border;
+  border-radius: @border-radius-base;
   outline: none;
   -webkit-appearance: none;
 
@@ -1255,9 +1444,15 @@ select.form-control {
 
 // Custom external link symbol
 a {
+
   .icon-external {
     opacity: .6;
     vertical-align: 0;
+  }
+
+  &.disabled,
+  &[disabled] {
+    cursor: not-allowed !important;
   }
 }
 
@@ -1366,6 +1561,168 @@ a {
     margin-bottom: 0;
   }
 
+  @radio-icon-size: 40px;
+  @radio-icon-margin: 10px;
+  .custom-form-with-icon & {
+    padding-left: 0;
+
+    label {
+      display: block;
+    }
+
+    .icon {
+      font-size: @radio-icon-size;
+      color: @gray-light;
+      float: left;
+      display: block;
+      padding-left: @radio-icon-margin;
+      padding-right: @radio-icon-margin;
+    }
+  }
+
+  .custom-form-with-hover-bg & {
+
+    label {
+      padding: 12px 5px;
+      margin: 6px 0;
+      border-radius: @border-radius-base;
+      box-shadow: 0 0 0 1px transparent;
+
+      &:hover,
+      &:focus {
+        color: #000;
+        background: #f9f9f9;
+        box-shadow: 0 0 0 1px @gray-lighter;
+
+        .icon,
+        .control-description {
+          color: @gray;
+        }
+
+        .checkmark--placeholder {
+          border-color: @gray-light;
+          background: @gray-lighter;
+        }
+      }
+    }
+
+    &.active {
+
+      label {
+        color: @brand-primary;
+        background: #fff;
+        box-shadow: 0 0 0 1px @brand-primary;
+
+        .icon,
+        .control-description {
+          color: @brand-primary;
+        }
+      }
+    }
+  }
+
+  @checkmark-offset: 4px;
+  @checkmark-size: 28px;
+
+  @checkmark-placeholder-offset: 5px;
+  @checkmark-placeholder-size: (@checkmark-size - @checkmark-placeholder-offset);
+  .custom-form-with-checkmark & {
+    padding-left: 0;
+
+    label {
+      display: block;
+    }
+
+    .icon {
+      font-size: @radio-icon-size;
+      color: @gray-light;
+      float: left;
+      display: block;
+      padding-left: @radio-icon-margin;
+      padding-right: @radio-icon-margin;
+    }
+
+    .transform-base(@size) {
+      transform+_: translateY((@size / -2));
+    }
+
+    label {
+      position: relative;
+
+      .control-title,
+      .control-description {
+        display: block;
+        margin-left: (@checkmark-size + @checkmark-offset * 2 + 12px);
+      }
+
+      // symbols for every option
+      .symbol-wrap {
+        height: 100%;
+        border-left: 1px solid;
+      }
+
+      .symbol {
+        position: absolute;
+        top: 50%;
+        padding-left: (@checkmark-size + @checkmark-offset * 2 + 10px);
+        .transform-base(@radio-icon-size);
+      }
+
+      // checkmark indicators
+      .checkmark-wrap {
+        height: 100%;
+        border-right: 1px solid;
+      }
+
+      .checkmark {
+        position: absolute;
+        top: 50%;
+        color: @brand-primary;
+        font-size: @checkmark-size;
+
+        &--checked {
+          opacity: 0;
+          left: @checkmark-offset;
+          .transform-base(@checkmark-size);
+          transform+_: scale(1.2);
+          transition: transform .3s ease, opacity .3s ease;
+        }
+
+        &--placeholder {
+          opacity: 1;
+          left: (@checkmark-offset + @checkmark-placeholder-offset / 2);
+          width: @checkmark-placeholder-size;
+          height: @checkmark-placeholder-size;
+          margin-left: @radio-icon-margin;
+          margin-right: @radio-icon-margin;
+          border: 1px solid lighten(@gray-light, 24%);
+          border-radius: 50%;
+          .transform-base(@checkmark-placeholder-size);
+          transition: opacity .3s ease;
+        }
+      }
+    }
+
+    &.active {
+
+      label {
+
+        .checkmark {
+
+          &--checked {
+            opacity: 1;
+            .transform-base(@checkmark-size);
+            transform+_: scale(1);
+          }
+
+          &--placeholder {
+            opacity: 0;
+          }
+        }
+      }
+    }
+  }
+
   .no-margin & {
     margin-top: 0;
     margin-bottom: 0;
@@ -1411,9 +1768,13 @@ a {
     }
   }
 
+  .control-description {
+    color: @gray-light;
+  }
+
   // Focus
   input:focus ~ .control-indicator {
-    background-color: #f5f5f5;
+    // background-color: #f5f5f5;
   }
 
   // Active

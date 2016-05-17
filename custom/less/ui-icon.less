@@ -14,11 +14,11 @@ Sep 16, 2015
 
 @font-face {
   font-family:"ui-icon";
-  src:url("../fonts/ui-icon.eot?9ea0729e9a45097c23082d259d99ca88");
+  src:url("../fonts/ui-icon.eot?bffe8af34d2bf84821bbad913efb4362");
   src:url("../fonts/ui-icon.eot?#iefix") format("embedded-opentype"),
-		url("../fonts/ui-icon.woff2?9ea0729e9a45097c23082d259d99ca88") format("woff2"),
-		url("../fonts/ui-icon.woff?9ea0729e9a45097c23082d259d99ca88") format("woff"),
-		url("../fonts/ui-icon.svg?9ea0729e9a45097c23082d259d99ca88#ui-icon") format("svg");
+		url("../fonts/ui-icon.woff2?bffe8af34d2bf84821bbad913efb4362") format("woff2"),
+		url("../fonts/ui-icon.woff?bffe8af34d2bf84821bbad913efb4362") format("woff"),
+		url("../fonts/ui-icon.svg?bffe8af34d2bf84821bbad913efb4362#ui-icon") format("svg");
   font-weight:normal;
   font-style:normal;
 }
@@ -43,6 +43,10 @@ Sep 16, 2015
 
 // Mixins
 
+.icon-acl-disable-in-out, 
+.icon-acl-disable-in, 
+.icon-acl-disable-none, 
+.icon-acl-disable-out, 
 .icon-add, 
 .icon-analytics, 
 .icon-apple, 
@@ -67,6 +71,7 @@ Sep 16, 2015
 .icon-chat-alt, 
 .icon-chat-bold, 
 .icon-chat, 
+.icon-checked-bold, 
 .icon-checked, 
 .icon-checkmark-bold, 
 .icon-clipboard, 
@@ -74,6 +79,7 @@ Sep 16, 2015
 .icon-cloud, 
 .icon-compare, 
 .icon-compose, 
+.icon-compress, 
 .icon-console-run, 
 .icon-contact-card, 
 .icon-controller, 
@@ -88,12 +94,14 @@ Sep 16, 2015
 .icon-edit, 
 .icon-envelope-bold, 
 .icon-envelope, 
+.icon-expand, 
 .icon-external, 
 .icon-factory, 
 .icon-filter, 
 .icon-gear-bold, 
 .icon-gear, 
 .icon-gears, 
+.icon-git-branch, 
 .icon-github, 
 .icon-globe-alt-2, 
 .icon-globe-alt, 
@@ -194,7 +202,7 @@ Sep 16, 2015
 
 // Icons
 
-.icon-add {
+.icon-acl-disable-in-out {
   &:before {
     content:"\f101";
   }
@@ -202,7 +210,7 @@ Sep 16, 2015
 }
 
 
-.icon-analytics {
+.icon-acl-disable-in {
   &:before {
     content:"\f102";
   }
@@ -210,7 +218,7 @@ Sep 16, 2015
 }
 
 
-.icon-apple {
+.icon-acl-disable-none {
   &:before {
     content:"\f103";
   }
@@ -218,7 +226,7 @@ Sep 16, 2015
 }
 
 
-.icon-arrow-simple-bold {
+.icon-acl-disable-out {
   &:before {
     content:"\f104";
   }
@@ -226,7 +234,7 @@ Sep 16, 2015
 }
 
 
-.icon-arrow-simple {
+.icon-add {
   &:before {
     content:"\f105";
   }
@@ -234,7 +242,7 @@ Sep 16, 2015
 }
 
 
-.icon-at {
+.icon-analytics {
   &:before {
     content:"\f106";
   }
@@ -242,7 +250,7 @@ Sep 16, 2015
 }
 
 
-.icon-atom {
+.icon-apple {
   &:before {
     content:"\f107";
   }
@@ -250,7 +258,7 @@ Sep 16, 2015
 }
 
 
-.icon-avatar {
+.icon-arrow-simple-bold {
   &:before {
     content:"\f108";
   }
@@ -258,7 +266,7 @@ Sep 16, 2015
 }
 
 
-.icon-bandaid {
+.icon-arrow-simple {
   &:before {
     content:"\f109";
   }
@@ -266,7 +274,7 @@ Sep 16, 2015
 }
 
 
-.icon-beaker {
+.icon-at {
   &:before {
     content:"\f10a";
   }
@@ -274,7 +282,7 @@ Sep 16, 2015
 }
 
 
-.icon-blank-app {
+.icon-atom {
   &:before {
     content:"\f10b";
   }
@@ -282,7 +290,7 @@ Sep 16, 2015
 }
 
 
-.icon-browser {
+.icon-avatar {
   &:before {
     content:"\f10c";
   }
@@ -290,7 +298,7 @@ Sep 16, 2015
 }
 
 
-.icon-building {
+.icon-bandaid {
   &:before {
     content:"\f10d";
   }
@@ -298,7 +306,7 @@ Sep 16, 2015
 }
 
 
-.icon-bulb {
+.icon-beaker {
   &:before {
     content:"\f10e";
   }
@@ -306,7 +314,7 @@ Sep 16, 2015
 }
 
 
-.icon-cabinet-bold {
+.icon-blank-app {
   &:before {
     content:"\f10f";
   }
@@ -314,7 +322,7 @@ Sep 16, 2015
 }
 
 
-.icon-cabinet {
+.icon-browser {
   &:before {
     content:"\f110";
   }
@@ -322,7 +330,7 @@ Sep 16, 2015
 }
 
 
-.icon-calendar {
+.icon-building {
   &:before {
     content:"\f111";
   }
@@ -330,7 +338,7 @@ Sep 16, 2015
 }
 
 
-.icon-chart-alt {
+.icon-bulb {
   &:before {
     content:"\f112";
   }
@@ -338,7 +346,7 @@ Sep 16, 2015
 }
 
 
-.icon-chart-bold {
+.icon-cabinet-bold {
   &:before {
     content:"\f113";
   }
@@ -346,7 +354,7 @@ Sep 16, 2015
 }
 
 
-.icon-chart {
+.icon-cabinet {
   &:before {
     content:"\f114";
   }
@@ -354,7 +362,7 @@ Sep 16, 2015
 }
 
 
-.icon-chat-alt-bold {
+.icon-calendar {
   &:before {
     content:"\f115";
   }
@@ -362,7 +370,7 @@ Sep 16, 2015
 }
 
 
-.icon-chat-alt {
+.icon-chart-alt {
   &:before {
     content:"\f116";
   }
@@ -370,7 +378,7 @@ Sep 16, 2015
 }
 
 
-.icon-chat-bold {
+.icon-chart-bold {
   &:before {
     content:"\f117";
   }
@@ -378,7 +386,7 @@ Sep 16, 2015
 }
 
 
-.icon-chat {
+.icon-chart {
   &:before {
     content:"\f118";
   }
@@ -386,7 +394,7 @@ Sep 16, 2015
 }
 
 
-.icon-checked {
+.icon-chat-alt-bold {
   &:before {
     content:"\f119";
   }
@@ -394,7 +402,7 @@ Sep 16, 2015
 }
 
 
-.icon-checkmark-bold {
+.icon-chat-alt {
   &:before {
     content:"\f11a";
   }
@@ -402,7 +410,7 @@ Sep 16, 2015
 }
 
 
-.icon-clipboard {
+.icon-chat-bold {
   &:before {
     content:"\f11b";
   }
@@ -410,7 +418,7 @@ Sep 16, 2015
 }
 
 
-.icon-cloud-storage {
+.icon-chat {
   &:before {
     content:"\f11c";
   }
@@ -418,7 +426,7 @@ Sep 16, 2015
 }
 
 
-.icon-cloud {
+.icon-checked-bold {
   &:before {
     content:"\f11d";
   }
@@ -426,7 +434,7 @@ Sep 16, 2015
 }
 
 
-.icon-compare {
+.icon-checked {
   &:before {
     content:"\f11e";
   }
@@ -434,7 +442,7 @@ Sep 16, 2015
 }
 
 
-.icon-compose {
+.icon-checkmark-bold {
   &:before {
     content:"\f11f";
   }
@@ -442,7 +450,7 @@ Sep 16, 2015
 }
 
 
-.icon-console-run {
+.icon-clipboard {
   &:before {
     content:"\f120";
   }
@@ -450,7 +458,7 @@ Sep 16, 2015
 }
 
 
-.icon-contact-card {
+.icon-cloud-storage {
   &:before {
     content:"\f121";
   }
@@ -458,7 +466,7 @@ Sep 16, 2015
 }
 
 
-.icon-controller {
+.icon-cloud {
   &:before {
     content:"\f122";
   }
@@ -466,7 +474,7 @@ Sep 16, 2015
 }
 
 
-.icon-credit-card {
+.icon-compare {
   &:before {
     content:"\f123";
   }
@@ -474,7 +482,7 @@ Sep 16, 2015
 }
 
 
-.icon-crown {
+.icon-compose {
   &:before {
     content:"\f124";
   }
@@ -482,7 +490,7 @@ Sep 16, 2015
 }
 
 
-.icon-danger {
+.icon-compress {
   &:before {
     content:"\f125";
   }
@@ -490,7 +498,7 @@ Sep 16, 2015
 }
 
 
-.icon-dashboard {
+.icon-console-run {
   &:before {
     content:"\f126";
   }
@@ -498,7 +506,7 @@ Sep 16, 2015
 }
 
 
-.icon-database-bold {
+.icon-contact-card {
   &:before {
     content:"\f127";
   }
@@ -506,7 +514,7 @@ Sep 16, 2015
 }
 
 
-.icon-devices {
+.icon-controller {
   &:before {
     content:"\f128";
   }
@@ -514,7 +522,7 @@ Sep 16, 2015
 }
 
 
-.icon-dollars-bold {
+.icon-credit-card {
   &:before {
     content:"\f129";
   }
@@ -522,7 +530,7 @@ Sep 16, 2015
 }
 
 
-.icon-download {
+.icon-crown {
   &:before {
     content:"\f12a";
   }
@@ -530,7 +538,7 @@ Sep 16, 2015
 }
 
 
-.icon-edit {
+.icon-danger {
   &:before {
     content:"\f12b";
   }
@@ -538,7 +546,7 @@ Sep 16, 2015
 }
 
 
-.icon-envelope-bold {
+.icon-dashboard {
   &:before {
     content:"\f12c";
   }
@@ -546,7 +554,7 @@ Sep 16, 2015
 }
 
 
-.icon-envelope {
+.icon-database-bold {
   &:before {
     content:"\f12d";
   }
@@ -554,7 +562,7 @@ Sep 16, 2015
 }
 
 
-.icon-external {
+.icon-devices {
   &:before {
     content:"\f12e";
   }
@@ -562,7 +570,7 @@ Sep 16, 2015
 }
 
 
-.icon-factory {
+.icon-dollars-bold {
   &:before {
     content:"\f12f";
   }
@@ -570,7 +578,7 @@ Sep 16, 2015
 }
 
 
-.icon-filter {
+.icon-download {
   &:before {
     content:"\f130";
   }
@@ -578,7 +586,7 @@ Sep 16, 2015
 }
 
 
-.icon-gear-bold {
+.icon-edit {
   &:before {
     content:"\f131";
   }
@@ -586,7 +594,7 @@ Sep 16, 2015
 }
 
 
-.icon-gear {
+.icon-envelope-bold {
   &:before {
     content:"\f132";
   }
@@ -594,7 +602,7 @@ Sep 16, 2015
 }
 
 
-.icon-gears {
+.icon-envelope {
   &:before {
     content:"\f133";
   }
@@ -602,7 +610,7 @@ Sep 16, 2015
 }
 
 
-.icon-github {
+.icon-expand {
   &:before {
     content:"\f134";
   }
@@ -610,7 +618,7 @@ Sep 16, 2015
 }
 
 
-.icon-globe-alt-2 {
+.icon-external {
   &:before {
     content:"\f135";
   }
@@ -618,7 +626,7 @@ Sep 16, 2015
 }
 
 
-.icon-globe-alt {
+.icon-factory {
   &:before {
     content:"\f136";
   }
@@ -626,7 +634,7 @@ Sep 16, 2015
 }
 
 
-.icon-globe {
+.icon-filter {
   &:before {
     content:"\f137";
   }
@@ -634,7 +642,7 @@ Sep 16, 2015
 }
 
 
-.icon-golf {
+.icon-gear-bold {
   &:before {
     content:"\f138";
   }
@@ -642,7 +650,7 @@ Sep 16, 2015
 }
 
 
-.icon-google-play {
+.icon-gear {
   &:before {
     content:"\f139";
   }
@@ -650,7 +658,7 @@ Sep 16, 2015
 }
 
 
-.icon-graduation {
+.icon-gears {
   &:before {
     content:"\f13a";
   }
@@ -658,7 +666,7 @@ Sep 16, 2015
 }
 
 
-.icon-graph {
+.icon-git-branch {
   &:before {
     content:"\f13b";
   }
@@ -666,7 +674,7 @@ Sep 16, 2015
 }
 
 
-.icon-hammer-bold {
+.icon-github {
   &:before {
     content:"\f13c";
   }
@@ -674,7 +682,7 @@ Sep 16, 2015
 }
 
 
-.icon-heartbeat {
+.icon-globe-alt-2 {
   &:before {
     content:"\f13d";
   }
@@ -682,7 +690,7 @@ Sep 16, 2015
 }
 
 
-.icon-home-bold {
+.icon-globe-alt {
   &:before {
     content:"\f13e";
   }
@@ -690,7 +698,7 @@ Sep 16, 2015
 }
 
 
-.icon-home {
+.icon-globe {
   &:before {
     content:"\f13f";
   }
@@ -698,7 +706,7 @@ Sep 16, 2015
 }
 
 
-.icon-id-card {
+.icon-golf {
   &:before {
     content:"\f140";
   }
@@ -706,7 +714,7 @@ Sep 16, 2015
 }
 
 
-.icon-inbox-empty {
+.icon-google-play {
   &:before {
     content:"\f141";
   }
@@ -714,7 +722,7 @@ Sep 16, 2015
 }
 
 
-.icon-inbox-files-bold {
+.icon-graduation {
   &:before {
     content:"\f142";
   }
@@ -722,7 +730,7 @@ Sep 16, 2015
 }
 
 
-.icon-inbox-files {
+.icon-graph {
   &:before {
     content:"\f143";
   }
@@ -730,7 +738,7 @@ Sep 16, 2015
 }
 
 
-.icon-info {
+.icon-hammer-bold {
   &:before {
     content:"\f144";
   }
@@ -738,7 +746,7 @@ Sep 16, 2015
 }
 
 
-.icon-key-bold {
+.icon-heartbeat {
   &:before {
     content:"\f145";
   }
@@ -746,7 +754,7 @@ Sep 16, 2015
 }
 
 
-.icon-key {
+.icon-home-bold {
   &:before {
     content:"\f146";
   }
@@ -754,7 +762,7 @@ Sep 16, 2015
 }
 
 
-.icon-keyhole {
+.icon-home {
   &:before {
     content:"\f147";
   }
@@ -762,7 +770,7 @@ Sep 16, 2015
 }
 
 
-.icon-layer-alt {
+.icon-id-card {
   &:before {
     content:"\f148";
   }
@@ -770,7 +778,7 @@ Sep 16, 2015
 }
 
 
-.icon-layer-bold {
+.icon-inbox-empty {
   &:before {
     content:"\f149";
   }
@@ -778,7 +786,7 @@ Sep 16, 2015
 }
 
 
-.icon-lightning {
+.icon-inbox-files-bold {
   &:before {
     content:"\f14a";
   }
@@ -786,7 +794,7 @@ Sep 16, 2015
 }
 
 
-.icon-list-selected {
+.icon-inbox-files {
   &:before {
     content:"\f14b";
   }
@@ -794,7 +802,7 @@ Sep 16, 2015
 }
 
 
-.icon-list {
+.icon-info {
   &:before {
     content:"\f14c";
   }
@@ -802,7 +810,7 @@ Sep 16, 2015
 }
 
 
-.icon-location-arrow {
+.icon-key-bold {
   &:before {
     content:"\f14d";
   }
@@ -810,7 +818,7 @@ Sep 16, 2015
 }
 
 
-.icon-lock {
+.icon-key {
   &:before {
     content:"\f14e";
   }
@@ -818,7 +826,7 @@ Sep 16, 2015
 }
 
 
-.icon-locked-on {
+.icon-keyhole {
   &:before {
     content:"\f14f";
   }
@@ -826,7 +834,7 @@ Sep 16, 2015
 }
 
 
-.icon-locked {
+.icon-layer-alt {
   &:before {
     content:"\f150";
   }
@@ -834,7 +842,7 @@ Sep 16, 2015
 }
 
 
-.icon-log {
+.icon-layer-bold {
   &:before {
     content:"\f151";
   }
@@ -842,7 +850,7 @@ Sep 16, 2015
 }
 
 
-.icon-magic {
+.icon-lightning {
   &:before {
     content:"\f152";
   }
@@ -850,7 +858,7 @@ Sep 16, 2015
 }
 
 
-.icon-magnet {
+.icon-list-selected {
   &:before {
     content:"\f153";
   }
@@ -858,7 +866,7 @@ Sep 16, 2015
 }
 
 
-.icon-map-location {
+.icon-list {
   &:before {
     content:"\f154";
   }
@@ -866,7 +874,7 @@ Sep 16, 2015
 }
 
 
-.icon-megaphone-bold {
+.icon-location-arrow {
   &:before {
     content:"\f155";
   }
@@ -874,7 +882,7 @@ Sep 16, 2015
 }
 
 
-.icon-mobile {
+.icon-lock {
   &:before {
     content:"\f156";
   }
@@ -882,7 +890,7 @@ Sep 16, 2015
 }
 
 
-.icon-multi-lang {
+.icon-locked-on {
   &:before {
     content:"\f157";
   }
@@ -890,7 +898,7 @@ Sep 16, 2015
 }
 
 
-.icon-outbound {
+.icon-locked {
   &:before {
     content:"\f158";
   }
@@ -898,7 +906,7 @@ Sep 16, 2015
 }
 
 
-.icon-package {
+.icon-log {
   &:before {
     content:"\f159";
   }
@@ -906,7 +914,7 @@ Sep 16, 2015
 }
 
 
-.icon-path {
+.icon-magic {
   &:before {
     content:"\f15a";
   }
@@ -914,7 +922,7 @@ Sep 16, 2015
 }
 
 
-.icon-pen {
+.icon-magnet {
   &:before {
     content:"\f15b";
   }
@@ -922,7 +930,7 @@ Sep 16, 2015
 }
 
 
-.icon-phone-bold {
+.icon-map-location {
   &:before {
     content:"\f15c";
   }
@@ -930,7 +938,7 @@ Sep 16, 2015
 }
 
 
-.icon-phone {
+.icon-megaphone-bold {
   &:before {
     content:"\f15d";
   }
@@ -938,7 +946,7 @@ Sep 16, 2015
 }
 
 
-.icon-pie-chart {
+.icon-mobile {
   &:before {
     content:"\f15e";
   }
@@ -946,7 +954,7 @@ Sep 16, 2015
 }
 
 
-.icon-piggy-bank {
+.icon-multi-lang {
   &:before {
     content:"\f15f";
   }
@@ -954,7 +962,7 @@ Sep 16, 2015
 }
 
 
-.icon-plan {
+.icon-outbound {
   &:before {
     content:"\f160";
   }
@@ -962,7 +970,7 @@ Sep 16, 2015
 }
 
 
-.icon-plane {
+.icon-package {
   &:before {
     content:"\f161";
   }
@@ -970,7 +978,7 @@ Sep 16, 2015
 }
 
 
-.icon-play-bold {
+.icon-path {
   &:before {
     content:"\f162";
   }
@@ -978,7 +986,7 @@ Sep 16, 2015
 }
 
 
-.icon-play {
+.icon-pen {
   &:before {
     content:"\f163";
   }
@@ -986,7 +994,7 @@ Sep 16, 2015
 }
 
 
-.icon-plug {
+.icon-phone-bold {
   &:before {
     content:"\f164";
   }
@@ -994,7 +1002,7 @@ Sep 16, 2015
 }
 
 
-.icon-presentation-bold {
+.icon-phone {
   &:before {
     content:"\f165";
   }
@@ -1002,7 +1010,7 @@ Sep 16, 2015
 }
 
 
-.icon-push-bold {
+.icon-pie-chart {
   &:before {
     content:"\f166";
   }
@@ -1010,7 +1018,7 @@ Sep 16, 2015
 }
 
 
-.icon-push {
+.icon-piggy-bank {
   &:before {
     content:"\f167";
   }
@@ -1018,7 +1026,7 @@ Sep 16, 2015
 }
 
 
-.icon-question {
+.icon-plan {
   &:before {
     content:"\f168";
   }
@@ -1026,7 +1034,7 @@ Sep 16, 2015
 }
 
 
-.icon-radar {
+.icon-plane {
   &:before {
     content:"\f169";
   }
@@ -1034,7 +1042,7 @@ Sep 16, 2015
 }
 
 
-.icon-refresh {
+.icon-play-bold {
   &:before {
     content:"\f16a";
   }
@@ -1042,7 +1050,7 @@ Sep 16, 2015
 }
 
 
-.icon-rewind {
+.icon-play {
   &:before {
     content:"\f16b";
   }
@@ -1050,7 +1058,7 @@ Sep 16, 2015
 }
 
 
-.icon-rss {
+.icon-plug {
   &:before {
     content:"\f16c";
   }
@@ -1058,7 +1066,7 @@ Sep 16, 2015
 }
 
 
-.icon-satellite {
+.icon-presentation-bold {
   &:before {
     content:"\f16d";
   }
@@ -1066,7 +1074,7 @@ Sep 16, 2015
 }
 
 
-.icon-schema-free {
+.icon-push-bold {
   &:before {
     content:"\f16e";
   }
@@ -1074,7 +1082,7 @@ Sep 16, 2015
 }
 
 
-.icon-search-bold {
+.icon-push {
   &:before {
     content:"\f16f";
   }
@@ -1082,7 +1090,7 @@ Sep 16, 2015
 }
 
 
-.icon-search {
+.icon-question {
   &:before {
     content:"\f170";
   }
@@ -1090,7 +1098,7 @@ Sep 16, 2015
 }
 
 
-.icon-server-rack-bold {
+.icon-radar {
   &:before {
     content:"\f171";
   }
@@ -1098,7 +1106,7 @@ Sep 16, 2015
 }
 
 
-.icon-share-bold {
+.icon-refresh {
   &:before {
     content:"\f172";
   }
@@ -1106,7 +1114,7 @@ Sep 16, 2015
 }
 
 
-.icon-share {
+.icon-rewind {
   &:before {
     content:"\f173";
   }
@@ -1114,15 +1122,20 @@ Sep 16, 2015
 }
 
 
-.icon-signpost {
+.icon-rss {
   &:before {
     content:"\f174";
   }
-  
+}
+
+.icon-faq {
+  &:before {
+    content:"\f170";
+  }
 }
 
 
-.icon-slider-alt {
+.icon-satellite {
   &:before {
     content:"\f175";
   }
@@ -1130,7 +1143,7 @@ Sep 16, 2015
 }
 
 
-.icon-slider-nav-left {
+.icon-schema-free {
   &:before {
     content:"\f176";
   }
@@ -1138,7 +1151,7 @@ Sep 16, 2015
 }
 
 
-.icon-slider-nav-right {
+.icon-search-bold {
   &:before {
     content:"\f177";
   }
@@ -1146,7 +1159,7 @@ Sep 16, 2015
 }
 
 
-.icon-slider {
+.icon-search {
   &:before {
     content:"\f178";
   }
@@ -1154,7 +1167,7 @@ Sep 16, 2015
 }
 
 
-.icon-smile-bold {
+.icon-server-rack-bold {
   &:before {
     content:"\f179";
   }
@@ -1162,7 +1175,7 @@ Sep 16, 2015
 }
 
 
-.icon-smile {
+.icon-share-bold {
   &:before {
     content:"\f17a";
   }
@@ -1170,7 +1183,7 @@ Sep 16, 2015
 }
 
 
-.icon-sms {
+.icon-share {
   &:before {
     content:"\f17b";
   }
@@ -1178,7 +1191,7 @@ Sep 16, 2015
 }
 
 
-.icon-stopwatch {
+.icon-signpost {
   &:before {
     content:"\f17c";
   }
@@ -1186,7 +1199,7 @@ Sep 16, 2015
 }
 
 
-.icon-target {
+.icon-slider-alt {
   &:before {
     content:"\f17d";
   }
@@ -1194,7 +1207,7 @@ Sep 16, 2015
 }
 
 
-.icon-team-bold {
+.icon-slider-nav-left {
   &:before {
     content:"\f17e";
   }
@@ -1202,7 +1215,7 @@ Sep 16, 2015
 }
 
 
-.icon-team {
+.icon-slider-nav-right {
   &:before {
     content:"\f17f";
   }
@@ -1210,7 +1223,7 @@ Sep 16, 2015
 }
 
 
-.icon-timer {
+.icon-slider {
   &:before {
     content:"\f180";
   }
@@ -1218,7 +1231,7 @@ Sep 16, 2015
 }
 
 
-.icon-trash {
+.icon-smile-bold {
   &:before {
     content:"\f181";
   }
@@ -1226,7 +1239,7 @@ Sep 16, 2015
 }
 
 
-.icon-twitter {
+.icon-smile {
   &:before {
     content:"\f182";
   }
@@ -1234,7 +1247,7 @@ Sep 16, 2015
 }
 
 
-.icon-user {
+.icon-sms {
   &:before {
     content:"\f183";
   }
@@ -1242,7 +1255,7 @@ Sep 16, 2015
 }
 
 
-.icon-users-bold {
+.icon-stopwatch {
   &:before {
     content:"\f184";
   }
@@ -1250,7 +1263,7 @@ Sep 16, 2015
 }
 
 
-.icon-users {
+.icon-target {
   &:before {
     content:"\f185";
   }
@@ -1258,7 +1271,7 @@ Sep 16, 2015
 }
 
 
-.icon-wandoujia {
+.icon-team-bold {
   &:before {
     content:"\f186";
   }
@@ -1266,7 +1279,7 @@ Sep 16, 2015
 }
 
 
-.icon-wechat-alt {
+.icon-team {
   &:before {
     content:"\f187";
   }
@@ -1274,7 +1287,7 @@ Sep 16, 2015
 }
 
 
-.icon-weibo {
+.icon-timer {
   &:before {
     content:"\f188";
   }
@@ -1282,7 +1295,7 @@ Sep 16, 2015
 }
 
 
-.icon-window {
+.icon-trash {
   &:before {
     content:"\f189";
   }
@@ -1290,7 +1303,7 @@ Sep 16, 2015
 }
 
 
-.icon-wrench {
+.icon-twitter {
   &:before {
     content:"\f18a";
   }
@@ -1298,9 +1311,73 @@ Sep 16, 2015
 }
 
 
-.icon-yen-bold {
+.icon-user {
   &:before {
     content:"\f18b";
+  }
+  
+}
+
+
+.icon-users-bold {
+  &:before {
+    content:"\f18c";
+  }
+  
+}
+
+
+.icon-users {
+  &:before {
+    content:"\f18d";
+  }
+  
+}
+
+
+.icon-wandoujia {
+  &:before {
+    content:"\f18e";
+  }
+  
+}
+
+
+.icon-wechat-alt {
+  &:before {
+    content:"\f18f";
+  }
+  
+}
+
+
+.icon-weibo {
+  &:before {
+    content:"\f190";
+  }
+  
+}
+
+
+.icon-window {
+  &:before {
+    content:"\f191";
+  }
+  
+}
+
+
+.icon-wrench {
+  &:before {
+    content:"\f192";
+  }
+  
+}
+
+
+.icon-yen-bold {
+  &:before {
+    content:"\f193";
   }
   
 }
@@ -1309,281 +1386,297 @@ Sep 16, 2015
 
 // Less variables
 
-@icon-add: "\f101";
+@icon-acl-disable-in-out: "\f101";
 
-@icon-analytics: "\f102";
+@icon-acl-disable-in: "\f102";
 
-@icon-apple: "\f103";
+@icon-acl-disable-none: "\f103";
 
-@icon-arrow-simple-bold: "\f104";
+@icon-acl-disable-out: "\f104";
 
-@icon-arrow-simple: "\f105";
+@icon-add: "\f105";
 
-@icon-at: "\f106";
+@icon-analytics: "\f106";
 
-@icon-atom: "\f107";
+@icon-apple: "\f107";
 
-@icon-avatar: "\f108";
+@icon-arrow-simple-bold: "\f108";
 
-@icon-bandaid: "\f109";
+@icon-arrow-simple: "\f109";
 
-@icon-beaker: "\f10a";
+@icon-at: "\f10a";
 
-@icon-blank-app: "\f10b";
+@icon-atom: "\f10b";
 
-@icon-browser: "\f10c";
+@icon-avatar: "\f10c";
 
-@icon-building: "\f10d";
+@icon-bandaid: "\f10d";
 
-@icon-bulb: "\f10e";
+@icon-beaker: "\f10e";
 
-@icon-cabinet-bold: "\f10f";
+@icon-blank-app: "\f10f";
 
-@icon-cabinet: "\f110";
+@icon-browser: "\f110";
 
-@icon-calendar: "\f111";
+@icon-building: "\f111";
 
-@icon-chart-alt: "\f112";
+@icon-bulb: "\f112";
 
-@icon-chart-bold: "\f113";
+@icon-cabinet-bold: "\f113";
 
-@icon-chart: "\f114";
+@icon-cabinet: "\f114";
 
-@icon-chat-alt-bold: "\f115";
+@icon-calendar: "\f115";
 
-@icon-chat-alt: "\f116";
+@icon-chart-alt: "\f116";
 
-@icon-chat-bold: "\f117";
+@icon-chart-bold: "\f117";
 
-@icon-chat: "\f118";
+@icon-chart: "\f118";
 
-@icon-checked: "\f119";
+@icon-chat-alt-bold: "\f119";
 
-@icon-checkmark-bold: "\f11a";
+@icon-chat-alt: "\f11a";
 
-@icon-clipboard: "\f11b";
+@icon-chat-bold: "\f11b";
 
-@icon-cloud-storage: "\f11c";
+@icon-chat: "\f11c";
 
-@icon-cloud: "\f11d";
+@icon-checked-bold: "\f11d";
 
-@icon-compare: "\f11e";
+@icon-checked: "\f11e";
 
-@icon-compose: "\f11f";
+@icon-checkmark-bold: "\f11f";
 
-@icon-console-run: "\f120";
+@icon-clipboard: "\f120";
 
-@icon-contact-card: "\f121";
+@icon-cloud-storage: "\f121";
 
-@icon-controller: "\f122";
+@icon-cloud: "\f122";
 
-@icon-credit-card: "\f123";
+@icon-compare: "\f123";
 
-@icon-crown: "\f124";
+@icon-compose: "\f124";
 
-@icon-danger: "\f125";
+@icon-compress: "\f125";
 
-@icon-dashboard: "\f126";
+@icon-console-run: "\f126";
 
-@icon-database-bold: "\f127";
+@icon-contact-card: "\f127";
 
-@icon-devices: "\f128";
+@icon-controller: "\f128";
 
-@icon-dollars-bold: "\f129";
+@icon-credit-card: "\f129";
 
-@icon-download: "\f12a";
+@icon-crown: "\f12a";
 
-@icon-edit: "\f12b";
+@icon-danger: "\f12b";
 
-@icon-envelope-bold: "\f12c";
+@icon-dashboard: "\f12c";
 
-@icon-envelope: "\f12d";
+@icon-database-bold: "\f12d";
 
-@icon-external: "\f12e";
+@icon-devices: "\f12e";
 
-@icon-factory: "\f12f";
+@icon-dollars-bold: "\f12f";
 
-@icon-filter: "\f130";
+@icon-download: "\f130";
 
-@icon-gear-bold: "\f131";
+@icon-edit: "\f131";
 
-@icon-gear: "\f132";
+@icon-envelope-bold: "\f132";
 
-@icon-gears: "\f133";
+@icon-envelope: "\f133";
 
-@icon-github: "\f134";
+@icon-expand: "\f134";
 
-@icon-globe-alt-2: "\f135";
+@icon-external: "\f135";
 
-@icon-globe-alt: "\f136";
+@icon-factory: "\f136";
 
-@icon-globe: "\f137";
+@icon-filter: "\f137";
 
-@icon-golf: "\f138";
+@icon-gear-bold: "\f138";
 
-@icon-google-play: "\f139";
+@icon-gear: "\f139";
 
-@icon-graduation: "\f13a";
+@icon-gears: "\f13a";
 
-@icon-graph: "\f13b";
+@icon-git-branch: "\f13b";
 
-@icon-hammer-bold: "\f13c";
+@icon-github: "\f13c";
 
-@icon-heartbeat: "\f13d";
+@icon-globe-alt-2: "\f13d";
 
-@icon-home-bold: "\f13e";
+@icon-globe-alt: "\f13e";
 
-@icon-home: "\f13f";
+@icon-globe: "\f13f";
 
-@icon-id-card: "\f140";
+@icon-golf: "\f140";
 
-@icon-inbox-empty: "\f141";
+@icon-google-play: "\f141";
 
-@icon-inbox-files-bold: "\f142";
+@icon-graduation: "\f142";
 
-@icon-inbox-files: "\f143";
+@icon-graph: "\f143";
 
-@icon-info: "\f144";
+@icon-hammer-bold: "\f144";
 
-@icon-key-bold: "\f145";
+@icon-heartbeat: "\f145";
 
-@icon-key: "\f146";
+@icon-home-bold: "\f146";
 
-@icon-keyhole: "\f147";
+@icon-home: "\f147";
 
-@icon-layer-alt: "\f148";
+@icon-id-card: "\f148";
 
-@icon-layer-bold: "\f149";
+@icon-inbox-empty: "\f149";
 
-@icon-lightning: "\f14a";
+@icon-inbox-files-bold: "\f14a";
 
-@icon-list-selected: "\f14b";
+@icon-inbox-files: "\f14b";
 
-@icon-list: "\f14c";
+@icon-info: "\f14c";
 
-@icon-location-arrow: "\f14d";
+@icon-key-bold: "\f14d";
 
-@icon-lock: "\f14e";
+@icon-key: "\f14e";
 
-@icon-locked-on: "\f14f";
+@icon-keyhole: "\f14f";
 
-@icon-locked: "\f150";
+@icon-layer-alt: "\f150";
 
-@icon-log: "\f151";
+@icon-layer-bold: "\f151";
 
-@icon-magic: "\f152";
+@icon-lightning: "\f152";
 
-@icon-magnet: "\f153";
+@icon-list-selected: "\f153";
 
-@icon-map-location: "\f154";
+@icon-list: "\f154";
 
-@icon-megaphone-bold: "\f155";
+@icon-location-arrow: "\f155";
 
-@icon-mobile: "\f156";
+@icon-lock: "\f156";
 
-@icon-multi-lang: "\f157";
+@icon-locked-on: "\f157";
 
-@icon-outbound: "\f158";
+@icon-locked: "\f158";
 
-@icon-package: "\f159";
+@icon-log: "\f159";
 
-@icon-path: "\f15a";
+@icon-magic: "\f15a";
 
-@icon-pen: "\f15b";
+@icon-magnet: "\f15b";
 
-@icon-phone-bold: "\f15c";
+@icon-map-location: "\f15c";
 
-@icon-phone: "\f15d";
+@icon-megaphone-bold: "\f15d";
 
-@icon-pie-chart: "\f15e";
+@icon-mobile: "\f15e";
 
-@icon-piggy-bank: "\f15f";
+@icon-multi-lang: "\f15f";
 
-@icon-plan: "\f160";
+@icon-outbound: "\f160";
 
-@icon-plane: "\f161";
+@icon-package: "\f161";
 
-@icon-play-bold: "\f162";
+@icon-path: "\f162";
 
-@icon-play: "\f163";
+@icon-pen: "\f163";
 
-@icon-plug: "\f164";
+@icon-phone-bold: "\f164";
 
-@icon-presentation-bold: "\f165";
+@icon-phone: "\f165";
 
-@icon-push-bold: "\f166";
+@icon-pie-chart: "\f166";
 
-@icon-push: "\f167";
+@icon-piggy-bank: "\f167";
 
-@icon-question: "\f168";
+@icon-plan: "\f168";
 
-@icon-radar: "\f169";
+@icon-plane: "\f169";
 
-@icon-refresh: "\f16a";
+@icon-play-bold: "\f16a";
 
-@icon-rewind: "\f16b";
+@icon-play: "\f16b";
 
-@icon-rss: "\f16c";
+@icon-plug: "\f16c";
 
-@icon-satellite: "\f16d";
+@icon-presentation-bold: "\f16d";
 
-@icon-schema-free: "\f16e";
+@icon-push-bold: "\f16e";
 
-@icon-search-bold: "\f16f";
+@icon-push: "\f16f";
 
-@icon-search: "\f170";
+@icon-question: "\f170";
 
-@icon-server-rack-bold: "\f171";
+@icon-radar: "\f171";
 
-@icon-share-bold: "\f172";
+@icon-refresh: "\f172";
 
-@icon-share: "\f173";
+@icon-rewind: "\f173";
 
-@icon-signpost: "\f174";
+@icon-rss: "\f174";
 
-@icon-slider-alt: "\f175";
+@icon-satellite: "\f175";
 
-@icon-slider-nav-left: "\f176";
+@icon-schema-free: "\f176";
 
-@icon-slider-nav-right: "\f177";
+@icon-search-bold: "\f177";
 
-@icon-slider: "\f178";
+@icon-search: "\f178";
 
-@icon-smile-bold: "\f179";
+@icon-server-rack-bold: "\f179";
 
-@icon-smile: "\f17a";
+@icon-share-bold: "\f17a";
 
-@icon-sms: "\f17b";
+@icon-share: "\f17b";
 
-@icon-stopwatch: "\f17c";
+@icon-signpost: "\f17c";
 
-@icon-target: "\f17d";
+@icon-slider-alt: "\f17d";
 
-@icon-team-bold: "\f17e";
+@icon-slider-nav-left: "\f17e";
 
-@icon-team: "\f17f";
+@icon-slider-nav-right: "\f17f";
 
-@icon-timer: "\f180";
+@icon-slider: "\f180";
 
-@icon-trash: "\f181";
+@icon-smile-bold: "\f181";
 
-@icon-twitter: "\f182";
+@icon-smile: "\f182";
 
-@icon-user: "\f183";
+@icon-sms: "\f183";
 
-@icon-users-bold: "\f184";
+@icon-stopwatch: "\f184";
 
-@icon-users: "\f185";
+@icon-target: "\f185";
 
-@icon-wandoujia: "\f186";
+@icon-team-bold: "\f186";
 
-@icon-wechat-alt: "\f187";
+@icon-team: "\f187";
 
-@icon-weibo: "\f188";
+@icon-timer: "\f188";
 
-@icon-window: "\f189";
+@icon-trash: "\f189";
 
-@icon-wrench: "\f18a";
+@icon-twitter: "\f18a";
 
-@icon-yen-bold: "\f18b";
+@icon-user: "\f18b";
+
+@icon-users-bold: "\f18c";
+
+@icon-users: "\f18d";
+
+@icon-wandoujia: "\f18e";
+
+@icon-wechat-alt: "\f18f";
+
+@icon-weibo: "\f190";
+
+@icon-window: "\f191";
+
+@icon-wrench: "\f192";
+
+@icon-yen-bold: "\f193";
 

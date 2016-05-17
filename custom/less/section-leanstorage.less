@@ -109,13 +109,14 @@ select.input-sm.cloud-stat-condition {
   position: relative;
 }
 
+
+
 .timestamp-toggle {
   position: absolute;
   @s: 19px;
   width: @s;
   height: @s;
   background: #fff;
-  left: 227px;
   bottom: 18px;
   border-radius: 4px;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 1px 2px 1px rgba(0, 0, 0, .06);
@@ -139,7 +140,7 @@ select.input-sm.cloud-stat-condition {
   }
 
   .no-timestamp & {
-    left: (@cloud-log-level-width + 10px);
+    left: (@cloud-log-level-width + 10px) !important;
 
     .icon {
       transform: rotate(180deg);
@@ -157,11 +158,28 @@ select.input-sm.cloud-stat-condition {
   overflow-x: auto;
 
   .log-item {
-    padding: 0 1ch;
+
+    &:first-child {
+
+      > div {
+        padding-top: 10px;
+      }
+    }
+
+    &:last-child {
+
+      > div {
+        padding-bottom: 10px;
+      }
+    }
 
     &:hover,
     &:focus {
       color: @link-color;
+
+      .cloud-log-level {
+        color: #fff;
+      }
 
       .cloud-log-output {
         color: @link-color;
@@ -175,6 +193,11 @@ select.input-sm.cloud-stat-condition {
       &:hover,
       &:focus {
         color: @brand-danger;
+
+        .cloud-log-level {
+          background: @brand-danger;
+          border-color: @brand-danger;
+        }
 
         .cloud-log-output {
           color: @brand-danger;
@@ -190,6 +213,11 @@ select.input-sm.cloud-stat-condition {
       &:focus {
         color: @link-color;
 
+        .cloud-log-level {
+          background: @link-color;
+          border-color: @link-color;
+        }
+
         .cloud-log-output {
           color: @link-color;
           background: fade(@link-color, 5%);
@@ -203,8 +231,9 @@ select.input-sm.cloud-stat-condition {
 .cloud-log-meta {
   // format:
   // 2015-08-04 15:08:17
-  width: (19ch + 8ch);
+
   float: left;
+  padding-right: 10px;
 
   .no-timestamp & {
     width: (@cloud-log-level-width + 10px);
@@ -219,13 +248,13 @@ select.input-sm.cloud-stat-condition {
 }
 
 .cloud-log-output {
-  white-space: pre;
   word-wrap: break-word;
   word-break: break-word;
-  width: calc(~"100% - 230px");
+  width: calc(~"100% - 228px");
   float: left;
   border-left: 1px solid #eee;
   padding-left: 10px;
+  padding-right: 10px;
 
   .no-timestamp & {
     width: calc(100% ~"-" (@cloud-log-level-width + 10px));
@@ -260,7 +289,7 @@ select.input-sm.cloud-stat-condition {
   width: @cloud-log-level-width;
   display: inline-block;
   text-align: center;
-  vertical-align: middle;
+  vertical-align: text-bottom;
 }
 
 .cloud-log-level-error {
@@ -269,6 +298,27 @@ select.input-sm.cloud-stat-condition {
 
 .cloud-log-level-info {
   color: @link-color;
+}
+
+// cloud-deploy-log-modal.html
+// override .cloud-log-content
+.app-deploy-log-content {
+  // 1px for box shadow
+  margin: -(@modal-inner-padding + 1px) -@modal-inner-padding;
+  height: auto;
+  min-height: 240px;
+  max-height: 300px;
+
+  .log-item {
+
+    .cloud-log-meta {
+      margin-left: @modal-inner-padding;
+    }
+    //
+    .cloud-log-output {
+      width: calc(~"100% - 243px");
+    }
+  }
 }
 
 // cloud-online.html
@@ -554,8 +604,8 @@ select.input-sm.cloud-stat-condition {
   }
 }
 
-// LeanCache
-.leancache-node {
+// LeanEngine / LeanCache
+.leanstorage-node {
   border: 1px solid @gray-lighter;
   border-radius: @border-radius-base;
   width: 400px;
@@ -563,6 +613,7 @@ select.input-sm.cloud-stat-condition {
   padding: (@grid-gutter-width / 4) (@grid-gutter-width / 2);
   margin-right: 10px;
   margin-bottom: (@grid-gutter-width / 2);
+  transition: border .2s ease;
 
   @media (max-width: @screen-xs-max) {
     width: 100%;
@@ -576,38 +627,124 @@ select.input-sm.cloud-stat-condition {
     margin: 12px (@grid-gutter-width / -2);
   }
 
-  .leancache-node-title-wrap {
+  .leanstorage-node-title-wrap {
     margin-bottom: -4px;
   }
 
-  .leancache-node-title {
+  .leanstorage-node-title {
     max-width: calc(~"100% - 85px");
     font-size: 16px;
     line-height: 20px;
     font-weight: bold;
   }
 
-  .leancache-node-mem-size {
+  .leanstorage-node-mem-size {
     font-size: 16px;
   }
 
-  .app-item-settings {
-    color: @gray-light;
-    margin-left: 6px;
-    text-decoration: none;
-    transition: color .2s ease;
-
-    &:hover,
-    &:focus {
-      color: @brand-primary;
-    }
+  // reset navbar right offset
+  .navbar-right {
+    margin-right: 0;
   }
 
   &:hover,
   &:focus {
+    border-color: lighten(@gray-light, 25%);
 
     .app-item-settings {
       color: @gray-dark;
+
+      .dropdown-toggle {
+        color: @gray-dark;
+      }
+    }
+  }
+}
+
+.leanengine-deploy-status {
+  margin-right: 6px;
+
+  .icon {
+    font-size: 16px;
+    vertical-align: -2px;
+  }
+}
+
+// Dropdown with gear icon
+.dropdown-settings {
+  margin-left: 6px;
+  color: @gray-light;
+  text-decoration: none !important;
+  transition: color .2s ease;
+
+  &:hover,
+  &:focus {
+    color: @brand-primary;
+  }
+
+  .dropdown-toggle {
+    position: relative;
+    display: block;
+    width: 20px;
+    height: 20px;
+    color: @gray-light;
+    text-decoration: none;
+    transition: color .2s ease;
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      color: @gray-dark;
+    }
+  }
+
+  .dropdown-menu {
+    left: -14px;
+  }
+
+  // arrow offset tweak
+  &.navbar-right {
+    margin-right: 0;
+
+    .dropdown-menu {
+      left: auto;
+      right: -20px;
+    }
+  }
+}
+
+// Create LeanCache / LeanEngine nodes
+.leanengine-node-sample {
+
+  .leanengine-node-sample-text {
+    padding: 10px;
+    border: 1px solid #ddd;
+    width: 90px;
+    border-radius: @border-radius-base;
+    cursor: pointer;
+  }
+
+  .leanengine-node-sample-radio {
+    display: none;
+
+    &:checked ~ .leanengine-node-sample-text {
+      color: @brand-primary;
+      border-color: @brand-primary;
+    }
+  }
+}
+
+// Icon size fix for nav tabs
+// TODO: need to be merged into core theme
+// Date: Feb 25, 2016, 6:48 PM
+// Author: Tunghsiao Liu
+.nav.nav-tabs {
+
+  li > a {
+
+    .icon:not(.icon-external) {
+      font-size: 130%;
+      vertical-align: -2px;
     }
   }
 }
