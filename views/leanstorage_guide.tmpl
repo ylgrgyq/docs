@@ -48,6 +48,8 @@
 
 请阅读 [{{platform_title}} 安装指南](sdk_setup-{{segment_code}}.html)。
 
+{% block text_for_ts_developer %}{% endblock %}
+
 ## 对象
 
 `{{baseObjectName}}` 是 {{productName}} 对复杂对象的封装，每个 `AVObject` 包含若干属性值对，也称键值对（key-value）。属性的值是与 JSON 格式兼容的数据。通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
@@ -99,12 +101,12 @@ description     objectId
 
 #### 保存选项
 
-`{{baseObjectName}}` 对象在保存时可以通过设置 `AVSaveOption` 来指定保存选项。`AVSaveOption` 支持以下属性：
+`{{baseObjectName}}` 对象在保存时可以通过设置保存选项来指定保存选项。保存选项支持以下属性：
 
 选项 | 类型 | 说明
 --- | --- | ---
 <code class="text-nowrap">fetchWhenSave</code> | BOOL | 对象成功保存后，自动返回该对象在云端的最新数据。用途请参考 [更新计数器](#更新计数器)。
-`query` | AVQuery  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `AVQuery` 和 `AVObject` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突。
+`query` | {{baseQueryClassName}}  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `{{baseQueryClassName}}` 和 `{{baseObjectName}}` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突。
 
 <a id="saveoption_query_example" name="saveoption_query_example"></a>【示例】一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时其 version 值为 3，当用户 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或执行其他自定义的业务逻辑。
 
@@ -209,6 +211,9 @@ description     objectId
 
 {% block code_delete_todo_by_objectId %}{% endblock %}
 
+**注意：删除对象是一个较为敏感的操作，在控制台创建对象的时候，默认开启了权限保护，关于这部分的内容请阅读{% block link_to_acl_doc %}{% endblock %}
+**
+
 #### 使用 CQL 语法删除对象
 {{productName}} 提供了类似 SQL 语法中的 Delete 方式删除一个对象，例如删除一个 Todo 对象可以使用下面的代码：
 {% block code_delete_todo_by_cql %}{% endblock %}
@@ -287,10 +292,12 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 反序列化：
 {% block code_deserialize_string_to_baseObject %}{% endblock %}
 
+{% endblock %}
+
 {% block text_data_protocol %}
-#### 数据协议
+### 数据协议
 很多开发者在使用 {{productName}} 初期都会产生疑惑：客户端的数据类型是如何被云端识别的？
-因此，我们有必要重点介绍一下 {{productName}} 的数据协议，这个就会用到上一小节讲解到的序列化的知识点。
+因此，我们有必要重点介绍一下 {{productName}} 的数据协议。
 
 先从一个简单的日期类型入手，比如在 {{platform_title}} 中，默认的日期类型是 `{{dateType}}`，下面会详细讲解一个 
  `{{dateType}}` 是如何被云端正确的按照日期格式存储的。
@@ -311,6 +318,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 然后发送给云端，云端会自动进行反序列化，这样自然就知道这个数据类型是日期，然后按照传过来的有效值进行存储。因此，开发者在进阶开发的阶段，最好是能掌握 {{productName}} 的数据协议。如下表介绍的就是一些默认的数据类型被序列化之后的格式：
 
 {% block table_data_protocol %}
+
 类型 | 序列化之后的格式|
 ---|---
 `{{dateType}}` | `{"__type": "Date","iso": "2015-11-21T18:02:52.249Z"}`
@@ -320,7 +328,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 {% endblock %}
 
 {% endblock %}
-{% endblock %}
+
 ## 文件
 文件存储也是数据存储的一种方式，图像、音频、视频、通用文件等等都是数据的载体，另外很多开发者习惯了把复杂对象序列化之后保存成文件（如 `.json` 或者 `.xml` )。文件存储在 {{productName}} 中被单独封装成一个 {{fileObjectName}} 来实现文件的上传、下载等操作。
 
@@ -370,13 +378,14 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 
 {% endblock %}
 
+{% block text_download_file_with_progress %}
 ### 文件下载
-SDK 接口可以下载文件并把它缓存起来，只要文件的 URL 不变，那么一次下载成功之后，就不会再重复下载，目的是为了减少客户端的流量。
+客户端 SDK 接口可以下载文件并把它缓存起来，只要文件的 URL 不变，那么一次下载成功之后，就不会再重复下载，目的是为了减少客户端的流量。
 
 {% block code_download_file %}{% endblock %}
 
 请注意代码中**下载进度**数据的读取。
-
+{% endblock %}
 ### 图像缩略图
 
 保存图像时，如果想在下载原图之前先得到缩略图，方法如下：
@@ -398,6 +407,8 @@ SDK 接口可以下载文件并把它缓存起来，只要文件的 URL 不变�
 {% block code_cache_operations_file %}{% endblock %}
 
 {% block text_https_access_for_ios9 %}{% endblock %}
+
+**注意：默认情况下，文件的删除权限是关闭的**
 
 ## 查询
 {{baseQueryClassName}} 是构建针对 {{baseObjectName}} 查询的基础类。
@@ -727,6 +738,9 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 {{geoPointObjectN
 
 {% block code_user_logIn_with_smsCode %}{% endblock %}
 
+#### SessionToken
+所有登录接口调用成功之后，服务端会返回一个 SessionToken 给客户端，客户端在发送 Http 请求的时候，{{sdk_name}} 会在 Http 请求的 Header 里面自动添加上当前用户的 SessionToken 作为这次请求的发起者({{userObjectName}})的身份认证信息。
+
 #### 账户锁定
 
 输入错误的密码或验证码会导致用户登录失败。如果在 15 分钟内，同一个用户登录失败的次数大于 6 次，该用户账户即被云端暂时锁定，此时云端会返回错误码 `{"code":1,"error":"登录失败次数超过限制，请稍候再试，或者通过忘记密码重设密码。"}`，开发者可在客户端进行必要提示。
@@ -758,7 +772,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 {{geoPointObjectN
 
 {% block code_update_user_custom_properties %}{% endblock %}
 
-细心的开发者应该已经发现 {{userObjectName}} 在自定义属性上的使用与一般的 AVObject 没本质区别。
+细心的开发者应该已经发现 {{userObjectName}} 在自定义属性上的使用与一般的 {{baseObjectName}} 没本质区别。
 
 ### 重置密码
 
