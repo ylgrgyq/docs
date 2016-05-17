@@ -22,6 +22,7 @@
 {% set fileObjectName ="AV.File" %}
 {% set dateType= "Date" %}
 {% set byteType= "Buffer" %}
+{% set link_to_acl_doc ="[JavaScript 权限管理使用指南](acl_guide-js.html)" %}
 {% set funtionName_whereKeyHasPrefix = "whereKey:hasPrefix:" %}
 
 {% block text_for_ts_developer %}
@@ -139,7 +140,7 @@
 ```ts
   // AV.Object.extend('className') 所需的参数 className 则表示对应的表名
   var Todo = AV.Object.extend('Todo');
-  
+
   // 在 TypeScript 当中我们推荐如下创建对象的方式
   let todo = new AV.Object('Todo');
 ```
@@ -352,7 +353,7 @@ testObject.save().then(function(testObject) {
     var location = todo.get('location');
     var title = todo.get('title');
     var content = todo.get('content');
-    
+
     // 获取三个特殊属性
     var objectId = todo.id;
     var updatedAt = todo.updatedAt;
@@ -388,7 +389,7 @@ testObject.save().then(function(testObject) {
   todo.id = '5590cdfde4b00f7adb5860c8';
   todo.fetch().then(function (todo) {
     // // todo 是从服务器加载到本地的 Todo 对象
-    var priority = todo.get('priority'); 
+    var priority = todo.get('priority');
   }, function (error) {
 
   });
@@ -567,9 +568,9 @@ testObject.save().then(function(testObject) {
   var reminder1 = new Date('2015-11-11 07:10:00');
   var reminder2 = new Date('2015-11-11 07:20:00');
   var reminder3 = new Date('2015-11-11 07:30:00');
-  
+
   var reminders = [reminder1, reminder2, reminder3];
-  
+
   var todo = new AV.Object('Todo');
   // 指定 reminders 是做一个 Date 对象数组
   todo.addUnique('reminders', reminders);
@@ -637,7 +638,7 @@ testObject.save().then(function(testObject) {
 
 ```js
   var avObjectArray = [];// 构建一个本地的 AV.Object 对象数组
-  
+
    // 批量创建、更新
   AV.Object.saveAll(avObjectArray).then(function (avobjs) {
   }, function (error) {
@@ -712,22 +713,22 @@ testObject.save().then(function(testObject) {
   var todoFolder = new AV.Object('TodoFolder');
   todoFolder.set('name', '工作');
   todoFolder.set('priority', 1);
-  
+
   var todo1 = new AV.Object('Todo');
   todo1.set('title', '工程师周会');
   todo1.set('content', '每周工程师会议，周一下午2点');
   todo1.set('location', '会议室');
-  
+
   var todo2 = new AV.Object('Todo');
   todo2.set('title', '维护文档');
   todo2.set('content', '每天 16：00 到 18：00 定期维护文档');
   todo2.set('location', '当前工位');
-  
+
   var todo3 = new AV.Object('Todo');
   todo3.set('title', '发布 SDK');
   todo3.set('content', '每周一下午 15：00');
   todo3.set('location', 'SA 工位');
-  
+
   var localTodos = [todo1, todo2, todo3];
   AV.Object.saveAll(localTodos).then(function (cloudTodos) {
       var relation = todoFolder.relation('containedTodos'); // 创建 AV.Relation
@@ -801,7 +802,7 @@ testObject.save().then(function(testObject) {
   // 第一个参数是： latitude ，纬度
   // 第二个参数是： longitude，经度
   var point1 = new AV.GeoPoint(39.9, 116.4);
-  
+
   // 以下是创建 AV.GeoPoint 对象不同的方法
   var point2 = new AV.GeoPoint([12.7, 72.2]);
   var point3 = new AV.GeoPoint({ latitude: 30, longitude: 30 });
@@ -824,7 +825,7 @@ testObject.save().then(function(testObject) {
 {% endblock %}
 
 {% block text_deserialize_and_serialize %}
-<!--- js 以及 ts 没有序列化和反序列化的需求---> 
+<!--- js 以及 ts 没有序列化和反序列化的需求--->
 {% endblock %}
 
 {% block code_data_protocol_save_date %}
@@ -850,7 +851,7 @@ testObject.save().then(function(testObject) {
   file.save().then(function (savedFile) {
   }, function (error) {
   });
-  
+
   var bytes = [0xBE, 0xEF, 0xCA, 0xFE];
   var byteArrayFile = new AV.File('myfile.txt', bytes);
   byteArrayFile.save();
@@ -861,7 +862,7 @@ testObject.save().then(function(testObject) {
   file.save<AV.File>().then((savedFile)=>{
   },(error)=>{
   });
-  
+
   let bytes = [ 0xBE, 0xEF, 0xCA, 0xFE ];
   let byteArrayFile:AV.File = new AV.File('myfile.txt',bytes);
   byteArrayFile.save();
@@ -880,7 +881,7 @@ testObject.save().then(function(testObject) {
     if (fileUploadControl.files.length > 0) {
       var file = fileUploadControl.files[0];
       var name = 'avatar.jpg';
-      
+
       var avFile = new AV.File(name, file);
       avFile.save().then(function(obj) {
         // 数据保存成功
@@ -1298,25 +1299,25 @@ function uploadFile (req, res) {
 ```js
   var tag1 = new AV.Object('Todo');
   tag1.set('name', '今日必做');
-  
+
   var tag2 = new AV.Object('Todo');
   tag2.set('name', '老婆吩咐');
-  
+
   var tag3 = new AV.Object('Todo');
   tag3.set('name', '十分重要');
-  
+
   var tags = [tag1, tag2, tag3];
   AV.Object.saveAll(tags).then(function (savedTags) {
-  
+
       var todoFolder = new AV.Object('TodoFolder');
       todoFolder.set('name', '家庭');
       todoFolder.set('priority', 1);
-      
+
       var relation = todoFolder.relation('tags');
       relation.add(tag1);
       relation.add(tag2);
       relation.add(tag3);
-      
+
       todoFolder.save();
   }, function (error) {
   });
@@ -1438,17 +1439,17 @@ function uploadFile (req, res) {
   // 构建内嵌查询
   var innerQuery = new AV.Query('TodoFolder');
   innerQuery.greaterThan('likes', 20);
-  
+
   // 将内嵌查询赋予目标查询
   var query = new AV.Query('Comment');
-  
+
   // 执行内嵌操作
   query.matchesQuery('targetTodoFolder', innerQuery);
   query.find().then(function (results) {
      // results 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
   }, function (error) {
   });
-  
+
   query.doesNotMatchQuery('targetTodoFolder', innerQuery);
   // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
 ```
@@ -1588,7 +1589,7 @@ function uploadFile (req, res) {
 ```js
   // 按时间，升序排列
   query.ascending('createdAt');
-  
+
   // 按时间，降序排列
   query.descending('createdAt');
 ```
@@ -1620,10 +1621,10 @@ function uploadFile (req, res) {
 ```js
   var priorityQuery = new AV.Query('Todo');
   priorityQuery.greaterThanOrEqualTo('priority', 3);
-  
+
   var statusQuery = new AV.Query('Todo');
   statusQuery.equalTo('status', 1);
-  
+
   var query = AV.Query.or(priorityQuery, statusQuery);
   // 返回 priority 大于等于 3 或 status 等于 1 的 Todo
 ```
@@ -1644,10 +1645,10 @@ function uploadFile (req, res) {
 ```js
   var priorityQuery = new AV.Query('Todo');
   priorityQuery.greaterThanOrEqualTo('priority', 3);
-  
+
   var statusQuery = new AV.Query('Todo');
   statusQuery.equalTo('status', 1);
-  
+
   var query = AV.Query.and(priorityQuery, statusQuery);
   // 返回 priority 小于 3 并且 status 等于 0 的 Todo
 ```
@@ -1671,14 +1672,14 @@ function uploadFile (req, res) {
   todo.set('images', aTodoAttachmentImage);
   todo.set('content', '记得买过年回家的火车票！！！');
   todo.save();
-  
+
   var query = new AV.Query('Todo');
   query.exists('images');
   query.find().then(function (results) {
     // results 返回的就是有图片的 Todo 集合
   }, function (error) {
   });
-  
+
   // 使用空值查询获取没有图片的 Todo
   query.doesNotExist('images');
 ```
@@ -1713,7 +1714,7 @@ function uploadFile (req, res) {
   });
   cql = 'select * from %@ where status = 1';
   AV.Query.doCloudQuery(cql).then(function (data) {
-      // 获取符合查询的数量 
+      // 获取符合查询的数量
       var count = data.count;
   }, function (error) {
   });
@@ -1803,8 +1804,6 @@ function uploadFile (req, res) {
 {% endblock %} code_object_fetch_with_keys
 
 
-{% block link_to_acl_doc %}[JavaScript 权限管理使用指南](acl_guide-js.html){% endblock %}
-
 {% block link_to_relation_guide_doc %}[JavaScript 关系建模指南](relation_guide-js.html){% endblock %}
 
 {% set link_to_sms_guide_doc = '[JavaScript 短信服务使用指南](sms_guide-js.html#注册验证)' %}
@@ -1858,7 +1857,7 @@ function uploadFile (req, res) {
   user.signUp<AV.User>().then((loginedUser)=>{
     console.log(loginedUser);
   },(error=>{
-    
+
   }));
 ```
 {% endblock %}
@@ -2032,7 +2031,7 @@ AV.User.logInWithMobilePhoneSmsCode('13577778888','238825').then((success)=>{
 ```js
   var currentUser = AV.User.current();
   if (currentUser) {
-     // 跳转到首页 
+     // 跳转到首页
   }
   else {
      //currentUser 为空时，可打开用户注册界面…
