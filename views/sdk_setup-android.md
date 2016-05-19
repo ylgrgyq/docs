@@ -5,9 +5,11 @@
 {% block libs_tool_automatic %}
 
 #### Gradle
+
 Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android Studio 进行开发的时候，它会自动在新建的项目中包含一个自带的命令行工具 **gradlew**。我们推荐开发者使用这个自带的命令行工具，这是因为 Gradle 存在版本兼容的问题，很多开发者即使正确配置了 Gradle 脚本，但由于使用了最新版本或不兼容的 Gradle 版本而仍然无法成功加载依赖包。
 
 ##### Android Studio
+
 使用 Android Studio 创建一个新的项目的时候，它的目录结构如下：
 
 ```
@@ -22,7 +24,7 @@ Gradle 是 Google 官方推荐的构建 Android 程序的工具，使用 Android
 └── settings.gradle
 ```
 
-首先打开 `./build.gradle` ，按照如下进行标准配置，请注意：这一步我们修改的是根目录下的 `build.gradle`:
+首先打开根目录下的 `build.gradle` 进行如下标准配置：
 
 ```
 buildscript {
@@ -50,7 +52,7 @@ allprojects {
 }
 ```
 
-然后打开 `./app/build.gradle`，按照如下进行标准配置，请注意：这一步我们修改的是 `app` 目录下的 `build.gradle` :
+然后打开 `app` 目录下的 `build.gradle` 进行如下配置：
 
 ```
 android {
@@ -67,23 +69,25 @@ android {
 dependencies {
     compile ('com.android.support:support-v4:21.0.3')
 
-    //avoscloud-sdk 为 LeanCloud基础包
+    // LeanCloud 基础包
     compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
 
-    //avoscloud-push 为推送与实时聊天需要的包
+    // 推送与实时聊天需要的包
     compile ('cn.leancloud.android:avoscloud-push:v3.+@aar'){transitive = true}
 
-    //avoscloud-statistics 为 LeanCloud 统计包
+    // LeanCloud 统计包
     compile ('cn.leancloud.android:avoscloud-statistics:v3.+')
 
-    //avoscloud-feedback 为 LeanCloud 用户反馈包
+    // LeanCloud 用户反馈包
     compile ('cn.leancloud.android:avoscloud-feedback:v3.+@aar')
 
-    //avoscloud-sns 为 LeanCloud 第三方登录包
+    // avoscloud-sns：LeanCloud 第三方登录包
     compile ('cn.leancloud.android:avoscloud-sns:v3.+@aar')
     compile ('cn.leancloud.android:qq-sdk:1.6.1-leancloud')
+    // 目前新浪微博官方只提供 jar 包的集成方式
+    // 请手动下载新浪微博 SDK 的 jar 包，将其放在 libs 目录下进行集成
 
-    //avoscloud-search 为 LeanCloud 应用内搜索包
+    // LeanCloud 应用内搜索包
     compile ('cn.leancloud.android:avoscloud-search:v3.+@aar')
 }
 ```
@@ -93,22 +97,18 @@ dependencies {
 #### Eclipse
 
 Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步骤](#手动安装) 将 SDK 导入到项目里。
-
 {% endblock %}
 
-{% block sdk_download_link %}[SDK 下载](sdk_down.html){% endblock %}
-
 {% block import_sdk %}
-
-下载成功之后将获得如下几个 lib 包:
+下载文件成功解压缩后会得到如下文件：
 
 ```
-├── avoscloud-feedback-{version-number}.zip     // LeanCloud 用户反馈模块
-├── avoscloud-push-{version-number}.jar         // LeanCloud 推送模块和实时聊天模块
-├── avoscloud-sdk-{version-number}.jar          // LeanCloud 基本存储模块
-├── avoscloud-search-{version-number}.zip       // LeanCloud 应用内搜索模块
-├── avoscloud-sns-{version-number}.zip          // LeanCloud SNS 模块
-├── avoscloud-statistics-{version-number}.jar   // LeanCloud 统计模块
+├── avoscloud-feedback-<版本号>.zip     // LeanCloud 用户反馈模块
+├── avoscloud-push-<版本号>.jar         // LeanCloud 推送模块和实时聊天模块
+├── avoscloud-sdk-<版本号>.jar          // LeanCloud 基本存储模块
+├── avoscloud-search-<版本号>.zip       // LeanCloud 应用内搜索模块
+├── avoscloud-sns-<版本号>.zip          // LeanCloud SNS 模块
+├── avoscloud-statistics-<版本号>.jar   // LeanCloud 统计模块
 ├── fastjson.jar                                // LeanCloud 基本存储模块
 ├── httpmime-4.2.4.jar                          // LeanCloud 基本存储模块
 ├── Java-WebSocket-1.3.1-leancloud.jar          // LeanCloud 推送模块和实时聊天模块
@@ -156,10 +156,10 @@ Eclipse 用户首先 [下载 SDK](sdk_down.html)，然后按照 [手动安装步
 首先本地已经下载好了项目需要的 SDK 包，然后按照以下步骤导入：
 
 1. 打开 **File** > **Project Structure** > **Modules** 对话框，点击 **Dependencies**；
-2. 点击下方的**小 + 号**，选择要导入的 SDK 包（xxxx.jar），记得 **Scope** 选为 **Compile**；
+2. 点击下方的 **+**（加号），选择要导入的 SDK 包（xxxx.jar），记得 **Scope** 选为 **Compile**；
 3. 重复第 2 步，直到所有需要的包均已正确导入。
 
-Eclipse 的导入与一般的 jar 导入无本质区别，不做赘述。
+Eclipse 的导入与一般的 jar 导入无本质区别，因此不再赘述。
 
 {% endblock %}
 
@@ -216,9 +216,7 @@ public class MyLeanCloudApp extends Application {
 
 {% endblock %}
 
-{% block sdk_using_north_america_node %}
-只要在调用 `AVOSCloud.initialize` 之后调用一下 `AVOSCloud.useAVCloudUS()` 即可，如下：
-
+{% block sdk_switching_node %}
 ```java
 public class MyLeanCloudApp extends Application {
 
@@ -232,9 +230,7 @@ public class MyLeanCloudApp extends Application {
         AVOSCloud.useAVCloudUS();
     }
 }
-
 ```
-
 {% endblock %}
 
 {% block save_a_hello_world %}
@@ -270,3 +266,25 @@ public class MyLeanCloudApp extends Application {
 {% block permission_access_network_config %}{% endblock %}
 
 {% block platform_specific_faq %}{% endblock %}
+
+{% block android_mutildex_issue %}
+### 运行中遇到 `NoClassDefFoundError` 异常
+一般来说遇到这个问题只有两种可能：
+第一种是 Android SDK 的间接依赖并没有能全部下载导致的，可以通过在 gradle 配置中显式指定 `transitive=true` 来解决这个问题:
+
+
+```
+
+dependencies {
+    compile 'com.android.support:multidex:'
+    compile 'com.android.support:support-v4:21.0.3'
+    compile 'cn.leancloud.android:avoscloud-sdk:v3.+'
+    compile('cn.leancloud.android:avoscloud-push:v3.+@aar') { transitive = true }
+}
+
+
+```
+
+第二种情况则是由在 v3.13.+ 以后 Android SDK 引入了 Google ProtoBuf 来提高实时通信模块的传输效率，随之而来的是类和方法数量的激增,超过了 Android 上存在着方法总数不能超过 65k 的上限而导致的。这个时候我们可以采用 Google 提出的[解决方案](http://developer.android.com/intl/zh-cn/tools/building/multidex.html#about)来解决这个问题。
+
+{% endblock%}

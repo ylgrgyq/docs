@@ -105,6 +105,11 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
       <td>获取用户</td>
     </tr>
     <tr>
+      <td>/1.1/users/me</td>
+      <td>GET</td>
+      <td>根据 <a href="js_guide.html#SessionToken">sessionToken</a> 获取用户信息</td>
+    </tr>
+    <tr>
       <td>/1.1/users/&lt;objectId&gt;/updatePassword</td>
       <td>PUT</td>
       <td>更新密码，要求输入旧密码。</td>
@@ -451,7 +456,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 
 举例来说，假设应用的信息如下：
 
-<table border="0" cellspacing="0" cellpadding="0">
+<table class="noheading">
   <tbody>
     <tr>
       <td scope="row">App Id</td>
@@ -479,7 +484,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 **使用 App Key 来计算 sign**：
 
 >md5( timestamp + App Key ) <br/>
-= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
+= md5( <code><u>1453014943466</u>UtOCzqb67d3sN12Kts4URwy8</code> )<br/>= d5bcbb897e19b2f6633c716dfdfaf9be
 
 ```sh
   -H "X-LC-Sign: d5bcbb897e19b2f6633c716dfdfaf9be,1453014943466" \
@@ -488,7 +493,7 @@ master |可选|字符串 `"master"`，当使用 master key 签名请求的时候
 **使用 Master Key 来计算 sign**：
 
 >md5( timestamp + Master Key )<br/>
-= md5( <code><span style="border-bottom:1px solid #999; padding-bottom:2px;">1453014943466</span>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
+= md5( <code><u>1453014943466</u>DyJegPlemooo4X1tg94gQkw1</code> ) <br>
 = e074720658078c898aa0d4b1b82bdf4b
 
 ```sh
@@ -548,7 +553,7 @@ Key（属性名）必须是字母和数字组成的字符串，Value（属性值
 }
 ```
 
-createdAt 和 updatedAt 都是 UTC 时间戳，以 ISO 8601 标准和毫秒级精度储存：`YYYY-MM-DDTHH:MM:SS.MMMMZ`。objectId 是一个字符串，在类中可以唯一标识一个实例。
+createdAt 和 updatedAt 都是 UTC 时间戳，以 ISO 8601 标准和毫秒级精度储存：`YYYY-MM-DDTHH:MM:SS.MMMZ`。objectId 是一个字符串，在类中可以唯一标识一个实例。
 在 REST API 中，class 级的操作都是通过一个带类名的资源路径（URL）来标识的。例如，如果类名是 Post，那么 class 的 URL 就是：
 
 ```
@@ -1165,7 +1170,7 @@ curl -X GET \
   https://api.leancloud.cn/1.1/classes/Comment
 ```
 
-如果你想获取作为其父对象的关系成员的对象，你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户（**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**）：
+如果你想获取作为其父对象的关系成员的对象，你可以使用 `$relatedTo` 操作符。例如对于微博这种社交类应用来讲，每一条微博都可以被不同的用户点赞，我们可以设计 Post 类下面有一个 key 是 Relation 类型，叫做 `likes`，存储了喜欢这个 Post 的所有 User。你可以通过下面的方式找到喜欢某条 Post 的所有用户（**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的_ACL)。**）：
 
 ```sh
 curl -X GET \
@@ -1368,9 +1373,29 @@ curl -X GET \
 }
 ```
 
-### 使用手机号码一键注册或登录
+### 已登录的用户信息
 
-请参考 [短信服务 REST API 详解 - 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
+用户成功注册或登录后，服务器会返回 sessionToken 并保存在本地，后续请求可以通过传递 sessionToken 来获取该用户信息（如访问权限等）。更多说明请参考 [存储 &middot; sessionToken](js_guide.html#SessionToken)。
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://api.leancloud.cn/1.1/users/me
+```
+返回的 JSON 数据与 [`/login`](#登录) 登录请求所返回的相同。
+
+
+#### 账户锁定
+
+输入错误的密码或验证码会导致用户登录失败。如果在 15 分钟内，同一个用户登录失败的次数大于 6 次，该用户账户即被云端暂时锁定，此时云端会返回错误码 `{"code":1,"error":"登录失败次数超过限制，请稍候再试，或者通过忘记密码重设密码。"}`，开发者可在客户端进行必要提示。
+
+锁定将在最后一次错误登录的 15 分钟之后由云端自动解除，开发者无法通过 SDK 或 REST API 进行干预。在锁定期间，即使用户输入了正确的验证信息也不允许登录。这个限制在 SDK 和云引擎中都有效。
+
+### 使用手机号码注册或登录
+
+请参考 [短信服务 REST API 详解 &middot; 使用手机号码注册或登录](rest_sms_api.html#使用手机号码注册或登录)。
 
 ### 验证 Email
 
@@ -1491,7 +1516,7 @@ curl -X PUT \
 
 ### 查询
 
-**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，你可以通过 class 权限设置打开，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的_ACL)。**
 
 你可以一次获取多个用户，只要向用户的根 URL 发送一个 GET 请求。没有任何 URL 参数的话，可以简单地列出所有用户：
 
@@ -1975,7 +2000,7 @@ curl -X PUT \
 
 ## 文件
 
-对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./cloud_code_commandline.html)。
+对于文件上传，我们推荐使用各个客户端的 SDK 进行操作，或者使用[命令行工具](./leanengine_cli.html)。
 
 **通过 REST API 上传文件受到三个限制**：
 
@@ -2249,9 +2274,9 @@ curl -X POST \
 }
 ```
 
-**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的 leanengine**
+**注意：`POST /1.1/call/:name` 需要你在云引擎中使用最新版的 SDK，Node.js 需要 0.2 版本以上的云引擎**
 
-你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
+你还可以阅读 [云引擎开发指南 - Node.js 环境](./leanengine_cloudfunction_guide-node.html) / [Python 环境](./leanengine_guide-python.html) 来获取更多的信息。
 
 ## 地理查询
 

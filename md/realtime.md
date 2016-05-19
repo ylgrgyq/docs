@@ -217,13 +217,13 @@ app_id:peer_id:watch_peer_ids:timestamp:nonce:su
 
 ![image](images/leanchat.png)
 
-LeanChat 用到了大多数实时通信组件的提供的接口与功能，通过阅读它的源码，相信您可以很快学会使用通信组件。当然，首要的是能编译运行 LeanChat，项目Readme 上都有说明，仍然遇到问题的话请[联系我们](https://ticket.leancloud.cn)。
+LeanChat 用到了大多数实时通信组件的提供的接口与功能，通过阅读它的源码，相信您可以很快学会使用通信组件。当然，首要的是能编译运行 LeanChat，项目Readme 上都有说明，仍然遇到问题的话请[联系我们](https://leanticket.cn/)。
 
 代码实现上有三点比较重要，
 
 * `Msg` 对象，它代表一个具体的消息对象，`Msg`对象可转换成 `Json`文本，发送给对方，对方接收到后可转换成 `Msg` 对象。可参考 [Msg.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/entity/Msg.java)。
 * `messages` 表，用来保存消息，字段基本和 `Msg`对象的成员一一对应。可参考 [DBMsg.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/db/DBMsg.java)。
-* 音频、图片消息的发送，用到了[AVFile](./android_guide.html#文件)，通过相应的函数创建、上传`AVFile`，得到 `url`之后作为 `Msg` 对象的一部分发送给对方。
+* 音频、图片消息的发送，用到了[AVFile](./leanstorage_guide-android.html#文件)，通过相应的函数创建、上传`AVFile`，得到 `url`之后作为 `Msg` 对象的一部分发送给对方。
 
 除了上述代码，Android 项目中，推荐阅读 [MsgReceiver.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/service/receiver/MsgReceiver.java)与 [ChatService.java](https://github.com/leancloud/leanchat-android/blob/master/src/com/avoscloud/chat/service/ChatService.java)。iOS 项目中，推荐阅读 [CDSessionManager.m](https://github.com/leancloud/leanchat-ios/blob/master/AVOSChatDemo/service/CDSessionManager.m)与 [CDDatabaseService.m](https://github.com/leancloud/leanchat-ios/blob/master/AVOSChatDemo/service/CDDatabaseService.m)。
 
@@ -305,7 +305,7 @@ pushMessage | 可选，推送内容，支持自定义 JSON 结构
 * `4107` 读超时，服务器端长时间没有收到客户端的数据，切断连接。SDK 包装了心跳包的机制，正常情况下不会出现这个错误。如果遇到请检查网络并重试。
 * `4108` 登录超时，连接后长时间没有完成 session open。如果开启了签名认证，可能由于签名错误出现这个情况，请查看。
 * `4109` 包过长。消息大小超过 5KB，请缩短消息或者拆分消息。
-* `4200` 服务器内部错误，如果反复出现请收集相关线索并[创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
+* `4200` 服务器内部错误，如果反复出现请收集相关线索并[创建工单](https://leanticket.cn/)，我们会尽快解决。
 
 ## FAQ
 

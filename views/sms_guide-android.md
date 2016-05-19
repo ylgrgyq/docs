@@ -23,7 +23,7 @@
 {% endblock %}
 
 {% block builtin_account_url %}
-android_guide.html#用户
+leanstorage_guide-android.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
@@ -107,7 +107,7 @@ android_guide.html#用户
         parameters.put("service_name", "月度周刊");
         parameters.put("order_id", "7623432424540");
         AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(),
-                "Notice_Template",
+                "Notice_Welcome",
                 parameters,
                 new RequestMobileCodeCallback() {
                     @Override

@@ -1,4 +1,4 @@
-# 云代码指南
+# 云引擎指南
 
 ## 介绍
 
@@ -6,18 +6,18 @@
 
 ## JavaScript 指南
 
-云代码可以完全运行所有 JavaScript SDK 提供的功能，但是不提供浏览器的 localStorage 存储。查看[《JavaScript SDK开发指南》](./js_guide.html)。
+云引擎可以完全运行所有 JavaScript SDK 提供的功能，但是不提供浏览器的 localStorage 存储。查看[《JavaScript SDK开发指南》](./js_guide.html)。
 
 ## Cloud Code 管理
 
-首先，请进入应用控制台的 [云代码管理](/cloud.html?appid={{appid}}#/repository) 界面：
+首先，请进入应用控制台的 [云引擎管理](/cloud.html?appid={{appid}}#/repository) 界面：
 
 ![image](images/cloud_code_menu.png)
 
 可以看到左侧菜单：
 
 * **定义函数**
-  Cloud Code 的简单模式，可以直接在线维护云代码方法。
+  Cloud Code 的简单模式，可以直接在线维护云引擎方法。
 * **定时任务**
   可以设置一些定时任务，比如每天凌晨清理无用数据等。
 * **Git 部署**
@@ -125,13 +125,13 @@ if (name) {
 
 ### 命令行工具
 
-推荐安装基于 Node.js 的 avoscloud 命令行工具，通过该工具可以创建、部署、发布、回滚、查询云代码，并且支持多应用管理。
+推荐安装基于 Node.js 的 avoscloud 命令行工具，通过该工具可以创建、部署、发布、回滚、查询云引擎，并且支持多应用管理。
 
-详细请查看 [云代码命令行工具详解](./cloud_code_commandline.html)。
+详细请查看 [云引擎命令行工具详解](./leanengine_cli.html)。
 
 ### 项目框架
 
-你可以在 **云代码** > **设置** 页面下载到项目框架：
+你可以在 **云引擎** > **设置** 页面下载到项目框架：
 
 ![image](images/cloud_code_skeleton.png)
 
@@ -175,7 +175,7 @@ AV.Cloud.define('hello', function(request, response) {
 
 CSDN CODE 是国内非常优秀的源码托管平台，你可以使用 CODE 平台提供公有仓库和有限的私有仓库完成对代码的管理功能。
 
-以下是使用 CODE 平台与 LeanCloud 云代码结合的一个例子。
+以下是使用 CODE 平台与 LeanCloud 云引擎结合的一个例子。
 
 首先在 CODE 上创建一个项目：
 
@@ -194,7 +194,7 @@ git remote add origin git@code.csdn.net:${yourname}/test.git
 git push -u origin master
 ```
 
-我们已经将源码成功推送到 CODE 平台，接下来到 LeanCloud 云代码的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
+我们已经将源码成功推送到 CODE 平台，接下来到 LeanCloud 云引擎的管理界面填写下你的 git 地址（请注意，一定要填写以 `git@` 开头的地址，我们暂不支持 https 协议 clone 源码）并点击 save 按钮保存：
 
 ![image](images/csdn_code2.png)
 
@@ -202,7 +202,7 @@ git push -u origin master
 
 ![image](images/csdn_code3.png)
 
-下一步，部署源码到测试环境，进入 **云代码** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 **云引擎** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -242,7 +242,7 @@ git push -u origin master
 
 ![image](images/cloud_code_github_deploy_key.png)
 
-下一步，部署源码到测试环境，进入 **云代码** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
+下一步，部署源码到测试环境，进入 **云引擎** > **Git 部署** 菜单，点击「部署到开发环境」的部署按钮：
 
 ![image](images/cloud_code_5.png)
 
@@ -299,12 +299,12 @@ https://leancloud.cn/1.1/functions/hello
 
 接下来，你可以尝试修改 `hello` 函数的返回值，然后 push 到 github 仓库并部署，看看调用的结果是否也相应地作出改变。
 
-在 Android SDK 里调用云代码函数，参考 [Android SDK 开发指南 - 调用云代码](./android_guide.html#调用云代码)。
+在 Android SDK 里调用云引擎函数，参考 [Android SDK 开发指南 - 调用云引擎](./android_guide.html#调用云引擎)。
 
-在 iOS SDK 里调用云代码函数，参考 [iOS / OSX SDK 开发指南 - 调用云代码](./ios_os_x_guide.html#调用云代码)。
+在 iOS SDK 里调用云引擎函数，参考 [iOS / OSX SDK 开发指南 - 调用云引擎](./ios_os_x_guide.html#调用云引擎)。
 
 
-### 本地调试云代码
+### 本地调试云引擎
 
 **Windows 系统用户请确保在系统盘 C 盘上安装 Node.js，否则命令行工具无法正常运行。**
 
@@ -323,10 +323,10 @@ npm install -g  git+https://github.com/leancloud/avoscloud-code-command
 ```
 
 
-然后在云代码项目的根目录执行 `avoscloud` 命令，就可以启动本地模拟服务器。
+然后在云引擎项目的根目录执行 `avoscloud` 命令，就可以启动本地模拟服务器。
 
 * 访问 <http://localhost:3000/> 即可访问到你的云主机代码，子路径按照你在 app.js 里配置的即可访问。
-* 访问 <http://localhost:3000/avos> 进入云代码函数和 Class Hooks 函数调试界面。
+* 访问 <http://localhost:3000/avos> 进入云引擎函数和 Class Hooks 函数调试界面。
 * 测试函数:
 
 ```sh
@@ -347,7 +347,7 @@ curl -X POST -H 'Content-Type:application/json' \
 
 其中 `MyUser` 是 className，beforeSave 指定调用 `MyUser` 定义的 beforeSave 函数，其他函数类似。
 
-更多使用参考 [云代码命令行工具详解](./cloud_code_commandline.html)。
+更多使用参考 [云引擎命令行工具详解](./leanengine_cli.html)。
 
 ### 测试环境和生产环境
 
@@ -459,9 +459,9 @@ https://leancloud.cn/1.1/functions/averageStars
 }
 ```
 
-#### 在云代码里调用已定义的函数
+#### 在云引擎里调用已定义的函数
 
-使用 `AV.Cloud.run` 可以在云代码中调用 `AV.Cloud.define` 定义的云代码函数：
+使用 `AV.Cloud.run` 可以在云引擎中调用 `AV.Cloud.define` 定义的云引擎函数：
 
 ```javascript
 AV.Cloud.run('hello', {name: 'dennis'}, {
@@ -629,7 +629,7 @@ AV.Cloud.onLogin(function(request, response) {
 
 ### 错误响应码
 
-有些时候你希望能自己定义错误响应码。云代码的 `response.error(err)` 回调中，如果 err 对象有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 1， `message` 为 `err` 对象的字符串形式。比如下列代码：
+有些时候你希望能自己定义错误响应码。云引擎的 `response.error(err)` 回调中，如果 err 对象有 `code` 和 `message` 属性，则响应的 `body` 以这两个属性为准，否则 `code` 为 1， `message` 为 `err` 对象的字符串形式。比如下列代码：
 
 ```
 AV.Cloud.define('errorCode', function(req, res) {
@@ -810,13 +810,13 @@ AV.Cloud.httpRequest({
 
 ## 定时任务
 
-很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云代码中运行这样的任务。
+很多时候可能你想做一些定期任务，比如半夜清理过期数据，或者每周一给所有用户发送推送消息等等，我们提供了定时任务给你，让你可以在云引擎中运行这样的任务。
 
 **我们提供的定时任务的最小时间单位是秒，正常情况下我们都能将误差控制在秒级别。**
 
 **原来提供的 `AV.Cloud.setInterval` 和 `AV.Cloud.cronjob` 都已经废弃，这两个函数的功能变成和 `AV.Cloud.define` 一样，已经定义的任务会自动进行转换并启动。**
 
-定时任务也是普通的 `AV.Cloud.define` 定义的云代码函数，比如我们定义一个打印循环打印日志的任务 `log_timer`：
+定时任务也是普通的 `AV.Cloud.define` 定义的云引擎函数，比如我们定义一个打印循环打印日志的任务 `log_timer`：
 
 ```javascript
 AV.Cloud.define('log_timer', function(req, res){
@@ -825,7 +825,7 @@ AV.Cloud.define('log_timer', function(req, res){
 });
 ```
 
-部署云代码之后，进入云代码管理菜单，左侧有个定时任务菜单：
+部署云引擎之后，进入云引擎管理菜单，左侧有个定时任务菜单：
 
 ![image](images/schedule_timer1.png)
 
@@ -842,7 +842,7 @@ AV.Cloud.define('log_timer', function(req, res){
 
 ![image](images/schedule_timer3.png)
 
-接下里就可以在云代码日志里看到这条日志的打印：
+接下里就可以在云引擎日志里看到这条日志的打印：
 
 ![image](images/schedule_timer4.png)
 
@@ -881,7 +881,7 @@ crontab 的基本语法是：
 
 ### 权限说明
 
-云代码拥有超级权限，默认使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。
+云引擎拥有超级权限，默认使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。
 
 如果在你的 Node.js 环境里也想做到超级权限，请调用下列代码初始化 SDK:
 
@@ -892,7 +892,7 @@ AV.Cloud.useMasterKey();
 
 ### 定时器数量
 
-开发环境和测试环境的定时器数量都限制在 3 个以内，也就是说你总共最多可以创建 6 个定时器。
+开发环境和测试环境的定时器数量都限制在 5 个以内，也就是说你总共最多可以创建 10 个定时器。
 
 ### 超时
 
@@ -907,7 +907,7 @@ Web Hosting 的动态请求超时也被限定为 15 秒。
 
 ## 日志
 
-**云代码** > [**日志**](/cloud.html?appid={{appid}}#/log)，可以查看 Cloud Code 的部署和运行日志，还可以选择查看的日志级别：
+**云引擎** > [**日志**](/cloud.html?appid={{appid}}#/log)，可以查看 Cloud Code 的部署和运行日志，还可以选择查看的日志级别：
 
 ![image](images/cloud_code_11.png)
 
@@ -930,7 +930,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 ### 设置域名
 
-首先，你需要到 **云代码** > **设置** 页面找到 **Web 主机域名**，在这里填写你的域名：
+首先，你需要到 **云引擎** > **设置** 页面找到 **Web 主机域名**，在这里填写你的域名：
 
 ![image](images/cloud_code_web_setting.png)
 
@@ -942,7 +942,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 #### 主域名
 
-仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与 App 绑定的相关手续。
+仅使用云引擎托管静态文件、未使用其他 LeanCloud 服务的用户，需要自行办理独立域名与 App 绑定的相关手续。
 
 其他用户如果需要为 App 绑定一个独立域名，可以使用账户注册邮箱将下列信息发送至 <support@leancloud.rocks> ，或者从控制台菜单中选择 **帮助** > **技术支持** ，通过工单来提出申请 ：
 
@@ -956,9 +956,9 @@ AV.Cloud.define('Logger', function(request, response) {
 
 #### 域名备案流程
 
-**域名备案的前置条件：云代码已经部署，并且网站内容和备案申请的内容一致。**
+**域名备案的前置条件：云引擎已经部署，并且网站内容和备案申请的内容一致。**
 
-仅使用云代码托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
+仅使用云引擎托管静态文件、未使用其他 LeanCloud 服务的企业用户，请自行完成域名备案工作。
 
 其他企业用户，若尚未在国内对其域名进行过备案，可以申请由我们协助来完成备案工作。其流程大致如下：
 
@@ -1008,7 +1008,7 @@ AV.Cloud.define('Logger', function(request, response) {
 
 ### 下载 Web Hosting 项目框架
 
-进入 **云代码** > **设置** 菜单下载项目框架（web 主机版）：
+进入 **云引擎** > **设置** 菜单下载项目框架（web 主机版）：
 
 ![image](images/cloud_code_skeleton.png)
 
@@ -1110,7 +1110,7 @@ app.set('view engine', 'jade');
 
 ### 自定义 404 页面
 
-自定义 404 页面在云代码里比较特殊，假设我们要渲染一个 404 页面，必须将下列代码放在 `app.listen()` 之后：
+自定义 404 页面在云引擎里比较特殊，假设我们要渲染一个 404 页面，必须将下列代码放在 `app.listen()` 之后：
 
 ```javascript
 // 在app.listen();之后。
@@ -1123,7 +1123,7 @@ app.use(function(req, res, next){
 
 ### 获取客户端 IP
 
-因为我们的云代码服务在 Nginx 之后，因此不能通过 `req.connection.remoteAddress` 这样的 API 来获取客户端的真实 IP，需要通过以下方式获取：
+因为我们的云引擎服务在 Nginx 之后，因此不能通过 `req.connection.remoteAddress` 这样的 API 来获取客户端的真实 IP，需要通过以下方式获取：
 
 ```javascript
 var ip = req.headers['x-real-ip']
@@ -1173,7 +1173,7 @@ app.post('/upload', function(req, res){
 
 ### 处理用户登录和登出
 
-假设你创建了一个支持 web 主机功能的云代码项目，在 app.js 里添加下列代码：
+假设你创建了一个支持 web 主机功能的云引擎项目，在 app.js 里添加下列代码：
 
 ```javascript
 var express = require('express');
@@ -1201,9 +1201,9 @@ cookie | 可选 | 设置 cookie 属性，例如 maxAge、secure等。我们会�
 fetchUser | | **是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**<br/>如果设置为 true，每个HTTP请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。<br/>如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性，<br/>你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
 key | | session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
 
-**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
+**注意**：我们通常不建议在云引擎环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但是我们仍建议:
 
-* 在云代码方法中，通过 request.user 获取用户信息。
+* 在云引擎方法中，通过 request.user 获取用户信息。
 * 在 webHosting 中，通过 req.AV.user 获取用户信息。
 * 在后续的方法调用显示的传递 user 对象。
 
@@ -1263,7 +1263,7 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意：express 框架的 express.session.MemoryStore 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession 中间件](https://gist.github.com/visionmedia/1491756)。
+注意：express 框架的 express.session.MemoryStore 在我们云引擎中是无法正常工作的，因为我们的云引擎是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [cookieSession 中间件](https://gist.github.com/visionmedia/1491756)。
 
 ### 自定义 session
 
@@ -1279,20 +1279,20 @@ app.use(express.cookieSession());
 
 ### 启用 HTTPS
 
-为了安全性，我们可能会为网站加上HTTPS加密传输。我们的云代码支持网站托管，同样会有这样的需求。
+为了安全性，我们可能会为网站加上HTTPS加密传输。我们的云引擎支持网站托管，同样会有这样的需求。
 
-因此我们在云代码中提供了一个新的 middleware 来强制让你的 `{domain}.avosapps.com`的网站通过 https 访问，你只要这样：
+因此我们在云引擎中提供了一个新的 middleware 来强制让你的 `{domain}.avosapps.com`的网站通过 https 访问，你只要这样：
 
 ```javascript
 var avosExpressHttpsRedirect = require('avos-express-https-redirect');
 app.use(avosExpressHttpsRedirect());
 ```
 
-部署并发布到生产环境之后，访问你的云代码网站二级域名都会强制通过HTTPS访问。测试环境的域名仍然不会启用HTTPS。
+部署并发布到生产环境之后，访问你的云引擎网站二级域名都会强制通过HTTPS访问。测试环境的域名仍然不会启用HTTPS。
 
 ### 测试环境和开发环境
 
-**提示**：云代码 2.0 及以上版本可以跳过本节。
+**提示**：云引擎 2.0 及以上版本可以跳过本节。
 
 前面已经谈到 Cloud Code 的测试和生产环境之间的区别，可以通过 HTTP 头部 X-LC-Prod 来区分。但是对于 Web Hosting 就没有办法通过这个 HTTP 头来方便的区分。
 
@@ -1338,7 +1338,7 @@ if (__local) {
 } else if(__production) {
   // 当前环境为「生产环境」，是线上正式运行的环境
 } else {
-  // 当前环境为「测试环境」，云代码方法通过 HTTP 头部 X-LC-Prod:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
+  // 当前环境为「测试环境」，云引擎方法通过 HTTP 头部 X-LC-Prod:0 来访问；webHosting 通过 dev.xxx.avosapps.com 域名来访问
 }
 ```
 
@@ -1397,11 +1397,11 @@ xml2js
 
 我们还提供受限制的 fs 文件模块，仅可以读取上传文件目录下的文件。
 
-**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本。**
+**云引擎 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云引擎环境中使用的版本。**
 
 ## 时区问题
 
-因为某些原因，云代码 2.0 默认使用的是 UTC 时间，这给很多开发者带来了困惑，所以我们着重讨论下时区问题。
+因为某些原因，云引擎 2.0 默认使用的是 UTC 时间，这给很多开发者带来了困惑，所以我们着重讨论下时区问题。
 
 比如有这样一个时间：`2015-05-05T06:15:22.024Z` (ISO 8601 表示法)，最后末尾的 `Z` 表示该时间是 UTC 时间。
 
@@ -1411,16 +1411,16 @@ xml2js
 
 很多开发者在时间处理上会忽略「时区」标志，导致最后总是莫名其妙的出现 8 小时的偏差。我们假设有下面一个场景：
 
-1. 某开发者开发的应用使用云代码的 WebHosting 功能做了一个网站，其中有时间格式的表单提交。
+1. 某开发者开发的应用使用云引擎的 WebHosting 功能做了一个网站，其中有时间格式的表单提交。
 1. 某用户使用浏览器访问该网站，提交表单，时间格式为：`2015-05-05 14:15:22.024`，注意该时间没有「时区」标志。因为这个时间是浏览器生成的，而该用户浏览器上的时间通常是东八区时间，所以该业务数据希望表达的时间是「东八区的 14 点」。
-1. 该时间 `2015-05-05 14:15:22.024` 提交到云代码服务器，被转换为 Date 类型（JS 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云代码 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
+1. 该时间 `2015-05-05 14:15:22.024` 提交到云引擎服务器，被转换为 Date 类型（JS 代码：`new Date('2015-05-05 14:15:22.024')`）。因为云引擎 2.0 使用的是 UTC 时间，所以该时间会被处理为 `2015-05-05T14:15:22.024Z`，即「UTC 时间的 14 点」。导致最后获得的时间和期望时间相差了 8 小时。
 
 解决办法很简单：时间格式带上时区标志。即浏览器上传时间时使用 `2015-05-05T14:15:22.024+0800`，这样不管服务端默认使用什么时区，带有时区的时间格式转换的 Date 都不会有歧义。
 
 另外一个场景：
 
 1. 从数据库获取某记录的 `createdAt` 属性，假设值为：`2015-04-09T03:35:09.678Z`。
-1. 因为云代码默认时区是 UTC，所以一些时间函数的返回结果如下：
+1. 因为云引擎默认时区是 UTC，所以一些时间函数的返回结果如下：
 
 函数 | 返回结果
 ---|---
@@ -1438,15 +1438,15 @@ console.log('toString', time.toString());
 console.log('getHours', time.hours())
 ```
 
-## 云代码 2.0 版
+## 云引擎 2.0 版
 
-2014 年 8 月 14 号，Cloud Code 推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从当天开始，新创建的应用都将使用云代码 2.0 版本。
+2014 年 8 月 14 号，Cloud Code 推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从当天开始，新创建的应用都将使用云引擎 2.0 版本。
 
 ### 升级到 2.0
 
-1. 时区问题：2.0 版解决了 1.0 中时区错误的问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码2.0之前，移除代码中之前对时间修正的部分代码。
+1. 时区问题：2.0 版解决了 1.0 中时区错误的问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云引擎2.0之前，移除代码中之前对时间修正的部分代码。
 
-  >需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+  >需要注意的是，云引擎 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
 
 1. 引入 package.json （可选）：如果项目需要引入其他三方类库，可以像标准 Node.js 项目一样，在项目根目录添加一个 package.json 配置文件，下面是一个简单的样例：
 
@@ -1482,7 +1482,7 @@ xml2js: "0.4.4"
 
 **注意**：express 目前只支持 3.4.x 版本，即使 package.json 指定其他版本也是无效的。
 
-在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
+在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云引擎将继续提供服务，因此无需担心迁移期间服务暂停。
 
 ### 最新特性
 

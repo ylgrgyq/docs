@@ -6,27 +6,27 @@
 * 添加列的时候可以设置必选、默认值、隐藏等属性。
 * 列名旁边的下拉框，可以删除、重命名和编辑列属性。
 * 在不同应用之间可以共享 class 数据，例如共享 _User 表实现单点登录，参考 [应用间数据共享文档](app_data_share.html)。
-* 数据菜单左下角有 **数据导入** 菜单，可以导入符合我们 [预先定义格式](data_security.html#导入数据) 的遗留系统的数据到 LeanCloud 平台。
+* 数据菜单左下角有 **数据导入** 菜单，可以导入符合我们 [预先定义格式](dashboard_guide.html#本地数据导入_LeanCloud) 的遗留系统的数据到 LeanCloud 平台。
 * 查询的时候如果想将关联 Pointer 类型带入查询结果，请使用 AV.Query 的 `includeKey` 方法指定字段名称。
 * 查询可以指定 skip 和 limit 做分页查询。
 * 你可以使用类似 SQL 的语法来查询 LeanCloud 数据，参考 [CQL 详细指南](cql_guide.html)。
-* 你可以在 [REST API 错误代码](error_code.html) 文档里找到所有的错误代码和信息解释。
+* 你可以在 [错误码详解](error_code.html) 文档里找到所有的错误代码和信息解释。
 * 你可以使用 [API 在线测试工具](https://leancloud.cn/apionline/) 在线测试我们提供的开放 [REST API](rest_api.html)。
 * 我们的用户账户系统都自动做了密码加密存储，基于 SHA-512 加密算法，使用随机生成的 salt 加密。
 * 我们提供短信服务，你可以使用短息服务发送手机验证码、手机登录验证码等。具体参考各 SDK 开发指南。
 * 我们提供了 iOS、Android、Windows Phone、JavaScript、Unity3D 等平台的 SDK，进入 [SDK 下载页面](sdk_down.html)。
 * 如果你想做一个形如微博的 Feed 系统，也许你可以尝试使用我们的 [事件流系统](status_system.html)。
 * 我们提供简易的 [SNS 组件](sns.html)，用于第三方登录和分享。
-* [Android 应用代码混淆注意事项](android_guide.html#代码混淆)
+* [Android 应用代码混淆注意事项](android_faq.html#代码混淆怎么做)
 * [基于 LeanCloud 的一对多、多对多关系数据建模](https://blog.leancloud.cn/1723/)
 * [使用 LeanCloud JavaScript SDK 和 AngularJS 创建 一个 Todo Demo](https://blog.leancloud.cn/1541/)
 * 我们的数据存储服务提供地理位置信息查询，参考 SDK 开发指南，或者博文教程[《GEO Point 的使用》](https://blog.leancloud.cn/537/)。
 * 在应用设置菜单里，可以找到 **数据导出** 功能，你可以完整导出应用的数据。
 * 你可以在某个 class 的其他菜单里找到权限设置、Class 绑定等高级功能。
 * 在应用设置的 **邮件模板** 菜单，你可以编辑并保存发送给注册用户的邮箱验证邮件模板等。
-* 适当使用 [查询缓存](ios_os_x_guide.html#缓存查询) 功能，可以提升查询性能，并提供离线浏览。
+* 适当使用 [查询缓存](leanstorage_guide-ios.html#缓存查询) 功能，可以提升查询性能，并提供离线浏览。
 * 实现应用 DeepLink，参考 [应用内搜索和 DeepLink 开发指南](app_search_guide.html)。
-* 如果你想针对一个列建立唯一索引，不允许该列的数据出现重复，请提交 [技术支持工单](https://ticket.leancloud.cn) 或者发邮件至 <support@leancloud.rocks>，说明应用、Class 和列名。
+* 如果你想针对一个列建立唯一索引，不允许该列的数据出现重复，请提交 [技术支持工单](https://leanticket.cn/) 或者发邮件至 <support@leancloud.rocks>，说明应用、Class 和列名。
 * 想实现先验证手机号码再注册，可以用 `requestSMSCode`、`verifySMSCodeInBackground` 得到一个正确的手机号码再进行 `new AVUser()` 的注册。
 
 
@@ -35,7 +35,7 @@
 * 你可以在数据管理平台的 _File 表的 **url** 列点击上传按钮，直接上传文件。
 * 文件 API 提供元数据存储和缩略图功能，请参考 SDK 开发指南。更多缩略图选项可以使用 [七牛 API](http://docs.qiniu.com/api/v6/image-process.html) 做 URL 转换得到。
 * 文件如果存储为其他对象的数组属性，那么需要在 query 或者 fetch 的时候 `includeKey` 该字段。
-* [云引擎命令行工具](cloud_code_commandline.html) 提供文件批量上传命令 upload，可以用于上传现有资源文件到 LeanCloud 平台。
+* [云引擎命令行工具](leanengine_cli.html) 提供文件批量上传命令 upload，可以用于上传现有资源文件到 LeanCloud 平台。
 * 文件没有大小限制，文件在 SDK 下载成功后将自动缓存在本地。
 
 ## 统计
@@ -85,8 +85,8 @@
 
 ## 云引擎
 
-* 云引擎提供 [命令行工具](cloud_code_commandline.html)，方便部署、发布、调试云引擎项目。
-* 云引擎支持一份代码部署多个应用，只要使用相同的 git 仓库即可。另外 [命令行工具](cloud_code_commandline.html#多应用管理) 提供强力支持。
+* 云引擎提供 [命令行工具](leanengine_cli.html)，方便部署、发布、调试云引擎项目。
+* 云引擎支持一份代码部署多个应用，只要使用相同的 git 仓库即可。另外 [命令行工具](leanengine_cli.html#多应用管理) 提供强力支持。
 * 云引擎菜单提供统计功能，查看你的云引擎项目调用状况。
 * 云引擎提供 [定时任务](leanengine_guide-cloudcode.html#定时任务)，特定的时刻，做特定的事情。
 * 云引擎提供 [HTTP 客户端](leanengine_guide-cloudcode.html#发送_HTTP_请求)，抓取第三方数据。
@@ -94,7 +94,7 @@
 * 避免对象循环引用，将循环关系作为第三个对象存储。
 * 想建立一个应用网站？我们提供 [网站托管](leanengine_guide-cloudcode.html#Web_Hosting)。
 * 想用好云引擎，请先熟悉 [JavaScript SDK 开发指南](js_guide.html)。
-* 云引擎 Web 主机托管，可以绑定备案过的独立域名，请在 [工单系统](https://ticket.leancloud.cn) 提出技术申请。
+* 云引擎 Web 主机托管，可以绑定备案过的独立域名，请在 [工单系统](https://leanticket.cn/) 提出技术申请。
 * 云引擎 Web 主机托管，我们可以协助你完成域名的备案，请参考 [域名备案流程](leanengine_guide-cloudcode.html#域名备案流程)。
 
 ## 其他
@@ -102,7 +102,7 @@
 * [邀请朋友](/settings.html#/setting/invite) 注册 LeanCloud，获取赠送金额。
 * 修改登录邮箱，请进入 [邮箱](/settings.html#/setting/mail) 菜单。
 * 查看 [快速入门文档](/start.html)，开始应用开发之旅。
-* 通过 [工单系统](https://ticket.leancloud.cn/login) 提交技术支持申请，获取 LeanCloud 工程师的帮助。
+* 通过 [工单系统](https://leanticket.cn/) 提交技术支持申请，获取 LeanCloud 工程师的帮助。
 * 在右上角用户名左侧的消息中心，可以看到 LeanCloud 最火热的新闻和教程。
 * 在工具栏的资源菜单里，可以找到 LeanCloud 移动客户端下载链接，在移动设备上查看应用分析数据。
 * 使用 [drop](https://drop.leanapp.cn/) 或者 [fir.im](http://fir.im/) 分发测试你的应用。

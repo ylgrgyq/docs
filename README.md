@@ -57,7 +57,7 @@ $ grunt server
 
 ## 一套模板多份渲染
 
-有些文档的相似度非常高，所以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云代码 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
+有些文档的相似度非常高，所以可以使用一份模板，多分变量渲染的方式一次性生成多份文档，比如 「LeanEngine 指南」的文档就是这样生成的。这份文档分为三个运行时：Node.js、Python、云引擎 2.0。最终效果可见 [LeanEngine (Node.js 环境)](https://leancloud.cn/docs/leanengine_guide-node.html) 和 [LeanEngine（Python 环境）](https://leancloud.cn/docs/leanengine_guide-python.html)。这类文档编写方式如下：
 
 * 在 `views` 目录先编写一份「模板」（以 `tmpl` 作为扩展名），将文档的主体部分完成，将文档之间不一样的部分（比如不同语言的代码片段）使用：
 
@@ -104,7 +104,7 @@ $ grunt server
 {# 这是注释，用 <!-- --> 无效 #} 
 
 {% if numUsers < 5 %}...{% endif %}
-{% if i == 0 %}...{% endif %}
+{% if i != "String" %}...{% endif %}
 {% if users and showUsers %}...{% endif %}
 {% if i == 0 and not hideFirst %}...{% endif %}
 {% if (x < 5 or y < 5) and foo %}...{% endif %}

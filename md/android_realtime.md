@@ -267,7 +267,7 @@ group.join();
 ```
 对于之前已经加入过的群组，只要没有显式调用过quit()，**并不需要在重新上线以后反复 join**。只要在`session.open` 以后，就能收到来自群组的消息。
 
-AVQuery 查询参考 [Android 指南](./android_guide.html#查询)。
+AVQuery 查询参考 [Android 指南](./leanstorage_guide-android.html#查询)。
 
 ### 发送消息
 
@@ -417,11 +417,11 @@ public class DemoGroupMessageReceiver extends AVGroupMessageReceiver{
 在阅读下面的代码前，你可能需要先了解一下有关权限管理的基本概念：[权限和认证](./realtime.html#权限和认证)。
 
 在实时聊天系统中间，很多操作是需要有权限控制才能操作成功的,比如：单聊的添加好友，群组的邀请、剔除操作等，都需要做一定权限认证。
-客户端传一些参数给自有用户系统或者云代码（统称权限管理服务器），权限管理服务器端根据一定的逻辑判断操作是否合法，如果该操作是合法的，则返回一个正确的签名；如果是非法的，就返回一个错误的签名。之后在实时通信的过程中就会将返回的签名带在通信的请求中，LeanCloud的实时通信服务器会比对自己算出来的签名与客户端传递过来的签名是否一致来获知该操作是否合法。
+客户端传一些参数给自有用户系统或者云引擎（统称权限管理服务器），权限管理服务器端根据一定的逻辑判断操作是否合法，如果该操作是合法的，则返回一个正确的签名；如果是非法的，就返回一个错误的签名。之后在实时通信的过程中就会将返回的签名带在通信的请求中，LeanCloud的实时通信服务器会比对自己算出来的签名与客户端传递过来的签名是否一致来获知该操作是否合法。
 
-完成一个简单的权限管理认证系统，你需要以下几个步骤（下面以LeanCloud的云代码服务作为权限认证服务器为例）：
+完成一个简单的权限管理认证系统，你需要以下几个步骤（下面以LeanCloud的云引擎服务作为权限认证服务器为例）：
 
-1. 部署云代码[签名范例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)代码到LeanCloud的云代码服务器
+1. 部署云引擎[签名范例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)代码到LeanCloud的云引擎服务器
 2. 在LeanCloud中你的项目对应的网页控制台的`设置`->`应用选项`->`聊天推送`中打开`聊天服务签名认证`
 3. 在 SDK 中间继承 SignatureFactory 抽象类
 

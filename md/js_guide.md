@@ -10,7 +10,7 @@ LeanCloud 提供了一个移动 app 的完整后端解决方案，我们的目�
 
 请在阅读本文档的同时，对照查看 [JavaScript API文档](/api-docs/javascript/)，本指南并没有完全覆盖所有的 API 调用。
 
-该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](https://leancloud.cn/docs/leanengine_guide-node.html)。
+该 JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以使用 LeanEngine 来搭建服务器端，可以参考[相关文档](leanengine_overview.html)。
 
 ## 快速入门
 
@@ -115,21 +115,20 @@ var post2 = Post.new({pubUser: 'LeanCloud官方客服', content:'每个 JavaScri
 
 这里要注意，我们每个存储条目的 `objectId` 是服务器端自动生成的唯一 id（非简单的自增逻辑生成），所以 `objectId` 是不可修改的。如果你有自定义 id 的需求，可以自己建立一个字段，逻辑上作为你的自定义 id。
 
+**所有异步接口都会返回一个 [Promise](#Promise)**
+
 ```javascript
 var post = new Post();
 post.set('content', '每个 JavaScript 程序员必备的8个开发工具');
 post.set('pubUser', 'LeanCloud官方客服');
 post.set('pubTimestamp', 1435541999);
-post.save(null, {
-  success: function(post) {
-    // 成功保存之后，执行其他逻辑.
-    console.log('New object created with objectId: ' + post.id);
-  },
-  error: function(post, error) {
-    // 失败之后执行其他逻辑
-    // error 是 AV.Error 的实例，包含有错误码和描述信息.
-    console.log('Failed to create new object, with error message: ' + error.message);
-  }
+post.save().then(function(post) {
+  // 成功保存之后，执行其他逻辑.
+  console.log('New object created with objectId: ' + post.id);
+}, function(err) {
+  // 失败之后执行其他逻辑
+  // error 是 AV.Error 的实例，包含有错误码和描述信息.
+  console.log('Failed to create new object, with error message: ' + err.message);
 });
 ```
 
@@ -156,13 +155,10 @@ post.save({
   content: '每个 JavaScript 程序员必备的 8 个开发工具',
   pubUser: 'LeanCloud官方客服',
   pubTimestamp: 1435541999
-}, {
-  success: function(post) {
-    // 实例已经成功保存.
-  },
-  error: function(post, error) {
-    // 失败了.
-  }
+}).then(function(post) {
+  // 实例已经成功保存.
+}, function(err) {
+  // 失败了.
 });
 ```
 
@@ -173,17 +169,14 @@ post.save({
 在 LeanCloud 中保存数据是很简单的，获取数据也非常容易。如果事先知道 `objectId` 的话,你可以用一个 `AV.Query` 提取出整个 `AV.Object`:
 
 ```javascript
-var query = new AV.Query('Post');
-query.get('558e20cbe4b060308e3eb36c', {
-  success: function(post) {
-    // 成功获得实例
-    var content = post.get('content');
-    var username = post.get('pubUser');
-    var pubTimestamp = post.get('pubTimestamp');
-  },
-  error: function(error) {
-    // 失败了.
-  }
+var query = new AV.Query(Post);
+query.get('558e20cbe4b060308e3eb36c').then(function(post) {
+  // 成功获得实例
+  var content = post.get('content');
+  var username = post.get('pubUser');
+  var pubTimestamp = post.get('pubTimestamp');
+}, function(error) {
+  // 失败了
 });
 ```
 
@@ -205,16 +198,12 @@ var Post = AV.Object.extend('Post');
 var query = new AV.Query(Post);
 
 // 这个 id 是要修改条目的 objectId，你在生成这个实例并成功保存时可以获取到，请看前面的文档
-query.get('558e20cbe4b060308e3eb36c', {
-    success: function(post) {
-      // 成功，回调中可以取得这个 Post 对象的一个实例，然后就可以修改它了
-      post.set('content', '每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/');
-      post.save();
-    },
-    error: function(object, error) {
-      // 失败了.
-      console.log(object);
-    }
+query.get('558e20cbe4b060308e3eb36c').then(function(post) {
+  // 成功，回调中可以取得这个 Post 对象的一个实例，然后就可以修改它了
+  post.set('content', '每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/');
+  post.save();
+}, function(error) {
+  // 失败了
 });
 ```
 
@@ -232,7 +221,11 @@ var post = AV.Object.createWithoutData('Post', '558e20cbe4b060308e3eb36c');
 // 更改属性
 post.set('content', '每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/');
 // 保存
-post.save();
+post.save().then(function() {
+  // 保存成功
+}, function(error) {
+  // 失败
+});
 ```
 
 #### fetchWhenSave
@@ -244,10 +237,38 @@ post.save();
 post.fetchWhenSave(true);
 post.set('content', '每个 JavaScript 程序员必备的 8 个开发工具: http://buzzorange.com/techorange/2015/03/03/9-javascript-ide-editor/');
 post.set('pubUser', 'LeanCloud官方客服');
-post.save();
+post.save().then(function() {
+  // 保存成功
+}, function(error) {
+  // 失败
+});
 ```
 
 这个方法在对象被并发修改的时候特别有用，可以得到更新后对象的最新状态。例如维护一个计数器的场景，每次 `save` 后得到最新的计数。
+
+#### 保存选项
+
+从 0.6.10 / 1.0.0-rc8 起，`AV.Object` 对象在保存时可以通过设置 `options` 参数来指定保存选项。该参数支持以下选项：
+
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | Boolean | 对象成功保存后，自动返回该对象在服务端的最新数据。
+`query` | AV.Query  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以分 query 和 save 两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突。
+
+以下为 `query` 选项的用法：
+
+```javascript
+new AV.Query('Clazz').first().then(function(instance) {
+  var currentVersion = instance.version; // 13
+  instance.set('version', currentVersion + 1);
+  return instance.save(null, {
+    query: new AV.Query('Clazz').equalTo('version', currentVersion)
+  });
+}).then(function(instance) { /* success */ }, function(error) {
+  // 试图更新时 version 不是 13 了，更新失败
+});
+```
+
 
 #### 计数器
 
@@ -255,7 +276,11 @@ post.save();
 
 ```javascript
 post.increment('upvotes');
-post.save();
+post.save().then(function() {
+  // 保存成功
+}, function(error) {
+  // 失败
+});
 ```
 
 另外，通过使用 `increment(key, amount)` 方法，你可以自行定义增减的幅度（amount 缺省值为 1）。
@@ -273,7 +298,11 @@ post.save();
 ```javascript
 post.addUnique('tags', 'Frontend');
 post.addUnique('tags', 'JavaScript');
-post.save();
+post.save().then(function() {
+  // 保存成功
+}, function(error) {
+  // 失败
+});
 ```
 
 ### 删除对象
@@ -281,13 +310,10 @@ post.save();
 调用如下代码会在 LeanCloud 中删除一个实例:
 
 ```javascript
-myObject.destroy({
-  success: function(myObject) {
-    // 对象的实例已经被删除了.
-  },
-  error: function(myObject, error) {
-    // 出错了.
-  }
+myObject.destroy().then(function() {
+  // 删除成功
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -298,13 +324,21 @@ myObject.destroy({
 post.unset('pubTimestamp');
 
 // 写回 LeanCloud
-post.save();
+post.save().then(function() {
+  // 删除成功
+}, function(error) {
+  // 失败
+});
 ```
 
 批量删除一批对象可以这样：
 
 ```javascript
-AV.Object.destroyAll(objects);
+AV.Object.destroyAll(objects).then(function() {
+  // 删除成功
+}, function(error) {
+  // 失败
+});
 ```
 
 其中 objects 是一个对象集合，且其中的每个对象的 className 必须一样。
@@ -339,7 +373,11 @@ myComment.set('content', '我若是写代码，进入状态之后最好不要停
 myComment.set('post', myPost);
 
 // 这会将 myPost 和 myComment 一起保存起来
-myComment.save();
+myComment.save().then(function() {
+  // 保存成功
+}, function(error) {
+  // 失败
+});
 ```
 
 LeanCloud 内部会自动处理，调用 `Comment` 的 `save` 方法就可以同时保存两个新对象。
@@ -365,13 +403,13 @@ myComment.set('post', post);
 ```javascript
 var post = fetchedComment.get('post');
 post.fetch({
-    // 用法可参考 API 文档 > AV.Object > fetch
-    include: 'author'
-  },
-  {
-    success: function(post) {
-      var content = post.get('content');
-    }
+  // 用法可参考 API 文档 > AV.Object > fetch
+  include: 'author'
+}).then(function(post) {
+  // 成功
+  var content = post.get('content');
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -383,7 +421,11 @@ post.fetch({
 var user = AV.User.current();
 var relation = user.relation('likes');
 relation.add(post);
-user.save();
+user.save().then(function(user) {
+  // 成功
+}, function(error) {
+  // 失败
+});
 ```
 
 值得一提的是，Relation 会自动去重。所以，你不用去担心用户会重复 like 同一篇 post。
@@ -392,7 +434,11 @@ user.save();
 
 ```javascript
 relation.remove(post);
-user.save();
+user.save().then(function(user) {
+  // 成功
+}, function(error) {
+  // 失败
+});
 ```
 
 你可以在用 save 方法保存前多次调用 add 和 remove 方法：
@@ -400,23 +446,32 @@ user.save();
 ```javascript
 relation.remove(post1);
 relation.remove(post2);
-user.save();
+user.save().then(function(user) {
+  // 成功
+}, function(error) {
+  // 失败
+});
 ```
 
 你还可以传入一个 AV.Object 数组来做 add 和 remove：
 
 ```javascript
 relation.add([post1, post2, post3]);
-user.save();
+user.save().then(function(user) {
+  // 成功
+}, function(error) {
+  // 失败
+});
 ```
 
 默认情况下，`relation` 关联的对象不会被同步获取到，你可以通过使用 `query` 方法返回的 AV.Query 对象来获取 AV.Object 的列表，例如：
 
 ```javascript
-relation.query().find({
-  success: function(list) {
-    // list 里包含当前用户喜欢的所有微博.
-  }
+relation.query().find().then(function(list) {
+  // list 里包含当前用户喜欢的所有微博
+  console.log(list);
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -426,10 +481,11 @@ relation.query().find({
 var query = relation.query();
 query.skip(10);
 query.limit(10);
-query.find({
-  success:function(list) {
-    // list 里包含当前用户喜欢的部分微博.
-  }
+query.find().then(function(list) {
+  // list 里包含当前用户喜欢的所有微博
+  console.log(list);
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -447,10 +503,10 @@ var query = relation.query();
 
 ```javascript
 var query = AV.Relation.reverseQuery('_User', 'likes', post);
-query.find({
-  success:function(users) {
-   // users 是表示喜欢这个 post 的用户列表。
-  }
+query.find().then(function(users) {
+  // users 是表示喜欢这个 post 的用户列表。
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -479,7 +535,11 @@ testObject.set('testDate', date);
 testObject.set('testArray', array);
 testObject.set('testObject', object);
 testObject.set('testNull', null);
-testObject.save();
+testObject.save().then(function(testObject) {
+  // 成功
+}, function(error) {
+  // 失败
+});
 ```
 
 AV.Object 实例的大小不应该超过 128 KB，如果需要存储较大的文件类型如图像、文件、音乐，可以使用 `AV.File` 对象来存储，具体使用方法可见 [AV.File 指南部分](#文件)。关于处理数据的更多信息，可查看开发指南的数据安全部分。
@@ -497,18 +557,15 @@ AV.Object 实例的大小不应该超过 128 KB，如果需要存储较大的文
 ```javascript
 var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
-query.find({
-  success: function(results) {
-    console.log('Successfully retrieved ' + results.length + ' posts.');
-    // 处理返回的结果数据
-    for (var i = 0; i < results.length; i++) {
-      var object = results[i];
-      console.log(object.id + ' - ' + object.get('content'));
-    }
-  },
-  error: function(error) {
-    console.log('Error: ' + error.code + ' ' + error.message);
+query.find().then(function(results) {
+  console.log('Successfully retrieved ' + results.length + ' posts.');
+  // 处理返回的结果数据
+  for (var i = 0; i < results.length; i++) {
+    var object = results[i];
+    console.log(object.id + ' - ' + object.get('content'));
   }
+}, function(error) {
+  console.log('Error: ' + error.code + ' ' + error.message);
 });
 ```
 
@@ -563,13 +620,10 @@ query.limit(10); // 最多返回 10 条结果
 ```javascript
 var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
-query.first({
-  success: function(object) {
-    // LeanCloud官方客服的第一条微博.
-  },
-  error: function(error) {
-    console.log('Error: ' + error.code + ' ' + error.message);
-  }
+query.first().then(function(object) {
+  // LeanCloud官方客服的第一条微博
+}, function(error) {
+  console.log('Error: ' + error.code + ' ' + error.message);
 });
 ```
 
@@ -634,24 +688,27 @@ userQuery.equalTo('follower', AV.User.current());
 // 找到这些被关注者发布的微博
 var postQuery = new AV.Query(Post);
 postQuery.matchesKeyInQuery('author', 'followee', userQuery);
-postQuery.find({
-  success: function(results) {
-    // 得到当前用户关注的人发布的微博
-  }
+postQuery.find().then(function(results) {
+  // 得到当前用户关注的人发布的微博
+  console.log(results);
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
-相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。
-例如，找出当前用户没有关注的人发布的微博：
+相反，要从一个查询中获取一组对象，该对象的一个键值，与另一个对象的键值并不匹配，可以使用 `doesNotMatchKeyInQuery`。例如，找出当前用户没有关注的人发布的微博：
 
 ```javascript
 // Post 和 userQuery 在上段代码中已声明
 var postQuery = new AV.Query(Post);
 postQuery.doesNotMatchKeyInQuery('author', 'followee', userQuery);
-postQuery.find({
-  success: function(results) {
-    // 得到非当前用户关注的人发布的微博
-  }
+postQuery.find().then(function(results) {
+  // 得到当前用户未关注的人发布的微博
+  console.log(results);
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -662,6 +719,10 @@ var query = new AV.Query('Post');
 query.select('pubUser', 'content');
 query.find().then(function(results) {
   // each of results will only have the selected fields available.
+  console.log(results);
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -717,10 +778,10 @@ query.startsWith('pubUser', 'LeanCloud');
 // 假设类型为 AV.Object 的 myPost 已提前定义
 var query = new AV.Query('Comment');
 query.equalTo('post', myPost);
-query.find({
-  success: function(comments) {
-    // comments 包含有 myPost 下的所有评论
-  }
+query.find().then(function(comments) {
+  // comments 包含有 myPost 下的所有评论
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -733,10 +794,10 @@ var innerQuery = new AV.Query('Post');
 innerQuery.exists('image');
 var query = new AV.Query('Comment');
 query.matchesQuery('post', innerQuery);
-query.find({
-  success: function(comments) {
-    // comments 包含有所有带图片微博的评论.
-  }
+query.find().then(function(comments) {
+  // comments 包含有所有带图片微博的评论.
+}, function(error) {
+  // 失败
 });
 ```
 
@@ -748,10 +809,11 @@ var innerQuery = new AV.Query('Post');
 innerQuery.exists('image');
 var query = new AV.Query('Comment');
 query.doesNotMatchQuery('post', innerQuery);
-query.find({
-  success: function(comments) {
-    // comments 包含所有不带图片微博的评论.
-  }
+query.find().then(function(comments) {
+  // comments 包含所有不带图片微博的评论.
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -778,14 +840,15 @@ query.limit(10);
 // 包含了对应的微博信息
 query.include('post');
 
-query.find({
-  success: function(comments) {
-    // comments 包含最近的 10 条评论，每个 comment 实例的 'post' 都有全部的帖子信息。
-    for (var i = 0; i < comments.length; i++) {
-      // 这里不再需要网络访问.
-      var post = comments[i].get('post');
-    }
+query.find().then(function(comments) {
+  // comments 包含最近的 10 条评论，每个 comment 实例的 'post' 都有全部的帖子信息。
+  for (var i = 0; i < comments.length; i++) {
+    // 这里不再需要网络访问.
+    var post = comments[i].get('post');
   }
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -793,7 +856,7 @@ query.find({
  的 author，你可以这样做:
 
 ```javascript
-query.include(['post.author']);
+query.include(['post.author']); //数组，支持传入多个字段
 ```
 
 你可以多次使用 `include` 来构建一个有多个字段的查询，这项功能同样适用于
@@ -806,14 +869,11 @@ AV.Query 的 helper 函数，例如 `first` 和 `get` 等.
 ```javascript
 var query = new AV.Query('Post');
 query.equalTo('pubUser', 'LeanCloud官方客服');
-query.count({
-  success: function(count) {
-    // 成功了
-    console.log('LeanCloud官方客服 发布了 ' + count + ' 条微博');
-  },
-  error: function(error) {
-    // 失败了
-  }
+query.count().then(function(count) {
+  // 成功了
+  console.log('LeanCloud官方客服 发布了 ' + count + ' 条微博');
+}, function(error) {
+  // 失败了
 });
 ```
 
@@ -834,13 +894,12 @@ var individualPosts = new AV.Query('Post');
 individualPosts.lessThan('pubUserCertificate', 2);
 
 var mainQuery = AV.Query.or(officialPosts, individualPosts);
-mainQuery.find({
-  success: function(results) {
-     // results 包含企业官方账号和个人账号发布的一些微博.
-  },
-  error: function(error) {
-    // 失败了.
-  }
+mainQuery.find().then(function(results) {
+  // results 包含企业官方账号和个人账号发布的一些微博
+  console.log(results);
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -853,14 +912,11 @@ mainQuery.find({
 如果你想将查询出来的对象都删除，或者删除符合查询条件的所有对象，可以调用 `destroyAll` 方法：
 
 ```javascript
-query.destroyAll({
-   success: function(){
-      // 成功删除 query 命中的所有实例.
-   },
-   error: function(err){
-      // 失败了.
-   }
-   });
+query.destroyAll().then(function() {
+  // 删除成功
+}, function() {
+  // 失败
+});
 ```
 
 ### CQL 查询语言
@@ -868,30 +924,26 @@ query.destroyAll({
 从 0.4.3 版本开始，我们允许使用类 SQL 语法的 CQL 查询语言来查询 LeanCloud 应用内的数据，例如：
 
 ```javascript
-AV.Query.doCloudQuery('select * from Post', {
-  success: function(result){
-    //results 是查询返回的结果，AV.Object 列表
-    var results = result.results;
-    //do something with results...
-  },
-  error: function(error){
-    //查询失败，查看 error
-    console.dir(error);
-  }
+AV.Query.doCloudQuery('select * from Post').then(function(data) {
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
+  var results = data.results;
+  //do something with results...
+}, function(error) {
+  //查询失败，查看 error
+  console.log(error);
 });
+
 //查询认证等级大于 2 的账户的微博，并返回前100条。
-AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>2', {
-  success: function(result){
-    //results 是查询返回的结果，AV.Object 列表
-    var results = result.results;
-    //count 表示符合查询条件的总记录数
-    var count = result.count;
-    //do something with results...
-  },
-  error: function(error){
-    //查询失败，查看 error
-    console.dir(error);
-  }
+AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>2')
+.then(function(data) {
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
+  var results = data.results;
+  //count 表示符合查询条件的总记录数
+  var count = data.count;
+  //do something with results...
+}, function(error) {
+  //查询失败，查看 error
+  console.log(error);
 });
 ```
 
@@ -907,19 +959,16 @@ CQL 语法请参考 [CQL 详细指南](./cql_guide.html)。
 
 ```javascript
 //查询认证等级大于 3 的账户的微博，并返回前10条。
-AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? limit ?',[3,10],
- {
-  success: function(result){
-    //results 是查询返回的结果，AV.Object 列表
-    var results = result.results;
-    //count 表示符合查询条件的总记录数
-    var count = result.count;
-    //do something with results...
-  },
-  error: function(error){
-    //查询失败，查看 error
-    console.dir(error);
-  }
+AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? limit ?',[3,10])
+.then(function(data) {
+  // data 中的 results 是本次查询返回的结果，AV.Object 实例列表
+  var results = data.results;
+  //count 表示符合查询条件的总记录数
+  var count = data.count;
+  //do something with results...
+}, function(error) {
+  //查询失败，查看 error
+  console.log(error);
 });
 ```
 
@@ -929,6 +978,27 @@ AV.Query.doCloudQuery('select count(*),* from Post where pubUserCertificate>? li
 
 除了回调函数之外，每一个在 LeanCloud JavaScript SDK 中的异步方法都会返回一个
  `Promise`。使用 `Promise`，你的代码可以比原来的嵌套 callback 的方法看起来优雅得多。
+
+```javascript
+// 这是一个比较完整的例子，具体方法可以看下面的文档
+// 查询某个 AV.Object 实例，之后进行修改
+var query = new AV.Query('TestObject');
+query.equalTo('name', 'hjiang');
+// find 方法是一个异步方法，会返回一个 Promise，之后可以使用 then 方法
+query.find().then(function(results) {
+  // 返回一个符合条件的 list
+  var obj = results[0];
+  obj.set('phone', '182xxxx5548');
+  // save 方法也是一个异步方法，会返回一个 Promise，所以在此处，你可以直接 return 出去，后续操作就可以支持链式 Promise 调用
+  return obj.save();
+}).then(function() {
+  // 这里是 save 方法返回的 Promise
+  console.log('设置手机号码成功');
+}).catch(function(error) {
+  // catch 方法写在 Promise 链式的最后，可以捕捉到全部 error
+  console.log(error);
+});
+```
 
 ### then 方法
 
@@ -1100,7 +1170,8 @@ var promise = new AV.Promise(function(resolve, reject){
 });
 
 promise.then(functon(ret){
-  console.log(ret); //print 42.
+  //print 42.
+  console.log(ret);
 });
 ```
 
@@ -1108,19 +1179,21 @@ promise.then(functon(ret){
 
 ```javascript
 var promise = new AV.Promise(function(resolve, reject) {
-      setTimeout(function() {
-          if (Date.now() % 2) {
-               resolve('奇数时间');
-          } else {
-               reject('偶数时间');
-          }
-      }, 2000);
+  setTimeout(function() {
+    if (Date.now() % 2) {
+     resolve('奇数时间');
+    } else {
+     reject('偶数时间');
+    }
+  }, 2000);
 });
 
 promise.then(function(value) {
-    console.log(value);  // 奇数时间
+  // 奇数时间
+  console.log(value);
 }, function(value) {
-    console.log(value);  // 偶数时间
+  // 偶数时间
+  console.log(value);
 });
 ```
 
@@ -1159,42 +1232,42 @@ query.find().then(function(results) {
 简单例子：
 
 ```javascript
-  function timerPromisefy(delay) {
-    return new AV.Promise(function (resolve) {
-      //延迟 delay 毫秒，然后调用 resolve
-      setTimeout(function () {
-        resolve(delay);
-      }, delay);
-     });
-  };
-
-   var startDate = Date.now();
-
-   AV.Promise.when(
-     timerPromisefy(1),
-     timerPromisefy(32),
-     timerPromisefy(64),
-     timerPromisefy(128)
-   ).then(function (r1, r2, r3, r4) {
-        //r1,r2,r3,r4 分别为1,32,64,128
-        //大概耗时在 128 毫秒
-        console.log(new Date() - startDate);
+function timerPromisefy(delay) {
+  return new AV.Promise(function (resolve) {
+    //延迟 delay 毫秒，然后调用 resolve
+    setTimeout(function () {
+      resolve(delay);
+    }, delay);
    });
+}
 
-   //尝试下其中一个失败的例子
-   var startDate = Date.now();
-   AV.Promise.when(
-     timerPromisefy(1),
-     timerPromisefy(32),
-     AV.Promise.error('test error'),
-     timerPromisefy(128)
-   ).then(function () {
-        //不会执行
-   }, function(errors){
-       //大概耗时在 128 毫秒
-        console.log(new Date() - startDate);
-        console.dir(errors);  //print [ , , 'test error',  ]
-   });
+var startDate = Date.now();
+
+AV.Promise.when(
+  timerPromisefy(1),
+  timerPromisefy(32),
+  timerPromisefy(64),
+  timerPromisefy(128)
+).then(function (r1, r2, r3, r4) {
+  //r1,r2,r3,r4 分别为1,32,64,128
+  //大概耗时在 128 毫秒
+  console.log(new Date() - startDate);
+});
+
+//尝试下其中一个失败的例子
+var startDate = Date.now();
+AV.Promise.when(
+  timerPromisefy(1),
+  timerPromisefy(32),
+  AV.Promise.error('test error'),
+  timerPromisefy(128)
+).then(function () {
+  //不会执行
+}, function(errors){
+  //大概耗时在 128 毫秒
+  console.log(new Date() - startDate);
+  console.dir(errors);  //print [ , , 'test error',  ]
+});
 ```
 
 下面例子执行一次批量删除某个 Post 的评论：
@@ -1220,31 +1293,32 @@ query.find().then(function(results) {
 
 `when` 会在错误处理器中返回所有遇到的错误信息，以数组的形式提供。
 
-
 除了 `when` 之外，还有一个类似的方法是 `AV.Promise.all`，这个方法和 `when` 的区别在于：
 
 它只接受数组形式的 promise 输入，并且如果有任何一个 promise 失败，它就会直接调用错误处理器，而不是等待所有 promise 完成，其次是它的 resolve 结果返回的是数组。例如：
 
-```javscript
-     AV.Promise.all([
-       timerPromisefy(1),
-       timerPromisefy(32),
-       timerPromisefy(64),
-       timerPromisefy(128)
-     ]).then(function (values) {
-       //values 数组为 [1, 32, 64, 128]
-     })
-     //测试下失败的例子
-     AV.Promise.when(
-       timerPromisefy(1),
-       timerPromisefy(32),
-       AV.Promise.error('test error'),
-       timerPromisefy(128)
-     ).then(function () {
-        //不会执行
-     }, function(error){
-       console.dir(error);  //print 'test error'
-     });
+```javascript
+AV.Promise.all([
+  timerPromisefy(1),
+  timerPromisefy(32),
+  timerPromisefy(64),
+  timerPromisefy(128)
+]).then(function (values) {
+  //values 数组为 [1, 32, 64, 128]
+});
+//测试下失败的例子
+AV.Promise.all([
+  timerPromisefy(1),
+  timerPromisefy(32),
+  AV.Promise.error('test error'),
+  timerPromisefy(128)
+]).then(function () {
+  //不会执行
+}, function(error){
+  console.dir(error);  //print 'test error'
+});
+
+//http://jsplay.avosapps.com/zuy/embed?js,console
 ```
 
 ### race 方法
@@ -1252,14 +1326,14 @@ query.find().then(function(results) {
 `AV.Promise.race` 方法接收一个 promise 数组输入，当这组 promise 中的任何一个 promise 对象如果变为 resolve 或者 reject 的话， 该函数就会返回，并使用这个 promise 对象的值进行 resolve 或者 reject。`race`，顾名思义就是在这些 promise 赛跑，谁先执行完成，谁就先 resolve。
 
 ```javascript
-var p1 = AV.Promise.as(1),
-    p2 = AV.Promise.as(2),
-    p3 = AV.Promise.as(3);
+var p1 = AV.Promise.as(1);
+var p2 = AV.Promise.as(2);
+var p3 = AV.Promise.as(3);
 Promise.race([p1, p2, p3]).then(function (value) {
-    console.log(value);  // 打印 1
+  // 打印 1
+  console.log(value);
 });
 ```
-
 
 ### 创建异步方法
 
@@ -1311,6 +1385,13 @@ AV.Promise.setDebugError(true);
 ```javascript
 var base64 = '6K+077yM5L2g5Li65LuA5LmI6KaB56C06Kej5oiR77yf';
 var file = new AV.File('myfile.txt', { base64: base64 });
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 另外，也可以用一个 byte 数组来新建一个文件。
@@ -1335,6 +1416,13 @@ if (fileUploadControl.files.length > 0) {
   var name = 'avatar.jpg';
 
   var avFile = new AV.File(name, file);
+  avFile.save().then(function(obj) {
+    // 数据保存成功
+    console.log(obj.url());
+  }, function(err) {
+    // 数据保存失败
+    console.log(err);
+  });
 }
 ```
 
@@ -1348,6 +1436,13 @@ if (fileUploadControl.files.length > 0) {
 
 ```javascript
 var file = new AV.File('test.txt', new Buffer('hello world'));
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 因为 Node.js 对 IO 的读写经常都是经过 Buffer，通过支持 Buffer，我们的 SDK 也能很好地工作在 Node.js 环境。
@@ -1356,17 +1451,25 @@ var file = new AV.File('test.txt', new Buffer('hello world'));
 
 ```javascript
 var file = AV.File.withURL('test.jpg', 'images/permission.png');
-file.save();
+file.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
 ```
 
 下面你应该向 LeanCloud 上传你的文件了。就像 AV.Object 一样，有很多不同的
 save 方法，你可以按你想用的 callback 和 error 处理的方式来使用它们：
 
 ```javascript
-avFile.save().then(function() {
-  // The file has been saved to AV.
-}, function(error) {
-  // The file either could not be read, or could not be saved to AV.
+avFile.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
 });
 ```
 
@@ -1375,8 +1478,109 @@ avFile.save().then(function() {
 ```javascript
 var post = new AV.Object('Post');
 post.set('content', '#花儿与少年# 迪拜疯狂之旅');
-post.set('image', file);
-post.save();
+// fileObject 是一个实例化的 AV.File 对象
+post.set('image', fileObject);
+post.save().then(function(obj) {
+  // 数据保存成功
+  console.log(obj.url());
+}, function(err) {
+  // 数据保存失败
+  console.log(err);
+});
+```
+
+### 文件上传
+
+如果仅是想简单的上传，可以直接在 Web 前端使用 AV.File 上面的相关方法。但真实使用场景中，还有很多开发者需要自行实现一个上传接口，对数据做更多的处理。
+
+以下是一个在 Web 中完整上传一张图片的 Demo，包括前端与 Node.js 服务端代码。服务端推荐使用 LeanCloud 推出的「[云引擎](leanengine_overview.html)」，非常出色的 Node.js 环境。
+
+前端页面（比如:fileUpload.html）：
+```html
+// 页面元素（限制上传为图片类型，使用时可自行修改 accept 属性）
+<form id="upload-file-form" class="upload" enctype="multipart/form-data">
+  <input name="attachment" type="file" accept="image/gif, image/jpeg, image/png">
+</form>
+```
+纯前端调用方式：
+
+```javascript
+// 前端代码，基于 jQuery
+function uploadPhoto() {
+  var uploadFormDom = $('#upload-file-form');
+  var uploadInputDom = uploadFormDom.find('input[type=file]');
+  // 获取浏览器 file 对象
+  var files = uploadInputDom[0].files;
+  // 创建 formData 对象
+  var formData = new window.FormData(uploadFormDom[0]);
+  if (files.length) {
+    $.ajax({
+      // 注意，这个 url 地址是一个例子，真实使用时需替换为自己的上传接口 url
+      url: 'https://leancloud.cn/xxx/xxx/upload',
+      method: 'post',
+      data: formData,
+      processData: false,
+      contentType: false
+    }).then((data) => {
+      // 上传成功，服务端设置返回
+      console.log(data);
+    });
+  }
+};
+```
+
+在服务端可以编写如下代码：
+
+```javascript
+// 服务端代码，基于 Node.js、Express
+var AV = require('leanengine');
+// 服务端需要使用 connect-busboy（通过 npm install 安装）
+var busboy = require('connect-busboy');
+// 使用这个中间件
+app.use(busboy());
+
+// 上传接口方法（使用时自行配置到 router 中）
+function uploadFile (req, res) {
+  if (req.busboy) {
+    var base64data = [];
+    var pubFileName = '';
+    var pubMimeType = '';
+    req.busboy.on('file', (fieldname, file, fileName, encoding, mimeType) => {
+      var buffer = '';
+      pubFileName = fileName;
+      pubMimeType = mimeType;
+      file.setEncoding('base64');
+      file.on('data', function(data) {
+        buffer += data;
+      }).on('end', function() {
+        base64data.push(buffer);
+      });
+    }).on('finish', function() {
+      var f = new AV.File(pubFileName, {
+        // 仅上传第一个文件（多个文件循环创建）
+        base64: base64data[0]
+      });
+      try {
+        f.save().then(function(fileObj) {
+          // 向客户端返回数据
+          res.send({
+            fileId: fileObj.id,
+            fileName: fileObj.name(),
+            mimeType: fileObj.metaData().mime_type,
+            fileUrl: fileObj.url()
+          });
+        });
+      } catch (err) {
+        console.log('uploadFile - ' + err);
+        res.status(502);
+      }
+    })
+    req.pipe(req.busboy);
+  } else {
+    console.log('uploadFile - busboy undefined.');
+    res.status(502);
+  }
+};
 ```
 
 ### 获取文件的内容
@@ -1393,7 +1597,9 @@ $('avatarImg')[0].src = avatarPhoto.url();
 如果你想在云引擎中处理一个文件的数据， 你可以用我们的 http 网络库来获取这个文件。
 
 ```javascript
-AV.Cloud.httpRequest({ url: avatarPhoto.url() }).then(function(response) {
+AV.Cloud.httpRequest({
+  url: avatarPhoto.url()
+}).then(function(response) {
   // The file contents are in response.buffer.
 });
 ```
@@ -1403,7 +1609,7 @@ AV.Cloud.httpRequest({ url: avatarPhoto.url() }).then(function(response) {
 你还可以在上传文件之前设置文件的元信息，例如：
 
 ```javascript
-file.metaData().mimeType = 'text/plain';
+file.metaData().author = 'steven';
 ```
 
 获取元信息列表函数 `metaData` 返回的是一个 JSON 对象。
@@ -1420,10 +1626,10 @@ var ownerId = file.ownerId();
 ```javascript
 //获取所有元信息组成的JSON对象
 var metadata = file.metaData();
-//设置format元信息
-file.metaData('format','image/jpeg');
-//获取format元信息
-var format = file.metaData('format');
+//设置author元信息
+file.metaData('author','steven');
+//获取author元信息
+var format = file.metaData('author');
 ```
 
 ### 缩略图
@@ -1479,15 +1685,12 @@ user.set('email', 'hang@leancloud.rocks');
 
 // other fields can be set just like with AV.Object
 user.set('phone', '186-1234-0000');
-
-user.signUp(null, {
-  success: function(user) {
-    // 注册成功，可以使用了.
-  },
-  error: function(user, error) {
-    // 失败了
-    console.log('Error: ' + error.code + ' ' + error.message);
-  }
+user.signUp().then(function(user) {
+  // 注册成功，可以使用了
+  console.log(user);
+}, function(error) {
+  // 失败了
+  console.log('Error: ' + error.code + ' ' + error.message);
 });
 ```
 
@@ -1504,13 +1707,10 @@ user.signUp(null, {
 在你要求你的用户注册之后，当然应该让他们在以后用自己的账户登录进来。你可以使用 logIn 方法来进行登录：
 
 ```javascript
-AV.User.logIn('myname', 'mypass', {
-  success: function(user) {
-    // 成功了，现在可以做其他事情了.
-  },
-  error: function(user, error) {
-    // 失败了.
-  }
+AV.User.logIn('myname', 'mypass').then(function() {
+  // 成功了，现在可以做其他事情了
+}, function() {
+  // 失败了
 });
 ```
 
@@ -1539,21 +1739,20 @@ AV.User 的 email 被设定或者修改后，`emailVerified` 会被置为 false�
 ```javascript
 var user = AV.User.current();
 user.setPassword('new password');
-user.save().then(……)
+user.save().then(function() {
+  // 成功
+});
 ```
 
 有时候，你希望验证用户的当前密码之后才允许更新密码，可以用 `updatePassword`方法：
 
 ```javascript
 var user = AV.User.current();
-user.updatePassword('当前密码', '新密码',{
-  success: function(){
-    //更新成功
-  },
-  error: function(user, err){
-    //更新失败
-    console.dir(err);
-  }
+user.updatePassword('当前密码', '新密码').then(function() {
+  //更新成功
+}, function(error) {
+  //更新失败
+  console.log(error);
 });
 ```
 
@@ -1566,7 +1765,11 @@ var user = new AV.User();
 user.set('username', 'hjiang');
 user.set('password', '123456');
 user.setMobilePhoneNumber('186xxxxxxxx');
-user.signUp(null, ……)
+user.signUp().then(function() {
+  // 成功
+}, function() {
+  // 失败
+});
 ```
 
 为了发送短信，你需要在 [控制台 > 设置 > 应用选项 > 用户账号](/app.html?appid={{appid}}#/permission) 中启用 **用户注册时，向注册手机号码发送验证短信**。
@@ -1574,9 +1777,9 @@ user.signUp(null, ……)
 如果用户注册没有收到短信，你可以通过 `requestMobilePhoneVerify` 方法强制重新发送：
 
 ```javascript
-AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
+AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function() {
   //发送成功
-}, function(err){
+}, function(err) {
    //发送失败
 });
 ```
@@ -1584,9 +1787,9 @@ AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
 当用户收到验证短信后，会有 6 位数字的验证码，让用户输入，并调用 `verifyMobilePhone` 来确认是否正确：
 
 ```javascript
-AV.User.verifyMobilePhone('6位数字验证码').then(function(){
+AV.User.verifyMobilePhone('6位数字验证码').then(function() {
   //验证成功
-}, function(err){
+}, function(err) {
   //验证失败
 });
 ```
@@ -1599,9 +1802,9 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 当用户有填写 `mobilePhoneNumber` 的时候，可以使用手机和密码登录：
 
 ```javascript
-AV.User.logInWithMobilePhone('186xxxxxxxx', password).then(function(user){
+AV.User.logInWithMobilePhone('186xxxxxxxx', password).then(function(user) {
   //登录成功
-}, function(err){
+}, function(err) {
   //登录失败
 });
 ```
@@ -1610,16 +1813,16 @@ AV.User.logInWithMobilePhone('186xxxxxxxx', password).then(function(user){
 
 ```javascript
 //请求登录验证码
-AV.User.requestLoginSmsCode('186xxxxxxxx').then(function(){
+AV.User.requestLoginSmsCode('186xxxxxxxx').then(function() {
   //发送成功
-}, function(err){
+}, function(err) {
   //发送失败
 });
 
 //用户收到6位登录验证码后，输入验证码登录
-AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').then(function(user){
+AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').then(function(user) {
   //登录成功
-}, function(err){
+}, function(err) {
   //登录失败
 });
 ```
@@ -1631,9 +1834,9 @@ AV.User.logInWithMobilePhoneSmsCode('186xxxxxxxx', '6位登录验证码数字').
 ```javascript
 //获取短信
 //已在 应用选项 > 其他 中开启 "启用通用的短信验证码服务（开放 requestSmsCode 和 verifySmsCode 接口）"
-AV.Cloud.requestSmsCode('186xxxxxxxx').then(function(){
+AV.Cloud.requestSmsCode('186xxxxxxxx').then(function() {
   //发送成功
-}, function(err){
+}, function(err) {
   //发送失败
 });
 ```
@@ -1646,15 +1849,11 @@ user.signUpOrlogInWithMobilePhone({
   mobilePhoneNumber: '186xxxxxxxx',
   smsCode: '手机收到的 6 位验证码字符串',
   ……其他属性，比如 username 等。
-},
-{
-  success:function(user){
-    //注册或者登录成功
-  },
-  error: function(user, err){
-    //失败
-    console.dir(err);
-  }
+}).then(function(user) {
+  //注册或者登录成功
+}, function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -1684,6 +1883,19 @@ AV.User.logOut();
 var currentUser = AV.User.current();  // this will now be null
 ```
 
+### SessionToken
+用户成功注册或登录后，服务器会返回 sessionToken，用来认证该用户随后的请求，你可以通过 `AV.User.current()._sessionToken` 来获取当前登录用户的 sessionToken。在知道用户的 sessionToken 的情况下，可以使用 `AV.User.become()` 方法来以该用户身份登录。
+
+```javascript
+AV.User.become(sessionToken).then(function (user) {
+  // The current user is changed.
+}, function (error) {
+  // Login failed.
+});
+```
+
+这种方式适用于需要传递用户登录状态的情况，比如 Hybrid 应用中使用 native SDK 登录后在 WebView 中自动登录，或者在 server 端处理用户请求时以该用户身份登录。因为获取了 sessionToken 就得到了该用户的账户访问权限，请在使用这种方式登录时注意不要泄露 sessionToken。
+
 ### 用户对象的安全
 
 AV.User 类默认就是受保护的，在 AV.User 中保存的数据只能被创建它的用户所修改，但可以被任意客户端所读取。
@@ -1693,28 +1905,24 @@ AV.User 类默认就是受保护的，在 AV.User 中保存的数据只能被创
 下面的代码展示了上面说的安全策略：
 
 ```javascript
-var user = AV.User.logIn('my_username', 'my_password', {
-  success: function(user) {
-    user.set('username', 'my_new_username');  // attempt to change username
-    user.save(null, {
-      success: function(user) {
-        // This succeeds, since the user was authenticated on the device
-
-        // Get the user from a non-authenticated method
-        var query = new AV.Query(AV.User);
-        query.get(user.objectId, {
-          success: function(userAgain) {
-            userAgain.set('username', 'another_username');
-            userAgain.save(null, {
-              error: function(userAgain, error) {
-                // This will error, since the AV.User is not authenticated
-              }
-            });
-          }
-        });
-      }
-    });
-  }
+var user;
+AV.User.logIn('my_username', 'my_password').then(function(object) {
+  user = object;
+  user.set('username', 'my_new_username');  // attempt to change username
+  return user.save();
+}).then(function(user) {
+  // This succeeds, since the user was authenticated on the device
+  // Get the user from a non-authenticated method
+  var query = new AV.Query(AV.User);
+  return query.get(user.id);
+}).then(function(userAgain) {
+  userAgain.set('username', 'another_username');
+  return userAgain.save();
+}).then(function() {
+  // 保存成功
+}).catch(function(error) {
+  // 失败
+  console.log(error);
 });
 ```
 
@@ -1729,19 +1937,17 @@ var user = AV.User.logIn('my_username', 'my_password', {
 
 ```javascript
 AV.User._logInWith('weibo', {
-   'authData': {
-      'uid': '123456789',
-       'access_token': '2.00vs3XtCI5FevCff4981adb5jj1lXE',
-       'expiration_in': '36000'
-    },
-    success: function(user){
-        //返回绑定后的用户
-        console.dir(user);
-    },
-    error: function(err){
-       console.dir(err);
-    }
-})
+  'authData': {
+    'uid': '123456789',
+    'access_token': '2.00vs3XtCI5FevCff4981adb5jj1lXE',
+    'expiration_in': '36000'
+  }
+}).then(function(user) {
+  //返回绑定后的用户
+  console.log(user);
+}, function(error) {
+  console.log(error);
+});
 ```
 
 其中 `authData` 是微博端返回的用户信息 JSON 对象，更多平台支持和格式信息请参考 [REST API 用户账户连接](./rest_api.html#用户账户连接)。
@@ -1751,19 +1957,17 @@ AV.User._logInWith('weibo', {
 ```javascript
 var user = ...已存在的处于登录状态的 AV.User 对象 ...
 user._linkWith('weibo', {
-   'authData': {
-      'uid': '123456789',
-       'access_token': '2.00vs3XtCI5FevCff4981adb5jj1lXE',
-       'expiration_in': '36000'
-    },
-    success: function(user){
-        //返回绑定后的用户
-        console.dir(user);
-    },
-    error: function(err){
-       console.dir(err);
-    }
-})
+ 'authData': {
+    'uid': '123456789',
+    'access_token': '2.00vs3XtCI5FevCff4981adb5jj1lXE',
+    'expiration_in': '36000'
+  }
+}).then(function(user) {
+  //返回绑定后的用户
+  console.log(user);
+}, function(error) {
+  console.log(error);
+});
 ```
 
 ### 其他对象的安全
@@ -1781,7 +1985,7 @@ privateNote.setACL(new AV.ACL(AV.User.current()));
 privateNote.save();
 ```
 
-这个 note 只能由当前的用户所访问，但是对用户登录的设备没有限制，只要是相同的用户就可以了。这项功能对于你如果想让用户再任何其他的设备上保存和访问数据十分有用，比如说一个私人的 todo list 应用。
+这个 note 只能由当前的用户所访问，但是对用户登录的设备没有限制，只要是相同的用户就可以了。这项功能对于让用户在任何其他的设备上保存和访问数据十分有用，比如说一个私人的 todo list 应用。
 
 权限也能在使用者的基础上授予，你可以通过 setReadAccess 和 setWriteAccess 方法独立的向 AV.ACL 中添加权限。比如，假设你有一条消息想要发送给一个组里的多个用户，他们中的每一个都有读和写的权限：
 
@@ -1819,14 +2023,11 @@ publicPost.save();
 
 ```javascript
 // 邮件重置
-AV.User.requestPasswordReset('email@example.com', {
-  success: function() {
-    // Password reset request was sent successfully
-  },
-  error: function(error) {
-    // Show the error message somewhere
-    console.log('Error: ' + error.code + ' ' + error.message);
-  }
+AV.User.requestPasswordReset('email@example.com').then(function() {
+  // Password reset request was sent successfully
+}, function(error) {
+  // Show the error message somewhere
+  console.log('Error: ' + error.code + ' ' + error.message);
 });
 ```
 
@@ -1843,15 +2044,13 @@ AV.User.requestPasswordReset('email@example.com', {
 
 **短信重置密码**：
 
-```
-AV.User.requestPasswordResetBySmsCode('18212346648', {
-  success: function() {
-    // 密码重置请求已成功发送
-  },
-  error: function(error) {
-    // 记录失败信息
-    console.log('Error: ' + error.code + ' ' + error.message);
-  }
+```javascript
+// 短信重置
+AV.User.requestPasswordResetBySmsCode('18212346648').then(function() {
+  // 密码重置请求已成功发送
+}, function(error) {
+  // 记录失败信息
+  console.log('Error: ' + error.code + ' ' + error.message);
 });
 ```
 
@@ -1871,17 +2070,15 @@ AV.User.resetPasswordBySmsCode('6位验证码', '新密码', {
 
 ### 查询
 
-**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的_ACL)。**
 
 为了查询用户，你可以简单地针对 AV.User 来创建一个 AV.Query：
 
 ```javascript
 var query = new AV.Query(AV.User);
 query.equalTo('gender', 'female');  // find all the women
-query.find({
-  success: function(women) {
-    // Do stuff
-  }
+query.find().then(function(womenList) {
+  console.log(womenList);
 });
 ```
 
@@ -1896,17 +2093,13 @@ var user = AV.User.current();
 var post = new Post();
 post.set('content', 'walking in Dubai.');
 post.set('author', user);
-post.save(null, {
-  success: function(post) {
-    // Find all posts by the current user
-    var query = new AV.Query('Post');
-    query.equalTo('author', user);
-    query.find({
-      success: function(usersPosts) {
-        // userPosts contains all of the posts by the current user.
-      }
-    });
-  }
+post.save().then(function(post) {
+  // Find all posts by the current user
+  var query = new AV.Query(Post);
+  query.equalTo('author', user);
+  return query.find();
+}).then(function(usersPosts) {
+  // userPosts contains all of the posts by the current user.
 });
 ```
 
@@ -2003,16 +2196,16 @@ moderators.save();
 云引擎 函数应该用 AV.Cloud.run 函数来进行调用，比如，调用云引擎中的函数 `hello` 应该这样：
 
 ```javascript
-AV.Cloud.run('hello', {}, {
-  success: function(result) {
-    // result is 'Hello world!'
-  },
-  error: function(error) {
-  }
+AV.Cloud.run('hello', {}).then(function(result) {
+  // result is 'Hello world!'
+  console.log(result);
+}, function(error) {
+  // error
+  console.log(error);
 });
 ```
 
-你可以参考我们的 [云函数指南](leanengine_guide-node.html#云函数) 来进一步了解这部分功能。
+你可以参考我们的 [云函数指南](leanengine_cloudfunction_guide-node.html) 来进一步了解这部分功能。
 
 ## Push 通知
 
@@ -2112,9 +2305,8 @@ query.near('location', userGeoPoint);
 query.limit(10);
 
 // Final list of objects
-query.find({
-  success: function(posts) {
-  }
+query.find().then(function(posts) {
+  console.log(posts);
 });
 ```
 
@@ -2130,10 +2322,8 @@ var point2 = new AV.GeoPoint(39.99, 116.37);
 
 var query = new AV.Query('Post');
 query.withinGeoBox('location', point1, point2);
-query.find({
-  success: function(posts) {
-    ...
-  }
+query.find().then(function(posts) {
+  // 成功
 });
 ```
 
@@ -2153,18 +2343,16 @@ query.find({
 error 会在任何一种在与 LeanCloud 的网络连接发生错误的时候调用。这些错误信息一般会反映连接到云端时出现的一些问题，或者处理请求的操作时遇到的一些问题。我们可以看下另一个例子。在下面的代码中我们想要获取一个不存在的 objectId。LeanCloud 会返回一个错误，所以这里就是我们怎样在你的 callback 里处理错误。
 
 ```javascript
-var query = new AV.Query(Note);
-query.get('aBcDeFgH', {
-  success: function(results) {
-    // This function will *not* be called.
-    console.log('Everything went fine!');
-  },
-  error: function(model, error) {
-    // This will be called.
-    // error is an instance of AV.Error with details about the error.
-    if (error.code === AV.Error.OBJECT_NOT_FOUND) {
-      console.log('Uh oh, we couldn\'t find the object!');
-    }
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
+query.get('aBcDeFgH').then(function(results) {
+  // This function will *not* be called.
+  console.log('Everything went fine!');
+}, function(error) {
+  // This will be called.
+  // error is an instance of AV.Error with details about the error.
+  if (error.code === AV.Error.OBJECT_NOT_FOUND) {
+    console.log('Uh oh, we couldn\'t find the object!');
   }
 });
 ```
@@ -2172,21 +2360,13 @@ query.get('aBcDeFgH', {
 查询在无法连接到 LeanCloud 的时候同样有可能失败。下面是同样的 callback，但是有一些其他的代码来处理这种情况：
 
 ```javascript
-var query = new AV.Query(Note);
-query.get('thisObjectIdDoesntExist', {
-  success: function(results) {
-    // This function will *not* be called.
-    console.log('Everything went fine!');
-  },
-  error: function(model, error) {
-    // This will be called.
-    // error is an instance of AV.Error with details about the error.
-    if (error.code === AV.Error.OBJECT_NOT_FOUND) {
-      console.log('Uh oh, we couldn\'t find the object!');
-    } else if (error.code === AV.Error.CONNECTION_FAILED) {
-      console.log('Uh oh, we couldn\'t even connect to the LeanCloud!');
-    }
-  }
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
+query.get('thisObjectIdDoesntExist').then(function(results) {
+  // This function will *not* be called.
+  console.log('Everything went fine!');
+}, function(error) {
+  console.log(error);
 });
 ```
 

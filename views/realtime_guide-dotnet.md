@@ -319,29 +319,6 @@ Tom 要发送一份 .doc 文件给 Jerry，可以用下面这种方法：
 
 ##### 发送通用文件消息
 
-{% block fileMessage_sent %}
-```
-- 初始化 ClientId = Tom
-- Tom 登录到系统
-- 创建与 Jerry 的对话，对话名称为「猫和老鼠」
-- 打开本地文件夹
-- 读取本地文件 leancloud.doc，构造 AVFile
-- 发送
-```
-{% endblock %}
-
-##### 接收通用文件消息
-
-{% block fileMessage_received_intro %}
-```
-- 文件元信息提取/列表 [messageId, FileUrl, Size]
-```
-{% endblock %}
-
-{% endblock %}
-
-
-{% block fileMessage_sent %}
 ```c#
 public async void SendDocAsync()
 {
@@ -356,10 +333,11 @@ public async void SendDocAsync()
     await conversation.SendFileMessageAsync(fileMessage);//发送
 }
 ```
-{% endblock %}
 
-{% block fileMessage_received_intro %}
+##### 接收通用文件消息
+
 与接收图像消息类似，由 `AVIMConversation` 的 `OnFileMessageReceived` 方法来响应，实例代码请参照 [图像消息接收](#接收图像消息)。
+
 {% endblock %}
 
 {% block locationMessage_new %}
@@ -695,38 +673,6 @@ public async void InitiativeJoinAsync()
 
 * 如果 Bob 仅仅是登录了应用，并没有加载具体的对话到本地，他只会激发 `AVIMClient` 层级上的回调，代码如下:
 
-{% block conversation_membersChanged %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break;
-```
-{% endblock %}
-
-* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会激发 `AVIMClient` 层级上的回调，也会激发 `AVIMConversation` 层级上相关回调，代码如下：
-
-{% block conversation_memebersJoined %}
-```
-- 初始化 ClientId = Bob
-- Bob 登录
-- 设置 MembersChanged 响应
-- switch:case 如果事件类型为 MembersJoined
-- 获取本次加入的 ClientIds //因为只是 Tom 一人加入，所以只有一个 Id
-- //开发者可以继续添加自己的业务逻辑
-- break; 
-- ------------ 以上与上例相同 ---------------
-- 获取对话对象 Id = 551260efe4b01608686c3e0f
-- 设置 OnMembersJoined 响应
-- 获取本次加入的 ClientIds //还是只有 Tom 一人，所以这样就可以直接读取到 Tom 的 clientId
-```
-{% endblock %}
-{% endblock %}
-
-{% block conversation_membersChanged %}
 ```c#
 public async void BobOnTomJoined_S1()
 {
@@ -748,9 +694,9 @@ public async void BobOnTomJoined_S1()
     };
 }
 ```
-{% endblock %}
 
-{% block conversation_memebersJoined %}
+* 如果 Bob 不但登录了，还在客户端加载了当前这个对话，那么他不但会激发 `AVIMClient` 层级上的回调，也会激发 `AVIMConversation` 层级上相关回调，代码如下：
+
 ```c#
 public async void BobOnTomJoined_S2()
 {
@@ -1075,18 +1021,6 @@ public async void WhereNotEqualTo_SampleCode()
 ```
 {% endblock %}
 
-{% block conversation_query_notEqualTo %}
-```c#
-public async void WhereNotEqualTo_SampleCode()
-{
-    AVIMClient client = new AVIMClient("Tom");
-    await client.ConnectAsync();//Tom 登录客户端
-    AVIMConversationQuery query = client.GetQuery().WhereNotEqualTo("attr.type", "private");//构建 type 不等于 movie 的查询
-    var result = await query.FindAsync();//执行查询
-}
-```
-{% endblock %}
-
 {% block conversation_query_greaterThan %}
 ```c#
 public async void WhereGreaterThan_SampleCode()
@@ -1309,7 +1243,7 @@ public ISignatureFactoryV2 SignatureFactory { get; set; }
 
 演示实例的步骤：
 
-* 首先您需要下载最新版本的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云引擎命令行工具使用详解](cloud_code_commandline.html#)
+* 首先您需要下载最新版本的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云引擎命令行工具使用详解](leanengine_cli.html#)
 
 * 其次，在 Visual Studio 中，新建一个类叫做 `SampleSignatureFactory` ，把下面这段代码拷贝到其中：
 
@@ -1430,6 +1364,7 @@ await client.ConnectAsync();//Tom 登录客户端
 
 {% block avoidCreatingDuplicateConversation %}>提示：每次调用 `CreateConversationAsync()` 方法，都会生成一个新的 Conversation 实例，即便使用相同 conversationMembers 和 name 也是如此。因此必要时可以先使用 `AVIMConversationQuery` 进行查询，避免重复创建。{% endblock %}
 
+{# 2016-02-01 待 .NET 实现 disable_im_cache 再将以下 block 删除 #}
 {% block text_im_history_cache %}{% endblock %}
 
 {% block text_single_endpoint_login %}{% endblock %}

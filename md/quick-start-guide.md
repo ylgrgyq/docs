@@ -3,7 +3,7 @@
 ## 你是 iOS 程序员？
 
 * [快速入门](/start.html)
-<li><a href="ios_os_x_guide.html">iOS / OS X 数据存储指南</a></li>
+<li><a href="leanstorage_guide-ios.html">iOS / OS X 数据存储指南</a></li>
 <li><a href="realtime_guide-ios.html">iOS 实时通信指南</a></li>
 <li><a href="ios_statistics.html">iOS 统计 SDK 开发指南</a></li>
 <li><a href="ios_push_cert.html">iOS 推送证书设置指南</a></li>
@@ -13,7 +13,7 @@
 ## 你是 Android 程序员？
 
 * [快速入门](/start.html)
-<li><a href="android_guide.html">Android 数据存储指南</a></li>
+<li><a href="leanstorage_guide-android.html">Android 数据存储指南</a></li>
 <li><a href="realtime_guide-android.html">Android 实时通信指南</a></li>
 <li><a href="android_statistics.html">Android 统计 SDK 开发指南</a></li>
 <li><a href="/api-docs/android/index.html" target="_blank">Android SDK API</a></li>
@@ -40,7 +40,7 @@
 <li><a href="js_guide.html">JavaScript 数据存储指南</a></li>
 <li><a href="leanengine_guide-node.html">云引擎指南（Node.js）</a></li>
 <li><a href="leanengine_guide-python.html">云引擎指南（Python）</a></li>
-<li><a href="cloud_code_commandline.html">云引擎命令行工具</a></li>
+<li><a href="leanengine_cli.html">云引擎命令行工具</a></li>
 
 ## 你是 PHP 开发者？
 
@@ -55,8 +55,8 @@
 ## 你要实现数据存储？
 
 <ul>
-<li><a href="ios_os_x_guide.html">iOS / OS X 数据存储指南</a></li>
-<li><a href="android_guide.html">Android 数据存储指南</a></li>
+<li><a href="leanstorage_guide-ios.html">iOS / OS X 数据存储指南</a></li>
+<li><a href="leanstorage_guide-android.html">Android 数据存储指南</a></li>
 <li><a href="unity_guide.html">Unity3D 数据存储指南</a></li>
 <li><a href="dotnet_guide.html">.NET 数据存储指南</a></li>
 <li><a href="js_guide.html">JavaScript 数据存储指南</a></li>
@@ -96,8 +96,8 @@
 ## 你要导入导出数据？
 
 <ul>
-<li><a href="./data_security.html#导入数据">导入数据</a></li>
-<li><a href="./data_security.html#导出数据">导出数据</a></li>
+<li><a href="./dashboard_guide.html#本地数据导入_LeanCloud">导入数据</a></li>
+<li><a href="./dashboard_guide.html#云端数据导出到本地">导出数据</a></li>
  </ul>
 
 ## 常见问题

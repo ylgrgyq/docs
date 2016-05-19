@@ -89,6 +89,36 @@ createdAt:"2015-06-29 09:39:35", updatedAt:"2015-06-29 09:39:35"
    
    在执行保存操作之前，这些字段不会被自动保存到 `AVObject` 中。
 
+### 保存选项
+
+`AVObject` 对象在保存时可以使用以下选项：
+
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | BOOL | 对象成功保存后，自动返回该对象在服务端的最新数据。用途请参考 [计数器](#计数器)。
+`query` | AVQuery  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `AVQuery` 和 `AVObject` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突，[示例如下](#saveoption_query_example)。
+
+每个保存选项实质上是 `AVSaveOption` 对象的一个属性，使用时调用 `AVObject` 的带有 `option` 参数的保存接口即可。
+
+【示例】<a id="saveoption_query_example" name="saveoption_query_example"></a>：一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 的内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时它的 version 值为 3，那么当用户 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或应用自定义的业务逻辑。
+
+```objc
+// 假设 version 值已提前获取
+
+AVSaveOption *option = [[AVSaveOption alloc] init];
+
+AVQuery *query = [[AVQuery alloc] init];
+[query whereKey:@"version" equalTo:version];
+
+option.query = query;
+
+[object saveInBackgroundWithOption:option block:^(BOOL succeeded, NSError *error) {
+    if ( error.code == 305 ){
+      NSLog(@"无法保存修改，wiki 已被他人更新。");
+    }
+}];
+```
+
 ### 检索对象
 
 将数据保存到 LeanCloud 上实现起来简单而直观，获取数据也是如此。如果已知 `objectId`，用 `AVQuery` 就可以查询到对应的 `AVObject` 实例：
@@ -1677,7 +1707,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
     }];
 ```
 
-验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
+验证成功后，用户的 `mobilePhoneVerified` 属性变为 `true`，并会触发调用云引擎的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1738,7 +1768,7 @@ AVUser *currentUser = [AVUser currentUser]; // 现在的currentUser是nil了
 
 ### 查询
 
-**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的_ACL)。**
 
 查询用户的信息，需要使用特殊的用户查询对象来完成：
 
@@ -1827,11 +1857,11 @@ NSArray<AVObject *> *posts = [query findObjects];
 * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
 * iOS 8.0 之后，使用定位服务之前，需要调用 `[locationManager requestWhenInUseAuthorization]` 或 `[locationManager requestAlwaysAuthorization]` 来获取用户的「使用期授权」或「永久授权」，而这两个请求授权需要在 `info.plist` 里面对应添加 `NSLocationWhenInUseUsageDescription` 或 `NSLocationAlwaysUsageDescription` 的键值对，值为开启定位服务原因的描述。SDK 内部默认使用的是「使用期授权」。
 
-## 调用云代码
+## 调用云引擎
 
-### 调用云代码函数
+### 调用云引擎函数
 
-使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
+使用 `AVCloud` 类的静态方法来调用云引擎中定义的函数：
 
 ``` objc
     NSDictionary *parameters = @{...};
@@ -1861,11 +1891,11 @@ RPC 云引擎调用的方法签名以 `rpc` 方法打头，例如 `+[AVCloud rpc
 
 ### 区分生产环境调用
 
-云代码区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
+云引擎区分「测试环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
 
 ``` objc
 [AVCloud setProductionMode:NO];
 ```
 
-其中 `NO` 表示「测试环境」，默认调用生产环境云代码。
+其中 `NO` 表示「测试环境」，默认调用生产环境云引擎。
 

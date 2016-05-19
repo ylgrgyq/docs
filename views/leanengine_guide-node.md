@@ -1,5 +1,5 @@
 {% extends "./leanengine_guide.tmpl" %}
-{% set environment        = "node" %}
+{% set environment        = "node.js" %}
 {% set hook_before_save   = "beforeSave" %}
 {% set hook_after_save    = "afterSave" %}
 {% set hook_before_update = "beforeUpdate" %}
@@ -58,7 +58,7 @@ $ avoscloud
 ```
 {% endblock %}
 
-{% block cloud_func_file %}`$PROJECT_DIR/cloud.js`{% endblock %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud.js`' %}
 
 {% block project_constraint %}
 云引擎Node.js 项目必须有 `$PROJECT_DIR/server.js` 文件，该文件为整个项目的启动文件。
@@ -120,7 +120,7 @@ AV.initialize(APP_ID, APP_KEY, MASTER_KEY);
 ```
 {% endblock %}
 
-{% block sdk_guide_link %}[JavaScript SDK](./js_guide.html){% endblock %}
+{% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
 
 {% block cloudFuncExample %}
 ```javascript
@@ -618,9 +618,10 @@ app.post('/upload', function(req, res){
 });
 ```
 
-上传成功后，即可在数据管理平台里看到你所上传的文件。{% endblock %}
-{% block cookie_session %}
+上传成功后，即可在数据管理平台里看到你所上传的文件。
+{% endblock %}
 
+{% block cookie_session %}
 ### 处理用户登录和登出
 
 要让云引擎支持 LeanCloud 用户体系的 Session，在 app.js 里添加下列代码：
@@ -714,9 +715,8 @@ app.get('/logout', function(req, res) {
 
 ### 自定义 session
 
-有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session)。该组件和 {% block cookie_session_middleware %}{% endblock %} 组件可以并存。{% endblock %}
-
-{% block cookie_session_middleware %}`AV.Cloud.CookieSession`{% endblock %}
+有时候你需要将一些自己需要的属性保存在 session 中，你可以增加通用的 `cookie-session` 组件，详情可以参考 [express.js &middot; cookie-session](https://github.com/expressjs/cookie-session)。该组件和 `AV.Cloud.CookieSession` 组件可以并存。
+{% endblock %}
 
 {% block https_redirect %}
 ```javascript
@@ -738,7 +738,8 @@ if (NODE_ENV === 'development') {
 ```
 {% endblock %}
 
-{% block project_start %}### 项目启动
+{% block project_start %}
+### 项目启动
 
 如果 `$PROJECT_DIR/package.json` 文件有类似下面的声明：
 

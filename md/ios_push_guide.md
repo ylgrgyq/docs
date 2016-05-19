@@ -14,35 +14,47 @@
 
 ## 保存 Installation
 
-在保存 installation 前，要先通过下列代码获取用户推送权限：
+在保存 installation 前，要先从 APNs 注册推送所需的 device token。可以选择使用 SDK 中提供的接口，也可以使用 Cocoa Touch 提供的原生接口。SDK 提供的接口封装了原生接口在不同版本 iOS 系统上的差异。
+
+`+[AVOSCloud registerForRemoteNotification]` 接口是一个快捷方法：
 
 ```objc
-// Before iOS 8:
-- (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    ...
-    // Register for push notifications
-    [application registerForRemoteNotificationTypes:
-                                UIRemoteNotificationTypeBadge |
-                                UIRemoteNotificationTypeAlert |
-                                UIRemoteNotificationTypeSound];
-    ...
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [AVOSCloud registerForRemoteNotification];
 }
 ```
 
+上面的代码等价于以下代码：
+
 ```objc
-//For iOS 8:
-- (BOOL)application:(UIApplication *)application
-didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    ...
-    UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:UIUserNotificationTypeAlert
-                                            | UIUserNotificationTypeBadge
-                                            | UIUserNotificationTypeSound
-                                                                             categories:nil];
-    [application registerUserNotificationSettings:settings];
-    [application registerForRemoteNotifications];
-    ...
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+{
+    if ([[UIDevice currentDevice].systemVersion floatValue] < 8.0) {
+        UIRemoteNotificationType types = UIRemoteNotificationTypeBadge |
+                                         UIRemoteNotificationTypeAlert |
+                                         UIRemoteNotificationTypeSound;
+        [application registerForRemoteNotificationTypes:types];
+    } else {
+        UIUserNotificationType types = UIUserNotificationTypeAlert |
+                                       UIUserNotificationTypeBadge |
+                                       UIUserNotificationTypeSound;
+
+        UIUserNotificationSettings *settings = [UIUserNotificationSettings settingsForTypes:types categories:nil];
+
+        [application registerUserNotificationSettings:settings];
+        [application registerForRemoteNotifications];
+    }
 }
+```
+
+除此之外，还可以使用 SDK 提供的更灵活的接口来注册不同类型的通知：
+
+```objc
+@interface AVOSCloud : NSObject
+
++ (void)registerForRemoteNotificationTypes:(NSUInteger)types categories:(NSSet *)categories AVIM_TV_UNAVAILABLE AVIM_WATCH_UNAVAILABLE;
+
+@end
 ```
 
 在 iOS 设备中，Installation 的类是 AVInstallation，并且是 AVObject 的子类，使用同样的 API 存储和查询。如果要访问当前应用的 Installation 对象，可以通过 `[AVInstallation currentInstallation]` 方法。当你第一次保存 AVInstallation 的时候，它会插入 `_Installation` 表，你可以在 [数据管理](/data.html?appid={{appid}}) 平台看到和查询。当 deviceToken 一被保存，你就可以向这台设备推送消息了。
@@ -55,6 +67,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 ```
 
+SDK 将以上逻辑封装成了简单的方法，以上代码等价于：
+
+```objc
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [AVOSCloud handleRemoteNotificationsWithDeviceToken:deviceToken];
+}
+```
+
 可以像修改 AVObject 那样去修改 AVInstallation，但是有一些特殊字段可以帮你管理目标设备：
 
 字段|说明
@@ -64,6 +84,16 @@ channels|当前设备所订阅的频道数组
 appName|应用名称（只读）
 appVersion|应用版本（只读）
 deviceProfile|设备对应的后台自定义证书名称，用于多证书推送
+
+同样，SDK 提供了相应的方法，用于在保存 installation 前构造它。例如，如果希望自定义 deviceProfile 字段，可以这样实现：
+
+```objc
+- (void)application:(UIApplication *)app didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    [AVOSCloud handleRemoteNotificationsWithDeviceToken:deviceToken constructingInstallationWithBlock:^(AVInstallation *currentInstallation) {
+        currentInstallation.deviceProfile = @"driver-push-certificate";
+    }];
+}
+```
 
 ## 发送推送消息
 
@@ -404,11 +434,11 @@ AVPush *push = [[AVPush alloc] init];
 ```
 
 
-你可以阅读 [Apple 本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1) 来更多地了解推送通知。
+你可以阅读 [Apple 本地化和推送的文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/Introduction.html#//apple_ref/doc/uid/TP40008194-CH1-SW1) 来更多地了解推送通知。
 
 ## 跟踪推送和应用的打开情况
 
-通过 AVAnalytics 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的 `application:didFinishLaunchingWithOptions:` 方法来收集打开信息：
+通过 `AVAnalytics` 你可以跟踪通知和应用的打开情况。添加下列代码到上面例子中的 `application:didFinishLaunchingWithOptions:` 方法来收集打开信息：
 
 ```objc
 if (application.applicationState != UIApplicationStateBackground) {
@@ -426,9 +456,9 @@ if (application.applicationState != UIApplicationStateBackground) {
 ```
 
 
-传递 nil 或者空白的参数给 `trackAppOpenedWithLaunchOptions:` 方法只是统计一次标准的应用打开事件（比如不是通过通知打开的应用）。
+传递 `nil` 或者空白的参数给 `trackAppOpenedWithLaunchOptions:` 方法只是统计一次标准的应用打开事件（比如不是通过通知打开的应用）。
 
-你可以在 [控制台 /<span class="text-muted">（选择应用）</span>/ 分析 / 行为分析 / 应用使用](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
+你可以在 [控制台 > 分析 > 行为分析 > 应用使用](/stat.html?appid={{appid}}#/stat/appuse) 里看到通知和应用打开的情况。
 
 请注意，如果你的应用正在运行或者在后台，`application:didReceiveRemoteNotification:`方法将会处理收到的推送通知。
 
@@ -462,7 +492,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 }
 ```
 
-### 跟踪本地通知 (iOS only)
+### 跟踪本地通知
 
 为了统计跟踪本地通知消息，需要注意以下两种方法都会调用到：
 
@@ -471,7 +501,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 
 如果你实现了 `application:didReceiveLocalNotification:` 这个方法，要注意避免重复统计。
 
-#### 清除 Badge
+### 清除 Badge
 
 清除 Badge 数字的最好时机是打开应用的时候。设置当前 installation 的 badge 属性并保存到服务器：
 
@@ -496,3 +526,7 @@ if (application.applicationState != UIApplicationStateBackground) {
 - `application:didReceiveRemoteNotification:`
 
 请阅读 [UIApplicationDelegate 文档](http://developer.apple.com/library/ios/#DOCUMENTATION/UIKit/Reference/UIApplicationDelegate_Protocol/Reference/Reference.html)。
+
+## 离线消息重复推送
+
+请参考 [为什么在 iOS 上离线消息重复推送了两次？](realtime_guide-ios.html#duplicate-offline-message-notification)

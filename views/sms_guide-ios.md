@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block builtin_account_url %}
-ios_os_x_guide.html#用户
+leanstorage_guide-ios.html#用户
 {% endblock %}
 
 {% block avuser_signup_sms_verify %}
@@ -75,7 +75,7 @@ ios_os_x_guide.html#用户
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
     [dict setObject:@"月度周刊" forKey:@"service_name"];
     [dict setObject:@"7623432424540" forKey:@"order_id"];
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Notice_Template" variables:dict callback:^(BOOL succeeded, NSError *error) {
+    [AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Notice_Welcome" variables:dict callback:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             //操作成功
         } else {

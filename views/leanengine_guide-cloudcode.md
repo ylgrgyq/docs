@@ -1,19 +1,19 @@
 {% extends "./leanengine_guide.tmpl" %}
 
 {% block updateToLeanEngine %}
-## 云代码 2.0 环境已不推荐使用
+## 云引擎 2.0 环境已不推荐使用
 
 ### 如何判断当前运行环境
-如果项目中有 `cloud/main.js` 文件，即为云代码 2.0 环境，该环境以后不会增加任何新功能，我们强烈建议你升级到云引擎环境。
+如果项目中有 `cloud/main.js` 文件，即为云引擎 2.0 环境，该环境以后不会增加任何新功能，我们强烈建议你升级到云引擎环境。
 
 ### 升级到云引擎
 
-云代码 2.0 和云引擎的差别主要是**应用的目录结构**。因为云引擎没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
+云引擎 2.0 和云引擎的差别主要是**应用的目录结构**。因为云引擎没有沙箱环境，所以不强制 `cloud` 和 `config` 等目录结构，只要是一个普通的 Node.js 项目即可。而 SDK 将作为一个普通组件添加到项目中，所以使用方面也有一些变化：
 
-* 需要自己初始化 AV 对象：云代码 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以云引擎环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 master key 。
-* 时区：云代码 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以云引擎默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
+* 需要自己初始化 AV 对象：云引擎 2.0 的环境会直接将 AV 对象初始化并保存在沙箱环境上下文中，所以不需要任何声明而直接使用。我们认为这样违背了编程规则，所以云引擎环境需要自行初始化 AV 对象，而且可以根据需要来决定此过程是否使用 master key 。
+* 时区：云引擎 2.0 默认使用 UTC 时区，这给很多开发者带来了困惑。所以云引擎默认情况使用东八区时区，在 [时区问题](#时区问题) 部分详细讨论这个问题。
 * `avos-express-cookie-session` 的改变：该组件不再依赖 `cookie-parse`，而且引入方式发生变化，详情见 [处理用户登录和登出](#处理用户登录和登出)。
-* 运行环境判断：云代码 2.0 使用 `__production` 全局变量判断当前环境是「预备环境」还是「生产环境」，而云引擎尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为预备环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)。
+* 运行环境判断：云引擎 2.0 使用 `__production` 全局变量判断当前环境是「预备环境」还是「生产环境」，而云引擎尊重 Node.js 的习惯，使用 `NODE_ENV` 这个变量来进行区分，`test` 为预备环境，`production` 为生产环境。详情见 [运行环境区分](#运行环境区分)。
 
 请参见详细的 [升级指南](leanengine_upgrade_3.html)。
 {% endblock %}
@@ -33,14 +33,14 @@ $ cd <appName>
 {% endblock %}
 
 {% block introduceCloudCodeV2 %}
-## 云代码 2.0 版
+## 云引擎 2.0 版
 
-2014 年 8 月 14 号，云代码推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从 14 号开始，新创建的应用都将使用云代码2.0版本。
+2014 年 8 月 14 号，云引擎推出 2.0 版本，最主要特性：可以自由添加和使用三方类库，去除一些对模块的限制。从 14 号开始，新创建的应用都将使用云引擎2.0版本。
 
 ### 升级到 2.0
 
-1. 时区问题：2.0 版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云代码 2.0 之前，移除代码中之前对时间修正的部分代码。
-  > 需要注意的是，云代码 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论。
+1. 时区问题：2.0 版彻底修复了时区问题，应用不再需要自己对时间做 8 小时的时区修正。所以需要确认，在迁移到云引擎 2.0 之前，移除代码中之前对时间修正的部分代码。
+  > 需要注意的是，云引擎 2.0 使用的默认时区仍然为 UTC 时区，在 [时区问题](#时区问题) 部分详细讨论。
 1. 引入 package.json（可选）：如果项目需要引入其他三方类库，可以像标准 Node.js 项目一样，在项目根目录添加一个 `package.json` 配置文件，下面是一个简单的样例：
 
 ```json
@@ -55,7 +55,7 @@ $ cd <appName>
 }
 ```
 
-需要注意的是，云代码 2.0 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
+需要注意的是，云引擎 2.0 运行环境默认包含一些组件，如果 `package.json` 指定明确版本则以用户自定义的为准，否则使用下面的默认版本：
 
 ```
 nodejs: "0.10.29"
@@ -75,7 +75,7 @@ xml2js: "0.4.4"
 
 **注意**：`express` 目前只支持 `3.4.x` 版本，即使 `package.json` 指定其他版本也是无效的。
 
-在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云代码将继续提供服务，因此无需担心迁移期间服务暂停。
+在以上问题都确认后，就可以进行升级动作。升级操作完成后，因为缓存的原因，需要等待最多 5 分钟，平台将自动迁移完成，在 5 分钟迁移时间内，老的云引擎将继续提供服务，因此无需担心迁移期间服务暂停。
 
 ### 最新特性
 
@@ -162,25 +162,25 @@ $ avoscloud
 ```
 {% endblock %}
 
-{% block cloud_func_file %}`$PROJECT_DIR/cloud/main.js`{% endblock %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud/main.js`' %}
 
 {% block project_constraint %}
-云代码 2.0 的项目必须有 `$PROJECT_DIR/cloud/main.js` 文件，该文件为整个项目的启动文件。
+云引擎 2.0 的项目必须有 `$PROJECT_DIR/cloud/main.js` 文件，该文件为整个项目的启动文件。
 {% endblock %}
 
 {% block ping %}
-云代码 2.0 沙箱环境内置了该 URL 的处理，所以不需要做额外操作。
+云引擎 2.0 沙箱环境内置了该 URL 的处理，所以不需要做额外操作。
 {% endblock %}
 
 {% block others_web_framework %}
-因为云代码 2.0 是运行在沙箱环境，所以不支持其他的 Web 框架。只能使用预定义的 Express 3.x。
+因为云引擎 2.0 是运行在沙箱环境，所以不支持其他的 Web 框架。只能使用预定义的 Express 3.x。
 {% endblock %}
 
 {% block install_middleware_cloudcode %}
-因为云代码 2.0 是运行在沙箱环境，所以不需要安装和初始化，直接可以在项目中使用。
+因为云引擎 2.0 是运行在沙箱环境，所以不需要安装和初始化，直接可以在项目中使用。
 {% endblock %}
 
-{% block sdk_guide_link %}[JavaScript SDK](./js_guide.html){% endblock %}
+{% set sdk_guide_link = '[JavaScript SDK](./js_guide.html)' %}
 
 {% block cloudFuncExample %}
 ```javascript
@@ -288,7 +288,7 @@ AV.Cloud.afterSave('_User', function(request) {
 {% endblock %}
 
 {% block beforeUpdate %}
-云代码 2.0 没有支持这个 Hook，你需要升级到云引擎来使用它，请参见详细的 [升级指南](leanengine_upgrade_3.html)。
+云引擎 2.0 没有支持这个 Hook，你需要升级到云引擎来使用它，请参见详细的 [升级指南](leanengine_upgrade_3.html)。
 {% endblock %}
 
 {% block afterUpdateExample %}
@@ -582,7 +582,7 @@ AV.Cloud.useMasterKey();
 {% endblock %}
 
 {% block masterKeyInitLegacy %}
-**注意：**云代码 2.0 版本已经默认使用 master key 初始化 SDK，所以不需要额外初始化。
+**注意：**云引擎 2.0 版本已经默认使用 master key 初始化 SDK，所以不需要额外初始化。
 {% endblock %}
 
 {% block loggerExample %}
@@ -738,7 +738,7 @@ app.post('/upload', function(req, res){
 
 ### 处理用户登录和登出
 
-假设你创建了一个支持web主机功能的云代码项目，在 app.js 里添加下列代码：
+假设你创建了一个支持web主机功能的云引擎项目，在 app.js 里添加下列代码：
 
 ```javascript
 var express = require('express');
@@ -764,9 +764,9 @@ app.use(avosExpressCookieSession({ cookie: { maxAge: 3600000 }, fetchUser: true}
 * **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `req.AV.user` 当前用户的 id 属性，你可以在必要的时候 fetch 整个用户。通常保持默认的 false 就可以。
 * **key**：session 在 cookie 中存储的 key 名称，默认为 `avos.sess`。
 
-**注意**：我们通常不建议在云代码环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
+**注意**：我们通常不建议在云引擎环境中通过 `AV.User.current()` 获取登录用户的信息，虽然这样做不会有问题，也不会有串号的风险，但由于这个功能依赖 Node.js 的 Domain 模块，而 Node.js 4.x 已经不推荐使用 Domain 模块了，所以在云引擎中获取 currentUser 的机制后续会发生改变。因此，我们建议：
 
-* 在云代码方法中通过 request.user 获取用户信息。
+* 在云引擎方法中通过 request.user 获取用户信息。
 * 在网站托管中通过 req.AV.user 获取用户信息。
 * 在后续的方法调用显示传递 user 对象。
 
@@ -826,10 +826,8 @@ app.get('/logout', function(req, res) {
   </html>
 ```
 
-注意： express 框架的 `express.session.MemoryStore` 在我们云代码中是无法正常工作的，因为我们的云代码是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
+注意： express 框架的 `express.session.MemoryStore` 在我们云引擎中是无法正常工作的，因为我们的云引擎是多主机，多进程运行，因此内存型 session 是无法共享的，建议用 [express.js &middot; cookie-session 中间件](https://github.com/expressjs/cookie-session)。
 {% endblock %}
-
-{% block cookie_session_middleware %}`avosExpressCookieSession`{% endblock %}
 
 {% block https_redirect %}
 ```javascript
@@ -853,7 +851,7 @@ if (__local) {
 {% block cloud_code_module %}
 ## 模块
 
-云代码 2.0 支持将 JavaScript 代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云代码模块的运作方式和 CommonJS 模块类似。当一个模块被加载的时候，JavaScript  文件首先被加载，然后执行文件内的源码，并返回全局的 export 对象。例如，假设 `cloud/name.js` 包含以下源码：
+云引擎 2.0 支持将 JavaScript 代码拆分成各个模块。为了避免加载模块带来的不必要的副作用，云引擎模块的运作方式和 CommonJS 模块类似。当一个模块被加载的时候，JavaScript  文件首先被加载，然后执行文件内的源码，并返回全局的 export 对象。例如，假设 `cloud/name.js` 包含以下源码：
 
 ```javascript
 var coolNames = ['Ralph', 'Skippy', 'Chip', 'Ned', 'Scooter'];
@@ -873,11 +871,11 @@ name.coolNames; // 未定义.
 
 提示，你可以利用 `console.log` 来打印这几个调用的返回值到日志，在 [控制台 / 存储 / 云引擎 / 日志](/cloud.html?appid={{appid}}#/log) 中查看。
 
-name 模块包含一个名为 `isACoolName` 的函数。`require` 接收的路径是相对于你的云代码项目的根路径，并且只限 `cloud/` 目录下的模块可以被加载。
+name 模块包含一个名为 `isACoolName` 的函数。`require` 接收的路径是相对于你的云引擎项目的根路径，并且只限 `cloud/` 目录下的模块可以被加载。
 
 ### 可用的第三方模块
 
-因为云代码 1.0 运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
+因为云引擎 1.0 运行在沙箱环境，我们只允许使用部分类库，这个名单如下：
 
 ```
 qiniu
@@ -905,5 +903,5 @@ xml2js
 
 上面这些模块都可以直接 require 使用。我们还提供受限制的 `fs` 文件模块，仅可以读取上传文件目录下的文件。
 
-**云代码 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云代码环境中使用的版本。**
+**云引擎 2.0 开始将没有模块限制，但是上述必选的模块仍然将优先使用云引擎环境中使用的版本。**
 {% endblock %}

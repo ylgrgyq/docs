@@ -13,8 +13,8 @@
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
-  * [聊天 Demo](http://leancloud.github.io/js-realtime-sdk/demo/demo2/) (可与 iOS/Android 版 LeanMessageDemo 通信)
-  * [Demo 源码](https://github.com/leancloud/js-realtime-sdk/tree/master/demo)
+  * [Simple Chatroom](https://leancloud.github.io/js-realtime-sdk/demo/simple-chatroom/)（[源码](https://github.com/leancloud/js-realtime-sdk/tree/next/demo/simple-chatroom)）
+  * [LeanMessageDemo Web 版](https://github.com/leancloud/LeanMessage-Demo)
 
 关于这些项目的更多介绍、截图预览，可见 [LeanCloud Demos](https://github.com/leancloud/leancloud-demos) 。
 
@@ -89,12 +89,12 @@ LeanCloud 实时通信服务的特性主要有：
 **objectId**|conversationId|String||对话 id（只读），由云端为该对话生成的一个全局唯一的 id。
 **c**|creator|String||对话创建者的 clientId（只读）
 **lm**|lastMessageAt|Date||对话中最后一条消息的发送或接收时间
-**m**|members|Array||对话的所有参与者
+**m**|members|Array||普通对话的所有参与者（仅针对普通对话，暂态对话和系统对话并不支持持久化的成员列表）
 **mu**|mute|Array||将对话设为静音的参与者，这部分参与者不会收到推送。<br/>（仅针对 iOS 以及 Windows Phone 用户有效）
 **name**|name|String|可选|对话的名字，可为群组命名。
 **tr**|transient|Boolean|可选|是否为暂态对话
 **sys**|system|Boolean|可选|是否是系统对话
-**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话
+**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话。<br/>（原子创建对话功能只能通过 SDK 调用创建对话接口实现，REST API 创建对话可以设置 unique 值，但无原子创建对话效果)
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
@@ -119,6 +119,10 @@ LeanCloud 实时通信服务的特性主要有：
 如果开发者希望使用固定的对话，可以在创建对话时设置相应 SDK 上的 `unique` 选项，系统将查找对应成员相同且 `unique` 选项为 true 的对话，如果找到即返回已有的对话，如果没有则自动创建。
 （注意，这种方式查找的对话仅对已经使用 `unique` 选项的对话有效，并且创建对话时不会触发 `_Conversation` 表在云引擎上的 `beforeSave` 等 hook）
 
+通过 REST API 创建对话也能带着 `unique` 参数，但 REST API 总是会创建新对话，只是带着 `unique` 参数后会将该参数值设置为新对话中 `unique` 选项的值，不会查找并返回具有相同成员的对话。
+
+对于应用中存在系统帐号的场景，我们建议您通过下文提到的[系统对话](#普通对话_Normal_Conversation_)来实现，以避免对单一帐号创建过多的对话影响您应用的性能。
+
 #### 暂态对话（Transient Conversation）
 
 专门用来处理「聊天室」这种需求。与普通对话一样，它支持创建、自身主动加入、自身主动退出对话等操作；消息记录会被保存并可供获取；但不同之处在于：
@@ -131,6 +135,8 @@ LeanCloud 实时通信服务的特性主要有：
 * 一个用户一次登录只能加入一个暂态对话，加入新的暂态对话后会自动离开旧的暂态对话。
 * 加入暂态对话后半小时内断网重连会自动加入原暂态对话，超过这个时间则需要重新加入。
 
+注意暂态对话没有持久化的成员概念，因此对普通对话的 `m` 字段的操作对暂态对话无效。
+
 #### 系统对话（System Conversation）
 
 这是用于实现机器人、公众号、服务账号等场景的对话，也可以用作发送应用内通知的通道。这种对话具有以下特点：
@@ -140,13 +146,14 @@ LeanCloud 实时通信服务的特性主要有：
 * 开发者可以通过 REST API 以系统对话的渠道给指定的用户发消息
 * 用户可以给系统对话发消息，消息和相关信息会存储在数据存储中的 `_SysMessage` 表，并不会被其他订阅用户收到
 * 开发者可以配置 Web Hook 地址接收用户发给系统对话的消息，并利用 REST API 发消息回复
+* 开发者可以通过系统对话向所有用户发送特殊的全员广播消息
 * 在 SDK 层面，系统对话的接口与普通对话完全一致
 
 #### 对话类型比较
 
 功能点 | 普通对话 | 暂态对话 | 系统对话
 --- | --- | --- | ---
-**表字段**<span>*</span> | m | tr | sys
+**关键字段**<span>*</span> | m | tr | sys
 **成员管理** | 成员体现在 m 字段上，<br/>持久化保存 | 没有持久化的成员数据，<br/>随时加入随时退出 | 没有成员概念，无法加入和退出，<br/>开发者维护订阅关系
 **收发消息** | 只有成员可以收发消息 | 所有用户都可以发消息，<br/>当前在线的成员可以收到消息 | 开发者通过 API 给特定用户发消息，<br/>用户发送的消息到达数据库和 Web Hook
 **离线消息** | 支持 | 不支持 | 支持
@@ -239,6 +246,8 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ![image](images/realtime_ios_push.png)
 
+此外，您还可以设置声音等推送属性，具体的字段可以参考[推送 &middot; 消息内容 Data](./push_guide.html#消息内容_Data)。
+
 ##### 动态内容
 
 如果希望推送通知显示动态内容，比如消息的实际内容，或根据消息内容、对话信息等上下文信息来自定义内容，则需要通过 [云引擎 Hook `_receiversOffline`](#_receiversOffline) 来实现。
@@ -270,6 +279,19 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 如果开发者有较为复杂的过滤需求，我们推荐使用下文提到的云引擎 hook 来实现过滤，在 hook 中开发者对消息的内容有完全的控制力。
 
+#### 广播消息
+
+当开发者需要向所有用户发送广播消息时，可以利用广播消息的接口，而无需遍历所有的用户 ID 逐个发送。
+
+广播消息具有以下特征：
+
+* 广播消息必须与系统对话关联，广播消息和一般的系统对话消息会混合在系统对话的记录中
+* 用户离线时发送的广播消息，上线后会作为离线消息收到
+* 广播消息具有实效性，可以设置过期时间；过期的消息不会作为离线消息发送给用户，不过仍然可以在历史消息中获取到
+* 新用户第一次登录后，会收到最近一条未过期的系统广播消息
+
+除此以外广播消息与普通消息的处理完全一致。广播消息的发送可以参考[广播消息 REST API](./realtime_rest_api.html#系统对话发送广播消息)
+
 ## 权限和认证
 
 为了保证聊天通道的安全，我们设计了签名的概念。默认这一功能是关闭的，你可以在 [控制台 > **设置** > **应用选项**](/app.html?appid={{appid}}#/permission) 中勾选 **聊天服务，启用签名认证** 来强制启用签名。启用后，所有的用户登录、新建或加入对话、邀请/踢出对话成员等操作都需要包含签名，这样你可以对聊天过程进行充分的控制。
@@ -281,7 +303,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 3. 客户端获得签名后，编码到请求中，发给 LeanCloud 实时通信服务器；
 4. 实时通信服务器对请求的内容和签名做一遍验证，确认这个操作是被应用服务器允许的，进而执行后续的实际操作。
 
-签名采用 **Hmac-sha1** 算法，输出字节流的十六进制字符串（hex dump）。针对不同的请求，需要拼装不同组合的字符串，加上 UTC timestamp 以及随机字符串作为签名的消息。
+签名采用 **Hmac-sha1** 算法，输出字节流的十六进制字符串（hex dump）。针对不同的请求，开发者需要拼装不同组合的字符串，加上 UTC timestamp 以及随机字符串作为签名的消息。
 
 ### 云引擎签名范例
 
@@ -290,7 +312,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 ### 用户登录的签名
 
-签名采用 ，签名的消息格式如下：
+签名的消息格式如下，注意 `clientid` 与 `timestamp` 之间是<u>两个冒号</u>：
 
 ```
 appid:clientid::timestamp:nonce
@@ -303,7 +325,7 @@ clientid|登录时使用的 clientId
 timestamp|当前的 UTC 时间距离 unix epoch 的**秒数**
 nonce|随机字符串
 
->注意：签名的 key **必须** 是应用的 master key，你可以 [控制台 > **设置** > **应用 Key**](/app.html?appid={{appid}}#/key) 里找到。**请保护好 master key，不要泄露给任何无关人员。**
+>注意：签名的 key **必须** 是应用的 master key，你可以 [控制台 > 设置 > 应用 Key](/app.html?appid={{appid}}#/key) 里找到。**请保护好 master key，不要泄露给任何无关人员。**
 
 开发者可以实现自己的 SignatureFactory，调用远程服务器的签名接口获得签名。如果你没有自己的服务器，可以直接在 LeanCloud 云引擎上通过 **网站托管** 来实现自己的签名接口。在移动应用中直接做签名的作法 **非常危险**，它可能导致你的 **master key** 泄漏。
 
@@ -326,7 +348,7 @@ appid:clientid:sorted_member_ids:timestamp:nonce
 appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
 ```
 
-* appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对加入群的情况，这里 sorted_member_ids 是空字符串。
+* appid、clientid、sorted_member_ids、timestamp 和 nonce  的含义同上。对创建群的情况，这里 sorted_member_ids 是空字符串。
 * convid - 此次行为关联的对话 id。
 * action - 此次行为的动作，分为 **add** （加群和邀请）与 **remove** （踢出群）两种，但出于兼容考虑，签名时分别使用常量 **invite** 和 **kick** 来进行表示。
 
@@ -340,12 +362,18 @@ appid:clientid:convid:sorted_member_ids:timestamp:nonce:action
   消息达到服务器，群组成员已解析完成之后，发送给收件人之前。
 * **_receiversOffline**<br/>
   消息发送完成，存在离线的收件人。
+* **_messageSent**<br/>
+  消息发送完成。
 * **_conversationStart**<br/>
   创建对话，在签名校验（如果开启）之后，实际创建之前。
+* **_conversationStarted**<br/>
+  创建对话完成。
 * **_conversationAdd**<br/>
   向对话添加成员，在签名校验（如果开启）之后，实际加入之前，包括主动加入和被其他用户加入两种情况。
 * **_conversationRemove**<br/>
   从对话中踢出成员，在签名校验（如果开启）之后，实际踢出之前，用户自己退出对话不会调用。
+* **_conversationUpdate**<br/>
+  修改对话属性、设置或取消对话消息提醒，在实际修改之前调用。
 
 ### 使用场景
 
@@ -432,6 +460,31 @@ offlinePeers|可选|数组，筛选过的推送收件人。
 pushMessage|可选|推送内容，支持自定义 JSON 结构。
 force|可选|如果为真将强制推送给 offlinePeers 里 mute 的用户，默认 false。
 
+### `_messageSent`
+
+在消息发送完成后执行，对消息发送性能没有影响，可以用来执行相对耗时的逻辑。
+
+#### 参数
+
+参数	| 说明
+----- | ------
+fromPeer	| 消息发送者的 ID
+convId	| 消息所属对话的 ID
+msgId | 消息 id
+onlinePeers	| 当前在线发送的用户 id
+offlinePeers | 当前离线的用户 id
+transient	| 是否是 transient 消息
+system | 是否是 system conversation
+bin | 是否是二进制消息
+content	| 消息体字符串
+receipt	| 是否要求回执
+timestamp	| 服务器收到消息的时间戳（毫秒）
+sourceIP	| 消息发送者的 IP
+
+#### 返回
+
+这个 hook 不会对返回值进行检查。只需返回 `{}` 即可。
+
 ### `_conversationStart`
 
 在创建对话时调用，发生在签名验证之后、创建对话之前。
@@ -450,6 +503,20 @@ attr | 创建对话时的额外属性
 --- | ---|---
 reject |可选|是否拒绝，默认为 **false**。
 code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整型错误码。
+
+### `_conversationStarted`
+
+对话创建后调用
+
+#### 参数
+
+参数 | 说明
+--- | ---
+convId | 新生成的对话 Id
+
+#### 返回
+
+这个 hook 不对返回值进行处理，只需返回 `{}` 即可。
 
 ### `_conversationAdd`
 
@@ -489,6 +556,28 @@ convId | 对话 id
 reject | 可选 | 是否拒绝，默认为 **false**。
 code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整型错误码。
 
+### `_conversationUpdate`
+
+在修改对话属性、设置或取消对话消息提醒之前调用。
+
+#### 参数
+
+参数 | 说明
+--- | ---
+initBy | 由谁发起。
+convId | 对话 id。
+mute | 是否关闭当前对话提醒。
+attr | 待设置的对话属性。
+
+#### 返回
+
+参数 |约束| 说明
+---|---|---
+reject | 可选 | 是否拒绝，默认为 **false**。
+code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整型错误码。
+attr | 可选 | 修改后的待设置对话属性，如果不提供则保持原参数中的对话属性。
+mute | 可选 | 修改后的关闭对话提醒设置，如果不提供则保持原参数中的关闭提醒设置。
+
 ### 部署环境
 
 实时通信的云引擎 Hook 要求云引擎部署在云引擎的 **生产环境**，测试环境仅用于开发者手动调用测试。由于缓存的原因，首次部署的云引擎 Hook 需要至多三分钟来正式生效，后续修改会实时生效。
@@ -505,7 +594,7 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 
 ##  JavaScript 开发指南
 
-参考 [JavaScript 实时通信开发指南](js_realtime.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
+参考 [JavaScript 实时通信开发指南](realtime_guide-js.html)。另外，我们已经开源了 JavaScript  Realtime SDK， 见 [ LeanCloud JavaScript Realtime SDK - Github 资源库](https://github.com/leancloud/js-realtime-sdk) 。
 
 ## REST API
 
@@ -522,8 +611,10 @@ code | 可选 | 当 reject 为 true 时可以下发一个应用自定义的整�
 ### 系统对话消息的发送
 
 系统对话给用户发消息请参考： [REST API - 系统对话给用户发消息](realtime_rest_api.html#系统对话给用户发消息)。
-
 用户给系统对话发送消息跟用户给普通对话发消息方法一致。
+
+您还可以利用系统对话发送广播消息给全部用户。相比遍历所有用户 ID 逐个发送，广播消息只需要调用一次 REST API。
+关于广播消息的详细特征可以参考[消息 - 广播消息](#广播消息)。
 
 ### 获取系统对话消息记录
 
@@ -582,7 +673,7 @@ data | 消息内容
 
 ## 限制
 
-* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、建立/关闭连接等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
+* 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、登录服务、退出服务等均限制为 **每分钟 30 次**。当调用超过限制时，服务端会丢弃超出的消息。
 * 客户端发送的单条消息大小不得超过 5 KB。
 * 目前单个普通对话的成员上限为 500 个。
 
@@ -590,21 +681,22 @@ data | 消息内容
 
 实时通信的错误码会以 SDK 异常或 WebSocket 关闭状态码的形式返回给客户端。当出现异常情况时，SDK 会输出状态码到日志里，以下是对部分状态码的简单说明：
 
-<!--2015-10-27 Da Li: add <code style="white-space:nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
+<!--2015-10-27 Da Li: add <code class="text-nowrap"> to prevent unexpected line wrapping. DO NOT REMOVE -->
 
 代码|消息|说明
 ---|---|---
 `0`| |websocket 正常关闭，可能发生在服务器重启，或本地网络异常的情况。SDK 会自动重连，无需人工干预。
-<code style="white-space:nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
+<code class="text-nowrap">1006</code>| |websocket 连接非正常关闭，通常见于路由器配置对长连接限制的情况。SDK 会自动重连，无需人工干预。
 `4100`|`APP_NOT_AVAILABLE`|应用不存在或应用禁用了实时通信服务
 `4103`|`INVALID_LOGIN`|Client Id 格式错误，超过 64 个字符。
 `4105`|`SESSION_REQUIRED`|Session 没有打开就发送消息，或执行其他操作。常见的错误场景是调用 open session 后直接发送消息，正确的用法是在 Session 打开的回调里执行。
 `4107`|`READ_TIMEOUT`|读超时，服务器端长时间没有收到客户端的数据，切断连接。SDK 包装了心跳包的机制，出现此错误通常是网络问题。SDK 会自动重连，无需人工干预。
-`4108`|`LOGIN_TIMEOUT`|登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以 [创建工单](http://ticket.leancloud.cn/)，由我们技术顾问来给出建议。
+`4108`|`LOGIN_TIMEOUT`|登录超时，连接后长时间没有完成 session open。通常是登录被拒绝等原因，出现此问题可能是使用方式有误，可以 [创建工单](https://leanticket.cn/)，由我们技术顾问来给出建议。
 `4109`|`FRAME_TOO_LONG`|包过长。消息大小超过 5 KB，请缩短消息或者拆分消息。
 `4110`|`INVALID_ORIGIN`|设置安全域名后，当前登录的域名与安全域名不符合。
-`4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](http://ticket.leancloud.cn/)，我们会尽快解决。
+`4200`|`INTERNAL_ERROR`|服务器内部错误，如果反复出现请收集相关线索并 [创建工单](https://leanticket.cn/)，我们会尽快解决。
 `4201`|`SEND_MESSAGE_TIMEOUT`|通过 API 发送消息超时
+`4301`|`CONVERSATION_API_FAILED`|上游 API 调用异常，请查看报错信息了解错误详情
 `4302`|<code style="white-space:nowrap">CONVERSATION_SIGNATURE_FAILED</code>|对话相关操作签名错误
 `4303`|`CONVERSATION_NOT_FOUND`|发送消息，或邀请等操作对应的对话不存在。
 `4304`|`CONVERSATION_FULL`|对话成员已满，不能再添加。
@@ -612,7 +704,12 @@ data | 消息内容
 `4306`|`CONVERSATION_UPDATE_FAILED`|更新对话操作失败
 `4307`|`CONVERSATION_READ_ONLY`|该对话为只读，不能更新或增删成员。
 `4308`|`CONVERSATION_NOT_ALLOWED`|该对话禁止当前用户发送消息
-`4401`|`INVALID_MESSAGING_TARGET`|发送消息的对话不存在，或当前用户不在对话中。
+`4309`|`CONVERSATION_UPDATE_REJECT`|更新对话的请求被拒绝，当前用户不在对话中
+`4310`|`CONVERSATION_QUERY_FAILED`|查询对话失败，常见于慢查询导致的超时或受其他慢查询导致的数据库响应慢
+`4311`|`CONVERSATION_LOG_FAILED`|拉取对话消息记录失败，常见与超时的情况
+`4312`|`CONVERSATION_LOG_REJECT`|拉去对话消息记录被拒绝，当前用户不再对话中
+`4313`|`SYSTEM_CONVERSATION_REQUIRED`|该功能仅对系统对话有效
+`4401`|`INVALID_MESSAGING_TARGET`|发送消息的对话不存在，或当前用户不在对话中
 `4402`|`MESSAGE_REJECTED_BY_APP`|发送的消息被应用的云引擎 Hook 拒绝
 
 ## 常见问题 FAQ

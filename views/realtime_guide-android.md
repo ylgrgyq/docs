@@ -856,7 +856,7 @@ ioType|AVIMMessageIOType 枚举|消息传输方向，有两种取值：<br/><br/
  
 {% endblock %}
 
-{% block attributes %}`AVIMTypedMessage.attributes`{% endblock %}
+{% set attributes = "`AVIMTypedMessage.attributes`" %}
 
 {% block attributes_property %}attributes{% endblock %}
 
@@ -907,34 +907,6 @@ friend.open(new AVIMClientCallback() {
     public void done(AVIMClient client, AVIMException e) {
         if (e == null) {}
     }
-});
-```
-{% endblock %}
-
-{% block customMessage_create %}
-
-```
-AVIMClient tom = AVIMClient.getInstance("Tom");
-tom.open(new AVIMClientCallback() {
-    @Override
-    public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-            AVIMImageMessage msg = new AVIMImageMessage(someLocalFile);
-            Map<String, Object> attributes = new HashMap<String, Object>();
-            attributes.put("location", "拉萨布达拉宫");
-            attributes.put("Title", "这蓝天……我彻底是醉了");
-            msg.setAttrs(attributes);
-            client.getConversation("551260efe4b01608686c3e0f").sendMessage(msg,
-                new AVIMConversationCallback() {
-                    @Override
-                    public void done(AVIMException e) {
-                        if (e == null) {
-                        // 发送成功
-                    }
-                }
-            });
-        }
-      }
 });
 ```
 {% endblock %}
@@ -2196,6 +2168,6 @@ public class AVImClientManager extends AVIMClientEventHandler {
 ```
 {% endblock %}
 
-{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](android_guide.html#缓存查询) 一节。
+{% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](leanstorage_guide-android.html#缓存查询) 一节。
 {% endblock %}
 

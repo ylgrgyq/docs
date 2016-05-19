@@ -199,10 +199,10 @@ LeanCloud 平台保证 99.9% 的高可用性，并且数据访问方面保证了
 如果你是某个特定平台的开发者，想查看我们原生的 SDK 开发指南，请移步到具体页面：
 
 ### iOS 开发指南
-详细请参看 [iOS 数据存储开发指南](./ios_os_x_guide.html);
+详细请参看 [iOS 数据存储开发指南](./leanstorage_guide-ios.html);
 
 ### Android 开发指南
-详细请参看 [Android 数据存储开发指南](./android_guide.html);
+详细请参看 [Android 数据存储开发指南](./leanstorage_guide-android.html);
 
 ### Javascript 开发指南
 详细请参看 [Javascript 数据存储开发指南](./js_guide.html);

@@ -1028,12 +1028,12 @@ public ISignatureFactoryV2 SignatureFactory { get; set; }
 ```
 是预留给开发者实现签名需求的接口，开发者只需要在登录之前实现这个接口即可。
 
-###  签名的云代码实例
-为了方便开发者理解签名，我们特地开源了签名的[云代码实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)，只要按照要求正确配置，就可以在客户端通过调用云代码的具体的函数实现签名。
+###  签名的云引擎实例
+为了方便开发者理解签名，我们特地开源了签名的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)，只要按照要求正确配置，就可以在客户端通过调用云引擎的具体的函数实现签名。
 
 演示实例的步骤：
 
-* 首先您需要下载最新版本的[云代码实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云代码命令行工具使用详解](./cloud_code_commandline.html)
+* 首先您需要下载最新版本的[云引擎实例](https://github.com/leancloud/realtime-messaging-signature-cloudcode)到本地，然后部署到您的应用中，详细请参考[云引擎命令行工具使用详解](./leanengine_cli.html)
 
 * 其次，在 Visual Studio 中，新建一个类叫做 `SampleSignatureFactory` ，把下面这段代码拷贝到其中：
 
@@ -1062,7 +1062,7 @@ public class SampleSignatureFactory : ISignatureFactoryV2
         data.Add("action", action);//conversationId是签名必须的参数。
             
             
-        //调用云代码进行签名。
+        //调用云引擎进行签名。
         return AVCloud.CallFunctionAsync<IDictionary<string, object>>("actionOnCoversation", data).ContinueWith<AVIMSignatureV2>(t =>
         {
             return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
@@ -1080,7 +1080,7 @@ public class SampleSignatureFactory : ISignatureFactoryV2
 
         data.Add("client_id", clientId);//表示当前是谁要求连接服务器。 
 
-        //调用云代码进行签名。
+        //调用云引擎进行签名。
         return AVCloud.CallFunctionAsync<IDictionary<string, object>>("connect", data).ContinueWith<AVIMSignatureV2>(t =>
         {
             return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
@@ -1100,7 +1100,7 @@ public class SampleSignatureFactory : ISignatureFactoryV2
         data.Add("client_id", clientId);//表示当前是谁在操作。
         data.Add("member_ids", targetIds);//memberIds不要包含当前的ClientId。
 
-        //调用云代码进行签名。
+        //调用云引擎进行签名。
         return AVCloud.CallFunctionAsync<IDictionary<string, object>>("startConversation", data).ContinueWith<AVIMSignatureV2>(t =>
         {
             return MakeSignature(t.Result); ;//拼装成一个 Signature 对象
@@ -1134,7 +1134,7 @@ public class SampleSignatureFactory : ISignatureFactoryV2
         data.Add("client_id", clientId);//表示当前是谁在操作。
         data.Add("convid", conversationId);//memberIds不要包含当前的ClientId。
 
-        //调用云代码进行签名。
+        //调用云引擎进行签名。
         return AVCloud.CallFunctionAsync<IDictionary<string, object>>("queryHistory", data).ContinueWith<AVIMSignatureV2>(t =>
         {
             return MakeSignature(t.Result); ;//拼装成一个 Signature 对象

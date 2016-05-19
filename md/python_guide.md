@@ -61,7 +61,7 @@ monkey.patch_all()  # 或者只 patch 指定的模块
 
 关于 gevent 的详细介绍，可以参考[gevent 官方文档](http://www.gevent.org/)。
 
-另外如果你使用我们的云代码环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
+另外如果你使用我们的云引擎环境来运行 Python SDK，以上的步骤是不需要的，我们默认开启了 gevent 支持。
 
 ## 初始化
 
@@ -194,6 +194,13 @@ game_score.save()
 
 ```python
 game_score.destroy()
+```
+
+批量删除对象可以使用 `leancloud.Object.destroy_all()` 方法：
+
+```python
+objects = [obj1, obj2, obj3]
+leancloud.Object.destroy_all(objects)
 ```
 
 ### 关系数据
@@ -388,14 +395,14 @@ query.contained_in("playerName", ["Jonathan Walsh", "Dario Wunsch", "Shawn Simon
 
 相反地，你可以使用 not_contained_in 方法来查询在集合之外的目标对象。
 
-如果你想要查询含有某一特定属性的对象，你可以使用 exists。相对地，如果你想获取没有这一特定属性的对象，你可以使用 `does_not_exist`。
+如果你想要查询含有某一特定属性的对象，你可以使用 exists。相对地，如果你想获取没有这一特定属性的对象，你可以使用 `does_not_exists`。
 
 ```python
 # Finds objects that have the score set
 query.exists("score")
 
 # Finds objects that don't have the score set
-query.does_not_exist("score")
+query.does_not_exists("score")
 ```
 
 你可以使用 `matches_key_in_query` 方法来进行嵌套的子查询。举例说，如果你有一个类包含了运动队，而你在用户的类中存储了用户的家乡信息，你可以构造一个查询来查找某地的运动队有赢的记录的用户。查询应该看起来像下面这样:
@@ -685,7 +692,7 @@ thumbnail_url = file.get_thumbnail_url(width='100', height='100')
 
 ### 删除文件
 
-获取了一个 File 对象之后，只要调用 destory 方法即可在服务器上删除此 File 对象。
+获取了一个 File 对象之后，只要调用 `destroy` 方法即可在服务器上删除此 File 对象。
 
 ## 用户
 

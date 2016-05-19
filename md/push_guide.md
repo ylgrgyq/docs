@@ -61,7 +61,7 @@ errors| | 本次推送过程中的错误信息。
 
 请阅读 [Windows Phone 推送开发文档](./dotnet_push_guide.html)。
 
-## 云代码和 JavaScript 创建推送
+## 云引擎和 JavaScript 创建推送
 
 请阅读 [JavaScript SDK 指南 - Push 通知](./js_guide.html#Push_通知)。
 我们还提供单独的 [JavaScript 推送客户端](https://github.com/leancloud/js-push-sdk/) 用于在网页中收发推送。
@@ -197,7 +197,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
   "data": {
    "alert":             "消息内容",
    "category":          "通知分类名称",
-   "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串  'Increment'（大小写敏感）",
+   "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串 "Increment"（大小写敏感）,
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": "如果使用 Newsstand，设置为 1 来开始一次后台下载",
    "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
@@ -269,7 +269,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
   "data":{
     "ios": {
       "alert":             "消息内容",
-      "badge":             "未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 Increment 这个字符串（大小写敏感）",
+      "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以设置为 "Increment" 这个字符串（大小写敏感）,
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": "如果你在使用 Newsstand, 设置为 1 来开始一次后台下载",
       "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
@@ -312,18 +312,18 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 
 #### 过期时间和定时推送
 
-`expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 是一个 UTC 时间的字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ`。
+`expiration_time` 属性用于指定消息的过期时间，如果客户端收到消息的时间超过这个绝对时间，那么消息将不显示给用户。`expiration_time` 是一个 UTC 时间的字符串，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ`。
 
 ```
 {
-      "expiration_time": "2015-11-11T00:51:13Z",
+      "expiration_time": "2016-01-28T00:07:29.773Z",
       "data": {
-        "alert": "过期时间为北京时间 11 月 11 号 8:51。"
+        "alert": "过期时间为北京时间 1 月 28 日 8:07。"
       }
 }
 ```
 
-`expiration_interval` 也可以用于指定过期时间，不过这是一个相对时间，以*秒为单位*，从 API 调用时间点开始计算起：
+`expiration_interval` 也可以用于指定过期时间，不过这是一个相对时间，以**秒**为单位，从 API 调用时间点开始计算起：
 
 ```
 {
@@ -334,14 +334,14 @@ _Installation 表中的所有属性，无论是内置的还是自定义的，都
 }
 ```
 
-`push_time` 是定时推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMMZ` 的 UTC 时间，也可以结合 `expiration_interval` 设定过期时间：
+`push_time` 是定时推送的时间，格式为 `YYYY-MM-DDTHH:MM:SS.MMMZ` 的 UTC 时间，也可以结合 `expiration_interval` 设定过期时间：
 
 ```
 {
-      "push_time":           "2015-11-11T00:51:13.931ZZ",
+      "push_time":           "2016-01-28T00:07:29.773Z",
       "expiration_interval": "86400",
       "data": {
-        "alert": "北京时间 11 月 11 号 8:51 发送这条推送，24 小时后过期"
+        "alert": "北京时间 1 月 28 日 8:07 发送这条推送，24 小时后过期"
       }
 }
 ```
@@ -591,7 +591,7 @@ curl -X GET \
   -H "Content-Type: application/json" \
   https://leancloud.cn/1.1/scheduledPushMessages
  ```
- 
+
 查询出来的结果类似：
 
 ```json
@@ -624,7 +624,7 @@ curl -X GET \
     }
   ]
 }
-``` 
+```
 
 其中 `push_msg` 就是该推送消息的详情，`expire_time` 是消息设定推送时间的 unix 时间戳。
 

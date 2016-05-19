@@ -81,6 +81,34 @@ createdAt       keyValues
 description     objectId
 ```
 
+#### 保存选项
+
+`AVObject` 对象在保存时可以通过设置 `AVSaveOption` 来指定保存选项。`AVSaveOption`有以下属性支持：
+
+选项 | 类型 | 说明
+--- | --- | ---
+<code class="text-nowrap">`fetchWhenSave`</code> | BOOL | 对象成功保存后，自动返回该对象在服务端的最新数据。用途请参考 [更新后获取最新值](#更新后获取最新值)。
+`query` | AVQuery  | 当 query 中的条件满足后对象才能成功保存，否则放弃保存，并返回错误码 305。<br/><br/>开发者原本可以通过 `AVQuery` 和 `AVObject` 分两步来实现这样的逻辑，但如此一来无法保证操作的原子性从而导致并发问题。该选项可以用来判断多用户更新同一对象数据时可能引发的冲突。
+
+以下为 `query` 选项的用法：
+
+``` java
+
+    AVObject object = new AVObject("ObjectSaveWithQuery");
+    object.put("int", 1);
+    object.save();
+
+    object.put("int", 2);
+    AVQuery query = new AVQuery("ObjectSaveWithQuery");
+    query.whereEqualTo("int", 2);
+    AVSaveOption option = new AVSaveOption();
+    option.query(query);
+    try {
+      object.save(option);   //本次保存将不成功，因为不满足 AVSaveOption 里面的 query 条件
+    } catch (AVException e) {
+      Assert.assertEquals(305, e.getCode());
+    }
+```
 
 ### 数据检索
 
@@ -245,6 +273,35 @@ post.saveInBackground();
 ```java
 List<AVObject> objects = ...
 AVObject.deleteAll(objects);
+```
+
+#### 删除选项
+
+与 [保存选项](#保存选项) 的 `query` 一样，在删除某个对象时，你可能需要先校验一下对象中的属性值，如果不满足条件则放弃删除操作。我们可以在删除的时候传入 `AVDeleteOption` 参数来实现这一功能：
+
+``` java
+
+    AVObject object = new AVObject("post");
+    object.put("upvotes", 1);
+    object.save();
+
+    AVQuery query = new AVQuery("ObjectDeleteWithOption");
+    query.whereEqualTo("upvotes", 2);
+    AVDeleteOption option = new AVDeleteOption();
+    option.query(query);
+    try {
+      object.delete(option); //本次删除不会成功，因为不满足 AVDeleteOption 里面的 query 条件
+    } catch (AVException e) {
+      Assert.assertEquals(305, e.getCode());
+    }
+
+    query.whereEqualTo("upvotes", 1);
+    object.deleteInBackground(option, new DeleteCallback() {
+      @Override
+      public void done(AVException e) {
+        Assert.assertNull(e);//本次操作就可以成功删除对象
+      }
+    });
 ```
 
 ### 关联数据
@@ -1323,7 +1380,7 @@ user.signUpInBackground(new SignUpCallback() {
 
 关于自定义邮件模板和验证链接请看博客文章[《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云引擎回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 登录
 
@@ -1390,7 +1447,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 关于自定义邮件模板和验证链接，请参考博客文章 [《自定义应用内用户重设密码和邮箱验证页面》](https://blog.leancloud.cn/607/)。
 
-用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云代码回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
+用户邮箱验证后，会调用 `AV.Cloud.onVerified('email',function)` 的 [云引擎回调函数](leanengine_guide-cloudcode.html#用户验证通知函数)，方便你做一些后处理。
 
 ### 修改密码
 
@@ -1460,7 +1517,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
     });
 ```
 
-验证成功后，在控制台，用户的记录 `mobilePhoneVerified` 属性变为 true，并且调用云代码的 `AV.Cloud.onVerifed('sms', function)` 方法。
+验证成功后，在控制台，用户的记录 `mobilePhoneVerified` 属性变为 true，并且调用云引擎的 `AV.Cloud.onVerifed('sms', function)` 方法。
 
 ### 手机号码登录
 
@@ -1524,7 +1581,7 @@ AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswo
 
 ### 查询
 
-**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的权限)。**
+**请注意，新创建应用的 `_User` 表的查询权限默认是关闭的，通常我们推荐你在云引擎里封装用户查询，只查询特定条件的用户，避免开放用户表的全部查询权限。此外，你可以通过 class 权限设置打开查询权限，请参考 [数据与安全 - Class 级别的权限](data_security.html#Class_级别的_ACL)。**
 
 查询用户，你需要使用特殊的用户查询对象来完成：
 
@@ -1674,11 +1731,11 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
   })
 ```
 -->
-## 调用云代码
+## 调用云引擎
 
 ### 调用函数
 
-使用 `AVCloud` 类的静态方法来调用云代码中定义的函数：
+使用 `AVCloud` 类的静态方法来调用云引擎中定义的函数：
 
 ```java
  Map<String,Object> parameters = ......
@@ -1716,13 +1773,13 @@ AVOSCloud.requestSMSCodeInBackground("12312312312", null, "短信验证", 10,
 
 ### 生产环境和测试环境
 
-云代码区分测试环境和生产环境，在SDK里指定调用的云代码环境，可以通过 `setProductionMode` 方法：
+云引擎区分测试环境和生产环境，在SDK里指定调用的云引擎环境，可以通过 `setProductionMode` 方法：
 
 ```java
-AVCloud.setProductionMode(false); //调用测试环境云代码
+AVCloud.setProductionMode(false); //调用测试环境云引擎
 ```
 
-默认为 true，也就是调用生产环境云代码函数。
+默认为 true，也就是调用生产环境云引擎函数。
 
 ## 代码混淆
 为了保证 SDK 在代码混淆后能正常运作，需要保证部分类和第三方库不被混淆，具体操作请参考 [常见问题 - 代码混淆](android_faq.html#代码混淆怎么做)。

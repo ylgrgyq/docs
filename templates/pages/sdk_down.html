@@ -68,8 +68,8 @@
           <hr>
           <ul class="list-unstyled list-inline">
             <li>已开源模块</li>
-            <li><a href="https://github.com/leancloud/leancloud-feedback-ios" class="btn"><i class="icon icon-github"></i> 用户反馈组件</a></li>
-            <li><a href="https://github.com/leancloud/leancloud-social-ios" class="btn"><i class="icon icon-github"></i> 社交组件</a></li>
+            <li><a href="https://github.com/leancloud/leancloud-feedback-ios" class="btn btn-link"><i class="icon icon-github"></i> 用户反馈组件</a></li>
+            <li><a href="https://github.com/leancloud/leancloud-social-ios" class="btn btn-link"><i class="icon icon-github"></i> 社交组件</a></li>
           </ul>
         </div>
         <!-- .dl-cell -->
@@ -82,16 +82,19 @@
           <div class="row">
             <div class="col-sm-4">
               <div class="checkbox custom-control">
-                <label class="bspopover" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-title="详情" data-content="<p><strong>基础模块包含：</strong></p><ul><li>存储</li><li>统计</li></ul>">
+                <label class="bspopover" data-toggle="popover" data-placement="bottom" data-trigger="hover" data-html="true" data-title="详情" data-content="<p><strong>基础模块包含：</strong></p><ul><li>存储</li></ul>">
                   <input type="checkbox" name="osx" disabled checked>
                   <span class="control-indicator"></span> 基础模块
                 </label>
               </div>
             </div>
             <div class="col-sm-4" ng-repeat="m in download.osx.optional">
-              <label class="checkbox">
-                <input type="checkbox" name="osx" ng-model="downselect.osx[m.name]"> {{m.name}}
-              </label>
+              <div class="checkbox custom-control">
+                <label class="checkbox">
+                  <input type="checkbox" name="osx" ng-model="downselect.osx[m.name]">
+                  <span class="control-indicator"></span> {{m.name}}
+                </label>
+              </div>
             </div>
           </div>
 
@@ -202,22 +205,22 @@
           <h2>JavaScript SDK</h2>
           <ul class="list-unstyled list-inline">
 
-            <li><a href="https://github.com/leancloud/javascript-sdk" class="btn"><i class="icon icon-github"></i> JavaScript Core SDK</a>
+            <li><a href="https://github.com/leancloud/javascript-sdk" class="btn btn-link"><i class="icon icon-github"></i> JavaScript Core SDK</a>
             </li>
-            <li><a href=" https://github.com/leancloud/js-realtime-sdk" class="btn"><i class="icon icon-github"></i> JavaScript 实时通信 SDK</a>
+            <li><a href=" https://github.com/leancloud/js-realtime-sdk" class="btn btn-link"><i class="icon icon-github"></i> JavaScript 实时通信 SDK</a>
             </li>
-            <li><a href="https://github.com/leancloud/js-push-sdk" class="btn"><i class="icon icon-github"></i> JavaScript 推送 SDK</a>
+            <li><a href="https://github.com/leancloud/js-push-sdk" class="btn btn-link"><i class="icon icon-github"></i> JavaScript 推送 SDK</a>
             </li>
 
           </ul>
           <hr>
           <h2>其他 SDK</h2>
           <ul class="list-unstyled list-inline">
-            <li><a href="https://github.com/leancloud/python-sdk" class="btn  "><i class="icon icon-github"></i> Python SDK</a>
+            <li><a href="https://github.com/leancloud/python-sdk" class="btn btn-link"><i class="icon icon-github"></i> Python SDK</a>
             </li>
-             <li><a href="https://github.com/leancloud/php-sdk/" class="btn  "><i class="icon icon-github"></i> PHP SDK</a>
+             <li><a href="https://github.com/leancloud/php-sdk/" class="btn btn-link"><i class="icon icon-github"></i> PHP SDK</a>
             </li>
-            <li><a href="https://github.com/leancloud/cpp-sdk" class="btn  "><i class="icon icon-github"></i> C++ SDK</a>
+            <li><a href="https://github.com/leancloud/cpp-sdk" class="btn btn-link"><i class="icon icon-github"></i> C++ SDK</a>
             </li>
           </ul>
         </div>
@@ -358,7 +361,7 @@
   <div class="col-md-12">
 
 
-    <p>我们在 GitHub 上的 repo（<a href="https://gitcafe.com/leancloud" class="">GitCafe 镜像</a>）：</p>
+    <p>我们在 GitHub 上的 repos：</p>
 
     <ul class="list-unstyled list-inline">
       <li><a href="https://github.com/leancloud/leancloud-sdk" class="btn btn-lg btn-default"><i class="icon icon-github"></i> leancloud/leancloud-sdk</a>
