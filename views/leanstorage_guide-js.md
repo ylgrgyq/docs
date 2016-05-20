@@ -23,7 +23,7 @@
 {% set dateType= "Date" %}
 {% set byteType= "Buffer" %}
 {% set link_to_acl_doc ="[JavaScript 权限管理使用指南](acl_guide-js.html)" %}
-{% set funtionName_whereKeyHasPrefix = "whereKey:hasPrefix:" %}
+{% set funtionName_whereKeyHasPrefix = "startsWith" %}
 
 {% block text_for_ts_developer %}
 ## TypeScript 开发者
@@ -31,8 +31,8 @@
 
 本质上，TypeScript 经过编译之后实际上也是调用 JavaScript SDK 的对应的接口，因此在本文代码块中，一些 TypeScript 写法可以给开发者进行参考。
 
-注意，TypeScript 针对异步函数有多种写法，本文采用 [Promise](#Promise) 的作为默认的示例代码书写方式，仅供参考。
- [Promise](#Promise) 以及 Typescript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 的不同写法的支持取决于在 TypeScript 项目中的 `tsconfig.json` 的 `compilerOptions` 配置里面选择 `target` 是什么版本，例如，要支持 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 需要进入如下配置：
+注意，TypeScript 针对异步函数有多种写法，本文以 [Promise](#Promise) 作为默认的示例代码书写方式，仅供参考。
+[Promise](#Promise) 以及 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 的不同写法的支持取决于在 TypeScript 项目中的 `tsconfig.json` 的 `compilerOptions` 配置里面选择 `target` 是什么版本，例如，要支持 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 需要进行如下配置：
 
 ```json
 {
@@ -46,7 +46,7 @@
   ...
 }
 ```
-关于在 ES6 编译模式下的如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这片[文章](/*todo*/)：
+关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
 
 注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
 
@@ -75,10 +75,10 @@
   todo.save().then(function (todo) {
     // 成功保存之后，执行其他逻辑.
     console.log('New object created with objectId: ' + todo.id);
-  }, function (err) {
+  }, function (error) {
     // 失败之后执行其他逻辑
     // error 是 AV.Error 的实例，包含有错误码和描述信息.
-    console.log('Failed to create new object, with error message: ' + err.message);
+    console.log('Failed to create new object, with error message: ' + error.message);
   });
 ```
 ```ts
@@ -108,7 +108,7 @@
   todo.set('location','会议室');// 只要添加这一行代码，服务端就会自动添加这个字段
   todo.save().then(function (todo) {
     // 成功保存之后，执行其他逻辑.
-  }, function (err) {
+  }, function (error) {
     // 失败之后执行其他逻辑
     // error 是 AV.Error 的实例，包含有错误码和描述信息.
   });
@@ -238,8 +238,8 @@ testObject.save().then(function(testObject) {
    todoFolder.set('priority',1);// 设置优先级
    todoFolder.save().then(function (todo) {
       console.log('objectId is ' + todo.id);
-    }, function (err) {
-      console.log(err);
+    }, function (error) {
+      console.log(error);
    });// 保存到云端
 ```
 ```ts
@@ -323,7 +323,7 @@ testObject.save().then(function(testObject) {
   todo.save().then(function (todo) {
     // 成功保存之后，执行其他逻辑
     var objectId = todo.id;// 获取 objectId
-  }, function (err) {
+  }, function (error) {
     // 失败之后执行其他逻辑
     // error 是 AV.Error 的实例，包含有错误码和描述信息.
   });
@@ -886,9 +886,9 @@ testObject.save().then(function(testObject) {
       avFile.save().then(function(obj) {
         // 数据保存成功
         console.log(obj.url());
-      }, function(err) {
+      }, function(error) {
         // 数据保存失败
-        console.log(err);
+        console.log(error);
       });
     }
 ```
@@ -990,8 +990,8 @@ function uploadFile (req, res) {
             fileUrl: fileObj.url()
           });
         });
-      } catch (err) {
-        console.log('uploadFile - ' + err);
+      } catch (error) {
+        console.log('uploadFile - ' + error);
         res.status(502);
       }
     })
@@ -1045,16 +1045,6 @@ function uploadFile (req, res) {
   file.metaData('author','LeanCloud');
   // 获取文件的格式
   let format = file.metaData('format');
-```
-{% endblock %}
-
-{% block code_download_file %}
-```objc
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        // data 就是文件的数据流
-    } progressBlock:^(NSInteger percentDone) {
-        //下载的进度数据，percentDone 介于 0 和 100。
-    }];
 ```
 {% endblock %}
 
@@ -1774,17 +1764,23 @@ function uploadFile (req, res) {
 ```js
   var query = new AV.Query('Todo');
   var point = new AV.GeoPoint('39.9', '116.4');
-  query.limit(10);
-  query.near('whereCreated', point);
+  query.withinKilometers('whereCreated', point, 2.0);
+  query.find().then(function (results) {
+      var nearbyTodos = results;
+  }, function (error) {
+  });
 ```
 ```ts
   let query : AV.Query = new AV.Query('Todo');
   let point : AV.GeoPoint = new AV.GeoPoint('39.9','116.4');
-  query.limit(10);
-  query.near('whereCreated',point);
+  query.withinKilometers('whereCreated',point,2.0);
+  query.find<AV.Object []>().then((results)=>{
+    let nearbyTodos : AV.Object [] = results;
+  },(error)=>{
+  });
 ```
 
-在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
+在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `ascending` 或 `descending` 方法，则按距离排序会被新排序覆盖。**
 {% endblock %}
 
 {% block text_platform_geoPoint_notice %}{% endblock %}
@@ -2072,9 +2068,9 @@ AV.User.logInWithMobilePhoneSmsCode('13577778888','238825').then((success)=>{
 {% endblock %}
 
 {% block text_subclass %}{% endblock %}
+{% block text_sns %}{% endblock %}
+{% block text_feedback %}{% endblock %}
 {% block link_to_in_app_search_doc %}[JavaScript 应用内搜索指南](app_search_guide.html){% endblock %}
-{% block link_to_status_system_doc %}[JavaScript 应用内社交模块](status_system.html#iOS_SDK){% endblock %}
-{% block link_to_sns_doc %}[JavaScript SNS 开发指南](sns.html#iOS_SNS_组件){% endblock %}
-{% block link_to_feedback_doc %}[JavaScript 用户反馈指南](feedback.html#iOS_反馈组件){% endblock %}
+{% block link_to_status_system_doc %}[JavaScript 应用内社交模块](status_system.html#JavaScript_SDK){% endblock %}
 
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}

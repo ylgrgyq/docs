@@ -101,7 +101,7 @@ description     objectId
 
 #### 保存选项
 
-`{{baseObjectName}}` 对象在保存时可以通过设置保存选项来指定保存选项。保存选项支持以下属性：
+`{{baseObjectName}}` 对象在保存时可以设置选项来快捷完成关联操作，可用的选项属性有：
 
 选项 | 类型 | 说明
 --- | --- | ---
@@ -408,7 +408,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 
 {% block text_https_access_for_ios9 %}{% endblock %}
 
-**注意：默认情况下，文件的删除权限是关闭的**
+<div class="callout callout-info">注意：默认情况下，文件的删除权限是关闭的，需要进入控制台，在 [`_File` > 其他 > 权限设置 > delete](/data.html?appid={{appid}}#/_File)  中开启。</div>
 
 ## 查询
 {{baseQueryClassName}} 是构建针对 {{baseObjectName}} 查询的基础类。
@@ -841,8 +841,13 @@ User 表是一个特殊的表，专门存储 AVUser 对象。在浏览器端，�
 ## 应用内社交
 应用内社交，又称「事件流」，在应用开发中出现的场景非常多，包括用户间关注（好友）、朋友圈（时间线）、状态、互动（点赞）、私信等常用功能，这部分文档请参考：{% block link_to_status_system_doc %}{% endblock %}
 
+{% block text_sns %}
 ## 第三方账户登录
 社交账号的登录方便了应用开发者在提升用户体验，我们特地开发了一套支持第三方账号登录的组件，这部分文档请参考：{% block link_to_sns_doc %}{% endblock %}
 
+{% endblock %}
+
+{% block text_feedback %}
 ## 用户反馈
 用户反馈是一个非常轻量的模块，可以用最少两行的代码来实现一个支持文字和图片的用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈，这部分文档请参考：{% block link_to_feedback_doc %}{% endblock %}
+{% endblock %}
