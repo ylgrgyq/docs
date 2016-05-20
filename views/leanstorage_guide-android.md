@@ -82,7 +82,7 @@
 
         avSaveOption.query(query);
 
-        avObject.saveInBackground(new SaveCallback() {
+        avObject.saveInBackground(avSaveOption, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e.getCode() == 305) {
