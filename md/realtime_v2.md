@@ -94,7 +94,7 @@ LeanCloud 实时通信服务的特性主要有：
 **name**|name|String|可选|对话的名字，可为群组命名。
 **tr**|transient|Boolean|可选|是否为暂态对话
 **sys**|system|Boolean|可选|是否是系统对话
-**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话。<br/>（原子创建对话功能只能通过 SDK 调用创建对话接口实现，REST API 创建对话可以设置 unique 值，但无原子创建对话效果)
+**unique**|unique|Boolean|可选|内部字段，标记根据成员原子创建的对话。<br/>（只能在 SDK 中使用。**REST API 不支持此参数**，传入 unique 无效)
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
