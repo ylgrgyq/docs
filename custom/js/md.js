@@ -227,7 +227,8 @@ var codeBlockTabber = (function() {
       'lang-javascript': 'JavaScript',
       'lang-js': 'JavaScript',
       'lang-python': 'Python',
-      'lang-java': 'Java'
+      'lang-java': 'Java',
+      'lang-ts':'TypeScript'
     };
 
     $.each($codeBlocks, function () {
