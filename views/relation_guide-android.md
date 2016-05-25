@@ -224,8 +224,7 @@
 ```
 {% endblock %}
 
-{% block code_query_student_by_course %}
-
+{% block code_query_students_by_course %}
 ```java
         // 微积分课程
         AVObject courseCalculus = AVObject.createWithoutData("Course", "562da3fdddb2084a8a576d49");
