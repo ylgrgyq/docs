@@ -1,10 +1,14 @@
 {% extends "./acl_guide.tmpl" %}
 
 {% block language_version %}JavaScript{% endblock %}
+{% block for_front_js %}
+### 云引擎使用 ACL
+文档中使用的 `AV.User.current()` 这个方法仅仅针对浏览器端有效，在**云引擎中该接口无法使用**。
+{% endblock %}
 {% block link_to_acl_quickStart %}[权限管理以及 ACL 快速指南](acl_quick_start-js.html){% endblock %}
 {% block create_post_set_acl_for_single_user %}
 
-```javascript
+```js
   // 新建一个帖子对象
   var Post = AV.Object.extend("Post");
   var post = new Post();
@@ -19,12 +23,26 @@
   post.setACL(acl);
   post.save();
 ```
+```ts
+  // 新建一个帖子对象
+  let post : AV.Object = new AV.Object("Post");
+  post.set('title','大家好，我是新人');
+
+  // 新建一个 ACL 实例
+  let acl : AV.ACL = new AV.ACL();
+  acl.setPublicReadAccess(true);
+  acl.setWriteAccess(AV.User.current(),true);
+
+  // 将 ACL 实例赋予 Post 对象
+  post.setACL(acl);
+  post.save();
+```
 
 {% endblock %}
 
 {% block create_post_set_acl_for_othter_user %}
 
-```javascript
+```js
   // 查找某一个其他用户
   var query = new AV.Query(AV.User);
   query.get("55f1572460b2ce30e8b7afde", {
@@ -48,6 +66,9 @@
       // error is an instance of AV.Error.
     }
   });
+```
+```ts
+
 ```
 {% endblock %}
 
