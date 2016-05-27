@@ -76,7 +76,7 @@ allprojects {
 }
 ```
 
-7. sync project，这样 LeanCloudChatKit 就算是导入进 project 了
+最后只要 sync project，这样 LeanCloudChatKit 就算是导入进 project 了
 
 ### 自定义使用
 1. 实现自己的 Application
