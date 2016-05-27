@@ -234,6 +234,9 @@ LeanCloudChatKit 包含两个 UI 页面，LCIMConversationListFragment 与 LCIMC
     ...
 }
 ```
+具体的显示效果如下：
+
+![](https://dn-lhzo7z96.qbox.me/1464320206432)
 
 #### 聊天界面 - LCIMConversationFragment & LCIMConversationActivity
 聊天界面是显示频率最高的前端页面，在 ChatKit 当中自然也提供这一界面的实现。
@@ -257,7 +260,9 @@ LeanCloudChatKit 包含两个 UI 页面，LCIMConversationListFragment 与 LCIMC
     });
   }
 ```
+具体的显示效果如下：
 
+![chatkit_01](https://dn-lhzo7z96.qbox.me/1461816927540)
 
 
 ## F&Q
