@@ -10,6 +10,10 @@
   color: #3090e4!important;
   border: none!important;
 }
+.dropdown-header() {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
 body {
   position: relative;
@@ -18,9 +22,14 @@ body {
 
 .doc-content {
   .dropdown-header {
-    text-transform: uppercase;
-    letter-spacing: 1px;
+    .dropdown-header
     padding: 3px 15px;
+  }
+  
+  .link-block .dropdown-header {
+    .dropdown-header
+    font-size: 12px;
+    padding: 0;
   }
 
   p,
