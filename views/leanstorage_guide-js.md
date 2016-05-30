@@ -2483,4 +2483,139 @@ AV.Promise.setDebugError(true);
 如果你想更深入地了解和学习 Promise，我们推荐[《JavaScript Promise迷你书（中文版）》](http://liubin.github.io/promises-book/)这本书。
 {% endblock %}
 
+{% block js_push_guide %}
+## Push 通知
+
+通过 JavaScript SDK 也可以向移动设备推送消息，使用也非常简单。
+
+如果想在 Web 端独立使用推送模块，包括通过 Web 端推送消息到各个设备、以及通过 Web 端也可以接收其他端的推送，可以了解下我们的 [JavaScript 推送 SDK 使用指南](./js_push.html) 来获取更详细的信息。
+
+一个简单例子推送给所有订阅了 `public` 频道的设备：
+
+```javascript
+AV.Push.send({
+  channels: [ 'Public' ],
+  data: {
+    alert: 'Public message'
+  }
+});
+```
+
+这就向订阅了 `public` 频道的设备发送了一条内容为 `public message` 的消息。
+
+如果希望按照某个 `_Installation` 表的查询条件来推送，例如推送给某个 `installationId` 的 Android 设备，可以传入一个 `AV.Query` 对象作为 `where` 条件：
+
+```javascript
+var query = new AV.Query('_Installation');
+query.equalTo('installationId', installationId);
+AV.Push.send({
+  where: query,
+  data: {
+    alert: 'Public message'
+  }
+});
+```
+
+此外，如果你觉得 AV.Query 太繁琐，也可以写一句 [CQL](./cql_guide.html) 来搞定：
+
+```javascript
+AV.Push.send({
+  cql: 'select * from _Installation where installationId="设备id"',
+  data: {
+    alert: 'Public message'
+  }
+});
+```
+
+`AV.Push` 的更多使用信息参考 API 文档 [AV.Push](/api-docs/javascript/symbols/AV.Push.html)。
+
+更多推送的查询条件和格式，请查阅我们的[Push Notification指南](./push_guide.html)来获取更详细的信息。
+
+iOS 设备可以通过 `prod` 属性指定使用测试环境还是生产环境证书：
+
+```javascript
+AV.Push.send({
+  prod: 'dev',
+  data: {
+    alert: 'Public message'
+  }
+});
+```
+
+`dev` 表示开发证书，`prod` 表示生产证书，默认生产证书。
+{% endblock %}
+
+
+{% block js_error_handling %}
+## 错误处理
+
+大部分 LeanCloud JavaScript 函数会通过一个有 callback 的对象来报告它们是否成功了，主要的两个 callback 是 success 和 error。
+
+在一个操作都没有错误发生的时候 success 会被调用。通常来说，它的参数在 save 或者 get 的情况下可能是 AV.Object，或者在 find 的情形下是一个 AV.Object 数组。
+
+error 会在任何一种在与 LeanCloud 的网络连接发生错误的时候调用。这些错误信息一般会反映连接到云端时出现的一些问题，或者处理请求的操作时遇到的一些问题。我们可以看下另一个例子。在下面的代码中我们想要获取一个不存在的 objectId。LeanCloud 会返回一个错误，所以这里就是我们怎样在你的 callback 里处理错误。
+
+```javascript
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
+query.get('aBcDeFgH').then(function(results) {
+  // This function will *not* be called.
+  console.log('Everything went fine!');
+}, function(error) {
+  // This will be called.
+  // error is an instance of AV.Error with details about the error.
+  if (error.code === AV.Error.OBJECT_NOT_FOUND) {
+    console.log('Uh oh, we couldn\'t find the object!');
+  }
+});
+```
+
+查询在无法连接到 LeanCloud 的时候同样有可能失败。下面是同样的 callback，但是有一些其他的代码来处理这种情况：
+
+```javascript
+// 你有一个 Class 名字为 Note
+var query = new AV.Query('Note');
+query.get('thisObjectIdDoesntExist').then(function(results) {
+  // This function will *not* be called.
+  console.log('Everything went fine!');
+}, function(error) {
+  console.log(error);
+});
+```
+
+对于像是 save 或者是 signUp 这种方法会对一个特定的 AV.Object 起作用的方法来说，error 函数的第一个参数是 object 本身。第二个是一个 AV.Error 对象，详情请查看 JavaScript API 来得到所有的 AV.Error 的返回码。
+{% endblock %}
+
+{% block use_js_in_webview %}
+## WebView 中使用
+
+JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 LeanCloud 的「云引擎」中。
+
+### Android 中使用
+
+如果是 Android WebView，在 Native 代码创建 WebView 的时候你需要打开几个选项，
+这些选项生成 WebView 的时候默认并不会被打开，需要配置：
+
+1. 因为我们 JS SDK 目前使用了 window.localStorage，所以你需要开启 WebView 的 localStorage；设置方式：
+
+  ```java
+  yourWebView.getSettings().setDomStorageEnabled(true);
+  ```
+2. 如果你希望直接调试手机中的 WebView，也同样需要在生成 WebView 的时候设置远程调试，具体使用方式请参考 [Google 官方文档](https://developer.chrome.com/devtools/docs/remote-debugging)。
+
+  ```java
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      yourWebView.setWebContentsDebuggingEnabled(true);
+  }
+  ```
+
+  注意：这种调试方式仅支持 Android 4.4 已上版本（含 4.4）
+3. 如果你是通过 WebView 来开发界面，Native 调用本地特性的 Hybrid 方式开发你的 App。比较推荐的开发方式是：通过 Chrome 的开发者工具开发界面部分，当界面部分完成，与 Native 再来做数据连调，这种时候才需要用 Remote debugger 方式在手机上直接调试 WebView。这样做会大大节省你开发调试的时间，不然如果界面都通过 Remote debugger 方式开发，可能效率较低。
+4. 为了防止通过 JavaScript 反射调用 Java 代码访问 Android 文件系统的安全漏洞，在 Android 4.2 以后的系统中间，WebView 中间只能访问通过 [@JavascriptInterface](http://developer.android.com/reference/android/webkit/JavascriptInterface.html) 标记过的方法。如果你的目标用户覆盖 4.2 以上的机型，请注意加上这个标记，以避免出现 **Uncaught TypeError**。
+{% endblock %}
+
+
+
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
+
+
