@@ -500,11 +500,11 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 
 {% block code_query_array_contains_using_equalsTo %}{% endblock %}
 
-有包含的查询是需要精确匹配的，比如我要查询在只在 8:30、9:30 这两个时间点响起闹钟的 Todo，可以使用如下代码：
+如果你要查询包含 8:30、9:30 这两个时间点响起闹钟的 Todo，可以使用如下代码：
 
 {% block code_query_array_contains_all %}{% endblock %}
 
-假如有一个 Todo 会在 8:30、9:30、10:30 响起闹钟，它是不会被查询出来的。
+注意这里是包含关系，假如有一个 Todo 会在 8:30、9:30、10:30 响起闹钟，它仍然是会被查询出来的。
 
 #### 字符串查询
 使用 `{{funtionName_whereKeyHasPrefix}}` 可以过滤出以特定字符串开头的结果，这有点像 SQL 的 LIKE 条件。因为支持索引，所以该操作对于大数据集也很高效。
