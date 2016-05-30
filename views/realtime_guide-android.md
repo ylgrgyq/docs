@@ -14,7 +14,7 @@
 {% endblock %}
 
 {% block oneOnOneChat_sent %}
-**请注意：启用实时通信一定要正确配置 AndroidManifest.xml，请点击[Android SDK 初始化配置](https://leancloud.cn/docs/sdk_setup-android.html#初始化)**
+<div class="callout callout-info">注意：**启用实时通信一定要正确配置** `AndroidManifest.xml`，请仔细阅读 [Android SDK 初始化配置](sdk_setup-android.html#初始化)。</div>
 
 ```
   public void sendMessageToJerryFromTom() {
