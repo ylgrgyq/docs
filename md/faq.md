@@ -101,22 +101,31 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 我们每个月提供 100 万次的免费额度，超过的部分才收费。推送服务和统计服务免费使用，并不占用免费额度。
 
-默认情况下，每个应用同一时刻的**并发请求上限为 100**（即同一时刻最多可以同时处理 100 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
+默认情况下，每个应用同一时刻的**并发请求上限为 30**（即同一时刻最多可以同时处理 30 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
 
 ### API 调用次数的计算
 
-对于「数据存储」来说，每次 create 和 update 一条数据算一次请求，如调用一次 `object.saveInBackground` 算一次 API 请求。
+对于数据存储来说，每次 `create` 和 `update` 一个对象的数据算 1 次请求，如调用 1 次 `object.saveInBackground` 算 1 次 API 请求。
 
-`fetch`、`find`、`delete`、`deleteAll` 算**一次请求**：
+**一次请求**<br/>
+- `create`
+- `save`
+- `fetch`
+- `find`
+- `delete`
+- `deleteAll`
 
-- 调用一次 fetch / find 通过 include 返回了 100 个关联对象，算一次 API 请求。
-- 调用一次 find / deleteAll 来查找或删除 500 条记录，只算一次 API 请求。
+调用一次 `fetch` 或 `find` 通过 `include` 返回了 100 个关联对象，算 1 次 API 请求。调用一次 `find` 或 `deleteAll` 来查找或删除 500 条记录，只算 1 次 API 请求。
 
-`saveAll`、`fetchAll` 算**多次请求**：
+**多次请求**<br/>
+- `saveAll`
+- `fetchAll`
 
-- 调用一次 saveAll / fetchAll 来保存或获取 array 里面 100 个 对象，算 100 次 API 请求。
+调用一次 `saveAll` 或 `fetchAll` 来保存或获取 array 里面 100 个 对象，算 100 次 API 请求。
 
-对于「[应用内社交](status_system.html)」，create 和 update 按照 Status 和 Follower/Followee 的对象数量来计费。对于 query 则是按照请求数来计费，与结果的大小无关。collection fetch 也是按照请求次数来计费。
+对于 [应用内社交](status_system.html)，`create` 和 `update` 按照 Status 和 Follower/Followee 的对象数量来计费。
+
+对于 query 则是按照请求数来计费，与结果的大小无关。`query.count` 算 1 次 API 请求。collection fetch 也是按照请求次数来计费。
 
 ### 可以在线测试 API 吗
 

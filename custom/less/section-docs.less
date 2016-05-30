@@ -1,6 +1,7 @@
 // Basic styles
 @table-border: 1px solid #ebebeb;
-@table-radius: 3px;
+@general-radius: 3px;
+@table-inner-radius: (@general-radius - 1);
 @bubble-color: #eee;
 @base-font-color:#333;
 @internal-link-color: #78909C;
@@ -136,12 +137,12 @@ body {
     color: #666;
     background-color: #f2f2f2;
     border-color: none;
-    border-radius: @table-radius;
   }
 
   .callout {
     padding: 1.2em;
     border-left: none;
+    border-radius: @general-radius;
 
     a {
         font-weight: inherit;
@@ -162,46 +163,58 @@ body {
 .doc-content {
 
   table {
+    display: table;
     margin: 1.8em 0;
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
+    border: @table-border;
+    border-radius: @general-radius;
+    -moz-border-radius: @general-radius;
 
     td, th {
       padding: 8px 13px;
-      border-bottom: @table-border;
+      border-top: @table-border;
       border-left: @table-border;
-      vertical-align: top;
     }
 
     th {
       white-space: nowrap;
       background-color: #f7f7f7;
+      border-bottom: @table-border;
+      border-top: none;
     }
 
-    th, &.noheading tr:first-child td {
-      border-top: @table-border;
-    }
-    tr th:first-child, &.noheading tr:first-child td:first-child {
-      border-top-left-radius: @table-radius;
+    td:first-child,
+    th:first-child {
+      border-left: none;
     }
 
-    tr th:last-child, &.noheading tr:first-child td:last-child {
-      border-right: @table-border;
-      border-top-right-radius: @table-radius;
+    tr:first-child td:first-child,
+    tr:first-child th:first-child {
+      border-top-left-radius: @table-inner-radius;
+    }
+    
+    tr:first-child td:last-child,
+    tr:first-child th:last-child {
+      border-top-right-radius: @table-inner-radius;
     }
 
-    tr:last-child td:first-child {
-      border-bottom-left-radius: @table-radius;
+    thead~tbody tr:first-child td:first-child,
+    tbody~thead tr:first-child th:first-child,
+    thead~tbody tr:first-child td:last-child,
+    thead~tbody tr:first-child th:last-child {
+      border-radius: 0;
     }
 
-    tr:last-child td:last-child {
-      border-bottom-right-radius: @table-radius;
+    tbody > tr:first-child td {
+      border-top: none!important;
     }
 
-    tr td:last-child {
-      border-right: @table-border;
+    tbody > tr:first-child th {
+      border-bottom: none;
     }
+
   }
 
 }
@@ -227,6 +240,7 @@ body {
 
     a {
       .header-link;
+      color: @base-font-color!important;
     }
 
     // When GitHub contributers loaded, add a special class to remove extra space
