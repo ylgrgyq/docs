@@ -1,7 +1,7 @@
 {% extends "./acl_guide.tmpl" %}
 
 {% block language_version %}Python{% endblock %}
-{% block link_to_acl_quickStart %}[权限管理以及 ACL 快速指南](acl_quick_start-js.html){% endblock %}
+{% block link_to_acl_quickStart %}[权限管理以及 ACL 快速指南](acl_quick_start-python.html){% endblock %}
 {% block create_post_set_acl_for_single_user %}
 
 ```python
@@ -12,7 +12,7 @@ from leancloud import ACL
 # 新建一个帖子对象
 Post = Object.extend('Post')
 post = Post()
-post.set('title','大家好，我是新人')
+post.set('title', '大家好，我是新人')
 
 # 新建一个ACL实例
 acl = ACL()
@@ -36,12 +36,12 @@ from leancloud import User
 
 # 登录一个用户
 user = User()
-user.login('my_user_name','my_password')
+user.login('my_user_name', 'my_password')
 
 # 新建一个 Post 对象
 Post = Object.extend('Post')
 post = Post()
-post.set('title','大家好，我是新人')
+post.set('title', '大家好，我是新人')
 
 # 新建一个 ACL 实例
 acl = ACL()

@@ -533,16 +533,16 @@ with open('~/avatar.png') as f:
 import leancloud
 from leancloud import File
 
-file = File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
-file.save()
+avatar = File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
+avatar.save()
 ```
 {% endblock %}
 
 {% block code_upload_file %}
 
 ```python
-file.save()  # 执行上传
-objectId = file.id # 一旦保存成功即可获取到文件的 objectId
+avatar.save()  # 执行上传
+objectId = avatar.id # 一旦保存成功即可获取到文件的 objectId
 ```
 {% endblock %}
 
@@ -550,7 +550,7 @@ objectId = file.id # 一旦保存成功即可获取到文件的 objectId
 {% block code_download_file %}
 
 ```python
-url = file.url
+url = avatar.url
 ```
 {% endblock %}
 
@@ -559,10 +559,10 @@ url = file.url
 import leancloud
 from leancloud import File
 
-file = File.create_without_data('5732df1c1ea4930060ba4642')
-file.fetch()
+avatar = File.create_without_data('5732df1c1ea4930060ba4642')
+avatar.fetch()
 
-thumbnail_url = file.get_thumbnail_url(width=100, height=100)
+thumbnail_url = avatar.get_thumbnail_url(width=100, height=100)
 ```
 {% endblock %}
 
@@ -573,11 +573,11 @@ import leancloud
 from leancloud import File
 
 with open('~/avatar.png') as f:
-    file = File('fileFromLocalFile', f)
-    file.metadata['width'] = 100 # file.metadata是一个字典，可以添加内容并保存
-    file.metadata['heigth'] = 100
-    file.metadata['author'] = 'LeanCloud'
-    file.save()
+    avatar = File('fileFromLocalFile', f)
+    avatar.metadata['width'] = 100 # avatar.metadata是一个字典，可以添加内容并保存
+    avatar.metadata['heigth'] = 100
+    avatar.metadata['author'] = 'LeanCloud'
+    avatar.save()
 ```
 {% endblock %}
 
@@ -589,8 +589,8 @@ from leancloud import File
 # 默认情况下文件的删除权限是关闭的，如果想要删除需要更改class权限或者使用 master_key
 leancloud.init("{{appid}}", master_key="{{masterkey}}")
 leancloud.use_master_key()
-file = File.create_without_data('5732f4cf71cfe4006cc89d75')
-file.destroy()
+avatar = File.create_without_data('5732f4cf71cfe4006cc89d75')
+avatar.destroy()
 ```
 {% endblock %}
 
@@ -1122,7 +1122,7 @@ query.within_kilometers('whereCreated', point, 10)
 
 {% block link_to_relation_guide_doc %}[Python 关系建模指南](relation_guide-python.html){% endblock %}
 
-{% block link_to_sms_guide_doc %}[Android 短信服务使用指南](sms_guide-Android.html#注册验证){% endblock %}
+{% block link_to_sms_guide_doc %}{% endblock %}
 
 {% block code_send_sms_code_for_loginOrSignup %}
 
@@ -1408,9 +1408,8 @@ class MyUser(User):
 ```
 
 {% endblock %}
-{% block link_to_in_app_search_doc %}[应用内搜索指南](app_search_guide.html){% endblock %}
-{% block link_to_status_system_doc %}[应用内社交模块](status_system.html#Android_SDK){% endblock %}
-{% block link_to_sns_doc %}[Android SNS 开发指南](sns.html#Android_SNS_组件){% endblock %}
-{% block link_to_feedback_doc %}[Android 用户反馈指南](feedback.html#Android_反馈组件){% endblock %}
-
+{% block link_to_in_app_search_doc %}（Python 暂不支持）{% endblock %}
+{% block link_to_status_system_doc %}（Python 暂不支持）{% endblock %}
+{% block link_to_sns_doc %}（Python 文档待补充）{% endblock %}
+{% block link_to_feedback_doc %}（Python 暂不支持）{% endblock %}
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
