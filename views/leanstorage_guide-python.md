@@ -211,7 +211,7 @@ content = todo.get('content')
 {% block code_object_fetchWhenSave %}
 
 ```python
-todo.fetch_when_save = True # 设置 fetchWhenSave 为 true
+todo.fetch_when_save = True # 设置 fetch_when_save 为 true
 todo.save()
 ```
 {% endblock %}
@@ -225,7 +225,7 @@ from leancloud import Object
 
 Todo = Object.extend('Todo')
 todo = Todo.create_without_data('57301af42e958a006982efad')   # 这里填入你所要获取的objectId
-title = todo.set('title','Another title')
+title = todo.set('title', 'Another title')
 todo.save()
 ```
 {% endblock %}
@@ -235,7 +235,7 @@ todo.save()
 ```python
 import leancloud
 from leancloud import Query
-query_string = 'update TodoFolder set name=%s where objectId= %s'%('家庭','57318f14df0eea006331a19a')
+query_string = 'update TodoFolder set name=%s where objectId= %s'%('家庭', '57318f14df0eea006331a19a')
 result = Query.do_cloud_query(query_string)
 ```
 {% endblock %}
@@ -250,7 +250,7 @@ from leancloud import Object
 
 Todo = Object.extend('Todo')
 todo = Todo.create_without_data('57301af42e958a006982efad')   # 这里填入你所要获取的objectId
-title = todo.set('views',0)  # 原子增加查看次数
+title = todo.set('views', 0)  # 原子增加查看次数
 todo.save()
 
 todo.increment('views')
@@ -311,7 +311,7 @@ todo.destroy();
 import leancloud
 from leancloud import Query
 
-query_string = 'delete from %s where objectId=%s'%('Todo','5731a29d71cfe4006cbdbc22')
+query_string = 'delete from %s where objectId=%s'%('Todo', '5731a29d71cfe4006cbdbc22')
 Query.do_cloud_query(query_string)
 ```
 {% endblock %}
@@ -382,9 +382,9 @@ Todo = Object.extend('Todo')
 todo1 = Todo()
 todo2 = Todo()
 todo3 = Todo()
-todo1.set('status',1)
-todo2.set('status',2)
-todo3.set('status',3)
+todo1.set('status', 1)
+todo2.set('status', 2)
+todo3.set('status', 3)
 
 Todo.save_all([todo1, todo2, todo3])  # save_all是一个类方法
 ```
@@ -742,7 +742,7 @@ reminder2 = datetime(2015, 11, 11, 07, 30, 00)
 query.equal_to('reminders', reminder1)
 
 # 如果查询数组中含有多个元素，则用contains_all函数
-query.contains_all('reminders', [reminder1,reminder2])
+query.contains_all('reminders', [reminder1, reminder2])
 ```
 {% endblock %}
 
@@ -1120,7 +1120,7 @@ query.within_kilometers('whereCreated', point, 10)
 
 {% block link_to_acl_doc %}[Python-SDK 权限管理使用指南](acl_guide-python.html){% endblock %}
 
-{% block link_to_relation_guide_doc %}[Android 关系建模指南](relation_guide-android.html){% endblock %}
+{% block link_to_relation_guide_doc %}[Python 关系建模指南](relation_guide-python.html){% endblock %}
 
 {% block link_to_sms_guide_doc %}[Android 短信服务使用指南](sms_guide-Android.html#注册验证){% endblock %}
 
@@ -1165,7 +1165,7 @@ import leancloud
 from leancloud import User
 
 user = User()
-user.login('ruyi','fs87ds*')
+user.login('ruyi', 'fs87ds*')
 ```
 {% endblock %}
 
@@ -1176,7 +1176,7 @@ import leancloud
 from leancloud import User
 
 user = User()
-user.login_with_mobile_phone('135********','fs87ds*')
+user.login_with_mobile_phone('135********', 'fs87ds*')
 ```
 {% endblock %}
 
@@ -1246,7 +1246,7 @@ User.request_password_reset_by_sms_code('135********')
 
 ``` python
 # 这部分需要添加python-SDK部分的接口，目前还没有
-User.reset_password_by_sms_code('123456','newpassword')
+User.reset_password_by_sms_code('123456', 'newpassword')
 ```
 {% endblock %}
 
@@ -1280,7 +1280,7 @@ LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `Objec
 import leancloud
 from leancloud import Object
 student = Object.extend("Student")()
-student.set('name','小明')
+student.set('name', '小明')
 student.save()
 ```
 
@@ -1315,7 +1315,7 @@ class Student(Object):
     pass
 
 student = Student()
-student.set('name','Tom')
+student.set('name', 'Tom')
 student.save()
 ```
 

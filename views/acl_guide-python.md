@@ -97,7 +97,7 @@ from leancloud import Role
 from leancloud import Query
 
 user = User()
-user.login('username','password')
+user.login('username', 'password')
 
 role_query = Query(Role)
 role_query.equal_to('name', 'Administrator')
@@ -299,17 +299,17 @@ digital_post.set("title", "我是电子数码板块的帖子！")
 # 新建一个摄影器材版主可写的 ACL 实例
 photographic_acl = ACL()
 photographic_acl.set_public_read_access(True)
-photographic_acl.set_role_write_access(photographic_role,True)
+photographic_acl.set_role_write_access(photographic_role, True)
 
 # 新建一个手机平板版主可写的 ACL 实例
 mobile_acl = ACL();
 mobile_acl.set_public_read_access(True)
-mobile_acl.set_role_write_access(mobile_role,True)
+mobile_acl.set_role_write_access(mobile_role, True)
 
 # 新建一个手机平板版主可写的 ACL 实例
 digital_acl = ACL()
 digital_acl.set_public_read_access(True)
-digital_acl.set_role_write_access(digital_role,True)
+digital_acl.set_role_write_access(digital_role, True)
 
 # photographic_post 只有 photographic_role 可以读写
 # mobile_post 只有 mobile_role 可以读写

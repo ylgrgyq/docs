@@ -56,7 +56,7 @@ leancloud.init("{{appid}}", "{{appkey}}")
 
 TestObject = Object.extend('TestObject')
 testObject = TestObject()
-testObject.set('words',"Hello World!")
+testObject.set('words', "Hello World!")
 testObject.save()
 ```
 

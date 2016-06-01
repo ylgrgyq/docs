@@ -33,8 +33,8 @@ from leancloud import Object
 guangdong = Object.extend('Province').create_without_data('574416af79bc44005c61bfa3') # 用 create_without_data 关联一个已经存在的对象
 
 dongguan = Object.extend('City')()
-dongguan.set('name','东莞')
-dongguan.set('dependent',guangdong)  # 为东莞设置 dependent 属性为广东
+dongguan.set('name', '东莞')
+dongguan.set('dependent', guangdong)  # 为东莞设置 dependent 属性为广东
 
 dongguan.save()
 ```
@@ -63,7 +63,7 @@ from leancloud import Object
 from leancloud import Query
 
 query = Query("City")
-query.equal_to('name','广州')
+query.equal_to('name', '广州')
 query.include('dependent') # 关键代码，找出对应城市的省份
 
 for city in query.find():
