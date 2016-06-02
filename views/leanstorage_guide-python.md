@@ -23,6 +23,8 @@
 {% set dateType= "datetime.datetime" %}
 {% set byteType= "byte[]" %}
 {% set funtionName_whereKeyHasPrefix = "startswith()" %}
+{% set saveOptions_query= "where" %}
+{% set saveOptions_fetchWhenSave= "fetch_when_save" %}
 
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
@@ -124,7 +126,7 @@ supported_type.set('int', 108)
 supported_type.set('float', 1.890)
 supported_type.set('boolean', True)
 supported_type.set('list', [1, 2, [3, 4, 'string']])
-supported_type.set('map', {'item1': 12, 'item2': 'string item', 'item3': [1, 2, '3']})
+supported_type.set('dict', {'item1': 12, 'item2': 'string item', 'item3': [1, 2, '3']})
 supported_type.set('date', datetime.now())
 supported_type.save()
 ```
@@ -142,9 +144,10 @@ supported_type.save()
 ```python
 import leancloud
 from leancloud import Object
+from leancloud import Query
 
 Todo = Object.extend('Todo')
-query = Todo.query  # 这里也可以直接传递一个 Class 名字的字符串作为构造参数
+query = Query('Todo')
 # 也可以获取 Todo的 query 属性
 # query = Todo.query
 query_result = query.get('57301af42e958a006982efad') # 这里填入需要查询的 objectId
@@ -235,8 +238,8 @@ todo.save()
 ```python
 import leancloud
 from leancloud import Query
-query_string = 'update TodoFolder set name=%s where objectId= %s'%('家庭', '57318f14df0eea006331a19a')
-result = Query.do_cloud_query(query_string)
+cql = 'update TodoFolder set name = ? where objectId = ?'
+result = Query.do_cloud_query(cql, '家庭', '57318f14df0eea006331a19a')
 ```
 {% endblock %}
 
@@ -311,8 +314,7 @@ todo.destroy();
 import leancloud
 from leancloud import Query
 
-query_string = 'delete from %s where objectId=%s'%('Todo', '5731a29d71cfe4006cbdbc22')
-Query.do_cloud_query(query_string)
+Query.do_cloud_query('delete from ? where objectId = ?', 'Todo', '5731a29d71cfe4006cbdbc22')
 ```
 {% endblock %}
 
@@ -769,7 +771,7 @@ query.equal_to('reminders', [reminder1, reminder2])
 
 ```python
 #找出开头是「早餐」的 Todo
-query.startsWith("content", "早餐");
+query.startswith("content", "早餐");
 ```
 {% endblock %}
 
@@ -1050,7 +1052,7 @@ query1.greater_than('priority', 3)
 query2.equal_to('status', 1)
 
 # 返回 priority 大于等于3 且 status 等于 1 的 Todo
-query = Query.and_(query1,query2)
+query = Query.and_(query1, query2)
 ```
 {% endblock %}
 
@@ -1061,11 +1063,8 @@ query = Query.and_(query1,query2)
 import leancloud
 from leancloud import Query
 
-cql = "select * from Todo where status = 1"
-todo_list = Query.do_cloud_query(cql).results
-
-cql = "select count(*) from Todo where priority = 0"
-todo_count = Query.do_cloud_query(cql).count
+todo_list = Query.do_cloud_query("select * from Todo where status = 1").results
+todo_count = Query.do_cloud_query("select count(*) from Todo where priority = 0").count
 ```
 {% endblock %}
 
