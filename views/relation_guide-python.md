@@ -12,15 +12,15 @@ from leancloud import Object
 
 leancloud.init("{{appid}}", "{{appkey}}")
 
-guangzhou  = Object.extend('City')()
-guangzhou.set('name', '广州')
+guangZhou  = Object.extend('City')()
+guangZhou.set('name', '广州')
 
-guangdong = Object.extend('Province')()
-guangdong.set('name', '广东')
+guangDong = Object.extend('Province')()
+guangDong.set('name', '广东')
 
-guangzhou.set('dependent', guangdong)  # 为广州设置 dependent 属性为广东
+guangZhou.set('dependent', guangDong)  # 为广州设置 dependent 属性为广东
 
-guangzhou.save() # 广东无需被单独保存，因为在保存广州的时候已经上传到服务端。
+guangZhou.save() # 广东无需被单独保存，因为在保存广州的时候已经上传到服务端。
 ```
 {% endblock %}
 
@@ -30,13 +30,13 @@ guangzhou.save() # 广东无需被单独保存，因为在保存广州的时候�
 import leancloud
 from leancloud import Object
 
-guangdong = Object.extend('Province').create_without_data('574416af79bc44005c61bfa3') # 用 create_without_data 关联一个已经存在的对象
+guangDong = Object.extend('Province').create_without_data('574416af79bc44005c61bfa3') # 用 create_without_data 关联一个已经存在的对象
 
-dongguan = Object.extend('City')()
-dongguan.set('name', '东莞')
-dongguan.set('dependent', guangdong)  # 为东莞设置 dependent 属性为广东
+dongGuan = Object.extend('City')()
+dongGuan.set('name', '东莞')
+dongGuan.set('dependent', guangDong)  # 为东莞设置 dependent 属性为广东
 
-dongguan.save()
+dongGuan.save()
 ```
 
 {% endblock %}
@@ -46,9 +46,9 @@ dongguan.save()
 import leancloud
 from leancloud import Object
 
-guangzhou = Object.extend('City').create_without_data('5744189fdf0eea0063ad948b')
-guangzhou.fetch()
-province_id = guangzhou.get('dependent').id  # 获取广东省的 objectId
+guangZhou = Object.extend('City').create_without_data('5744189fdf0eea0063ad948b')
+guangZhou.fetch()
+province_id = guangZhou.get('dependent').id  # 获取广东省的 objectId
 
 province = Object.extend('Province')()
 province.id = province_id
@@ -81,10 +81,10 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-guangdong = Object.extend('Province').create_without_data('574416af79bc44005c61bfa3')
+guangDong = Object.extend('Province').create_without_data('574416af79bc44005c61bfa3')
 
 query = Query("City")
-query.equal_to('dependent', guangdong)
+query.equal_to('dependent', guangDong)
 
 for city in query.find():
     city_name = city.get('name')
@@ -98,14 +98,14 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-guangdong = Object.extend('Province')()
-guangzhou = Object.extend('City')()
-guangzhou.set('name', '广州')
-shenzhen  = Object.extend('City')()
-shenzhen.set('name', '深圳')
+guangDong = Object.extend('Province')()
+guangZhou = Object.extend('City')()
+guangZhou.set('name', '广州')
+shenZhen  = Object.extend('City')()
+shenZhen.set('name', '深圳')
 
-guangdong.set('city_list',[guangzhou, shenzhen])
-guangdong.save()   # 只要保存 guangDong 即可，它关联的对象都会一并被保存在服务端
+guangDong.set('cityList',[guangZhou, shenZhen])
+guangDong.save()   # 只要保存 guangDong 即可，它关联的对象都会一并被保存在服务端
 ```
 
 {% endblock %}
@@ -117,9 +117,9 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-guangdong = Object.extend('Province').create_without_data('57442c56df0eea0063ae2c35')
-guangdong.fetch()
-city_list = guangdong.get('city_list')
+guangDong = Object.extend('Province').create_without_data('57442c56df0eea0063ae2c35')
+guangDong.fetch()
+city_list = guangDong.get('cityList')
 
 for city in city_list:
     city.fetch()
@@ -137,11 +137,11 @@ from leancloud import Query
 
 query = Query('Province')
 query.equal_to('name', '广东')
-query.include('city_list') # 这条语句是关键语句，它表示可以将关联的数据下载到本地，而不用fetch
+query.include('cityList') # 这条语句是关键语句，它表示可以将关联的数据下载到本地，而不用fetch
 
 province = query.find()[0]
-province.get('city_list')
-for city in province.get('city_list'):
+province.get('cityList')
+for city in province.get('cityList'):
     # 这里不用再添加 city.fetch() 这条语句
     name = city.get('name')
 ```
@@ -154,10 +154,10 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-guangzhou = Object.extend('City').create_without_data('57442c562e958a006bf2d468') #这是 广州 的 objectId
+guangZhou = Object.extend('City').create_without_data('57442c562e958a006bf2d468') #这是 广州 的 objectId
 
 query = Query('Province')
-query.equal_to('city_list', guangzhou)
+query.equal_to('cityList', guangZhou)
 
 province = query.find()[0]
 provice_name = province.get('name') #这里 province_name 会得到 ‘广东’
@@ -171,8 +171,8 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-student_Tom = Object.extend("Student")()
-student_Tom.set('name', 'Tom')
+student_tom = Object.extend("Student")()
+student_tom.set('name', 'Tom')
 
 course_linear_algebra = Object.extend('Cource')()
 course_linear_algebra.set('name', 'Linear Algebra')
@@ -185,12 +185,12 @@ course_operating_system.set('name', 'Operating System')
 
 Object.save_all([course_linear_algebra, course_object_oriented_programming,course_operating_system])
 
-relation = student_Tom.relation('course_chosen')
+relation = student_tom.relation('course_chosen')
 relation.add(course_linear_algebra)
 relation.add(course_object_oriented_programming)
 relation.add(course_operating_system)
 
-student_Tom.save()
+student_tom.save()
 ```
 {% endblock %}
 
@@ -201,8 +201,8 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-student_Tom = Object.extend("Student").create_without_data('574470acc26a38006c4099e2')
-relation = student_Tom.relation('course_chosen')
+student_tom = Object.extend("Student").create_without_data('574470acc26a38006c4099e2')
+relation = student_tom.relation('course_chosen')
 
 query = relation.query
 course_list = query.find() # course_list 就是当前学生 Tom 所选择的所有课程
@@ -235,26 +235,26 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-student_Tom = Object.extend('Student')()
-student_Tom.set('name', 'Tom')
+student_tom = Object.extend('Student')()
+student_tom.set('name', 'Tom')
 
 course_linear_algebra = Object.extend('Course')()
 course_linear_algebra.set('name', 'Linear Algebra')
 # 选课表对象
-student_course_map_Tom = Object.extend('Student_course_map')()
+student_course_map_tom = Object.extend('Student_course_map')()
 
 # 设置关联
-student_course_map_Tom.set('student', student_Tom)
-student_course_map_Tom.set('course', course_linear_algebra)
+student_course_map_tom.set('student', student_tom)
+student_course_map_tom.set('course', course_linear_algebra)
 
 # 设置学习周期
-student_course_map_Tom.set('duration', ["2016-02-19", "2016-04-12"])
+student_course_map_tom.set('duration', ["2016-02-19", "2016-04-12"])
 
 # 获取操作平台
-student_course_map_Tom.set('platform', 'ios')
+student_course_map_tom.set('platform', 'ios')
 
 #保存选课表对象
-student_course_map_Tom.save()
+student_course_map_tom.save()
 ```
 {% endblock %}
 
@@ -284,8 +284,8 @@ for student_course_map in student_course_map_list:
 {% block code_query_relationTable_courses_by_student %}
 
 ```python
-student_Tom = Object.extend('Student').create_without_data("562da3fc00b0bf37b117c250");
-query.whereEqualTo("student", student_Tom);
+student_tom = Object.extend('Student').create_without_data("562da3fc00b0bf37b117c250");
+query.whereEqualTo("student", student_tom);
 ```
 {% endblock %}
 
@@ -296,8 +296,8 @@ import leancloud
 from leancloud import Object
 from leancloud import Query
 
-student_Tom = Object.extend("Student")()
-student_Tom.set('name', 'Tom')
+student_tom = Object.extend("Student")()
+student_tom.set('name', 'Tom')
 
 course_linear_algebra = Object.extend('Cource')()
 course_linear_algebra.set('name', 'Linear Algebra')
@@ -312,10 +312,10 @@ course_operating_system.set('name', 'Operating System')
 courses = [course_linear_algebra, course_object_oriented_programming,course_operating_system]
 
 # 使用属性名字 coursesChosen 保存所选课程的数组
-student_Tom.set('course_chosen', courses)
+student_tom.set('course_chosen', courses)
 
 # 保存在云端
-student_Tom.save()
+student_tom.save()
 ```
 {% endblock %}
 
