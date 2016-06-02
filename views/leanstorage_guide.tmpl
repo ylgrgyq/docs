@@ -122,6 +122,10 @@ description     objectId
 
 {% block code_get_todo_by_objectId %}{% endblock %}
 
+如果不想使用查询，还可以通过从本地构建一个 `{{objectIdName}}`，然后调用接口从服务端把这个 `{{objectIdName}}` 的数据拉取到本地，示例代码如下：
+
+{% block code_fetch_todo_by_objectId %}{% endblock %}
+
 #### 获取 objectId
 每一次对象存储成功之后，云端都会返回 `{{objectIdName}}`，它是一个全局唯一的属性。
 
@@ -178,6 +182,10 @@ description     objectId
 
 需要特别声明是，更新操作是覆盖式的，云端会根据最后一次提交到服务器的有效请求更新数据。更新是字段级别的操作，未更新的字段不会产生变动，这一点请不用担心。
 
+另外，假如已知了 `{{objectIdName}}`，可以通过如下接口从本地构建一个 {{baseObjectName}}，然后更新这个对象：
+
+{% block code_update_todo_content_with_objectId %}{% endblock %}
+
 #### 使用 CQL 语法更新对象
 {{productName}} 提供了类似 SQL 语法中的 Update 方式更新一个对象，例如更新一个 TodoFolder 对象可以使用下面的代码：
 
@@ -229,7 +237,6 @@ description     objectId
 {% block code_batch_set_todo_completed %}{% endblock %}
 
 不同类型的批量操作所引发不同数量的 API 调用，具体请参考 [API 调用次数的计算](faq.html#API_调用次数的计算)。
-
 
 {% block text_work_in_background %}
 ### 后台运行

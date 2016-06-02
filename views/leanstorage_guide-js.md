@@ -305,6 +305,12 @@ testObject.save().then(function(testObject) {
 ```
 {% endblock %}
 
+{% block code_fetch_todo_by_objectId %}
+
+> TODO
+
+{% endblock %}
+
 {% block code_save_callback_get_objectId %}
 
 ```js
@@ -473,6 +479,12 @@ testObject.save().then(function(testObject) {
     if(error) throw error;
   });
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+> TODO
+
 {% endblock %}
 
 {% block code_update_object_by_cql %}
