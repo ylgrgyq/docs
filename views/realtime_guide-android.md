@@ -168,7 +168,7 @@ public class MyApplication extends Application{
 }
 
 - CustomMessageHandler.java
-public class CustomMessageHandler<AVIMTextMessage> implements AVTypedMessageHandler{
+public class CustomMessageHandler<AVIMTextMessage> implements AVIMTypedMessageHandler{
  
   @Override
   public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
