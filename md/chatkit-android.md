@@ -18,7 +18,10 @@ git clone git@github.com:leancloud/LeanCloudIMKit-Android.git
 
 ![project_structure](http://ac-lhzo7z96.clouddn.com/1459410595962)
 
-`imkitapplication` 为 Demo 项目，它是一个简单的实例项目，用来指导开发者如何使用 `leancloudimkit`。
+ChatKit-Android project 包含两个 module，leancloudimkit 与 chatkitapplication
+
+  * leancloudimkit 是一个封装了 LeanCloud 实时通讯的 UI lib，其目的是可以让开发者更快速的接入 LeanCloud 实时通讯的功能。
+  * imkitapplication 为 Demo 项目，它是一个简单的示例项目，用来指导开发者如何使用 leancloudimkit。
 
 然后，请确保电脑上已经连接了一台真机或者虚拟机用作调试。
 
@@ -27,30 +30,13 @@ git clone git@github.com:leancloud/LeanCloudIMKit-Android.git
 
 ## 使用 ChatKit
 
+开发者可以在自己的 Project 中导入 ChatKit 并使用，这里为了详细说明，新建一个 Project 用以导入 ChatKit。
+导入方式有三种，通过 Gradle 导入、通过源代码导入、通过 Jar 包导入（因为通过 Jar 包导入仍然要拷贝资源文件，所以这里不推荐此种方式）。
+
+
 ### 导入 ChatKit 
-
-#### 通过 Gradle 导入
-
-#### 源代码导入
-
-1. 浏览器访问 https://github.com/leancloud/ChatKit-Android
-
-2. clone 项目到本地，命令行下执行：`git clone https://github.com/leancloud/LeanCloudChatKit-Android.git`（也可以直接下载 zip 包，假设本地目录为 `/Users/leancloud/workspace/chatKitImport/`）
-
-3. Android studio，"open an existing Android Studio projcet"，选择下载到本地的目录，/Users/leancloud/workspace/chatKitImport/ChatKit-Android，点击 ok 导入
-
-4. 导入成功后点击 Android studio 的 run 按钮则可以直接运行 ChatKit 的 demo application "chatkitapplication"（ChatKit-Android project 包含两个 module，ChatKit 与 chatkitapplication）
-
-	* chatkitapplication 是一个 demo 程序，可以更直观的了解如何使用 ChatKit
-	* ChatKit 是一个封装了 LeanCloud 实时通讯的 UI lib，其目的是可以让开发者更快速的接入 LeanCloud 实时通讯的功能。
-
-### 引用 ChatKit
-导入成功之后，开始引用
-1. 新建一个 application project，这里起名称为 ChatDemo
-2. 将 ChatKit 文件夹 copy 到 ChatDemo 根目录
-3. 修改 ChatDemo/settings.gradle 加入 include ':ChatKit'
-4. 修改 ChatDemo/app/build.gradle，在 dependencies 中添加 compile project(":ChatKit")
-6. ChatDemo 根目录下的 build.gradle 标准配置为
+新建一个 application project，这里起名称为 ChatDemo
+ChatDemo 根目录下的 build.gradle 标准配置为
 
 ```
 buildscript {
@@ -78,14 +64,34 @@ allprojects {
 }
 ```
 
+#### 通过 Gradle 导入
+
+修改 app 目录下的 build.gradle 文件，dependencies 中添加依赖，如下：
+
+```
+dependencies {
+    compile ('cn.leancloud.android:chatkit:1.0.0')
+}
+```
+
+#### 源代码导入（如果是通过 Gradle 导入则不需要以下步骤）
+
+1. 浏览器访问 https://github.com/leancloud/ChatKit-Android
+2. clone 项目到本地，命令行下执行：`git clone https://github.com/leancloud/LeanCloudChatKit-Android.git`（也可以直接下载 zip 包，假设本地目录为 `/Users/leancloud/workspace/chatKitImport/`）
+3. 将 ChatKit 文件夹 copy 到 ChatDemo 根目录
+4. 修改 ChatDemo/settings.gradle 加入 include ':ChatKit'
+5. 修改 ChatDemo/app/build.gradle，在 dependencies 中添加 compile project(":ChatKit")
+
 最后只要 sync project，这样 ChatKit 就算是导入进 project 了
 
+
 ### 自定义使用
+
 1. 实现自己的 Application
 ChatDemo 中新建一个 Java Class ，名字叫做 ChatDemoApplication，让它继承自 Application 类，实例代码如下:
 
 ```java
-public class App extends Application {
+public class ChatDemoApplication extends Application {
 
 // appId、appKey 可以在 LeanCloud  控制台 / 设置 / 应用 Key 下边获取
   private final String APP_ID = "********";
