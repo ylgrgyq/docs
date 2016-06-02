@@ -50,11 +50,10 @@ leancloud.use_region('US') # 启用美国节点
 
 ```python
 import leancloud
-from leancloud import Object
 
 leancloud.init("{{appid}}", "{{appkey}}")
 
-TestObject = Object.extend('TestObject')
+TestObject = leancloud.Object.extend('TestObject')
 test_object = TestObject()
 test_object.set('words', "Hello World!")
 test_object.save()

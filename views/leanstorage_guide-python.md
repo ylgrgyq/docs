@@ -14,17 +14,18 @@
 {% set backgroundFunctionTemplate ="xxxxInBackground" %}
 {% set saveEventuallyName ="saveEventually" %}
 {% set deleteEventuallyName ="deleteEventually" %}
-{% set relationObjectName ="Relation" %}
-{% set pointerObjectName ="Pointer" %}
-{% set baseQueryClassName ="Query" %}
-{% set geoPointObjectName ="GeoPoint" %}
-{% set userObjectName ="User" %}
-{% set fileObjectName ="File" %}
+{% set relationObjectName ="leancloud.Relation" %}
+{% set pointerObjectName ="leancloud.Pointer" %}
+{% set baseQueryClassName ="leancloud.Query" %}
+{% set geoPointObjectName ="leancloud.GeoPoint" %}
+{% set userObjectName ="leancloud.User" %}
+{% set fileObjectName ="leancloud.File" %}
 {% set dateType= "datetime.datetime" %}
 {% set byteType= "byte[]" %}
 {% set funtionName_whereKeyHasPrefix = "startswith()" %}
 {% set saveOptions_query= "where" %}
 {% set saveOptions_fetchWhenSave= "fetch_when_save" %}
+
 
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
@@ -36,13 +37,12 @@
 
 ```python
 import leancloud
-from leancloud import Object
 
-# 可以用继承的方式定义 Object 的子类
-class Todo(Object):
+# 可以用继承的方式定义 leancloud.Object 的子类
+class Todo(leancloud.Object):
   pass
 # 或者用以下的方式定义子类
-# Todo = Object.extend('Todo')
+# Todo = leancloud.Object.extend('Todo')
 todo = Todo()
 todo.set('title', '工程师周会')  
 todo.set('content', '每周工程师会议，周一下午2点')
@@ -55,9 +55,8 @@ todo.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo()
 todo.set('title', '工程师周会')  
 todo.set('content', '每周工程师会议，周一下午2点')
@@ -72,9 +71,9 @@ todo.save()
 
 ```python
 import leancloud
-from leancloud import Object
+
 # 构造方法传入的参数，对应的就是控制台中的 Class Name
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo()
 ```
 {% endblock %}
@@ -85,9 +84,8 @@ todo = Todo()
 
 ```python
 import leancloud
-from leancloud import Object
 
-TodoFolder = Object.extend('TodoFolder')
+TodoFolder = leancloud.Object.extend('TodoFolder')
 todoFolder = TodoFolder()
 todoFolder.set('name', '工作')  
 todoFolder.set('priority', 1)
@@ -102,10 +100,9 @@ todoFolder.save()
 
 ```python
 import leancloud
-from leancloud import Query
 
 query_string = r"insert into TodoFolder(name, priority) values('工作', 78)"
-result = Query.do_cloud_query(query_string)
+result = leancloud.Query.do_cloud_query(query_string)
 ```
 {% endblock %}
 
@@ -117,9 +114,8 @@ result = Query.do_cloud_query(query_string)
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-SupportedType = Object.extend('SupportedType')
+SupportedType = leancloud.Object.extend('SupportedType')
 supported_type = SupportedType()
 supported_type.set('string', '工作')  
 supported_type.set('int', 108)
@@ -133,7 +129,7 @@ supported_type.save()
 
 此外，map 和 list 支持嵌套，这样在一个 `leancloud.Object` 中就可以使用它们来储存更多的结构化数据。
 
-我们**不推荐**在 `leancloud.Object` 中使用 `list` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `leancloud.Object` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `File`。更多细节可以阅读本文 [文件](#文件) 部分。
+我们**不推荐**在 `leancloud.Object` 中使用 `list` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `leancloud.Object` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `leancloud.File`。更多细节可以阅读本文 [文件](#文件) 部分。
 
 若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
 {% endblock %}
@@ -143,11 +139,9 @@ supported_type.save()
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Todo = Object.extend('Todo')
-query = Query('Todo')
+Todo = leancloud.Object.extend('Todo')
+query = leancloud.Query('Todo')
 # 也可以获取 Todo的 query 属性
 # query = Todo.query
 query_result = query.get('57301af42e958a006982efad') # 这里填入需要查询的 objectId
@@ -160,9 +154,8 @@ title = query_result.get('title')
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo()
 todo.set('title', '工程师周会')  
 todo.set('content', '每周工程师会议，周一下午2点')
@@ -177,10 +170,8 @@ objectId = todo.id
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query  
 query_result = query.get('57301af42e958a006982efad') # 这里填入需要查询的 objectId
 title = query_result.get('title')
@@ -199,10 +190,8 @@ createdAt = query_result.created_at
 
 ```python
 import leancloud
-from leancloud import Object
 
-
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo.create_without_data('57301af42e958a006982efad')   # 这里填入你所要获取的objectId
 todo.fetch()
 title = todo.get('title')
@@ -224,9 +213,8 @@ todo.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo.create_without_data('57301af42e958a006982efad')   # 这里填入你所要获取的objectId
 title = todo.set('title', 'Another title')
 todo.save()
@@ -237,9 +225,9 @@ todo.save()
 
 ```python
 import leancloud
-from leancloud import Query
+
 cql = 'update TodoFolder set name = ? where objectId = ?'
-result = Query.do_cloud_query(cql, '家庭', '57318f14df0eea006331a19a')
+result = leancloud.Query.do_cloud_query(cql, '家庭', '57318f14df0eea006331a19a')
 ```
 {% endblock %}
 
@@ -249,9 +237,8 @@ result = Query.do_cloud_query(cql, '家庭', '57318f14df0eea006331a19a')
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo.create_without_data('57301af42e958a006982efad')   # 这里填入你所要获取的objectId
 title = todo.set('views', 0)  # 原子增加查看次数
 todo.save()
@@ -282,9 +269,8 @@ todo.save()
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo = Todo()
 
 reminder1 = datetime(2015, 11, 11, 07, 10, 00)
@@ -312,9 +298,8 @@ todo.destroy();
 ```python
 # 执行 CQL 语句实现删除一个 Todo 对象
 import leancloud
-from leancloud import Query
 
-Query.do_cloud_query('delete from ? where objectId = ?', 'Todo', '5731a29d71cfe4006cbdbc22')
+leancloud.Query.do_cloud_query('delete from ? where objectId = ?', 'Todo', '5731a29d71cfe4006cbdbc22')
 ```
 {% endblock %}
 
@@ -324,10 +309,10 @@ Query.do_cloud_query('delete from ? where objectId = ?', 'Todo', '5731a29d71cfe4
 
 ```python
 # 批量创建、更新
-Object.save_all(list_of_objects)
+leancloud.Object.save_all(list_of_objects)
 
 # 批量删除
-Object.destroy_all(list_of_objects)```
+leancloud.Object.destroy_all(list_of_objects)```
 {% endblock %}
 
 
@@ -335,10 +320,9 @@ Object.destroy_all(list_of_objects)```
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
-TodoFolder = Object.extend('TodoFolder')
+Todo = leancloud.Object.extend('Todo')
+TodoFolder = leancloud.Object.extend('TodoFolder')
 
 todoFolder = TodoFolder()
 todoFolder.set('name', '工作')
@@ -378,9 +362,8 @@ todoFolder.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 todo1 = Todo()
 todo2 = Todo()
 todo3 = Todo()
@@ -399,10 +382,8 @@ Todo.save_all([todo1, todo2, todo3])  # save_all是一个类方法
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud.errors import LeanCloudError
 
-Wiki = Object.extend('Wiki')
+Wiki = leancloud.Object.extend('Wiki')
 wiki = Wiki()
 wiki.set('content', 'Hello World!')
 wiki.set('version', 2)
@@ -414,7 +395,7 @@ query.equal_to('version', 1) # 可能查询的时候版本号不符
 wiki.set('content', 'Morning, World!')
 try:
     wiki.save(query)
-except LeanCloudError as e:
+except leancloud.LeanCloudError as e:
     print "无法保存修改，wiki 已被他人更新。"   #如果抛出异常，则说明 query 的条件不符合
 else:
     print "保存成功。"
@@ -440,10 +421,9 @@ else:
 
 ```python
 import leancloud
-from leancloud import Object
 
-Comment = Object.extend('Comment')
-TodoFolder = Object.extend('TodoFolder')
+Comment = leancloud.Object.extend('Comment')
+TodoFolder = leancloud.Object.extend('TodoFolder')
 
 todoFolder = TodoFolder()
 comment = Comment()
@@ -463,9 +443,8 @@ comment.save()
 
 ```python
 import leancloud
-from leancloud import GeoPoint
 
-point = GeoPoint(39.9, 116.4)
+point = leancloud.GeoPoint(39.9, 116.4)
 ```
 {% endblock %}
 
@@ -501,15 +480,14 @@ todo.save()
 
 ```python
 import leancloud
-from leancloud import File
 from StringIO import StringIO
 
-file1 = File('resume.txt', StringIO('data'))
+file1 = leancloud.File('resume.txt', StringIO('data'))
 
-file2 = File('fileFromBuffer.txt', buffer('\x42\x43\x44'))
+file2 = leancloud.File('fileFromBuffer.txt', buffer('\x42\x43\x44'))
 
 # 还可以指定文件的mime type，如果不指定的话会根据文件名后缀来猜测
-file3 = File('truth.txt', StringIO('{"truth": 42}'), 'application/json')
+file3 = leancloud.File('truth.txt', StringIO('{"truth": 42}'), 'application/json')
 
 file1.save()
 file2.save()
@@ -521,10 +499,9 @@ file3.save()
 
 ```python
 import leancloud
-from leancloud import File
 
 with open('~/avatar.png') as f:
-    avatar = File('fileFromLocalFile', f)
+    avatar = leancloud.File('fileFromLocalFile', f)
     avatar.save()
 ```
 {% endblock %}
@@ -533,9 +510,8 @@ with open('~/avatar.png') as f:
 
 ```python
 import leancloud
-from leancloud import File
 
-avatar = File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
+avatar = leancloud.File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
 avatar.save()
 ```
 {% endblock %}
@@ -559,9 +535,8 @@ url = avatar.url
 {% block code_file_image_thumbnail %}
 ```python
 import leancloud
-from leancloud import File
 
-avatar = File.create_without_data('5732df1c1ea4930060ba4642')
+avatar = leancloud.File.create_without_data('5732df1c1ea4930060ba4642')
 avatar.fetch()
 
 thumbnail_url = avatar.get_thumbnail_url(width=100, height=100)
@@ -572,10 +547,9 @@ thumbnail_url = avatar.get_thumbnail_url(width=100, height=100)
 {% block code_file_metadata %}
 ```python
 import leancloud
-from leancloud import File
 
 with open('~/avatar.png') as f:
-    avatar = File('fileFromLocalFile', f)
+    avatar = leancloud.File('fileFromLocallFile', f)
     avatar.metadata['width'] = 100 # avatar.metadata是一个字典，可以添加内容并保存
     avatar.metadata['heigth'] = 100
     avatar.metadata['author'] = 'LeanCloud'
@@ -587,11 +561,11 @@ with open('~/avatar.png') as f:
 
 ``` python
 import leancloud
-from leancloud import File
+
 # 默认情况下文件的删除权限是关闭的，如果想要删除需要更改class权限或者使用 master_key
 leancloud.init("{{appid}}", master_key="{{masterkey}}")
 leancloud.use_master_key()
-avatar = File.create_without_data('5732f4cf71cfe4006cc89d75')
+avatar = leancloud.File.create_without_data('5732f4cf71cfe4006cc89d75')
 avatar.destroy()
 ```
 {% endblock %}
@@ -602,11 +576,9 @@ avatar.destroy()
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Todo = Object.extend('Todo')
-query = Query(Todo)
+Todo = leancloud.Object.extend('Todo')
+query = leancloud.Query(Todo)
 
 # 或者采用 Todo 的 query属性，也可以获得 Todo 的 query对象  
 # query = Todo.query
@@ -622,9 +594,8 @@ query = Query(Todo)
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 # 获取符合 priority = 0 的 Todo数组
@@ -636,9 +607,8 @@ query_list = query.equal_to('priority', 0).find()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 query.equal_to('priority', 1)
@@ -650,7 +620,7 @@ query_list = query.find()
 {% endblock %}
 
 {% block table_logic_comparison_in_query %}
-逻辑操作 | Query 方法|
+逻辑操作 | leancloud.Query 方法|
 ---|---
 等于 | `equal_to`
 不等于 |  `not_equal_to`
@@ -678,9 +648,8 @@ query.greater_than_or_equal_to("priority", 2);
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 query.matched('title', '^李总')
 todo_list = query.find()
@@ -691,9 +660,8 @@ todo_list = query.find()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 query.contains('title', '李总')
@@ -704,9 +672,8 @@ query.contains('title', '李总')
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 query.matched('title', '^((?!机票).)*')
@@ -717,9 +684,8 @@ query.matched('title', '^((?!机票).)*')
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 query.not_contained_in('title', ['工程师周会'])
@@ -732,9 +698,8 @@ query.not_contained_in('title', ['工程师周会'])
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 reminder1 = datetime(2015, 11, 11, 07, 10, 00)
@@ -754,9 +719,8 @@ query.contains_all('reminders', [reminder1, reminder2])
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 
 reminder1 = datetime(2015, 11, 11, 8, 30, 00)
@@ -779,11 +743,9 @@ query.startswith("content", "早餐");
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-query = Query("Comment")
-TodoFolder = Object.extend('TodoFolder')
+query = leancloud.Query("Comment")
+TodoFolder = leancloud.Object.extend('TodoFolder')
 query.equal_to('targetTodoFolder', TodoFolder.create_without_data('5732a4821ea4930064013bdb'))
 ```
 {% endblock %}
@@ -792,9 +754,8 @@ query.equal_to('targetTodoFolder', TodoFolder.create_without_data('5732a4821ea49
 
 ```python
 import leancloud
-from leancloud import Object
 
-Tag = Object.extend('Tag')
+Tag = leancloud.Object.extend('Tag')
 tag = Tag()
 tag.set('name', '今日必做')
 tag.save()
@@ -805,9 +766,8 @@ tag.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-Tag = Object.extend('Tag')
+Tag = leancloud.Object.extend('Tag')
 tag1 = Tag()
 tag1.set('name', '今日必做')
 tag1.save()
@@ -820,7 +780,7 @@ tag3 = Tag()
 tag3.set('name','十分重要')
 tag3.save()
 
-TodoFolder = Object.extend('TodoFolder')
+TodoFolder = leancloud.Object.extend('TodoFolder')
 todoFolder = TodoFolder()
 todoFolder.set('name','家庭')
 todoFolder.set('priority', 1)
@@ -838,9 +798,8 @@ todoFolder.save()  # 保存到云端
 
 ```python
 import leancloud
-from leancloud import Object
 
-TodoFolder = Object.extend('TodoFolder')
+TodoFolder = leancloud.Object.extend('TodoFolder')
 todoFolder = TodoFolder.create_without_data('5735744479bc44005c402c51')
 
 relation = todoFolder.relation('tags')
@@ -853,12 +812,10 @@ query.count()  # 返回第一个 tag 的数量
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Tag = Object.extend('Tag')
+Tag = leancloud.Object.extend('Tag')
 tag = Tag.create_without_data('573573aec4c9710060f9a575')
-query = Query('TodoFolder')
+query = leancloud.Query('TodoFolder')
 query.equal_to('tags', tag)
 query.find()
 ```
@@ -868,10 +825,8 @@ query.find()
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-comment_query = Query('Comment')
+comment_query = leancloud.Query('Comment')
 comment_query.add_descending('createdAt')
 comment_query.limit(10)
 comment_query.include('targetTodoFolder') # 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
@@ -887,9 +842,8 @@ for comment in comment_list:
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 query.equal_to('priority', 3)
 todo_first = query.first()
@@ -902,9 +856,8 @@ todo_first = query.first()
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 date = datetime.now()
 
@@ -919,9 +872,8 @@ query.limit(10)   # 最多返回 10 条结果
 import datetime
 from datetime import datetime
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 date = datetime.now()
 
@@ -936,9 +888,8 @@ query.skip(20)    # 跳过 20 条结果 跳过 20 条结果
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 query.equal_to('status', 1)
 todo_count = query.count() # 获取输出计数
@@ -950,12 +901,11 @@ todo_count = query.count() # 获取输出计数
 
 ```python
 import leancloud
-from leancloud import Query
 
-inner_query = Query('TodoFolder')
+inner_query = leancloud.Query('TodoFolder')
 inner_query.greater_than('likes', 20) # 设置内置查询条件
 
-query = Query('Comment')
+query = leancloud.Query('Comment')
 query.matches_query('targetTodoFolder', inner_query)  # 将内嵌查询赋予目标查询
 # query.does_not_match_query('targetTodoFolder', inner_query) #也可以查询不包含内嵌查询的目标查询
 query.find()  # 返回符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
@@ -966,9 +916,8 @@ query.find()  # 返回符合超过 20 个赞的 TodoFolder 这一条件的 Comme
 
 ```python
 import leancloud
-from leancloud import Object
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query = Todo.query
 query.select('title','content')
 query_list = query.find()
@@ -1003,11 +952,9 @@ query.add_descending('priority')
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import File
 
-Todo = Object.extend('Todo')
-img = File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
+Todo = leancloud.Object.extend('Todo')
+img = leancloud.File.create_with_url('avatar.jpg', 'http://www.example.com/avatar.jpg')
 todo = Todo()
 todo.set('images',img)
 todo.save() # 存储图片
@@ -1022,10 +969,8 @@ query.does_not_exists('images') # 查询images属性为空的对象
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query1 = Todo.query
 query2 = Todo.query
 
@@ -1033,7 +978,7 @@ query1.greater_than('priority', 3)
 query2.equal_to('status', 1)
 
 # 返回 priority 大于等于3 或 status 等于 1 的 Todo
-query = Query.or_(query1,query2)
+query = leancloud.Query.or_(query1,query2)
 ```
 {% endblock %}
 
@@ -1041,10 +986,8 @@ query = Query.or_(query1,query2)
 
 ```python
 import leancloud
-from leancloud import Object
-from leancloud import Query
 
-Todo = Object.extend('Todo')
+Todo = leancloud.Object.extend('Todo')
 query1 = Todo.query
 query2 = Todo.query
 
@@ -1052,7 +995,7 @@ query1.greater_than('priority', 3)
 query2.equal_to('status', 1)
 
 # 返回 priority 大于等于3 且 status 等于 1 的 Todo
-query = Query.and_(query1, query2)
+query = leancloud.Query.and_(query1, query2)
 ```
 {% endblock %}
 
@@ -1061,10 +1004,9 @@ query = Query.and_(query1, query2)
 
 ```python
 import leancloud
-from leancloud import Query
 
-todo_list = Query.do_cloud_query("select * from Todo where status = 1").results
-todo_count = Query.do_cloud_query("select count(*) from Todo where priority = 0").count
+todo_list = leancloud.Query.do_cloud_query("select * from Todo where status = 1").results
+todo_count = leancloud.Query.do_cloud_query("select count(*) from Todo where priority = 0").count
 ```
 {% endblock %}
 
@@ -1072,10 +1014,9 @@ todo_count = Query.do_cloud_query("select count(*) from Todo where priority = 0"
 
 ```python
 import leancloud
-from leancloud import Query
 
 cql = " select * from Todo where status = ? and priority = ?"
-todo_query = Query.do_cloud_query(cql, 1, 4)
+todo_query = leancloud.Query.do_cloud_query(cql, 1, 4)
 todo_list  = todo_query.results # 返回符合条件的 todo list
 ```
 {% endblock %}
@@ -1092,12 +1033,10 @@ todo_list  = todo_query.results # 返回符合条件的 todo list
 
 ```python
 import leancloud
-from leancloud import Query
-from leancloud import GeoPoint
 
 leancloud.init("{{appid}}", "{{appkey}}")
-query = Query('Todo')
-point = GeoPoint(39.9, 116.4)
+query = leancloud.Query('Todo')
+point = leancloud.GeoPoint(39.9, 116.4)
 query.limit(10)
 query.near('whereCreated', point) # 离这个位置最近的 10 个 Todo 对象
 query.find()
@@ -1127,9 +1066,8 @@ query.within_kilometers('whereCreated', point, 10)
 
 ```python
 import leancloud
-from leancloud import cloudfunc
 
-cloudfunc.request_sms_code('135********')
+leancloud.cloudfunc.request_sms_code('135********')
 ```
 {% endblock %}
 
@@ -1137,9 +1075,8 @@ cloudfunc.request_sms_code('135********')
 
 ```python
 import leancloud
-from leancloud import User
 
-User.signup_or_login_with_mobile_phone('135********','258794')  # 填入手机获取的验证码
+leancloud.User.signup_or_login_with_mobile_phone('135********','258794')  # 填入手机获取的验证码
 ```
 {% endblock %}
 
@@ -1147,9 +1084,8 @@ User.signup_or_login_with_mobile_phone('135********','258794')  # 填入手机�
 
 ```python
 import leancloud
-from leancloud import User
 
-user = User()
+user = leancloud.User()
 user.set_username('ruyi')
 user.set_password('fs87ds*')
 user.set_email('ruyi-test@gmail.com')
@@ -1161,9 +1097,8 @@ user.sign_up()
 
 ```python
 import leancloud
-from leancloud import User
 
-user = User()
+user = leancloud.User()
 user.login('ruyi', 'fs87ds*')
 ```
 {% endblock %}
@@ -1172,9 +1107,8 @@ user.login('ruyi', 'fs87ds*')
 
 ```python
 import leancloud
-from leancloud import User
 
-user = User()
+user = leancloud.User()
 user.login_with_mobile_phone('135********', 'fs87ds*')
 ```
 {% endblock %}
@@ -1183,9 +1117,8 @@ user.login_with_mobile_phone('135********', 'fs87ds*')
 
 ```python
 import leancloud
-from leancloud import User
 
-user = User()
+user = leancloud.User()
 user.request_login_sms_code('135********')
 ```
 {% endblock %}
@@ -1194,9 +1127,8 @@ user.request_login_sms_code('135********')
 
 ```python
 import leancloud
-from leancloud import User
 
-user = User()
+user = leancloud.User()
 user.signup_or_login_with_mobile_phone('135********','897897')
 ```
 {% endblock %}
@@ -1204,40 +1136,40 @@ user.signup_or_login_with_mobile_phone('135********','897897')
 {% block code_get_user_properties %}
 
 ```python
-currentUsername = User.get_current().get_username()  
-currentEmail =  User.get_current().get_email()    
+currentUsername = leancloud.User.get_current().get_username()  
+currentEmail =  leancloud.User.get_current().get_email()    
 # 请注意，以下代码无法获取密码, 无 get_password() 此方法
-currentPassword = User.get_current().get_password()
+currentPassword = leancloud.User.get_current().get_password()
 ```
 {% endblock %}
 
 {% block code_set_user_custom_properties %}
 
 ```python
-User.get_current().set('age', 25)
-User.get_current().save()
+leancloud.User.get_current().set('age', 25)
+leancloud.User.get_current().save()
 ```
 {% endblock %}
 
 {% block code_update_user_custom_properties %}
 
 ```python
-User.get_current().set('age', 27)
-User.get_current().save()
+leancloud.User.get_current().set('age', 27)
+leancloud.User.get_current().save()
 ```
 {% endblock %}
 
 {% block code_reset_password_by_email %}
 
 ``` python
-User.request_password_reset('ruyi-test@gmail.com')
+leancloud.User.request_password_reset('ruyi-test@gmail.com')
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber %}
 
 ``` python
-User.request_password_reset_by_sms_code('135********')
+leancloud.User.request_password_reset_by_sms_code('135********')
 ```
 {% endblock %}
 
@@ -1245,14 +1177,14 @@ User.request_password_reset_by_sms_code('135********')
 
 ``` python
 # 这部分需要添加python-SDK部分的接口，目前还没有
-User.reset_password_by_sms_code('123456', 'newpassword')
+leancloud.User.reset_password_by_sms_code('123456', 'newpassword')
 ```
 {% endblock %}
 
 {% block code_current_user %}
 
 ```python
-current_user = User.get_current()
+current_user = leancloud.User.get_current()
 ```
 {% endblock %}
 
@@ -1260,25 +1192,25 @@ current_user = User.get_current()
 
 ```python
 user.logout() # 清除缓存用户对象
-current_user = User.get_current() # 现在的 current_user 是 null 了
+current_user = leancloud.User.get_current() # 现在的 current_user 是 null 了
 ```
 {% endblock %}
 
 {% block code_query_user %}
 
 ```python
-user_query = Query('_User')
+user_query = leancloud.Query('_leancloud.User')
 ```
 {% endblock %}
 
 {% block text_subclass %}
 ## 子类化
-LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `Object.get()` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
+LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `leancloud.Object.get()` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
 
 ```python
 import leancloud
-from leancloud import Object
-student = Object.extend("Student")()
+
+student = leancloud.Object.extend("Student")()
 student.set('name', '小明')
 student.save()
 ```
@@ -1287,9 +1219,8 @@ student.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-class Student(Object):
+class Student(leancloud.Object):
   pass
 student = Student()
 student.set('name','小明')
@@ -1308,9 +1239,8 @@ student.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-class Student(Object):
+class Student(leancloud.Object):
     pass
 
 student = Student()
@@ -1326,9 +1256,8 @@ student.save()
 
 ```python
 import leancloud
-from leancloud import Object
 
-class Student(Object):
+class Student(leancloud.Object):
     @property
     def content(self):
         # 可以使用property装饰器，方便获取属性
@@ -1362,9 +1291,8 @@ def take_accusation():
 
 ```python
 import leancloud
-from leancloud import Object
 
-Student = Object.extend('Student')
+Student = leancloud.Object.extend('Student')
 student = Student.create_without_data('573a8459df0eea005e6b711c')
 student.fetch()
 ```
@@ -1376,12 +1304,9 @@ student.fetch()
 
 ```python
 import leancloud
-from leancloud import Query
-from leancloud import Object
-from leancloud import User
 
-query = Query('Student')
-query.equal_to('pubUser', User.get_current().get_username())
+query = leancloud.Query('Student')
+query.equal_to('publeancloud.User', leancloud.User.get_current().get_username())
 student_list = query.find()
 
 for student in student_list:
@@ -1389,15 +1314,14 @@ for student in student_list:
 ```
 ### User 的子类化
 
-User 作为 `leancloud.Object` 的子类，同样允许子类化，你可以定义自己的 User 对象。需要继承 User，并且将子类的 `_class_name` 设为 `'_User'`：
+leancloud.User 作为 `leancloud.Object` 的子类，同样允许子类化，你可以定义自己的 User 对象。需要继承 User，并且将子类的 `_class_name` 设为 `'_User'`：
 
 ```python
 import leancloud
-from leancloud import User
 
-class MyUser(User):
+class MyUser(leancloud.User):
     def __init__(self):
-        User.__init__(self)
+        leancloud.User.__init__(self)
         self._class_name = '_User' # 这里要指定 _class_name 为 _User
     def set_nickname(self, name):
         self.set('nick_name', name)
