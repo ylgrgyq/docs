@@ -55,9 +55,9 @@ from leancloud import Object
 leancloud.init("{{appid}}", "{{appkey}}")
 
 TestObject = Object.extend('TestObject')
-testObject = TestObject()
-testObject.set('words', "Hello World!")
-testObject.save()
+test_object = TestObject()
+test_object.set('words', "Hello World!")
+test_object.save()
 ```
 
 然后编译执行。
