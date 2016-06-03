@@ -40,7 +40,7 @@ leancloud.init("{{appid}}", "{{appkey}}")
 import leancloud
 
 leancloud.init("{{appid}}", "{{appkey}}")
-leancloud.use_region('US') # 启用美国节点
+leancloud.use_region('US')  # 启用美国节点
 # leancloud.use_region('CN') 启用国内节点，是默认行为
 ```
 {% endblock %}

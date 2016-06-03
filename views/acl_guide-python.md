@@ -15,7 +15,8 @@ post.set('title', '大家好，我是新人')
 # 新建一个leancloud.ACL实例
 acl = leancloud.ACL()
 acl.set_public_read_access(True)
-acl.set_write_access('user_objectId', True) # 这里设置某个 user 的写权限
+# 这里设置某个 user 的写权限
+acl.set_write_access('user_objectId', True)
 
 # 将 leancloud.ACL 实例赋予 Post 对象
 post.set_acl(acl)
@@ -41,8 +42,10 @@ post.set('title', '大家好，我是新人')
 # 新建一个 leancloud.ACL 实例
 acl = leancloud.ACL()
 acl.set_public_read_access(True)
-acl.set_write_access(leancloud.User.get_current().id, True) # 设置当前登录用户的的可写权限
-acl.set_write_access('55f1572460b2ce30e8b7afde', True) # 设定指定 objectId 用户的可写权限
+# 设置当前登录用户的的可写权限
+acl.set_write_access(leancloud.User.get_current().id, True)
+# 设定指定 objectId 用户的可写权限
+acl.set_write_access('55f1572460b2ce30e8b7afde', True)
 post.set_acl(acl)
 post.save()
 ```
@@ -54,13 +57,13 @@ post.save()
 import leancloud
 
 user = leancloud.User()
-user.login('username','password') # 登录一个用户
+user.login('username', 'password')  # 登录一个用户
 
 # 新建一个角色，并把为当前用户赋予该角色
 administrator_role = leancloud.Role('Administrator')
 relation = administrator_role.get_users()
 relation.add(leancloud.User.get_current())  # 为当前用户赋予该角色
-administrator_role.save() # 保存
+administrator_role.save()  # 保存
 ```
 {% endblock %}
 
@@ -73,7 +76,7 @@ user.login('username','password')
 
 role_query = leancloud.Query(leancloud.Role)
 role_query.equal_to('users', leancloud.User.get_current())
-role_query_list = role_query.find() # 返回当前用户的角色列表
+role_query_list = role_query.find()  # 返回当前用户的角色列表
 ```
 {% endblock %}
 
@@ -93,7 +96,8 @@ role_query_list = role_query.find()
 if len(role_query_list) > 0:  # 该角色存在
     administrator_role = role_query_list[0]  # 获取该角色对象
     user_relation = administrator_role.relation('users')
-    users_with_administrator = user_relation.query.find()  # 查找该角色下的所有用户列表。如果这里有权限问题，请到控制台设置 leancloud.User 对象的权限
+    # 查找该角色下的所有用户列表。如果这里有权限问题，请到控制台设置 leancloud.User 对象的权限
+    users_with_administrator = user_relation.query.find()
     print users_with_administrator
 else:
     # 该角色不存在，可以新建该角色，并把当前用户设置成该角色
@@ -107,10 +111,10 @@ else:
 import leancloud
 
 role_query = leancloud.Query(leancloud.Role)
-role = role_query.get('573d5fdc2e958a0069f5d6fe') # 根据 objectId 获取 role 对象
-user_relation = role.get_users() # 获取 user 的 relation
+role = role_query.get('573d5fdc2e958a0069f5d6fe')  # 根据 objectId 获取 role 对象
+user_relation = role.get_users()  # 获取 user 的 relation
 
-user_list = user_relation.query.find() # 根据 relation 查找所包含的用户列表
+user_list = user_relation.query.find()  # 根据 relation 查找所包含的用户列表
 ```
 {% endblock %}
 
@@ -161,7 +165,8 @@ if len(role_query_list) > 0:  # 该角色存在
     administrator_role = role_query_list[0]
     role_query.equal_to('users', leancloud.User.get_current())
     role_query_with_current_user = role_query.find()
-    if len(role_query_with_current_user) == 0: # 该角色存在，但是当前用户尚未被赋予该角色
+    if len(role_query_with_current_user) == 0:
+      # 该角色存在，但是当前用户尚未被赋予该角色
         relation = administrator_role.get_users()
         relation.add(leancloud.User.get_current())  # 为当前用户赋予该角色
         administrator_role.save()
@@ -193,9 +198,11 @@ if len(role_query_list) > 0:  # 该角色存在
     administrator_role = role_query_list[0]
     role_query.equal_to('users', leancloud.User.get_current())
     role_query_with_current_user = role_query.find()
-    if len(role_query_with_current_user) > 0: # 该角色存在，且当前用户拥有该角色
+    if len(role_query_with_current_user) > 0:
+      # 该角色存在，且当前用户拥有该角色
         relation = administrator_role.get_users()
-        relation.remove(leancloud.User.get_current())  # 为当前用户剥夺该角色
+        relation.remove(leancloud.User.get_current())
+        # 为当前用户剥夺该角色
         administrator_role.save()
     else:
         # 该角色存在，当前用户并不拥有该角色
@@ -212,17 +219,19 @@ else:
 import leancloud
 
 # 建立版主和论坛管理员之间的角色从属关系
-administrator_role = leancloud.Role("Administrator") # 新建角色
-moderator_role = leancloud.Role("Moderator") # 新建角色
+administrator_role = leancloud.Role("Administrator")  # 新建角色
+moderator_role = leancloud.Role("Moderator")  # 新建角色
 
 moderator_acl = leancloud.ACL()
-moderator_acl.set_public_write_access(True) # 这里为了在后面可以添加 moderator_role 可以添加 role， 设置一个可写权限
+# 这里为了在后面可以添加 moderator_role 可以添加 role， 设置一个可写权限
+moderator_acl.set_public_write_access(True)
 moderator_role.set_acl(moderator_acl)
 
 administrator_role.save()
 moderator_role.save()
 
-moderator_role.get_roles().add(administrator_role) # 将 Administrator 设为 moderator_role 一个子角色
+# 将 Administrator 设为 moderator_role 一个子角色
+moderator_role.get_roles().add(administrator_role)
 moderator_role.save()
 ```
 {% endblock %}
@@ -233,8 +242,8 @@ moderator_role.save()
 rt leancloud
 
 photographic_role = leancloud.Role("Photographic") # 新建摄影器材版主角色
-mobile_role = leancloud.Role("Mobile") # 新建手机平板版主角色
-digital_role = leancloud.Role("Digital") # 新建电子数码版主角色
+mobile_role = leancloud.Role("Mobile")  # 新建手机平板版主角色
+digital_role = leancloud.Role("Digital")  # 新建电子数码版主角色
 
 # 先行保存 photographic_role 和 mobile_role
 photographic_role.save()
