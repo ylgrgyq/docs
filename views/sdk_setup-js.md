@@ -9,7 +9,7 @@ LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以�
 
 ```
 # 存储服务
-$ npm install avoscloud-sdk --save
+$ npm install leancloud-storage --save
 # 实时消息服务
 $ npm install leancloud-realtime --save
 ```
