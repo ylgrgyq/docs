@@ -1086,9 +1086,9 @@ leancloud.User.signup_or_login_with_mobile_phone('135********','258794')  # å¡«å
 import leancloud
 
 user = leancloud.User()
-user.set_username('ruyi')
-user.set_password('fs87ds*')
-user.set_email('ruyi-test@gmail.com')
+user.set_username('Tom')
+user.set_password('cat!@#123')
+user.set_email('tom-test@gmail.com')
 user.sign_up()
 ```
 {% endblock %}
@@ -1099,7 +1099,7 @@ user.sign_up()
 import leancloud
 
 user = leancloud.User()
-user.login('ruyi', 'fs87ds*')
+user.login('Tom', 'cat!@#123')
 ```
 {% endblock %}
 
@@ -1162,7 +1162,7 @@ leancloud.User.get_current().save()
 {% block code_reset_password_by_email %}
 
 ``` python
-leancloud.User.request_password_reset('ruyi-test@gmail.com')
+leancloud.User.request_password_reset('tom-test@gmail.com')
 ```
 {% endblock %}
 
