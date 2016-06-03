@@ -145,7 +145,9 @@ Todo = leancloud.Object.extend('Todo')
 query = leancloud.Query('Todo')
 # 也可以获取 Todo的 query 属性
 # query = Todo.query
-query_result = query.get('57301af42e958a006982efad')  # 这里填入需要查询的 objectId
+
+# 这里填入需要查询的 objectId
+query_result = query.get('57301af42e958a006982efad')
 title = query_result.get('title')
 ```
 {% endblock %}
@@ -414,7 +416,7 @@ else:
 {% block code_object_fetch_with_keys %}
 
 ```python
-#python-SDK 暂不支持
+# python-SDK 暂不支持
 ```
 {% endblock %}
 
@@ -433,7 +435,7 @@ TodoFolder = leancloud.Object.extend('TodoFolder')
 comment = Comment()
 # 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
 comment.set('like', 1)
-#留言的内容
+# 留言的内容
 comment.set('content', '这个太赞了！楼主，我也要这些游戏，咱们团购么？')
 
 # 假设已知了被分享的该 TodoFolder 的 objectId 是 5732a4821ea4930064013bdb
