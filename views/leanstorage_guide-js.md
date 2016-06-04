@@ -307,7 +307,18 @@ testObject.save().then(function(testObject) {
 
 {% block code_fetch_todo_by_objectId %}
 
-> TODO
+```js
+  // 第一个参数是 className，第二个参数是 objectId
+  var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
+  var title = todo.get('title');// 读取 title
+  var content = todo.get('content');// 读取 content
+```
+```ts
+  // 第一个参数是 className，第二个参数是 objectId
+  let todo : AV.Object = AV.Object.createWithoutData('Todo','5745557f71cfe40068c6abe0');
+  let title = todo.get('title');// 读取 title
+  let content = todo.get('content');// 读取 content
+```
 
 {% endblock %}
 
@@ -483,7 +494,22 @@ testObject.save().then(function(testObject) {
 
 {% block code_update_todo_content_with_objectId %}
 
-> TODO
+```js
+  // 第一个参数是 className，第二个参数是 objectId
+  var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
+  // 修改属性
+  todo.set('content', '每周工程师会议，本周改为周三下午3点半。');
+  // 保存到云端
+  todo.save();
+```
+```ts
+  // 第一个参数是 className，第二个参数是 objectId
+  let todo : AV.Object = AV.Object.createWithoutData('Todo','5745557f71cfe40068c6abe0');
+  // 修改属性
+  todo.set('content','每周工程师会议，本周改为周三下午3点半。');
+  // 保存到云端
+  todo.save();
+```
 
 {% endblock %}
 
