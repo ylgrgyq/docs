@@ -137,6 +137,22 @@
 ```
 {% endblock %}
 
+{% block code_fetch_todo_by_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+        todo.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                String title = avObject.getString("title");// 读取 title
+                String content = avObject.getString("content");// 读取 content
+            }
+        });
+```
+
+{% endblock %}
+
 {% block code_save_callback_get_objectId %}
 
 ```java
@@ -254,6 +270,20 @@
             }
         });
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+
+        // 修改 content
+        todo.put("content","每周工程师会议，本周改为周三下午3点半。");
+        // 保存到云端
+        todo.saveInBackground();
+```
+
 {% endblock %}
 
 {% block code_atomic_operation_increment %}
