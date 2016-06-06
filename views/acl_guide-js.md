@@ -43,73 +43,133 @@
 {% block create_post_set_acl_for_othter_user %}
 
 ```js
-  // 查找某一个其他用户
+  // 创建一个针对 User 的查询
   var query = new AV.Query(AV.User);
-  query.get("55f1572460b2ce30e8b7afde", {
-    success: function(object) {
-      // 新建一个帖子对象
-      var Post = AV.Object.extend("Post");
-      var post = new Post();
-      post.set("title", "大家好，我是新人");
+  query.get('55098d49e4b02ad5826831f6').then(function(otherUser) {
+    var post = new AV.Object('Post');
+    post.set('title', '大家好，我是新人');
 
-      // 新建一个 ACL 实例
-      var acl = new AV.ACL();
-      acl.setPublicReadAccess(true);
-      acl.setWriteAccess(AV.User.current(),true);
-      acl.setWriteAccess(object,true);//为该用户设置「写」权限
+    // 新建一个 ACL 实例
+    var acl = new AV.ACL();
+    acl.setPublicReadAccess(true);
+    acl.setWriteAccess(AV.User.current(), true);
+    acl.setWriteAccess(otherUser, true);
 
-      // 将 ACL 实例赋予 Post 对象
-      post.setACL(acl);
-    },
+    // 将 ACL 实例赋予 Post 对象
+    post.setACL(acl);
 
-    error: function(object, error) {
-      // error is an instance of AV.Error.
-    }
+    // 保存到云端
+    post.save();
+  }, function(error) {
+    // 编写处理 error 的逻辑
   });
 ```
 ```ts
+  // 创建一个针对 User 的查询
+  let query = new AV.Query(AV.User);
+  query.get<AV.User>('55098d49e4b02ad5826831f6').then((otherUser) =>{
+    // 新建一个帖子对象
+    let post = new AV.Object('Post');
+    post.set('title','大家好，我是新人');
 
+    // 新建一个 ACL 实例
+    var acl = new AV.ACL();
+    acl.setPublicReadAccess(true);
+    acl.setWriteAccess(AV.User.current(),true);
+    acl.setWriteAccess(otherUser,true);
+
+    // 将 ACL 实例赋予 Post 对象
+    post.setACL(acl);
+
+    // 保存到云端
+    post.save();
+  },error =>{
+    // 编写处理 error 的逻辑
+  });
 ```
 {% endblock %}
 
 {% block create_role_administrator %}
 
-```javascript
+```js
   // 新建一个角色，并把为当前用户赋予该角色
-  var administratorRole = new AV.Role("Administrator");//新建角色
-
-  var relation= administratorRole.getUsers();
+  var roleAcl = new AV.ACL();
+  roleAcl.setPublicReadAccess(true);
+  roleAcl.setPublicWriteAccess(false);
+  
+  // 当前用户是该角色的创建者，因此具备对该角色的写权限
+  roleAcl.setWriteAccess(AV.User.current(), true);
+  var administratorRole = new AV.Role('Administrator', roleAcl);//新建角色
+  var relation = administratorRole.getUsers();
   administratorRole.getUsers().add(AV.User.current());//为当前用户赋予该角色
-  administratorRole.save();//保存
+  administratorRole.save().then(function (role) {
+      // 创建成功
+  }, function (error) {
+      if (error)
+          throw error;
+      done();
+  });//保存
+```
+```ts
+  // 新建一个角色，并把为当前用户赋予该角色
+  let roleAcl = new AV.ACL();
+  roleAcl.setPublicReadAccess(true);
+  roleAcl.setPublicWriteAccess(false);
+  
+  // 当前用户是该角色的创建者，因此具备对该角色的写权限
+  roleAcl.setWriteAccess(AV.User.current(),true);
+
+  let administratorRole = new AV.Role('Administrator',roleAcl);//新建角色
+  let relation= administratorRole.getUsers();
+  administratorRole.getUsers().add(AV.User.current());//为当前用户赋予该角色
+  administratorRole.save<AV.Role>().then((role)=>{
+      // 创建成功
+  },error=>{
+    if(error) throw error;
+    done();
+  });//保存
 ```
 {% endblock %}
 
 {% block query_role_administrator %}
 
-```javascript
+```js
+  // 新建针对 Role 的查询
   var roleQuery = new AV.Query(AV.Role);
+  // 查询 name 等于 Administrator 的角色
   roleQuery.equalTo('name', 'Administrator');
-  roleQuery.first({
-    success:function(result){
-      if(result){
-        var userRelation = result.relation("users");
-        userRelation.query().find({
-          success:function(list){
-           // list 就是拥有该角色权限的所有用户了。 
-              var firstAdmin=list[0];
-          }
-        });
-      }
-    },
-    error:function(error){
-
-    }});
+  // 执行查询
+  roleQuery.first().then(function (adminRole) {
+      var userRelation = adminRole.relation('users');
+      userRelation.query().find().then(function (userList) {
+          // userList 就是拥有该角色权限的所有用户了。
+          var firstAdmin = userList[0];
+      }, function (error) {
+      });
+  }, function (error) {
+  });
+```
+```ts
+  // 新建针对 Role 的查询
+  let roleQuery = new AV.Query(AV.Role);
+  // 查询 name 等于 Administrator 的角色
+  roleQuery.equalTo('name', 'Administrator');
+  // 执行查询
+  roleQuery.first<AV.Role>().then(adminRole=>{
+    let userRelation = adminRole.relation('users');
+    userRelation.query().find<AV.Object []>().then(userList =>{
+      // userList 就是拥有该角色权限的所有用户了。
+      let firstAdmin = userList[0];
+    },error=>{
+    });
+  },error =>{
+  });
 ```
 {% endblock %}
 
 {% block query_role_of_user %}
 
-```javascript
+```js
   var roleQuery = new AV.Query(AV.Role);
   roleQuery.equalTo('users', AV.User.current());
   roleQuery.find({
