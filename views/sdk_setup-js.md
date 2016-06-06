@@ -9,7 +9,7 @@ LeanCloud JavaScript SDK 也可在 Node.js 等服务器端环境运行，可以�
 
 ```
 # 存储服务
-$ npm install avoscloud-sdk --save
+$ npm install leancloud-storage --save
 # 实时消息服务
 $ npm install leancloud-realtime --save
 ```
@@ -43,6 +43,27 @@ $ bower install leancloud-javascript-sdk --save
 <!-- 如果只用存储、推送等最核心的功能，可以使用精简版的 core.js -->
 <script src="https://cdn1.lncld.net/static/js/av-core-mini-<版本号>.js"></script>
 ```
+
+### TypeScript SDK 安装
+#### 通过 typings 工具安装
+
+首先需要安装 [typings 命令行工具](https://www.npmjs.com/package/typings)
+
+```sh
+npm install typings --global
+```
+
+然后再执行如下命令即可：
+
+```sh
+typings install leancloud-jssdk --save
+```
+
+
+#### 直接引用 d.ts 文件
+TypeScript 使用 JavaScript SDK 是通过定义文件来实现调用的，因此我们也将定义文件开源在 GitHub 上，地址是：
+[typed-leancloud-jssdk](https://github.com/leancloud/typed-leancloud-jssdk)
+
 
 #### Web 安全
 

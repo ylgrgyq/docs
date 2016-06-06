@@ -72,7 +72,7 @@
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
     [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，服务端就会自动添加这个字段
+    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，云端就会自动添加这个字段
     [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             // 存储成功
@@ -88,7 +88,7 @@
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    [todoFolder saveInBackground];// 保存到服务端
+    [todoFolder saveInBackground];// 保存到云端
 ```
 {% endblock %}
 
@@ -122,17 +122,30 @@ option.query = query;
 ```
 {% endblock %}
 
+{% block code_fetch_todo_by_objectId %}
+
+```objc
+    // 第一个参数是 className，第二个参数是 objectId
+    AVObject *todo =[AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
+    [todo fetchInBackgroundWithBlock:^(AVObject *avObject, NSError *error) {
+        NSString *title = avObject[@"title"];// 读取 title
+        NSString *content = avObject[@"content"]; // 读取 content
+    }];
+```
+
+{% endblock %}
+
 {% block code_save_callback_get_objectId %}
 
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
     [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，服务端就会自动添加这个字段
+    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，云端就会自动添加这个字段
     [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         if (succeeded) {
             // 存储成功
-            NSLog(@"%@",todo.objectId);// 保存成功之后，objectId 会自动从服务端加载到本地
+            NSLog(@"%@",todo.objectId);// 保存成功之后，objectId 会自动从云端加载到本地
         } else {
             // 失败的话，请检查网络环境以及 SDK 配置是否正确
         }
@@ -163,7 +176,7 @@ option.query = query;
 ```objc
     // 使用已知 objectId 构建一个 AVObject
     AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
-    // 然后调用刷新的方法，将数据从服务端拉到本地
+    // 然后调用刷新的方法，将数据从云端拉到本地
     [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         // 此处调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果一样。
     }];
@@ -184,7 +197,7 @@ option.query = query;
     AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
     NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location",nil];// 指定刷新的 key 数组
     [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-        // theTodo 的 priority 和 location 属性的值就是与服务端一致的
+        // theTodo 的 priority 和 location 属性的值就是与云端一致的
         NSString *priority = [object objectForKey:@"priority"];
         NSString *location = object[@"location"];
     }];
@@ -192,6 +205,7 @@ option.query = query;
 {% endblock %}
 
 {% block code_update_todo_location %}
+
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
@@ -207,6 +221,19 @@ option.query = query;
         }
     }];
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```objc
+    // 第一个参数是 className，第二个参数是 objectId
+    AVObject *todo =[AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
+    // 修改属性
+    [todo setObject:@"每周工程师会议，本周改为周三下午3点半。" forKey:@"content"];
+    // 保存到云端
+    [todo saveInBackground];
+```
+
 {% endblock %}
 
 {% block code_update_object_by_cql %}
@@ -461,7 +488,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 
     AVObject *todoFolder = [AVObject objectWithDictionary:objectDictionary];// 由 NSMutableDictionary 转化一个 AVObject
 
-    [todoFolder saveInBackground];// 保存到服务端
+    [todoFolder saveInBackground];// 保存到云端
 ```
 {% endblock %}
 
@@ -671,6 +698,13 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```objc
 [query whereKey:@"priority" greaterThanOrEqualTo:@2];
 ```
+
+另外，因为 Objective-C 语言本身特定的设定，boolean 值的查询很多开发者**错误地**使用了 0 和 1 进行查询。
+正确的构建方式如下：
+
+```
+[query whereKey:@"booleanTest" equalTo:@(YES)];
+```
 {% endblock %}
 
 {% block code_query_with_regular_expression %}
@@ -841,7 +875,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     AVQuery *commentQuery = [AVQuery queryWithClassName:@"Comment"];
     [commentQuery orderByDescending:@"createdAt"];
     commentQuery.limit = 10;
-    [commentQuery includeKey:@"targetTodoFolder"];// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+    [commentQuery includeKey:@"targetTodoFolder"];// 关键代码，用 includeKey 告知云端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
 
     [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
         // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据

@@ -10,13 +10,33 @@
   color: #3090e4!important;
   border: none!important;
 }
+.dropdown_header() {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
 
 body {
   position: relative;
   font-size: 15px;
 }
 
+.nav .dropdown-header {
+    .dropdown_header;
+    padding: 3px 15px;
+}
+
 .doc-content {
+  
+  .link-block .dropdown-header {
+    .dropdown_header;
+    font-size: 12px;
+    padding: 0;
+  }
+  
+  .img-bordered {
+    /* use outline in place of border */
+    outline: 1px solid #999;
+  }
 
   p,
   li {

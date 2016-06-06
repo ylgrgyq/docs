@@ -122,6 +122,10 @@ description     objectId
 
 {% block code_get_todo_by_objectId %}{% endblock %}
 
+如果不想使用查询，还可以通过从本地构建一个 `{{objectIdName}}`，然后调用接口从云端把这个 `{{objectIdName}}` 的数据拉取到本地，示例代码如下：
+
+{% block code_fetch_todo_by_objectId %}{% endblock %}
+
 #### 获取 objectId
 每一次对象存储成功之后，云端都会返回 `{{objectIdName}}`，它是一个全局唯一的属性。
 
@@ -178,6 +182,10 @@ description     objectId
 
 需要特别声明是，更新操作是覆盖式的，云端会根据最后一次提交到服务器的有效请求更新数据。更新是字段级别的操作，未更新的字段不会产生变动，这一点请不用担心。
 
+另外，假如已知了 `{{objectIdName}}`，可以通过如下接口从本地构建一个 {{baseObjectName}}，然后更新这个对象：
+
+{% block code_update_todo_content_with_objectId %}{% endblock %}
+
 #### 使用 CQL 语法更新对象
 {{productName}} 提供了类似 SQL 语法中的 Update 方式更新一个对象，例如更新一个 TodoFolder 对象可以使用下面的代码：
 
@@ -229,7 +237,6 @@ description     objectId
 {% block code_batch_set_todo_completed %}{% endblock %}
 
 不同类型的批量操作所引发不同数量的 API 调用，具体请参考 [API 调用次数的计算](faq.html#API_调用次数的计算)。
-
 
 {% block text_work_in_background %}
 ### 后台运行
@@ -500,11 +507,11 @@ Pointer 只是个描述并没有具象的类与之对应，它与 {{relationObje
 
 {% block code_query_array_contains_using_equalsTo %}{% endblock %}
 
-有包含的查询是需要精确匹配的，比如我要查询在只在 8:30、9:30 这两个时间点响起闹钟的 Todo，可以使用如下代码：
+如果你要查询包含 8:30、9:30 这两个时间点响起闹钟的 Todo，可以使用如下代码：
 
 {% block code_query_array_contains_all %}{% endblock %}
 
-假如有一个 Todo 会在 8:30、9:30、10:30 响起闹钟，它是不会被查询出来的。
+注意这里是包含关系，假如有一个 Todo 会在 8:30、9:30、10:30 响起闹钟，它仍然是会被查询出来的。
 
 #### 字符串查询
 使用 `{{funtionName_whereKeyHasPrefix}}` 可以过滤出以特定字符串开头的结果，这有点像 SQL 的 LIKE 条件。因为支持索引，所以该操作对于大数据集也很高效。
@@ -553,7 +560,7 @@ AND 操作是指只有满足了所有查询条件的对象才会被返回给客�
 尽管我们提供以上接口，但是我们不建议广泛使用，因为它的执行效率比较低。取而代之，我们建议使用 `{{createdAtName}}` 或者 `{{updatedAtName}}` 这类的时间戳进行分段查询。
 
 #### 属性限定
-通常列表展现的时候并不是需要展现某一个对象的所有属性，例如，Todo 这个对象列表展现的时候，我们一般展现的是 title 以及 content，我们在设置查询的时候，也可以告知服务端需要返回的属性有哪些，这样既满足需求又节省了流量，也可以提高一部分的性能，代码如下：
+通常列表展现的时候并不是需要展现某一个对象的所有属性，例如，Todo 这个对象列表展现的时候，我们一般展现的是 title 以及 content，我们在设置查询的时候，也可以告知云端需要返回的属性有哪些，这样既满足需求又节省了流量，也可以提高一部分的性能，代码如下：
 
 {% block code_query_select_keys %}{% endblock %}
 
@@ -668,6 +675,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 {{geoPointObjectN
 * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
 {% block text_platform_geoPoint_notice %}{% endblock %}
 
+{% block text_js_promise %}{% endblock %}
 ## 用户
 
 用户系统几乎是每款应用都要加入的功能。除了基本的注册、登录和密码重置，移动端开发还会使用手机号一键登录、短信验证码登录等功能。{{productName}} 提供了一系列接口来帮助开发者快速实现各种场景下的需求。
@@ -739,7 +747,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 {{geoPointObjectN
 {% block code_user_logIn_with_smsCode %}{% endblock %}
 
 #### SessionToken
-所有登录接口调用成功之后，服务端会返回一个 SessionToken 给客户端，客户端在发送 Http 请求的时候，{{sdk_name}} 会在 Http 请求的 Header 里面自动添加上当前用户的 SessionToken 作为这次请求的发起者({{userObjectName}})的身份认证信息。
+所有登录接口调用成功之后，云端会返回一个 SessionToken 给客户端，客户端在发送 Http 请求的时候，{{sdk_name}} 会在 Http 请求的 Header 里面自动添加上当前用户的 SessionToken 作为这次请求的发起者({{userObjectName}})的身份认证信息。
 
 #### 账户锁定
 
@@ -851,3 +859,9 @@ User 表是一个特殊的表，专门存储 AVUser 对象。在浏览器端，�
 ## 用户反馈
 用户反馈是一个非常轻量的模块，可以用最少两行的代码来实现一个支持文字和图片的用户反馈系统，并且能够方便的在我们的移动 App 中查看用户的反馈，这部分文档请参考：{% block link_to_feedback_doc %}{% endblock %}
 {% endblock %}
+
+{% block js_push_guide %}{% endblock %}
+
+{% block js_error_handling %}{% endblock %}
+
+{% block use_js_in_webview %}{% endblock %}
