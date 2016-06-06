@@ -67,14 +67,14 @@ const realtime = new Realtime({
 ```
 
 ### leancloud-realtime-typed-messages
-如果需要使用 [富媒体消息](#富媒体消息) 中的 `ImageMessage`、`AudioMessage`、`VideoMessage`、`FileMessage` 或 `LocationMessage`，需要额外安装 leancloud-realtime-typed-messages 与 avoscloud-sdk：
+如果需要使用 [富媒体消息](#富媒体消息) 中的 `ImageMessage`、`AudioMessage`、`VideoMessage`、`FileMessage` 或 `LocationMessage`，需要额外安装 leancloud-realtime-typed-messages 与 leancloud-storage：
 ```bash
-npm install --save leancloud-realtime-typed-messages avoscloud-sdk
+npm install --save leancloud-realtime-typed-messages leancloud-storage
 ```
 
 在浏览器中使用时按照以下顺序加载：
 ```html
-<script src="./node_modules/avoscloud-sdk/dist/av.js"></script>
+<script src="./node_modules/leancloud-storage/dist/av.js"></script>
 <script src="./node_modules/leancloud-realtime/dist/realtime.browser.js"></script>
 <script src="./node_modules/leancloud-realtime-typed-messages/dist/typed-messages.js"></script>
 ```
@@ -94,7 +94,7 @@ realtime.register([ImageMessage]);
 
 如果是在 Node.js 中使用，需要按以下方法进行初始化：
 ```javascript
-var AV = require('avoscloud-sdk');
+var AV = require('leancloud-storage');
 var Realtime = require('leancloud-realtime').Realtime;
 var ImageMessage = require('leancloud-realtime-typed-messages').ImageMessage;
 
