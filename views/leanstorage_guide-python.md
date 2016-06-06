@@ -1122,7 +1122,7 @@ user.login('Tom', 'cat!@#123')
 import leancloud
 
 user = leancloud.User()
-user.login_with_mobile_phone('135********', 'fs87ds*')
+user.login_with_mobile_phone('135********', 'cat!@#123')
 ```
 {% endblock %}
 
@@ -1234,7 +1234,8 @@ student.save()
 import leancloud
 
 class Student(leancloud.Object):
-  pass
+    pass
+
 student = Student()
 student.set('name', '小明')
 student.save()
@@ -1283,18 +1284,10 @@ class Student(leancloud.Object):
         return self.set('content', value)
 ```
 
-现在你就可以使用 `student.content` 方法来访问 `content` 字段，并通过 `student.content = "blah blah blah"` 来修改它。这样就允许你的 IDE 提供代码自动完成功能，并且可以在编译时发现到类型错误。
+现在你就可以使用 `student.content` 方法来访问 `content` 字段，并通过 `student.content = "blah blah blah"` 来修改它，并且可以通过 IDE 或者 linter 在运行前就可以发现类型错误。
 
 
-如果你不仅需要一个简单的访问器，而是有更复杂的逻辑，你可以实现自己的方法，例如：
-
-```python
-def take_accusation():
-    # 处理用户举报，当达到某个条数的时候，自动打上屏蔽标志
-    increment('accusation', 1)
-    if get_accusation() > 50:
-        set_spam(True)
-```
+如果你不仅需要一个简单的访问器，而是有更复杂的逻辑，你可以在子类化时定义和实现自己的方法。
 
 ### 初始化子类
 
