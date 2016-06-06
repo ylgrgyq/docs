@@ -1,6 +1,6 @@
 {% extends "./sdk_setup.tmpl" %}
 
-{% block language %}JavaScript{% endblock %} 
+{% block language %}JavaScript{% endblock %}
 
 {% block libs_tool_automatic %}
 #### npm 安装
@@ -39,9 +39,7 @@ $ bower install leancloud-javascript-sdk --save
 #### CDN 加速
 
 ```html
-<script src="https://cdn1.lncld.net/static/js/av-mini-<版本号>.js"></script>
-<!-- 如果只用存储、推送等最核心的功能，可以使用精简版的 core.js -->
-<script src="https://cdn1.lncld.net/static/js/av-core-mini-<版本号>.js"></script>
+<script src="https://cdn1.lncld.net/static/js/av-min-1.0.0.js"></script>
 ```
 
 ### TypeScript SDK 安装
