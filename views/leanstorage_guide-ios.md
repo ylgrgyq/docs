@@ -32,6 +32,7 @@
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
 {% block code_create_todo_object %}
+
 ```objc
     // objectWithClassName 参数对应控制台中的 Class Name
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
@@ -55,6 +56,7 @@
 {% endblock %}
 
 {% block code_quick_save_a_todo %}
+
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
@@ -70,6 +72,7 @@
 {% endblock %}
 
 {% block code_quick_save_a_todo_with_location %}
+
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
@@ -86,6 +89,7 @@
 {% endblock %}
 
 {% block code_save_todo_folder %}
+
 ```objc
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
@@ -95,6 +99,7 @@
 {% endblock %}
 
 {% block code_saveoption_query_example %}
+
 ```objc
 // 获取 version 值
 NSNumber *version = [object objectForKey:@"version"];
