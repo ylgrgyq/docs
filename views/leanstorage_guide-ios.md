@@ -32,6 +32,7 @@
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
 {% block code_create_todo_object %}
+
 ```objc
     // objectWithClassName 参数对应控制台中的 Class Name
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
@@ -55,6 +56,7 @@
 {% endblock %}
 
 {% block code_quick_save_a_todo %}
+
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
@@ -70,6 +72,7 @@
 {% endblock %}
 
 {% block code_quick_save_a_todo_with_location %}
+
 ```objc
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
@@ -86,6 +89,7 @@
 {% endblock %}
 
 {% block code_save_todo_folder %}
+
 ```objc
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
@@ -95,6 +99,7 @@
 {% endblock %}
 
 {% block code_saveoption_query_example %}
+
 ```objc
 // 获取 version 值
 NSNumber *version = [object objectForKey:@"version"];
@@ -128,7 +133,7 @@ option.query = query;
 
 ```objc
     // 第一个参数是 className，第二个参数是 objectId
-    AVObject *todo =[AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
+    AVObject *todo =[AVObject objectWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
     [todo fetchInBackgroundWithBlock:^(AVObject *avObject, NSError *error) {
         NSString *title = avObject[@"title"];// 读取 title
         NSString *content = avObject[@"content"]; // 读取 content
@@ -177,7 +182,7 @@ option.query = query;
 {% block code_object_fetch %}
 ```objc
     // 使用已知 objectId 构建一个 AVObject
-    AVObject *anotherTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
+    AVObject *anotherTodo = [AVObject objectWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
     // 然后调用刷新的方法，将数据从云端拉到本地
     [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
         // 此处调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果一样。
@@ -196,7 +201,7 @@ option.query = query;
 {% block code_object_fetch_with_keys %}
 
 ```objc
-    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
+    AVObject *theTodo = [AVObject objectWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
     NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location",nil];// 指定刷新的 key 数组
     [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
         // theTodo 的 priority 和 location 属性的值就是与云端一致的
@@ -229,7 +234,7 @@ option.query = query;
 
 ```objc
     // 第一个参数是 className，第二个参数是 objectId
-    AVObject *todo =[AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
+    AVObject *todo =[AVObject objectWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
     // 修改属性
     [todo setObject:@"每周工程师会议，本周改为周三下午3点半。" forKey:@"content"];
     // 保存到云端
@@ -251,7 +256,7 @@ option.query = query;
 
 {% block code_atomic_operation_increment %}
 ```objc
-    AVObject *theTodo = [AVObject objectWithoutDataWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
+    AVObject *theTodo = [AVObject objectWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
     [theTodo setObject:[NSNumber numberWithInt:0] forKey:@"views"]; //初始值为 0
     [theTodo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         // 原子增加查看的次数
@@ -394,7 +399,7 @@ option.query = query;
             // 出现错误
         } else {
             // 保存成功
-            AVRelation *relation = [todoFolder relationforKey:@"containedTodos"];// 新建一个 AVRelation
+            AVRelation *relation = [todoFolder relationForKey:@"containedTodos"];// 新建一个 AVRelation
             [relation addObject:todo1];
             [relation addObject:todo2];
             [relation addObject:todo3];
@@ -414,7 +419,7 @@ option.query = query;
     [comment setObject:@"这个太赞了！楼主，我也要这些游戏，咱们团购么？" forKey:@"content"];// 留言的内容
 
     // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
-    [comment setObject:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"] forKey:@"targetTodoFolder"];
+    [comment setObject:[AVObject objectWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"] forKey:@"targetTodoFolder"];
     // 以上代码的执行结果是在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
 ```
 {% endblock %}
@@ -804,7 +809,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 ```objc
     AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
-    [query whereKey:@"targetTodoFolder" equalTo:[AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"]];
+    [query whereKey:@"targetTodoFolder" equalTo:[AVObject objectWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"]];
 ```
 {% endblock %}
 
@@ -834,7 +839,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [todoFolder setObject:@"家庭" forKey:@"name"];// 设置 Todo 名称
     [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
 
-    AVRelation *relation = [todoFolder relationforKey:@"tags"];// 新建一个 AVRelation
+    AVRelation *relation = [todoFolder relationForKey:@"tags"];// 新建一个 AVRelation
     [relation addObject:tag1];
     [relation addObject:tag2];
     [relation addObject:tag3];
@@ -846,8 +851,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_query_tag_for_todoFolder %}
 
 ```objc
-    AVObject *todoFolder = [AVObject objectWithoutDataWithClassName:@"TodoFolder" objectId:@"5661047dddb299ad5f460166"];
-    AVRelation *relation = [todoFolder relationforKey:@"tags"];
+    AVObject *todoFolder = [AVObject objectWithClassName:@"TodoFolder" objectId:@"5661047dddb299ad5f460166"];
+    AVRelation *relation = [todoFolder relationForKey:@"tags"];
     AVQuery *query = [relation query];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
        // objects 是一个 AVObject 的 NSArray，它包含所有当前 todoFolder 的 tags
@@ -858,7 +863,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% block code_query_todoFolder_with_tag %}
 
 ```objc
-    AVObject *tag = [AVObject objectWithoutDataWithClassName:@"Tag" objectId:@"5661031a60b204d55d3b7b89"];
+    AVObject *tag = [AVObject objectWithClassName:@"Tag" objectId:@"5661031a60b204d55d3b7b89"];
 
     AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
 
@@ -1527,7 +1532,7 @@ student.name = @"小明";
 
 ### 初始化子类
 
-创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithoutDataWithObjectId:` 类方法。
+创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithObjectId:` 类方法。
 
 ### 子类查询
 
