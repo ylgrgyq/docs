@@ -1298,12 +1298,12 @@ function uploadFile (req, res) {
 {% block code_query_comment_by_todoFolder %}
 
 ```js
-  var query = new AV.Query('Todo');
+  var query = new AV.Query('Comment');
   var todoFolder = AV.Object.createWithoutData('Todo', '5735aae7c4c9710060fbe8b0');
   query.equalTo('targetTodoFolder', todoFolder);
 ```
 ```ts
-  let query: AV.Query= new AV.Query('Todo');
+  let query: AV.Query= new AV.Query('Comment');
   let todoFolder : AV.Object = AV.Object.createWithoutData('Todo','5735aae7c4c9710060fbe8b0');
   query.equalTo('targetTodoFolder',todoFolder);
 ```
