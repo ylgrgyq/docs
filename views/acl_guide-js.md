@@ -99,9 +99,8 @@
   
   // 当前用户是该角色的创建者，因此具备对该角色的写权限
   roleAcl.setWriteAccess(AV.User.current(), true);
+  
   var administratorRole = new AV.Role('Administrator', roleAcl);//新建角色
-  var relation = administratorRole.getUsers();
-  administratorRole.getUsers().add(AV.User.current());//为当前用户赋予该角色
   administratorRole.save().then(function (role) {
       // 创建成功
   }, function (error) {
@@ -120,13 +119,9 @@
   roleAcl.setWriteAccess(AV.User.current(),true);
 
   let administratorRole = new AV.Role('Administrator',roleAcl);//新建角色
-  let relation= administratorRole.getUsers();
-  administratorRole.getUsers().add(AV.User.current());//为当前用户赋予该角色
   administratorRole.save<AV.Role>().then((role)=>{
       // 创建成功
   },error=>{
-    if(error) throw error;
-    done();
   });//保存
 ```
 {% endblock %}
@@ -170,16 +165,24 @@
 {% block query_role_of_user %}
 
 ```js
+  // 新建角色查询
   var roleQuery = new AV.Query(AV.Role);
+  // 查询当前用户拥有的角色
   roleQuery.equalTo('users', AV.User.current());
-  roleQuery.find({
-    success:function(roles){
-      // roles 就是一个 AVRole 的数组，这些 AVRole 就是当前用户所在拥有的角色
-      console.log(roles);
-      response.success(200);
-    },error:function(error){ 
-      
-    }
+  roleQuery.find().then(function (roles) {
+    // roles 是一个 AV.Role 数组，这些 AV.Role 表示当前用户所拥有的角色
+  }, function (error) {
+  });
+```
+```ts
+  // 新建角色查询
+  let roleQuery = new AV.Query(AV.Role);
+  // 查询当前用户拥有的角色
+  roleQuery.equalTo('users',AV.User.current());
+  roleQuery.find<AV.Role []>().then(roles =>{
+    // roles 是一个 AV.Role 数组，这些 AV.Role 表示当前用户所拥有的角色
+  },error =>{
+
   });
 ```
 {% endblock %}
