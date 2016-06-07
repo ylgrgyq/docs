@@ -239,7 +239,7 @@ moderator_role.save()
 {% block share_role %}
 
 ```python
-rt leancloud
+import leancloud
 
 photographic_role = leancloud.Role("Photographic") # 新建摄影器材版主角色
 mobile_role = leancloud.Role("Mobile")  # 新建手机平板版主角色
