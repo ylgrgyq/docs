@@ -220,7 +220,7 @@ description     objectId
 
 {% block code_delete_todo_by_objectId %}{% endblock %}
 
-<div class="callout callout-danger">删除对象是一个较为敏感的操作。在控制台创建对象的时候，默认开启了权限保护，关于这部分的内容请阅读《{% block link_to_acl_doc %}{% endblock %}》。</div>
+<div class="callout callout-danger">删除对象是一个较为敏感的操作。在控制台创建对象的时候，默认开启了权限保护，关于这部分的内容请阅读《{{link_to_acl_doc}}》。</div>
 
 #### 使用 CQL 语法删除对象
 {{productName}} 提供了类似 SQL 语法中的 Delete 方式删除一个对象，例如删除一个 Todo 对象可以使用下面的代码：
