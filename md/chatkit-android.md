@@ -1,13 +1,13 @@
 # ChatKit 使用指南 &middot; Android
 
-[ChatKit](https://github.com/leancloud/LeanCloudIMKit-Android) 是由 LeanCloud 官方推出的、基于 LeanCloud 实时通信 SDK「LeanMessage」开发并封装了简单 UI 的聊天套件。它可以帮助开发者快速掌握 LeanMessage 的技术细节，轻松扩展和实现常用的聊天功能。
+[ChatKit](https://github.com/leancloud/LeanCloudChatKit-Android) 是由 LeanCloud 官方推出的、基于 LeanCloud 实时通信 SDK「LeanMessage」开发并封装了简单 UI 的聊天套件。它可以帮助开发者快速掌握 LeanMessage 的技术细节，轻松扩展和实现常用的聊天功能。
 
 ChatKit 是一个免费且开源的项目组件，提供完全自由的授权协议，开发者可以对其进行任意的自定义和二次封装。ChatKit 的底层依然基于 LeanCloud 为各平台推出的 SDK，其最大特点是把聊天常用的一些功能配合 UI 一起提供给开发者。
 
 ## 获取项目
 
 ```bash
-git clone git@github.com:leancloud/LeanCloudIMKit-Android.git
+git clone git@github.com:leancloud/LeanCloudChatKit-Android.git
 ```
 
 ## 运行 Demo
@@ -77,7 +77,7 @@ dependencies {
 
 <div class="callout callout-info">如果是通过 Gradle 导入则不需要以下步骤。</div>
 
-1. 浏览器访问 <https://github.com/leancloud/ChatKit-Android>；
+1. 浏览器访问 <https://github.com/leancloud/LeanCloudChatKit-Android>；
 2. 执行以下命令行，将项目 clone 到本地（如 ChatKit 文件夹中，或者直接下载 zip 包自行解压缩到此文件夹下）：
   ```bash
   git clone https://github.com/leancloud/LeanCloudChatKit-Android.git`
