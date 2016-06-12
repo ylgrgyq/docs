@@ -27,33 +27,6 @@
 {% set saveOptions_query= "query" %}
 {% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
 
-{% block text_for_ts_developer %}
-## TypeScript 开发者
-伴随着 [Angular2](https://angular.io/) 以及  [ionic@2](http://ionicframework.com/docs/v2/) 的受欢迎，LeanCloud 也针对 JavaScript SDK 编写了一个 `d.ts` 定义文件提供给开发者使用。
-
-本质上，TypeScript 经过编译之后实际上也是调用 JavaScript SDK 的对应的接口，因此在本文代码块中，一些 TypeScript 写法可以给开发者进行参考。
-
-注意，TypeScript 针对异步函数有多种写法，本文以 [Promise](#Promise) 作为默认的示例代码书写方式，仅供参考。
-[Promise](#Promise) 以及 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 的不同写法的支持取决于在 TypeScript 项目中的 `tsconfig.json` 的 `compilerOptions` 配置里面选择 `target` 是什么版本，例如，要支持 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 需要进行如下配置：
-
-```json
-{
-  ...
-  "compilerOptions": {
-    ...
-    "target": "es6",
-    "module": "commonjs",
-    ...
-  },
-  ...
-}
-```
-关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
-
-注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
-
-{% endblock %}
-
 {# --End--变量定义，主模板使用的单词和短语在所有子模板都必须赋值 #}
 
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
@@ -589,7 +562,7 @@ testObject.save().then(function(testObject) {
 * `AV.Object.add('arrayKey',arrayValue)`<br>
   将指定对象附加到数组末尾。
 * `AV.Object.addUnique('arrayKey',arrayValue);`<br>
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
+  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。
 * `AV.Object.remove('arrayKey',arrayValue);`<br>
   从数组字段中删除指定对象的所有实例。
 
@@ -683,7 +656,7 @@ testObject.save().then(function(testObject) {
   // 批量获取
   AV.Object.fetchAll(avObjectArray).then(function (avobjs) {
   }, function (error) {
-  });                    
+  });
 ```
 ```ts
   let avObjectArray:Array<AV.Object> = [/*...*/];// 构建一个 AV.object 数组
@@ -1212,10 +1185,10 @@ function uploadFile (req, res) {
 {% block code_query_with_contains_keyword %}
 
 ```js
-  query.contains('title','李总');  
+  query.contains('title','李总');
 ```
 ```ts
-  query.contains('title','李总');  
+  query.contains('title','李总');
 ```
 {% endblock %}
 
@@ -1253,7 +1226,7 @@ function uploadFile (req, res) {
   var query = new AV.Query('Todo');
   var reminderFilter = [new Date('2015-11-11 08:30:00')];
   query.containsAll('reminders', reminderFilter);
-  
+
   // 也可以使用 equals 接口实现这一需求
   var targetDateTime = new Date('2015-11-11 08:30:00');
   query.equalTo('reminders', targetDateTime);
@@ -1262,7 +1235,7 @@ function uploadFile (req, res) {
   let query: AV.Query= new AV.Query('Todo');
   let reminderFilter: Array<Date> = [new Date('2015-11-11 08:30:00')];
   query.containsAll('reminders',reminderFilter);
-  
+
   // 也可以使用 equals 接口实现这一需求
   let targetDateTime : Date =  new Date('2015-11-11 08:30:00');
   query.equalTo('reminders',targetDateTime);
@@ -1867,8 +1840,8 @@ function uploadFile (req, res) {
   });
 ```
 ```ts
-    AV.User.signUpOrlogInWithMobilePhone('13577778888','123456').then((success)=>{  
-    },(error)=>{  
+    AV.User.signUpOrlogInWithMobilePhone('13577778888','123456').then((success)=>{
+    },(error)=>{
     });
 ```
 {% endblock %}
@@ -1939,7 +1912,7 @@ AV.User.requestLoginSmsCode('13577778888').then(function (success) {
   });
 ```
 ```ts
-AV.User.requestLoginSmsCode('13577778888').then((success)=>{  
+AV.User.requestLoginSmsCode('13577778888').then((success)=>{
   },(error)=>{
   });
 ```
@@ -2617,6 +2590,33 @@ query.get('thisObjectIdDoesntExist').then(function(results) {
 ```
 
 对于像是 save 或者是 signUp 这种方法会对一个特定的 AV.Object 起作用的方法来说，error 函数的第一个参数是 object 本身。第二个是一个 AV.Error 对象，详情请查看 JavaScript API 来得到所有的 AV.Error 的返回码。
+{% endblock %}
+
+{% block text_for_ts_developer %}
+## TypeScript 开发者
+伴随着 [Angular2](https://angular.io/) 以及  [ionic@2](http://ionicframework.com/docs/v2/) 的受欢迎，LeanCloud 也针对 JavaScript SDK 编写了一个 `d.ts` 定义文件提供给开发者使用。
+
+本质上，TypeScript 经过编译之后实际上也是调用 JavaScript SDK 的对应的接口，因此在本文代码块中，一些 TypeScript 写法可以给开发者进行参考。
+
+注意，TypeScript 针对异步函数有多种写法，本文以 [Promise](#Promise) 作为默认的示例代码书写方式，仅供参考。
+[Promise](#Promise) 以及 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 的不同写法的支持取决于在 TypeScript 项目中的 `tsconfig.json` 的 `compilerOptions` 配置里面选择 `target` 是什么版本，例如，要支持 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 需要进行如下配置：
+
+```json
+{
+  ...
+  "compilerOptions": {
+    ...
+    "target": "es6",
+    "module": "commonjs",
+    ...
+  },
+  ...
+}
+```
+关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
+
+注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
+
 {% endblock %}
 
 {% block use_js_in_webview %}
