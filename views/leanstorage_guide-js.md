@@ -27,6 +27,14 @@
 {% set saveOptions_query= "query" %}
 {% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
 
+{% block text_web_security %}
+## Web 安全
+
+如果在前端使用 JavaScript SDK，当你打算正式发布的时候，请务必配置 **Web 安全域名**。配置方式为：进入 [控制台 / 设置 / 安全中心 / **Web 安全域名**](/app.html?appid={{appid}}#/security)。这样就可以防止其他人，通过外网其他地址盗用你的服务器资源。
+
+具体安全相关内容可以仔细阅读文档 [数据和安全](data_security.html) 。
+{% endblock %}
+
 {# --End--变量定义，主模板使用的单词和短语在所有子模板都必须赋值 #}
 
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
@@ -109,7 +117,7 @@
 
   // 在 TypeScript 当中我们推荐如下创建对象的方式
   let todo = new AV.Object('Todo');
-  
+
 //https://github.com/leancloud/TypeScript-Sample-Code/blob/master/sample/Object/AVObject%23new.ts
 ```
 
@@ -2590,33 +2598,6 @@ query.get('thisObjectIdDoesntExist').then(function(results) {
 ```
 
 对于像是 save 或者是 signUp 这种方法会对一个特定的 AV.Object 起作用的方法来说，error 函数的第一个参数是 object 本身。第二个是一个 AV.Error 对象，详情请查看 JavaScript API 来得到所有的 AV.Error 的返回码。
-{% endblock %}
-
-{% block text_for_ts_developer %}
-## TypeScript 开发者
-伴随着 [Angular2](https://angular.io/) 以及  [ionic@2](http://ionicframework.com/docs/v2/) 的受欢迎，LeanCloud 也针对 JavaScript SDK 编写了一个 `d.ts` 定义文件提供给开发者使用。
-
-本质上，TypeScript 经过编译之后实际上也是调用 JavaScript SDK 的对应的接口，因此在本文代码块中，一些 TypeScript 写法可以给开发者进行参考。
-
-注意，TypeScript 针对异步函数有多种写法，本文以 [Promise](#Promise) 作为默认的示例代码书写方式，仅供参考。
-[Promise](#Promise) 以及 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 的不同写法的支持取决于在 TypeScript 项目中的 `tsconfig.json` 的 `compilerOptions` 配置里面选择 `target` 是什么版本，例如，要支持 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 需要进行如下配置：
-
-```json
-{
-  ...
-  "compilerOptions": {
-    ...
-    "target": "es6",
-    "module": "commonjs",
-    ...
-  },
-  ...
-}
-```
-关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
-
-注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
-
 {% endblock %}
 
 {% block use_js_in_webview %}
