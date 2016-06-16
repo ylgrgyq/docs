@@ -2603,9 +2603,9 @@ query.get('thisObjectIdDoesntExist').then(function(results) {
 {% block use_js_in_webview %}
 ## WebView 中使用
 
-JS SDK 当然也支持在各种 WebView 中使用，可以将代码部署在 LeanCloud 的「云引擎」中。
+JS SDK 支持在各种 WebView 中使用（包括 PhoneGap/Cordova、微信 WebView 等）。
 
-### Android 中使用
+### Android WebView 中使用
 
 如果是 Android WebView，在 Native 代码创建 WebView 的时候你需要打开几个选项，
 这些选项生成 WebView 的时候默认并不会被打开，需要配置：
