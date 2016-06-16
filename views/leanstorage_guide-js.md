@@ -24,6 +24,8 @@
 {% set byteType= "Buffer" %}
 {% set link_to_acl_doc ="[JavaScript 权限管理使用指南](acl_guide-js.html)" %}
 {% set funtionName_whereKeyHasPrefix = "startsWith" %}
+{% set saveOptions_query= "query" %}
+{% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
 
 {% block text_for_ts_developer %}
 ## TypeScript 开发者
@@ -49,15 +51,6 @@
 关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
 
 注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
-
-### TypeScript SDK 安装
-#### 通过 typings 工具安装
-
-> Todo
-
-#### 直接引用 d.ts 文件
-
-> Todo
 
 {% endblock %}
 
@@ -143,6 +136,8 @@
 
   // 在 TypeScript 当中我们推荐如下创建对象的方式
   let todo = new AV.Object('Todo');
+  
+//https://github.com/leancloud/TypeScript-Sample-Code/blob/master/sample/Object/AVObject%23new.ts
 ```
 
 **注意**：`AV.Object.extend` 产生的对象需要作为全局变量保存，因为每调用
@@ -314,6 +309,23 @@ testObject.save().then(function(testObject) {
 ```
 {% endblock %}
 
+{% block code_fetch_todo_by_objectId %}
+
+```js
+  // 第一个参数是 className，第二个参数是 objectId
+  var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
+  var title = todo.get('title');// 读取 title
+  var content = todo.get('content');// 读取 content
+```
+```ts
+  // 第一个参数是 className，第二个参数是 objectId
+  let todo : AV.Object = AV.Object.createWithoutData('Todo','5745557f71cfe40068c6abe0');
+  let title = todo.get('title');// 读取 title
+  let content = todo.get('content');// 读取 content
+```
+
+{% endblock %}
+
 {% block code_save_callback_get_objectId %}
 
 ```js
@@ -482,6 +494,27 @@ testObject.save().then(function(testObject) {
     if(error) throw error;
   });
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```js
+  // 第一个参数是 className，第二个参数是 objectId
+  var todo = AV.Object.createWithoutData('Todo', '5745557f71cfe40068c6abe0');
+  // 修改属性
+  todo.set('content', '每周工程师会议，本周改为周三下午3点半。');
+  // 保存到云端
+  todo.save();
+```
+```ts
+  // 第一个参数是 className，第二个参数是 objectId
+  let todo : AV.Object = AV.Object.createWithoutData('Todo','5745557f71cfe40068c6abe0');
+  // 修改属性
+  todo.set('content','每周工程师会议，本周改为周三下午3点半。');
+  // 保存到云端
+  todo.save();
+```
+
 {% endblock %}
 
 {% block code_update_object_by_cql %}
@@ -1267,12 +1300,12 @@ function uploadFile (req, res) {
 {% block code_query_comment_by_todoFolder %}
 
 ```js
-  var query = new AV.Query('Todo');
+  var query = new AV.Query('Comment');
   var todoFolder = AV.Object.createWithoutData('Todo', '5735aae7c4c9710060fbe8b0');
   query.equalTo('targetTodoFolder', todoFolder);
 ```
 ```ts
-  let query: AV.Query= new AV.Query('Todo');
+  let query: AV.Query= new AV.Query('Comment');
   let todoFolder : AV.Object = AV.Object.createWithoutData('Todo','5735aae7c4c9710060fbe8b0');
   query.equalTo('targetTodoFolder',todoFolder);
 ```
