@@ -63,7 +63,6 @@ $ bower install leancloud-storage --save
   ...
 }
 ```
-关于在 ES6 编译模式下如何使用 TypeScript 中的 [async/await](https://blogs.msdn.microsoft.com/typescript/2015/11/03/what-about-asyncawait/) 请参考这篇[文章](/*todo*/)：
 
 注意：因为 TypeScript SDK 是基于 JavaScript SDK 编写的定义文件，因此并不是所有 JavaScript SDK 的接口都有对应 TypeScript 的版本，示例代码会持续更新。
 
