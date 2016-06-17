@@ -141,7 +141,7 @@
 
 ## 128
 
-* 信息 - `Invalid Relation data..`
+* 信息 - `Invalid relation data.`
 * 含义 - 无效的 Relation 数据，通常是因为添加或者删除的 Relation 数据为空或者过多（单次超过 1000 个）。
 
 
@@ -343,7 +343,7 @@
 
 ## 503
 
-* 信息 - `The app is temporary disabled/readonly.`
+* 信息 - `The app is temporarily disabled/readonly.`
 * 含义 - 应用被临时禁用或者进入只读状态，通常是进行运维或者故障处理操作，我们会提前告知开发者。
 
 ## 511
