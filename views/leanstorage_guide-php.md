@@ -136,8 +136,8 @@ $anotherTodo->fetch();
 {% block code_update_object_by_cql %}
 
 ```php
-        // 执行 CQL 语句实现更新一个 TodoFolder 对象
-        LeanCloud.doCloudquery("update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'");
+// 执行 CQL 语句实现更新一个 TodoFolder 对象
+LeanCloud::doCloudquery("update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'");
 ```
 {% endblock %}
 
@@ -217,13 +217,13 @@ $todo->addUniqueIn("reminders", $reminder3);
 
 ```php
 // 批量创建、更新
-saveAll()
+LeanObject::saveAll()
 
 // 批量删除
-destroyAll()
+LeanObject::destroyAll()
 
 // 批量获取
-fetchAll()
+LeanObject::fetchAll()
 ```
 {% endblock %}
 
@@ -257,45 +257,45 @@ $todo->destroy();
 {% block code_relation_todoFolder_one_to_many_todo %}
 
 ```php
-        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
-        todoFolder.put("name", "工作");
-        todoFolder.put("priority", 1);
+$todoFolder = new LeanObject("TodoFolder");// 构建对象
+$todoFolder->set("name", "工作");
+$todoFolder->set("priority", 1);
 
-        AVObject todo1 = new AVObject("Todo");
-        todo1.put("title", "工程师周会");
-        todo1.put("content", "每周工程师会议，周一下午2点");
-        todo1.put("location", "会议室");
+$todo1 = new LeanObject("Todo");
+$todo1->set("title", "工程师周会");
+$todo1->set("content", "每周工程师会议，周一下午2点");
+$todo1->set("location", "会议室");
 
-        AVObject todo2 = new AVObject("Todo");
-        todo2.put("title", "维护文档");
-        todo2.put("content", "每天 16：00 到 18：00 定期维护文档");
-        todo2.put("location", "当前工位");
+$todo2 = new LeanObject("Todo");
+$todo2->set("title", "维护文档");
+$todo2->set("content", "每天 16：00 到 18：00 定期维护文档");
+$todo2->set("location", "当前工位");
 
-        AVObject todo3 = new AVObject("Todo");
-        todo3.put("title", "发布 SDK");
-        todo3.put("content", "每周一下午 15：00");
-        todo3.put("location", "SA 工位");
+$todo3 = new LeanObject("Todo");
+$todo3->set("title", "发布 SDK");
+$todo3->set("content", "每周一下午 15：00");
+$todo3->set("location", "SA 工位");
 
-        AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
-        relation.add(todo1);
-        relation.add(todo2);
-        relation.add(todo3);
-        // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+$relation = $todoFolder->getRelation("containedTodos");// 新建一个 Relation
+$relation->add($todo1);
+$relation->add($todo2);
+$relation->add($todo3);
+// 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
 
-        todoFolder.saveInBackground();
+$todoFolder->save();
 ```
 {% endblock %}
 
 {% block code_pointer_comment_one_to_many_todoFolder %}
 
-```java
-        AVObject comment = new AVObject("Comment");// 构建 Comment 对象
-        comment.put("like", 1);// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
-        comment.put("content", "这个太赞了！楼主，我也要这些游戏，咱们团购么？");// 留言的内容
+```php
+$comment = new LeanObject("Comment");// 构建 Comment 对象
+$comment->set("like", 1); // 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
+$comment->set("content", "这个太赞了！楼主，我也要这些游戏，咱们团购么？"); // 留言的内容
 
-        // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
-        comment.put("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
-        // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
+// 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
+$comment->set("targetTodoFolder", LeanObject::create("TodoFolder", "5590cdfde4b00f7adb5860c8"));
+// 以上代码的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
 ```
 
 {% endblock %}
@@ -332,15 +332,15 @@ $testObject->save();
 
 {% block code_create_geoPoint %}
 
-``` java
-        AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
+```php
+$geopoint = new GeoPoint(39.9, 116.4);
 ```
 {% endblock %}
 
 {% block code_use_geoPoint %}
 
-``` java
-        todo.put("whereCreated", point);
+```php
+$todo->set("whereCreated", $point);
 ```
 {% endblock %}
 
@@ -354,7 +354,6 @@ $testObject->save();
         String serializedString = todoFolder.toString();
 
 ```
-
 {% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}
@@ -369,106 +368,87 @@ $testObject->save();
 
 {% block code_create_avfile_by_stream_data %}
 
-```java
-        AVFile file = new AVFile("resume.txt","Working with LeanCloud is great!".getBytes());
+```php
+$file = LeanFile::createWithData("resume.txt", "Working with LeanCloud is great!", "text/plain");
 ```
+
 {% endblock %}
 
 {% block code_create_avfile_from_local_path %}
 
-```java
-        AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png", Environment.getExternalStorageDirectory() + "/LeanCloud.png");
+```php
+// 文件类型如果不提供，会按照结尾符自动识别
+$file = LeanFile::createWithLocalFile("/tmp/LeanCloud.png");
 ```
+
 {% endblock %}
 
 {% block code_create_avfile_from_url %}
 
-```java
-        AVFile file = new AVFile("test.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", new HashMap<String, Object>());
+```php
+$file = LeanFile::createWithUrl("test.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif");
 ```
 {% endblock %}
 
 {% block code_upload_file %}
 
-```java
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                Log.d(TAG, file.getUrl());//返回一个唯一的 Url 地址
-            }
-        });
+```php
+$file->save();
+$file->getUrl(); // 返回一个唯一的 Url 地址
 ```
+
 {% endblock %}
 
 {% block code_upload_file_with_progress %}
 
-```java
-        file.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                // 成功或失败处理...
-            }
-        }, new ProgressCallback() {
-            @Override
-            public void done(Integer integer) {
-                // 上传进度数据，integer 介于 0 和 100。
-            }
-        }); 
+```php
+// Not available
 ```
 {% endblock %}
 
 {% block code_download_file %}
 
-```java 
-        file.getDataInBackground(new GetDataCallback() {
-            @Override
-            public void done(byte[] bytes, AVException e) {
-                // bytes 就是文件的数据流
-            }
-        }, new ProgressCallback() {
-            @Override
-            public void done(Integer integer) {
-                // 上传进度数据，integer 介于 0 和 100。
-            }
-        });
+```php 
+// Not available
 ```
+
 {% endblock %}
 
 {% block code_file_image_thumbnail %}
-```java
-        AVFile file = new AVFile("test.jpg", "文件-url", new HashMap<String, Object>());
-        file.getThumbnailUrl(true, 100, 100);
+
+```php
+$file = LeanFile::createWithUrl("test.jpg", "文件-url");
+$file->getThumbnailUrl(100, 100);
 ```
+
 {% endblock %}
 
 {% block code_file_metadata %}
-``` java
-        AVFile file = AVFile.withAbsoluteLocalPath("test.jpg", Environment.getExternalStorageDirectory() + "/xxx.jpg");
-        file.addMetaData("width", 100);
-        file.addMetaData("height", 100);
-        file.addMetaData("author", "LeanCloud");
-        file.saveInBackground();
+```php
+$file = LeanFile::createWithLocalFile("/tmp/xxx.jpg");
+$file->setMeta("width", 100);
+$file->setMeta("height", 100);
+$file->setMeta("author", "LeanCloud");
+$file->save();
 ```
 {% endblock %}
 
 {% block code_file_delete %}
 
-``` java
-        file.deleteInBackground(new DeleteCallback() {
-            @Override
-            public void done(AVException e) {
-                
-            }
-        });
+```php
+$file->destroy();
 ```
+
 {% endblock %}
 
-{% block code_cache_operations_file %}{% endblock %}
+{% block code_cache_operations_file %}
+
+{% endblock %}
 
 {% block code_create_query_by_className %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
+```php
+$query = new LeanQuery("Todo");
 ```
 {% endblock %}
 
@@ -476,38 +456,25 @@ $testObject->save();
 
 {% block code_create_query_by_avobject %}
 
-```java
-
-```
 {% endblock %}
 
 {% block code_priority_equalTo_zero_query %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereEqualTo("priority", 0);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                List<AVObject> priorityEqualsZeroTodos = list;// 符合 priority = 0 的 Todo 数组
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query->equalTo("priority", 0);
+$todos = $query->find();
 ```
 {% endblock %}
 
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereEqualTo("priority", 0);
-        query.whereEqualTo("priority", 1);
-        // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                ...
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query->equalTo("priority", 0);
+$query->equalTo("priority", 1);
+// 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+$todos = $query->find();
 ```
 {% endblock %}
 
@@ -524,73 +491,60 @@ $testObject->save();
 
 {% block code_query_lessThan %}
 
-```java
-        query.whereLessThan("priority", 2);
+```php
+$query->lessThan("priority", 2);
 ```
 {% endblock %}
 
 {% block code_query_greaterThanOrEqualTo %}
 
-```java
-        query.whereGreaterThanOrEqualTo("priority", 2);
+```php
+$query->greaterThanOrEqualTo("priority", 2);
 ```
 {% endblock %}
 
 {% block code_query_with_regular_expression %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereMatches("title","[\\u4e00-\\u9fa5]");
+```php
+$query = new LeanQuery("Todo");
+$query->matches("title","[\\u4e00-\\u9fa5]");
 ```
 {% endblock %}
 
 {% block code_query_with_contains_keyword %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereContains("title", "李总");
+```php
+$query = new LeanQuery("Todo");
+$query->contains("title","李总");
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword_using_regex %}
 
 ```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereMatches("title","^((?!机票).)*quot");
+$query = new LeanQuery("Todo");
+$query->matches("title","^((?!机票).)*quot");
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereNotContainedIn("title", Arrays.asList("出差", "休假"));
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                List<AVObject> nearbyTodos = list;// 离这个位置最近的 10 个 Todo 对象
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query->notContainedIn("title",array("出差", "休假"));
+$query->find();
 ```
 {% endblock %}
 
 {% block code_query_array_contains_using_equalsTo %}
 
-```java
-    Date getDateWithDateString(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = dateFormat.parse(dateString);
-        return date;
-    }
+```php
+$query = new LeanQuery("Todo");
+$date = new \DateTime("2015-11-11 08:30:00");
+// equalTo: 可以找出数组中包含单个值的对象
+$query->equalTo("reminders", $date);
+$query->find();
 
-    void queryRemindersContains() {
-        Date reminder = getDateWithDateString("2015-11-11 08:30:00");
-
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-
-        // equalTo: 可以找出数组中包含单个值的对象
-        query.whereEqualTo("reminders", reminder);
-    }
 ```
 {% endblock %}
 
@@ -906,7 +860,7 @@ $testObject->save();
 {% block code_delete_todo_by_cql %}
 
 ```php
-LeanQuery.doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb36c'");
+LeanQuery::doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb36c'");
 ```
 {% endblock %}
 
