@@ -550,310 +550,246 @@ $query->find();
 
 {% block code_query_array_contains_all %}
 
-```java
-    Date getDateWithDateString(String dateString) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = dateFormat.parse(dateString);
-        return date;
-    }
-
-    void queryRemindersContainsAll() {
-        Date reminder1 = getDateWithDateString("2015-11-11 08:30:00");
-        Date reminder2 = getDateWithDateString("2015-11-11 09:30:00");
-
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereContainsAll("reminders", Arrays.asList(reminder1, reminder2));
-
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                
-            }
-        });
-    }
+```php
+$query = new LeanQuery("Todo");
+$date1 = new \DateTime("2015-11-11 08:30:00");
+$date2 = new \DateTime("2015-11-11 09:30:00");
+$query->containsAll("reminders", array($date1, $date2));
+$query->find();
 ```
 {% endblock %}
 
 {% block code_query_whereHasPrefix %}
 
-```java
-        // 找出开头是「早餐」的 Todo
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereStartsWith("content", "早餐");
+```php
+// 找出开头是「早餐」的 Todo
+$query = new LeanQuery("Todo");
+$query->startsWith("content", "早餐");
 ```
 {% endblock %}
 
 {% block code_query_comment_by_todoFolder %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Comment");
-        query.whereEqualTo("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
+```php
+$query = new LeanQuery("Comment");
+$query->equalTo("targetTodoFolder", LeanObject::create("TodoFolder", "5590cdfde4b00f7adb5860c8"));
 ```
 {% endblock %}
 
 {% block code_create_tag_object %}
 
-```java
-        AVObject tag = new AVObject("Tag");// 构建对象
-        tag.put("name", "今日必做");// 设置名称
-        tag.saveInBackground();
+```php
+$tag = new LeanObject("Tag");// 构建对象
+$tag->set("name", "今日必做");// 设置名称
+$tag->save();
 ```
 {% endblock %}
 
 {% block code_create_family_with_tag %}
 
-```java
-        AVObject tag1 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "今日必做");// 设置 Tag 名称
+```php
+$tag1 = new LeanObject("Tag");// 构建对象
+$tag1->set("name", "今日必做");// 设置 Tag 名称
 
-        AVObject tag2 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "老婆吩咐");// 设置 Tag 名称
+$tag2 = new LeanObject("Tag");// 构建对象
+$tag2->set("name", "老婆吩咐");// 设置 Tag 名称
 
-        AVObject tag3 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "十分重要");// 设置 Tag 名称
+$tag3 = new LeanObject("Tag");// 构建对象
+$tag3->set("name", "十分重要");// 设置 Tag 名称
 
-        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
-        todoFolder.put("name", "家庭");// 设置 Todo 名称
-        todoFolder.put("priority", 1);// 设置优先级
+$todoFolder = new LeanObject("TodoFolder");// 构建对象
+$todoFolder->set("name", "家庭");// 设置 Todo 名称
+$todoFolder->set("priority", 1);// 设置优先级
 
-        AVRelation<AVObject> relation = todoFolder.getRelation("tags");
-        relation.add(tag1);
-        relation.add(tag2);
-        relation.add(tag3);
+$relation = $todoFolder->getRelation("tags");
+$relation->add($tag1);
+$relation->add($tag2);
+$relation->add($tag3);
 
-        todoFolder.saveInBackground();// 保存到云端
+$todoFolder->save();// 保存到云端
 ```
 {% endblock %}
 
 {% block code_query_tag_for_todoFolder %}
 
-```java
-        AVObject todoFolder = AVObject.createWithoutData("TodoFolder", "5661047dddb299ad5f460166");
-        AVRelation<AVObject> relation = todoFolder.getRelation("tags");
-        AVQuery<AVObject> query = relation.getQuery();
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // list 是一个 AVObject 的 List，它包含所有当前 todoFolder 的 tags
-            }
-        });
+```php
+$todoFolder = LeanObject::create("TodoFolder", "5661047dddb299ad5f460166");
+$relation   = $todoFolder->getRelation("tags");
+$query      = $relation->getQuery();
+// 结果将包含当前 todoFolder 的所有 Tag 对象
+$query->find();
 ```
 {% endblock %}
 
 {% block code_query_todoFolder_with_tag %}
 
-```java
-        AVObject tag = AVObject.createWithoutData("Tag", "5661031a60b204d55d3b7b89");
-        AVQuery<AVObject> query = new AVQuery<>("TodoFolder");
-        query.whereEqualTo("tags", tag);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // list 是一个 AVObject 的 List
-                // list 指的就是所有包含当前 tag 的 TodoFolder
-            }
-        });
+```php
+$tag = LeanObject::create("Tag", "5661031a60b204d55d3b7b89");
+$query = new LeanQuery("TodoFolder");
+$query->equalTo("tags", $tag);
+// 结果是所有包含当前 tag 的 TodoFolder 对象
+$query->find();
 ```
 {% endblock %}
 
 {% block code_query_comment_include_todoFolder %}
 
-```java
-        AVQuery<AVObject> commentQuery = new AVQuery<>("Comment");
-        commentQuery.orderByDescending("createdAt");
-        commentQuery.limit(10);
-        commentQuery.include("targetTodoFolder");// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
-        commentQuery.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // list 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
-                for (AVObject comment : list) {
-                    // 并不需要网络访问
-                    AVObject todoFolder = comment.getAVObject("targetTodoFolder");
-                }
-            }
-        });
+```php
+$commentQuery = new LeanQuery("Comment");
+$commentQuery->descend("createdAt");
+$commentQuery->limit(10);
+$commentQuery->_include("targetTodoFolder");// 关键代码，用 _include 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+$comments = $commentQuery->find();
+// 最近的十条评论, 其 targetTodoFolder 字段也有相应数据
+forEach($comments as $comment) {
+    $folder = $comment->get("targetTodoFolder");
+}
 ```
 {% endblock %}
 
 {% block code_query_find_first_object %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereEqualTo("priority",0);
-        query.getFirstInBackground(new GetCallback<AVObject>() {
-            @Override
-            public void done(AVObject avObject, AVException e) {
-                // object 就是符合条件的第一个 AVObject
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query->equalTo("priority",0);
+// 返回符合条件的第一个对象
+$query->first();
 ```
 {% endblock %}
 
 {% block code_set_query_limit %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        Date now = new Date();
-        query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
-        query.limit(10);// 最多返回 10 条结果
+```php
+$query = new LeanQuery("Todo");
+$query->lessThanOrEqualTo("createdAt", new \DateTime());
+$query->limit(10); // 最多返回 10 条结果
 ```
 {% endblock %}
 
 {% block code_set_skip_for_pager %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        Date now = new Date();
-        query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
-        query.limit(10);// 最多返回 10 条结果
-        query.skip(20);// 跳过 20 条结果
+```php
+$query = new LeanQuery("Todo");
+$query->lessThanOrEqualTo("createdAt", new \DateTime());
+$query->limit(10); // 最多返回 10 条结果
+$query->skip(20); // 跳过 20 条结果
 ```
 
 {% endblock %}
 
 {% block code_query_count %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereEqualTo("status", 0);
-        query.countInBackground(new CountCallback() {
-            @Override
-            public void done(int i, AVException e) {
-                if (e == null) {
-                    // 查询成功，输出计数
-                    Log.d(TAG, "今天完成了" + i + "条待办事项。");
-                } else {
-                    // 查询失败
-                }
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query->equalTo("status", 0);
+$query->count();
 ```
 
 {% endblock %}
 
 {% block code_query_comment_match_query_todoFolder %}
 
-```java
-        // 构建内嵌查询
-        AVQuery<AVObject> innerQuery = new AVQuery<>("TodoFolder");
-        innerQuery.whereGreaterThan("liks", 20);
-        // 将内嵌查询赋予目标查询
-        AVQuery<AVObject> query = new AVQuery<>("Comment");
-        // 执行内嵌操作
-        query.whereMatchesQuery("targetTodoFolder", innerQuery);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // list 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
-            }
-        });
+```php
+// 构建内嵌查询
+$innerQuery = new LeanQuery("TodoFolder");
+$innerQuery->greaterThan("likes", 20);
+// 将内嵌查询赋予目标查询
+$query = new LeanQuery("Comment");
+// 执行内嵌操作
+$query->matchesInQuery("targetTodoFolder", $innerQuery);
+// 返回符合 TodoFolder 超过 20 个赞这一条件的 Comment 对象集合
+$comments = $query->find();
 
-        // 注意如果要做相反的查询可以使用
-        query.whereDoesNotMatchQuery("targetTodoFolder", innerQuery);
-        // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
+// 注意如果要做相反的查询可以使用
+$query->notMatchInQuery("targetTodoFolder", $innerQuery);
+// 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
+$comments = $query->find();
 ```
 {% endblock %}
 
 {% block code_query_select_keys %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.selectKeys(Arrays.asList("title", "content"));
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                for (AVObject avObject : list) {
-                    String title = avObject.getString("title");
-                    String content = avObject.getString("content");
-
-                    // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
-                    String location = avObject.getString("location");
-                }
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$query.select("title", "content");
+$todos = $query->find();
+forEach($todos as $todo) {
+    $title   = $todo->get("title");
+    $content = $todo->get("content");
+    // 访问其它字段会返回 null
+    $null = $todo->get("location");
+}
 ```
 {% endblock %}
 
 {% block code_query_orderby %}
-``` java
-        // 按时间，升序排列
-        query.orderByAscending("createdAt");
+```php
+// 按时间，升序排列
+$query->ascend("createdAt");
 
-        // 按时间，降序排列
-        query.orderByDescending("createdAt");
+// 按时间，降序排列
+$query->descend("createdAt");
 ```
 {% endblock %}
 
 {% block code_query_orderby_on_multiple_keys %}
 
-```java
-        query.addAscendingOrder("priority");
-        query.addDescendingOrder("createdAt");
+```php
+$query->addAscend("priority");
+$query->addDescend("createdAt");
 ```
 {% endblock %}
 
 {% block code_query_where_keys_exist %}
 
-```java
-        // 存储一个带有图片的 Todo 到 LeanCloud 云端
-        AVFile aTodoAttachmentImage = new AVFile("test.jpg", "http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg", new HashMap<String, Object>());
-        AVObject todo = new AVObject("Todo");
-        todo.put("images", aTodoAttachmentImage);
-        todo.put("content", "记得买过年回家的火车票！！！");
-        todo.saveInBackground();
-        
-        // 使用非空值查询获取有图片的 Todo
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereExists("images");
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // list 返回的就是有图片的 Todo 集合
-            }
-        });
+```php
+// 存储一个带有图片的 Todo 到 LeanCloud 云端
+$aTodoAttachmentImage = LeanFile::createWithUrl("test.jpg", "http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg");
+$todo = new LeanObject("Todo");
+$todo->set("images", $aTodoAttachmentImage);
+$todo->set("content", "记得买过年回家的火车票！！！");
+$todo->save();
 
-        // 使用空值查询获取没有图片的 Todo
-        query.whereDoesNotExist("images");
+// 使用非空值查询获取有图片的 Todo
+$query = new LeanQuery("Todo");
+$query->exists("images");
+// 返回有图片的 Todo 集合
+$query->find();
 
+// 使用空值查询获取没有图片的 Todo
+$query->notExists("images");
 ```
 {% endblock %}
 
 {% block code_query_with_or %}
 
-```java
-        final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
-        priorityQuery.whereGreaterThanOrEqualTo("priority", 3);
+```php
+$priorityQuery = new LeanQuery("Todo");
+$priorityQuery->greaterThanOrEqualTo("priority", 3);
 
-        final AVQuery<AVObject> statusQuery = new AVQuery<>("Todo");
-        statusQuery.whereEqualTo("status", 1);
+$statusQuery = new LeanQuery("Todo");
+$statusQuery->equalTo("status", 1);
 
-        AVQuery<AVObject> query = AVQuery.or(Arrays.asList(priorityQuery, statusQuery));
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // 返回 priority 大于等于3 或 status 等于 1 的 Todo
-            }
-        });
+$query = LeanQuery::orQuery($priorityQuery, $statusQuery);
+
+// 返回 priority 大于等于3 或 status 等于 1 的 Todo
+$query->find();
 ```
 {% endblock %}
 
 {% block code_query_with_and %}
 
-```java
-        final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
-        priorityQuery.whereLessThan("priority", 3);
+```php
+$priorityQuery = new LeanQuery("Todo");
+$priorityQuery->greaterThanOrEqualTo("priority", 3);
 
-        final AVQuery<AVObject> statusQuery = new AVQuery<>("Todo");
-        statusQuery.whereEqualTo("status", 0);
+$statusQuery = new LeanQuery("Todo");
+$statusQuery->equalTo("status", 0);
 
-        AVQuery<AVObject> query = AVQuery.and(Arrays.asList(priorityQuery, statusQuery));
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                // 返回 priority 小于 3 并且 status 等于 0 的 Todo
-            }
-        });
+$query = LeanQuery::andQuery($priorityQuery, $statusQuery);
+
+// 返回 priority 小于 3 并且 status 等于 0 的 Todo
+$query->find();
 ```
 {% endblock %}
 
@@ -866,117 +802,47 @@ LeanQuery::doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb3
 
 {% block code_query_by_cql %}
 
-```java
-        String cql = "select * from Todo where status = 1";
-        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
-            @Override
-            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
-                avCloudQueryResult.getResults();
-            }
-        });
+```php
 
-        cql = "select count(*) from Todo where priority = 0";
-        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
-            @Override
-            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
-                avCloudQueryResult.getCount();
-            }
-        });
+$todos = LeanQuery::doCloudQuery("select * from Todo where status = 1");
+
+$result = LeanQuery::doCloudQuery("select count(*) from Todo where priority = 0");
+$result["count"];
 ```
 {% endblock %}
 
 {% block code_query_by_cql_with_placeholder %}
 
-```java
-        String cql = " select * from Todo where status = ? and priority = ?";
-        AVQuery.doCloudQueryInBackground(cql, new CloudQueryCallback<AVCloudQueryResult>() {
-            @Override
-            public void done(AVCloudQueryResult avCloudQueryResult, AVException e) {
-                if (e == null) {
-                    // 操作成功
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        }, Arrays.asList(0, 1));
+```php
+$todos = LeanQuery::doCloudQuery("select * from Todo where status = ? and priority = ?", array(0, 1));
 ```
 {% endblock %}
 
 {% block code_set_cache_policy %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Post");
-        query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.setMaxCacheAge(24 * 3600); //设置缓存有效期
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                if (e == null) {
-                    // 成功找到结果，先找网络再访问磁盘
-                } else {
-                    // 无法访问网络，本次查询结果未做缓存
-                }
-            }
-        });
+```php
+// PHP 暂不支持
 ```
 {% endblock %}
 
 {% block table_cache_policy %}
-
-策略枚举 | 含义及解释|
----|---
-`IGNORE_CACHE`| **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-`CACHE_ONLY` |  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVException`。
-`CACHE_ELSE_NETWORK` |  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVException`。
-`NETWORK_ELSE_CACHE` | 查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVException`。
-`CACHE_THEN_NETWORK` | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `find()` 同时使用。
 {% endblock %}
 
 {% block code_cache_operation %}
-
-* 检查是否存在缓存查询结果：
-
-  ``` java
-  boolean isInCache = query.hasCachedResult();
-  ```
-
-* 删除某一查询的任何缓存结果：
-
-  ``` java
-  query.clearCachedResult();
-  ```
-
-* 删除查询的所有缓存结果：
-
-  ``` java
-  AVQuery.clearAllCachedResults();
-  ```
-
-* 设定缓存结果的最长时限：
-
-  ``` java
-  query.setMaxCacheAge(60 * 60 * 24);// 一天的总秒数
-  ```
-
-查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirst()` 和 `getInBackground()`。
 {% endblock %}
 
 {% block code_query_geoPoint_near %}
 
-```java
-        AVQuery<AVObject> query = new AVQuery<>("Todo");
-        AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
-        query.limit(10);
-        query.whereNear("whereCreated", point);
-        query.findInBackground(new FindCallback<AVObject>() {
-            @Override
-            public void done(List<AVObject> list, AVException e) {
-                List<AVObject> nearbyTodos = list;// 离这个位置最近的 10 个 Todo 对象
-            }
-        });
+```php
+$query = new LeanQuery("Todo");
+$point = new GeoPoint(39.9, 116.4);
+$query->limit(10);
+$query->near("whereCreated", $point);
+// 离这个位置最近的 10 个 Todo 对象
+$nearbyTodos = $query->find();
 ```
 
-在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending` 或 `orderByDescending` 方法，则按距离排序会被新排序覆盖。**
+在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `ascend` 或 `descend` 方法，则按距离排序会被新排序覆盖。**
 {% endblock %}
 
 {% block text_platform_geoPoint_notice %}
@@ -984,8 +850,8 @@ LeanQuery::doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb3
 
 {% block code_query_geoPoint_within %}
 
-```java
-        query.whereWithinKilometers("whereCreated", point, 2.0);
+```php
+$query->withinKilometers("whereCreated", $point, 2.0);
 ```
 {% endblock %}
 
