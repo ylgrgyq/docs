@@ -1,6 +1,7 @@
 {% extends "./relation_guide.tmpl" %}
 
-{% set platform = 'iOS / OS X' %}
+{% set platform    = "iOS / OS X" %}
+{% set ops_include = "includeKey" %}
 
 {% block code_city_point_to_province %}
 
@@ -18,7 +19,7 @@
           // 广州被保存成功  
         }
     }];
-    // 广东无需被单独保存，因为在保存广州的时候已经上传到服务端。
+    // 广东无需被单独保存，因为在保存广州的时候已经上传到云端。
 ```
 {% endblock %}
 
@@ -104,7 +105,7 @@
     [AVObject saveAllInBackground:cityList block:^(BOOL succeeded, NSError *error) {
                [GuangDong addUniqueObjectsFromArray:[NSArray arrayWithObjects:GuangZhou, ShenZhen, nil] forKey:@"cityList"];
 
-        // 只要保存 GuangDong 即可，它关联的对象都会一并被保存在服务端。
+        // 只要保存 GuangDong 即可，它关联的对象都会一并被保存在云端。
         [GuangDong saveInBackground];
     }];
 ```
@@ -179,51 +180,33 @@
 ```objc
     AVObject *studentTom = [[AVObject alloc] initWithClassName:@"Student"];// 学生 Tom
     [studentTom setObject:@"Tom" forKey:@"name"];
-
+    
     AVObject *courseLinearAlgebra = [[AVObject alloc] initWithClassName:@"Course"];// 线性代数
     [courseLinearAlgebra setObject:@"Linear Algebra" forKey:@"name"];
-
+    
     AVObject *courseObjectOrientedProgramming = [[AVObject alloc] initWithClassName:@"Course"];// 面向对象程序设计
     [courseObjectOrientedProgramming setObject:@"Object-Oriented Programming" forKey:@"name"];
-
+    
     AVObject *courseOperatingSystem = [[AVObject alloc] initWithClassName:@"Course"];// 操作系统
     [courseOperatingSystem setObject:@"Operating System" forKey:@"name"];
-
-    AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];// 新建一个 AVRelation，用来保存所选的课程
-
-    [relation addObject:courseLinearAlgebra];
-    [relation addObject:courseObjectOrientedProgramming];
-    [relation addObject:courseOperatingSystem];
-
-    // 保存到云端，只要保存 studentTom 即可，与之关联的课程都会一并被云端保存
-    [studentTom saveInBackground];
-```
-{% endblock %}
-
-{% block code_query_student_by_course %}
-
-```objc
-    // 假设 Tom 被保存到云端之后的 objectId 是 562da3fdddb2084a8a576d49
-    AVObject *studentTom = [AVObject objectWithoutDataWithClassName:@"Student" objectId:@"562da3fdddb2084a8a576d49"];
-
-    // 读取 AVRelation 对象
-    AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];
-
-    // 获取关系查询
-    AVQuery *query = [relation query];
-
-    [query findObjectsInBackgroundWithBlock:^(NSArray *courses, NSError *error) {
-        // courses 就是当前学生 Tom 所选择的所有课程
-        for (AVObject *course in courses) {
-            // 打印 course 的 objectId 以及 name
-            NSLog(@"objectId: %@", course.objectId);
-            NSLog(@"name: %@", [course objectForKey:@"name"]);
+    
+    [AVObject saveAllInBackground:@[courseLinearAlgebra,courseObjectOrientedProgramming,courseOperatingSystem] block:^(BOOL succeeded, NSError *error) {
+        if (error) {
+            // 出现错误
+        } else {
+            // 保存成功
+            AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];// 新建一个 AVRelation，用来保存所选的课程
+            [relation addObject:courseLinearAlgebra];
+            [relation addObject:courseObjectOrientedProgramming];
+            [relation addObject:courseOperatingSystem];
+            
+            [studentTom saveInBackground];
         }
     }];
 ```
 {% endblock %}
 
-{% block code_query_courses_by_student %}
+{% block code_query_students_by_course %}
 
 ```objc
     // 微积分课程
@@ -242,6 +225,29 @@
             // 打印 student 的 objectId 以及 name
             NSLog(@"objectId: %@", student.objectId);
             NSLog(@"name: %@", [student objectForKey:@"name"]);
+        }
+    }];
+```
+{% endblock %}
+
+{% block code_query_courses_by_student %}
+
+```objc
+    // 假设 Tom 被保存到云端之后的 objectId 是 562da3fdddb2084a8a576d49
+    AVObject *studentTom = [AVObject objectWithoutDataWithClassName:@"Student" objectId:@"562da3fdddb2084a8a576d49"];
+
+    // 读取 AVRelation 对象
+    AVRelation *relation = [studentTom relationforKey:@"coursesChosen"];
+
+    // 获取关系查询
+    AVQuery *query = [relation query];
+
+    [query findObjectsInBackgroundWithBlock:^(NSArray *courses, NSError *error) {
+        // courses 就是当前学生 Tom 所选择的所有课程
+        for (AVObject *course in courses) {
+            // 打印 course 的 objectId 以及 name
+            NSLog(@"objectId: %@", course.objectId);
+            NSLog(@"name: %@", [course objectForKey:@"name"]);
         }
     }];
 ```
@@ -278,8 +284,8 @@
     // 微积分课程
     AVObject *courseCalculus = [AVObject objectWithoutDataWithClassName:@"Course" objectId:@"562da3fdddb2084a8a576d49"];
 
-    // 构建 CourseChoosing 的查询
-    AVQuery *query = [AVQuery queryWithClassName:@"CourseChoosing"];
+    // 构建 StudentCourseMap 的查询
+    AVQuery *query = [AVQuery queryWithClassName:@"StudentCourseMap"];
 
     // 查询所有选择了线性代数的学生
     [query whereKey:@"course" equalTo:courseCalculus];

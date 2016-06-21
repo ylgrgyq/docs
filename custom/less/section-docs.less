@@ -1,13 +1,42 @@
 // Basic styles
 @table-border: 1px solid #ebebeb;
-@table-radius: 3px;
+@general-radius: 3px;
+@table-inner-radius: (@general-radius - 1);
 @bubble-color: #eee;
+@base-font-color:#333;
+@internal-link-color: #78909C;
+
+.header-link() {
+  color: #3090e4!important;
+  border: none!important;
+}
+.dropdown_header() {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 body {
   position: relative;
   font-size: 15px;
 }
 
+.nav .dropdown-header {
+    .dropdown_header;
+    padding: 3px 15px;
+}
+
 .doc-content {
+  
+  .link-block .dropdown-header {
+    .dropdown_header;
+    font-size: 12px;
+    padding: 0;
+  }
+  
+  .img-bordered {
+    /* use outline in place of border */
+    outline: 1px solid #999;
+  }
 
   p,
   li {
@@ -56,6 +85,23 @@ body {
     padding-bottom: 2px;
   }
 
+  /* decrease levels of attention for internal links */
+  a[href^="#"] {
+    color: @internal-link-color;
+    text-decoration: none;
+
+    &:hover {
+      border-bottom: 1px solid @internal-link-color;
+      padding-bottom: 1px;
+    }
+  }
+
+  em {
+    font-style: normal;
+    text-emphasis: dot #bbb;
+    text-emphasis-position: under right;
+  }
+
   dt {
     margin-top: 1.5em;
   }
@@ -72,6 +118,7 @@ body {
     color: inherit;
     background-color: transparent;
   }
+
 
   dt code, h1 code, h2 code, h3 code, h4 code, h5 code {
     padding:0;
@@ -106,6 +153,22 @@ body {
     }
   }
 
+  .callout-info {
+    color: #666;
+    background-color: #f2f2f2;
+    border-color: none;
+  }
+
+  .callout {
+    padding: 1.2em;
+    border-left: none;
+    border-radius: @general-radius;
+
+    a {
+        font-weight: inherit;
+    }
+  }
+
   .prettyprint {
 
     .com {
@@ -120,46 +183,58 @@ body {
 .doc-content {
 
   table {
+    display: table;
     margin: 1.8em 0;
     border-collapse: separate;
     border-spacing: 0;
     width: 100%;
+    border: @table-border;
+    border-radius: @general-radius;
+    -moz-border-radius: @general-radius;
 
     td, th {
       padding: 8px 13px;
-      border-bottom: @table-border;
+      border-top: @table-border;
       border-left: @table-border;
-      vertical-align: top;
     }
 
     th {
       white-space: nowrap;
       background-color: #f7f7f7;
+      border-bottom: @table-border;
+      border-top: none;
     }
 
-    th, &.noheading tr:first-child td {
-      border-top: @table-border;
-    }
-    tr th:first-child, &.noheading tr:first-child td:first-child {
-      border-top-left-radius: @table-radius;
+    td:first-child,
+    th:first-child {
+      border-left: none;
     }
 
-    tr th:last-child, &.noheading tr:first-child td:last-child {
-      border-right: @table-border;
-      border-top-right-radius: @table-radius;
+    tr:first-child td:first-child,
+    tr:first-child th:first-child {
+      border-top-left-radius: @table-inner-radius;
+    }
+    
+    tr:first-child td:last-child,
+    tr:first-child th:last-child {
+      border-top-right-radius: @table-inner-radius;
     }
 
-    tr:last-child td:first-child {
-      border-bottom-left-radius: @table-radius;
+    thead~tbody tr:first-child td:first-child,
+    tbody~thead tr:first-child th:first-child,
+    thead~tbody tr:first-child td:last-child,
+    thead~tbody tr:first-child th:last-child {
+      border-radius: 0;
     }
 
-    tr:last-child td:last-child {
-      border-bottom-right-radius: @table-radius;
+    tbody > tr:first-child td {
+      border-top: none!important;
     }
 
-    tr td:last-child {
-      border-right: @table-border;
+    tbody > tr:first-child th {
+      border-bottom: none;
     }
+
   }
 
 }
@@ -184,7 +259,8 @@ body {
     border-bottom: 1px solid @gray-lighter;
 
     a {
-      color: #000;
+      .header-link;
+      color: @base-font-color!important;
     }
 
     // When GitHub contributers loaded, add a special class to remove extra space
@@ -204,6 +280,10 @@ body {
     margin: 17px 0;
     margin-top: 40px;
     border-bottom: 1px solid #eee;
+
+    a {
+      .header-link;
+    }
   }
 
   h3 {
@@ -213,6 +293,10 @@ body {
     padding-top: 24px;
     margin-top: 30px;
     margin-bottom: 15px;
+
+    a {
+      .header-link;
+    }
   }
 
   h4 {
@@ -221,18 +305,30 @@ body {
     line-height: 1.4;
     padding-top: 24px;
     margin-top: 20px;
+
+    a {
+      .header-link;
+    }
   }
 
   h5 {
     line-height: 1.4;
     padding-top: 24px;
     margin-top: 20px;
+
+    a {
+      .header-link;
+    }
   }
 
   h6 {
     line-height: 1.4;
     padding-top: 24px;
     margin-top: 20px;
+
+    a {
+      .header-link;
+    }
   }
 }
 
@@ -335,6 +431,10 @@ body {
   .hero-search {
     max-width: 400px;
     margin: 15px auto;
+  }
+
+  .faq-title {
+    font-weight: bold;
   }
 }
 
@@ -825,7 +925,7 @@ ul#toc,#toc li {
       .icon-github {
         font-size: 20px;
         line-height: 1;
-        vertical-align: -4px;
+        vertical-align: -2px;
       }
     }
   }
@@ -873,7 +973,7 @@ ul#toc,#toc li {
 
     .icon {
       font-size: 17px;
-      vertical-align: -2px;
+      vertical-align: -1px;
     }
 
     &:hover,
@@ -887,14 +987,14 @@ h1 {
 
   .changelog-rss {
     border: 1px solid;
-    padding: 2px 4px;
+    padding: 2px 8px;
     border-radius: @border-radius-base;
     font-size: 17px;
     vertical-align: 3px;
 
     .icon {
       font-size: 17px;
-      vertical-align: -1px;
+      vertical-align: 0;
     }
 
     &:hover,

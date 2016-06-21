@@ -25,11 +25,11 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### 如何付费
 
-* [支付宝充值](/bill.html#/bill/charge)
+* 支付宝充值
 
-  我们将每个月自动从您的账户余额里扣除上月账单的费用。每次扣费优先使用充值金额，其次是赠送金额。
+  进入 [控制台 > 财务 > 账务概况](/bill.html#/bill/general)，点击「充值」或「购买」按钮时将会出现「支付宝充值」窗口。 我们将每个月自动从您的账户余额里扣除上月账单的费用。每次扣费优先使用充值金额，其次是赠送金额。
 
-* 对公账户付款
+* 对公账户汇款
 
   公司税号：**110108597742364**<br/>
   公司名称：**美味书签（北京）信息技术有限公司**<br/>
@@ -37,6 +37,8 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
   银行账号：**344159259324**<br/>
   银行地址：**北京市海淀区知春路 6 号锦秋国际大厦一层**<br/>
   银行行号：**104100004013**
+  
+  <div class="callout callout-danger">请务必在汇款附言里中注明您的 LeanCloud 用户名，或注册邮箱，或您的应用名称，以便我们账务确认汇款的来源和用途，及时入账。</div>
 
 ### 如何申请开具发票
 
@@ -101,22 +103,31 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 我们每个月提供 100 万次的免费额度，超过的部分才收费。推送服务和统计服务免费使用，并不占用免费额度。
 
-默认情况下，每个应用同一时刻的**并发请求上限为 100**（即同一时刻最多可以同时处理 100 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
+默认情况下，每个应用同一时刻的**并发请求上限为 30**（即同一时刻最多可以同时处理 30 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
 
 ### API 调用次数的计算
 
-对于「数据存储」来说，每次 create 和 update 一条数据算一次请求，如调用一次 `object.saveInBackground` 算一次 API 请求。
+对于数据存储来说，每次 `create` 和 `update` 一个对象的数据算 1 次请求，如调用 1 次 `object.saveInBackground` 算 1 次 API 请求。
 
-`fetch`、`find`、`delete`、`deleteAll` 算**一次请求**：
+**一次请求**<br/>
+- `create`
+- `save`
+- `fetch`
+- `find`
+- `delete`
+- `deleteAll`
 
-- 调用一次 fetch / find 通过 include 返回了 100 个关联对象，算一次 API 请求。
-- 调用一次 find / deleteAll 来查找或删除 500 条记录，只算一次 API 请求。
+调用一次 `fetch` 或 `find` 通过 `include` 返回了 100 个关联对象，算 1 次 API 请求。调用一次 `find` 或 `deleteAll` 来查找或删除 500 条记录，只算 1 次 API 请求。
 
-`saveAll`、`fetchAll` 算**多次请求**：
+**多次请求**<br/>
+- `saveAll`
+- `fetchAll`
 
-- 调用一次 saveAll / fetchAll 来保存或获取 array 里面 100 个 对象，算 100 次 API 请求。
+调用一次 `saveAll` 或 `fetchAll` 来保存或获取 array 里面 100 个 对象，算 100 次 API 请求。
 
-对于「[应用内社交](status_system.html)」，create 和 update 按照 Status 和 Follower/Followee 的对象数量来计费。对于 query 则是按照请求数来计费，与结果的大小无关。collection fetch 也是按照请求次数来计费。
+对于 [应用内社交](status_system.html)，`create` 和 `update` 按照 Status 和 Follower/Followee 的对象数量来计费。
+
+对于 query 则是按照请求数来计费，与结果的大小无关。`query.count` 算 1 次 API 请求。collection fetch 也是按照请求次数来计费。
 
 ### 可以在线测试 API 吗
 
@@ -175,9 +186,10 @@ REST API 文档使用 curl 作为示范，其中 `--data-urlencode` 表示要对
 前面两种很好理解，就是按大小或者英文字母的顺序来排列。场景比如，你的某一张表记录着许多商品，其中一个字段是商品价格。以该字段建好索引后，可以加快在查询时，相对应的正序或者倒序数据的返回速度。第三种，是适用于地理位置经纬度的数据（控制台上的 GeoPoint 型字段）。移动场景中的常见需求都可能会用到地理位置，比如查找附近的其他用户。这时候就可以利用 2dsphere 来加快查询。
 
 原则：数据量少时，不建索引。多的时候请记住，因为索引也占空间，以此来换取更少的查询时间。针对每张表的情况，写少读多就多建索引, 写多读少就少建索引。
-提示：数据表的默认四个字段 objectId / ACL / createdAt / updatedAt 是自带索引的，但是在勾选时，可以作为联合索引来使用。并且，如果单表数据超过 1 万条以上，请联系我们来创建。
+
 操作：进入[控制台 > 存储](/data.html?appid={{appid}}#/_File)，选定一张表之后，点击右侧的「其他」下拉菜单，然后选择「索引」，然后根据你的查询需要建立好索引。
 
+提示：数据表的默认四个字段 objectId / ACL / createdAt / updatedAt 是自带索引的，但是在勾选时，可以作为联合索引来使用。并且，如果单表数据超过 1 万条以上，请将 App Id 和查询语句发送到 <support@leancloud.cn>，由我们来创建索引。
 
 ### LeanCloud 查询支持 `Sum`, `Group By`, `Distinct` 这种函数吗？
 LeanCloud 数据存储的查询接口不支持这些函数，可以查询到客户端后，在客户端中自己写逻辑进行这些操作。
@@ -290,7 +302,7 @@ LeanCloud 依赖的 Framework 包括：
 
 ### 有没有同步 API
 
-JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](js_guide.html#promise) 来减少 callback 嵌套过多的问题。
+JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](leanstorage_guide-js.html#Promise) 来减少 callback 嵌套过多的问题。
 
 ### 在 AV.initialize 中用了 Master Key，但发出去的 AJAX 请求返回 206
 目前 JavaScript SDK 在浏览器（而不是 Node）中工作时，是不会发送 Master Key 的，因为我们不鼓励在浏览器中使用 Master Key，Master Key 代表着对数据的最高权限，只应当在后端程序中使用。
@@ -370,11 +382,7 @@ LeanCloud 的美国节点即将提供 GCM 支持，如果应用的服务对象�
 
 ## 云引擎
 
-### 定时器 crontab 的语法
-
-请参考 [Quartz 文档](http://www.quartz-scheduler.org/documentation/quartz-1.x/tutorials/crontrigger)。
-
-### 云端代码都支持那些语言
+### 云引擎都支持哪些语言
 
 目前支持 Node.js 和 Python 运行环境，未来可能还会引入 PHP 等其他语言。
 

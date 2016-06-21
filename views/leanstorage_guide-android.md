@@ -22,7 +22,10 @@
 {% set fileObjectName ="AVFile" %}
 {% set dateType= "Date" %}
 {% set byteType= "byte[]" %}
+{% set link_to_acl_doc= "[Android 权限管理使用指南](acl_guide-android.html)" %}
 {% set funtionName_whereKeyHasPrefix = "whereStartsWith()" %}
+{% set saveOptions_query= "query" %}
+{% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
 
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
@@ -82,7 +85,7 @@
 
         avSaveOption.query(query);
 
-        avObject.saveInBackground(new SaveCallback() {
+        avObject.saveInBackground(avSaveOption, new SaveCallback() {
             @Override
             public void done(AVException e) {
                 if (e.getCode() == 305) {
@@ -134,6 +137,22 @@
             }
         });
 ```
+{% endblock %}
+
+{% block code_fetch_todo_by_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+        todo.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                String title = avObject.getString("title");// 读取 title
+                String content = avObject.getString("content");// 读取 content
+            }
+        });
+```
+
 {% endblock %}
 
 {% block code_save_callback_get_objectId %}
@@ -221,13 +240,13 @@
 
 ```java
         AVObject theTodo = AVObject.createWithoutData("Todo", "564d7031e4b057f4f3006ad1");
-        String keys = "priority,content";// 指定刷新的 key 字符串
+        String keys = "priority,location";// 指定刷新的 key 字符串
         theTodo.fetchInBackground(keys, new GetCallback<AVObject>() {
             @Override
             public void done(AVObject avObject, AVException e) {
                 // theTodo 的 location 和 content 属性的值就是与服务端一致的
+                String priority = avObject.getString("priority");
                 String location = avObject.getString("location");
-                String content = avObject.getString("content");
             }
         });
 ```
@@ -253,6 +272,20 @@
             }
         });
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+
+        // 修改 content
+        todo.put("content","每周工程师会议，本周改为周三下午3点半。");
+        // 保存到云端
+        todo.saveInBackground();
+```
+
 {% endblock %}
 
 {% block code_atomic_operation_increment %}
@@ -363,32 +396,37 @@ fetchAllInBackground()
 {% block code_relation_todoFolder_one_to_many_todo %}
 
 ```java
-        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
+        final AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
         todoFolder.put("name", "工作");
         todoFolder.put("priority", 1);
 
-        AVObject todo1 = new AVObject("Todo");
+        final AVObject todo1 = new AVObject("Todo");
         todo1.put("title", "工程师周会");
         todo1.put("content", "每周工程师会议，周一下午2点");
         todo1.put("location", "会议室");
 
-        AVObject todo2 = new AVObject("Todo");
+        final AVObject todo2 = new AVObject("Todo");
         todo2.put("title", "维护文档");
         todo2.put("content", "每天 16：00 到 18：00 定期维护文档");
         todo2.put("location", "当前工位");
 
-        AVObject todo3 = new AVObject("Todo");
+        final AVObject todo3 = new AVObject("Todo");
         todo3.put("title", "发布 SDK");
         todo3.put("content", "每周一下午 15：00");
         todo3.put("location", "SA 工位");
 
-        AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
-        relation.add(todo1);
-        relation.add(todo2);
-        relation.add(todo3);
-        // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
+        AVObject.saveAllInBackground(Arrays.asList(todo1, todo2, todo3), new SaveCallback() {
+            @Override
+            public void done(AVException e) {
+                AVRelation<AVObject> relation = todoFolder.getRelation("containedTodos");// 新建一个 AVRelation
+                relation.add(todo1);
+                relation.add(todo2);
+                relation.add(todo3);
+                // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
 
-        todoFolder.saveInBackground();
+                todoFolder.saveInBackground();
+            }
+        });
 ```
 {% endblock %}
 
@@ -523,13 +561,13 @@ fetchAllInBackground()
             public void done(Integer integer) {
                 // 上传进度数据，integer 介于 0 和 100。
             }
-        }); 
+        });
 ```
 {% endblock %}
 
 {% block code_download_file %}
 
-```java 
+```java
         file.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] bytes, AVException e) {
@@ -567,7 +605,7 @@ fetchAllInBackground()
         file.deleteInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
-                
+
             }
         });
 ```
@@ -713,17 +751,17 @@ fetchAllInBackground()
         return date;
     }
 
-    void queryRemindersContainsAll() {
+    void queryRemindersWhereEqualTo() {
         Date reminder1 = getDateWithDateString("2015-11-11 08:30:00");
         Date reminder2 = getDateWithDateString("2015-11-11 09:30:00");
 
         AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereContainsAll("reminders", Arrays.asList(reminder1, reminder2));
+        query.whereEqualTo("reminders", Arrays.asList(reminder1, reminder2));
 
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                
+
             }
         });
     }
@@ -958,7 +996,7 @@ fetchAllInBackground()
         todo.put("images", aTodoAttachmentImage);
         todo.put("content", "记得买过年回家的火车票！！！");
         todo.saveInBackground();
-        
+
         // 使用非空值查询获取有图片的 Todo
         AVQuery<AVObject> query = new AVQuery<>("Todo");
         query.whereExists("images");
@@ -1152,11 +1190,9 @@ fetchAllInBackground()
 {% endblock %} code_object_fetch_with_keys
 
 
-{% block link_to_acl_doc %}[Android 权限管理使用指南](acl_guide-android.html){% endblock %}
-
 {% block link_to_relation_guide_doc %}[Android 关系建模指南](relation_guide-android.html){% endblock %}
 
-{% block link_to_sms_guide_doc %}[Android 短信服务使用指南](sms_guide-Android.html#注册验证){% endblock %}
+{% set link_to_sms_guide_doc = '[短信服务使用指南 &middot; 注册验证](sms_guide-android.html#注册验证)' %}
 
 {% block code_send_sms_code_for_loginOrSignup %}
 
@@ -1208,7 +1244,7 @@ fetchAllInBackground()
         AVUser.logInInBackground("Tom", "cat!@#123", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-         
+
             }
         });
 ```
@@ -1220,7 +1256,7 @@ fetchAllInBackground()
         AVUser.loginByMobilePhoneNumberInBackground("13577778888", "cat!@#123", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                
+
             }
         });
 ```
@@ -1232,7 +1268,7 @@ fetchAllInBackground()
         AVUser.requestLoginSmsCodeInBackground("13577778888", new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
-                
+
             }
         });
 ```
@@ -1244,7 +1280,7 @@ fetchAllInBackground()
         AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "238825", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                
+
             }
         });
 ```

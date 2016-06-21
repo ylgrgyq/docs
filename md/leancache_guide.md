@@ -75,16 +75,14 @@ LeanCache 不提供外网直接访问。如果需要进行简单的数据操作�
 可以通过下列命令查询当前应用有哪些 LeanCache 实例：
 
 ``` shell
-avoscloud redis list
+lean redis list
 ```
 
 可以通过下列命令创建一个交互式的 client：
 
 ``` shell
-avoscloud redis <实例名称>
+lean redis conn <实例名称>
 ```
-
-
 
 ### 在云引擎中使用（Node.js 环境）
 
@@ -192,17 +190,9 @@ MSET (10 keys): 60096.15 requests per second
 
 ## 价格
 
-因为用户可能需要随时调整 LeanCache 实例的容量，所以为了方便计算，我们按照每个实例当天所使用的「最大容量」来结算，而不是「实际使用容量」。不同容量的 LeanCache 实例的价格如下：
+因为用户可能需要随时调整 LeanCache 实例的容量，所以为了方便计算，我们按照每个实例当天所使用的「最大容量」来结算，而不是「实际使用容量」。
 
-|     容量 |    每日 |
-| -----: | ----: |
-| 128 MB |   1 元 |
-| 256 MB | 1.5 元 |
-| 512 MB |   3 元 |
-|   1 GB |   5 元 |
-|   2 GB |  10 元 |
-|   4 GB |  20 元 |
-|   8 GB |  50 元 |
+不同容量的 LeanCache 实例的价格，请参考 [官网报价](/pricing.html)。不同的节点使用不同的结算货币，价格会有差异，敬请留意。
 
 ### 费用计算
 
@@ -228,11 +218,8 @@ LeanCache 采取按天扣费，使用时间不足一天按一天收费，次日�
 - **数据持久化存储**：在程序重启或重新部署后数据不会丢失，Redis 会帮你完成数据持久化的工作。LeanCache 还会为你的 Redis 做热备，具有非常高的[可靠性](#可靠性)。
 - **原子操作和性能**：Redis 提供了常见的数据结构和大量原子操作，其文档中列出了每个操作符的时间复杂度，而自行实现的 HashTable 的性能则很大程度依赖于具体语言的实现（例如 V8 的 Array 实际上是通过 Hash Map 实现的）。
 
-### 报错：Redis connection gone from end event 
+### 报错：Redis connection gone from end event
 
 LeanCache 或者任何网络程序都有可能出现连接闪断的问题，可能是因为网络波动，或是服务器负载、容量调整等等。这时只需要重建连接即可使用。而 Redis Client 一般都有断开重连的机制，未连接期间指令会保存到队列，待连接成功后再发送队列中的指令（[Redis client library](https://www.npmjs.com/package/redis) 便是如此实现）。所以如果这个错误<u>偶尔发生</u>，一般不会有什么问题；同时建议在应用中 [增加 Redis 的 on error 事件处理](#在云引擎中使用_Node_js_环境_)。
 
 如果这个错误<u>频繁出现</u>，那么很可能 LeanCache 节点处于非受控状态，请联系 [技术支持](faq.html#获取客服支持有哪些途径) 进行处理。
-
-
-

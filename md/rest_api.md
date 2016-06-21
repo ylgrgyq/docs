@@ -20,9 +20,9 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 所有 API 访问都通过 HTTPS 进行。API 访问域名为：
 
-- **中国节点**：<https://api.leancloud.cn> 
+- **中国节点**：<https://api.leancloud.cn>
 - **美国节点**：<https://us-api.leancloud.cn>
- 
+
 域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
 
 ### 在线测试
@@ -103,6 +103,11 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
       <td>/1.1/users/&lt;objectId&gt;</td>
       <td>GET</td>
       <td>获取用户</td>
+    </tr>
+    <tr>
+      <td>/1.1/users/me</td>
+      <td>GET</td>
+      <td>根据 <a href="leanstorage_guide-js.html#SessionToken">sessionToken</a> 获取用户信息</td>
     </tr>
     <tr>
       <td>/1.1/users/&lt;objectId&gt;/updatePassword</td>
@@ -365,19 +370,19 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </thead>
   <tbody>
     <tr>
-      <td>/1.1/rtm/messages/logs/</td>
+      <td>/1.1/rtm/messages/logs</td>
       <td>GET</td>
       <td>获得应用聊天记录</td>
     </tr>
     <tr>
-      <td>/1.1/rtm/messages/</td>
+      <td>/1.1/rtm/messages</td>
       <td>POST</td>
       <td>通过 API 向用户发消息</td>
     </tr>
     <tr>
       <td>/1.1/rtm/transient_group/onlines</td>
       <td>GET</td>
-      <td>获取暂态对话的在线人数</td>
+      <td>获取暂态对话（聊天室）的在线人数</td>
     </tr>
   </tbody>
 </table>
@@ -1367,6 +1372,20 @@ curl -X GET \
   "mobilePhoneVerified":false
 }
 ```
+
+### 已登录的用户信息
+
+用户成功注册或登录后，服务器会返回 sessionToken 并保存在本地，后续请求可以通过传递 sessionToken 来获取该用户信息（如访问权限等）。更多说明请参考 [存储 &middot; sessionToken](leanstorage_guide-js.html#SessionToken)。
+
+```
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "X-LC-Session: qmdj8pdidnmyzp0c7yqil91oc" \
+  https://api.leancloud.cn/1.1/users/me
+```
+返回的 JSON 数据与 [`/login`](#登录) 登录请求所返回的相同。
+
 
 #### 账户锁定
 

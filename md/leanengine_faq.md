@@ -43,7 +43,7 @@ var async = require('async');
 
 `AV.Object.extend` 产生的对象需要作为全局变量保存（即定义在 AV.Cloud.define 方法之外）。因为每调用一次，就会产生一个新的类的实例，并且和之前创建的实例形成一个链表。调用次数过多后（几万次）就会堆栈溢出。如果你的应用时不时出现 **Maximum call stack size exceeded** 错误，请确认是否误用了 `AV.Object.extend` 方法。
 
-我们在 [JavaScript 指南 - AV.Object](./js_guide.html#AV_Object) 章节中也进行了描述。
+我们在 [JavaScript 指南 - AV.Object](./leanstorage_guide-js.html#AV_Object) 章节中也进行了描述。
 
 ## 目前支持哪些语言？
 
@@ -55,7 +55,7 @@ var async = require('async');
 
 ## 调用云引擎方法如何收费？
 
-现在云引擎本身不收费，云引擎中如果有 LeanCloud 的存储等 API 调用，按 API 收费策略收费。
+云引擎中如果有 LeanCloud 的存储等 API 调用，按 [API 收费策略](faq.html#API_调用次数的计算) 收费。另外如果使用的是云引擎专业版，该服务也会产生使用费，具体请参考 [云引擎运行方案](leanengine_plan.html#价格)。
 
 ## 「定义函数」和「Git 部署」可以混用吗？
 
