@@ -1,6 +1,35 @@
 {% extends "./leanstorage_guide.tmpl" %}
 
+{# --Start--变量定义，主模板使用的单词，短语所有子模板都必须赋值 #}
+
+{% set productName ="LeanStorage" %}
+{% set platform_title ="PHP" %}
+{% set segment_code ="PHP" %}
+{% set sdk_name ="PHP SDK" %}
+{% set baseObjectName ="LeanObject" %}
+{% set objectIdName ="objectId" %}
+{% set updatedAtName ="updatedAt" %}
+{% set createdAtName ="createdAt" %}
+{% set backgroundFunctionTemplate ="xxxxInBackground" %}
+{% set saveEventuallyName ="saveEventually" %}
+{% set deleteEventuallyName ="deleteEventually" %}
+{% set relationObjectName ="LeanRelation" %}
+{% set pointerObjectName ="LeanPointer" %}
+{% set baseQueryClassName ="LeanQuery" %}
+{% set geoPointObjectName ="GeoPoint" %}
+{% set userObjectName ="LeanUser" %}
+{% set fileObjectName ="LeanFile" %}
+{% set dateType= "Datetime" %}
+{% set byteType= "LeanBytes" %}
+{% set funtionName_whereKeyHasPrefix = "startsWith()" %}
+{% set saveOptions_query= "where" %}
+{% set saveOptions_fetchWhenSave= "fetch_when_save" %}
+{% set link_to_acl_doc = "[" + sdk_name + " 权限管理使用指南](acl_guide-python.html)" %}
 {% block code_create_todo_object %}
+
+{# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
+
+{# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
 ```php
 // "Todo" 对应的就是控制台中的 Class Name
@@ -43,8 +72,9 @@ try {
 {% block code_saveoption_query_example %}
 
 ```php
-// To be supported.
-```{% endblock %}
+// PHP 有待支持
+```
+{% endblock %}
 
 {% block code_quick_save_a_todo_with_location %}
 
@@ -124,12 +154,12 @@ $todo->getCreatedAt();
 ```
 {% endblock %}
 
-{% block code_object_fetch %}
+{% block code_fetch_todo_by_objectId %}
 ```php
 // 假如已知了 objectId 可以用如下的方式构建一个 LeanObject
-$anotherTodo = LeanObject::create("Todo", "5656e37660b2febec4b35ed7");
+$todo = LeanObject::create("Todo", "5656e37660b2febec4b35ed7");
 // 然后调用刷新的方法，将数据提取到对象
-$anotherTodo->fetch();
+$todo->fetch();
 ```
 {% endblock %}
 
@@ -144,14 +174,14 @@ LeanCloud::doCloudquery("update TodoFolder set name='家庭' where objectId='558
 {% block code_object_fetchWhenSave %}
 
 ```
-// To be supported.
+// PHP 有待支持
 ```
 {% endblock %}
 
 {% block code_object_fetch_with_keys %}
 
 ```php
-// To be supported
+// PHP 有待支持
 ```
 {% endblock %}
 
@@ -170,6 +200,20 @@ try {
     // 失败的话，请检查网络环境以及 SDK 配置是否正确
 }
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```php
+// 第一参数是 className,第二个参数是 objectId
+$todo = LeanObject::create("Todo", "558e20cbe4b060308e3eb36c");
+
+// 修改 content
+$todo->set("content","每周工程师会议，本周改为周三下午3点半。");
+// 保存到云端
+$todo->save();
+```
+
 {% endblock %}
 
 {% block code_atomic_operation_increment %}
@@ -302,10 +346,10 @@ $comment->set("targetTodoFolder", LeanObject::create("TodoFolder", "5590cdfde4b0
 
 {% block code_data_type %}
 ```php
-$bool = true;
-$number = 2015;
-$string = $number . " 年度音乐排行";
-$date = new \DateTime();
+$bool       = true;
+$number     = 2015;
+$string     = $number . " 年度音乐排行";
+$date       = new \DateTime();
 $bytesArray = LeanBytes::createFromBase64Data(base64_encode("Hello world!"));
 
 $testObject = new LeanObject("DataTypes");
@@ -396,14 +440,14 @@ $file->getUrl(); // 返回一个唯一的 Url 地址
 {% block code_upload_file_with_progress %}
 
 ```php
-// Not available
+// PHP 不支持
 ```
 {% endblock %}
 
 {% block code_download_file %}
 
 ```php 
-// Not available
+// PHP 不支持
 ```
 
 {% endblock %}
@@ -859,12 +903,6 @@ $query->withinKilometers("whereCreated", $point, 2.0);
 
 ```php
 LeanCloud::requestLoginSmsCode("13577778888");
-        AVOSCloud.requestSMSCodeInBackground("13577778888", new RequestMobileCodeCallback() {
-            @Override
-            public void done(AVException e) {
-                // 发送失败可以查看 e 里面提供的信息
-            }
-        });
 ```
 {% endblock %}
 
