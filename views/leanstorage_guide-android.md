@@ -801,10 +801,10 @@ fetchAllInBackground()
         tag1.put("name", "今日必做");// 设置 Tag 名称
 
         AVObject tag2 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "老婆吩咐");// 设置 Tag 名称
+        tag2.put("name", "老婆吩咐");// 设置 Tag 名称
 
         AVObject tag3 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "十分重要");// 设置 Tag 名称
+        tag3.put("name", "十分重要");// 设置 Tag 名称
 
         AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
         todoFolder.put("name", "家庭");// 设置 Todo 名称
