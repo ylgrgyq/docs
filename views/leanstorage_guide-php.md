@@ -346,21 +346,15 @@ $todo->set("whereCreated", $point);
 
 {% block code_serialize_baseObject_to_string %}
 
-```java
-        AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
-        todoFolder.put("name", "工作");// 设置名称
-        todoFolder.put("priority", 1);// 设置优先级
-        todoFolder.put("owner", AVUser.getCurrentUser());// 这里就是一个 Pointer 类型，指向当前登录的用户
-        String serializedString = todoFolder.toString();
-
+```php
+// PHP 暂不支持
 ```
 {% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}
 
-```java
-        AVObject deserializedObject = AVObject.parseAVObject(serializedString);
-        deserializedObject.saveInBackground();// 保存到服务端
+```php
+// PHP 暂不支持
 ```
 {% endblock %}
 
@@ -521,7 +515,7 @@ $query->contains("title","李总");
 
 {% block code_query_with_not_contains_keyword_using_regex %}
 
-```java
+```php
 $query = new LeanQuery("Todo");
 $query->matches("title","^((?!机票).)*quot");
 ```
@@ -855,15 +849,16 @@ $query->withinKilometers("whereCreated", $point, 2.0);
 ```
 {% endblock %}
 
-{% block link_to_acl_doc %}[Android 权限管理使用指南](acl_guide-android.html){% endblock %}
+{% block link_to_acl_doc %}(**PHP 文档待补充**){% endblock %}
 
-{% block link_to_relation_guide_doc %}[Android 关系建模指南](relation_guide-android.html){% endblock %}
+{% block link_to_relation_guide_doc %}(**PHP 文档待补充**){% endblock %}
 
-{% block link_to_sms_guide_doc %}[Android 短信服务使用指南](sms_guide-Android.html#注册验证){% endblock %}
+{% block link_to_sms_guide_doc %}(**PHP 有待补充**){% endblock %}
 
 {% block code_send_sms_code_for_loginOrSignup %}
 
-```java
+```php
+LeanCloud::requestLoginSmsCode("13577778888");
         AVOSCloud.requestSMSCodeInBackground("13577778888", new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
@@ -875,208 +870,144 @@ $query->withinKilometers("whereCreated", $point, 2.0);
 
 {% block code_verify_sms_code_for_loginOrSignup %}
 
-```java
-        AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "123456", new LogInCallback<AVUser>() {
-            @Override
-            public void done(AVUser avUser, AVException e) {
-                // 如果 e 为空就可以表示登录成功了，并且 user 是一个全新的用户
-            }
-        });
+```php
+LeanCloud::logInWithSmsCode("13577778888", "123456");
 ```
 {% endblock %}
 
 {% block code_user_signUp_with_username_and_password %}
 
-```java
-        AVUser user = new AVUser();// 新建 AVUser 对象实例
-        user.setUsername("Tom");// 设置用户名
-        user.setPassword("cat!@#123");// 设置密码
-        user.setEmail("tom@leancloud.cn");// 设置邮箱
-        user.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-                    // 注册成功
-                } else {
-                    // 失败的原因可能有多种，常见的是用户名已经存在。
-                }
-            }
-        });
+```php
+$user = new LeanUser();// 新建 User 对象实例
+$user->setUsername("Tom");// 设置用户名
+$user->setPassword("cat!@#123");// 设置密码
+$user->setEmail("tom@leancloud.cn");// 设置邮箱
+$user->signUp();
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_username_and_password %}
 
-```java
-        AVUser.logInInBackground("Tom", "cat!@#123", new LogInCallback<AVUser>() {
-            @Override
-            public void done(AVUser avUser, AVException e) {
-         
-            }
-        });
+```php
+LeanUser::logIn("Tom", "cat!@#123");
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
-```java
-        AVUser.loginByMobilePhoneNumberInBackground("13577778888", "cat!@#123", new LogInCallback<AVUser>() {
-            @Override
-            public void done(AVUser avUser, AVException e) {
-                
-            }
-        });
+```php
+LeanUser::logInWithMobilePhoneNumber("13577778888", "cat!@#123");
 ```
 {% endblock %}
 
 {% block code_user_logIn_requestLoginSmsCode %}
 
-```java
-        AVUser.requestLoginSmsCodeInBackground("13577778888", new RequestMobileCodeCallback() {
-            @Override
-            public void done(AVException e) {
-                
-            }
-        });
+```php
+LeanUser::requestLoginSmsCode("13577778888");
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_smsCode %}
 
-```java
-        AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "238825", new LogInCallback<AVUser>() {
-            @Override
-            public void done(AVUser avUser, AVException e) {
-                
-            }
-        });
+```php
+LeanUser::logInWithSmsCode("13577778888", "238825");
 ```
 {% endblock %}
 
 {% block code_get_user_properties %}
 
-```java
-        String currentUsername = AVUser.getCurrentUser().getUsername();
-        String currentEmail = AVUser.getCurrentUser().getEmail();
+```php
+$currentUser = LeanUser::getCurrentUser();
+$currentUser->getUsername();
+$currentUser->getEmail();
+// 请注意，以下代码无法获取密码
 
-        // 请注意，以下代码无法获取密码
-        String currentPassword = AVUser.getCurrentUser().getPassword();// 无 getPassword() 此方法
+$currentUser->getPassword(); // 无 getPassword() 方法
 ```
 {% endblock %}
 
 {% block code_set_user_custom_properties %}
 
-```java
-        AVUser.getCurrentUser().put("age", 25);
-        AVUser.getCurrentUser().saveInBackground();
+```php
+$currentUser = LeanUser::getCurrentUser();
+$currentUser->set("age", 25);
+$currentUser->save();
 ```
 {% endblock %}
 
 {% block code_update_user_custom_properties %}
 
-```java
-        AVUser.getCurrentUser().put("age", 25);
-        AVUser.getCurrentUser().saveInBackground(new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                AVUser.getCurrentUser().put("age", 27);
-                AVUser.getCurrentUser().saveInBackground();
-            }
-        });
+```php
+$currentUser->set("age", 27);
+$currentUser->save();
 ```
 {% endblock %}
 
 {% block code_reset_password_by_email %}
 
-``` java
-        AVUser.requestPasswordResetInBackground("myemail@example.com", new RequestPasswordResetCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
+```php
+LeanUser::requestPasswordReset("myemail@example.com");
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber %}
 
-``` java
-        AVUser.requestPasswordResetBySmsCodeInBackground("18612340000", new RequestMobileCodeCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
+```php
+LeanUser::requestPasswordResetBySmsCode("18612340000");
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber_verify %}
 
-``` java
-        AVUser.resetPasswordBySmsCodeInBackground("123456", "password", new UpdatePasswordCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e == null) {
-
-                } else {
-                    e.printStackTrace();
-                }
-            }
-        });
+```php
+LeanUser::resetPasswordBySmsCode("123456", "password");
 ```
 {% endblock %}
 
 {% block code_current_user %}
 
-```java
-        AVUser currentUser = AVUser.getCurrentUser();
-        if (currentUser != null) {
-            // 跳转到首页
-        } else {
-            //缓存用户对象为空时，可打开用户注册界面…
-        }
+```php
+$currentUser = LeanUser::getCurrentUser();
+
+if ($currentUser != null) {
+    // 跳转到首页
+} else {
+    //缓存用户对象为空时，可打开用户注册界面…
+}
 ```
 {% endblock %}
 
 {% block code_current_user_logout %}
 
-```java
-        AVUser.logOut();// 清除缓存用户对象
-        AVUser currentUser = AVUser.getCurrentUser();// 现在的 currentUser 是 null 了
+```php
+LeanUser->logOut();// 退出当前用户
+$currentUser = LeanUser::getCurrentUser();// 现在的 currentUser 是 null 了
 ```
 {% endblock %}
 
 {% block code_query_user %}
 
-```java
-        AVQuery<AVUser> userQuery = new AVQuery<>("_User");
+```php
+$userQuery = new LeanQuery("_User");
 ```
 {% endblock %}
 
 {% block text_subclass %}
 ## 子类化
-LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `AVObject.get` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
+LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `LeanObject#get` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
 
 ```
-        AVObject student = new AVObject("Student");
-        student.put("name", "小明");
-        student.saveInBackground();
+$student = new LeanObject("Student");
+$student->set("name", "小明");
+$student->save();
 ```
 
 可改写成:
 
 ```
-        Student student = new Student();
-        student.put("name", "小明");
-        student.saveInBackground();
+$student = new Student();
+$student->set("name", "小明");
+$student->save();
 ```
 
 这样代码看起来是不是更简洁呢？
@@ -1085,165 +1016,96 @@ LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `AVObj
 
 要实现子类化，需要下面几个步骤：
 
-1. 首先声明一个子类继承自 `AVObject`；
-2. 添加 `@AVClassName` 注解。它的值必须是一个字符串，也就是你过去传入 `AVObject` 构造函数的类名。这样以来，后续就不需要再在代码中出现这个字符串类名；
-3. 确保你的子类有一个 public 的默认（参数个数为 0）的构造函数。切记不要在构造函数里修改任何 `AVObject` 的字段；
-4. 在你的应用初始化的地方，在调用 `AVOSCloud.initialize()` 之前注册子类 `AVObject.registerSubclass(YourClass.class)`。
+1. 首先声明一个子类继承自 `LeanObject`；
+2. 子类中声明静态字段 `protected static $className`，对应云端的数据表名；
+3. 建议不要重载构造函数 `__construct()`，如果一定需要构造，请确保其接受 2 个参数：`$className` 和 `$objectId`；
+4. 将子类注册到 `LeanObject`，如 `Student::registerClass();`。
 
 下面是实现 `Student` 子类化的例子:
 
-``` java
-// Student.java
-import com.avos.avoscloud.AVClassName;
-import com.avos.avoscloud.AVObject;
+```php
+// Student.php
+use LeanCloud\LeanObject;
 
-@AVClassName("Student")
-public class Student extends AVObject {
+class Student extends LeanObject {
+    protected static $className = "Student";
 }
-
-// App.java
-import com.avos.avoscloud.AVOSCloud;
-import android.app.Application;
-
-public class App extends Application {
-  @Override
-  public void onCreate() {
-    super.onCreate();
-
-    AVObject.registerSubclass(Student.class);
-    AVOSCloud.initialize(this, "...", "...");
-  }
-}
+Student::registerClass();
 ```
 
 ### 访问器、修改器和方法
 
-添加方法到 AVObject 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
+添加方法到 LeanObject 的子类有助于封装类的逻辑。你可以将所有跟子类有关的逻辑放到一个地方，而不是分成多个类来分别处理商业逻辑和存储/转换逻辑。
 
-你可以很容易地添加访问器和修改器到你的 AVObject 子类。像平常那样声明字段的`getter` 和 `setter` 方法，但是通过 AVObject 的 `get` 和 `put` 方法来实现它们。下面是这个例子为 `Student` 类创建了一个 `content` 的字段：
+你可以很容易地添加访问器和修改器到你的 LeanObject 子类。像平常那样声明字段的`getter` 和 `setter` 方法，但是通过 LeanObject 的 `get` 和 `set` 方法来实现它们。下面是这个例子为 `Student` 类创建了一个 `content` 的字段：
 
-``` java
-// Student.java
-@AVClassName("Student")
-public class Student extends AVObject {
-  public String getContent() {
-    return getString("content");
-  }
-  public void setContent(String value) {
-    put("content", value);
-  }
+```php
+// Student.php
+use LeanCloud\LeanObject;
+
+class Student extends LeanObject {
+    protected static $className = "Student";
+
+    public function setContent($value) {
+        $this->set("content", $value);
+        return $this; // 方便链式调用
+    }
+
+    public function getContent() {
+        return $this->get("content");
+    }
 }
+Student::registerClass();
 ```
 
-现在你就可以使用 `student.getContent()` 方法来访问 `content` 字段，并通过 `student.setContent("blah blah blah")` 来修改它。这样就允许你的 IDE 提供代码自动完成功能，并且可以在编译时发现到类型错误。
-+
+现在你就可以使用 `$student->getContent()` 方法来访问 `content` 字段，
+并通过 `$student->setContent("blah blah blah")` 来修改它。
 
-各种数据类型的访问器和修改器都可以这样被定义，使用各种 `get()` 方法的变种，例如 `getInt()`，`getAVFile()` 或者 `getMap()`。
-+
+各种数据类型的访问器和修改器都可以这样被定义，使用各种 `get()` 方法的
+变种，例如 `getInt()`，`getLeanFile()` 或者 `getMap()`。
 
-如果你不仅需要一个简单的访问器，而是有更复杂的逻辑，你可以实现自己的方法，例如：
+如果你不仅需要一个简单的访问器，而是有更复杂的逻辑，你也可以实现自己的方法，例如：
 
-``` java
-ublic void takeAccusation() {
+```php
+public function takeAccusation() {
   // 处理用户举报，当达到某个条数的时候，自动打上屏蔽标志
-  increment("accusation", 1);
-  if (getAccusation() > 50) {
-    setSpam(true);
+  $this->increment("accusation", 1);
+  if ($this->getAccusation() > 50) {
+    $this->setSpam(true);
   }
 }
 ```
 
 ### 初始化子类
 
-你可以使用你自定义的构造函数来创建你的子类对象。你的子类必须定义一个公开的默认构造函数，并且不修改任何父类 AVObject 中的字段，这个默认构造函数将会被 SDK 使用来创建子类的强类型的对象。
+你可以使用你自定义的构造函数来创建你的子类对象。`LeanObject` 已定义了默认的构造函数，如果需要重载构造函数，请注意其需要接收 2 个参数：`$className` 和 `$objectId`。这个构造函数将会被 SDK 使用来创建子类的对象。
 
+要创建一个到现有对象的引用，可以使用 `LeanObject::create("Student", "abc123")`:
 
-要创建一个到现有对象的引用，可以使用 `AVObject.createWithoutData()`:
-
-```java
-Student postReference = AVObject.createWithoutData(Student.class, student.getObjectId());
-```
-
-### 子类的序列化与反序列化
-
-在 v3.4 版本以后，如果希望 AVObject 子类也支持 Parcelable，则需要至少满足以下几个要求：
-1. 确保子类有一个 public 并且参数为 Parcel 的构造函数，并且在内部调用父类的该构造函数。
-2. 内部需要有一个静态变量 CREATOR 实现 `Parcelable.Creator`。
-
-```java
-// Stduent.java
-@AVClassName("Student")
-public class Student extends AVObject {
-  public Student(){
-    super();
-  }
-
-  public Student(Parcel in){
-    super(in);
-  }
-  //此处为我们的默认实现，当然你也可以自行实现
-  public static final Creator CREATOR = AVObjectCreator.instance;
-}
+```php
+$student = LeanObject::create("Student", "573a8459df0eea005e6b711c");
 ```
 
 ### 查询子类
 
-你可以通过 `AVObject.getQuery()` 或者 `AVQuery.getQuery` 的静态方法获取特定的子类的查询对象。下面的例子就查询了用户发表的所有微博列表：
+你可以通过 `LeanObject#getQuery()` 方法获取特定的子类的查询对象。下面的例子就查询了用户发表的所有微博列表：
 
-```java
-AVQuery<Student> query = AVObject.getQuery(Student.class);
-query.whereEqualTo("pubUser", AVUser.getCurrentUser().getUsername());
-query.findInBackground(new FindCallback<Student>() {
-  @Override
-  public void done(List<Student> results, AVException e) {
-    for (Student a : results) {
-      // ...
-    }
-  }
-});
+```php
+$query = $post->getQuery();
+$query->equalTo("pubUser", LeanUser::getCurrentUser()->getUsername());
+$query->find();
 ```
-### AVUser 的子类化
-
-AVUser 作为 AVObject 的子类，同样允许子类化，你可以定义自己的 User 对象，不过比起 AVObject 子类化会更简单一些，只要继承 AVUser 就可以了：
-
-```java
-import com.avos.avoscloud.AVObject;
-import com.avos.avoscloud.AVUser;
-
-public class MyUser extends AVUser {
-    public void setNickName(String name) {
-  this.put("nickName", name);
-    }
-
-    public String getNickName() {
-  return this.getString("nickName");
-    }
-}
-```
-
-不需要添加 @AVClassname 注解，所有 AVUser 的子类的类名都是内建的 `_User`。同样也不需要注册 MyUser。
-
-当用户子类化 AVUser 后，如果希望以后查询 AVUser 所得到的对象会自动转化为用户子类化的对象，则需要在调用 AVOSCloud.initialize() 之前添加：
-
-```java
-AVUser.alwaysUseSubUserClass(subUser.class);
-```
-
-注册跟普通的 AVUser 对象没有什么不同，但是登录如果希望返回自定义的子类，必须这样：
-
-```java
-MyUser cloudUser = AVUser.logIn(username, password,
-        MyUser.class);
-```
-
-**注：由于 fastjson 内部的 bug，请在定义 AVUser 时不要定义跟 AVRelation 相关的 get 方法，如果一定要定义的话，请通过在 Class 上添加@JSONType(ignores = {"属性名"})的方式，将其注释为非序列化字段**。
-
 {% endblock %}
 
-{% block link_to_in_app_search_doc %}[Android 应用内搜索指南](app_search_guide.html){% endblock %}
+{% block link_to_in_app_search_doc %}（**PHP 不支持**）{% endblock %}
+{% block link_to_status_system_doc %}（**PHP 不支持**）{% endblock %}
+{% block link_to_sns_doc %}（**PHP 文档待补充**）{% endblock %}
+{% block link_to_feedback_doc %}（**PHP 不支持**）{% endblock %}
 
-{% block link_to_status_system_doc %}[Android 应用内社交模块](status_system.html#Android_SDK){% endblock %}
 
-{% block link_to_sns_doc %}[Android SNS 开发指南](sns.html#Android_SNS_组件){% endblock %}
+{# 2016-06-07 以下三部分都不适用于 Python，所以清空内容。 #}
+{% block text_work_in_background %}{% endblock %}
+{% block text_data_protocol %}{% endblock %}
+{% block save_eventually %}{% endblock %}
 
-{% block link_to_feedback_doc %}[Android 用户反馈指南](feedback.html#Android_反馈组件){% endblock %}
+{# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
