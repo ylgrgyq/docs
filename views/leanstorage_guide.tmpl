@@ -55,7 +55,7 @@
 
 ## 对象
 
-`{{baseObjectName}}` 是 {{productName}} 对复杂对象的封装，每个 `AVObject` 包含若干属性值对，也称键值对（key-value）。属性的值是与 JSON 格式兼容的数据。通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
+`{{baseObjectName}}` 是 {{productName}} 对复杂对象的封装，每个 `{{baseObjectName}}` 包含若干属性值对，也称键值对（key-value）。属性的值是与 JSON 格式兼容的数据。通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
 
 ### 构建对象
 构建一个 `{{baseObjectName}}` 可以使用如下方式：
@@ -352,7 +352,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 上例将文件命名为 `resume.txt`，这里需要注意两点：
 
 - 不必担心文件名冲突。每一个上传的文件都有惟一的 ID，所以即使上传多个文件名为 `resume.txt` 的文件也不会有问题。
-- 给文件添加扩展名非常重要。云端通过扩展名来判断文件类型，以便正确处理文件。所以要将一张 PNG 图片存到 `AVFile` 中，要确保使用 `.png` 扩展名。
+- 给文件添加扩展名非常重要。云端通过扩展名来判断文件类型，以便正确处理文件。所以要将一张 PNG 图片存到 `{{fileObjectName}}` 中，要确保使用 `.png` 扩展名。
 {% endblock %}
 
 {% block text_create_avfile_from_local_path %}
@@ -403,7 +403,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 ### 文件元数据
 
-`AVFile` 的 `metaData` 属性，可以用来保存和获取该文件对象的元数据信息：
+`{{fileObjectName}}` 的 `metaData` 属性，可以用来保存和获取该文件对象的元数据信息：
 
 {% block code_file_metadata %}{% endblock %}
 
@@ -682,7 +682,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 
 用户系统几乎是每款应用都要加入的功能。除了基本的注册、登录和密码重置，移动端开发还会使用手机号一键登录、短信验证码登录等功能。{{productName}} 提供了一系列接口来帮助开发者快速实现各种场景下的需求。
 
-`AVUser` 是用来描述一个用户的特殊对象，与之相关的数据都保存在 `_User` 数据表中。
+`{{userObjectName}}` 是用来描述一个用户的特殊对象，与之相关的数据都保存在 `_User` 数据表中。
 
 ### 注册
 
@@ -838,7 +838,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 
 ### 浏览器中查看用户表
 
-用户表是一个特殊的表，专门存储 AVUser 对象。在浏览器端，你会看到一个 `_User` 表。
+用户表是一个特殊的表，专门存储用户对象。在浏览器端，你会看到一个 `_User` 表。
 
 ## 角色
 关于用户与角色的关系，我们有一个更为详尽的文档介绍这部分的内容，并且针对权限管理有深入的讲解，详情请点击 {{link_to_acl_doc}}。
