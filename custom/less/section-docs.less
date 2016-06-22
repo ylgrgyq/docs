@@ -89,8 +89,10 @@ body {
     padding-bottom: 2px;
   }
 
-  /* decrease levels of attention for in-page links */
-  a[href^="#"] {
+  /* decrease levels of attention for in-page links
+  ** :not() is not supported until IE9, should be okay to use 
+  */
+  a[href^="#"]:not([href="#"]):not([class~="btn"]) {
     color: @internal-link-color;
     text-decoration: none;
 
@@ -101,15 +103,6 @@ body {
       content:  "\00a7"; /* section sign § */
       padding: 0 2px;
       font-style: italic;
-    }
-  }
-  /* resolves conflicts with code-lang-toggles */
-  .toggle-item a.toggle {
-    &:before {
-      content:  none;
-    }
-    &:hover{
-      border-bottom-color: @brand-primary;
     }
   }
 
