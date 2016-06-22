@@ -1838,7 +1838,7 @@ function uploadFile (req, res) {
   var query = new AV.Query('Todo');
   query.select('title', 'content');
   query.find().then(function (results) {
-      for (var i = 0； i < results.length; i++) {
+      for (var i = 0; i < results.length; i++) {
           var todo = results[i];
           var title = todo.get('title');
           var content = todo.get('content');
