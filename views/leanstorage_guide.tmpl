@@ -179,15 +179,13 @@ description     objectId
 
 ### 更新对象
 
-{{productName}} 上的更新对象都是针对单个对象，在确保对象的 objectId 不为空才可以更新对象。云端根据<u>有没有 objectId</u> 来决定一个对象是新增还是更新。
+{{productName}} 上的更新对象都是针对单个对象，云端会根据<u>有没有 objectId</u> 来决定是新增还是更新一个对象。
 
-{% block code_update_todo_location %}{% endblock %}
-
-需要特别声明是，更新操作是覆盖式的，云端会根据最后一次提交到服务器的有效请求更新数据。更新是字段级别的操作，未更新的字段不会产生变动，这一点请不用担心。
-
-另外，假如已知了 `{{objectIdName}}`，可以通过如下接口从本地构建一个 `{{baseObjectName}}`，然后更新这个对象：
+假如 `{{objectIdName}}` 已知，则可以通过如下接口从本地构建一个 `{{baseObjectName}}` 来更新这个对象：
 
 {% block code_update_todo_content_with_objectId %}{% endblock %}
+
+更新操作是覆盖式的，云端会根据最后一次提交到服务器的有效请求来更新数据。更新是字段级别的操作，未更新的字段不会产生变动，这一点请不用担心。
 
 #### 使用 CQL 语法更新对象
 {{productName}} 提供了类似 SQL 语法中的 Update 方式更新一个对象，例如更新一个 TodoFolder 对象可以使用下面的代码：
