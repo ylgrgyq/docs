@@ -89,23 +89,6 @@ body {
     padding-bottom: 2px;
   }
 
-  /* decrease levels of attention for in-page links
-  ** :not() is not supported until IE9, should be okay to use 
-  */
-  a[href^="#"]:not([href="#"]):not([class~="btn"]) {
-    color: @internal-link-color;
-    text-decoration: none;
-
-    &:hover {
-      border-bottom: 1px solid @internal-link-color;
-    }
-    &:before {
-      content:  "\00a7"; /* section sign § */
-      padding: 0 2px;
-      font-style: italic;
-    }
-  }
-
   em {
     font-style: normal;
     text-emphasis: dot #bbb;
@@ -338,6 +321,30 @@ body {
 
     a {
       .header-link;
+    }
+  }
+
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+
+    a[href^="#"] {
+      position: relative;
+
+      &:after {
+        position: absolute;
+        top: -.1em;
+        right: 100%;
+        content: '§';
+        padding: 0 .2em;
+        opacity: .5;
+
+        @media (max-width: @screen-xs-max) {
+          display: none;
+        }
+      }
     }
   }
 }
@@ -812,6 +819,10 @@ ul#toc,#toc li {
     color: @gray-light;
     text-decoration: none;
 
+    &:after {
+      display: none !important;
+    }
+
     &:hover,
     &:focus {
       color: #000;
@@ -834,6 +845,10 @@ ul#toc,#toc li {
     }
 
     a {
+
+      &::after {
+        display: none !important;
+      }
 
       img {
         @s: 24px;

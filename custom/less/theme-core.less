@@ -1556,52 +1556,31 @@ a {
   }
 }
 
-.lc-main {
+.lc-main,
+.doc-content.with-links {
   padding-bottom: 30px;
 
-  a:not(.btn) {
+  a:not([class~="btn"]):not([href="#"]) {
 
     &[href^="/docs/"],
-    &[href^="#"],
     &[href^="http"],
     &[href^="https"],
     &[href^="//"] {
-      position: relative;
 
       &:after {
-        @s: 1em;
-        position: absolute;
-        display: block;
-        font-size: @s;
-        line-height: 1;
+        display: inline-block;
+        font-family: "ui-icon";
         content: '';
-        width: @s;
-        height: @s;
         opacity: .5;
+        padding: 0 1px;
       }
     }
 
     // Documentation specified links
     &[href^="/docs/"] {
-      padding-right: 1.2em;
 
       &:after {
-        top: 2px;
-        right: 0;
-        font-family: "ui-icon";
         content: @icon-internal;
-      }
-    }
-
-    // Internal links
-    &[href^="#"] {
-      padding-left: 1.2em;
-
-      &:after {
-        top: 1px;
-        left: 0;
-        content: '§';
-        text-align: right;
       }
     }
 
@@ -1609,13 +1588,20 @@ a {
     &[href^="http"],
     &[href^="https"],
     &[href^="//"] {
-      padding-right: 1.2em;
 
       &:after {
-        top: 2px;
-        right: 0;
-        font-family: "ui-icon";
         content: @icon-external;
+      }
+    }
+
+    // Internal links
+    &[href^="#"] {
+
+      &:before {
+        display: inline-block;
+        content: '§';
+        opacity: .5;
+        padding: 0 1px;
       }
     }
   }
