@@ -153,6 +153,32 @@ title = query_result.get('title')
 {% endblock %}
 
 
+{% block code_fetch_todo_by_objectId %}
+```python
+import leancloud
+
+todo = leancloud.Object.extend('Todo')
+todo = Todo()
+# 本地设置需要查询的 objectId
+todo.id = "574d4a4e2b51e90056f76c89"
+# 用 fetch 函数将该对象拉到本地
+todo.fetch()
+```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+```python
+import leancloud
+
+Todo = leancloud.Object.extend('Todo')
+todo = Todo.create_without_data('574d4a4e2b51e90056f76c89')
+# 这里修改 location 的值
+todo.set('location', '二楼大会议室')
+todo.save()
+```
+{% endblock %}
+
+
 {% block code_save_callback_get_objectId %}
 
 ```python
