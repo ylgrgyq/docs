@@ -157,10 +157,9 @@ title = query_result.get('title')
 ```python
 import leancloud
 
-todo = leancloud.Object.extend('Todo')
-todo = Todo()
-# 本地设置需要查询的 objectId
-todo.id = "574d4a4e2b51e90056f76c89"
+Todo = leancloud.Object.extend('Todo')
+# 用 objectId 初始化 Todo
+todo = Todo.create_without_data('574d4a4e2b51e90056f76c89')
 # 用 fetch 函数将该对象拉到本地
 todo.fetch()
 ```
