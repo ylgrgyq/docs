@@ -561,7 +561,7 @@ $query->contains("title","李总");
 
 ```php
 $query = new LeanQuery("Todo");
-$query->matches("title","^((?!机票).)*quot");
+$query->matches("title","^((?!机票).)*");
 ```
 {% endblock %}
 
