@@ -205,7 +205,7 @@ try {
 {% block code_update_todo_content_with_objectId %}
 
 ```php
-// 第一参数是 className,第二个参数是 objectId
+// 参数依次为 className、objectId
 $todo = LeanObject::create("Todo", "558e20cbe4b060308e3eb36c");
 
 // 修改 content
@@ -480,7 +480,7 @@ $file->destroy();
 {% endblock %}
 
 {% block code_cache_operations_file %}
-
+// PHP 不支持
 {% endblock %}
 
 {% block code_create_query_by_className %}
