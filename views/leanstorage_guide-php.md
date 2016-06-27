@@ -98,7 +98,7 @@ try {
 ```php
 $todoFolder = new LeanObject("TodoFolder"); // 构建对象
 $todoFolder->set("name", "工作");           // 设置名称
-$todoFolder->set("priority", 1);           // 设置优先级
+$todoFolder->set("priority", 1);            // 设置优先级
 
 try {
     $todoFolder->save();
@@ -301,7 +301,7 @@ $todo->destroy();
 {% block code_relation_todoFolder_one_to_many_todo %}
 
 ```php
-$todoFolder = new LeanObject("TodoFolder");// 构建对象
+$todoFolder = new LeanObject("TodoFolder"); // 构建对象
 $todoFolder->set("name", "工作");
 $todoFolder->set("priority", 1);
 
@@ -320,7 +320,7 @@ $todo3->set("title", "发布 SDK");
 $todo3->set("content", "每周一下午 15：00");
 $todo3->set("location", "SA 工位");
 
-$relation = $todoFolder->getRelation("containedTodos");// 新建一个 Relation
+$relation = $todoFolder->getRelation("containedTodos"); // 新建一个 Relation
 $relation->add($todo1);
 $relation->add($todo2);
 $relation->add($todo3);
@@ -333,7 +333,7 @@ $todoFolder->save();
 {% block code_pointer_comment_one_to_many_todoFolder %}
 
 ```php
-$comment = new LeanObject("Comment");// 构建 Comment 对象
+$comment = new LeanObject("Comment"); // 构建 Comment 对象
 $comment->set("like", 1); // 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
 $comment->set("content", "这个太赞了！楼主，我也要这些游戏，咱们团购么？"); // 留言的内容
 
@@ -617,8 +617,8 @@ $query->equalTo("targetTodoFolder", LeanObject::create("TodoFolder", "5590cdfde4
 {% block code_create_tag_object %}
 
 ```php
-$tag = new LeanObject("Tag");// 构建对象
-$tag->set("name", "今日必做");// 设置名称
+$tag = new LeanObject("Tag"); // 构建对象
+$tag->set("name", "今日必做"); // 设置名称
 $tag->save();
 ```
 {% endblock %}
@@ -626,25 +626,25 @@ $tag->save();
 {% block code_create_family_with_tag %}
 
 ```php
-$tag1 = new LeanObject("Tag");// 构建对象
-$tag1->set("name", "今日必做");// 设置 Tag 名称
+$tag1 = new LeanObject("Tag"); // 构建对象
+$tag1->set("name", "今日必做"); // 设置 Tag 名称
 
-$tag2 = new LeanObject("Tag");// 构建对象
-$tag2->set("name", "老婆吩咐");// 设置 Tag 名称
+$tag2 = new LeanObject("Tag"); // 构建对象
+$tag2->set("name", "老婆吩咐"); // 设置 Tag 名称
 
-$tag3 = new LeanObject("Tag");// 构建对象
-$tag3->set("name", "十分重要");// 设置 Tag 名称
+$tag3 = new LeanObject("Tag"); // 构建对象
+$tag3->set("name", "十分重要"); // 设置 Tag 名称
 
-$todoFolder = new LeanObject("TodoFolder");// 构建对象
-$todoFolder->set("name", "家庭");// 设置 Todo 名称
-$todoFolder->set("priority", 1);// 设置优先级
+$todoFolder = new LeanObject("TodoFolder"); // 构建对象
+$todoFolder->set("name", "家庭"); // 设置 Todo 名称
+$todoFolder->set("priority", 1); // 设置优先级
 
 $relation = $todoFolder->getRelation("tags");
 $relation->add($tag1);
 $relation->add($tag2);
 $relation->add($tag3);
 
-$todoFolder->save();// 保存到云端
+$todoFolder->save(); // 保存到云端
 ```
 {% endblock %}
 
@@ -676,7 +676,7 @@ $query->find();
 $commentQuery = new LeanQuery("Comment");
 $commentQuery->descend("createdAt");
 $commentQuery->limit(10);
-$commentQuery->_include("targetTodoFolder");// 关键代码，用 _include 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+$commentQuery->_include("targetTodoFolder"); // 关键代码，用 _include 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
 $comments = $commentQuery->find();
 // 最近的十条评论, 其 targetTodoFolder 字段也有相应数据
 forEach($comments as $comment) {
@@ -710,7 +710,7 @@ $query->limit(10); // 最多返回 10 条结果
 $query = new LeanQuery("Todo");
 $query->lessThanOrEqualTo("createdAt", new \DateTime());
 $query->limit(10); // 最多返回 10 条结果
-$query->skip(20); // 跳过 20 条结果
+$query->skip(20);  // 跳过 20 条结果
 ```
 
 {% endblock %}
@@ -916,10 +916,10 @@ LeanCloud::logInWithSmsCode("13577778888", "123456");
 {% block code_user_signUp_with_username_and_password %}
 
 ```php
-$user = new LeanUser();// 新建 User 对象实例
-$user->setUsername("Tom");// 设置用户名
-$user->setPassword("cat!@#123");// 设置密码
-$user->setEmail("tom@leancloud.cn");// 设置邮箱
+$user = new LeanUser();              // 新建 User 对象实例
+$user->setUsername("Tom");           // 设置用户名
+$user->setPassword("cat!@#123");     // 设置密码
+$user->setEmail("tom@leancloud.cn"); // 设置邮箱
 $user->signUp();
 ```
 {% endblock %}
@@ -1018,8 +1018,8 @@ if ($currentUser != null) {
 {% block code_current_user_logout %}
 
 ```php
-LeanUser->logOut();// 退出当前用户
-$currentUser = LeanUser::getCurrentUser();// 现在的 currentUser 是 null 了
+LeanUser->logOut(); // 退出当前用户
+$currentUser = LeanUser::getCurrentUser(); // 现在的 currentUser 是 null 了
 ```
 {% endblock %}
 
