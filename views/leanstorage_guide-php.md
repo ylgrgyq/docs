@@ -19,7 +19,7 @@
 {% set geoPointObjectName ="GeoPoint" %}
 {% set userObjectName ="LeanUser" %}
 {% set fileObjectName ="LeanFile" %}
-{% set dateType= "Datetime" %}
+{% set dateType= "DateTime" %}
 {% set byteType= "LeanBytes" %}
 {% set funtionName_whereKeyHasPrefix = "startsWith()" %}
 {% set saveOptions_query= "where" %}
