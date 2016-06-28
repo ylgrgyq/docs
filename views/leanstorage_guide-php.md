@@ -44,7 +44,7 @@ $todo = LeanObject::create("Todo");
 
 ```php
 $todo = new LeanObject("Todo");
-$todo->set("title",   "工程师周会");
+$todo->set("title", "工程师周会");
 $todo->set("content", "每周工程师会议，周一下午2点");
 try {
     $todo->save();
@@ -80,7 +80,7 @@ try {
 
 ```php
 $todo = new LeanObject("Todo");
-$todo->set("title",   "工程师周会");
+$todo->set("title", "工程师周会");
 $todo->set("content", "每周工程师会议，周一下午2点");
 $todo->set("location", "会议室"); // 只要添加这一行代码，服务端就会自动添加这个字段
 try {
@@ -122,7 +122,7 @@ $todo  = $query->get("558e20cbe4b060308e3eb36c");
 
 ```php
 $todo = new LeanObject("Todo");
-$todo->set("title",   "工程师周会");
+$todo->set("title", "工程师周会");
 $todo->set("content", "每周工程师会议，周一下午2点");
 $todo->set("location", "会议室"); // 只要添加这一行代码，服务端就会自动添加这个字段
 try {
