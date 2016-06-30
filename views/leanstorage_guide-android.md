@@ -22,7 +22,10 @@
 {% set fileObjectName ="AVFile" %}
 {% set dateType= "Date" %}
 {% set byteType= "byte[]" %}
+{% set link_to_acl_doc= "[Android 权限管理使用指南](acl_guide-android.html)" %}
 {% set funtionName_whereKeyHasPrefix = "whereStartsWith()" %}
+{% set saveOptions_query= "query" %}
+{% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
 
 
 {# --End--变量定义，主模板使用的单词，短语的定义所有子模板都必须赋值 #}
@@ -134,6 +137,22 @@
             }
         });
 ```
+{% endblock %}
+
+{% block code_fetch_todo_by_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+        todo.fetchInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                String title = avObject.getString("title");// 读取 title
+                String content = avObject.getString("content");// 读取 content
+            }
+        });
+```
+
 {% endblock %}
 
 {% block code_save_callback_get_objectId %}
@@ -253,6 +272,20 @@
             }
         });
 ```
+{% endblock %}
+
+{% block code_update_todo_content_with_objectId %}
+
+```java
+        // 第一参数是 className,第二个参数是 objectId
+        AVObject todo = AVObject.createWithoutData("Todo", "558e20cbe4b060308e3eb36c");
+
+        // 修改 content
+        todo.put("content","每周工程师会议，本周改为周三下午3点半。");
+        // 保存到云端
+        todo.saveInBackground();
+```
+
 {% endblock %}
 
 {% block code_atomic_operation_increment %}
@@ -437,11 +470,7 @@ fetchAllInBackground()
         object.saveInBackground();
 ```
 
-此外，HashMap 和 ArrayList 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
-
-我们**不推荐**在 `AVObject` 中使用 `byte[]` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `AVFile`。更多细节可以阅读本文 [文件](#文件) 部分。
-
-若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
+此外，HashMap 和 ArrayList 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。
 {% endblock %}
 
 {% block code_create_geoPoint %}
@@ -528,13 +557,13 @@ fetchAllInBackground()
             public void done(Integer integer) {
                 // 上传进度数据，integer 介于 0 和 100。
             }
-        }); 
+        });
 ```
 {% endblock %}
 
 {% block code_download_file %}
 
-```java 
+```java
         file.getDataInBackground(new GetDataCallback() {
             @Override
             public void done(byte[] bytes, AVException e) {
@@ -572,7 +601,7 @@ fetchAllInBackground()
         file.deleteInBackground(new DeleteCallback() {
             @Override
             public void done(AVException e) {
-                
+
             }
         });
 ```
@@ -671,7 +700,7 @@ fetchAllInBackground()
 
 ```java
         AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereMatches("title","^((?!机票).)*quot");
+        query.whereMatches("title","^((?!机票).)*$");
 ```
 {% endblock %}
 
@@ -718,17 +747,17 @@ fetchAllInBackground()
         return date;
     }
 
-    void queryRemindersContainsAll() {
+    void queryRemindersWhereEqualTo() {
         Date reminder1 = getDateWithDateString("2015-11-11 08:30:00");
         Date reminder2 = getDateWithDateString("2015-11-11 09:30:00");
 
         AVQuery<AVObject> query = new AVQuery<>("Todo");
-        query.whereContainsAll("reminders", Arrays.asList(reminder1, reminder2));
+        query.whereEqualTo("reminders", Arrays.asList(reminder1, reminder2));
 
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
-                
+
             }
         });
     }
@@ -768,10 +797,10 @@ fetchAllInBackground()
         tag1.put("name", "今日必做");// 设置 Tag 名称
 
         AVObject tag2 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "老婆吩咐");// 设置 Tag 名称
+        tag2.put("name", "老婆吩咐");// 设置 Tag 名称
 
         AVObject tag3 = new AVObject("Tag");// 构建对象
-        tag1.put("name", "十分重要");// 设置 Tag 名称
+        tag3.put("name", "十分重要");// 设置 Tag 名称
 
         AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
         todoFolder.put("name", "家庭");// 设置 Todo 名称
@@ -963,7 +992,7 @@ fetchAllInBackground()
         todo.put("images", aTodoAttachmentImage);
         todo.put("content", "记得买过年回家的火车票！！！");
         todo.saveInBackground();
-        
+
         // 使用非空值查询获取有图片的 Todo
         AVQuery<AVObject> query = new AVQuery<>("Todo");
         query.whereExists("images");
@@ -1157,8 +1186,6 @@ fetchAllInBackground()
 {% endblock %} code_object_fetch_with_keys
 
 
-{% block link_to_acl_doc %}[Android 权限管理使用指南](acl_guide-android.html){% endblock %}
-
 {% block link_to_relation_guide_doc %}[Android 关系建模指南](relation_guide-android.html){% endblock %}
 
 {% set link_to_sms_guide_doc = '[短信服务使用指南 &middot; 注册验证](sms_guide-android.html#注册验证)' %}
@@ -1213,7 +1240,7 @@ fetchAllInBackground()
         AVUser.logInInBackground("Tom", "cat!@#123", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-         
+
             }
         });
 ```
@@ -1225,7 +1252,7 @@ fetchAllInBackground()
         AVUser.loginByMobilePhoneNumberInBackground("13577778888", "cat!@#123", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                
+
             }
         });
 ```
@@ -1237,7 +1264,7 @@ fetchAllInBackground()
         AVUser.requestLoginSmsCodeInBackground("13577778888", new RequestMobileCodeCallback() {
             @Override
             public void done(AVException e) {
-                
+
             }
         });
 ```
@@ -1249,7 +1276,7 @@ fetchAllInBackground()
         AVUser.signUpOrLoginByMobilePhoneInBackground("13577778888", "238825", new LogInCallback<AVUser>() {
             @Override
             public void done(AVUser avUser, AVException e) {
-                
+
             }
         });
 ```

@@ -14,6 +14,8 @@
 {% endblock %}
 
 {% block oneOnOneChat_sent %}
+<div class="callout callout-info">注意：**启用实时通信一定要正确配置** `AndroidManifest.xml`，请仔细阅读 [Android SDK 初始化配置](sdk_setup-android.html#初始化)。</div>
+
 ```
   public void sendMessageToJerryFromTom() {
     // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
@@ -166,7 +168,7 @@ public class MyApplication extends Application{
 }
 
 - CustomMessageHandler.java
-public class CustomMessageHandler<AVIMTextMessage> implements AVTypedMessageHandler{
+public class CustomMessageHandler<AVIMTextMessage> implements AVIMTypedMessageHandler{
  
   @Override
   public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
