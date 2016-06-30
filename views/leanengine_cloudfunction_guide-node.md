@@ -1,4 +1,23 @@
 {% extends "./leanengine_cloudfunction_guide.tmpl" %}
+{% set platformName = 'Node.js' %}
+{% set productName = 'LeanEngine' %}
+{% set storageName = 'LeanStorage' %}
+{% set leanengine_middleware = '[LeanEngine Node.js SDK](https://github.com/leancloud/leanengine-node-sdk)' %}
+
+{% set sdk_guide_link = '[JavaScript SDK](./leanstorage_guide-js.html)' %}
+{% set cloud_func_file = '`$PROJECT_DIR/cloud.js`' %}
+{% set runFuncName = '`AV.Cloud.run`' %}
+{% set defineFuncName = '`AV.Cloud.define`' %}
+{% set runFuncApiLink = '[AV.Cloud.run](/api-docs/javascript/symbols/AV.Cloud.html#.run)' %}
+
+{% set hook_before_save   = "beforeSave" %}
+{% set hook_after_save    = "afterSave" %}
+{% set hook_before_update = "beforeUpdate" %}
+{% set hook_after_update  = "afterUpdate" %}
+{% set hook_before_delete = "beforeDelete" %}
+{% set hook_after_delete  = "afterDelete" %}
+{% set hook_on_verified   = "onVerified" %}
+{% set hook_on_login      = "onLogin" %}
 
 {% block cloudFuncExample %}
 
