@@ -19,7 +19,7 @@ composer require leancloud/leancloud-sdk
 
 ```php
 use \LeanCloud\LeanClient;
-
+// 参数依次为 AppId, AppKey, MasterKey
 LeanClient::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
 ```
 {% endblock %}
@@ -27,7 +27,7 @@ LeanClient::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
 {% block sdk_switching_node %}
 ```php
 use \LeanCloud\LeanClient;
-
+// 参数依次为 AppId, AppKey, MasterKey
 LeanClient::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
 // 启用美国节点
 // LeanClient::useRegion("US");
@@ -45,7 +45,7 @@ require 'vendor/autoload.php';
 
 use \LeanCloud\LeanClient;
 use \LeanCloud\LeanObject;
-
+// 参数依次为 AppId, AppKey, MasterKey
 LeanClient::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
 
 $testObject = new LeanObject("TestObject");
