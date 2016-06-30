@@ -7,7 +7,6 @@
 {% set sdk_name = 'PHP' %}
 {% set leanengine_middleware = '[LeanCloud PHP SDK](https://github.com/leancloud/php-sdk)' %}
 
-
 {% block custom_api_random_string %}
 打开 `./app.php` ，添加如下代码：
 
@@ -114,9 +113,7 @@ LeanClient::useMasterKey(true);
 云引擎 PHP 环境可以使用内置的 curl 模块，不过我们推荐使用 guzzle 等第
 三方库来处理 HTTP 请求。
 
-推荐使用 [request](https://www.npmjs.com/package/request) 这个第三方模块来完成 HTTP 请求。
-
-安装 request:
+安装 guzzle:
 
 ```sh
 composer require guzzlehttp/guzzle:~6.0
