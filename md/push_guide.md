@@ -18,7 +18,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应 [数据�
 ---|---|---
 badge|iOS|呈现在应用图标右上角的红色圆形数字提示，例如待更新的应用数、未读信息数目等。
 channels| |设备订阅的频道
-deviceProfile|iOS|在应用有多个推送证书的场景下，deviceProfile 用于指定该设备对应的证书名。
+deviceProfile||在应用有多个 iOS 推送证书或多个混合推送配置的场景下，deviceProfile 用于指定该设备对应的证书名或配置名。
 deviceToken|iOS|APNS 推送的唯一标识符
 deviceType| |设备类型，目前支持 "ios"、"android"、"wp"、"web"。
 ID|Windows Phone|仅对微软平台的设备（微软平板和手机）有效
@@ -57,9 +57,16 @@ errors| | 本次推送过程中的错误信息。
 
 请阅读 [Android 推送开发文档](./android_push_guide.html)。
 
+## 混合推送
+
+混合推送是为了提高在部分 Android ROM 上推送到达率而专门设计的一套推送功能。
+
+关于混合推送的接入方法和使用方式请阅读 [混合推送使用文档](./android_push_guide.html#混合推送)。
+
 ## Windows Phone 消息推送
 
 请阅读 [Windows Phone 推送开发文档](./dotnet_push_guide.html)。
+
 
 ## 云引擎和 JavaScript 创建推送
 
@@ -177,6 +184,7 @@ expiration_time|消息过期的绝对日期时间
 prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
+silent|推送通知是否关闭通知栏提醒，默认为 false，即不关闭通知栏提醒
 
 #### 开发证书推送
 
@@ -303,6 +311,10 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 ```
 
 如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书，默认使用**生产证书**。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
+
+#### 混合推送多配置区分
+
+如果使用了混合推送功能且设置了多个混合推送配置，需要在 _Installation 表保存设备信息时将当前设备所对应的混合推送配置名存入 deviceProfile 。推送时我们会按照每个目标设备在 _Installation 表 deviceProfile 字段指定的配置名来发混合推送。如果 deviceProfile 为空，我们会默认使用名为**_default**的混合推送配置名来发推送。
 
 #### 推送查询条件
 
