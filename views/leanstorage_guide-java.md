@@ -30,7 +30,9 @@
 
 {# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
 
-{% block code_quick_save_a_todo %}```java
+{% block code_quick_save_a_todo %}
+
+```java
     AVObject todo = new AVObject("Todo");
     todo.put("title", "工程师周会");
     todo.put("content", "每周工程师会议，周一下午2点");
@@ -41,9 +43,12 @@
         // 失败的话，请检查网络环境以及 SDK 配置是否正确
         e.printStackTrace();
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_quick_save_a_todo_with_location %}```java
+{% block code_quick_save_a_todo_with_location %}
+
+```java
     AVObject todo = new AVObject("Todo");
     todo.put("title", "工程师周会");
     todo.put("content", "每周工程师会议，周一下午2点");
@@ -55,21 +60,29 @@
         // 失败的话，请检查网络环境以及 SDK 配置是否正确
         e.printStackTrace();
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_create_todo_object %}```java
+{% block code_create_todo_object %}
+
+```java
     // 构造方法传入的参数，对应的就是控制台中的 Class Name
     AVObject todo = new AVObject("Todo");
 ```{% endblock %}
 
-{% block code_save_todo_folder %}```java
+{% block code_save_todo_folder %}
+
+```java
     AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
     todoFolder.put("name", "工作");// 设置名称
     todoFolder.put("priority", 1);// 设置优先级
     todoFolder.save();// 保存到服务端
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_save_object_by_cql %}```java
+{% block code_save_object_by_cql %}
+
+```java
     // 执行 CQL 语句实现新增一个 TodoFolder 对象
     try {
         AVCloudQueryResult result = AVQuery.doCloudQuery("insert into TodoFolder(name, priority) values('工作', 1)");
@@ -79,9 +92,12 @@
         // 失败的话，请检查网络环境以及 SDK 配置是否正确
         e.printStackTrace();
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_saveoption_query_example %}```java
+{% block code_saveoption_query_example %}
+
+```java
     // 获取 version 值
     int version = wiki.getInt("version");
     AVQuery<AVObject> query = new AVQuery<>("Wiki");
@@ -97,7 +113,8 @@
             e.printStackTrace();
         }
     }
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_data_type %}
 
@@ -127,31 +144,42 @@
 
 此外，HashMap 和 ArrayList 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。{% endblock %}
 
-{% block code_get_todo_by_objectId %}```java
+{% block code_get_todo_by_objectId %}
+
+```java
     String objectId = "558e20cbe4b060308e3eb36c";
     AVQuery<AVObject> avQuery = new AVQuery<>("Todo");
     AVObject object = avQuery.get(objectId);
     // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_fetch_todo_by_objectId %}```java
+{% block code_fetch_todo_by_objectId %}
+
+```java
     // 第一参数是 className,第二个参数是 objectId
     AVObject object = AVObject.createWithoutData("Todo", objectId);
     object.fetch();
     String title = object.getString("title");// 读取 title
     String content = object.getString("content");// 读取 content
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_save_callback_get_objectId %}```java
+{% block code_save_callback_get_objectId %}
+
+```java
     todo = new AVObject("Todo");
     todo.put("title", "工程师周会");
     todo.put("content", "每周工程师会议，周一下午2点");
     todo.save();
     // 保存成功之后，objectId 会自动从服务端加载到本地
     String objectId = todo.getObjectId();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_access_todo_folder_properties %}```java
+{% block code_access_todo_folder_properties %}
+
+```java
     String objectId = "558e20cbe4b060308e3eb36c";
     AVQuery<AVObject> avQuery = new AVQuery<>("Todo");
     AVObject avObject = avQuery.get(objectId);
@@ -166,9 +194,12 @@
     String objectId = avObject.getObjectId();
     Date updatedAt = avObject.getUpdatedAt();
     Date createdAt = avObject.getCreatedAt();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_object_fetch %}```java
+{% block code_object_fetch %}
+
+```java
     String objectId = "5656e37660b2febec4b35ed7";
     // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
     AVObject object = AVObject.createWithoutData("Todo", objectId);
@@ -176,14 +207,17 @@
     object.fetchIfNeeded();
     String title = object.getString("title");// 读取 title
     String content = object.getString("content");// 读取 content
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_object_fetchWhenSave %}```java
     todo.setFetchWhenSave(true);// 设置 fetchWhenSave 为 true
     todo.save();// 如此
 ```{% endblock %}
 
-{% block code_object_fetch_with_keys %}```java
+{% block code_object_fetch_with_keys %}
+
+```java
     String objectId = "5656e37660b2febec4b35ed7";
     // 假如已知了 objectId 可以用如下的方式构建一个 AVObject
     AVObject avObject = AVObject.createWithoutData("Todo", objectId);
@@ -193,9 +227,12 @@
     // avObject 的 location 和 content 属性的值就是与服务端一致的
     int priority = avObject.getInt("priority");
     String location = avObject.getString("location");
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_update_todo_content_with_objectId %}```java
+{% block code_update_todo_content_with_objectId %}
+
+```java
     String objectId = "5656e37660b2febec4b35ed7";
     // 第一参数是 className,第二个参数是 objectId
     AVObject todo = AVObject.createWithoutData("Todo", objectId);
@@ -203,15 +240,21 @@
     todo.put("content", "每周工程师会议，本周改为周三下午3点半。");
     // 保存到云端
     todo.save();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_update_object_by_cql %}```java
+{% block code_update_object_by_cql %}
+
+```java
     String objectId = "5656e37660b2febec4b35ed7";
     // 执行 CQL 语句实现更新一个 TodoFolder 对象
     AVQuery.doCloudQuery("update TodoFolder set name='家庭' where objectId=?", objectId);
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_atomic_operation_increment %}```java
+{% block code_atomic_operation_increment %}
+
+```java
     String objectId = "5656e37660b2febec4b35ed7";
     final AVObject theTodo = AVObject.createWithoutData("Todo", objectId);
     theTodo.put("views", 0);// 初始值为 0
@@ -226,7 +269,8 @@
     theTodo.save();
     // saveInBackground 调用之后，如果成功的话，对象的计数器字段是当前系统最新值。
     views = theTodo.getInt("views"); // 此时为 6
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_atomic_operation_array %}* `add()`<br>
   将指定对象附加到数组末尾。
@@ -235,7 +279,9 @@
 * `removeAll()`<br>
   从数组字段中删除指定对象的所有实例。{% endblock %}
 
-{% block code_set_array_value %}```java
+{% block code_set_array_value %}
+
+```java
     Date getDateWithDateString(String dateString) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date date = dateFormat.parse(dateString);
@@ -251,41 +297,54 @@
         todo.addAllUnique("reminders", Arrays.asList(reminder1, reminder2, reminder3));
         todo.save();
     }
-```{% endblock %}
-
-{% block code_delete_todo_by_objectId %}
-```java
-    todo.delete();
-```{% endblock %}
-
-{% block code_delete_todo_by_cql %}```java
-    String objectId = "5656e37660b2febec4b35ed7";
-    // 执行 CQL 语句实现更新一个 Todo 对象
-    AVQuery.doCloudQuery("delete from Todo where objectId=?", objectId);
-```{% endblock %}
-
-{% block code_batch_operation %}```java
-// 批量创建、更新
-saveAll()
-
-// 批量删除
-deleteAll()
-
-// 批量获取
-fetchall()
 ```
 {% endblock %}
 
-{% block code_batch_set_todo_completed %}```java
+{% block code_delete_todo_by_objectId %}
+
+```java
+    todo.delete();
+```
+{% endblock %}
+
+{% block code_delete_todo_by_cql %}
+
+```java
+    String objectId = "5656e37660b2febec4b35ed7";
+    // 执行 CQL 语句实现更新一个 Todo 对象
+    AVQuery.doCloudQuery("delete from Todo where objectId=?", objectId);
+```
+{% endblock %}
+
+{% block code_batch_operation %}
+
+```java
+    // 批量创建、更新
+    AVObject.saveAll()
+
+    // 批量删除
+    AVObject.deleteAll()
+
+    // 批量获取
+    AVObject.fetchall()
+```
+{% endblock %}
+
+{% block code_batch_set_todo_completed %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     List<AVObject> todos = query.find();
     for (AVObject todo : todos) {
         todo.put("status", 1);
     }
     AVObject.saveAll(todos);
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_relation_todoFolder_one_to_many_todo %}```java
+{% block code_relation_todoFolder_one_to_many_todo %}
+
+```java
     final AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
     todoFolder.put("name", "工作");
     todoFolder.put("priority", 1);
@@ -325,7 +384,9 @@ fetchall()
     // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
 ```{% endblock %}
 
-{% block code_create_geoPoint %}``` java
+{% block code_create_geoPoint %}
+
+``` java
     AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
 ```{% endblock %}
 
@@ -335,7 +396,9 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_serialize_baseObject_to_string %}```java
+{% block code_serialize_baseObject_to_string %}
+
+```java
     AVObject todoFolder = new AVObject("TodoFolder");// 构建对象
     todoFolder.put("name", "工作");// 设置名称
     todoFolder.put("priority", 1);// 设置优先级
@@ -344,29 +407,41 @@ fetchall()
 
 ```{% endblock %}
 
-{% block code_deserialize_string_to_baseObject %}```java
+{% block code_deserialize_string_to_baseObject %}
+
+```java
     AVObject deserializedObject = AVObject.parseAVObject(serializedString);
     deserializedObject.save();// 保存到服务端
 ```{% endblock %}
 
-{% block code_create_avfile_by_stream_data %}```java
+{% block code_create_avfile_by_stream_data %}
+
+```java
     AVFile file = new AVFile("resume.txt","Working with LeanCloud is great!".getBytes());
 ```
 {% endblock %}
 
-{% block code_create_avfile_from_local_path %}```java
+{% block code_create_avfile_from_local_path %}
+
+```java
     AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png",  "/tmp/LeanCloud.png");
 ```{% endblock %}
 
-{% block code_create_avfile_from_url %}```java
+{% block code_create_avfile_from_url %}
+
+```java
     AVFile file = new AVFile("test.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", new HashMap<String, Object>());
 ```{% endblock %}
 
-{% block code_upload_file %}```java
+{% block code_upload_file %}
+
+```java
     file.save()
 ```{% endblock %}
 
-{% block code_upload_file_with_progress %}```java
+{% block code_upload_file_with_progress %}
+
+```java
     file.saveInBackground(new SaveCallback() {
         @Override
         public void done(AVException e) {
@@ -378,7 +453,8 @@ fetchall()
         // 上传进度数据，integer 介于 0 和 100。
         }
     });
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_download_file %}
 
@@ -398,13 +474,16 @@ fetchall()
 {% endblock %}
 
 {% block code_file_image_thumbnail %}
+
 ```java
     AVFile file = new AVFile("test.jpg", "文件-url", new HashMap<String, Object>());
     file.getThumbnailUrl(true, 100, 100);
 ```
 {% endblock %}
 
-{% block code_file_metadata %}``` java
+{% block code_file_metadata %}
+
+``` java
     AVFile file = AVFile.withAbsoluteLocalPath("test.jpg", "/tmp/xxx.jpg");
     file.addMetaData("width", 100);
     file.addMetaData("height", 100);
@@ -417,13 +496,17 @@ fetchall()
     file.delete();
 ```{% endblock %}
 
-{% block code_priority_equalTo_zero_query %}```java
+{% block code_priority_equalTo_zero_query %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereEqualTo("priority", 0);
     List<AVObject> todos = query.find(); // 符合 priority = 0 的 Todo 列表
 ```{% endblock %}
 
-{% block code_priority_equalTo_zero_and_one_wrong_example %}```java
+{% block code_priority_equalTo_zero_and_one_wrong_example %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereEqualTo("priority", 0);
     query.whereEqualTo("priority", 1);
@@ -440,34 +523,51 @@ fetchall()
 小于 | `lessThan`
 小于等于 | `lessThanOrEqualTo`{% endblock %}
 
-{% block code_query_lessThan %}```java
-    query.whereLessThan("priority", 2);
-```{% endblock %}
+{% block code_query_lessThan %}
 
-{% block code_query_greaterThanOrEqualTo %}```java
+```java
+    query.whereLessThan("priority", 2);
+```
+{% endblock %}
+
+{% block code_query_greaterThanOrEqualTo %}
+
+```java
     query.whereGreaterThanOrEqualTo("priority", 2);
 ```{% endblock %}
 
-{% block code_query_with_regular_expression %}```java
+{% block code_query_with_regular_expression %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereMatches("title","[\\u4e00-\\u9fa5]");
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_with_contains_keyword %}```java
+{% block code_query_with_contains_keyword %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereContains("title", "李总");
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_with_not_contains_keyword_using_regex %}```java
+{% block code_query_with_not_contains_keyword_using_regex %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereMatches("title","^((?!机票).)*$");
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_with_not_contains_keyword %}```java
+{% block code_query_with_not_contains_keyword %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereNotContainedIn("title", Arrays.asList("出差", "休假"));
     List<AVObject> todos = query.find(); // 标题不是“出差”和“休假”的 Todo 对象列表
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_query_array_contains_using_equalsTo %}
 
@@ -489,7 +589,9 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_query_array_contains_all %}```java
+{% block code_query_array_contains_all %}
+
+```java
     Date getDateWithDateString(String dateString) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Date date = dateFormat.parse(dateString);
@@ -508,14 +610,18 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_query_whereHasPrefix %}```java
+{% block code_query_whereHasPrefix %}
+
+```java
     // 找出开头是「早餐」的 Todo
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereStartsWith("content", "早餐");
 ```
 {% endblock %}
 
-{% block code_query_with_or %}```java
+{% block code_query_with_or %}
+
+```java
     final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
     priorityQuery.whereGreaterThanOrEqualTo("priority", 3);
 
@@ -524,9 +630,12 @@ fetchall()
 
     AVQuery<AVObject> query = AVQuery.or(Arrays.asList(priorityQuery, statusQuery));
     List<AVObject> todos = query.find(); // 返回 priority 大于等于3 或 status 等于 1 的 Todo
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_with_and %}```java
+{% block code_query_with_and %}
+
+```java
     final AVQuery<AVObject> priorityQuery = new AVQuery<>("Todo");
     priorityQuery.whereLessThan("priority", 3);
 
@@ -538,20 +647,28 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_query_find_first_object %}```java
+{% block code_query_find_first_object %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereEqualTo("priority",0);
     AVObject avObject = query.getFirst(); // object 就是符合条件的第一个 AVObject
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_set_query_limit %}```java
+{% block code_set_query_limit %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     Date now = new Date();
     query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
     query.limit(10);// 最多返回 10 条结果
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_set_skip_for_pager %}```java
+{% block code_set_skip_for_pager %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     Date now = new Date();
     query.whereLessThanOrEqualTo("createdAt", now);//查询今天之前创建的 Todo
@@ -560,7 +677,9 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_query_select_keys %}```java
+{% block code_query_select_keys %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.selectKeys(Arrays.asList("title", "content"));
     List<AVObject> list = query.find();
@@ -571,9 +690,12 @@ fetchall()
         // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
         String location = avObject.getString("location");
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_count %}```java
+{% block code_query_count %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereEqualTo("status", 0);
     int i = query.count();
@@ -582,6 +704,7 @@ fetchall()
 {% endblock %}
 
 {% block code_query_orderby %}
+
 ``` java
     // 按时间，升序排列
     query.orderByAscending("createdAt");
@@ -591,12 +714,17 @@ fetchall()
 ```
 {% endblock %}
 
-{% block code_query_orderby_on_multiple_keys %}```java
+{% block code_query_orderby_on_multiple_keys %}
+
+```java
     query.addAscendingOrder("priority");
     query.addDescendingOrder("createdAt");
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_comment_by_todoFolder %}```java
+{% block code_query_comment_by_todoFolder %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Comment");
     query.whereEqualTo("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
 ```{% endblock %}
@@ -605,9 +733,12 @@ fetchall()
     AVObject tag = new AVObject("Tag");// 构建对象
     tag.put("name", "今日必做");// 设置名称
     tag.save();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_create_family_with_tag %}```java
+{% block code_create_family_with_tag %}
+
+```java
     AVObject tag1 = new AVObject("Tag");// 构建对象
     tag1.put("name", "今日必做");// 设置 Tag 名称
 
@@ -627,26 +758,34 @@ fetchall()
     relation.add(tag3);
 
     todoFolder.save();// 保存到云端
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_tag_for_todoFolder %}```java
+{% block code_query_tag_for_todoFolder %}
+
+```java
     AVObject todoFolder = AVObject.createWithoutData("TodoFolder", "5661047dddb299ad5f460166");
     AVRelation<AVObject> relation = todoFolder.getRelation("tags");
     AVQuery<AVObject> query = relation.getQuery();
     List<AVObject> list = query.find(); // list 是一个 AVObject 的 List，它包含所有当前 todoFolder 的 tags
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_query_todoFolder_with_tag %}
+
 ```java
     AVObject tag = AVObject.createWithoutData("Tag", "5661031a60b204d55d3b7b89");
     AVQuery<AVObject> query = new AVQuery<>("TodoFolder");
     query.whereEqualTo("tags", tag);
     List<AVObject> list = query.find(); // list 指的就是所有包含当前 tag 的 TodoFolder
-```{% endblock %}
+```
+{% endblock %}
 
 {% block link_to_relation_guide_doc %}[Java 关系建模指南](relation_guide-java.html){% endblock %}
 
-{% block code_query_comment_include_todoFolder %}```java
+{% block code_query_comment_include_todoFolder %}
+
+```java
     AVQuery<AVObject> commentQuery = new AVQuery<>("Comment");
     commentQuery.orderByDescending("createdAt");
     commentQuery.limit(10);
@@ -656,9 +795,12 @@ fetchall()
         // 并不需要网络访问
         AVObject todoFolder = comment.getAVObject("targetTodoFolder");
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_comment_match_query_todoFolder %}```java
+{% block code_query_comment_match_query_todoFolder %}
+
+```java
     // 构建内嵌查询
     AVQuery<AVObject> innerQuery = new AVQuery<>("TodoFolder");
     innerQuery.whereGreaterThan("liks", 20);
@@ -671,7 +813,8 @@ fetchall()
     // 注意如果要做相反的查询可以使用
     query.whereDoesNotMatchQuery("targetTodoFolder", innerQuery);
     // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_query_by_cql %}
 ```java
@@ -682,16 +825,22 @@ fetchall()
     cql = "select count(*) from Todo where priority = 0";
     AVCloudQueryResult avCloudQueryResult = AVQuery.doCloudQuery(cql);
     avCloudQueryResult.getCount();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_by_cql_with_placeholder %}```java
+{% block code_query_by_cql_with_placeholder %}
+
+```java
     String cql = " select * from Todo where status = ? and priority = ?";
     AVCloudQueryResult avCloudQueryResult = AVQuery.doCloudQuery(cql, Arrays.asList(0, 1));
-```{% endblock %}
+```
+{% endblock %}
 
 {% block table_cache_policy %}Java SDK 不支持缓存策略。{% endblock %}
 
-{% block code_query_geoPoint_near %}```java
+{% block code_query_geoPoint_near %}
+
+```java
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
     query.limit(10);
@@ -701,25 +850,36 @@ fetchall()
 
 在上面的代码中，`list` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending` 或 `orderByDescending` 方法，则按距离排序会被新排序覆盖。**{% endblock %}
 
-{% block code_query_geoPoint_within %}```java
-    query.whereWithinKilometers("whereCreated", point, 2.0);
-```{% endblock %}
+{% block code_query_geoPoint_within %}
 
-{% block code_send_sms_code_for_loginOrSignup %}```java
+```java
+    query.whereWithinKilometers("whereCreated", point, 2.0);
+```
+{% endblock %}
+
+{% block code_send_sms_code_for_loginOrSignup %}
+
+```java
     try {
         AVOSCloud.requestSMSCode("13577778888");
     } catch (AVException e) {
         // 发送失败可以查看 e 里面提供的信息
         e.printStackTrace();
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_verify_sms_code_for_loginOrSignup %}```java
+{% block code_verify_sms_code_for_loginOrSignup %}
+
+```java
     AVUser avUser = AVUser.signUpOrLoginByMobilePhone("13577778888", "123456");
     // 如果没有抛异常就表示登录成功了，并且 user 是一个全新的用户
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_user_signUp_with_username_and_password %}```java
+{% block code_user_signUp_with_username_and_password %}
+
+```java
     try {
         AVUser user = new AVUser();// 新建 AVUser 对象实例
         user.setUsername("Tom");// 设置用户名
@@ -730,25 +890,36 @@ fetchall()
         // 失败的原因可能有多种，常见的是用户名已经存在。
         e.printStackTrace();
     }
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_user_logIn_with_username_and_password %}```java
+{% block code_user_logIn_with_username_and_password %}
+
+```java
     AVUser avUser = AVUser.logIn("Tom", "cat!@#123");
 ```{% endblock %}
 
-{% block code_user_logIn_with_mobilephonenumber_and_password %}```java
+{% block code_user_logIn_with_mobilephonenumber_and_password %}
+
+```java
     AVUser avUser = AVUser.loginByMobilePhoneNumber("13577778888", "cat!@#123");
 ```{% endblock %}
 
-{% block code_user_logIn_requestLoginSmsCode %}```java
+{% block code_user_logIn_requestLoginSmsCode %}
+
+```java
     AVUser.requestLoginSmsCode("13577778888");
 ```{% endblock %}
 
-{% block code_user_logIn_with_smsCode %}```java
+{% block code_user_logIn_with_smsCode %}
+
+```java
     AVUser avUser = AVUser.signUpOrLoginByMobilePhone("13577778888", "238825");
 ```{% endblock %}
 
-{% block code_get_user_properties %}```java
+{% block code_get_user_properties %}
+
+```java
     String currentUsername = AVUser.getCurrentUser().getUsername();
     String currentEmail = AVUser.getCurrentUser().getEmail();
 
@@ -756,31 +927,44 @@ fetchall()
     String currentPassword = AVUser.getCurrentUser().getPassword();// 无 getPassword() 此方法
 ```{% endblock %}
 
-{% block code_set_user_custom_properties %}```java
+{% block code_set_user_custom_properties %}
+
+```java
     AVUser.getCurrentUser().put("age", 25);
     AVUser.getCurrentUser().save();
 ```{% endblock %}
 
-{% block code_update_user_custom_properties %}```java
+{% block code_update_user_custom_properties %}
+
+```java
     AVUser.getCurrentUser().put("age", 25);
     AVUser.getCurrentUser().save();
     AVUser.getCurrentUser().put("age", 27);
     AVUser.getCurrentUser().save();
 ```{% endblock %}
 
-{% block code_reset_password_by_email %}``` java
+{% block code_reset_password_by_email %}
+
+```java
     AVUser.requestPasswordReset("myemail@example.com");
 ```{% endblock %}
 
-{% block code_reset_password_by_mobilephoneNumber %}``` java
-    AVUser.requestPasswordResetBySmsCode("18612340000");
-```{% endblock %}
+{% block code_reset_password_by_mobilephoneNumber %}
 
-{% block code_reset_password_by_mobilephoneNumber_verify %}``` java
+```java
+    AVUser.requestPasswordResetBySmsCode("18612340000");
+```
+{% endblock %}
+
+{% block code_reset_password_by_mobilephoneNumber_verify %}
+
+```java
     AVUser.resetPasswordBySmsCode("123456", "password");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_current_user %}
+
 ```java
     AVUser currentUser = AVUser.getCurrentUser();
     if (currentUser != null) {
@@ -791,14 +975,19 @@ fetchall()
 ```{% endblock %}
 
 {% block code_current_user_logout %}
+
 ```java
     AVUser.logOut();// 清除缓存用户对象
     AVUser currentUser = AVUser.getCurrentUser();// 现在的 currentUser 是 null 了
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_query_user %}```java
+{% block code_query_user %}
+
+```java
     AVQuery<AVUser> userQuery = new AVQuery<>("_User");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block text_subclass %}
 ## 子类化
