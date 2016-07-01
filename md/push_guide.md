@@ -184,7 +184,7 @@ expiration_time|消息过期的绝对日期时间
 prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
-silent|推送通知是否关闭通知栏提醒，默认为 false，即不关闭通知栏提醒
+silent|是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒
 
 #### 开发证书推送
 
