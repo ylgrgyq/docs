@@ -271,3 +271,230 @@ intent.putExtra(AVConstants.PUSH_INTENT_KEY, 1);
 ```
 
 然后当 MyActiviy 里 `getIntent()` 拿到这个 **intent** 后，执行 `AVAnalytics.trackAppOpened(intent);` 时发现 `PUSH_INTENT_KEY` 存在且为 1，则认定其来自推送。该统计可以通过 [请求分析 > Push 打开](/apistat.html?appid={{appid}}#/_appOpenWithPush) 查看。
+
+
+## 混合推送
+
+### 小米推送
+
+#### 环境配置
+1. 注册小米账号等 
+在[小米开放平台](http://dev.xiaomi.com/index)注册小米开发者账号并实名认证，具体流程可参考[详细流程](http://dev.xiaomi.com/doc/?p=90)
+2. 创建小米推送服务应用
+具体流程可参考[详细流程](http://dev.xiaomi.com/doc/?p=1621)
+3. 设置小米的 AppId 及 AppKey
+在 [小米开放平台](http://dev.xiaomi.com/index) -> 管理控制台 -> 消息推送 -> 相关应用 可以查到具体的小米推送服务应用的 AppId 及 AppKey，将此 AppId 及 AppKey 通过 LeanCloud 控制台与 LeanCloud 应用关联。
+
+#### 接入 sdk
+1. 导入 avoscloud-mihw 包
+修改 build.gradle 文件，在 dependencies 中添加依赖：
+```
+dependencies {
+    compile ('cn.leancloud.android:avoscloud-mihw:v3.+')
+}
+```
+如果是通过 jar 包导入，则需要手动下载 jar 包
+
+2. 导入小米推送 sdk
+[小米 sdk 下载链接](http://dev.xiaomi.com/mipush/downpage/)
+
+3. 配置相关 AndroidManifest
+
+添加 Permission
+```
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.GET_TASKS" />
+<uses-permission android:name="android.permission.VIBRATE"/>
+<permission android:name="<your package name>.permission.MIPUSH_RECEIVE" android:protectionLevel="signature" />
+<uses-permission android:name="<your package name>.permission.MIPUSH_RECEIVE" />
+```
+
+添加 service 与 receiver
+```
+<service
+  android:name="com.xiaomi.push.service.XMPushService"
+  android:enabled="true"
+  android:process=":pushservice"/>
+
+<service
+  android:name="com.xiaomi.push.service.XMService"
+  android:enabled="true"
+  android:exported="false"
+  android:permission="android.permission.BIND_JOB_SERVICE"
+  android:process=":pushservice"/>
+
+<service
+  android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
+  android:enabled="true"
+  android:exported="true"/>
+<service
+  android:name="com.xiaomi.mipush.sdk.MessageHandleService"
+  android:enabled="true"/>
+<!--注：此service必须在2.2.5版本以后（包括2.2.5版本）加入-->
+<receiver
+  android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
+  android:exported="true">
+  <intent-filter>
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+      <category android:name="android.intent.category.DEFAULT"/>
+  </intent-filter>
+</receiver>
+<receiver
+  android:name="com.xiaomi.push.service.receivers.PingReceiver"
+  android:exported="false"
+  android:process=":pushservice">
+  <intent-filter>
+      <action android:name="com.xiaomi.push.PING_TIMER"/>
+  </intent-filter>
+</receiver>
+<receiver
+  android:name="com.avos.avoscloud.AVMiPushMessageReceiver"
+  android:exported="true">
+  <intent-filter>
+      <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE"/>
+  </intent-filter>
+  <intent-filter>
+      <action android:name="com.xiaomi.mipush.MESSAGE_ARRIVED"/>
+  </intent-filter>
+  <intent-filter>
+      <action android:name="com.xiaomi.mipush.ERROR"/>
+  </intent-filter>
+</receiver>
+```
+
+#### 具体使用
+1. 在 AVOSCloud.initialize 时调用 AVMixpushManager.registerXiaomiPush(context, miAppId, miAppKey) 即可。
+注：只有在 小米手机 && manifest 正确填写 && appId、appKey 有效时 LeanCloud 才会使用小米推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
+
+
+### 华为推送
+
+#### 环境配置
+1. 注册华为账号等 
+在[华为开发者联盟](http://developer.huawei.com/cn/consumer/)注册华为开发者账号，具体流程可参考[详细流程](http://developer.huawei.com/cn/consumer/wiki/index.php?title=%E6%B3%A8%E5%86%8C%E7%99%BB%E5%BD%95)
+2. 创建华为应用
+实名认证通过后，需要创建华为移动应用并配置 Push 权益，具体流程可参考[详细流程](http://developer.huawei.com/cn/consumer/wiki/index.php?title=%E6%8E%A5%E5%85%A5%E8%AF%B4%E6%98%8E#2.1_.E6.B3.A8.E5.86.8C)
+
+#### 接入 sdk
+1. 导入 avoscloud-mihw 包
+修改 build.gradle 文件，在 dependencies 中添加依赖：
+```
+dependencies {
+    compile ('cn.leancloud.android:avoscloud-mihw:v3.+')
+}
+```
+如果是通过 jar 包导入，则需要手动下载 jar 包
+
+2. 导入小米推送 sdk
+[华为 push sdk 下载链接](http://developer.huawei.com/cn/consumer/wiki/index.php?title=PushSDK%E4%B8%8B%E8%BD%BD)
+
+3. 配置相关 AndroidManifest
+添加 Permission
+
+```
+<uses-permission android:name="android.permission.INTERNET" />
+<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+<uses-permission android:name="android.permission.WAKE_LOCK" />
+```
+
+添加 service 与 receiver
+
+```
+<receiver android:name="com.avos.avoscloud.AVHwPushMessageReceiver" >
+  <intent-filter>
+      <!-- 必须,用于接收token-->
+      <action android:name="com.huawei.android.push.intent.REGISTRATION" />
+      <!-- 必须，用于接收消息-->
+      <action android:name="com.huawei.android.push.intent.RECEIVE" />
+      <!-- 可选，用于点击通知栏或通知栏上的按钮后触发onEvent回调-->
+      <action android:name="com.huawei.android.push.intent.CLICK" />
+      <!-- 可选，查看push通道是否连接，不查看则不需要-->
+      <action android:name="com.huawei.intent.action.PUSH_STATE" />
+  </intent-filter>
+</receiver>
+
+<receiver
+  android:name="com.huawei.android.pushagent.PushEventReceiver"
+  android:process=":pushservice" >
+  <intent-filter>
+      <action android:name="com.huawei.android.push.intent.REFRESH_PUSH_CHANNEL" />
+      <action android:name="com.huawei.intent.action.PUSH" />
+      <action android:name="com.huawei.intent.action.PUSH_ON" />
+      <action android:name="com.huawei.android.push.PLUGIN" />
+  </intent-filter>
+  <intent-filter>
+      <action android:name="android.intent.action.PACKAGE_ADDED" />
+      <action android:name="android.intent.action.PACKAGE_REMOVED" />
+      <data android:scheme="package" />
+  </intent-filter>
+</receiver>
+<receiver
+  android:name="com.huawei.android.pushagent.PushBootReceiver"
+  android:process=":pushservice" >
+  <intent-filter>
+      <action android:name="com.huawei.android.push.intent.REGISTER" />
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+  </intent-filter>
+  <meta-data
+      android:name="CS_cloud_version"
+      android:value="\u0032\u0037\u0030\u0035" />
+</receiver>
+
+<service
+  android:name="com.huawei.android.pushagent.PushService"
+  android:process=":pushservice" >
+</service>
+```
+
+#### 具体使用
+1. 在 AVOSCloud.initialize 时调用 registerHuaweiPush(context) 即可。
+
+注：只有在 华为手机 && manifest 正确填写 时 LeanCloud 才会使用华为推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
+
+### GCM 推送
+
+后台不需要任何，gcm 相关的 token 由 LeanCloud sdk 来申请。
+
+1. 设置 GCM 开关：AVOSCloud.initialize 初始化时设置开关 AVOSCloud.setGcmOpen(true)
+2. 补充 AndroidManifest (注意替换其中的<your-package-name>)
+
+添加 Permission
+```
+<permission android:name="<your-package-name>.permission.C2D_MESSAGE"
+                    android:protectionLevel="signature" />
+<uses-permission android:name="<your-package-name>.permission.C2D_MESSAGE" />
+```
+添加 service 与 receiver
+```
+<receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+  <intent-filter>
+      <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      <action android:name="android.intent.action.USER_PRESENT"/>
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+  </intent-filter>
+</receiver>
+<service android:name="com.avos.avoscloud.PushService" />
+<service android:name="com.avos.avoscloud.AVGCMService">
+  <intent-filter>
+      <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+  </intent-filter>
+</service>
+<receiver
+  android:name="com.google.android.gms.gcm.GcmReceiver"
+  android:exported="true"
+  android:permission="com.google.android.c2dm.permission.SEND" >
+  <intent-filter>
+      <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+      <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
+      <category android:name="<your-package-name>" />
+  </intent-filter>
+</receiver>
+```
+
+注意只有保证 美国节点 & AVOSCloud.setGcmOpen(true) & manifest 声明，此时默认就会走 GCM 通道。
+可以通过查看控制台中 _Installation 表中的 registrationId 是否有值来判断客户端是否注册成功。
