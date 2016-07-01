@@ -1,34 +1,28 @@
-{# 指定继承模板 #}
 {% extends "./leanstorage_guide.tmpl" %}
 
-{# --Start--变量定义，主模板使用的单词，短语所有子模板都必须赋值 #}
-{% set cloudName ="LeanCloud" %}
-{% set productName ="LeanStorage" %}
-{% set platform_title ="Java" %}
-{% set segment_code ="java" %}
-{% set sdk_name ="Java SDK" %}
-{% set baseObjectName ="AVObject" %}
-{% set objectIdName ="objectId" %}
-{% set updatedAtName ="updatedAt" %}
-{% set createdAtName ="createdAt" %}
-{% set saveEventuallyName ="saveEventually" %}
-{% set deleteEventuallyName ="deleteEventually" %}
-{% set relationObjectName ="AVRelation" %}
-{% set pointerObjectName ="AVPointer" %}
-{% set baseQueryClassName ="AVQuery" %}
-{% set geoPointObjectName ="AVGeoPoint" %}
-{% set userObjectName ="AVUser" %}
-{% set fileObjectName ="AVFile" %}
-{% set dateType= "Date" %}
-{% set byteType= "byte[]" %}
-{% set link_to_acl_doc= "[Java 权限管理使用指南](acl_guide-java.html)" %}
+{% set cloudName = "LeanCloud" %}
+{% set productName = "LeanStorage" %}
+{% set platform_title = "Java" %}
+{% set segment_code = "java" %}
+{% set sdk_name = "Java SDK" %}
+{% set baseObjectName = "AVObject" %}
+{% set objectIdName = "objectId" %}
+{% set updatedAtName = "updatedAt" %}
+{% set createdAtName = "createdAt" %}
+{% set saveEventuallyName = "saveEventually" %}
+{% set deleteEventuallyName = "deleteEventually" %}
+{% set relationObjectName = "AVRelation" %}
+{% set pointerObjectName = "AVPointer" %}
+{% set baseQueryClassName = "AVQuery" %}
+{% set geoPointObjectName = "AVGeoPoint" %}
+{% set userObjectName = "AVUser" %}
+{% set fileObjectName = "AVFile" %}
+{% set dateType = "Date" %}
+{% set byteType = "byte[]" %}
+{% set link_to_acl_doc = "[Java 权限管理使用指南](acl_guide-java.html)" %}
 {% set funtionName_whereKeyHasPrefix = "whereStartsWith()" %}
-{% set saveOptions_query= "query" %}
-{% set saveOptions_fetchWhenSave= "fetchWhenSave" %}
-
-{# --End--变量定义，主模板使用的单词和短语在所有子模板都必须赋值 #}
-
-{# --Start--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
+{% set saveOptions_query = "query" %}
+{% set saveOptions_fetchWhenSave = "fetchWhenSave" %}
 
 {% block code_quick_save_a_todo %}
 
@@ -68,7 +62,8 @@
 ```java
     // 构造方法传入的参数，对应的就是控制台中的 Class Name
     AVObject todo = new AVObject("Todo");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_save_todo_folder %}
 
@@ -142,7 +137,8 @@
     object.save();
 ```
 
-此外，HashMap 和 ArrayList 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。{% endblock %}
+此外，HashMap 和 ArrayList 支持嵌套，这样在一个 `AVObject` 中就可以使用它们来储存更多的结构化数据。
+{% endblock %}
 
 {% block code_get_todo_by_objectId %}
 
@@ -210,10 +206,13 @@
 ```
 {% endblock %}
 
-{% block code_object_fetchWhenSave %}```java
+{% block code_object_fetchWhenSave %}
+
+```java
     todo.setFetchWhenSave(true);// 设置 fetchWhenSave 为 true
     todo.save();// 如此
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_object_fetch_with_keys %}
 
@@ -272,12 +271,15 @@
 ```
 {% endblock %}
 
-{% block code_atomic_operation_array %}* `add()`<br>
+{% block code_atomic_operation_array %}
+
+* `add()`<br>
   将指定对象附加到数组末尾。
 * `addUnique()`<br>
   如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。
 * `removeAll()`<br>
-  从数组字段中删除指定对象的所有实例。{% endblock %}
+  从数组字段中删除指定对象的所有实例。
+{% endblock %}
 
 {% block code_set_array_value %}
 
@@ -374,7 +376,9 @@
 ```
 {% endblock %}
 
-{% block code_pointer_comment_one_to_many_todoFolder %}```java
+{% block code_pointer_comment_one_to_many_todoFolder %}
+
+```java
     AVObject comment = new AVObject("Comment");// 构建 Comment 对象
     comment.put("like", 1);// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
     comment.put("content", "这个太赞了！楼主，我也要这些游戏，咱们团购么？");// 留言的内容
@@ -382,15 +386,18 @@
     // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
     comment.put("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
     // 以上代码就是的执行结果就会在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_create_geoPoint %}
 
 ``` java
     AVGeoPoint point = new AVGeoPoint(39.9, 116.4);
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_use_geoPoint %}
+
 ``` java
     todo.put("whereCreated", point);
 ```
@@ -405,14 +412,16 @@
     todoFolder.put("owner", AVUser.getCurrentUser());// 这里就是一个 Pointer 类型，指向当前登录的用户
     String serializedString = todoFolder.toString();
 
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}
 
 ```java
     AVObject deserializedObject = AVObject.parseAVObject(serializedString);
     deserializedObject.save();// 保存到服务端
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_create_avfile_by_stream_data %}
 
@@ -425,19 +434,22 @@
 
 ```java
     AVFile file = AVFile.withAbsoluteLocalPath("LeanCloud.png",  "/tmp/LeanCloud.png");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_create_avfile_from_url %}
 
 ```java
     AVFile file = new AVFile("test.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", new HashMap<String, Object>());
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_upload_file %}
 
 ```java
     file.save()
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_upload_file_with_progress %}
 
@@ -489,12 +501,15 @@
     file.addMetaData("height", 100);
     file.addMetaData("author", "LeanCloud");
     file.save();
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_file_delete %}
+
 ``` java
     file.delete();
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_priority_equalTo_zero_query %}
 
@@ -502,7 +517,8 @@
     AVQuery<AVObject> query = new AVQuery<>("Todo");
     query.whereEqualTo("priority", 0);
     List<AVObject> todos = query.find(); // 符合 priority = 0 的 Todo 列表
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
 
@@ -512,16 +528,20 @@
     query.whereEqualTo("priority", 1);
     // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
     List<AVObject> todos = query.find();
-```{% endblock %}
+```
+{% endblock %}
 
-{% block table_logic_comparison_in_query %}逻辑操作 | AVQuery 方法|
+{% block table_logic_comparison_in_query %}
+
+逻辑操作 | AVQuery 方法|
 ---|---
 等于 | `equalTo`
 不等于 |  `notEqualTo`
 大于 | `greaterThan`
 大于等于 | `greaterThanOrEqualTo`
 小于 | `lessThan`
-小于等于 | `lessThanOrEqualTo`{% endblock %}
+小于等于 | `lessThanOrEqualTo`
+{% endblock %}
 
 {% block code_query_lessThan %}
 
@@ -534,7 +554,8 @@
 
 ```java
     query.whereGreaterThanOrEqualTo("priority", 2);
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_query_with_regular_expression %}
 
@@ -727,9 +748,12 @@
 ```java
     AVQuery<AVObject> query = new AVQuery<>("Comment");
     query.whereEqualTo("targetTodoFolder", AVObject.createWithoutData("TodoFolder", "5590cdfde4b00f7adb5860c8"));
-```{% endblock %}
+```
+{% endblock %}
 
-{% block code_create_tag_object %}```java
+{% block code_create_tag_object %}
+
+```java
     AVObject tag = new AVObject("Tag");// 构建对象
     tag.put("name", "今日必做");// 设置名称
     tag.save();
@@ -781,7 +805,10 @@
 ```
 {% endblock %}
 
-{% block link_to_relation_guide_doc %}[Java 关系建模指南](relation_guide-java.html){% endblock %}
+{% block link_to_relation_guide_doc %}
+
+[Java 关系建模指南](relation_guide-java.html)
+{% endblock %}
 
 {% block code_query_comment_include_todoFolder %}
 
@@ -817,6 +844,7 @@
 {% endblock %}
 
 {% block code_query_by_cql %}
+
 ```java
     String cql = "select * from Todo where status = 1";
     AVCloudQueryResult avCloudQueryResult = AVQuery.doCloudQuery(cql);
@@ -836,7 +864,10 @@
 ```
 {% endblock %}
 
-{% block table_cache_policy %}Java SDK 不支持缓存策略。{% endblock %}
+{% block table_cache_policy %}
+
+Java SDK 不支持缓存策略。
+{% endblock %}
 
 {% block code_query_geoPoint_near %}
 
@@ -848,7 +879,8 @@
     List<AVObject> list ＝ query.find(); // 离这个位置最近的 10 个 Todo 对象
 ```
 
-在上面的代码中，`list` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending` 或 `orderByDescending` 方法，则按距离排序会被新排序覆盖。**{% endblock %}
+在上面的代码中，`list` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending` 或 `orderByDescending` 方法，则按距离排序会被新排序覆盖。**
+{% endblock %}
 
 {% block code_query_geoPoint_within %}
 
@@ -897,25 +929,29 @@
 
 ```java
     AVUser avUser = AVUser.logIn("Tom", "cat!@#123");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
 ```java
     AVUser avUser = AVUser.loginByMobilePhoneNumber("13577778888", "cat!@#123");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_user_logIn_requestLoginSmsCode %}
 
 ```java
     AVUser.requestLoginSmsCode("13577778888");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_user_logIn_with_smsCode %}
 
 ```java
     AVUser avUser = AVUser.signUpOrLoginByMobilePhone("13577778888", "238825");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_get_user_properties %}
 
@@ -925,14 +961,16 @@
 
     // 请注意，以下代码无法获取密码
     String currentPassword = AVUser.getCurrentUser().getPassword();// 无 getPassword() 此方法
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_set_user_custom_properties %}
 
 ```java
     AVUser.getCurrentUser().put("age", 25);
     AVUser.getCurrentUser().save();
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_update_user_custom_properties %}
 
@@ -941,13 +979,15 @@
     AVUser.getCurrentUser().save();
     AVUser.getCurrentUser().put("age", 27);
     AVUser.getCurrentUser().save();
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_reset_password_by_email %}
 
 ```java
     AVUser.requestPasswordReset("myemail@example.com");
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber %}
 
@@ -972,7 +1012,8 @@
     } else {
         //用户对象为空时，可打开用户注册界面…
     }
-```{% endblock %}
+```
+{% endblock %}
 
 {% block code_current_user_logout %}
 
@@ -990,6 +1031,7 @@
 {% endblock %}
 
 {% block text_subclass %}
+
 ## 子类化
 LeanCloud 希望设计成能让人尽快上手并使用。你可以通过 `AVObject.get` 方法访问所有的数据。但是在很多现有成熟的代码中，子类化能带来更多优点，诸如简洁、可扩展性以及 IDE 提供的代码自动完成的支持等等。子类化不是必须的，你可以将下列代码转化：
 
@@ -1163,6 +1205,12 @@ MyUser cloudUser = AVUser.logIn(username, password,
 **注：由于 fastjson 内部的 bug，请在定义 AVUser 时不要定义跟 AVRelation 相关的 get 方法，如果一定要定义的话，请通过在 Class 上添加@JSONType(ignores = {"属性名"})的方式，将其注释为非序列化字段**。
 {% endblock %}
 
-{% block link_to_in_app_search_doc %}（**Java 暂不支持**）{% endblock %}
+{% block link_to_in_app_search_doc %}
 
-{% block link_to_status_system_doc %}（**Java 暂不支持**）{% endblock %}
+（**Java 暂不支持**）
+{% endblock %}
+
+{% block link_to_status_system_doc %}
+
+（**Java 暂不支持**）
+{% endblock %}
