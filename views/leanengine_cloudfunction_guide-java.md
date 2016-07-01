@@ -1,4 +1,23 @@
 {% extends "./leanengine_cloudfunction_guide.tmpl" %}
+{% set platformName       = 'Java' %}
+{% set productName        = 'LeanEngine' %}
+{% set storageName        = 'LeanStorage' %}
+{% set leanengine_middleware = '[LeanEngine ' + platformName + ' SDK](https://github.com/leancloud/leanengine-java-sdk)' %}
+{% set sdk_guide_link     = '[' + platformName + ' SDK](./leanstorage_guide-' + platformName | lower + '.html)' %}
+
+{% set cloud_func_file    = '$PROJECT_DIR/cloud.php' %}
+{% set runFuncName        = 'LeanCloud\Engine\Cloud::run' %}
+{% set defineFuncName     = 'LeanCloud\Engine\Cloud::define' %}
+{% set runFuncApiLink     = '[LeanCloud\Engine\Cloud::run](/api-docs/php/class-LeanCloud.Engine.Cloud.html#run)' %}
+
+{% set hook_before_save   = "beforeSave" %}
+{% set hook_after_save    = "afterSave" %}
+{% set hook_before_update = "beforeUpdate" %}
+{% set hook_after_update  = "afterUpdate" %}
+{% set hook_before_delete = "beforeDelete" %}
+{% set hook_after_delete  = "afterDelete" %}
+{% set hook_on_verified   = "onVerified" %}
+{% set hook_on_login      = "onLogin" %}
 
 {% block cloudFuncExample %}```java
   @EngineFunction("averageStars")
@@ -115,7 +134,7 @@ EngineRequestContext 则可以获取额外的一些 metaData 信息{% endblock %
     query.whereEqualTo("album", album);
     int count = query.count();
     if (count > 0) {
-      throw new Exception("can't delete album if there's still photoes");
+      throw new Exception("无法删除非空相簿");
     } else {
       return album;
     }
