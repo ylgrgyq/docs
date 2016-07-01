@@ -4,22 +4,22 @@
 {# --Start--变量定义，主模板使用的单词和短语在所有子模板都必须赋值 #}
 {% set cloudName ="LeanCloud" %}
 {% set productName ="LeanStorage" %}
-{% set platform_title ="iOS / OS X" %}
-{% set segment_code ="ios" %}
-{% set sdk_name ="iOS / OS X SDK" %}
-{% set baseObjectName ="AVObject" %}
+{% set platform_title ="Swift" %}
+{% set segment_code ="swift" %}
+{% set sdk_name ="Swift SDK" %}
+{% set baseObjectName ="LCObject" %}
 {% set objectIdName ="objectId" %}
 {% set updatedAtName ="updatedAt" %}
 {% set createdAtName ="createdAt" %}
 {% set backgroundFunctionTemplate ="xxxxInBackground" %}
 {% set saveEventuallyName ="saveEventually" %}
 {% set deleteEventuallyName ="deleteEventually" %}
-{% set relationObjectName ="AVRelation" %}
-{% set pointerObjectName ="AVPointer" %}
-{% set baseQueryClassName ="AVQuery" %}
-{% set geoPointObjectName ="AVGeoPoint" %}
-{% set userObjectName ="AVUser" %}
-{% set fileObjectName ="AVFile" %}
+{% set relationObjectName ="LCRelation" %}
+{% set pointerObjectName ="LCPointer" %}
+{% set baseQueryClassName ="LeanCloud.Query" %}
+{% set geoPointObjectName ="LCGeoPoint" %}
+{% set userObjectName ="LCUser" %}
+{% set fileObjectName ="LCFile" %}
 {% set dateType= "NSDate" %}
 {% set byteType= "NSData" %}
 {% set link_to_acl_doc ="[iOS / OS X 权限管理使用指南](acl_guide-ios.html)"%}
@@ -33,187 +33,153 @@
 
 {% block code_create_todo_object %}
 
-```objc
-    // objectWithClassName 参数对应控制台中的 Class Name
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-
-    // 或调用实例方法创建一个对象
-    AVObject *todo = [[AVObject alloc] initWithClassName:@"Todo"];
-
-    // 以上两行代码完全等价
+```swift
+    // className 参数对应控制台中的 Class Name
+     let todo = LCObject(className: "Todo")
 ```
 {% endblock %}
 
 {% block code_save_object_by_cql %}
 
-```objc
+```swift
     // 执行 CQL 语句实现新增一个 TodoFolder 对象
-    [AVQuery doCloudQueryInBackgroundWithCQL:@"insert into TodoFolder(name, priority) values('工作', 1) " callback:^(AVCloudQueryResult *result, NSError *error) {
-        // 如果 error 为空，说明保存成功
-
-    }];
+    LeanCloud.CQLClient.execute("insert into TodoFolder(name, priority) values('工作', 1)") { (result) in
+        if(result.isFailure){
+            print(result.error)
+        } else {
+            if(result.objects.count > 0){
+                let todoFolder = result.objects[0]
+                // 打印 objectId
+                print("objectId",todoFolder.objectId?.value)
+            }
+        }
+    }
 ```
 {% endblock %}
 
 {% block code_quick_save_a_todo %}
 
-```objc
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-        } else {
-            // 失败的话，请检查网络环境以及 SDK 配置是否正确
-        }
-    }];
+```swift
+    // className 参数对应控制台中的 Class Name
+    let todo = LCObject(className: "Todo")
+    todo.set("title", object:"工作")
+    todo.set("content", object: "每周工程师会议，周一下午2点")
+    
+    todo.save { result in
+      // 读取 result.isSuccess 可以判断是否操作成功
+    }
 ```
 {% endblock %}
 
 {% block code_quick_save_a_todo_with_location %}
 
-```objc
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，云端就会自动添加这个字段
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-        } else {
-            // 失败的话，请检查网络环境以及 SDK 配置是否正确
-        }
-    }];
+```swift
+    // className 参数对应控制台中的 Class Name
+    let todo = LCObject(className: "Todo")
+    todo.set("title", object:"工作")
+    todo.set("content", object: "每周工程师会议，周一下午2点")
+    // 设置 location 的值为「会议室」
+    todo.set("location", object: "会议室")
+    
+    todo.save { result in
+      // 读取 result.isSuccess 可以判断是否操作成功
+      
+    }
 ```
 {% endblock %}
 
 {% block code_save_todo_folder %}
 
-```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    [todoFolder saveInBackground];// 保存到云端
+```swift
+    // className 参数对应控制台中的 Class Name
+    let todoFolder = LCObject(className: "TodoFolder")
+    todoFolder.set("name", object:"工作")
+    todoFolder.set("priority", object: 1)
+    
+    // 保存到云端
+    todoFolder.save { result in
+    }
 ```
 {% endblock %}
-
+{% block text_save_options %}{% endblock %}
 {% block code_saveoption_query_example %}
-
-```objc
-// 获取 version 值
-NSNumber *version = [object objectForKey:@"version"];
-
-AVSaveOption *option = [[AVSaveOption alloc] init];
-
-AVQuery *query = [[AVQuery alloc] init];
-[query whereKey:@"version" equalTo:version];
-
-option.query = query;
-
-[object saveInBackgroundWithOption:option block:^(BOOL succeeded, NSError *error) {
-    if ( error.code == 305 ){
-      NSLog(@"无法保存修改，wiki 已被他人更新。");
-    }
-}];
-```
 {% endblock %}
 
 {% block code_get_todo_by_objectId %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c" block:^(AVObject *object, NSError *error) {
-        // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-    }];
+```swift
+ > TODO
 ```
 {% endblock %}
 
 {% block code_fetch_todo_by_objectId %}
 
-```objc
+```swift
     // 第一个参数是 className，第二个参数是 objectId
-    AVObject *todo =[AVObject objectWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
-    [todo fetchInBackgroundWithBlock:^(AVObject *avObject, NSError *error) {
-        NSString *title = avObject[@"title"];// 读取 title
-        NSString *content = avObject[@"content"]; // 读取 content
-    }];
+    let todo = LCObject(className: "Todo", objectId: "575cf743a3413100614d7d75")
+    
+    todo.fetch({ (result ) in
+        if(result.error != nil){
+            print(result.error)
+        }
+        // 读取 title 属性
+        let title = todo.get("title")
+        // 读取 content 属性
+        let content = todo.get("content")
+    })
 ```
 
 {% endblock %}
 
 {% block code_save_callback_get_objectId %}
 
-```objc
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];// 只要添加这一行代码，云端就会自动添加这个字段
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-            NSLog(@"%@",todo.objectId);// 保存成功之后，objectId 会自动从云端加载到本地
+```swift
+    let todo = LCObject(className: "Todo")
+    todo.set("title", object: "工程师周会")
+    todo.set("content", object: "每周工程师会议，周一下午2点")
+    todo.set("location", object: "会议室")
+    
+    todo.save { (result) in
+        if(result.isSuccess){
+            print(todo.objectId)
         } else {
             // 失败的话，请检查网络环境以及 SDK 配置是否正确
         }
-    }];
+    }
 ```
 {% endblock %}
 
 {% block code_access_todo_folder_properties %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query getObjectInBackgroundWithId:@"558e20cbe4b060308e3eb36c" block:^(AVObject *object, NSError *error) {
-        // object 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
-        int priority = [[object objectForKey:@"priority"] intValue];
-        NSString *location = [object objectForKey:@"location"];
-        NSString *title = object[@"title"];
-        NSString *content = object[@"content"];
-
-        // 获取三个特殊属性
-        NSString *objectId = object.objectId;
-        NSDate *updatedAt = object.updatedAt;
-        NSDate *createdAt = object.createdAt;
-    }];
+```swift
+> LeanCloud.Query.getByObjectId 正在开发
 ```
 {% endblock %}
 
+{% block text_refresh_object %}{% endblock %}
+
 {% block code_object_fetch %}
-```objc
-    // 使用已知 objectId 构建一个 AVObject
-    AVObject *anotherTodo = [AVObject objectWithClassName:@"Todo" objectId:@"5656e37660b2febec4b35ed7"];
-    // 然后调用刷新的方法，将数据从云端拉到本地
-    [anotherTodo fetchIfNeededInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        // 此处调用 fetchIfNeededInBackgroundWithBlock 和 refreshInBackgroundWithBlock 效果一样。
-    }];
-```
+
+> TODO
+
 {% endblock %}
 
 {% block code_object_fetchWhenSave %}
-```
-    todo.fetchWhenSave = true;// 设置 fetchWhenSave 为 true
-    [todo saveInBackground];
-```
+
+> TODO
+
 {% endblock %}
 
 
 {% block code_object_fetch_with_keys %}
 
-```objc
-    AVObject *theTodo = [AVObject objectWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-    NSArray *keys = [NSArray arrayWithObjects:@"priority", @"location",nil];// 指定刷新的 key 数组
-    [theTodo fetchInBackgroundWithKeys:keys block:^(AVObject *object, NSError *error) {
-        // theTodo 的 priority 和 location 属性的值就是与云端一致的
-        NSString *priority = [object objectForKey:@"priority"];
-        NSString *location = object[@"location"];
-    }];
-```
+> TODO
+
 {% endblock %}
 
 {% block code_update_todo_location %}
 
-```objc
+```swift
     AVObject *todo = [AVObject objectWithClassName:@"Todo"];
     [todo setObject:@"工程师周会" forKey:@"title"];
     [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
@@ -232,103 +198,107 @@ option.query = query;
 
 {% block code_update_todo_content_with_objectId %}
 
-```objc
-    // 第一个参数是 className，第二个参数是 objectId
-    AVObject *todo =[AVObject objectWithClassName:@"Todo" objectId:@"558e20cbe4b060308e3eb36c"];
-    // 修改属性
-    [todo setObject:@"每周工程师会议，本周改为周三下午3点半。" forKey:@"content"];
-    // 保存到云端
-    [todo saveInBackground];
+```swift
+    let todo = LCObject(className: "Todo", objectId: "575cf743a3413100614d7d75")
+    todo.set("content", object: "每周工程师会议，本周改为周三下午3点半。")
+    
+    todo.save({ (result) in
+        if(result.isSuccess){
+            print("保存成功")
+        }
+    })
 ```
 
 {% endblock %}
 
 {% block code_update_object_by_cql %}
 
-```objc
-    // 执行 CQL 语句实现更新一个 TodoFolder 对象
-    [AVQuery doCloudQueryInBackgroundWithCQL:@"update TodoFolder set name='家庭' where objectId='558e20cbe4b060308e3eb36c'" callback:^(AVCloudQueryResult *result, NSError *error) {
-        // 如果 error 为空，说明保存成功
-
-    }];
+```swift
+    LeanCloud.CQLClient.execute("update TodoFolder set name='家庭' where objectId='575d2c692e958a0059ca3558'", completion: { (result) in
+        if(result.isSuccess){
+            // 成功执行了 CQL
+        }
+    })
 ```
 {% endblock %}
 
 {% block code_atomic_operation_increment %}
-```objc
-    AVObject *theTodo = [AVObject objectWithClassName:@"Todo" objectId:@"564d7031e4b057f4f3006ad1"];
-    [theTodo setObject:[NSNumber numberWithInt:0] forKey:@"views"]; //初始值为 0
-    [theTodo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        // 原子增加查看的次数
-        [theTodo incrementKey:@"views"];
-        // 保存时自动取回云端最新数据
-        theTodo.fetchWhenSave = true;
 
-        [theTodo saveInBackground];
-
-        // 也可以使用 incrementKey:byAmount: 来给 Number 类型字段累加一个特定数值。
-        [theTodo incrementKey:@"views" byAmount:@(5)];
-        [theTodo saveInBackground];
-        // 因为使用了 fetchWhenSave 选项，saveInBackground 调用之后，如果成功的话，对象的计数器字段是当前系统最新值。
-    }];
+```swift
+    let todo = LCObject(className: "Todo", objectId: "575cf743a3413100614d7d75")
+    todo.set("views", object: 50)
+    todo.save({ (saveResult) in
+        todo.increase("views", by: LCNumber(1));
+        todo.save({ (increaseResult) in
+            if(increaseResult.isSuccess){
+                print(todo.get("views"))
+            }
+        })
+    })
 ```
 {% endblock %}
 
 {% block code_atomic_operation_array %}
 
-* `addObject:forKey:`<br>
-  `addObjectsFromArray:forKey:`<br>
+* `append(String, element: LCType)`<br>
   将指定对象附加到数组末尾。
-* `addUniqueObject:forKey:`<br>
-  `addUniqueObjectsFromArray:forKey:`<br>
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
-* `removeObject:forKey:`<br>
-  `removeObjectsInArray:forKey:`<br>
-  从数组字段中删除指定对象的所有实例。
+* `append(String, element: LCType, unique: Bool)`<br>
+   将指定对象附加到数组末尾，并且可以设置一个 `unique` 的 `bool` 值表示只是确保唯一，不会重复添加
+* `append(String, elements: [LCType])`<br>
+   将指定对象数组附加到数组末尾。
+* `append(String, elements: [LCType], unique: Bool)`<br>
+   将指定对象附加到数组末尾，并且可以设置一个 `unique` 的 `bool` 值表示只是确保唯一，不会重复添加
+* `remove(String, element: LCType)`<br>
+   从数组字段中删除指定的对象。
+* `remove(String, elements: [LCType])`<br>
+   从数组字段中删除指定的对象数组。
 
 {% endblock %}
 
 {% block code_set_array_value %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
+```swift
+func getDateWithDateString(dateString:String) -> LCDate {
+    let dateStringFormatter = NSDateFormatter()
+    dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    let date = dateStringFormatter.dateFromString(dateString)!
+    let lcDate = LCDate(date);
+    return lcDate;
 }
 
--(void)addReminders{
-    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 07:10:00"];
-    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 07:20:00"];
-    NSDate *reminder3= [self getDateWithDateString:@"2015-11-11 07:30:00"];
+func testSetArray() {
 
-    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1,reminder3, nil];// 添加提醒时间
-
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo addUniqueObjectsFromArray:reminders forKey:@"reminders"];
-    [todo saveInBackground];
+    let renminder1 = self.getDateWithDateString("2015-11-11 07:10:00")
+    let renminder2 = self.getDateWithDateString("2015-11-11 07:20:00")
+    let renminder3 = self.getDateWithDateString("2015-11-11 07:30:00")
+    
+    let reminders = LCArray(arrayLiteral: renminder1,renminder2,renminder3)
+    
+    let todo = LCObject(className: "Todo")
+    todo.set("reminders", value: reminders)
+    
+    todo.save({ (result) in
+        // 新增一个闹钟时间
+        let todo4 = self.getDateWithDateString("2015-11-11 07:40:00")
+        // 使用 append 方法添加
+        todo.append("reminders", element: todo4, unique: true)
+        todo.save({ (updateResult) in
+            if(result.isSuccess){
+                // 成功执行了 CQL
+            }
+        })
+    })
 }
+
+//https://github.com/BenBBear/cordova-plugin-leanpush
 ```
 {% endblock %}
-
+{% block text_batch_operation %}{% endblock %}
 {% block code_batch_operation %}
 
-```objc
-// 批量创建、更新
-+ (BOOL)saveAll:(NSArray *)objects error:(NSError **)error;
-+ (void)saveAllInBackground:(NSArray *)objects
-              block:(AVBooleanResultBlock)block;
-
-// 批量删除
-+ (BOOL)deleteAll:(NSArray *)objects error:(NSError **)error;
-+ (void)deleteAllInBackground:(NSArray *)objects
-                        block:(AVBooleanResultBlock)block;
-
-// 批量获取
-+ (BOOL)fetchAll:(NSArray *)objects error:(NSError **)error;
-+ (void)fetchAllInBackground:(NSArray *)objects
-                       block:(AVArrayResultBlock)block;                        
+```swift
+ > TODO swift alpha 版本不支持批量操作                     
 ```
 {% endblock %}
 
@@ -354,77 +324,115 @@ option.query = query;
 
 {% endblock %}
 
+{% block text_work_in_background %}
+### 后台运行
+细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 {{productName}} 云端，如下代码：
+
+```swift
+    todo.save({ (result) in
+        if(result.isSuccess){
+            // 操作成功
+        }
+    })
+``` 
+上述用法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
+{% endblock %}
+
 {% block code_delete_todo_by_objectId %}
 
-```objc
-    [todo deleteInBackground];
+```swift
+    // 调用实例方法删除对象
+    todo.delete { (result) in
+        if(result.isSuccess){
+            // 根据 result.isSuccess 可以判断是否删除成功
+        } else {
+            if (result.error != nil){
+                print(result.error?.reason)
+                // 如果删除失败，可以查看是否当前正确的使用了 ACL
+            }
+        }
+    }
 ```
 {% endblock %}
 
 {% block code_delete_todo_by_cql %}
 
-```objc
+```swift
     // 执行 CQL 语句实现删除一个 Todo 对象
-    [AVQuery doCloudQueryInBackgroundWithCQL:@"delete from Todo where objectId='558e20cbe4b060308e3eb36c'" callback:^(AVCloudQueryResult *result, NSError *error) {
-        // 如果 error 为空，说明保存成功
-
-    }];
+    LeanCloud.CQLClient.execute("delete from Todo where objectId='558e20cbe4b060308e3eb36c'") { (result) in
+        if(result.isSuccess){
+            // 删除成功
+        } else {
+            // 删除失败，打印错误信息
+            print(result.error?.reason)
+        }
 ```
 {% endblock %}
 
+{% block save_eventually %}{% endblock %}
+
+
 {% block code_relation_todoFolder_one_to_many_todo %}
 
-```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-
-    AVObject *todo1 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo1 setObject:@"工程师周会" forKey:@"title"];
-    [todo1 setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo1 setObject:@"会议室" forKey:@"location"];
-
-    AVObject *todo2 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo2 setObject:@"维护文档" forKey:@"title"];
-    [todo2 setObject:@"每天 16：00 到 18：00 定期维护文档" forKey:@"content"];
-    [todo2 setObject:@"当前工位" forKey:@"location"];
-
-    AVObject *todo3 = [[AVObject alloc] initWithClassName:@"Todo"];
-    [todo3 setObject:@"发布 SDK" forKey:@"title"];
-    [todo3 setObject:@"每周一下午 15：00" forKey:@"content"];
-    [todo3 setObject:@"SA 工位" forKey:@"location"];
-
-    [AVObject saveAllInBackground:@[todo1,todo2,todo3] block:^(BOOL succeeded, NSError *error) {
-        if (error) {
-            // 出现错误
-        } else {
-            // 保存成功
-            AVRelation *relation = [todoFolder relationForKey:@"containedTodos"];// 新建一个 AVRelation
-            [relation addObject:todo1];
-            [relation addObject:todo2];
-            [relation addObject:todo3];
-            // 上述 3 行代码表示 relation 关联了 3 个 Todo 对象
-
-            [todoFolder saveInBackground];// 保存到云端
-        }
-    }];
+```swift
+    // 以下代码需要同步执行
+    // 新建一个 TodoFolder 对象
+    let todoFolder = LCObject(className: "TodoFolder")
+    todoFolder.set("name", object: "工作")
+    todoFolder.set("priority", object: 1)
+    todoFolder.save()
+    
+    // 新建 3 个 Todo 对象
+    let todo1 = LCObject(className: "Todo")
+    todo1.set("title", object: "工程师周会")
+    todo1.set("content", object: "每周工程师会议，周一下午2点")
+    todo1.set("location", object: "会议室")
+    todo1.save()
+    
+    let todo2 = LCObject(className: "Todo")
+    todo2.set("title", object: "维护文档")
+    todo2.set("content", object: "每天 16：00 到 18：00 定期维护文档")
+    todo2.set("location", object: "当前工位")
+    todo1.save()
+    
+    let todo3 = LCObject(className: "Todo")
+    todo3.set("title", object: "发布 SDK")
+    todo3.set("content", object: "每周一下午 15：00")
+    todo3.set("location", object: "SA 工位")
+    todo1.save()
+    
+    // 使用接口 insertRelation 建立 todoFolder 与 todo1,todo2,todo3 的一对多的关系
+    todoFolder.insertRelation("containedTodos", object: todo1)
+    todoFolder.insertRelation("containedTodos", object: todo2)
+    todoFolder.insertRelation("containedTodos", object: todo3)
+    
+    todoFolder.save()
+    
+    // 保存完毕之后，读取 LCRelation 对象
+    let relation : LCRelation = todoFolder.get("containedTodos")
 ```
 {% endblock %}
 
 {% block code_pointer_comment_one_to_many_todoFolder %}
 
 ```objc
-    AVObject *comment = [[AVObject alloc] initWithClassName:@"Comment"];// 构建 Comment 对象
-    [comment setObject:@1 forKey:@"like"];// 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
-    [comment setObject:@"这个太赞了！楼主，我也要这些游戏，咱们团购么？" forKey:@"content"];// 留言的内容
-
+    // 新建一条留言
+    let comment = LCObject(className: "Comment")
+    // 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
+    comment.set("like", object: 1)
+    // 留言的内容
+    comment.set("content", object: "这个太赞了！楼主，我也要这些游戏，咱们团购么？")
+    
     // 假设已知了被分享的该 TodoFolder 的 objectId 是 5590cdfde4b00f7adb5860c8
-    [comment setObject:[AVObject objectWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"] forKey:@"targetTodoFolder"];
+    let todoFolder = LCObject(className: "TodoFolder", objectId: "5590cdfde4b00f7adb5860c8")
+    comment.set("targetTodoFolder", object: todoFolder)
     // 以上代码的执行结果是在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
+    comment.save {}
 ```
 {% endblock %}
 
 {% block code_data_type %}
+
 ```objc
 NSNumber     *boolean    = @(YES);
 NSNumber     *number     = [NSNumber numberWithInt:2015];
@@ -467,6 +475,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% endblock %}
 
 {% block code_use_geoPoint %}
+
 ``` objc
 [todo setObject:point forKey:@"whereCreated"];
 ```
@@ -502,9 +511,23 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_data_protocol_save_date %}
-{% endblock %}
+{% block code_data_protocol_save_date %}{% endblock %}
 
+{% block module_file %}
+
+> 文件 swift 暂不支持
+
+{% endblock %}
+{% block module_in_app_search %}
+
+> 应用内搜索 swift 暂不支持
+
+{% endblock %}
+{% block module_in_app_social %}
+
+> 应用内社交 swift 暂不支持
+
+{% endblock %}
 {% block code_create_avfile_by_stream_data %}
 
 ```objc
@@ -512,7 +535,19 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
     AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
 ```
 {% endblock %}
+{% block text_sns %}
 
+> SNS 组件 swift 暂不支持
+
+{% endblock %}
+
+{% block text_feedback %}
+ 
+ > 用户反馈组件 swift 暂不支持
+ 
+{% endblock %}
+
+{% block js_push_guide %}{% endblock %}
 {% block code_create_avfile_from_local_path %}
 
 ```objc
@@ -531,6 +566,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% endblock %}
 
 {% block code_upload_file %}
+
 ```objc
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
         NSLog(file.url);//返回一个唯一的 Url 地址
@@ -743,6 +779,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword %}
+
 ```objc
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
@@ -1108,7 +1145,7 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
   }];
 ```
 {% endblock %}
-
+{% block text_query_cache_intro %}{% endblock %}
 {% block table_cache_policy %}
 
 策略枚举 | 含义及解释|

@@ -56,7 +56,7 @@
 
 ## 对象
 
-`{{baseObjectName}}` 是 {{productName}} 对复杂对象的封装，每个 `AVObject` 包含若干属性值对，也称键值对（key-value）。属性的值是与 JSON 格式兼容的数据。通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
+`{{baseObjectName}}` 是 {{productName}} 对复杂对象的封装，每个 `{{baseObjectName}}` 包含若干属性值对，也称键值对（key-value）。属性的值是与 JSON 格式兼容的数据。通过 REST API 保存对象需要将对象的数据通过 JSON 来编码。这个数据是无模式化的（Schema Free），这意味着你不需要提前标注每个对象上有哪些 key，你只需要随意设置 key-value 对就可以，云端会保存它。
 
 ### 构建对象
 构建一个 `{{baseObjectName}}` 可以使用如下方式：
@@ -102,7 +102,7 @@ description     objectId
 {{productName}} 提供了类似 SQL 语法中的 Insert 方式保存一个对象，例如保存一个 TodoFolder 对象可以使用下面的代码：
 
 {% block code_save_object_by_cql %}{% endblock %}
-
+{% block text_save_options %}
 #### 保存选项
 
 `{{baseObjectName}}` 对象在保存时可以设置选项来快捷完成关联操作，可用的选项属性有：
@@ -115,7 +115,7 @@ description     objectId
 <a id="saveoption_query_example" name="saveoption_query_example"></a>【示例】一篇 wiki 文章允许任何人来修改，它的数据表字段有：**content**（wiki 内容）、**version**（版本号）。每当 wiki 内容被更新后，其 version 也需要更新（+1）。用户 A 要修改这篇 wiki，从数据表中取出时其 version 值为 3，当用户 A 完成编辑要保存新内容时，如果数据表中的 version 仍为 3，表明这段时间没有其他用户更新过这篇 wiki，可以放心保存；如果不是 3，开发者可以拒绝掉用户 A 的修改，或执行其他自定义的业务逻辑。
 
 {% block code_saveoption_query_example %}{% endblock %}
-
+{% endblock %}
 ### 数据类型
 `{{baseObjectName}}` 支持以下数据类型：
 
@@ -156,7 +156,7 @@ description     objectId
 </dl>
 {% endblock %}
 
-{% block text_refresh_object%}
+{% block text_refresh_object %}
 #### 同步对象
 多终端共享一个数据时，为了确保当前客户端拿到的对象数据是最新的，可以调用刷新接口来确保本地数据与云端的同步：
 
@@ -227,6 +227,7 @@ description     objectId
 {{productName}} 提供了类似 SQL 语法中的 Delete 方式删除一个对象，例如删除一个 Todo 对象可以使用下面的代码：
 {% block code_delete_todo_by_cql %}{% endblock %}
 
+{% block text_batch_operation %}
 ### 批量操作
 
 为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行创建、更新、删除、获取。接口都在 `{{baseObjectName}}` 这个类下面：
@@ -238,7 +239,7 @@ description     objectId
 {% block code_batch_set_todo_completed %}{% endblock %}
 
 不同类型的批量操作所引发不同数量的 API 调用，具体请参考 [API 调用次数的计算](faq.html#API_调用次数的计算)。
-
+{% endblock %}
 {% block text_work_in_background %}
 ### 后台运行
 细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 {{productName}} 云端，形如 `{{backgroundFunctionTemplate}}` 的方法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
@@ -336,6 +337,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 {% endblock %}
 
+{% block module_file %}
 ## 文件
 文件存储也是数据存储的一种方式，图像、音频、视频、通用文件等等都是数据的载体，另外很多开发者习惯了把复杂对象序列化之后保存成文件（如 `.json` 或者 `.xml` )。文件存储在 {{productName}} 中被单独封装成一个 `{{fileObjectName}}` 来实现文件的上传、下载等操作。
 
@@ -417,6 +419,8 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 {% block text_https_access_for_ios9 %}{% endblock %}
 
 <div class="callout callout-info">注意：默认情况下，文件的删除权限是关闭的，需要进入控制台，在 [`_File` > 其他 > 权限设置 > delete](/data.html?appid={{appid}}#/_File)  中开启。</div>
+
+{% endblock %}
 
 ## 查询
 `{{baseQueryClassName}}` 是构建针对 `{{baseObjectName}}` 查询的基础类。
@@ -844,11 +848,16 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 
 {% block text_subclass %}{% endblock %}
 
+{% block module_in_app_search %}
 ## 应用内搜索
 应用内搜索是一个针对应用数据进行全局搜索的接口，它基于搜索引擎构建，提供更强大的搜索功能。要深入了解其用法和阅读示例代码，请阅读 {% block link_to_in_app_search_doc %}{% endblock %}。
+{% endblock %}
 
+{% block module_in_app_social %}
 ## 应用内社交
 应用内社交，又称「事件流」，在应用开发中出现的场景非常多，包括用户间关注（好友）、朋友圈（时间线）、状态、互动（点赞）、私信等常用功能，请参考 {% block link_to_status_system_doc %}{% endblock %}。
+
+{% endblock %}
 
 {% block text_sns %}
 ## 第三方账户登录
