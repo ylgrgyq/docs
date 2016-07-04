@@ -650,6 +650,12 @@ curl -X DELETE \
   https://leancloud.cn/1.1/scheduledPushMessages/:id
 ```
 
+## 限制
+
+* Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则可能被截断
+* 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对 data 参数有大小限制，超过限制会导致推送无法正常发送，请尽量减小发送数据大小
+* 对于 slient 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符，如果没有填写 title 我们可能会取 alert 中前五个字符作为 title
+
 ## Installation 自动过期和清理
 
 每当用户打开应用，我们都会更新该设备的 _Installation 表中的 `updatedAt` 时间戳。用户如果长期没有更新 _Installation 的 `updatedAt` 时间戳，也就意味着该用户长期没有打开过应用。当超过 360 天没有打开过应用时，我们会将这个用户在 _Installation 表中的记录删除。不过请不要担心，当用户再次打开应用的时候，仍然会自动创建一个新的 Installation 用于推送。
