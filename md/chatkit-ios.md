@@ -39,6 +39,10 @@ git clone --depth=1 https://github.com/leancloud/ChatKit-OC
   </div>
 </div>
 
+图片消息支持多图联播，支持多种分享 |文本消息支持图文混排| 文本消息支持双击全屏展示
+-------------|-------------|-------------
+![enter image description here](images/chatkit-ios/chatkit-screenshot-07.png) | ![enter image description here](images/chatkit-ios/chatkit-screenshot-08.png) | ![enter image description here](images/chatkit-ios/chatkit-screenshot-09.png)
+
 ## 项目结构
 
 ```
