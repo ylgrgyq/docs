@@ -114,6 +114,19 @@ def index():
     return render_template('index.html')
 
 # ...
+```
+```php
+// ./src/app.php
+// ...
+
+$app->get('/', function (Request $request, Response $response) {
+    return $this->view->render($response, "index.phtml", array(
+        "currentTime" => new \DateTime(),
+    ));
+});
+
+// ...
+```
 
 ### 新建一个 Todo
 
