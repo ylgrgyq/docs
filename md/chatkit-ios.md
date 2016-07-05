@@ -39,6 +39,10 @@ git clone --depth=1 https://github.com/leancloud/ChatKit-OC
   </div>
 </div>
 
+图片消息支持多图联播，支持多种分享 |文本消息支持图文混排| 文本消息支持双击全屏展示
+-------------|-------------|-------------
+![enter image description here](images/chatkit-ios/chatkit-screenshot-07.png) | ![enter image description here](images/chatkit-ios/chatkit-screenshot-08.png) | ![enter image description here](images/chatkit-ios/chatkit-screenshot-09.png)
+
 ## 项目结构
 
 ```
@@ -114,8 +118,8 @@ git clone --depth=1 https://github.com/leancloud/ChatKit-OC
  
  
  ## 使用 ChatKit
- 
- 为了让这个库更易入手，避免引入过多公开的类和概念，我们采用了类似「组件化」的方式进行构建——将你在使用 ChatKit 库中所需要的所有方法都放在了 `LCChatKit` 这一个类中。它是一个 Mediator，是整个库的入口，也是中枢。
+
+  为了让这个库更易入手，避免引入过多公开的类和概念，我们采用了类似「组件化」的方式进行构建——将你在使用 ChatKit 库时所需要用到的所有方法都放在了 `LCChatKit` 这一个类中。它是一个 Mediator，是整个库的入口，也是中枢。
  
  使用 ChatKit 大体有几个步骤：
 
@@ -151,7 +155,7 @@ gem install cocoapods
  
 如果提示找不到库，则可去掉 `--no-repo-update`。
 
-### 快速集成
+### 第二步：使用胶水函数完成快速集成
 
 ChatKit 提供了一个快速集成的演示类 `LCChatKitExample`，路径如下：
 
@@ -230,6 +234,27 @@ LCCKConversationViewController *conversationViewController = [[LCCKConversationV
 ```
 
 这里注意，通过 `peerId` 初始化，内部实现时，如果不是好友关系，会先建立好友关系、创建会话，所以调用该方法前请自行判断是否具有好友关系。同理，通过 `conversationId` 初始化群聊，内部实现时，如果不是群成员会先把当前用户加入群，并开启群聊。
+
+## 手动集成
+
+如果你不想使用 CocoaPods 进行集成，也可以选择使用源码集成。集成的步骤如下：
+
+第一步：
+
+将上文[「项目结构」](https://leancloud.cn/docs/chatkit-ios.html#项目结构)中提到的ChatKit 这个「核心库文件夹」拖拽到工程中。
+
+第二步：
+
+添加 ChatKit 依赖的第三方库以及对应版本：
+
+ - [AVOSCloud](https://leancloud.cn/docs/sdk_down.html) v3.3.5
+ - [AVOSCloudIM](https://leancloud.cn/docs/sdk_down.html) v3.3.5
+ - [MJRefresh](https://github.com/CoderMJLee/MJRefresh) 3.1.9
+ - [Masonry](https://github.com/SnapKit/Masonry) v1.0.1 
+ - [SDWebImage](https://github.com/rs/SDWebImage) v3.8.0
+ - [FMDB](https://github.com/ccgus/fmdb) 2.6.2 
+ - [UITableView+FDTemplateLayoutCell](https://github.com/forkingdog/UITableView-FDTemplateLayoutCell) 1.5.beta
+
 
 ## 常见问题
 
