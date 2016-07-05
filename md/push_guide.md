@@ -18,7 +18,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应 [数据�
 ---|---|---
 badge|iOS|呈现在应用图标右上角的红色圆形数字提示，例如待更新的应用数、未读信息数目等。
 channels| |设备订阅的频道
-deviceProfile||在应用有多个 iOS 推送证书或多个混合推送配置的场景下，deviceProfile 用于指定该设备对应的证书名或配置名。
+deviceProfile||在应用有多个 iOS 推送证书或多个 Android 混合推送配置的场景下，deviceProfile 用于指定该设备对应的证书名或配置名。
 deviceToken|iOS|APNS 推送的唯一标识符
 deviceType| |设备类型，目前支持 "ios"、"android"、"wp"、"web"。
 ID|Windows Phone|仅对微软平台的设备（微软平板和手机）有效
@@ -59,7 +59,7 @@ errors| | 本次推送过程中的错误信息。
 
 ## 混合推送
 
-混合推送是为了提高在部分 Android ROM 上推送到达率而专门设计的一套推送功能。
+在部分 Android ROM 上，由于系统对后台进程控制较严，Android 推送的到达率会受到影响。为此我们专门设计了一套称为混合推送的推送机制，用以提高在这部分 Android ROM 上推送的到达率。
 
 关于混合推送的接入方法和使用方式请阅读 [混合推送使用文档](./android_push_guide.html#混合推送)。
 
@@ -183,7 +183,7 @@ expiration_time|消息过期的绝对日期时间
 prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
-silent|是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒
+silent|只对 Android 推送有效。用于控制是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒
 
 #### 开发证书推送
 
@@ -311,7 +311,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 
 如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书，默认使用**生产证书**。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 
-#### 混合推送多配置区分
+#### Android 混合推送多配置区分
 
 如果使用了混合推送功能且设置了多个混合推送配置，需要在 _Installation 表保存设备信息时将当前设备所对应的混合推送配置名存入 deviceProfile 。推送时我们会按照每个目标设备在 _Installation 表 deviceProfile 字段指定的配置名来发混合推送。如果 deviceProfile 为空，我们会默认使用名为**_default**的混合推送配置名来发推送。
 
@@ -651,9 +651,9 @@ curl -X DELETE \
 
 ## 限制
 
-* Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则可能被截断
-* 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对 data 参数有大小限制，超过限制会导致推送无法正常发送，请尽量减小发送数据大小
-* 对于 slient 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符，如果没有填写 title 我们可能会取 alert 中前五个字符作为 title
+* Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则会被截断。详情请参看 [APNs 文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/APNsProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH101-SW1)
+* 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对消息大小有限制。为保证推送消息能被正常发送，我们要求 data + channels 参数须小于 4096 字节，超过限制会导致推送无法正常发送，请尽量减小发送数据大小
+* 对于 slient 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符。对于小米推送如果没有填写 title 我们会取 alert 中前五个字符作为 title
 
 ## Installation 自动过期和清理
 
