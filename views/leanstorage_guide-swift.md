@@ -417,7 +417,7 @@ func testSetArray() {
 
 {% block code_pointer_comment_one_to_many_todoFolder %}
 
-```objc
+```swift
     // 新建一条留言
     let comment = LCObject(className: "Comment")
     // 如果点了赞就是 1，而点了不喜欢则为 -1，没有做任何操作就是默认的 0
@@ -433,87 +433,97 @@ func testSetArray() {
 ```
 {% endblock %}
 
-{% block code_data_type %}
-
-```objc
-NSNumber     *boolean    = @(YES);
-NSNumber     *number     = [NSNumber numberWithInt:2015];
-NSString     *string     = [NSString stringWithFormat:@"%@ 年度音乐排行", number];
-NSDate       *date       = [NSDate date];
-
-NSData       *data       = [@"短篇小说" dataUsingEncoding:NSUTF8StringEncoding];
-NSArray      *array      = [NSArray arrayWithObjects:
-                              string,
-                              number,
-                              nil];
-NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-                              number, @"数字",
-                              string, @"字符串",
-                              nil];
-
-AVObject     *object     = [AVObject objectWithClassName:@"DataTypes"];
-[object setObject:boolean    forKey:@"testBoolean"];
-[object setObject:number     forKey:@"testInteger"];
-[object setObject:string     forKey:@"testString"];
-[object setObject:date       forKey:@"testDate"];
-[object setObject:data       forKey:@"testData"];
-[object setObject:array      forKey:@"testArray"];
-[object setObject:dictionary forKey:@"testDictionary"];
-[object saveInBackground];
-```
-
-此外，NSDictionary 和 NSArray 支持嵌套，这样在一个 AVObject 中就可以使用它们来储存更多的结构化数据。
-
-我们**不推荐**在 `AVObject` 中使用 `NSData` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `AVObject` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 [`AVFile`](#文件)。
-
-若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
-{% endblock %}
-
 {% block code_create_geoPoint %}
 
-``` objc
-AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
+```swift
+  let leancloudOffice  = LCGeoPoint(latitude: 39.9, longitude: 116.4)
 ```
 {% endblock %}
 
 {% block code_use_geoPoint %}
 
-``` objc
-[todo setObject:point forKey:@"whereCreated"];
+```swift
+  todo.set("whereCreated", object: leancloudOffice)
 ```
 {% endblock %}
 
 {% block code_serialize_baseObject_to_string %}
 
-```objc
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-    [todoFolder setObject:[AVUser currentUser] forKey:@"owner"];// 这里就是一个 Pointer 类型，指向当前登录的用户
-
-    NSMutableDictionary *serializedJSONDictionary = [todoFolder dictionaryForObject];//获取序列化后的字典
-    NSError *err;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:serializedJSONDictionary options:0 error:&err];//获取 JSON 数据
-    NSString *serializedString = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];// 获取 JSON 字符串
-    // serializedString 的内容是：{"name":"工作","className":"TodoFolder","priority":1}
+```swift
+    let todoFolder = LeanCloud.LCObject(className: "TodoFolder")
+    todoFolder.set("priority", object: 1)
+    todoFolder.set("name", object: "工作")
+    todoFolder.set("owner", object: LCUser.current)
+    
+    let serializeObject = NSKeyedArchiver.archivedDataWithRootObject(todoFolder)
+    // serializeObject 可以存在本地当做缓存或者作为参数传递
 ```
 {% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}
 
-```objc
-    NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithCapacity:10];// 声明一个 NSMutableDictionary
-    [objectDictionary setObject:@"工作" forKey:@"name"];
-    [objectDictionary setObject:@1 forKey:@"priority"];
-    [objectDictionary setObject:@"TodoFolder" forKey:@"className"];
-
-    AVObject *todoFolder = [AVObject objectWithDictionary:objectDictionary];// 由 NSMutableDictionary 转化一个 AVObject
-
-    [todoFolder saveInBackground];// 保存到云端
+```swift
+    // 假设 serializeObject 是一个已经被序列化之后的 NSData
+    let serializeObject = NSKeyedArchiver.archivedDataWithRootObject(todoFolder)
+    
+    // 反序列化的方式如下
+    let deserializeObject = NSKeyedUnarchiver.unarchiveObjectWithData(serializeObject) as! LCObject
 ```
 {% endblock %}
 
 {% block code_data_protocol_save_date %}{% endblock %}
+
+{% block code_data_type %}
+
+```swift
+    let bool = true
+    let number = 123
+    let str = "abc"
+    let date = NSDate()
+    let data = "短篇小说".dataUsingEncoding(NSUTF8StringEncoding)
+    let array:[String] = ["Eggs", "Milk"]
+    let dictionary: [String: String] = ["YYZ": "Toronto Pearson", "DUB": "Dublin"]
+    
+    let testObject = LeanCloud.LCObject(className: "Todo")
+    testObject.set("testBoolean", object: bool)
+    testObject.set("testNumber", object: number)
+    testObject.set("testString", object: str)
+    testObject.set("testDate", object: date)
+    testObject.set("testData", object: data)
+    testObject.set("testArray", object: array)
+    testObject.set("testDictionary", object: dictionary)
+    
+    testObject.save({ (result) in
+    })
+```
+
+若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
+{% endblock %}
+
+{% block text_LCType_convert %}
+#### LCString
+`LCString` 是 Swift SDK 针对 String 对象的封装，它与 String 相互转化的代码如下：
+
+```swift
+    // String 转化成 LCString
+    let lcString = LCString("abc")
+    // 从 LCString 获取 String
+    let abc  = lcString.value
+```
+
+#### LCNumber
+`LCNumber` 是 Swift SDK 针对  对象的封装，它与 Double 相互转化的代码如下：
+
+```swift
+    // Double 转化成 LCNumber
+    let number123 : Double = 123
+    let lcNumber  = LCNumber(number123)
+    // 从 LCNumber 获取 Double
+    let testNumber = lcNumber.value
+```
+
+
+{% endblock %}
 
 {% block module_file %}
 
@@ -687,8 +697,8 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block code_create_query_by_className %}
 
-```objc
-AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+```swift
+  let query = LeanCloud.Query(className: "Todo")
 ```
 {% endblock %}
 
@@ -703,21 +713,33 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 
 {% block code_priority_equalTo_zero_query %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *priorityEqualsZeroTodos = objects;// 符合 priority = 0 的 Todo 数组
-    }];
+```swift
+    // 构建 LeanCloud.Query 对象
+    let query = LeanCloud.Query(className: "Todo")
+    // 查询所有 priority 等于 0 的 Todo
+    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(0)))
+    // 执行查找
+    query.find({ (result) in
+        if(result.isSuccess){
+            // 获取 Todo 数组
+            let todos = result.objects
+            // 遍历数组
+            for todo in todos! {
+                // 打印 title
+                print(todo.get("title"))
+            }
+        }
+    })
 ```
 {% endblock %}
 
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
+
 ```objc
     AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     [query whereKey:@"priority" equalTo:@0];
     [query whereKey:@"priority" equalTo:@1];
-   // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
+    // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
        ...
     }];
