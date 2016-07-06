@@ -57,11 +57,11 @@ errors| | 本次推送过程中的错误信息。
 
 请阅读 [Android 推送开发文档](./android_push_guide.html)。
 
-## 混合推送
+## Android 混合推送
 
 在部分 Android ROM 上，由于系统对后台进程控制较严，Android 推送的到达率会受到影响。为此我们专门设计了一套称为混合推送的推送机制，用以提高在这部分 Android ROM 上推送的到达率。
 
-关于混合推送的接入方法和使用方式请阅读 [混合推送使用文档](./android_push_guide.html#混合推送)。
+关于混合推送的接入方法和使用方式请阅读 [Android 混合推送使用文档](./android_push_guide.html#混合推送)。
 
 ## Windows Phone 消息推送
 
@@ -183,7 +183,7 @@ expiration_time|消息过期的绝对日期时间
 prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
-silent|只对 Android 推送有效。用于控制是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒
+silent|只对 Android 推送有效。用于控制是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒。
 
 #### 开发证书推送
 
@@ -313,7 +313,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 
 #### Android 混合推送多配置区分
 
-如果使用了混合推送功能且设置了多个混合推送配置，需要在 _Installation 表保存设备信息时将当前设备所对应的混合推送配置名存入 deviceProfile 。推送时我们会按照每个目标设备在 _Installation 表 deviceProfile 字段指定的配置名来发混合推送。如果 deviceProfile 为空，我们会默认使用名为**_default**的混合推送配置名来发推送。
+如果使用了混合推送功能且设置了多个混合推送配置，需要在 `_Installation` 表保存设备信息时将当前设备所对应的混合推送配置名存入 `deviceProfile` 。推送时我们会按照每个目标设备在 `_Installation` 表 `deviceProfile` 字段指定的配置名来发混合推送。如果 `deviceProfile` 为空，我们会默认使用名为 **_default** 的混合推送配置名来发推送。
 
 #### 推送查询条件
 
@@ -654,6 +654,8 @@ curl -X DELETE \
 * Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则会被截断。详情请参看 [APNs 文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/APNsProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH101-SW1)。
 * 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对消息大小有限制。为保证推送消息能被正常发送，我们要求 data + channels 参数须小于 4096 字节，超过限制会导致推送无法正常发送，请尽量减小发送数据大小。
 * 对于 slient 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符。对于小米推送如果没有填写 title 我们会取 alert 中前五个字符作为 title。
+
+如果推送失败，在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 的“状态”一栏中会看到错误提示。
 
 ## Installation 自动过期和清理
 
