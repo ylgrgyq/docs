@@ -520,135 +520,46 @@ func testSetArray() {
     let lcNumber  = LCNumber(number123)
     // 从 LCNumber 获取 Double
     let testNumber = lcNumber.value
+    
+    // 从 LCObject 中读取 Double
+    let priority = todo.get("priority") as! LCNumber
+    let priorityDoubule = priority.value
 ```
 
 
 {% endblock %}
 
-{% block module_file %}
+{% block module_file %}{% endblock %}
 
-> 文件 swift 暂不支持
+{% block module_in_app_search %}{% endblock %}
 
-{% endblock %}
-{% block module_in_app_search %}
+{% block module_in_app_social %}{% endblock %}
 
-> 应用内搜索 swift 暂不支持
+{% block code_create_avfile_by_stream_data %}{% endblock %}
 
-{% endblock %}
-{% block module_in_app_social %}
+{% block text_sns %}{% endblock %}
 
-> 应用内社交 swift 暂不支持
-
-{% endblock %}
-{% block code_create_avfile_by_stream_data %}
-
-```objc
-    NSData *data = [@"我的工作经历" dataUsingEncoding:NSUTF8StringEncoding];
-    AVFile *file = [AVFile fileWithName:@"resume.txt" data:data];
-```
-{% endblock %}
-{% block text_sns %}
-
-> SNS 组件 swift 暂不支持
-
-{% endblock %}
-
-{% block text_feedback %}
- 
- > 用户反馈组件 swift 暂不支持
- 
-{% endblock %}
+{% block text_feedback %}{% endblock %}
 
 {% block js_push_guide %}{% endblock %}
-{% block code_create_avfile_from_local_path %}
 
-```objc
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-    NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *imagePath = [documentsDirectory stringByAppendingPathComponent:@"LeanCloud.png"];
-    AVFile *file = [AVFile fileWithName:fileName contentsAtPath: imagePath];
-```
-{% endblock %}
+{% block code_create_avfile_from_local_path %}{% endblock %}
 
-{% block code_create_avfile_from_url %}
-```objc
-    AVFile *file =[AVFile fileWithURL:@"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"];
-    [file getData];// 注意这一步很重要，这是把图片从原始地址拉去到本地
-```
-{% endblock %}
+{% block code_create_avfile_from_url %}{% endblock %}
 
-{% block code_upload_file %}
+{% block code_upload_file %}{% endblock %}
 
-```objc
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        NSLog(file.url);//返回一个唯一的 Url 地址
-    }];
-```
-{% endblock %}
+{% block code_upload_file_with_progress %}{% endblock %}
 
-{% block code_upload_file_with_progress %}
+{% block code_file_image_thumbnail %}{% endblock %}
 
-```objc
-    [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-      // 成功或失败处理...
-    } progressBlock:^(int percentDone) {
-      // 上传进度数据，percentDone 介于 0 和 100。
-    }];
-```
-{% endblock %}
+{% block code_file_metadata %}{% endblock %}
 
-{% block code_file_image_thumbnail %}
-```objc
-AVFile *file = [AVFile fileWithURL:@"文件-url"];
-[file getThumbnail:YES width:100 height:100 withBlock:^(UIImage *image, NSError *error) {
-    }];
-```
-{% endblock %}
+{% block code_download_file %}{% endblock %}
 
-{% block code_file_metadata %}
-``` objc
-AVFile *file = [AVFile fileWithName:@"test.jpg" contentsAtPath:@"文件-本地-路径"];
-[file.metaData setObject:@(100) forKey:@"width"];
-[file.metaData setObject:@(100) forKey:@"height"];
-[file.metaData setObject:@"LeanCloud" forKey:@"author"];
-NSError *error = nil;
-[file save:&error];
-```
-{% endblock %}
-
-{% block code_download_file %}
-```objc
-    [file getDataInBackgroundWithBlock:^(NSData *data, NSError *error) {
-        // data 就是文件的数据流
-    } progressBlock:^(NSInteger percentDone) {
-        //下载的进度数据，percentDone 介于 0 和 100。
-    }];
-```
-{% endblock %}
-
-{% block code_file_delete %}
-``` objc
-[file deleteInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-}];
-```
-{% endblock %}
+{% block code_file_delete %}{% endblock %}
 
 {% block code_cache_operations_file %}
-
-### 清除缓存
-
-`AVFile` 也提供了清除缓存的方法：
-
-``` objc
-//清除当前文件缓存
-- (void)clearCachedFile;
-
-//类方法, 清除所有缓存
-+ (BOOL)clearAllCachedFiles;
-
-//类方法, 清除多久以前的缓存
-+ (BOOL)clearCacheMoreThanDays:(NSInteger)numberOfDays;
-```
 {% endblock %}
 
 {% block text_https_access_for_ios9 %}
@@ -704,12 +615,7 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block text_create_query_by_avobject %}{% endblock %}
 
-{% block code_create_query_by_avobject %}
-
-```objc
-
-```
-{% endblock %}
+{% block code_create_query_by_avobject %}{% endblock %}
 
 {% block code_priority_equalTo_zero_query %}
 
@@ -735,46 +641,48 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query whereKey:@"priority" equalTo:@1];
+```swift
+    let query = LeanCloud.Query(className: "Todo")
+    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(0)))
+    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(1)))
     // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       ...
-    }];
+    query.find({ (result) in
+        if(result.isSuccess){
+            let todos = result.objects
+            for todo in todos! {
+                if(todo.get("priority") == LCNumber(1)){
+                  // todos 集合里面所有的 Todo 的 priority 属性都应该是 1
+                }
+            }
+        }
+    })
+
 ```
 {% endblock %}
 
 {% block table_logic_comparison_in_query %}
+
 逻辑操作 | AVQuery 方法|
 ---|---
-等于 | `equalTo`
-不等于 |  `notEqualTo`
-大于 | `greaterThan`
-大于等于 | `greaterThanOrEqualTo`
-小于 | `lessThan`
-小于等于 | `lessThanOrEqualTo`
+等于 | `whereKey("key", Query.Constraint.EqualTo(value: LCType()))`
+不等于 |  `whereKey("key", Query.Constraint.NotEqualTo(value: LCType))`
+大于 | `whereKey("key", Query.Constraint.GreaterThan(value: LCType))`
+大于等于 | `whereKey("key", Query.Constraint.GreaterThanOrEqualTo(value: LCType))`
+小于 | `whereKey("key", Query.Constraint.LessThan(value: LCType))`
+小于等于 | `whereKey("key", Query.Constraint.LessThanOrEqualTo(value: LCType))`
 {% endblock %}
 
 {% block code_query_lessThan %}
 
-```objc
-[query whereKey:@"priority" lessThan:@2];
+```swift
+  query.whereKey("priority", Query.Constraint.LessThan(value: LCNumber(2)))
 ```
 {% endblock %}
 
 {% block code_query_greaterThanOrEqualTo %}
 
-```objc
-[query whereKey:@"priority" greaterThanOrEqualTo:@2];
-```
-
-另外，因为 Objective-C 语言本身特定的设定，boolean 值的查询很多开发者**错误地**使用了 0 和 1 进行查询。
-正确的构建方式如下：
-
-```
-[query whereKey:@"booleanTest" equalTo:@(YES)];
+```swift
+  query.whereKey("priority", Query.Constraint.GreaterThanOrEqualTo(value: LCNumber(1)))
 ```
 {% endblock %}
 

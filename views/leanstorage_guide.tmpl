@@ -319,6 +319,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 {% block object_extra %}{% endblock %}
 
 {% block text_data_protocol %}
+
 ### 数据协议
 很多开发者在使用 {{productName}} 初期都会产生疑惑：客户端的数据类型是如何被云端识别的？
 因此，我们有必要重点介绍一下 {{productName}} 的数据协议。
@@ -353,6 +354,9 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 {% endblock %}
 
+{% block text_LCType_convert %}
+{% endblock %}
+{% block module_file %}
 ## 文件
 文件存储也是数据存储的一种方式，图像、音频、视频、通用文件等等都是数据的载体，另外很多开发者习惯了把复杂对象序列化之后保存成文件（如 `.json` 或者 `.xml` )。文件存储在 {{productName}} 中被单独封装成一个 `{{fileObjectName}}` 来实现文件的上传、下载等操作。
 
@@ -437,6 +441,7 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 <div class="callout callout-info">注意：默认情况下，文件的删除权限是关闭的，需要进入控制台，在 [`_File` > 其他 > 权限设置 > delete](/data.html?appid={{appid}}#/_File)  中开启。</div>
 
+{% endblock %}
 ## 查询
 `{{baseQueryClassName}}` 是构建针对 `{{baseObjectName}}` 查询的基础类。
 
@@ -866,11 +871,15 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 
 {% block text_subclass %}{% endblock %}
 
+{% block module_in_app_search %}
 ## 应用内搜索
 应用内搜索是一个针对应用数据进行全局搜索的接口，它基于搜索引擎构建，提供更强大的搜索功能。要深入了解其用法和阅读示例代码，请阅读 {% block link_to_in_app_search_doc %}{% endblock %}。
+{% endblock %}
 
+{% block module_in_app_social %}
 ## 应用内社交
 应用内社交，又称「事件流」，在应用开发中出现的场景非常多，包括用户间关注（好友）、朋友圈（时间线）、状态、互动（点赞）、私信等常用功能，请参考 {% block link_to_status_system_doc %}{% endblock %}。
+{% endblock %}
 
 {% block text_sns %}
 ## 第三方账户登录
