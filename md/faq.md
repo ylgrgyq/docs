@@ -485,7 +485,7 @@ avoscloud -P 3002
 
 1. 阅读官方指南 [Getting Started with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html)。
 2. 创建一个 AWS 账户，以使用 CloudFront 服务和付费。
-3. S3 的公共访问权限（read permission）已经配置好，指南中有关 S3 配置的部分可以跳过。
+3. S3 的公共访问权限（read permission）已经配置好，指南中有关 S3 配置的部分（[Step 2: Upload your content to Amazon S3 and grant object permissions](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html#GettingStartedUploadContent)）可以跳过。
 4. CloudFront 配置时的 **Origin Domain Name** 请从 `AVFile` 的 URL 中获取，其他均可保持默认。
 
 
