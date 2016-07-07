@@ -9,7 +9,7 @@ function refactDom(){
       var url = getPlayUrl(ele);
       var actions = $("<div class='doc-example-action'><button class='copybtn' title='复制'><span class='icon icon-clipboard'></span></button></div>");
       if (url) {
-        actions.prepend("<a class='runbtn' href='" + url + "' target='_blank' title='运行'><span class='icon icon-console-run'></span></a>")
+        actions.prepend("<a class='runbtn' href='" + url + "' target='_blank' title='在 GitHub 中查看'><span class='icon icon-console-run'></span></a>")
       }
       $(ele).after(actions);
       var appsStr = " <div class='doc-example-selector' ng-show='apps.length' ><span>选择应用 <select ng-model='pageState.currentApp' ng-options='app.app_name for app in apps'></select></span>";
