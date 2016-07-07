@@ -365,7 +365,7 @@ dependencies {
 #### 具体使用
 在 AVOSCloud.initialize 时调用 AVMixpushManager.registerXiaomiPush(context, miAppId, miAppKey) 即可。
 
-注：只有在（小米手机 && manifest 正确填写 && appId、appKey）有效时 LeanCloud 才会使用小米推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
+注：只有在是 MIUI 系统且 manifest 正确填写且 appId、appKey有效时，LeanCloud 才会使用小米推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
 
 
 ### 华为推送
@@ -452,7 +452,7 @@ dependencies {
 #### 具体使用
 1. 在 AVOSCloud.initialize 时调用 registerHuaweiPush(context) 即可。
 
-注：只有在 华为手机 && manifest 正确填写 时 LeanCloud 才会使用华为推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
+注：只有在是 EMUI 系统且 manifest 正确填写时，LeanCloud 才会使用华为推送，如果以上条件不符合，sdk 会有日志输出，开发者可以根据日志判断是什么原因导致注册失败。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
 
 ### GCM 推送
 
@@ -502,7 +502,5 @@ GCM 需要系统为 Android 2.2 及以上并且安装有 Google Play 商店的�
 
 2. 设置 GCM 开关：AVOSCloud.initialize 初始化时设置开关 AVOSCloud.setGcmOpen(true)。
 
-注意只有保证 美国节点 & AVOSCloud.setGcmOpen(true) & manifest 声明，此时默认就会走 GCM 通道。
-可以通过查看控制台中 _Installation 表中的 registrationId 是否有值来判断客户端是否注册成功。
-
+注：只有保证是美国节点且调用 AVOSCloud.setGcmOpen(true) 且 manifest 正确声明，才会默认走 GCM 通道。开发者可以通过查看控制台 _Installation 表的相关记录的 vendor 来判断是否注册成功。
 
