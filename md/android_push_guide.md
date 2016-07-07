@@ -456,12 +456,15 @@ dependencies {
 
 ### GCM 推送
 
-后台不需要任何，gcm 相关的 token 由 LeanCloud sdk 来申请。
+GCM（Google Cloud Messaging）是 Google 提供的一项将推送通知消息发送到手机的服务。接入时后台不需要任何设置，GCM 相关的 token 由 LeanCloud sdk 来申请。
 
-1. 设置 GCM 开关：AVOSCloud.initialize 初始化时设置开关 AVOSCloud.setGcmOpen(true)
-2. 补充 AndroidManifest
+#### 必须的环境：
+GCM 需要系统为 Android 2.2 及以上并且安装有 Google Play 商店的设备，或者使用了 GppgleAPIs 且系统为 Android 2.2 及以上的模拟器。具体可详见 [要求](https://developers.google.com/cloud-messaging/android/client)
 
-添加 Permission
+#### 接入 SDK
+1. 补充 AndroidManifest
+
+添加 Permission（开发者要替换其中的 <包名> 为自己 app 对应的 package）
 
 ```
 <permission android:name="<包名>.permission.C2D_MESSAGE"
@@ -469,7 +472,7 @@ dependencies {
 <uses-permission android:name="<包名>.permission.C2D_MESSAGE" />
 ```
 
-添加 service 与 receiver（开发者要替换其中的 <包名> 为自己 app 对应的 package）
+添加 service 与 receiver
 
 ```
 <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
@@ -496,6 +499,8 @@ dependencies {
   </intent-filter>
 </receiver>
 ```
+
+2. 设置 GCM 开关：AVOSCloud.initialize 初始化时设置开关 AVOSCloud.setGcmOpen(true)。
 
 注意只有保证 美国节点 & AVOSCloud.setGcmOpen(true) & manifest 声明，此时默认就会走 GCM 通道。
 可以通过查看控制台中 _Installation 表中的 registrationId 是否有值来判断客户端是否注册成功。
