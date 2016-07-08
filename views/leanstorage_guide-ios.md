@@ -519,6 +519,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```objc
     AVFile *file =[AVFile fileWithURL:@"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"];
     [file getData];// 注意这一步很重要，这是把图片从原始地址拉去到本地
+    [file save];
 ```
 {% endblock %}
 
@@ -727,7 +728,6 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword_using_regex %}
-
 ```objc
   AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
   [query whereKey:@"title" matchesRegex:@"^((?!机票).)*$"];
@@ -740,7 +740,8 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
     NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
     [query whereKey:@"title" notContainedIn:filterArray];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
+        // 标题不是「出差」和「休假」的 Todo 对象列表
+        NSArray<AVObject *> *todos = objects;
     }];
 ```
 {% endblock %}

@@ -30,6 +30,9 @@ $.fn.scrollStopped = function(callback) {
 
   tocContents.eventProxy.on('ready', function () {
     doSideBar();
+    if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
+      window.location=window.location.hash;
+    }
   });
 })();
 
@@ -67,10 +70,6 @@ var doSideBar = function(){
 };
 
 var updateScrollSpy = function() {
-  if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
-    window.location=window.location.hash;
-  }
-  //定位完成后再添加 scrollspy 功能
   setTimeout(function(){
     $('body').scrollspy({ target: '.sidebar-wrapper' });
   }, 200);
@@ -225,7 +224,8 @@ var codeBlockTabber = (function() {
       'lang-python': 'Python',
       'lang-java': 'Java',
       'lang-ts':'TypeScript',
-      'lang-es7': 'ECMAScript7'
+      'lang-es7': 'ECMAScript7',
+      'lang-html': 'HTML'
     };
 
     $.each($codeBlocks, function () {
