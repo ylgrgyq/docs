@@ -28,11 +28,9 @@ $ cd python-getting-started
 1. 申请渠道参数，并配置 BeeCloud 各个支付渠道的参数，此处请参考 [BeeCloud 文档 &middot; 渠道参数帮助页](https://beecloud.cn/doc/payapply/?index=0)。BeeCloud 中配置参数需要<u>完成企业认证</u>后才能填写！
 1. 激活「秒支付 Button」功能，进入 APP > **设置**  > **秒支付 Button**：
   
-  ![](http://7xavqo.com1.z0.glb.clouddn.com/spay-button-before.png)
+  ![](http://beeclouddoc.qiniudn.com/jsbutton_leancloud1.png)
 
-  点选 **支付渠道** 开启该支付渠道。同时还可以调整你需要的渠道菜单的显示顺序，点击 **保存** 后会生成 appid 对应的 script 标签。需要将此 script 标签放到<u>任何需要使用秒支付 Button 的网页里</u>。
-
-  ![](http://7xavqo.com1.z0.glb.clouddn.com/spay-button-after.png) 
+  拖动 **支付渠道** 开启该支付渠道。同时还可以调整你需要的渠道菜单的显示顺序，点击 **保存** 后会生成 appid 对应的 script 标签。需要将此 script 标签放到<u>任何需要使用秒支付 Button 的网页里</u>。
 
 ## 接入秒支付 Button 实现收款
 
