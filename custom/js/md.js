@@ -290,6 +290,31 @@ var codeBlockTabber = (function() {
       var targetLang = $(this).data('toggle-lang');
       var $blocks = $('.codeblock-toggle-enabled');
 
+      // check if is switching to another language first
+      if (!$(this).hasClass('active')) {
+        var prevHeihgt = 0;
+        var nextHeight = 0;
+        var heightOffset = 0;
+
+        // sum all heights of previous visble code blocks with multilang enabled
+        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled:visible').each(function () {
+          prevHeihgt += $(this).outerHeight(true);
+        });
+
+        // sum all heights of previous hidden code blocks with multilang enabled
+        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled').not(':visible').each(function () {
+          nextHeight += $(this).outerHeight(true);
+        });
+
+        heightOffset = prevHeihgt - nextHeight;
+
+        if (heightOffset !== 0) {
+          var currentTop = document.documentElement.scrollTop || document.body.scrollTop;
+          window.scrollTo(0, currentTop - heightOffset);
+          console.log('codeblock height offset: ' + heightOffset);
+        }
+      }
+
       console.log('switching to ' + targetLang);
 
       $('.code-lang-toggles .toggle').removeClass('active');
