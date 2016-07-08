@@ -1,6 +1,6 @@
 # 为网站快速加入收款功能
 
-网络支付是时下大热的开发趋势，但市面上支付渠道繁多，接入复杂，深坑不断，大大阻碍了开发者的开发进度。[BeeCloud][beecloud]为开发者提供了一站式支付的解决方案，能便捷快速地实现各种支付渠道的接入，包括微信支付、支付宝、银联、易宝支付、百度钱包、京东支付、快钱、PayPal、Visa、MasterCard。  
+网络支付是时下大热的开发趋势，但市面上支付渠道繁多，接入复杂，深坑不断，大大阻碍了开发者的开发进度。[BeeCloud][beecloud] 为开发者提供了一站式支付的解决方案，能便捷快速地实现各种支付渠道的接入，包括微信支付、支付宝、银联、易宝支付、百度钱包、京东支付、快钱、PayPal、Visa、MasterCard。  
 
 本文介绍如何在 [LeanCloud 云引擎](leanengine_overview.html) 的 [Python 环境](leanengine_guide-python.html) 中使用 BeeCloud 的「[秒收款 Button](https://app.beecloud.cn/)」产品来快速部署一个可以收款的网站。应用场景包含任何需要收款的网站（电脑/手机网站），兼容 IE7+、Chrome、Safari 等多数主流浏览器。
 
@@ -82,7 +82,7 @@ BC.click(data, event);
 `wxJsapiSuccess` | `function(res)` | 否 | 微信 jsapi 的接口支付成功后将调用此接口。 只传递一个参数，为微信原生的结果 Object。
 `wxJsapiFail` | `function(res)` | 否 | 微信 jsapi 的接口，支付不成功都将调用此接口。 只传递一个参数，为微信原生的结果 Object。
 
-## 示例步骤  
+## 示例文件 
 
 若为移动端 H5 页面，页面头部需加上以下 meta 做移动适配。
 ```
