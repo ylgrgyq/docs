@@ -710,8 +710,8 @@ curl -X GET \
 `skip`|可选|跳过的文档数目，默认为 0
 `limit`|可选|返回集合大小，默认 100，最大 1000
 `fields`|可选|相似搜索匹配的字段列表，用逗号隔开，默认为所有索引字段 `_all`
-`like`|可选，和 likeObjectIds 参数二者必须提供其中之一|相似的文本关键字。
-`likeObjectIds`|可选，和 like 参数二者必须提供其中之一|相似的对象 objectId 列表，用逗号隔开。
+`like`|可选|**和 `likeObjectIds` 参数二者必须提供其中之一**。代表相似的文本关键字。
+`likeObjectIds`|可选|**和 `like` 参数二者必须提供其中之一**。代表相似的对象 objectId 列表，用逗号隔开。
 `clazz`|必须|类名
 `include`|可选|关联查询内联的 Pointer 字段列表，逗号隔开，形如 `user,comment` 的字符串。**仅支持 include Pointer 类型**。
 `min_term_freq`|可选|文档中一个词语至少出现次数，小于这个值的词将被忽略，默认是 2，如果返回文档数目过少，可以尝试调低此值。
