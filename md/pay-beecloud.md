@@ -42,7 +42,6 @@ $ cd python-getting-started
 
 ```html
 <script id='spay-script' src='https://jspay.beecloud.cn/1/pay/jsbutton/returnscripts?appId=xxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxx'></script>
-    <script>
 ```
 
 然后调用 script 中包含的 `BC.Click()` 方法，进行支付。
@@ -132,7 +131,7 @@ JavaScript 传递的参数中 sign 比较特殊，用来保证订单信息的完
         if (typeof BC == "undefined") {
             if (document.addEventListener) { // 大部分浏览器
                 document.addEventListener('beecloud:onready', bcPay, false);
-            } else if (document.attachEvent) { // 兼容 IE 11 之前的版本
+            } else if (document.attachEvent) { // 兼容 IE11 之前的版本
                 document.attachEvent('beecloud:onready', bcPay);
             }
         } else {
@@ -296,7 +295,7 @@ def app_accept_webhook():
 <dt>是否支持个人开发者？</dt>
 <dd>不支持。目前 BeeCloud 的服务仅支持证照齐全的企业，主要因为个人无法在支付渠道方（例如支付宝
 、微信支付等）开通账号。</dd>
-<dt>微信公众号支付无法调用</dt>
+<dt>微信公众号支付无法调起</dt>
 <dd>请按照以下步骤进行排查：
 <ol><li>检查微信公众号后台是否正确设置了支付域名。</li>
 <li>检查微信公众号后台是否正确设置了用户信息获取授权域名。</li>
