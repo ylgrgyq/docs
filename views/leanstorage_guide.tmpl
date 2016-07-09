@@ -242,6 +242,7 @@ description     objectId
 {% block code_delete_options %}{% endblock %}
 {% endblock %}
 
+{% block text_batch_operation %}
 ### 批量操作
 
 为了减少网络交互的次数太多带来的时间浪费，你可以在一个请求中对多个对象进行创建、更新、删除、获取。接口都在 `{{baseObjectName}}` 这个类下面：
@@ -253,7 +254,7 @@ description     objectId
 {% block code_batch_set_todo_completed %}{% endblock %}
 
 不同类型的批量操作所引发不同数量的 API 调用，具体请参考 [API 调用次数的计算](faq.html#API_调用次数的计算)。
-
+{% endblock %}
 {% block text_work_in_background %}
 ### 后台运行
 细心的开发者已经发现，在所有的示例代码中几乎都是用了异步来访问 {{productName}} 云端，形如 `{{backgroundFunctionTemplate}}` 的方法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
@@ -709,6 +710,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 
 ### 注册
 
+{% block text_send_sms_code_for_loginOrSignup %}
 #### 手机号码登录
 
 一些应用为了提高首次使用的友好度，一般会允许用户浏览一些内容，直到用户发起了一些操作才会要求用户输入一个手机号，而云端会自动发送一条验证码的短信给用户的手机号，最后验证一下，完成一个用户注册并且登录的操作，例如很多团购类应用都有这种用户场景。
@@ -720,7 +722,7 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 然后在 UI 上给与用户输入验证码的输入框，用户点击登录的时候调用如下接口：
 
 {% block code_verify_sms_code_for_loginOrSignup %}{% endblock %}
-
+{% endblock %}
 #### 用户名和密码注册
 
 采用「用户名 + 密码」注册时需要注意：密码是以明文方式通过 HTTPS 加密传输给云端，云端会以密文存储密码，并且我们的加密算法是无法通过所谓「彩虹表撞库」获取的，这一点请开发者放心。换言之，用户的密码只可能用户本人知道，开发者不论是通过控制台还是 API 都是无法获取的。另外我们需要强调**在客户端，应用切勿再次对密码加密，这会导致重置密码等功能失效。**

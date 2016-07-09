@@ -16,7 +16,7 @@
 {% set deleteEventuallyName ="deleteEventually" %}
 {% set relationObjectName ="LCRelation" %}
 {% set pointerObjectName ="LCPointer" %}
-{% set baseQueryClassName ="LeanCloud.Query" %}
+{% set baseQueryClassName ="LCQuery" %}
 {% set geoPointObjectName ="LCGeoPoint" %}
 {% set userObjectName ="LCUser" %}
 {% set fileObjectName ="LCFile" %}
@@ -110,7 +110,14 @@
 {% block code_get_todo_by_objectId %}
 
 ```swift
- > TODO
+    let query = LCQuery(className: "Todo")
+    query.get("575cf743a3413100614d7d75", completion: { (result) in
+        if(result.isSuccess) {
+            let todo = result.object
+            print(todo?.objectId?.value)
+            print( todo?.get("title"))
+        }
+    })
 ```
 {% endblock %}
 
@@ -154,7 +161,19 @@
 {% block code_access_todo_folder_properties %}
 
 ```swift
-> LeanCloud.Query.getByObjectId 正在开发
+    let query = LCQuery(className: "Todo")
+    query.get("558e20cbe4b060308e3eb36c") { (result) in
+        // todoObj 就是 id 为 558e20cbe4b060308e3eb36c 的 Todo 对象实例
+        let todoObj = result.object
+        let location = todoObj?.get("location") as! LCString
+        let title = todoObj?.get("title") as! LCString
+        let content = todoObj?.get("content") as! LCString
+        
+        // 获取三个特性
+        let objectId = todoObj?.objectId
+        let updatedAt = todoObj?.updatedAt
+        let createdAt = todoObj?.createdAt
+    }
 ```
 {% endblock %}
 
@@ -300,7 +319,7 @@ func testSetArray() {
 {% block code_batch_operation %}
 
 ```swift
- > TODO swift alpha 版本不支持批量操作                     
+ > swift alpha 版本不支持批量操作                     
 ```
 {% endblock %}
 
@@ -512,7 +531,7 @@ func testSetArray() {
 ```
 
 #### LCNumber
-`LCNumber` 是 Swift SDK 针对  对象的封装，它与 Double 相互转化的代码如下：
+`LCNumber` 是 Swift SDK 针对 Double 数据类型的封装，它与 Double 相互转化的代码如下：
 
 ```swift
     // Double 转化成 LCNumber
@@ -525,7 +544,28 @@ func testSetArray() {
     let priority = todo.get("priority") as! LCNumber
     let priorityDoubule = priority.value
 ```
+#### LCArray
+`LCArray` 是 Swift SDK 针对  Array 类型的封装，它的构造方式如下：
 
+```swift
+    let lcNumberArray = LCArray(arrayLiteral: LCNumber(1),LCNumber(2),LCNumber(3))
+    let lcStringArray: LCArray = [LCString("a"), LCString("b"), LCString("c")]
+```
+
+#### LCDate
+`LCDate` 是 Swift SDK 针对  日期类型的封装，它的使用方式如下：
+
+```swift
+    let dateStringFormatter = NSDateFormatter()
+    dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+    let date = dateStringFormatter.dateFromString("2016-07-09 22:15:16")!
+    
+    // 使用 NSDate 构造 LCDate
+    let lcDate = LCDate(date);
+    // 从 LCDate 读取 NSDate
+    let nativeDate = lcDate.value
+```
 
 {% endblock %}
 
@@ -609,7 +649,7 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 {% block code_create_query_by_className %}
 
 ```swift
-  let query = LeanCloud.Query(className: "Todo")
+  let query = LCQuery(className: "Todo")
 ```
 {% endblock %}
 
@@ -620,10 +660,10 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 {% block code_priority_equalTo_zero_query %}
 
 ```swift
-    // 构建 LeanCloud.Query 对象
-    let query = LeanCloud.Query(className: "Todo")
+    // 构建 LCQuery 对象
+    let query = LCQuery(className: "Todo")
     // 查询所有 priority 等于 0 的 Todo
-    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(0)))
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
     // 执行查找
     query.find({ (result) in
         if(result.isSuccess){
@@ -642,9 +682,9 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 {% block code_priority_equalTo_zero_and_one_wrong_example %}
 
 ```swift
-    let query = LeanCloud.Query(className: "Todo")
-    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(0)))
-    query.whereKey("priority", Query.Constraint.EqualTo(value: LCNumber(1)))
+    let query = LCQuery(className: "Todo")
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(1)))
     // 如果这样写，第二个条件将覆盖第一个条件，查询只会返回 priority = 1 的结果
     query.find({ (result) in
         if(result.isSuccess){
@@ -664,315 +704,309 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 逻辑操作 | AVQuery 方法|
 ---|---
-等于 | `whereKey("key", Query.Constraint.EqualTo(value: LCType()))`
-不等于 |  `whereKey("key", Query.Constraint.NotEqualTo(value: LCType))`
-大于 | `whereKey("key", Query.Constraint.GreaterThan(value: LCType))`
-大于等于 | `whereKey("key", Query.Constraint.GreaterThanOrEqualTo(value: LCType))`
-小于 | `whereKey("key", Query.Constraint.LessThan(value: LCType))`
-小于等于 | `whereKey("key", Query.Constraint.LessThanOrEqualTo(value: LCType))`
+等于 | `whereKey("key", LCQuery.Constraint.EqualTo(value: LCType()))`
+不等于 |  `whereKey("key", LCQuery.Constraint.NotEqualTo(value: LCType))`
+大于 | `whereKey("key", LCQuery.Constraint.GreaterThan(value: LCType))`
+大于等于 | `whereKey("key", LCQuery.Constraint.GreaterThanOrEqualTo(value: LCType))`
+小于 | `whereKey("key", LCQuery.Constraint.LessThan(value: LCType))`
+小于等于 | `whereKey("key", LCQuery.Constraint.LessThanOrEqualTo(value: LCType))`
 {% endblock %}
 
 {% block code_query_lessThan %}
 
 ```swift
-  query.whereKey("priority", Query.Constraint.LessThan(value: LCNumber(2)))
+  query.whereKey("priority", LCQuery.Constraint.LessThan(value: LCNumber(2)))
 ```
 {% endblock %}
 
 {% block code_query_greaterThanOrEqualTo %}
 
 ```swift
-  query.whereKey("priority", Query.Constraint.GreaterThanOrEqualTo(value: LCNumber(1)))
+  query.whereKey("priority", LCQuery.Constraint.GreaterThanOrEqualTo(value: LCNumber(1)))
 ```
 {% endblock %}
 
 {% block code_query_with_regular_expression %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"title" matchesRegex:@"[\u4e00-\u9fa5]"];
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("title", LCQuery.Constraint.MatchedPattern(pattern: "[\\u4e00-\\u9fa5]", option:nil))
 ```
 {% endblock %}
 
 {% block code_query_with_contains_keyword %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"title" containsString:@"李总"];
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("title", LCQuery.Constraint.MatchedSubstring(string: "李总"))
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword_using_regex %}
 
-```objc
-  AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-  [query whereKey:@"title" matchesRegex:@"^((?!机票).)*$"];
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("title", LCQuery.Constraint.MatchedPattern(pattern: "^((?!机票).)*$", option: nil))
 ```
 {% endblock %}
 
 {% block code_query_with_not_contains_keyword %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSArray *filterArray = [NSArray arrayWithObjects:@"出差", @"休假", nil]; // NSArray
-    [query whereKey:@"title" notContainedIn:filterArray];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
-    }];
+```swift
+    let query = LCQuery(className: "Todo")
+    let filterArray = LCArray([ LCString("休假"),LCString("出差")])
+    query.whereKey("title", LCQuery.Constraint.NotContainedIn(array: filterArray))
 ```
 {% endblock %}
 
 {% block code_query_array_contains_using_equalsTo %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
-}
--(void)queryRemindersContains{
-    NSDate *reminder= [self getDateWithDateString:@"2015-11-11 08:30:00"];
-
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-
-    // equalTo: 可以找出数组中包含单个值的对象
-    [query whereKey:@"reminders" equalTo:reminder];
-}
+```swift
+    func queryRemindersContains(){
+        let reminder = self.getDateWithDateString("2015-11-11 08:30:00")
+        let query = LCQuery(className: "Todo")
+        query.whereKey("reminders", LCQuery.Constraint.EqualTo(value: reminder))
+    }
+    func getDateWithDateString(dateString:String) -> LCDate {
+        let dateStringFormatter = NSDateFormatter()
+        dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        let date = dateStringFormatter.dateFromString(dateString)!
+        let lcDate = LCDate(date);
+        return lcDate;
+    }
 ```
 {% endblock %}
 
 {% block code_query_array_contains_all %}
 
-```objc
--(NSDate*) getDateWithDateString:(NSString*) dateString{
-    NSDateFormatter *dateFormat = [[NSDateFormatter alloc] init];
-    [dateFormat setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
-    NSDate *date = [dateFormat dateFromString:dateString];
-    return date;
-}
-
--(void)queryRemindersContainsAll{
-    NSDate *reminder1= [self getDateWithDateString:@"2015-11-11 08:30:00"];
-    NSDate *reminder2= [self getDateWithDateString:@"2015-11-11 09:30:00"];
-
-    // 构建查询时间点数组
-    NSArray *reminders =[NSArray arrayWithObjects:reminder1, reminder1, nil];
-
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"reminders" containsAllObjectsInArray:reminders];
-
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-
-    }];
-}
+```swift
+    func testArrayContainsAll() {
+        let reminder1 = self.getDateWithDateString("2015-11-11 08:30:00")
+        let reminder2 = self.getDateWithDateString("2015-11-11 09:30:00")
+        
+        // 构建查询时间点数组
+        let reminders: LCArray = [reminder1, reminder2]
+        let query = LCQuery(className: "Todo")
+        query.whereKey("reminders", LCQuery.Constraint.ContainedAllIn(array: reminders))
+        
+    }
+    
+    func getDateWithDateString(dateString:String) -> LCDate {
+        let dateStringFormatter = NSDateFormatter()
+        dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
+        let date = dateStringFormatter.dateFromString(dateString)!
+        let lcDate = LCDate(date);
+        return lcDate;
+    }
 ```
 {% endblock %}
 
 {% block code_query_whereHasPrefix %}
 
-```objc
+```swift
     // 找出开头是「早餐」的 Todo
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"content" hasPrefix:@"早餐"];
+    let query = LCQuery(className: "Todo")
+    query.whereKey("content", LCQuery.Constraint.PrefixedBy(string: "早餐"))
 ```
 {% endblock %}
 
 {% block code_query_comment_by_todoFolder %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
-    [query whereKey:@"targetTodoFolder" equalTo:[AVObject objectWithClassName:@"TodoFolder" objectId:@"5590cdfde4b00f7adb5860c8"]];
+```swift
+    let query = LCQuery(className: "Comment")
+    let targetTodoFolder = LCObject(className: "TodoFolder", objectId: "5590cdfde4b00f7adb5860c8")
+    query.whereKey("targetTodoFolder", LCQuery.Constraint.EqualTo(value: targetTodoFolder))
 ```
 {% endblock %}
 
 {% block code_create_tag_object %}
 
-```objc
-    AVObject *tag = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag setObject:@"今日必做" forKey:@"name"];// 设置名称
-    [tag saveInBackground];
+```swift
+    let tag = LCObject(className: "Tag")
+    tag.set("name", object: "今日必做")
+    tag.save(){_ in }
 ```
 {% endblock %}
 
 {% block code_create_family_with_tag %}
 
-```objc
-    AVObject *tag1 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag1 setObject:@"今日必做" forKey:@"name"];// 设置 Tag 名称
-
-    AVObject *tag2 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag2 setObject:@"老婆吩咐" forKey:@"name"];// 设置 Tag 名称
-
-    AVObject *tag3 = [[AVObject alloc] initWithClassName:@"Tag"];// 构建对象
-    [tag3 setObject:@"十分重要" forKey:@"name"];// 设置 Tag 名称
-
-
-    AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
-    [todoFolder setObject:@"家庭" forKey:@"name"];// 设置 Todo 名称
-    [todoFolder setObject:@1 forKey:@"priority"];// 设置优先级
-
-    AVRelation *relation = [todoFolder relationForKey:@"tags"];// 新建一个 AVRelation
-    [relation addObject:tag1];
-    [relation addObject:tag2];
-    [relation addObject:tag3];
-
-    [todoFolder saveInBackground];// 保存到云端
+```swift
+    let tag1 = LCObject(className: "Tag")
+    tag1.set("name", object: "今日必做")
+    
+    let tag2 = LCObject(className: "Tag")
+    tag2.set("name", object: "今日必做")
+    
+    let tag3 = LCObject(className: "Tag")
+    tag3.set("name", object: "今日必做")
+    
+    let todoFolder = LCObject(className: "TodoFolder") // 新建 TodoFolder 对象
+    todoFolder.set("name", object: "家庭")
+    todoFolder.set("priority", object: 1)
+    
+    // 分别将 tag1,tag2,tag3 分别插入到关系中
+    todoFolder.insertRelation("tags", object: tag1)
+    todoFolder.insertRelation("tags", object: tag2)
+    todoFolder.insertRelation("tags", object: tag3)
+    
+    todoFolder.save(){_ in} //保存到云端
 ```
 {% endblock %}
 
 {% block code_query_tag_for_todoFolder %}
 
-```objc
-    AVObject *todoFolder = [AVObject objectWithClassName:@"TodoFolder" objectId:@"5661047dddb299ad5f460166"];
-    AVRelation *relation = [todoFolder relationForKey:@"tags"];
-    AVQuery *query = [relation query];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       // objects 是一个 AVObject 的 NSArray，它包含所有当前 todoFolder 的 tags
-    }];
+```swift
+    let targetTodoFolder = LCObject(className: "TodoFolder", objectId: "5590cdfde4b00f7adb5860c8")
+    let relation = todoFolder.relationForKey("tags")
+    let realationQuery = relation.query;
+    realationQuery.find { (result) in
+        let tags = result.objects
+    }
 ```
 {% endblock %}
 
 {% block code_query_todoFolder_with_tag %}
 
-```objc
-    AVObject *tag = [AVObject objectWithClassName:@"Tag" objectId:@"5661031a60b204d55d3b7b89"];
-
-    AVQuery *query = [AVQuery queryWithClassName:@"TodoFolder"];
-
-    [query whereKey:@"tags" equalTo:tag];
-
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        // objects 是一个 AVObject 的 NSArray
+```swift
+    let tag = LCObject(className: "Tag",objectId: "5661031a60b204d55d3b7b89")
+    let todoFolderQuery = LCQuery(className: "TodoFolder")
+    todoFolderQuery.whereKey("Tags", LCQuery.Constraint.EqualTo(value: tag))
+    todoFolderQuery.find { (result) in
         // objects 指的就是所有包含当前 tag 的 TodoFolder
-    }];
+        let objects = result.objects
+    }
 ```
 {% endblock %}
 
 {% block code_query_comment_include_todoFolder %}
 
-```objc
-    AVQuery *commentQuery = [AVQuery queryWithClassName:@"Comment"];
-    [commentQuery orderByDescending:@"createdAt"];
-    commentQuery.limit = 10;
-    [commentQuery includeKey:@"targetTodoFolder"];// 关键代码，用 includeKey 告知云端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
-
-    [commentQuery findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
+```swift
+    let query = LCQuery(className: "Comment")
+    query.whereKey("targetTodoFolder", LCQuery.Constraint.Included)// 关键代码，用 includeKey 告知云端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+    
+    query.whereKey("createdAt", LCQuery.Constraint.Descending)
+    query.limit = 10
+    query.find { (result) in
+        let comments = result.objects
         // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
-        for (AVObject *comment in comments) {
-            // 并不需要网络访问
-            AVObject *todoFolder = [comment objectForKey:@"targetTodoFolder"];
+        for comment in comments!{
+            print(comment.objectId?.value)
+            let todoFolder = comment .get("targetTodoFolder")
         }
-    }];
+    }
 ```
 {% endblock %}
 
 {% block code_query_comment_match_query_todoFolder %}
 
-```objc
+```swift
     // 构建内嵌查询
-    AVQuery *innerQuery = [AVQuery queryWithClassName:@"TodoFolder"];
-    [innerQuery whereKey:@"likes" greaterThan:@20];
+    let innerQuery = LCQuery(className: "TodoFolder")
+    innerQuery.whereKey("likes", LCQuery.Constraint.GreaterThan(value: LCNumber(20)))
     // 将内嵌查询赋予目标查询
-    AVQuery *query = [AVQuery queryWithClassName:@"Comment"];
+    let query = LCQuery(className: "Comment")
     // 执行内嵌操作
-    [query whereKey:@"targetTodoFolder" matchesQuery:innerQuery];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *comments, NSError *error) {
-        // comments 就是符合超过 20 个赞的 TodoFolder 这一条件的 Comment 对象集合
-    }];
-
+    query.whereKey("targetTodoFolder", LCQuery.Constraint.MatchedQuery(query: innerQuery))
+    query.find { (result) in
+        let comments = result.objects
+    }
+    
     // 注意如果要做相反的查询可以使用
-    [query whereKey:@"targetTodoFolder" doesNotMatchQuery:innerQuery];
+    query.whereKey("targetTodoFolder", LCQuery.Constraint.NotMatchedQuery(query: innerQuery))
     // 如此做将查询出 likes 小于或者等于 20 的 TodoFolder 的 Comment 对象
 ```
 {% endblock %}
 
 {% block code_query_find_first_object %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"priority" equalTo:@0];
-    [query getFirstObjectInBackgroundWithBlock:^(AVObject *object, NSError *error) {
-        // object 就是符合条件的第一个 AVObject
-    }];
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
+    query.getFirst { (result) in
+        // result.object 就是符合条件的第一个 LCObject
+    }
 ```
 {% endblock %}
 
 {% block code_set_query_limit %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSDate *now = [NSDate date];
-    [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
-    query.limit = 10; // 最多返回 10 条结果
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
+    query.limit = 10
+    query.find { (result) in
+        if(result.objects?.count <= 10){
+            // 因为设置了 limit，因此返回的结果数量一定小于等于 10
+        }
+    }
 ```
 {% endblock %}
 
 {% block code_set_skip_for_pager %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    NSDate *now = [NSDate date];
-    [query whereKey:@"createdAt" lessThanOrEqualTo:now];//查询今天之前创建的 Todo
-    query.limit = 10; // 最多返回 10 条结果
-    query.skip = 20;  // 跳过 20 条结果
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("priority", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
+    query.limit = 10 // 返回 10 条数据
+    query.skip = 20 // 跳过 20 条数据
+    query.find { (result) in
+        // 每一页 10 条数据，跳过了 20 条数据，因此获取的是第 3 页的数据
+    }
 ```
 
 {% endblock %}
 
 {% block code_query_select_keys %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query selectKeys:@[@"title", @"content"]];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        for(AVObject *avObject in objects){
-
-            NSString *title = avObject[@"title"];// 读取 title
-            NSString *content = avObject[@"content"]; // 读取 content
-
+```swift
+    let query = LCQuery(className: "Todo")
+    // 指定返回 title 属性
+    query.whereKey("title", LCQuery.Constraint.Selected)
+    // 指定返回 content 属性
+    query.whereKey("content", LCQuery.Constraint.Selected)
+    query.find { (result) in
+        for todo in result.objects!{
+            let title = todo.get("title") // 读取 title
+            let content = todo.get("content") // 读取 content
+            
             // 如果访问没有指定返回的属性（key），则会报错，在当前这段代码中访问 location 属性就会报错
-            NSString *location = [avObject objectForKey:@"location"];
+            let location = todo.get("location")
         }
-    }];
-```
+    }```
 {% endblock %}
 
 {% block code_query_count %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKey:@"status" equalTo:@"1"];
-    [query countObjectsInBackgroundWithBlock:^(NSInteger number, NSError *error) {
-        if (!error) {
-            // 查询成功，输出计数
-            NSLog(@"今天完成了 %ld 条待办事项。", number);
-        } else {
-            // 查询失败
-        }
-    }];
+```swift
+    let query = LCQuery(className: "Todo")
+    query.whereKey("status", LCQuery.Constraint.EqualTo(value: LCNumber(1)))
+    query.count()
 ```
 {% endblock %}
 
 {% block code_query_orderby %}
-``` objc
-// 按时间，升序排列
-[query orderByAscending:@"createdAt"];
 
-// 按时间，降序排列
-[query orderByDescending:@"createdAt"];
+``` swift
+    // 按时间，升序排列
+    query.whereKey("createdAt", LCQuery.Constraint.Ascending)
+
+    // 按时间，降序排列
+    query.whereKey("createdAt", LCQuery.Constraint.Descending)
 ```
 {% endblock %}
 
 {% block code_query_orderby_on_multiple_keys %}
 
-```objc
-[query addAscendingOrder:@"priority"];
-[query addDescendingOrder:@"createdAt"];
+```swift
+    query.whereKey("priority", LCQuery.Constraint.Ascending)
+    query.whereKey("createdAt", LCQuery.Constraint.Descending)
 ```
 {% endblock %}
 
 {% block code_query_with_or %}
+
 ```objc
     AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
     [priorityQuery whereKey:@"priority" greaterThanOrEqualTo:[NSNumber numberWithInt:3]];
@@ -1006,128 +1040,60 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block code_query_where_keys_exist %}
 
-```objc
-    // 存储一个带有图片的 Todo 到 LeanCloud 云端
-    AVFile *aTodoAttachmentImage = [AVFile fileWithURL:@("http://www.zgjm.org/uploads/allimg/150812/1_150812103912_1.jpg")];
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:aTodoAttachmentImage forKey:@"images"];
-    [todo setObject:@"记得买过年回家的火车票！！！" forKey:@"content"];
-    [todo saveInBackground];
-
+```swift
     // 使用非空值查询获取有图片的 Todo
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query whereKeyExists:@"images"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-       // objects 返回的就是有图片的 Todo 集合
-    }];
+    query.whereKey("images", LCQuery.Constraint.Existed)
 
     // 使用空值查询获取没有图片的 Todo
-    [query whereKeyDoesNotExist:@"images"];
+    query.whereKey("images", LCQuery.Constraint.NotExisted)
 ```
 {% endblock %}
 
 {% block code_query_by_cql %}
 
-```objc
-    NSString *cql = [NSString stringWithFormat:@"select * from %@ where status = 1", @"Todo"];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
-    {
-        NSLog(@"results:%@", result.results);
-    }];
+```swift
+    LCCQLClient.execute("select * from Todo where status = 1") { (result) in
+         // result.objects 就是满足条件的 Todo 对象
+        for todo in result.objects {
+            let title = todo.get("title")
+        }
+    }
 
-
-    cql = [NSString stringWithFormat:@"select count(*) from %@ where priority = 0", @"Todo"];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql callback:^(AVCloudQueryResult *result, NSError *error)
-    {
-       NSLog(@"count:%lu", (unsigned long)result.count);
-    }];
+    LCCQLClient.execute("select count(*) from Todo where priority = 0") { (result) in
+        // result.count 就是 priority = 0 的 Todo 的数量
+    }
 ```
 {% endblock %}
 
 {% block code_query_by_cql_with_placeholder %}
 
-```objc
-    NSString *cql = [NSString stringWithFormat:@"select * from %@ where status = ? and priority = ?", @"Todo"];
-    NSArray *pvalues =  @[@0, @1];
-    [AVQuery doCloudQueryInBackgroundWithCQL:cql pvalues:pvalues callback:^(AVCloudQueryResult *result, NSError *error) {
-        if (!error) {
-            // 操作成功
-        } else {
-            NSLog(@"%@", error);
-        }
-    }];
-```
-{% endblock %}
-
-{% block code_set_cache_policy %}
-
-```objc
-  AVQuery *query = [AVQuery queryWithClassName:@"Post"];
-  query.cachePolicy = kAVCachePolicyNetworkElseCache;
-
-  //设置缓存有效期
-  query.maxCacheAge = 24*3600;
-
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      // 成功找到结果，先找网络再访问磁盘
-    } else {
-      // 无法访问网络，本次查询结果未做缓存
+```swift
+    let cql = "select * from Todo where status = ? and priority = ?"
+    let pvalues = [0,1]
+    LCCQLClient.execute(cql, parameters: pvalues) { (result) in
+        // result.objects 就是满足条件(status = 0 and priority = 1)的 Todo 对象
     }
-  }];
 ```
 {% endblock %}
+
+{% block code_set_cache_policy %}{% endblock %}
 {% block text_query_cache_intro %}{% endblock %}
-{% block table_cache_policy %}
+{% block table_cache_policy %}{% endblock %}
 
-策略枚举 | 含义及解释|
----|---
-`kAVCachePolicyIgnoreCache`| **（默认缓存策略）**查询行为不从缓存加载，也不会将结果保存到缓存中。
-`kAVCachePolicyCacheOnly` |  查询行为忽略网络状况，只从缓存加载。如果没有缓存结果，该策略会产生 `AVError`。
-`kAVCachePolicyCacheElseNetwork` |  查询行为首先尝试从缓存加载，若加载失败，则通过网络加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-`kAVCachePolicyNetworkElseCache` | 查询行为先尝试从网络加载，若加载失败，则从缓存加载结果。如果缓存和网络获取行为均为失败，则产生 `AVError`。
-<code class="text-nowrap">`kAVCachePolicyCacheThenNetwork`</code> | 查询先从缓存加载，然后从网络加载。在这种情况下，回调函数会被调用两次，第一次是缓存中的结果，然后是从网络获取的结果。因为它会在不同的时间返回两个结果，所以该策略不能与 `findObjects` 同时使用。
-{% endblock %}
-
-{% block code_cache_operation %}
-
-* 检查是否存在缓存查询结果：
-
-  ``` objc
-  BOOL isInCache = [query hasCachedResult];
-  ```
-
-* 删除某一查询的任何缓存结果：
-
-  ``` objc
-  [query clearCachedResult];
-  ```
-
-* 删除查询的所有缓存结果：
-
-  ``` objc
-  [AVQuery clearAllCachedResults];
-  ```
-
-* 设定缓存结果的最长时限：
-
-  ``` objc
-  query.maxCacheAge = 60 * 60 * 24; // 一天的总秒数
-  ```
-
-查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirstObject` 和 `getObjectInBackground`。
-{% endblock %}
+{% block code_cache_operation %}{% endblock %}
 
 {% block code_query_geoPoint_near %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
-    query.limit = 10;
-    [query whereKey:@"whereCreated" nearGeoPoint:point];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *nearbyTodos = objects;// 离这个位置最近的 10 个 Todo 对象
-    }];
+```swift
+    let query = LCQuery(className: "Todo")
+    let point = LCGeoPoint(latitude: 39.9, longitude: 116.4)
+    
+    query.whereKey("whereCreated", LCQuery.Constraint.NearbyPoint(point: point))
+    query.limit = 10
+    query.find { (result) in
+        // 离这个位置最近的 10 个 Todo 对象
+        let todos = result.objects
+    }
 ```
 
 在上面的代码中，`nearbyTodos` 返回的是与 `point` 这一点按距离排序（由近到远）的对象数组。注意：**如果在此之后又使用了 `orderByAscending:` 或 `orderByDescending:` 方法，则按距离排序会被新排序覆盖。**
@@ -1139,8 +1105,13 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block code_query_geoPoint_within %}
 
-```objc
-    [query whereKey:@"whereCreated"  nearGeoPoint:point withinKilometers:2.0];
+```swift
+    let query = LCQuery(className: "Todo")
+    let point = LCGeoPoint(latitude: 39.9, longitude: 116.4)
+    let from = LCGeoPoint.Distance(value: 1.0, unit: LCGeoPoint.Unit.Kilometer)
+    let to = LCGeoPoint.Distance(value: 2.0, unit: LCGeoPoint.Unit.Kilometer)
+    // 查询离指定 point 距离在 1.0 和 2.0 公里的 Todo
+    query.whereKey("whereCreated", LCQuery.Constraint.NearbyPointWithRange(point: point, from: from, to: to))
 ```
 {% endblock %} code_object_fetch_with_keys
 
@@ -1148,155 +1119,104 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% set link_to_sms_guide_doc = '[iOS / OS X 短信服务使用指南](sms_guide-ios.html#注册验证)' %}
 
-{% block code_send_sms_code_for_loginOrSignup %}
-
-```objc
-    [AVOSCloud requestSmsCodeWithPhoneNumber:@"13577778888" callback:^(BOOL succeeded, NSError *error) {
-        // 发送失败可以查看 error 里面提供的信息
-    }];
-```
-{% endblock %}
-
-{% block code_verify_sms_code_for_loginOrSignup %}
-
-```objc
-    [AVUser signUpOrLoginWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"123456" block:^(AVUser *user, NSError *error) {
-       // 如果 error 为空就可以表示登录成功了，并且 user 是一个全新的用户
-    }];
-```
-{% endblock %}
+{% block text_send_sms_code_for_loginOrSignup %}{% endblock %}
+{% block code_send_sms_code_for_loginOrSignup %}{% endblock %}
+{% block code_verify_sms_code_for_loginOrSignup %}{% endblock %}
 
 {% block code_user_signUp_with_username_and_password %}
 
-```objc
-    AVUser *user = [AVUser user];// 新建 AVUser 对象实例
-    user.username = @"Tom";// 设置用户名
-    user.password =  @"cat!@#123";// 设置密码
-    user.email = @"tom@leancloud.cn";// 设置邮箱
-
-    [user signUpInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 注册成功
-        } else {
-            // 失败的原因可能有多种，常见的是用户名已经存在。
-        }
-    }];
+```swift
+    let randomUser = LCUser()
+    randomUser.username = LCString("Tom")
+    randomUser.password = LCString("leancloud")
+    randomUser.signUp()
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_username_and_password %}
 
-```objc
-  [AVUser logInWithUsernameInBackground:@"Tom" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
-      if (user != nil) {
-
-      } else {
-
-      }
-  }];
+```swift
+LCUser.logIn(username: "Tom", password: "leancloud", completion: { ( result ) in
+        let user = result.object! as LCUser
+    })
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
-```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" password:@"cat!@#123" block:^(AVUser *user, NSError *error) {
-
-    }];
+```swift
+    LCUser.logIn(mobilePhoneNumber: "13577778888", password: "leancloud") {_ in }
 ```
 {% endblock %}
 
 {% block code_user_logIn_requestLoginSmsCode %}
 
-```objc
-    [AVUser requestLoginSmsCode:@"13577778888" withBlock:^(BOOL succeeded, NSError *error) {
-
-    }];
+```swift
+    LCUser.requestLoginShortCode(mobilePhoneNumber: "13577778888") {_ in }
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_smsCode %}
 
-```objc
-    [AVUser logInWithMobilePhoneNumberInBackground:@"13577778888" smsCode:@"238825" block:^(AVUser *user, NSError *error) {
-
-    }];
+```swift
+    LCUser.logIn(mobilePhoneNumber: "13577778888", shortCode: "238825"){_ in }
 ```
 {% endblock %}
 
 {% block code_get_user_properties %}
 
-```objc
-    NSString *currentUsername = [AVUser currentUser].username;// 当前用户名
-    NSString *currentEmail = [AVUser currentUser].email; // 当前用户的邮箱
+<div class="callout callout-info">注意：**当前版本的 Swift SDK 并没有实现本地的持久化存储， 因此只能在登录成功之后访问 `LCUser.current`**</div>
+
+```swift
+    let username = LCUser.current?.username// 当前用户名
+    let email = LCUser.current?.email// 当前用户的邮箱
 
     // 请注意，以下代码无法获取密码
-    NSString *currentPassword = [AVUser currentUser].password;//  currentPassword 是 nil
+    let password = LCUser.current?.password
 ```
 {% endblock %}
 
 {% block code_set_user_custom_properties %}
 
-```objc
-    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
-    [[AVUser currentUser] saveInBackground];
+```swift
+    LCUser.current?.set("age", object: "27")
+    LCUser.current?.save(){_ in }
 ```
 {% endblock %}
 
 {% block code_update_user_custom_properties %}
 
-```objc
-    [[AVUser currentUser] setObject:[NSNumber numberWithInt:25] forKey:@"age"];
-    [[AVUser currentUser] saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        [[AVUser currentUser] setObject:[NSNumber numberWithInt:27] forKey:@"age"];
-        [[AVUser currentUser] saveInBackground];
-    }];
+```swift
+    LCUser.current?.set("age", object: "25")
+    LCUser.current?.save(){_ in }
 ```
 {% endblock %}
 
 {% block code_reset_password_by_email %}
 
-``` objc
-[AVUser requestPasswordResetForEmailInBackground:@"myemail@example.com" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
-
-    } else {
-
-    }
-}];
+``` swift
+    LCUser.requestPasswordReset(email: "myemail@example.com") { _ in}
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber %}
 
-``` objc
-[AVUser requestPasswordResetWithPhoneNumber:@"18612340000" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
-
-    } else {
-
-    }
-}];
+```swift
+    LCUser.requestPasswordReset(mobilePhoneNumber: "13577778888") { _ in}
 ```
 {% endblock %}
 
 {% block code_reset_password_by_mobilephoneNumber_verify %}
 
-``` objc
-[AVUser resetPasswordWithSmsCode:@"123456" newPassword:@"password" block:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
-
-    } else {
-
-    }
-}];
+```swift
+    LCUser.resetPassword(mobilePhoneNumber: "13577778888", shortCode: "123456", newPassword: "newpassword") { _ in}
 ```
 {% endblock %}
-
+{% block text_current_user %}{% endblock %}
 {% block code_current_user %}
 
-```objc
-  AVUser *currentUser = [AVUser currentUser];
+```swift
+  let currentUser = LCUser.current?
   if (currentUser != nil) {
       // 跳转到首页
   } else {
@@ -1316,7 +1236,7 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 {% block code_query_user %}
 
 ```objc
-  AVQuery *userQuery = [AVQuery queryWithClassName:@"_User"];
+  let query = LCQuery(className: "_User")
 ```
 {% endblock %}
 
