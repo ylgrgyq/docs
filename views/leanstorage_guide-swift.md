@@ -1242,207 +1242,69 @@ LCUser.logIn(username: "Tom", password: "leancloud", completion: { ( result ) in
 
 {% block text_subclass %}
 ## 子类化
-子类化推荐给进阶的开发者在进行代码重构的时候做参考。
-你可以用 `AVObject` 访问到所有的数据，用 `objectForKey:` 获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
+
+子类化推荐给进阶的开发者在进行代码重构的时候做参考。 你可以用 `LCObject` 访问到所有的数据，用 `get` 方法获取任意字段。 在成熟的代码中，子类化有很多优势，包括降低代码量，具有更好的扩展性，和支持自动补全。
 
 子类化是可选的，请对照下面的例子来加深理解：
 
-```
-AVObject *student = [AVObject objectWithClassName:@"Student"];
-[student setObject:@"小明" forKey:@"name"];
-[student saveInBackground];
+```swift
+let student = LCObject(className:"Student")
+student.set("name", object: "小明")
+student.save()
 ```
 
 可改写成:
 
-```
-Student *student = [Student object];
-student.name = @"小明";
-[student saveInBackground];
+```swift
+let student = Student()
+student.name = "小明"
+student.save()
 ```
 
 这样代码看起来是不是更简洁呢？
 
 ### 子类化的实现
 
-要实现子类化，需要下面几个步骤：
+要实现子类化，需要下面两个步骤：
 
-1. 导入 `AVObject+Subclass.h`；
-2. 继承 `AVObject` 并实现 `AVSubclassing` 协议；
-3. 实现类方法 `parseClassName`，返回的字符串是原先要传给 `initWithClassName:` 的参数，这样后续就不必再进行类名引用了。如果不实现，默认返回的是类的名字。**请注意： `AVUser` 子类化后必须返回 `_User`**；
-4. 在实例化子类之前调用 [YourClass registerSubclass]（**在应用当前生命周期中，只需要调用一次**。可在子类的 +load 方法或者 UIApplication 的 -application:didFinishLaunchingWithOptions: 方法里面调用）。
+1. 继承 `LCObject`；
+2. 重载静态方法 `objectClassName`，返回的字符串是原先要传递给 `LCObject(className:)` 初始化方法的参数。如果不实现，默认返回的是类的名字。**请注意：`LCUser` 子类化后必须返回 `_User`**。
 
-下面是实现 `Student` 子类化的例子:
+下面是实现 Student 子类化的例子：
 
-``` objc
-  //Student.h
-  #import <AVOSCloud/AVOSCloud.h>
+```swift
+import LeanCloud
 
-  @interface Student : AVObject <AVSubclassing>
+class Student: LCObject {
+    dynamic var name: LCString?
 
-  @property(nonatomic,copy) NSString *name;
-
-  @end
-
-
-  //Student.m
-  #import "Student.h"
-
-  @implementation Student
-
-  @dynamic name;
-
-  + (NSString *)parseClassName {
-      return @"Student";
-  }
-
-  @end
-
-
-  // AppDelegate.m
-  #import <AVOSCloud/AVOSCloud.h>
-  #import "Student.h"
-
-  - (BOOL)application:(UIApplication *)application
-  didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    [Student registerSubclass];
-    [AVOSCloud setApplicationId:appid clientKey:appkey];
-  }
+    override static func objectClassName() -> String {
+        return "Student"
+    }
+}
 ```
 
 ### 属性
 
-为 `AVObject` 的子类添加自定义的属性和方法，可以更好地将这个类的逻辑封装起来。用 `AVSubclassing` 可以把所有的相关逻辑放在一起，这样不必再使用不同的类来区分业务逻辑和存储转换逻辑了。
+为 `LCObject` 的子类添加自定义的属性和方法，可以更好地将这个类的逻辑封装起来。
 
-`AVObject` 支持动态 synthesizer，就像 `NSManagedObject` 一样。先正常声明一个属性，只是在 .m 文件中把 `@synthesize` 变成 `@dynamic`。
-
-请看下面的例子是怎么添加一个「年龄」属性：
-
-``` objc
-  //Student.h
-  #import <AVOSCloud/AVOSCloud.h>
-
-  @interface Student : AVObject <AVSubclassing>
-
-  @property int age;
-
-  @end
+自定义属性必须使用 `dynamic var` 来声明，请看下面的例子是怎么添加一个「年龄」属性：
 
 
-  //Student.m
-  #import "Student.h"
+```swift
+import LeanCloud
 
-  @implementation Student
-
-  @dynamic age;
-
-  ......
+class Student: LCObject {
+    dynamic var age: LCNumber?
+}
 ```
 
 这样就可以通过 `student.age = 19` 这样的方式来读写 `age` 字段了，当然也可以写成：
 
-``` objc
-[student setAge:19]
+```swift
+student.set("age", object: 19)
 ```
 
-**注意：属性名称保持首字母小写！**（错误：`student.Age` 正确：`student.age`）。
-
-`NSNumber` 类型的属性可用 `NSNumber` 或者是它的原始数据类型（`int`、 `long` 等）来实现。例如， `[student objectForKey:@"age"]` 返回的是 `NSNumber` 类型，而实际被设为 `int` 类型。
-
-你可以根据自己的需求来选择使用哪种类型。原始类型更为易用，而 `NSNumber` 支持 `nil` 值，这可以让结果更清晰易懂。
-
-**注意** 子类中，对于 `BOOL` 类型的字段，SDK 在 3.1.3.2 之前会将其保存为 Number 类型，3.1.3.2 之后将其正确保存为 Bool 类型。详情请参考[这里](https://leancloud.cn/docs/ios_os_x_faq.html#为什么升级到_3_1_3_2_以上的版本时_BOOL_类型数据保存错误_)。
-
-注意：`AVRelation` 同样可以作为子类化的一个属性来使用，比如：
-
-``` objc
-@interface Student : AVUser <AVSubclassing>
-@property(retain) AVRelation *friends;
-  ......
-@end
-
-@implementation Student
-@dynamic friends;
-  ......
-```
-
-另外，值为 Pointer 的实例可用 `AVObject*` 来表示。例如，如果 `Student` 中 `bestFriend` 代表一个指向另一个 `Student` 的键，由于 Student 是一个 AVObject，因此在表示这个键的值的时候，可以用一个 `AVObject*` 来代替：
-
-``` objc
-@interface Student : AVUser <AVSubclassing>
-@property(nonatomic, strong) AVObject *bestFriend;
- ......
-@end
-
-@implementation Student
-@dynamic bestFriend;
-  ......
-```
-
-提示：当需要更新的时候，最后都要记得加上 `[student save]` 或者对应的后台存储函数进行更新，才会同步至服务器。
-
-如果要使用更复杂的逻辑而不是简单的属性访问，可以这样实现:
-
-``` objc
-  @dynamic iconFile;
-
-  - (UIImageView *)iconView {
-    UIImageView *view = [[UIImageView alloc] initWithImage:kPlaceholderImage];
-    view.image = [UIImage imageNamed:self.iconFile];
-    return [view autorelease];
-  }
-
-```
-
-### 针对 AVUser 子类化的特别说明
-
-假如现在已经有一个基于 `AVUser` 的子类，如上面提到的 `Student`:
-
-``` objc
-@interface Student : AVUser<AVSubclassing>
-@property (retain) NSString *displayName;
-@end
-
-
-@implementation Student
-@dynamic displayName;
-+ (NSString *)parseClassName {
-    return @"_User";
-}
-@end
-```
-
-登录时需要调用 `Student` 的登录方法才能通过 `currentUser` 得到这个子类:
-
-``` objc
-[Student logInWithUsernameInBackground:@"USER_NAME" password:@"PASSWORD" block:^(AVUser *user, NSError *error) {
-        Student *student = [Student currentUser];
-        student.displayName = @"YOUR_DISPLAY_NAME";
-    }];
-```
-
-同样需要调用 `[Student registerSubclass];`，确保在其它地方得到的对象是 Student，而非 AVUser 。
-
-### 初始化子类
-
-创建一个子类实例，要使用 `object` 类方法。要创建并关联到已有的对象，请使用 `objectWithObjectId:` 类方法。
-
-### 子类查询
-
-使用类方法 `query` 可以得到这个子类的查询对象。
-
-例如，查询年龄小于 21 岁的学生：
-
-``` objc
-  AVQuery *query = [Student query];
-  [query whereKey:@"age" lessThanOrEqualTo:@(21)];
-  [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-    if (!error) {
-      Student *stu1 = [objects objectAtIndex:0];
-      // ...
-    }
-  }];
-```
 {% endblock %}
 {% block link_to_in_app_search_doc %}[iOS / OS X 应用内搜索指南](app_search_guide.html){% endblock %}
 {% block link_to_status_system_doc %}[iOS / OS X 应用内社交模块](status_system.html#iOS_SDK){% endblock %}
