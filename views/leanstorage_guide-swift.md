@@ -433,7 +433,7 @@ func testSetArray() {
     let todoFolder = LCObject(className: "TodoFolder", objectId: "5590cdfde4b00f7adb5860c8")
     comment.set("targetTodoFolder", object: todoFolder)
     // 以上代码的执行结果是在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
-    comment.save { _ in}
+    comment.save {_ in}
 ```
 {% endblock %}
 
@@ -811,7 +811,7 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 ```swift
     let tag = LCObject(className: "Tag")
     tag.set("name", object: "今日必做")
-    tag.save(){_ in }
+    tag.save(){ _ in }
 ```
 {% endblock %}
 
@@ -1133,21 +1133,21 @@ LCUser.logIn(username: "Tom", password: "leancloud", completion: { ( result ) in
 {% block code_user_logIn_with_mobilephonenumber_and_password %}
 
 ```swift
-    LCUser.logIn(mobilePhoneNumber: "13577778888", password: "leancloud") {_ in }
+    LCUser.logIn(mobilePhoneNumber: "13577778888", password: "leancloud") { _ in }
 ```
 {% endblock %}
 
 {% block code_user_logIn_requestLoginSmsCode %}
 
 ```swift
-    LCUser.requestLoginShortCode(mobilePhoneNumber: "13577778888") {_ in }
+    LCUser.requestLoginShortCode(mobilePhoneNumber: "13577778888") { _ in }
 ```
 {% endblock %}
 
 {% block code_user_logIn_with_smsCode %}
 
 ```swift
-    LCUser.logIn(mobilePhoneNumber: "13577778888", shortCode: "238825"){_ in }
+    LCUser.logIn(mobilePhoneNumber: "13577778888", shortCode: "238825"){ _ in }
 ```
 {% endblock %}
 
@@ -1168,7 +1168,7 @@ LCUser.logIn(username: "Tom", password: "leancloud", completion: { ( result ) in
 
 ```swift
     LCUser.current?.set("age", object: "27")
-    LCUser.current?.save(){_ in }
+    LCUser.current?.save(){ _ in }
 ```
 {% endblock %}
 
@@ -1176,7 +1176,7 @@ LCUser.logIn(username: "Tom", password: "leancloud", completion: { ( result ) in
 
 ```swift
     LCUser.current?.set("age", object: "25")
-    LCUser.current?.save(){_ in }
+    LCUser.current?.save(){ _ in }
 ```
 {% endblock %}
 
