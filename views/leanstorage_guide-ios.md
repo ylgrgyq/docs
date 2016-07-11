@@ -456,6 +456,7 @@ AVObject     *object     = [AVObject objectWithClassName:@"DataTypes"];
 {% endblock %}
 
 {% block code_create_geoPoint %}
+
 ``` objc
 AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
@@ -468,6 +469,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% endblock %}
 
 {% block code_serialize_baseObject_to_string %}
+
 ```objc
     AVObject *todoFolder = [[AVObject alloc] initWithClassName:@"TodoFolder"];// 构建对象
     [todoFolder setObject:@"工作" forKey:@"name"];// 设置名称
@@ -483,6 +485,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 {% endblock %}
 
 {% block code_deserialize_string_to_baseObject %}
+
 ```objc
     NSMutableDictionary *objectDictionary = [NSMutableDictionary dictionaryWithCapacity:10];// 声明一个 NSMutableDictionary
     [objectDictionary setObject:@"工作" forKey:@"name"];
@@ -495,7 +498,8 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```
 {% endblock %}
 
-{% block code_data_protocol_save_date %}{% endblock %}
+{% block code_data_protocol_save_date %}
+{% endblock %}
 
 {% block code_create_avfile_by_stream_data %}
 
