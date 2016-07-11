@@ -124,7 +124,6 @@
 {% block code_fetch_todo_by_objectId %}
 
 ```swift
-    // 第一个参数是 className，第二个参数是 objectId
     let todo = LCObject(className: "Todo", objectId: "575cf743a3413100614d7d75")
     
     todo.fetch({ (result ) in
@@ -201,19 +200,19 @@
 {% block code_update_todo_location %}
 
 ```swift
-    AVObject *todo = [AVObject objectWithClassName:@"Todo"];
-    [todo setObject:@"工程师周会" forKey:@"title"];
-    [todo setObject:@"每周工程师会议，周一下午2点" forKey:@"content"];
-    [todo setObject:@"会议室" forKey:@"location"];
-    [todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
-        if (succeeded) {
-            // 存储成功
-            [todo setObject:@"二楼大会议室" forKey:@"location"];
-            [todo saveInBackground];
-        } else {
-            // 失败的话，请检查网络环境以及 SDK 配置是否正确
+    let todo = LCObject(className: "Todo")
+    todo.set("title", value: LCString("工程师周会"))
+    todo.set("content", value: LCString("每周工程师会议，周一下午2点"))
+    todo.set("location", value: LCString("会议室"))
+    todo.save { (result) in
+        // 存储成功
+        if(result.isSuccess){
+            // 修改地址
+            todo.set("location", value: LCString("二楼大会议室"))
+            // 保存修改
+            todo.save { _ in }
         }
-    }];
+    }
 ```
 {% endblock %}
 
@@ -319,28 +318,14 @@ func testSetArray() {
 {% block code_batch_operation %}
 
 ```swift
- > swift alpha 版本不支持批量操作                     
+暂不支持                    
 ```
 {% endblock %}
 
 {% block code_batch_set_todo_completed %}
 
-```objc
-    AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSArray<AVObject *> *todos = objects;
-        for (AVObject *todo in todos) {
-            todo[@"status"] = @1;
-        }
-
-        [AVObject saveAllInBackground:todos block:^(BOOL succeeded, NSError *error) {
-            if (error) {
-                // 网络错误
-            } else {
-                // 保存成功
-            }
-        }];
-    }];
+```swift
+暂不支持
 ```
 
 {% endblock %}
@@ -356,7 +341,7 @@ func testSetArray() {
         }
     })
 ``` 
-上述用法都是提供给开发者在主线程调用用以实现后台运行的方法，因此开发者在主线程可以放心的调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
+上述用法都是提供给开发者在主线程调用用来实现后台运行的方法，因此开发者可以放心地在主线程调用这种命名方式的函数。另外，需要强调的是：**回调函数的代码是在主线程执行。**
 {% endblock %}
 
 {% block code_delete_todo_by_objectId %}
@@ -369,7 +354,7 @@ func testSetArray() {
         } else {
             if (result.error != nil){
                 print(result.error?.reason)
-                // 如果删除失败，可以查看是否当前正确的使用了 ACL
+                // 如果删除失败，可以查看是否当前正确使用了 ACL
             }
         }
     }
@@ -414,13 +399,13 @@ func testSetArray() {
     todo2.set("title", object: "维护文档")
     todo2.set("content", object: "每天 16：00 到 18：00 定期维护文档")
     todo2.set("location", object: "当前工位")
-    todo1.save()
+    todo2.save()
     
     let todo3 = LCObject(className: "Todo")
     todo3.set("title", object: "发布 SDK")
     todo3.set("content", object: "每周一下午 15：00")
     todo3.set("location", object: "SA 工位")
-    todo1.save()
+    todo3.save()
     
     // 使用接口 insertRelation 建立 todoFolder 与 todo1,todo2,todo3 的一对多的关系
     todoFolder.insertRelation("containedTodos", object: todo1)
@@ -448,7 +433,7 @@ func testSetArray() {
     let todoFolder = LCObject(className: "TodoFolder", objectId: "5590cdfde4b00f7adb5860c8")
     comment.set("targetTodoFolder", object: todoFolder)
     // 以上代码的执行结果是在 comment 对象上有一个名为 targetTodoFolder 属性，它是一个 Pointer 类型，指向 objectId 为 5590cdfde4b00f7adb5860c8 的 TodoFolder
-    comment.save {}
+    comment.save { _ in}
 ```
 {% endblock %}
 
@@ -772,8 +757,8 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
         dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         let date = dateStringFormatter.dateFromString(dateString)!
-        let lcDate = LCDate(date);
-        return lcDate;
+        let lcDate = LCDate(date)
+        return lcDate
     }
 ```
 {% endblock %}
@@ -797,8 +782,8 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
         dateStringFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         dateStringFormatter.locale = NSLocale(localeIdentifier: "en_US_POSIX")
         let date = dateStringFormatter.dateFromString(dateString)!
-        let lcDate = LCDate(date);
-        return lcDate;
+        let lcDate = LCDate(date)
+        return lcDate
     }
 ```
 {% endblock %}
@@ -837,10 +822,10 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
     tag1.set("name", object: "今日必做")
     
     let tag2 = LCObject(className: "Tag")
-    tag2.set("name", object: "今日必做")
+    tag2.set("name", object: "老婆吩咐")
     
     let tag3 = LCObject(className: "Tag")
-    tag3.set("name", object: "今日必做")
+    tag3.set("name", object: "十分重要")
     
     let todoFolder = LCObject(className: "TodoFolder") // 新建 TodoFolder 对象
     todoFolder.set("name", object: "家庭")
@@ -893,7 +878,7 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
         // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
         for comment in comments!{
             print(comment.objectId?.value)
-            let todoFolder = comment .get("targetTodoFolder")
+            let todoFolder = comment.get("targetTodoFolder")
         }
     }
 ```
@@ -1007,34 +992,37 @@ iOS 9 默认屏蔽了 HTTP 访问，只支持 HTTPS 访问。LeanCloud 除了文
 
 {% block code_query_with_or %}
 
-```objc
-    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
-    [priorityQuery whereKey:@"priority" greaterThanOrEqualTo:[NSNumber numberWithInt:3]];
-
-    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
-    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:1]];
-
-    AVQuery *query = [AVQuery orQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+```swift
+    let priorityQuery = LCQuery(className: "Todo")
+    priorityQuery.whereKey("priority", LCQuery.Constraint.GreaterThanOrEqualTo(value: LCNumber(3)))
+    
+    let statusQuery = LCQuery(className: "Todo")
+    statusQuery.whereKey("status", LCQuery.Constraint.EqualTo(value: LCNumber(1)))
+    
+    let query = priorityQuery.or(statusQuery)
+    
+    query.find { (result) in
         // 返回 priority 大于等于 3 或 status 等于 1 的 Todo
-    }];
+        let todos = result.objects
+    }
 ```
 {% endblock %}
 
 {% block code_query_with_and %}
 
-```objc
-    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
-    [priorityQuery whereKey:@"priority" lessThan:[NSNumber numberWithInt:3]];
-
-    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
-    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:0]];
-
-    AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
-
-    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+```swift
+    let priorityQuery = LCQuery(className: "Todo")
+    priorityQuery.whereKey("priority", LCQuery.Constraint.LessThan(value: LCNumber(3)))
+    
+    let statusQuery = LCQuery(className: "Todo")
+    statusQuery.whereKey("status", LCQuery.Constraint.EqualTo(value: LCNumber(0)))
+    
+    let query = priorityQuery.and(statusQuery)
+    
+    query.find { (result) in
         // 返回 priority 小于 3 并且 status 等于 0 的 Todo
-    }];
+        let todos = result.objects
+    }
 ```
 {% endblock %}
 
