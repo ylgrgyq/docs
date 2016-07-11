@@ -5,10 +5,10 @@
 {% set leanengine_middleware = '[LeanEngine ' + platformName + ' SDK](https://github.com/leancloud/leanengine-java-sdk)' %}
 {% set sdk_guide_link     = '[' + platformName + ' SDK](./leanstorage_guide-' + platformName | lower + '.html)' %}
 
-{% set cloud_func_file    = '$PROJECT_DIR/cloud.php' %}
-{% set runFuncName        = 'LeanCloud\Engine\Cloud::run' %}
-{% set defineFuncName     = 'LeanCloud\Engine\Cloud::define' %}
-{% set runFuncApiLink     = '[LeanCloud\Engine\Cloud::run](/api-docs/php/class-LeanCloud.Engine.Cloud.html#run)' %}
+{% set cloud_func_file    = '$PROJECT_DIR/src/main/java/$PACKAGE_NAME/Cloud.java' %}
+{% set runFuncName        = 'AVCloud.callFunction' %}
+{% set defineFuncName     = '@EngineFunction 注解' %}
+{% set runFuncApiLink     = '[AVCloud.callFunction](/api-docs/java/com/avos/avoscloud/AVCloud.html#callFunction(java.lang.String,%20java.util.Map))' %}
 
 {% set hook_before_save   = "beforeSave" %}
 {% set hook_after_save    = "afterSave" %}
@@ -19,7 +19,8 @@
 {% set hook_on_verified   = "onVerified" %}
 {% set hook_on_login      = "onLogin" %}
 
-{% block cloudFuncExample %}```java
+{% block cloudFuncExample %}
+```java
   @EngineFunction("averageStars")
   public static float getAverageStars(@EngineFunctionParam("movie") String movie)
       throws AVException {
