@@ -1274,8 +1274,9 @@ function uploadFile (req, res) {
 {% endblock %}
 
 {% block text_logInOrSignUp_with_authData %}
-#### 第三方帐号登录
-许多应用场景下为了减免用户注册的繁琐流程，在登陆界面给出第三方社交帐号登录的按钮选项（例如，微信，QQ，微博，豆瓣，Twitter，FaceBook等）是一个较好的用户体验设计 ，而 LeanCloud 封装的 {{userObjectName}} 对象也支持通过第三方帐号的 accessToken 信息创建一个用户，例如，使用微信授权信息创建 {{userObjectName}} 代码如下：
+#### 第三方账号登录
+
+为了简化用户注册的繁琐流程，许多应用都在登录界面提供了第三方社交账号登录的按钮选项，例如微信、QQ、微博、豆瓣、Twitter、FaceBook 等，以此来提高用户体验。LeanCloud 封装的 {{userObjectName}} 对象也支持通过第三方账号的 accessToken 信息来创建一个用户。例如，使用微信授权信息创建 {{userObjectName}} 的代码如下：
 
 ```js
   AV.User.signUpOrlogInWithAuthData({
