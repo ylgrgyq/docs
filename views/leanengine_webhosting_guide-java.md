@@ -1,9 +1,9 @@
 {% extends "./leanengine_webhosting_guide.tmpl" %}
+
 {% set productName = "云引擎" %}
 {% set platformName = "Java" %}
 {% set sdk_name = "Java" %}
 {% set leanengine_middleware = "[LeanEngine Java SDK](https://github.com/leancloud/leanengine-java-sdk)" %}
-
 
 {% block project_constraint %}
 
@@ -15,13 +15,13 @@
 
 ### 项目启动
 
-你需要在 pom.xml 中指定打包的目标为 war 包
+你需要在 pom.xml 中指定打包的目标为 war 包:
 ```
 <packaging>war</packaging>
 ```
 这样云引擎部署时会打包生成对应的 war 包。
 
-如果你需要进行本地调试，可以通过在 pom.xml 中增加 jetty plugin 来本地运行项目。具体的配置你可以参考我们的[实例代码] (https://github.com/leancloud/java-war-getting-started/blob/master/pom.xml)
+如果你需要进行本地调试，可以通过在 pom.xml 中增加 jetty plugin 来本地运行项目。具体的配置你可以参考我们的[实例代码] (https://github.com/leancloud/java-war-getting-started/blob/master/pom.xml)。
 {% endblock %}
 
 {% block ping %}
@@ -64,7 +64,7 @@ public class LeanEngineMetadataServlet extends HttpServlet {
 
 {% block supported_frameworks %}
 
-{{fullName}} 依赖 Servlet 3.1.0 ，你可以使用任何基于 Servlet 3.1.0 的 Web 框架
+{{fullName}} 依赖 Servlet 3.1.0 ，你可以使用任何基于 Servlet 3.1.0 的 Web 框架。
 {% endblock %}
 
 {% block custom_runtime %}
@@ -82,7 +82,7 @@ Java 云引擎只支持 1.8 运行环境和 war 包运行
 
 * 配置依赖：在 pom.xml 中增加依赖配置来增加 {{leanengine_middleware}} 的依赖：
 
-```
+```xml
 	<repositories>
 		<repository>
 			<id>leancloud</id>
@@ -203,7 +203,7 @@ LeanEngine.addSessionCookie(new EngineSessionCookie(3600000,true));
 `EngineSessionCookie` 的构造函数参数包括：
 
 * **maxAge**：设置 Cookie 的过期时间。
-* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**  
+* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**
   如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `AVUser.getCurrentUser()` 的 `id`（`_User` 表记录的 ObjectId）和 `sessionToken` 属性，你可以在需要时再手动 fetch 整个用户。
 
 * 在云引擎方法中，通过 `AVUser.getCurrentUser()` 获取用户信息。
@@ -302,6 +302,6 @@ public class ProfileServlet extends HttpServlet {
 
 
 ```java
-LeanEngine.setHttpsRedirectEnabled(true)
+LeanEngine.setHttpsRedirectEnabled(true);
 ```
 {% endblock %}
