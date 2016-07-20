@@ -25,11 +25,11 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 ### 如何付费
 
-* [支付宝充值](/bill.html#/bill/charge)
+* 支付宝充值
 
-  我们将每个月自动从您的账户余额里扣除上月账单的费用。每次扣费优先使用充值金额，其次是赠送金额。
+  进入 [控制台 > 财务 > 账务概况](/bill.html#/bill/general)，点击「充值」或「购买」按钮时将会出现「支付宝充值」窗口。 我们将每个月自动从您的账户余额里扣除上月账单的费用。每次扣费优先使用充值金额，其次是赠送金额。
 
-* 对公账户付款
+* 对公账户汇款
 
   公司税号：**110108597742364**<br/>
   公司名称：**美味书签（北京）信息技术有限公司**<br/>
@@ -37,6 +37,8 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
   银行账号：**344159259324**<br/>
   银行地址：**北京市海淀区知春路 6 号锦秋国际大厦一层**<br/>
   银行行号：**104100004013**
+
+  <div class="callout callout-danger">请务必在汇款附言里中注明您的 LeanCloud 用户名，或注册邮箱，或您的应用名称，以便我们账务确认汇款的来源和用途，及时入账。</div>
 
 ### 如何申请开具发票
 
@@ -101,7 +103,7 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 我们每个月提供 100 万次的免费额度，超过的部分才收费。推送服务和统计服务免费使用，并不占用免费额度。
 
-默认情况下，每个应用同一时刻的**并发请求上限为 100**（即同一时刻最多可以同时处理 100 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
+默认情况下，每个应用同一时刻的**并发请求上限为 30**（即同一时刻最多可以同时处理 30 个数据请求）。**我们会根据应用运行状况以及运维需要调整改值**。如果需要提高这一上限，请写信至 <support@leancloud.cn> 进行申请。
 
 ### API 调用次数的计算
 
@@ -250,6 +252,12 @@ https://ruby.taobao.org
 $ gem install cocoapods
 ```
 
+### iOS 项目打包后的大小
+
+创建一个全新的空白项目，使用 CocoaPod 安装了 AVOSCloud 和 AVOSCloudIM 模块，此时项目大小超过了 80 MB。打包之后体积会不会缩小？大概会有多大呢？
+
+LeanCloud iOS SDK 二进制中包含了 i386、armv7、arm64 等 5 个 CPU slices。发布过程中，non-ARM 的符号和没有参与连接的符号会被 strip 掉。因此，最终应用体积不会增加超过 10 MB，请放心使用。
+
 ### 编译失败
 
 #### Symbol(s) not found x86_64
@@ -279,6 +287,10 @@ LeanCloud 依赖的 Framework 包括：
 
 ![image](images/geopoint_faq.png)
 
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-ios.html#手机号码登录")。
+
 
 ## Android SDK
 
@@ -295,12 +307,17 @@ LeanCloud 依赖的 Framework 包括：
 * SDK 版本过旧，installationId 的生成逻辑在版本更迭中有修改。请更新至最新版本。
 * 代码混淆引起的，注意在 proguard 文件中添加 [LeanCloud SDK 的混淆排除](android_faq.html#代码混淆怎么做)。
 
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-android.html#手机号码登录")。
+
+
 
 ## JavaScript SDK
 
 ### 有没有同步 API
 
-JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](js_guide.html#Promise) 来减少 callback 嵌套过多的问题。
+JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器或者 Node.js 环境中），不提供同步 API，所有需要网络交互的 API 都需要以 callback 的形式调用。我们提供了 [Promise 模式](leanstorage_guide-js.html#Promise) 来减少 callback 嵌套过多的问题。
 
 ### 在 AV.initialize 中用了 Master Key，但发出去的 AJAX 请求返回 206
 目前 JavaScript SDK 在浏览器（而不是 Node）中工作时，是不会发送 Master Key 的，因为我们不鼓励在浏览器中使用 Master Key，Master Key 代表着对数据的最高权限，只应当在后端程序中使用。
@@ -308,11 +325,16 @@ JavaScript SDK 由于平台的特殊性（运行在单线程运行的浏览器�
 如果你的应用的确是内部应用（做好了相关的安全措施，外部访问不到），可以在 `AV.initialize`之后增加下面的代码来让 JavaScript SDK 发送 Master Key：
 ```
 AV._useMasterKey = true;
-``` 
+```
 
 ### Web 端会暴露 App Key 和 App Id，怎么保证安全性？
 首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_应用安全设置) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
 理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_overview.html)。
+
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-js.html#手机号码登录")。
+
 
 ## 消息推送
 
@@ -409,7 +431,7 @@ LeanCloud 的美国节点即将提供 GCM 支持，如果应用的服务对象�
 
 ### 如何在本地调试依赖 LeanCache 的应用？
 首先你需要在本地运行一个 redis-server:
- 
+
 * Mac 运行 `brew install redis` 安装，然后用 `redis-server` 启动
 * Debian/Ubuntu 运行 `apt-get install redis-server`, CentOS/RHEL 运行 `yum install redis`
 * Windows 尚无官方支持，可以下载 [微软的分支版本](https://github.com/MSOpenTech/redis/releases) 安装包。
@@ -426,7 +448,7 @@ var client = require('redis').createClient(process.env['REDIS_URL_mycache']);
 
 ### 为什么在控制台通过在线定义函数或项目定义函数中的 Class Hook 没有被运行？
 首先确认一下 Hook 被调用的时机是否与你的理解一致：
- 
+
 * beforeSave - 对象保存（创建）之前
 * afterSave - 对象保存（创建）之后
 * beforeUpdate - 对象更新之前
@@ -451,7 +473,7 @@ var client = require('redis').createClient(process.env['REDIS_URL_mycache']);
 
 ### 使用命令行工具在本地调试时提示 `Error: listen EADDRINUSE :::3000`, 无法访问应用
 `listen EADDRINUSE :::3000` 表示你的程序默认使用的 3000 端口被其他应用占用了，可以按照下面的方法找到并关闭占用 3000 端口的程序：
- 
+
 * [Mac 使用 lsof 和 kill](http://stackoverflow.com/questions/3855127/find-and-kill-process-locking-port-3000-on-mac)
 * [Linux 使用 fuser](http://stackoverflow.com/questions/11583562/how-to-kill-a-process-running-on-particular-port-in-linux)
 * [Windows 使用 netstat 和 taskkill](http://stackoverflow.com/questions/6204003/kill-a-process-by-looking-up-the-port-being-used-by-it-from-a-bat)
@@ -464,14 +486,22 @@ avoscloud -P 3002
 
 ### 云函数如何获取 Header、如何响应 GET 方法？
 不建议在 Header 中传递信息，云函数可以说是 LeanCloud 所提供的一种 RPC 的封装，这种封装的目的是隐藏掉底层使用 HTTP 协议的细节，所以建议将所有的参数都放在 Body 中、只使用 POST 方法请求。
- 
+
 如果希望能够充分利用 HTTP 提供的语义化特征，可以考虑使用云引擎的「[网站托管](leanengine_webhosting_guide-node.html#Web_框架)」功能，自行来处理 HTTP 请求。
 
 ## 文件
 
 ### 文件存储有 CDN 加速吗？
 
-有的。我们的文件存储目前由 [七牛](http://qiniu.com) 提供，都有 CDN 加速访问。
+国内节点本身就提供 CDN 加速访问。
+
+美国节点没有现成的 CDN 加速，需要用户自行配置。下面以 CloudFront 加速服务为例，简述一下配置过程。
+
+1. 阅读官方指南 [Getting Started with CloudFront](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html)。
+2. 创建一个 AWS 账户，以使用 CloudFront 服务和付费。
+3. S3 的公共访问权限（read permission）已经配置好，指南中有关 S3 配置的部分（[Step 2: Upload your content to Amazon S3 and grant object permissions](http://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/GettingStarted.html#GettingStartedUploadContent)）可以跳过。
+4. CloudFront 配置时的 **Origin Domain Name** 请从 `AVFile` 的 URL 中获取，其他均可保持默认。
+
 
 ### 文件存储有大小限制吗？
 

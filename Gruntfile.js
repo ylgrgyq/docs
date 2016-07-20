@@ -38,7 +38,10 @@ module.exports = function(grunt) {
 
     uglify: {
       options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+        compress: {
+          drop_console: true
+        }
       },
       build: {
         src: 'src/<%= pkg.name %>.js',
@@ -143,7 +146,7 @@ module.exports = function(grunt) {
     },
     comment:{
       md: {
-        src: 'dist/*.html'
+        src: ['dist/*.html', '!dist/demo.html']
       }
     },
     less: {
@@ -349,6 +352,7 @@ module.exports = function(grunt) {
           $('#content ' + dom).each(function() {
             if($(this).text().trim().length > 0) {
               var version = crypto.createHash('md5').update($(this).text()).digest('hex');
+              $(this).attr('id', version);
               $(this).attr('version', version);
             }
           });
@@ -403,9 +407,6 @@ module.exports = function(grunt) {
     }).then(function() {
       //保证所有文档都处理完再进行任务完成回调
       grunt.log.writeln('version build allcompleted');
-      done();
-    }, function(err) {
-      grunt.log.error('err: %s', err.stack || err.message || err);
       done();
     }).catch(function(err){
       grunt.log.error('err: %s', err.stack || err.message || err);

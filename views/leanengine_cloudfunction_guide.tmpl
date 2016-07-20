@@ -49,58 +49,64 @@ LeanCloud 各个语言版本的 SDK 都提供了调用云函数的接口。
 
 
 ```objc
-    // 在 iOS SDK 中，AVCloud 提供了一系列静态方法来实现客户端调用云函数
-    // 构建传递给服务端的参数字典
-     NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼" 
-                                                               forKey:@"movie"];
+// 在 iOS SDK 中，AVCloud 提供了一系列静态方法来实现客户端调用云函数
+// 构建传递给服务端的参数字典
+NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼"
+                                                          forKey:@"movie"];
 
-    // 调用指定名称的云函数 averageStars，并且传递参数
-    [AVCloud callFunctionInBackground:@"averageStars" 
-                       withParameters:dicParameters 
-                       block:^(id object, NSError *error) {
-                       if(error == nil){
-                         // 处理结果
-                       } else {
-                         // 处理报错
-                       }
-    }];
+// 调用指定名称的云函数 averageStars，并且传递参数
+[AVCloud callFunctionInBackground:@"averageStars"
+                   withParameters:dicParameters
+                   block:^(id object, NSError *error) {
+                   if(error == nil){
+                     // 处理结果
+                   } else {
+                     // 处理报错
+                   }
+}];
 ```
 ```java
-    // 在 Android SDK 中，AVCloud 提供了一系列的静态方法来实现客户端调用云函数
-    // 构建参数
-    Map<String, String> dicParameters = new HashMap<String, String>();
-    dicParameters.put("movie", "夏洛特烦恼");
+// 在 Android SDK 中，AVCloud 提供了一系列的静态方法来实现客户端调用云函数
+// 构建参数
+Map<String, String> dicParameters = new HashMap<String, String>();
+dicParameters.put("movie", "夏洛特烦恼");
 
-    // 调用云函数 averageStars
-    AVCloud.callFunctionInBackground("averageStars", dicParameters, new FunctionCallback() {
-        public void done(Object object, AVException e) {
-            if (e == null) {
-                // 处理返回结果
-            } else {
-                // 处理报错
-            }
+// 调用云函数 averageStars
+AVCloud.callFunctionInBackground("averageStars", dicParameters, new FunctionCallback() {
+    public void done(Object object, AVException e) {
+        if (e == null) {
+            // 处理返回结果
+        } else {
+            // 处理报错
         }
-    });
+    }
+});
 ```
 ```js
-  // 在 JavaScript 中 AV.Cloud 提供了一系列方法来调用云函数
-  var paramsJson = {
-    movie: "夏洛特烦恼"
-  };
-  AV.Cloud.run('averageStars', paramsJson, {
-    success: function(data) {
-      // 调用成功，得到成功的应答 data
-    },
-    error: function(err) {
-      // 处理调用失败
-    }
-  });
-
+// 在 JavaScript 中 AV.Cloud 提供了一系列方法来调用云函数
+var paramsJson = {
+  movie: "夏洛特烦恼"
+};
+AV.Cloud.run('averageStars', paramsJson, {
+  success: function(data) {
+    // 调用成功，得到成功的应答 data
+  },
+  error: function(err) {
+    // 处理调用失败
+  }
+});
+```
+```php
+use \LeanCloud\Engine\Cloud;
+$params = array(
+    "movie" => "夏洛特烦恼"
+);
+Cloud::run("averageStars", $params);
 ```
 ### 通过 REST API 调用云函数
 [REST API 调用云函数](rest_api.html#云函数-1) 是 LeanCloud 云端提供的统一的访问云函数的接口，所有的客户端 SDK 也都是封装了这个接口从而实现对云函数的调用。
 
-关于调试工具，我们推荐的工具有：[Postman](http://www.getpostman.com/) 以及 [Paw](#https://luckymarmot.com/paw) ，它们可以帮助开发者更方便地调试 Web API。
+关于调试工具，我们推荐的工具有：[Postman](http://www.getpostman.com/) 以及 [Paw](https://luckymarmot.com/paw) ，它们可以帮助开发者更方便地调试 Web API。
 
 假设没有以上工具，也可以使用命令行进行调试：
 
@@ -118,59 +124,48 @@ https://leancloud.cn/1.1/functions/averageStars
 
 在云引擎中可以使用 {{ runFuncName }} 调用 {{ defineFuncName }} 定义的云函数：
 
-```js
-  var paramsJson = {
-    movie: "夏洛特烦恼"
-  };
-  AV.Cloud.run('averageStars', paramsJson, {
-    success: function(data) {
-      // 调用成功，得到成功的应答data
-    },
-    error: function(err) {
-      // 处理调用失败
-    }
-  });
-```
-API 参数详解参见 {{ runFuncApiLink }}。
-
-**提示**：云引擎中调用云函数会变成一次本地调用，不会向其他 SDK 那样发起一次 HTTP 请求。
+{% block runFuncExample %}
+{% endblock %}
 
 ### RPC 调用云函数
 
 RPC 调用云函数是指：云引擎会在这种调用方式下自动为 Http Response Body 做序列化，而 SDK 调用之后拿回的返回结果就是一个完整的 `AVObject`。
 
 ```objc
-    NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼" 
-                                                              forKey:@"movie"];
+NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦恼"
+                                                          forKey:@"movie"];
 
-    [AVCloud rpcFunctionInBackground:@"averageStars" 
-                      withParameters:parameters 
-                      block:^(id object, NSError *error) {
-                      if(error == nil){
-                         // 处理结果
-                      } 
-                      else {
-                         // 处理报错
-                      }
-    }];
+[AVCloud rpcFunctionInBackground:@"averageStars"
+                  withParameters:parameters
+                  block:^(id object, NSError *error) {
+                  if(error == nil){
+                     // 处理结果
+                  }
+                  else {
+                     // 处理报错
+                  }
+}];
 ```
 ```java
-    AVObject movie = new AVObject("Movie");
-    movie.put("title", "夏洛特烦恼");
-    movie.save();
+AVObject movie = new AVObject("Movie");
+movie.put("title", "夏洛特烦恼");
+movie.save();
 
-    AVCloud.rpcFunctionInBackground("averageStars", movie,
-        new FunctionCallback<AVObject>() {
-          @Override
-          public void done(AVObject object, AVException e) {
-            Assert.assertNull(e);
-          }
-        });
+AVCloud.rpcFunctionInBackground("averageStars", movie,
+    new FunctionCallback<AVObject>() {
+      @Override
+      public void done(AVObject object, AVException e) {
+        Assert.assertNull(e);
+      }
+    });
+```
+```php
+// PHP 有待支持
 ```
 
 ### 切换云引擎环境
 
-云引擎区分「预备环境」和「生产环境」，使用 `AVCloud` 的 `setProductionMode` 方法可以切换环境：
+专业版云引擎应用有「生产环境」和「预备环境」，切换方法为：
 
 ```objc
 [AVCloud setProductionMode:NO]; // 调用预备环境
@@ -178,6 +173,12 @@ RPC 调用云函数是指：云引擎会在这种调用方式下自动为 Http R
 ```java
 AVCloud.setProductionMode(false); // 调用预备环境
 ```
+```php
+LeanClient::useProduction(false); // 调用预备环境
+```
+
+免费版云引擎应用只有「生产环境」，因此以上切换方法不适用。
+
 
 ### 云函数错误响应码
 
@@ -189,23 +190,7 @@ AVCloud.setProductionMode(false); // 调用预备环境
 
 客户端收到的响应： `{"code":123,"error":"自定义错误信息"}`
 
-### 云函数超时
-
-云函数超时时间为 15 秒，如果超过阈值，{{leanengine_middleware}} 将强制响应：
-
-* 客户端收到 HTTP status code 为 503 响应，body 为 `The request timed out on the server.`。
-* 服务端会出现类似这样的日志：`LeanEngine function timeout, url=/1.1/functions/<cloudFunc>, timeout=15000`
-
-另外还需要注意：虽然 {{leanengine_middleware}} 已经响应，但此时云函数可能仍在执行，但执行完毕后的响应是无意义的。
-
-#### 超时的处理方案
-
-我们建议将代码中的任务转化为异步队列处理，以优化运行时间，避免云函数或 [定时任务](#定时任务) 发生超时。比如：
-
-- 在存储服务中创建一个队列表，包含 `status` 列；
-- 接到任务后，向队列表保存一条记录，`status` 值设置为「处理中」，然后直接 response，也可以把队列对象 id 返回，如 `response.success(id);`；
-- 当业务处理完毕，根据处理结果更新刚才的队列对象状态，将 `status` 字段设置为「完成」或者「失败」；
-- 在任何时候，在控制台通过队列 id 可以获取某个任务的执行结果，判断任务状态。
+{% block cloudFuncTimeout %}{% endblock %}
 
 ## Hook 函数
 
@@ -215,15 +200,16 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 
 - 通过控制台进行 [数据导入](dashboard_guide.html#本地数据导入_LeanCloud) 不会触发以下任何 hook 函数。
 - 使用 Hook 函数需要 [防止死循环调用](#防止死循环调用)。
+- `_Installation` 表暂不支持 Hook 函数。
 
 ### {{hook_before_save}}
-在将对象保存到云端数据表之前，可以对数据做一些清理或验证。例如，一条电影评论不能过长，否则界面上显示不开，需要将其截断至 140 个字符：
+在创建新对象之前，可以对数据做一些清理或验证。例如，一条电影评论不能过长，否则界面上显示不开，需要将其截断至 140 个字符：
 
 {% block beforeSaveExample %}{% endblock %}
 
 ### {{hook_after_save}}
 
-在数据保存后触发指定操作，比如当一条留言保存后再更新一下所属帖子的评论总数：
+在创建新对象后触发指定操作，比如当一条留言创建后再更新一下所属帖子的评论总数：
 
 {% block afterSaveExample %}{% endblock %}
 
@@ -236,7 +222,7 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 ### {{hook_before_update}}
 
 {% block beforeUpdate %}
-在更新对象前执行操作，这时你可以知道哪些字段已被修改，还可以在特定情况下拒绝本次修改：
+在更新已存在的对象前执行操作，这时你可以知道哪些字段已被修改，还可以在特定情况下拒绝本次修改：
 
 {% block beforeUpdateExample %}{% endblock %}
 
@@ -245,7 +231,7 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 
 ### {{hook_after_update}}
 
-在更新对象后执行特定的动作，比如每次修改文章后记录下日志：
+在更新已存在的对象后执行特定的动作，比如每次修改文章后记录下日志：
 
 {% block afterUpdateExample %}{% endblock %}
 
@@ -305,31 +291,31 @@ Hook 函数本质上是云函数，但它有固定的名称，定义之后会**�
 
 ```javascript
 AV.Cloud.afterUpdate('Post', function(request) {
-    // 直接修改并保存对象不会再次触发 afterUpdate Hook 函数
-    request.object.set('foo', 'bar');
-    request.object.save().then(function(obj) {
-      // 你的业务逻辑
-    });
+  // 直接修改并保存对象不会再次触发 afterUpdate Hook 函数
+  request.object.set('foo', 'bar');
+  request.object.save().then(function(obj) {
+    // 你的业务逻辑
+  }).catch(console.error);
 
-    // 如果有 fetch 操作，则需要在新获得的对象上调用相关的 disable 方法
-    // 来确保不会再次触发 Hook 函数
-    request.object.fetch().then(function(obj) {
-      obj.disableAfterHook();
-      obj.set('foo', 'bar');
-      return obj.save();
-    }).then(function(obj) {
-      // 你的业务逻辑
-    });
-
-    // 如果是其他方式构建对象，则需要在新构建的对象上调用相关的 disable 方法
-    // 来确保不会再次触发 Hook 函数
-    var obj = AV.Object.createWithoutData('Post', request.object.id);
+  // 如果有 fetch 操作，则需要在新获得的对象上调用相关的 disable 方法
+  // 来确保不会再次触发 Hook 函数
+  request.object.fetch().then(function(obj) {
     obj.disableAfterHook();
     obj.set('foo', 'bar');
-    obj.save().then(function(obj) {
-      // 你的业务逻辑
-    });
-  });
+    return obj.save();
+  }).then(function(obj) {
+    // 你的业务逻辑
+  }).catch(console.error);
+
+  // 如果是其他方式构建对象，则需要在新构建的对象上调用相关的 disable 方法
+  // 来确保不会再次触发 Hook 函数
+  var obj = AV.Object.createWithoutData('Post', request.object.id);
+  obj.disableAfterHook();
+  obj.set('foo', 'bar');
+  obj.save().then(function(obj) {
+    // 你的业务逻辑
+  }).catch(console.error);
+});
 ```
 
 **提示**：云引擎 Node.js 环境从 [0.3.0](https://github.com/leancloud/leanengine-node-sdk/blob/master/CHANGELOG.md#v030-20151231) 开始支持 `object.disableBeforeHook()` 和 `object.disableAfterHook()`。
@@ -354,8 +340,6 @@ Hook 函数的超时时间为 3 秒。如果 Hook 函数被其他的云函数调
 ## 定时任务
 
 定时任务可以按照设定，以一定间隔自动完成指定动作，比如半夜清理过期数据，每周一向所有用户发送推送消息等等。定时任务的最小时间单位是**秒**，正常情况下时间误差都可以控制在秒级别。
-
-{% block timerLegacy %}{% endblock %}
 
 定时任务是普通的云函数，也会遇到 [超时问题](#云函数超时)，具体请参考 [超时处理方案](#超时的处理方案)。
 
@@ -432,10 +416,8 @@ Cron 表达式的基本语法为：
 
 ## 权限说明
 
-云引擎可以有超级权限，使用 master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。你只需要使用下列代码来初始化 SDK：
+云引擎可以有超级权限，使用 Master key 调用所有 API，因此会忽略 ACL 和 Class Permission 限制。你只需要使用下列代码来初始化 SDK（在线定义默认就有超级权限）：
 
 {% block masterKeyInit %}{% endblock %}
 
 如果在你的服务端环境里也想做到超级权限，也可以使用该方法初始化。
-
-{% block masterKeyInitLegacy %}{% endblock %}

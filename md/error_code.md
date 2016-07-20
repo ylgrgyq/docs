@@ -57,6 +57,12 @@
 * 信息 - `Tried to access a feature only available internally.`
 * 含义 - 此 API 仅供内部使用。
 
+## 109
+
+* 信息 - `That operation isn't allowed by binding class.`
+* 含义 - 共享的 Class 无权限执行此操作，请检查 Class 共享的权限设置。
+
+
 ## 111
 
 * 信息 - `Field set to incorrect type.`
@@ -91,7 +97,7 @@
 ## 119
 
 * 信息 - `That operation isn't allowed for clients.`
-* 含义 - 该操作无法从客户端发起。通常可以通过在应用设置里开启对应选项就可以解决。
+* 含义 - 该操作无法从客户端发起。请检查该错误由哪个操作引起，然后进入 [应用控制台 > 设置 > 应用选项](/app.html?appid={{appid}}#/permission) 启用相应的选项。
 
 ## 120
 
@@ -132,6 +138,12 @@
 
 * 信息 - `The mobile phone number was invalid.`
 * 含义 - 手机号码无效。
+
+## 128
+
+* 信息 - `Invalid relation data.`
+* 含义 - 无效的 Relation 数据，通常是因为添加或者删除的 Relation 数据为空或者过多（单次超过 1000 个）。
+
 
 ## 137
 
@@ -318,6 +330,12 @@
 * 信息 - `Forbidden to xxx by class permissions`
 * 含义 - 操作被禁止，因为 [Class 权限限制](./data_security.html#Class_级别的_ACL)。
 
+
+## 429
+
+* 信息 - `Too many requests.`
+* 含义 - 超过应用的流控限制，每个应用同一时刻的并发请求上限为 30（即同一时刻最多可以同时处理 30 个数据请求）；通过数据管理平台每秒限制上传一个文件，并且每分钟最多上传 30 个文件，如需提升，请联系我们。可以在 API 统计的性能统计总览中看到你的应用的请求统计，例如平均并发、平均响应时间等。
+
 ## 502
 
 * 信息 - `Server is in maintenance.`
@@ -325,8 +343,8 @@
 
 ## 503
 
-* 信息 - `Rate limit exceeded.`
-* 含义 - 超过流量访问限制。每个应用同一时刻的并发请求上限为 100（即同一时刻最多可以同时处理 100 个数据请求）；通过数据管理平台每秒限制上传一个文件，并且每分钟最多上传 30 个文件，如需提升，请联系我们。
+* 信息 - `The app is temporarily disabled/readonly.`
+* 含义 - 应用被临时禁用或者进入只读状态，通常是进行运维或者故障处理操作，我们会提前告知开发者。
 
 ## 511
 

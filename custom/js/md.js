@@ -30,6 +30,9 @@ $.fn.scrollStopped = function(callback) {
 
   tocContents.eventProxy.on('ready', function () {
     doSideBar();
+    if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
+      window.location=window.location.hash;
+    }
   });
 })();
 
@@ -67,10 +70,6 @@ var doSideBar = function(){
 };
 
 var updateScrollSpy = function() {
-  if(window.location.hash){//因为 dom改变导致 hash位置不正确，需要进行重新定位
-    window.location=window.location.hash;
-  }
-  //定位完成后再添加 scrollspy 功能
   setTimeout(function(){
     $('body').scrollspy({ target: '.sidebar-wrapper' });
   }, 200);
@@ -104,11 +103,7 @@ var initGitHubLinks = function() {
   var currentPath = window.location.pathname.match(/.*\/(.+).html/i)[1];
   $('#content').prepend("<div class=docs-meta>\
       <span class='icon icon-github'></span>\
-      <a href='http://github.com/leancloud/docs/blob/master/md/" + currentPath + ".md'>在 GitHub 查看</a>\
-      |\
-      <a href='http://github.com/leancloud/docs/commits/master/md/" + currentPath + ".md'>文件历史</a>\
-      |\
-      <a href='http://github.com/leancloud/docs/edit/master/md/" + currentPath + ".md'>编辑</a>\
+      <a href='https://github.com/leancloud/docs#贡献'>编辑</a>\
     </div>");
   $('.sidebar-wrapper #toc').append("<li class=sidebar-meta><a href='#' class=do-expand-all>展开所有</a> <a href='#top' class=back-to-top>返回顶部</a></li>");
 };
@@ -227,7 +222,10 @@ var codeBlockTabber = (function() {
       'lang-javascript': 'JavaScript',
       'lang-js': 'JavaScript',
       'lang-python': 'Python',
-      'lang-java': 'Java'
+      'lang-java': 'Java',
+      'lang-ts':'TypeScript',
+      'lang-es7': 'ECMAScript7',
+      'lang-html': 'HTML'
     };
 
     $.each($codeBlocks, function () {
@@ -292,6 +290,31 @@ var codeBlockTabber = (function() {
       var targetLang = $(this).data('toggle-lang');
       var $blocks = $('.codeblock-toggle-enabled');
 
+      // check if is switching to another language first
+      if (!$(this).hasClass('active')) {
+        var prevHeihgt = 0;
+        var nextHeight = 0;
+        var heightOffset = 0;
+
+        // sum all heights of previous visble code blocks with multilang enabled
+        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled:visible').each(function () {
+          prevHeihgt += $(this).outerHeight(true);
+        });
+
+        // sum all heights of previous hidden code blocks with multilang enabled
+        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled').not(':visible').each(function () {
+          nextHeight += $(this).outerHeight(true);
+        });
+
+        heightOffset = prevHeihgt - nextHeight;
+
+        if (heightOffset !== 0) {
+          var currentTop = document.documentElement.scrollTop || document.body.scrollTop;
+          window.scrollTo(0, currentTop - heightOffset);
+          console.log('codeblock height offset: ' + heightOffset);
+        }
+      }
+
       console.log('switching to ' + targetLang);
 
       $('.code-lang-toggles .toggle').removeClass('active');
@@ -339,6 +362,15 @@ $(function() {
     updateSidebarAffixShadowWidth();
   }, 400);
 
+  // set the title: LeanCloud 文档 - xxxxxxx
+  if ( window.location.pathname != '/'
+    && window.location.pathname.toLowerCase() != '/index.html' ){
+    $('title').text(function(){
+    // do not use html()
+    return $(this).text() + ' - ' + $('.doc-content h1').first().text();
+  });
+}
+
 });
 
 // If the cursor is off the sidebar, scrolls to parent active heading
@@ -359,12 +391,3 @@ $(window).scrollStopped(function() {
 $(window).resize(function() {
   updateSidebarAffixShadowWidth();
 });
-
-// set the title: LeanCloud 文档 - xxxxxxx
-if (window.location.pathname != '/' 
-  && window.location.pathname.toLowerCase() != '/index.html' ){
-  $('title').text(function(){
-    // do not use html()
-    return $(this).text() + ' - ' + $('.doc-content h1').first().text();
-  });
-}

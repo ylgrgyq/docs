@@ -20,9 +20,9 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 所有 API 访问都通过 HTTPS 进行。API 访问域名为：
 
-- **中国节点**：<https://api.leancloud.cn> 
+- **中国节点**：<https://api.leancloud.cn>
 - **美国节点**：<https://us-api.leancloud.cn>
- 
+
 域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
 
 ### 在线测试
@@ -107,7 +107,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
     <tr>
       <td>/1.1/users/me</td>
       <td>GET</td>
-      <td>根据 <a href="js_guide.html#SessionToken">sessionToken</a> 获取用户信息</td>
+      <td>根据 <a href="leanstorage_guide-js.html#SessionToken">sessionToken</a> 获取用户信息</td>
     </tr>
     <tr>
       <td>/1.1/users/&lt;objectId&gt;/updatePassword</td>
@@ -265,6 +265,30 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </tbody>
 </table>
 
+### 数据 Schema
+
+<table>
+  <thead>
+    <tr>
+      <th>URL</th>
+      <th>HTTP</th>
+      <th>功能</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>/1.1/schemas</td>
+      <td>GET</td>
+      <td>获取应用的所有 Class 的 Schema</td>
+    </tr>
+    <tr>
+      <td>/1.1/schemas/&lt;className&gt;</td>
+      <td>POST</td>
+      <td>获取应用指定的 Class 的 Schema</td>
+    </tr>
+  </tbody>
+</table>
+
 ### 云函数
 
 <table>
@@ -370,19 +394,19 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
   </thead>
   <tbody>
     <tr>
-      <td>/1.1/rtm/messages/logs/</td>
+      <td>/1.1/rtm/messages/logs</td>
       <td>GET</td>
       <td>获得应用聊天记录</td>
     </tr>
     <tr>
-      <td>/1.1/rtm/messages/</td>
+      <td>/1.1/rtm/messages</td>
       <td>POST</td>
       <td>通过 API 向用户发消息</td>
     </tr>
     <tr>
       <td>/1.1/rtm/transient_group/onlines</td>
       <td>GET</td>
-      <td>获取暂态对话的在线人数</td>
+      <td>获取暂态对话（聊天室）的在线人数</td>
     </tr>
   </tbody>
 </table>
@@ -740,6 +764,33 @@ curl -X PUT \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
 
+#### 按条件更新对象
+
+假设我们要从某个账户对象 Account 的余额扣除一定金额，但是要求余额要大于等于被扣除的金额，那么就需要在更新的时候加上条件 `balance >= amount`，并通过 `where` 参数来实现：
+
+```sh
+curl -X PUT \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  -d '{"balance":{"__op":"Decrement","amount": 30}}' \
+  "https://api.leancloud.cn/1.1/classes/Account/558e20cbe4b060308e3eb36c?where=%7B%22balance%22%3A%7B%22%24gte%22%3A%2030%7D%7D"    
+```
+
+可以看到 URL 里多了个参数 where，值是 `%7B%22balance%22%3A%7B%22%24gte%22%3A%2030%7D%7D`，其实是 `{"balance":{"$gte": 30}}` 做了 url encode 的结果。更多 where 查询的例子参见下文的 [查询](#查询) 一节。
+
+如果条件不满足，更新将失败，同时返回错误码 `305`：
+
+
+```json
+{
+  "code" : 305,
+  "error": "No effect on updating/deleting a document."
+}
+```
+
+**特别强调， where 一定要作为 URL 的 Query Parameters 传入。**
+
 ### 删除对象
 
 为了在 LeanCloud 上删除一个对象，可以发送一个 DELETE 请求到指定的对象的 URL，比如：
@@ -761,6 +812,33 @@ curl -X PUT \
   -d '{"downvotes":{"__op":"Delete"}}' \
   https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c
 ```
+
+#### 按条件删除对象
+
+为请求增加 `where` 参数即可以按指定的条件来删除对象：
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{appkey}}" \
+  -H "Content-Type: application/json" \
+  "https://api.leancloud.cn/1.1/classes/Post/558e20cbe4b060308e3eb36c?where=%7B%22clicks%22%3A%200%7D"    
+```
+
+可以看到 URL 里多了个参数 where，值是 `%7B%22clicks%22%3A%200%7D`，其实是 `{"clicks": 0}` 做了 url encode 的结果，这里的意思是我们只有当这个帖子的点击量 clicks 为 0 才删除。更多 where 查询的例子参见 [查询](#查询) 一节。
+
+如果条件不满足，删除将失败，同时返回错误码 `305`：
+
+
+```json
+{
+  "code" : 305,
+  "error": "No effect on updating/deleting a document."
+}
+```
+
+
+**特别强调， where 一定要作为 URL 的 Query Parameters 传入。**
 
 ### 批量操作
 
@@ -1375,7 +1453,7 @@ curl -X GET \
 
 ### 已登录的用户信息
 
-用户成功注册或登录后，服务器会返回 sessionToken 并保存在本地，后续请求可以通过传递 sessionToken 来获取该用户信息（如访问权限等）。更多说明请参考 [存储 &middot; sessionToken](js_guide.html#SessionToken)。
+用户成功注册或登录后，服务器会返回 sessionToken 并保存在本地，后续请求可以通过传递 sessionToken 来获取该用户信息（如访问权限等）。更多说明请参考 [存储 &middot; sessionToken](leanstorage_guide-js.html#SessionToken)。
 
 ```
 curl -X GET \
@@ -2237,6 +2315,47 @@ curl -X DELETE \
   -H "X-LC-Key: {{appkey}}" \
   https://api.leancloud.cn/1.1/installations/51fcb74ee4b074ac5c34cf85
 ```
+
+## 数据 Schema
+
+为了方便开发者使用、自行研发一些代码生成工具或者内部使用的管理平台。我们提供了获取数据 Class Schema 的开放 API，基于安全考虑，强制要求使用 Master Key 才可以访问。
+
+查询一个应用下面所有 Class 的 Schema:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://api.leancloud.cn/1.1/schemas
+```
+
+返回的 JSON 数据包含了每个 Class 对应的 Schema:
+
+```json
+{
+  "_User":{
+    "username"     : {"type":"String"},
+    "password"     : {"type":"String"},
+    "objectId"     : {"type":"String"},
+    "emailVerified": {"type":"Boolean"},
+    "email"        : {"type":"String"},
+    "createdAt"    : {"type":"Date"},
+    "updatedAt"    : {"type":"Date"},
+    "authData"     : {"type":"Object"}
+  }
+  ……其他 class……
+}
+```
+
+也可以单独获取某个 Class 的 Schema:
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   https://api.leancloud.cn/1.1/schemas/_User
+```
+
 
 ## 云函数
 
