@@ -46,7 +46,8 @@ var updateSidebarAffixShadowWidth = function() {
 };
 
 // Sidebar affix
-var doSideBar = function(){
+var doSideBar = function() {
+  $('.sidebar-loading').removeClass('on');
   $('.sidebar-wrapper').affix({
     offset: {
       top: 80,
