@@ -42,17 +42,15 @@
               <!-- <li><a href="#" data-toggle="modal" data-target="#modal-shortcuts">快捷键</a></li> -->
             </ul>
           </li>
-          {% if isHome != true %}
-          <!-- hide search input on the home page -->
-          <li>
-          <form class="navbar-form navbar-right" role="search" action="/search.html" method="get">
-            <div class="form-group">
-            <input name="q" type="text" class="form-control" placeholder="搜索&hellip;">
+        </ul>
+        <!-- hide search input on the home page -->
+        {% if isHome != true %}
+          <form role="search" action="/search.html" method="get">
+            <div class="app-search">
+              <input name="q" type="text" class="form-control" placeholder="搜索文档&hellip;">
             </div>
           </form>
-          </li>
-          {% endif %}
-        </ul>
+        {% endif %}
       </div>
 
       <ul class="nav navbar-nav navbar-user-actions navbar-right" ng-cloak>
