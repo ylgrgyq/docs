@@ -113,6 +113,7 @@ module.exports = function(grunt) {
         },
         layoutdir: 'templates/layouts/',
         layout: ['template.swig'],
+        node: grunt.option('theme'),
         flatten: true
       },
       md: {
