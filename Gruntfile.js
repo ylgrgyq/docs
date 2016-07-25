@@ -229,7 +229,12 @@ module.exports = function(grunt) {
       precompile: {
         baseDir: 'views',
         src: 'views/*.md',
-        destDir: 'md'
+        destDir: 'md',
+        options:{
+          data:{
+            node: grunt.option('theme')
+          }
+        }
       }
     },
 
