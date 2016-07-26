@@ -229,7 +229,7 @@ module.exports = function(grunt) {
     nunjucks: {
       precompile: {
         baseDir: 'views',
-        src: 'views/*.md',
+        src: ['views/*.md', 'views/start/*.md'],
         destDir: 'md',
         options:{
           data:{
