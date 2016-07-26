@@ -123,7 +123,11 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ## 设置域名
 
+{% if node=='qcloud' %}
+首先，你需要到 `云引擎 > 设置` 页面找到 **Web 主机域名**，在这里填写你的域名：
+{% else %}
 首先，你需要到 [云引擎 > 设置](/cloud.html?appid={{appid}}#/conf) 页面找到 **Web 主机域名**，在这里填写你的域名：
+{% endif %}
 
 ![image](images/cloud_code_web_setting.png)
 
@@ -216,7 +220,11 @@ ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEA5EZmrZZjbKb07yipeSkL+Hm+9mZAqyMfPu6BTAib+RVy
 
 ## 日志
 
+{% if node=='qcloud' %}
+`云引擎 / 日志`，可以查看云引擎的部署和运行日志，还可以通过日志级别进行筛选。
+{% else %}
 [云引擎 / 日志](/cloud.html?appid={{appid}}#/log)，可以查看云引擎的部署和运行日志，还可以通过日志级别进行筛选。
+{% endif %}
 
 应用的日志可以直接输出到「标准输出」或者「标准错误」，这些信息会分别对应日志的 `info` 和 `error` 级别，比如下列代码会在 info 级别记录参数信息：
 
