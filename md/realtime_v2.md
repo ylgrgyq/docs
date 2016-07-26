@@ -11,7 +11,7 @@
 
 * Android 聊天应用：
   * [ChatKit，自带 UI 的聊天工具包](chatkit-android.html)
-  * [LeanMessageDemo Android 版](https://github.com/leancloud/LeanMessage-Demo) 
+  * [LeanMessageDemo Android 版](https://github.com/leancloud/LeanMessage-Demo)
   * [LeanChat Android 版](https://github.com/leancloud/leanchat-android)
 
 * JavaScript 聊天应用
@@ -100,7 +100,7 @@ LeanCloud 实时通信服务的特性主要有：
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
-这里要特别讨论一下**单聊**、**群聊**、**聊天室**、**公众号**等概念。
+这里要特别讨论一下**单聊**、**群聊**、**聊天室**、**公众号**等使用场景。
 
 * **单聊**<br/>
   就是两个 client 之间的对话，公开与否（能否让其他人看到这个对话存在）由应用层自己控制。一般而言，它是私密的，并且加入新的成员之后，会切换到新的对话（当然，也可以依然不离开当前对话，这一点还是由应用层来决定）。
@@ -243,7 +243,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 进入 [控制台 > 消息 > 实时消息 > 设置 > iOS 用户离线推送设置](/messaging.html?appid={{appid}}#/message/realtime/conf)，填入：
 
 ```
-{"alert":"您有新的消息", "badge":"Increment"}`
+{"alert":"您有新的消息", "badge":"Increment"}
 ```
 
 注意，`Increment` 大小写敏感，表示自动增加应用 badge 上的数字计数。清除 badge 的操作请参考 [iOS 推送指南 &middot; 清除 badge](ios_push_guide.html#清除_Badge)。
@@ -679,7 +679,8 @@ data | 消息内容
 
 * 对于客户端主动发起的操作会按照操作类型限制其频率。发消息操作限制为 **每分钟 60 次**，历史消息查询操作限制为 **每分钟 120 次**，其它类型操作包括加入对话、离开对话、登录服务、退出服务等均限制为 **每分钟 30 次**。当调用超过限制时，云端会丢弃超出的消息。
 * 客户端发送的单条消息大小不得超过 5 KB。
-* 目前单个普通对话的成员上限为 500 个。
+* 目前单个普通对话的成员上限为 500 个，如果您通过数据存储 API 向 m 字段加入了超过 500 个 id，我们只会使用其中的前 500 个。
+* 请不要使用相同的 id 在大量设备上同时登录，如果系统检测到某个 id 同时在超过 5 个不同的 IP 上登录，会认为此 id 是重复使用的 id，之后此 id 当日的每次登录会按照 `id + IP` 的组合作为计费的独立用户。
 
 ## 云端错误码说明
 

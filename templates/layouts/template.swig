@@ -21,6 +21,8 @@
 
         <div class="sidebar-wrapper" id="toc-wrapper">
 
+          <div class="sidebar-loading on"> </div>
+
         </div>
         <!-- .sidebar-wrapper -->
 

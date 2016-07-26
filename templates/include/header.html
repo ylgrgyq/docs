@@ -1,83 +1,86 @@
 <nav class="dashboard-subnav navbar navbar-default navbar-static-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-collapse" id="app-options">
-            <ul class="nav navbar-nav navbar-app-select">
-                <li>
-                  <a href="/applist.html" class="nav-logo font-logo">L<span class="visible-xs-inline">eanCloud</span></a>
-                </li>
+  <div class="container-fluid">
+    <div class="navbar-collapse" id="app-options">
+      <ul class="nav navbar-nav navbar-app-select">
+        <li>
+          <a href="/applist.html" class="nav-logo font-logo">L<span class="visible-xs-inline">eanCloud</span></a>
+        </li>
+      </ul>
+      <div class="navbar-app-actions-wrap">
+        <ul class="nav navbar-nav navbar-app-actions">
+          <li class="dropdown dropdown-toggle-app-name">
+            <a href="index.html">
+              <i class="icon icon-dashbd-icon icon-home"></i>
+              <div class="name">文档首页</div>
+            </a>
+          </li>
+          <li>
+            <a href="/docs/sdk_down.html">
+              <i class="icon icon-dashbd-icon icon-package"></i>
+              <div class="dashboard-subnav-text">SDK 下载</div>
+            </a>
+          </li>
+          <li ng-class="{active:currentHtmlPage=='help.html'}">
+            <a class="nav-key-6 dropdown-toggle" title="帮助" data-toggle="dropdown">
+              <i class="icon icon-dashbd-icon icon-question"></i>
+              <i class="dashboard-subnav-text">帮助</i>
+            </a>
+            <ul class="dropdown-menu">
+              {% if layout!="board-nologin.swig" %}
+              <!-- <li><a href="start.html">快速入门</a></li> -->
+              {% endif %}
+              <li><a href="https://leanticket.cn/t/leancloud">技术支持</a></li>
+              <li><a href="http://forum.leancloud.cn">社区</a></li>
+              <li><a href="http://blog.leancloud.cn/">Blog</a></li>
+              <li role="presentation" class="divider"></li>
+              <li><a href="https://leancloud.cn/apionline/">在线 API 工具</a></li>
+              <li><a href="http://drop.avosapps.com/">iOS 测试包分发</a></li>
+              <li><a href="http://leancloud.sexy" target="_blank">第三方库</a></li>
+              <li role="presentation" class="divider"></li>
+              <li><a href="/apps.html">LeanCloud App</a></li>
+              <li><a href="/pricing.html">价格</a></li>
+              <!-- <li><a href="#" data-toggle="modal" data-target="#modal-shortcuts">快捷键</a></li> -->
             </ul>
-            <div class="navbar-app-actions-wrap">
-                <ul class="nav navbar-nav navbar-app-actions" >
-                  <li class="dropdown dropdown-toggle-app-name" >
-                    <a href="index.html">
-                      <i class="icon icon-dashbd-icon icon-blank-app"></i>
-                      <div class="name">文档首页</div>
-                    </a>
-                  </li>
-                  <li><a href="/docs/sdk_down.html">SDK 下载</a></li>
-                  <li ng-class="{active:currentHtmlPage=='help.html'}">
-                      <a class="nav-key-6 dropdown-toggle" title="帮助" data-toggle="dropdown">
-                          <i class="icon icon-dashbd-icon icon-info"></i>
-                          <i class="dashboard-subnav-text">帮助</i>
-                      </a>
-                      <ul class="dropdown-menu">
-                          {% if layout!="board-nologin.swig" %}
-                            <!-- <li><a href="start.html">快速入门</a></li> -->
-                          {% endif %}
-                          <li><a href="https://leanticket.cn/t/leancloud">技术支持</a></li>
-                          <li><a href="http://forum.leancloud.cn">社区</a></li>
-                          <li><a href="http://blog.leancloud.cn/">Blog</a></li>
-                          <li role="presentation" class="divider"></li>
-                          <li><a href="https://leancloud.cn/apionline/">在线 API 工具</a></li>
-                          <li><a href="http://drop.avosapps.com/">iOS 测试包分发</a></li>
-                          <li><a href="http://leancloud.sexy" target="_blank">第三方库</a></li>
-                          <li role="presentation" class="divider"></li>
-                          <li><a href="/apps.html">LeanCloud App</a></li>
-                          <li><a href="/pricing.html">价格</a></li>
-                          <!-- <li><a href="#" data-toggle="modal" data-target="#modal-shortcuts">快捷键</a></li> -->
-                      </ul>
-                  </li>
-                  {% if isHome != true %}
-                  <!-- hide search input on the home page -->
-                  <li>
-                    <form class="navbar-form navbar-right" role="search" action="/search.html" method="get">
-                      <div class="form-group">
-                        <input name="q" type="text" class="form-control" placeholder="搜索&hellip;">
-                      </div>
-                    </form>
-                  </li>
-                  {% endif %}
-                </ul>
+          </li>
+        </ul>
+        <!-- hide search input on the home page -->
+        {% if isHome != true %}
+          <form role="search" action="/search.html" method="get">
+            <div class="app-search">
+              <input name="q" type="text" class="form-control" placeholder="搜索文档&hellip;">
             </div>
+          </form>
+        {% endif %}
+      </div>
 
-            <ul class="nav navbar-nav navbar-user-actions navbar-right" ng-cloak>
+      <ul class="nav navbar-nav navbar-user-actions navbar-right" ng-cloak>
 
-                <li class="dropdown" ng-show="user.username">
-                    <a role="button" class="dropdown-toggle user-name" data-toggle="dropdown">
-                        <span class="user-gravatar">
-                            <img gravatar-src="user.email" gravatar-size="64">
-                        </span>
-                        <span class="user-name-text">{{user.username}}</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/settings.html">账号设置</a></li>
-                        <li><a href="/applist.html">控制台</a></li>
-                        <li><a href="/settings.html#/setting/team">团队管理</a></li>
-                        <li><a href="/bill.html#/bill/general">财务</a></li>
-                        <!-- <li><a href="settings.html#/setting/invite">邀请好友</a></li> -->
-                        <li ng-show="user.username" style=""><a ng-click="signout()">登出</a></li>
-                    </ul>
-                </li>
-                <li ng-hide="user.username">
-                    <a href="/login.html#/signin">登录</a>
-                </li>
-                <li ng-hide="user.username">
-                    <a href="/login.html#/signup">注册</a>
-                </li>
-            </ul>
-        </div><!-- /.navbar-collapse -->
-    </div>
-    <!-- .container-fluid -->
+        <li class="dropdown" ng-show="user.username">
+          <a role="button" class="dropdown-toggle user-name" data-toggle="dropdown">
+            <span class="user-gravatar">
+              <img gravatar-src="user.email" gravatar-size="64">
+            </span>
+            <span class="user-name-text">{{user.username}}</span>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="/settings.html">账号设置</a></li>
+            <li><a href="/applist.html">控制台</a></li>
+            <li><a href="/settings.html#/setting/team">团队管理</a></li>
+            <li><a href="/bill.html#/bill/general">财务</a></li>
+            <!-- <li><a href="settings.html#/setting/invite">邀请好友</a></li> -->
+            <li ng-show="user.username" style=""><a ng-click="signout()">登出</a></li>
+          </ul>
+        </li>
+        <li ng-hide="user.username">
+          <a href="/login.html#/signin">登录</a>
+        </li>
+        <li ng-hide="user.username">
+          <a href="/login.html#/signup">注册</a>
+        </li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div>
+  <!-- .container-fluid -->
 </nav>
 
 <header class="doc-subnav" role="banner">
@@ -194,6 +197,19 @@
           <ul class="dropdown-menu">
             <li><a href="leanstorage_guide-php.html">数据存储开发指南</a></li>
             <li><a href="/api-docs/php/" target="_blank">SDK API</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="dropdown-header">云引擎</li>
+            <li><a href="leanengine_webhosting_guide-php.html">网站托管开发指南</a></li>
+            <li><a href="leanengine_cloudfunction_guide-php.html">云函数开发指南</a></li>
+          </ul>
+        </li>
+        <li class="dropdown">
+          <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-hover="dropdown" href="#">Java</a>
+          <ul class="dropdown-menu">
+            <li><a href="leanstorage_guide-java.html">数据存储开发指南</a></li>
+            <li class="dropdown-header">云引擎</li>
+            <li><a href="leanengine_webhosting_guide-java.html">网站托管开发指南</a></li>
+            <li><a href="leanengine_cloudfunction_guide-java.html">云函数开发指南</a></li>
           </ul>
         </li>
         <li class="dropdown">
@@ -214,6 +230,7 @@
           <a class="dropdown-toggle" role="button" data-toggle="dropdown" data-hover="dropdown" href="#">云引擎</a>
           <ul class="dropdown-menu">
           <li><a href="leanengine_overview.html">云引擎总览</a></li>
+          <li><a href="leanengine_quickstart.html">云引擎快速入门</a></li>
           <li><a href="leanengine_plan.html">云引擎运行方案</a></li>
           <li role="separator" class="divider"></li>
           <li class="dropdown-header">Node.js</li>
@@ -224,6 +241,9 @@
           <li class="dropdown-header">PHP</li>
           <li><a href="leanengine_webhosting_guide-php.html">网站托管开发指南</a></li>
           <li><a href="leanengine_cloudfunction_guide-php.html">云函数开发指南</a></li>
+          <li class="dropdown-header">Java</li>
+          <li><a href="leanengine_webhosting_guide-java.html">网站托管开发指南</a></li>
+          <li><a href="leanengine_cloudfunction_guide-java.html">云函数开发指南</a></li>
           <li role="separator" class="divider"></li>
           <li><a href="leanengine_examples.html">云引擎项目示例</a></li>
           <li><a href="leanengine_cli.html">云引擎命令行工具</a></li>

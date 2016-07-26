@@ -38,7 +38,14 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
   银行地址：**北京市海淀区知春路 6 号锦秋国际大厦一层**<br/>
   银行行号：**104100004013**
 
-  <div class="callout callout-danger">请务必在汇款附言里中注明您的 LeanCloud 用户名，或注册邮箱，或您的应用名称，以便我们账务确认汇款的来源和用途，及时入账。</div>
+  <div class="callout callout-danger">请务必在汇款附言里中注明以下信息，以便我们账务确认汇款的来源和用途，及时入账。
+  <ol>
+  <li>如果充值到美国节点，需注明「美国节点」。</li>
+  <li>您的 LeanCloud 用户名</li>
+  <li>（或）注册邮箱</li>
+  <li>（或）您的应用名称</li>
+  </ol>
+  </div>
 
 ### 如何申请开具发票
 
@@ -287,6 +294,10 @@ LeanCloud 依赖的 Framework 包括：
 
 ![image](images/geopoint_faq.png)
 
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-ios.html#手机号码登录")。
+
 
 ## Android SDK
 
@@ -302,6 +313,11 @@ LeanCloud 依赖的 Framework 包括：
 可能有以下两种原因导致这种情况：
 * SDK 版本过旧，installationId 的生成逻辑在版本更迭中有修改。请更新至最新版本。
 * 代码混淆引起的，注意在 proguard 文件中添加 [LeanCloud SDK 的混淆排除](android_faq.html#代码混淆怎么做)。
+
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-android.html#手机号码登录")。
+
 
 
 ## JavaScript SDK
@@ -321,6 +337,11 @@ AV._useMasterKey = true;
 ### Web 端会暴露 App Key 和 App Id，怎么保证安全性？
 首先请阅读「[安全总览](data_security.html)」来了解 LeanCloud 完整的安全体系。其中提到，可以使用「[安全域名](data_security.html#Web_应用安全设置) 」，在没有域名的情况下，可以使用 「[ACL](acl_guide-js.html)」。
 理论上所有客户端都是不可信任的，所以需要在服务端对安全性进行设计。如果需要高级安全，可以使用 ACL 方式来管理，如果需要更高级的自定义方式，可以使用 [LeanEngine（云引擎）](leanengine_overview.html)。
+
+### 如何先验证手机号码再注册
+
+请参考 [存储开发指南 &middot; 手机号码登录](leanstorage_guide-js.html#手机号码登录")。
+
 
 ## 消息推送
 

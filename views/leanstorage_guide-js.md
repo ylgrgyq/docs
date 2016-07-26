@@ -983,13 +983,15 @@ function uploadFile (req, res) {
   var commentQuery = new AV.Query('Comment');
   commentQuery.descending('createdAt');
   commentQuery.limit(10);
-  commentQuery.include('targetTodoFolder');// 关键代码，用 includeKey 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+  commentQuery.include('targetTodoFolder');// 关键代码，用 include 告知服务端需要返回的关联属性对应的对象的详细信息，而不仅仅是 objectId
+  commentQuery.include('targetTodoFolder.targetAVUser');// 关键代码，同上，会返回 targetAVUser 对应的对象的详细信息，而不仅仅是 objectId
   commentQuery.find().then(function (comments) {
       // comments 是最近的十条评论, 其 targetTodoFolder 字段也有相应数据
       for (var i = 0; i < comments.length; i++) {
           var comment = comments[i];
           // 并不需要网络访问
           var todoFolder = comment.get('targetTodoFolder');
+          var avUser = todoFolder.get('targetAVUser'); 
       }
   }, function (error) {
   });
@@ -1229,7 +1231,7 @@ function uploadFile (req, res) {
 {% endblock %} code_object_fetch_with_keys
 
 
-{% block link_to_relation_guide_doc %}[JavaScript 关系建模指南](relation_guide-js.html){% endblock %}
+{% block link_to_relation_guide_doc %}《（待补充）JavaScript 关系建模指南》{% endblock %}
 
 {% set link_to_sms_guide_doc = '[JavaScript 短信服务使用指南](sms_guide-js.html#注册验证)' %}
 
