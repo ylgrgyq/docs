@@ -36,4 +36,6 @@ testObject.put("foo", "bar");
 testObject.save();
 ```
 
-运行你的 app。一个类 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
+运行你的 app，一个类 `TestObject` 的新对象将被发送到 LeanCloud 并保存下来。当你做完这一切，访问 [控制台 - 数据管理](/data.html?appid={{appid}}#/TestObject) 可以看到上面创建的 `TestObject` 的相关数据。
+
+LeanCloud 同时也提供了一个的 Java Servlet 运行环境，我们称之为 LeanEngine（云引擎），更推荐基于 LeanEngine 来实现并部署 Java war 包相关的代码。详细请参考 [云引擎文档](leanengine_overview.html) 。
