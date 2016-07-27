@@ -19,6 +19,7 @@ Installation 表示一个允许推送的设备的唯一标示，对应 [数据�
 badge|iOS|呈现在应用图标右上角的红色圆形数字提示，例如待更新的应用数、未读信息数目等。
 channels| |设备订阅的频道
 deviceProfile||在应用有多个 iOS 推送证书或多个 Android 混合推送配置的场景下，deviceProfile 用于指定该设备对应的证书名或配置名。
+deviceProfile||在应用有多个 iOS 推送证书或多个 Android 混合推送配置的场景下，deviceProfile 用于指定当前设备使用的证书名或配置名。其值需要与 [控制台 > 消息 > 设置](/messaging.html?appid={{appid}}#/message/push/conf) 内配置的证书名或配置名对应，否则将无法完成推送。使用方法请参考 [iOS 测试和生产证书区分](#iOS_测试和生产证书区分) 和 [Android 混合推送多配置区分](#Android_混合推送多配置区分)。
 deviceToken|iOS|APNS 推送的唯一标识符
 deviceType| |设备类型，目前支持 "ios"、"android"、"wp"、"web"。
 ID|Windows Phone|仅对微软平台的设备（微软平板和手机）有效
@@ -31,7 +32,7 @@ timeZone| |设备设定的时区
 
 ### Notification
 
-对应 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 里的一条记录，表示一条推送消息，它包括下列属性：
+对应 [控制台 > 消息 > 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 里的一条记录，表示一条推送消息，它包括下列属性：
 
 名称|适用平台|描述
 ---|---|---
@@ -45,11 +46,11 @@ errors| | 本次推送过程中的错误信息。
 
 如何发送消息也请看下面的详细指南。
 
-推送本质上是根据一个 query 条件来查询 _Installation 表里符合条件的设备，然后将消息推送给设备。因为 `_Installation` 是一个可以完全自定义属性的 Key-Value Object，因此可以实现各种复杂条件推送，例如频道订阅、地理位置信息推送、特定用户推送等。
+推送本质上是根据一个 query 条件来查询 `_Installation` 表里符合条件的设备，然后将消息推送给设备。因为 `_Installation` 是一个可以完全自定义属性的 Key-Value Object，因此可以实现各种复杂条件推送，例如频道订阅、地理位置信息推送、特定用户推送等。
 
 这里重点说明一下 **devices** 这个属性，它的值表示我们查找出来的符合条件的 Installation 数量。当值为 0 时，表示没有找到任何符合目标条件的设备，这时自然所有人都收不到推送通知；当值不为 0 时，仅仅说明找到了这么多符合条件的设备，但并不保证这些设备都能收到推送通知。
 
-注意：我们只保留最近一周的推送记录，并会对过期的推送记录定时进行清理。推送记录清理和推送消息过期时间无关，也就是说即使推送记录被清理，没有过期的推送消息依然是有效的，目标用户依然是能够收到消息。推送过期时间设置请参看[推送消息](#推送消息)一节。
+注意：我们只保留最近一周的推送记录，并会对过期的推送记录定时进行清理。推送记录清理和推送消息过期时间无关，也就是说即使推送记录被清理，没有过期的推送消息依然是有效的，目标用户依然是能够收到消息。推送过期时间设置请参考 [推送消息](#推送消息) 一节。
 
 ## iOS 消息推送
 
@@ -73,7 +74,7 @@ errors| | 本次推送过程中的错误信息。
 
 ## 云引擎和 JavaScript 创建推送
 
-请阅读 [JavaScript SDK 指南 - Push 通知](./leanstorage_guide-js.html#Push_通知)。
+请阅读 [JavaScript SDK 指南 &middot; Push 通知](./leanstorage_guide-js.html#Push_通知)。
 我们还提供单独的 [JavaScript 推送客户端](https://github.com/leancloud/js-push-sdk/) 用于在网页中收发推送。
 
 ## 使用 REST API 推送消息
@@ -182,16 +183,12 @@ curl -X PUT \
 ---|---
 channels|推送给哪些频道，将作为条件加入 where 对象。
 data|推送的内容数据，JSON 对象，请参考 [消息内容](#消息内容_Data)。
-expiration_interval|消息过期的相对时间，从调用 API 的时间开始算起，单位是「秒」。
+expiration_interval|消息过期的相对时间，从调用 API 的时间开始算起，单位是秒。
 expiration_time|消息过期的绝对日期时间
 prod|**仅对 iOS 有效**。设置使用开发证书（**dev**）还是生产证书（**prod**）。当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 push_time|定期推送时间
 where|检索 _Installation 表使用的查询条件，JSON 对象。
 silent|只对 Android 推送有效。用于控制是否关闭推送通知栏提醒，默认为 false，即不关闭通知栏提醒。
-
-#### 开发证书推送
-
-为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。
 
 #### 过期时间
 
@@ -273,7 +270,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 }
 ```
 
-但是如果想一次 push 调用**推送不同的数据给不同类型的设备**， `data` 属性同时支持设定设备特定消息，例如：
+但是如果想一次 push 调用**推送不同的数据给不同类型的设备**，`data` 属性同时支持设定设备特定消息，例如：
 
 ```
 {
@@ -313,15 +310,15 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 }
 ```
 
-如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书。如果未设置 `prod` 属性，且使用的不是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html) ，我们默认使用**生产证书**来发推送。如果未设置 `prod` 属性，且使用的是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html) ，则需要在发推送之前执行 [AV.setProduction](https://leancloud.cn/api-docs/javascript/symbols/AV.html#.setProduction) 函数才会使用生产证书发推送，否则会以开发证书发推送。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
+如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书。如果未设置 `prod` 属性，且使用的不是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html)，我们默认使用**生产证书**来发推送。如果未设置 `prod` 属性，且使用的是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html) ，则需要在发推送之前执行 [AV.setProduction](https://leancloud.cn/api-docs/javascript/symbols/AV.html#.setProduction) 函数才会使用生产证书发推送，否则会以开发证书发推送。注意，当设备设置了 deviceProfile 时我们优先按照 deviceProfile 指定的证书推送。
 
 #### Android 混合推送多配置区分
 
-如果使用了混合推送功能且设置了多个混合推送配置，需要在 `_Installation` 表保存设备信息时将当前设备所对应的混合推送配置名存入 `deviceProfile` 。推送时我们会按照每个目标设备在 `_Installation` 表 `deviceProfile` 字段指定的配置名来发混合推送。如果 `deviceProfile` 为空，我们会默认使用名为 **_default** 的混合推送配置名来发推送。
+如果使用了混合推送功能且设置了多个混合推送配置，需要在 `_Installation` 表保存设备信息时将当前设备所对应的混合推送配置名存入 `deviceProfile`。推送时我们会按照每个目标设备在 `_Installation` 表 `deviceProfile` 字段指定的配置名来发混合推送。如果 `deviceProfile` 为空，我们会默认使用名为 `_default` 的混合推送配置名来发推送。
 
 #### 推送查询条件
 
-_Installation 表中的所有属性，无论是内置的还是自定义的，都可以作为查询条件通过 where 来指定，并且支持 [REST API](./rest_api.html#查询) 定义的各种复杂查询。
+`_Installation` 表中的所有属性，无论是内置的还是自定义的，都可以作为查询条件通过 where 来指定，并且支持 [REST API](./rest_api.html#查询) 定义的各种复杂查询。
 
 后文会举一些例子，更多例子请参考 [REST API](./rest_api.html#查询) 查询文档。
 
@@ -595,6 +592,14 @@ curl -X GET \
 
 将返回推送记录对象，推送记录各字段含义参考 [Notification 说明](#Notification)。
 
+### 推送状态查看和取消
+
+在发推送的过程中，我们会随着推送任务的执行更新推送状态到 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 中，可以在这里查看推送的最新状态。对不同推送状态的说明请参看 [Notification 表详解](#Notification)。
+
+在一条推送记录状态到达 **done** 即完成推送之前，其状态信息旁边会显示 “取消推送” 按钮，点击后就能将本次推送取消。并且取消了的推送会从推送记录中删除。
+
+请注意取消推送的意思是取消还排在队列中未发出的推送，已经发出或已存入离线缓存的推送是无法取消的。同理，推送状态显示已经完成的推送也无法取消。请尽力在发推送前做好测试，确认好发送内容和目标设备查询条件。
+
 ### 定时推送任务查询和取消
 
 可以使用 **master key** 查询当前正在等待推送的定时推送任务：
@@ -655,6 +660,7 @@ curl -X DELETE \
 
 ## 限制
 
+* 为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 / 消息 / 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。
 * Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则会被截断。详情请参看 [APNs 文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/APNsProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH101-SW1)。
 * 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对消息大小有限制。为保证推送消息能被正常发送，我们要求 data + channels 参数须小于 4096 字节，超过限制会导致推送无法正常发送，请尽量减小发送数据大小。
 * 对于 slient 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符。对于小米推送如果没有填写 title 我们会取 alert 中前五个字符作为 title。

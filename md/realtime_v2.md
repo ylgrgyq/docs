@@ -100,7 +100,7 @@ LeanCloud 实时通信服务的特性主要有：
 
 除了在各平台的 SDK 里面可以调用 API 创建对话外，我们也提供 [REST API](./realtime_rest_api.html#通过_REST_API_创建_更新_删除对话数据) 可以让大家预先建立对话：对话的信息存储在 _Conversation 表中，你可以直接通过 [数据存储相关的 REST API](./rest_api.html#%E5%AF%B9%E8%B1%A1-1) 对其进行操作。
 
-这里要特别讨论一下**单聊**、**群聊**、**聊天室**、**公众号**等概念。
+这里要特别讨论一下**单聊**、**群聊**、**聊天室**、**公众号**等使用场景。
 
 * **单聊**<br/>
   就是两个 client 之间的对话，公开与否（能否让其他人看到这个对话存在）由应用层自己控制。一般而言，它是私密的，并且加入新的成员之后，会切换到新的对话（当然，也可以依然不离开当前对话，这一点还是由应用层来决定）。
@@ -711,10 +711,10 @@ data | 消息内容
 `4306`|`CONVERSATION_UPDATE_FAILED`|更新对话操作失败
 `4307`|`CONVERSATION_READ_ONLY`|该对话为只读，不能更新或增删成员。
 `4308`|`CONVERSATION_NOT_ALLOWED`|该对话禁止当前用户发送消息
-`4309`|`CONVERSATION_UPDATE_REJECT`|更新对话的请求被拒绝，当前用户不在对话中
+`4309`|`CONVERSATION_UPDATE_REJECTED`|更新对话的请求被拒绝，当前用户不在对话中
 `4310`|`CONVERSATION_QUERY_FAILED`|查询对话失败，常见于慢查询导致的超时或受其他慢查询导致的数据库响应慢
 `4311`|`CONVERSATION_LOG_FAILED`|拉取对话消息记录失败，常见与超时的情况
-`4312`|`CONVERSATION_LOG_REJECT`|拉去对话消息记录被拒绝，当前用户不再对话中
+`4312`|`CONVERSATION_LOG_REJECTED`|拉取对话消息记录被拒绝，当前用户不在对话中
 `4313`|`SYSTEM_CONVERSATION_REQUIRED`|该功能仅对系统对话有效
 `4401`|`INVALID_MESSAGING_TARGET`|发送消息的对话不存在，或当前用户不在对话中
 `4402`|`MESSAGE_REJECTED_BY_APP`|发送的消息被应用的云引擎 Hook 拒绝
