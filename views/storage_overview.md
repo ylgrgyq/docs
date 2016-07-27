@@ -18,7 +18,7 @@ Github 仓库地址：[https://github.com/leancloud/docs](https://github.com/lea
 
 这样的模式适合互联网上绝大部分产品，虽然数据结构有差异、业务逻辑不一样，但是前后端交互的主体——「数据」，抽象来看是一致的，后端的架构（譬如 LAMP）也是大同小异的，而且同样的系统在一遍一遍地被重复开发，极大浪费了我们宝贵的技术资源。
 
-## LeanCloud 的解决方案
+## 我们的解决方案
 
 LeanCloud 对大部分场景下的后端需求进行了抽象和统一，我们通过四大系统来实现一个通用、强大、可定制的 BaaS(Backend as a Service) 服务：
 
