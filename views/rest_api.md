@@ -2965,6 +2965,7 @@ curl -i -X GET \
 }
 ```
 
+{% if node!='qcloud' %}
 ## 离线数据分析 API
 
 ### 创建分析 job API
@@ -3051,6 +3052,7 @@ Connection: keep-alive
 Strict-Transport-Security: max-age=31536000
 {"id":"63f3b70b8ac3fd779de5bcb765cf121e","status":"OK","results":[{"_c0":6895}],"totalCount":1,"previewCount":1,"nextAnchor":1}
 ```
+{% endif %}
 
 ## 浏览器跨域和特殊方法解决方案
 

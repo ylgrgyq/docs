@@ -7,7 +7,7 @@
 {% if node=='qcloud' %}
 离线数据分析页面的访问路径为 `控制台 > **存储** > **离线数据分析**`。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/t/leancloud) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 {% else %}
-离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
+离线数据分析页面的访问路径为 [控制台 > **存储** > **离线数据分析**](/dataquery.html?appid={{appid}}#/)。如果该功能不能正常使用，请通过 [工单系统](https://leanticket.cn/t/leancloud) 或 [用户论坛](https://forum.leancloud.cn) 联系我们。
 {% endif %}
 
 ## 限制

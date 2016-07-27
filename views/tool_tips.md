@@ -26,7 +26,7 @@
 * 在应用设置的 **邮件模板** 菜单，你可以编辑并保存发送给注册用户的邮箱验证邮件模板等。
 * 适当使用 [查询缓存](leanstorage_guide-ios.html#缓存查询) 功能，可以提升查询性能，并提供离线浏览。
 * 实现应用 DeepLink，参考 [应用内搜索和 DeepLink 开发指南](app_search_guide.html)。
-* 如果你想针对一个列建立唯一索引，不允许该列的数据出现重复，请提交 [技术支持工单](https://leanticket.cn/) 或者发邮件至 <support@leancloud.rocks>，说明应用、Class 和列名。
+* 如果你想针对一个列建立唯一索引，不允许该列的数据出现重复，请提交 [技术支持工单](https://leanticket.cn/t/leancloud) 或者发邮件至 <support@leancloud.rocks>，说明应用、Class 和列名。
 * 想实现先验证手机号码再注册，可以用 `requestSMSCode`、`verifySMSCodeInBackground` 得到一个正确的手机号码再进行 `new AVUser()` 的注册。
 
 
@@ -99,7 +99,7 @@
 * 避免对象循环引用，将循环关系作为第三个对象存储。
 * 想建立一个应用网站？我们提供 [网站托管](leanengine_guide-cloudcode.html#Web_Hosting)。
 * 想用好云引擎，请先熟悉 [JavaScript SDK 开发指南](leanstorage_guide-js.html)。
-* 云引擎 Web 主机托管，可以绑定备案过的独立域名，请在 [工单系统](https://leanticket.cn/) 提出技术申请。
+* 云引擎 Web 主机托管，可以绑定备案过的独立域名，请在 [工单系统](https://leanticket.cn/t/leancloud) 提出技术申请。
 * 云引擎 Web 主机托管，我们可以协助你完成域名的备案，请参考 [域名备案流程](leanengine_guide-cloudcode.html#域名备案流程)。
 
 ## 其他
@@ -108,7 +108,7 @@
 * 修改登录邮箱，请进入 [邮箱](/settings.html#/setting/mail) 菜单。
 {% endif %}
 * 查看 [快速入门文档](./start.html)，开始应用开发之旅。
-* 通过 [工单系统](https://leanticket.cn/) 提交技术支持申请，获取 LeanCloud 工程师的帮助。
+* 通过 [工单系统](https://leanticket.cn/t/leancloud) 提交技术支持申请，获取 LeanCloud 工程师的帮助。
 * 在右上角用户名左侧的消息中心，可以看到 LeanCloud 最火热的新闻和教程。
 * 在工具栏的资源菜单里，可以找到 LeanCloud 移动客户端下载链接，在移动设备上查看应用分析数据。
 * 使用 [drop](https://drop.leanapp.cn/) 或者 [fir.im](http://fir.im/) 分发测试你的应用。
