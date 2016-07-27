@@ -6,6 +6,7 @@
 {% block code_city_point_to_province %}
 
 ```js
+  // 
   var GuangZhou = new AV.Object('City');// 广州
   GuangZhou.set('name', '广州');
   var GuangDong = new AV.Object('Province');// 广东
