@@ -880,7 +880,7 @@ curl -X GET \
     "cursor": "pQRhIrac3AEpLzCA"}
 ```
 
-其中 `results` 对应的就是返回的对象列表，而 `cursor` 表示本次遍历当前位置的『指针』，当 `cursor` 为 null 的时候，表示已经遍历完成，如果不为 null，请继续传入 `cursor` 到 `scan` 接口就可以从上次到达的位置继续往前查找：
+其中 `results` 对应的就是返回的对象列表，而 `cursor` 表示本次遍历当前位置的『指针』，当 `cursor` 为 null 的时候，表示已经遍历完成，如果不为 null，请继续传入 `cursor` 到 `scan` 接口就可以从上次到达的位置继续往后查找：
 
 ```sh
 curl -X GET \
