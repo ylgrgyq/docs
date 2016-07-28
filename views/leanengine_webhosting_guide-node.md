@@ -73,7 +73,10 @@ app.get('/1.1/_ops/functions/metadatas', function(req, res) {
 {% endblock %}
 
 {% block supported_frameworks %}
+
 {{fullName}} 支持任意 [Node.js](https://nodejs.org) 的 Web 框架，你可以使用你最熟悉的框架进行开发，或者不使用任何框架，直接使用 Node.js 的 http 模块进行开发。但是请保证通过执行 `server.js` 能够启动你的项目，启动之后程序监听的端口为 `process.env.LEANCLOUD_APP_PORT`。
+
+#### Express
 
 ```js
 var express = require('express');
@@ -82,6 +85,20 @@ var AV = require('leanengine');
 var app = express();
 
 app.use(AV.express());
+app.listen(process.env.LEANCLOUD_APP_PORT);
+```
+
+#### Koa
+
+使用 [Koa](http://koajs.com/) 时建议按照 [运行环境定制](#运行环境定制) 将 Node.js 的版本设置为 `4.x`。
+
+```js
+var koa = require('koa');
+var AV = require('leanengine');
+
+var app = koa();
+
+app.use(AV.koa());
 app.listen(process.env.LEANCLOUD_APP_PORT);
 ```
 {% endblock %}
@@ -204,6 +221,13 @@ var app = express();
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
+Koa 需要添加一个 `framework: 'koa'` 的参数：
+
+```javascript
+var app = koa();
+app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 3600000, fetchUser: true }));
+```
+
 你需要传入一个 secret 用于加密 Cookie（必须提供），这个中间件会将 `AV.User` 的登录状态信息记录到 Cookie 中，用户下次访问时自动检查用户是否已经登录，如果已经登录，可以通过 `req.currentUser` 获取当前登录用户。
 
 `AV.Cloud.CookieSession` 支持的选项包括：
@@ -286,9 +310,19 @@ app.get('/logout', function(req, res) {
 {% endblock %}
 
 {% block https_redirect %}
+
+Express:
+
 ```javascript
 app.enable('trust proxy');
 app.use(AV.Cloud.HttpsRedirect());
+```
+
+Koa:
+
+```javascript
+app.proxy = true;
+app.use(AV.Cloud.HttpsRedirect({framework: 'koa'}));
 ```
 {% endblock %}
 
@@ -305,6 +339,8 @@ app.use(AV.Cloud.HttpsRedirect());
 },
 ...
 ```
+
+你还可以将版本设置为 `*` 来指定总是使用最新版本的 Node.js（目前是 Node.js 6）。
 
 **提示**：{{productName}} 0.12 和 4.x 差异较大，建议升级后充分测试。
 
