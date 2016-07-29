@@ -16,7 +16,6 @@ npm-debug.log
 # use template
 # ------------
 md/*.md
-!md/realtime_guide-js.md
 !md/pay-beecloud.md
 md/start/*.md
 
