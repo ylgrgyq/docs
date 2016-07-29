@@ -857,7 +857,7 @@ curl -X GET \
    -H "X-LC-Key: {{masterkey}},master" \
    -G \
    --data-urlencode 'limit=10' \
-   https://api.leancloud.cn/1.1/scan/classes/Aritcle
+   https://api.leancloud.cn/1.1/scan/classes/Article
 ```
 
 `scan` 强制要求使用 master key。
@@ -880,7 +880,7 @@ curl -X GET \
     "cursor": "pQRhIrac3AEpLzCA"}
 ```
 
-其中 `results` 对应的就是返回的对象列表，而 `cursor` 表示本次遍历当前位置的『指针』，当 `cursor` 为 null 的时候，表示已经遍历完成，如果不为 null，请继续传入 `cursor` 到 `scan` 接口就可以从上次到达的位置继续往后查找：
+其中 `results` 对应的就是返回的对象列表，而 `cursor` 表示本次遍历当前位置的「指针」，当 `cursor` 为 null 的时候，表示已经遍历完成，如果不为 null，请继续传入 `cursor` 到 `scan` 接口就可以从上次到达的位置继续往后查找：
 
 ```sh
 curl -X GET \
@@ -889,7 +889,7 @@ curl -X GET \
    -G \
    --data-urlencode 'limit=10' \
    --data-urlencode 'cursor=pQRhIrac3AEpLzCA' \
-   https://api.leancloud.cn/1.1/scan/classes/Aritcle
+   https://api.leancloud.cn/1.1/scan/classes/Article
 ```
 
 每次返回的 `cursor` 的有效期是 10 分钟。
@@ -904,7 +904,7 @@ curl -X GET \
    -G \
    --data-urlencode 'limit=10' \
    --data-urlencode 'where={"score": 100}' \
-   https://api.leancloud.cn/1.1/scan/classes/Aritcle
+   https://api.leancloud.cn/1.1/scan/classes/Article
 ```
 
 按照其他字段排序（默认为  `createdAt`），可以传入 `scan_key` 参数：
@@ -916,7 +916,7 @@ curl -X GET \
    -G \
    --data-urlencode 'limit=10' \
    --data-urlencode 'scan_key=score' \
-   https://api.leancloud.cn/1.1/scan/classes/Aritcle
+   https://api.leancloud.cn/1.1/scan/classes/Article
 ```   
 
 ### 批量操作
