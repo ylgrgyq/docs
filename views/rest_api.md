@@ -70,6 +70,11 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
       <td>DELETE</td>
       <td>删除对象</td>
     </tr>
+    <tr>
+      <td>/1.1/scan/classes/&lt;className&gt;</td>
+      <td>GET</td>
+      <td>按照特定顺序遍历 Class</td>
+    </tr>
   </tbody>
 </table>
 
@@ -839,6 +844,80 @@ curl -X DELETE \
 
 
 **特别强调， where 一定要作为 URL 的 Query Parameters 传入。**
+
+### 遍历 Class
+
+因为更新和删除都是基于单个对象的，都要求提供 objectId，但是有时候用户需要高效地遍历一个 Class，做一些批量的更新或者删除的操作。
+
+通常情况下，如果 Class 的数量规模不大，使用查询加上 `skip` 和 `limit` 分页配合排序 `order` 就可以遍历所有数据。但是当 Class 数量规模比较大的时候， `skip` 的效率就非常低了（这跟 MySQL 等关系数据库的原因一样，深度翻页比较慢），因此我们提供了 `scan` 协议，可以按照特定字段排序来高效地遍历一张表，默认这个字段是 `createdAt`，也就是按照创建时间排序，同时支持设置 `limit`  限定每一批次的返回数量：
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   https://api.leancloud.cn/1.1/scan/classes/Article
+```
+
+`scan` 强制要求使用 master key。
+
+返回：
+
+```json
+{
+  "results":
+   [
+      {
+        "tags"     :  ["clojure","\u7b97\u6cd5"],
+        "createdAt":  "2016-07-07T08:54:13.250Z",
+        "updatedAt":  "2016-07-07T08:54:50.268Z",
+        "title"    :  "clojure persistent vector",
+        "objectId" :  "577e18b50a2b580057469a5e"
+       },
+       ......
+    ],
+    "cursor": "pQRhIrac3AEpLzCA"}
+```
+
+其中 `results` 对应的就是返回的对象列表，而 `cursor` 表示本次遍历当前位置的「指针」，当 `cursor` 为 null 的时候，表示已经遍历完成，如果不为 null，请继续传入 `cursor` 到 `scan` 接口就可以从上次到达的位置继续往后查找：
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'cursor=pQRhIrac3AEpLzCA' \
+   https://api.leancloud.cn/1.1/scan/classes/Article
+```
+
+每次返回的 `cursor` 的有效期是 10 分钟。
+
+
+遍历还支持过滤条件，加入 where 参数：
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'where={"score": 100}' \
+   https://api.leancloud.cn/1.1/scan/classes/Article
+```
+
+按照其他字段排序（默认为  `createdAt`），可以传入 `scan_key` 参数：
+
+```sh
+curl -X GET \
+   -H "X-LC-Id: {{appid}}" \
+   -H "X-LC-Key: {{masterkey}},master" \
+   -G \
+   --data-urlencode 'limit=10' \
+   --data-urlencode 'scan_key=score' \
+   https://api.leancloud.cn/1.1/scan/classes/Article
+```   
 
 ### 批量操作
 

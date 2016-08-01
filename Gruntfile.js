@@ -233,7 +233,9 @@ module.exports = function(grunt) {
         destDir: 'md',
         options:{
           data:{
-            node: grunt.option('theme')
+            node: grunt.option('theme'),
+            appid: '{{appid}}',
+            appkey: '{{appkey}}'
           }
         }
       }
