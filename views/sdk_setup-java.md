@@ -1,10 +1,7 @@
 {% extends "./sdk_setup.tmpl" %}
 
 
-{% block language %}
-
-Java
-{% endblock %}
+{% block language %}Java{% endblock %}
 
 {% block init_with_app_keys %}
 
@@ -12,6 +9,7 @@ Java
 
 ```java
 public static void main(String[] args){
+    // 参数依次为 AppId、AppKey、MasterKey
     AVOSCloud.initialize("{{appid}}","{{appkey}}","{{masterkey}}");
 }
 ```
@@ -25,8 +23,8 @@ public static void main(String[] args){
 public static void main(String[] args){
         // 启用北美节点
         AVOSCloud.useAVCloudUS();
-        // 初始化参数依次为 this, AppId, AppKey
-        AVOSCloud.initialize(this,"{{appid}}","{{appkey}}","{{masterkey}}");
+        // 初始化参数依次为 this, AppId, AppKey, MasterKey
+        AVOSCloud.initialize("{{appid}}","{{appkey}}","{{masterkey}}");
 }
 ```
 {% endblock %}
@@ -50,7 +48,7 @@ public static void main(String[] args){
 		<repository>
 			<id>leancloud</id>
 			<name>LeanCloud</name>
-			<url>http://mvn.leancloud.cn/nexus/content/repositories/snapshots</url>
+			<url>http://mvn.leancloud.cn/nexus/content/repositories/releases</url>
 		</repository>
 	</repositories>
 
