@@ -548,7 +548,7 @@ cid|String|消息所属对话 id
 id|String|消息发送成功之后，由 LeanCloud 云端给每条消息赋予的唯一 id
 timestamp|Date|消息发送的时间。消息发送成功之后，由 LeanCloud 云端赋予的全局的时间戳。
 deliveredAt|Date|消息送达时间
-status|Symbol|消息状态，其值为枚举 [`MessageStatus`](https://leancloud.github.io/js-realtime-sdk/docs/module-leancloud-realtime.html#.MessageStatus) 的成员之一：<br/><br/>`MessageStatus.NONE`（未知）<br/>`MessageStatus.SENDING`（发送中）<br/>`MessageStatus.SENT`（发送成功）<br/>`MessageStatus.DELIVERED`（被接收）<br/>`MessageStatus.FAILED`（失败）
+status|Symbol|消息状态，其值为枚举 [`MessageStatus`](https://leancloud.github.io/js-realtime-sdk/docs/module-leancloud-realtime.html#.MessageStatus) 的成员之一：<br/><br/>`MessageStatus.NONE`（未知）<br/>`MessageStatus.SENDING`（发送中）<br/>`MessageStatus.SENT`（发送成功）<br/>`MessageStatus.DELIVERED`（已送达）<br/>`MessageStatus.FAILED`（失败）
 
 我们为每一种富媒体消息定义了一个消息类型，实时通信 SDK 自身使用的类型是负数（如下面列表所示），所有正数留给开发者自定义扩展类型使用，0 作为「没有类型」被保留起来。
 
@@ -1265,7 +1265,7 @@ JavaScript SDK 没有客户端聊天记录缓存机制
 
 ### 网络状态响应
 
->注意：在网络中断的情况下，所有的消息收发和对话操作都会失败。开发者应该网络状态相关的事件，更新 UI，以免影响用户的使用体验。
+>注意：在网络中断的情况下，所有的消息收发和对话操作都会失败。开发者应该监听与网络状态相关的事件并更新 UI，以免影响用户的使用体验。
 
 当网络连接出现中断、恢复等状态变化时，SDK 会在 Realtime 实例上派发以下事件：
 
