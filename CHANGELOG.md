@@ -1,3 +1,57 @@
+<a name="0.1.2"></a>
+## [0.1.2](https://github.com/leancloud/docs/compare/v0.1.1...v0.1.2) (2016-08-16)
+
+
+### Bug Fixes
+
+* **docs:** [ChatKit] AppKey changed to AppSecret for XiaoMi ([#1386](https://github.com/leancloud/docs/issues/1386)) ([a2cfd13](https://github.com/leancloud/docs/commit/a2cfd13))
+* **docs:** [FAQ] 增加「先验证手机号码再注册」 ([#1370](https://github.com/leancloud/docs/issues/1370)) ([473001d](https://github.com/leancloud/docs/commit/473001d)), closes [#1359](https://github.com/leancloud/docs/issues/1359)
+* **docs:** [FAQ] 对公付款，美国节点要进行注明 ([bbcd120](https://github.com/leancloud/docs/commit/bbcd120)), closes [#1387](https://github.com/leancloud/docs/issues/1387)
+* **docs:** [LeanCache] 增加 Redis 版本号 ([07daa91](https://github.com/leancloud/docs/commit/07daa91)), closes [#1393](https://github.com/leancloud/docs/issues/1393)
+* **docs:** [LeanCache] 强调适用场景 ([#1357](https://github.com/leancloud/docs/issues/1357)) ([965da70](https://github.com/leancloud/docs/commit/965da70))
+* **docs:** [nav] 去掉 iOS 测试分发链接 ([#1432](https://github.com/leancloud/docs/issues/1432)) ([d17dbb0](https://github.com/leancloud/docs/commit/d17dbb0)), closes [#1431](https://github.com/leancloud/docs/issues/1431)
+* **docs:** [云引擎] Node.js 补充环境变量调用方式 ([#1373](https://github.com/leancloud/docs/issues/1373)) ([a675d6b](https://github.com/leancloud/docs/commit/a675d6b)), closes [#1369](https://github.com/leancloud/docs/issues/1369)
+* **docs:** [云引擎] 修正命令行工具名称 ([#1362](https://github.com/leancloud/docs/issues/1362)) ([ce68748](https://github.com/leancloud/docs/commit/ce68748))
+* **docs:** [云引擎] 增加 IM 签名的 Demo ([7139873](https://github.com/leancloud/docs/commit/7139873)), closes [#1366](https://github.com/leancloud/docs/issues/1366)
+* **docs:** [云引擎] 更新旧的工单地址 ([7889327](https://github.com/leancloud/docs/commit/7889327))
+* **docs:** [云引擎] 缩小示例二维码图片 ([a56436c](https://github.com/leancloud/docs/commit/a56436c)), closes [#1341](https://github.com/leancloud/docs/issues/1341)
+* **docs:** [云引擎] 预备环境域名不予绑定及独立域名，内容重新组织了一下 ([#1376](https://github.com/leancloud/docs/issues/1376)) ([8c761f5](https://github.com/leancloud/docs/commit/8c761f5))
+* **docs:** [存储]  JS 修订第三方账号登录的描述 ([9993efe](https://github.com/leancloud/docs/commit/9993efe))
+* **docs:** [存储] JS 取消关系建模指南链接，待完成后再恢复 ([d248841](https://github.com/leancloud/docs/commit/d248841))
+* **docs:** [存储] PHP 示例代码错误，应使用 lessThan ([#1344](https://github.com/leancloud/docs/issues/1344)) ([831cac5](https://github.com/leancloud/docs/commit/831cac5))
+* **docs:** [存储] Swift 移除 saveOptions 的说明 ([#1348](https://github.com/leancloud/docs/issues/1348)) ([e2d39a7](https://github.com/leancloud/docs/commit/e2d39a7))
+* **docs:** [安装] iOS 修订集成方法 ([#1379](https://github.com/leancloud/docs/issues/1379)) ([2e49fa8](https://github.com/leancloud/docs/commit/2e49fa8))
+* **docs:** [导航] 加入 Java 安装指南 ([dea3438](https://github.com/leancloud/docs/commit/dea3438))
+* **docs:** [应用内搜索] 强调参数 min_term_freq 和 min_term_freq 的说明 ([#1401](https://github.com/leancloud/docs/issues/1401)) ([7e76444](https://github.com/leancloud/docs/commit/7e76444))
+* **docs:** [应用数据共享] 只有表名相同的 Class 进行绑定后才可以使用 Relation  ([fafabdc](https://github.com/leancloud/docs/commit/fafabdc)), closes [#1391](https://github.com/leancloud/docs/issues/1391)
+* **docs:** [应用数据共享] 每个 class 只会触发当前应用的 hook，不会触发绑定的应用的 hook ([#1394](https://github.com/leancloud/docs/issues/1394)) ([40ddfed](https://github.com/leancloud/docs/commit/40ddfed)), closes [#1390](https://github.com/leancloud/docs/issues/1390)
+* **docs:** [推送] Android 修复链接 ([381bbab](https://github.com/leancloud/docs/commit/381bbab))
+* **docs:** [推送] 增加 deviceProfile 说明  ([33c1d6f](https://github.com/leancloud/docs/commit/33c1d6f)), closes [#1412](https://github.com/leancloud/docs/issues/1412)
+* **docs:** [推送] 更正小米、华为推送 compile url，需要加上 [@aar](https://github.com/aar) ([#1351](https://github.com/leancloud/docs/issues/1351)) ([14386c3](https://github.com/leancloud/docs/commit/14386c3))
+* **docs:** [推送] 调整混合推送字词 ([19c40c3](https://github.com/leancloud/docs/commit/19c40c3))
+* **docs:** [搜索] 修正 moreLikeThis url 错误 ([#1353](https://github.com/leancloud/docs/issues/1353)) ([1e71da0](https://github.com/leancloud/docs/commit/1e71da0))
+* **docs:** [教程] 支付 - 去掉示例代码中多余的 <script> ([35d3c5e](https://github.com/leancloud/docs/commit/35d3c5e))
+* **docs:** [短信] 自定义变量的值不允许包含实心括号 ([#1407](https://github.com/leancloud/docs/issues/1407)) ([2fbe2df](https://github.com/leancloud/docs/commit/2fbe2df)), closes [#1378](https://github.com/leancloud/docs/issues/1378)
+* **docs:** [错误码] 119 指明「应用选项」的位置 ([#1368](https://github.com/leancloud/docs/issues/1368)) ([4d5e38a](https://github.com/leancloud/docs/commit/4d5e38a)), closes [#1358](https://github.com/leancloud/docs/issues/1358)
+* **LeanEngine:** Java 运行环境启动应用部分参数描述有误 ([#1441](https://github.com/leancloud/docs/issues/1441)) ([b86fe7c](https://github.com/leancloud/docs/commit/b86fe7c))
+* **style:** wrong heading title color outside docs ([6400f2e](https://github.com/leancloud/docs/commit/6400f2e))
+* **tempalte:** wrong nav icon ([7c88f70](https://github.com/leancloud/docs/commit/7c88f70))
+* **template:** wrong icon for docs homepage ([228a509](https://github.com/leancloud/docs/commit/228a509))
+
+
+### Features
+
+* 增加 JS WebRTC 插件文档 ([#1363](https://github.com/leancloud/docs/issues/1363)) ([2ae7c48](https://github.com/leancloud/docs/commit/2ae7c48))
+* **js-realtime:** v3.2 changes ([4c26792](https://github.com/leancloud/docs/commit/4c26792))
+* **nav:** add link icon ([247dca6](https://github.com/leancloud/docs/commit/247dca6))
+* **realtime-js:** 增加对话「查询选项」部分 ([#1413](https://github.com/leancloud/docs/issues/1413)) ([b6072e8](https://github.com/leancloud/docs/commit/b6072e8))
+* **style:** better headings for doc content ([202a342](https://github.com/leancloud/docs/commit/202a342))
+* **style:** remove  gradient mask, useless ([2eab2d6](https://github.com/leancloud/docs/commit/2eab2d6))
+* **template:** better search input appearance ([217a8fc](https://github.com/leancloud/docs/commit/217a8fc))
+* **template:** spinning loader for sidebar ([fe271c5](https://github.com/leancloud/docs/commit/fe271c5))
+
+
+
 <a name="0.1.1"></a>
 ## [0.1.1](https://github.com/leancloud/docs/compare/v0.1.0...v0.1.1) (2016-07-08)
 
