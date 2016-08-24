@@ -60,4 +60,17 @@ public static void main(String[] args){
 		</dependency>
 	</dependencies>
 ```
+
+或者通过 gradle 配置相关依赖
+```groovy
+repositories {
+  maven {
+    url "http://mvn.leancloud.cn/nexus/content/repositories/releases"
+  }
+}
+
+dependencies {
+  compile("cn.leancloud.java:java-sdk:0.1.0")
+}
+```
 {% endblock %}
