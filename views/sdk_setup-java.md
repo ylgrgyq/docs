@@ -56,7 +56,7 @@ public static void main(String[] args){
 		<dependency>
 			<groupId>cn.leancloud.java</groupId>
 			<artifactId>java-sdk</artifactId>
-			<version>0.1.0</version>
+			<version>[0.1.0,0.2.0)</version>
 		</dependency>
 	</dependencies>
 ```
@@ -70,7 +70,7 @@ repositories {
 }
 
 dependencies {
-  compile("cn.leancloud.java:java-sdk:0.1.0")
+  compile("cn.leancloud.java:java-sdk:0.1.+")
 }
 ```
 {% endblock %}
