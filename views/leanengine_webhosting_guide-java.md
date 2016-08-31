@@ -46,10 +46,10 @@
 可以使用类似下面的命令来启动应用：
 
 ```
-LEANCLOUD_APP_ENV=development \
-  LEANCLOUD_APP_ID={{appid}} \
-  LEANCLOUD_APP_KEY={{appkey}} \
-  LEANCLOUD_APP_MASTER_KEY={{masterkey}} \
+LEANCLOUD_APP_ENV="development" \
+  LEANCLOUD_APP_ID="{{appid}}" \
+  LEANCLOUD_APP_KEY="{{appkey}}" \
+  LEANCLOUD_APP_MASTER_KEY="{{masterkey}}" \
   LEANCLOUD_APP_PORT=3000 \
   mvn jetty:run
 ```
