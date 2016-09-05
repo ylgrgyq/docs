@@ -157,7 +157,7 @@ appid:peerid:convid:nonce:signature_ts
 --- | ---
 conv-id | 用于查询的对话 id
 from | 消息来自 id
-data | 消息内容
+data | 消息内容，字符串形式的 JSON，格式请参考 [富媒体消息格式](realtime_rest_api.html#富媒体消息格式说明)。
 timestamp | 消息到达服务器的 Unix 时间戳（毫秒）
 msg-id | 消息 id
 is-conv | 是否是 v2 中对话模型的消息
