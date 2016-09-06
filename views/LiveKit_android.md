@@ -2,11 +2,22 @@
 
 [LiveKit](https://github.com/leancloud/LeanCloudLiveKit-Android.git) 是由 LeanCloud 官方推出的基于 LeanCloud 实时通信与七牛直播服务开发的并封装了简单 UI 的直播聊天套件。包含直播、文字聊天、弹幕、送礼物等操作。
 
-## LeanCloud 设置
+具体的展示效果如下：
 
-1. [注册](https://leancloud.cn/login.html#/signup) LeanCloud 账号
-2. [创建应用](https://leancloud.cn/applist.html#/newapp)，具体可以参看[控制台指南](https://leancloud.cn/docs/dashboard_guide.html)
-3. 在 控制台 -> 具体 App -> 设置 -> 应用 Key 中获取 AppId 与 AppKey。
+<table>
+  <tr>
+    <th>登陆页面</th>
+    <th>直播间页面</th>
+    <th>礼物列表</th>
+    <th>发送弹幕</th>
+  </tr>
+  <tr>
+    <td><img src="images/live_kit_android_login.png" width="260"></td>
+    <td><img src="images/live_kit_android_liveroom.png" width="260"></td>
+    <td><img src="images/live_kit_android_gift.png" width="260"></td>
+    <td><img src="images/live_kit_android_barrage.png" width="260"></td>
+  </tr>
+</table>
 
 ## 七牛设置
 
@@ -129,7 +140,7 @@ public class LCLKAppProvider implements LCLiveKitProvider {
 
   private static List<LCLKUser> partUsers = new ArrayList<LCLKUser>();
 
-  // 此数据均为 fake，仅供参考
+  // 此数据均为模拟数据，仅供参考
   static {
     partUsers.add(new LCLKUser("Tom", "Tom", "http://www.avatarsdb.com/avatars/tom_and_jerry2.jpg"));
     partUsers.add(new LCLKUser("Jerry", "Jerry", "http://www.avatarsdb.com/avatars/jerry.jpg"));
