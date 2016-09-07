@@ -1,6 +1,6 @@
-# LeanCloudLiveKit
+#LiveKit-Android
 
-[LiveKit](https://github.com/leancloud/LeanCloudLiveKit-Android.git) 是由 LeanCloud 官方推出的基于 LeanCloud 实时通信与七牛直播服务开发的并封装了简单 UI 的直播聊天套件。包含直播、文字聊天、弹幕、送礼物等操作。
+[LiveKit](https://github.com/leancloud/LeanCloudLiveKit-Android.git) 是由 LeanCloud 官方推出的基于 LeanCloud 实时通信与七牛直播服务的 UI 套件，它包含直播、文字聊天、弹幕、送礼物等界面。
 
 具体的展示效果如下：
 
@@ -18,6 +18,12 @@
     <td><img src="images/live_kit_android_barrage.png" width="260"></td>
   </tr>
 </table>
+
+## 概览
+
+### 准备工作
+1. 注册七牛开发者账号并且详细阅读七牛直播云服务 
+2. 了解 LeanCloud 聊天服务的概念以及功能
 
 ## 七牛设置
 
@@ -278,4 +284,6 @@ LCLKRecordActivity 在录制时会通过 [fetchRecordStream](#fetchRecordStream)
 参数：LCLKConstants.LIVE_ID，具体 LiveId 的作用可以参看 [LiveId](#LiveId)
 LCLKPlayActivity 在播放时会通过 [fetchPlayStream](#fetchPlayStream) 来获取推流地址。
 
+## 价格
+针对直播服务，LeanCloud 只按照聊天的收费标准进行收费，而直播相关的内容，LeanCloud 并不参与收费，其产生的费用请在七牛账户中查询。
 
