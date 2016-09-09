@@ -1146,7 +1146,7 @@ let query = priorityQuery.or(statusQuery).or(titleQuery)
 query.find { result in
     switch result {
     case .Success(let todos):
-        break // 返回 priority 大于等于 3 或 status 等于 1 的 Todo
+        break // 返回 priority 大于等于 3 或 status 等于 1 或 title 包含李总的 Todo
     case .Failure(let error):
         print(error)
     }
