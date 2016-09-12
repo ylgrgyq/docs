@@ -38,7 +38,7 @@ LeanCloud 开发者文档
   - 系统自动生成的 h1-h6 标题的 id，会将所有空格、中西文标点替换为下划线，如 `## 调用 Console.log()` 会生成  `<h2  id="调用_Console_log__">`，在引用时需要留意，包括大小写。  
 - 提交修改并发起 `Pull Request`
 
-## LeanCloud 内部贡献
+## 内部贡献
 
 为避免在所提交 PR 中出现与修改内容无关的 Merge pull request 的 commits，推荐使用以下流程提交 PR：
 
@@ -52,9 +52,7 @@ LeanCloud 开发者文档
 PR 合并后，要让改动最终生效还需要通过 Jenkins 执行 `cn-avoscloud-docs-prod-ucloud` 任务进行发布。
 
 
-### 内部贡献
-
-项目的目录结构说明如下：
+## 目录结构
 
 ```
 ├── README.md                          // 说明文档
