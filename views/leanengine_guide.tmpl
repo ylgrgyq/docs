@@ -152,8 +152,6 @@ curl -X POST -H "Content-Type: application/json; charset=utf-8"   \
 
 {% block cloudFuncExample %}{% endblock %}
 
-`averageStars` 和 `hello` 函数的唯一区别是在调用函数时，我们必须给 `request.params.movie` 提供参数。
-
 ### REST API 调用云函数
 
 云函数可以被各种客户端 SDK 调用（详见各 SDK 的「调用云引擎」部分），也可以通过 REST API 来调用。例如，用一部电影名称去调用 `averageStars` 函数：
