@@ -17,6 +17,14 @@
 {% set hook_after_delete = "afterDelete" %}
 {% set hook_on_verified = "onVerified" %}
 {% set hook_on_login = "onLogin" %}
+{% set hook_message_received = "_messageReceived" %}
+{% set hook_receiver_offline = "_receiversOffline" %}
+{% set hook_message_sent = "_messageSent" %}
+{% set hook_conversation_start = "_conversationStart" %}
+{% set hook_conversation_started = "_conversationStarted" %}
+{% set hook_conversation_add = "_conversationAdd" %}
+{% set hook_conversation_remove = "_conversationRemove" %}
+{% set hook_conversation_update = "_conversationUpdate" %}
 
 {% block cloudFuncExample %}
 
@@ -352,6 +360,219 @@ AV.Cloud.define('Logger', function(request, response) {
 ```
 {% endblock %}
 
+
+{% block code_hook_message_received %}
+
+```js
+AV.Cloud.define("_messageReceived", (request, response) => {
+	// request.params = {
+	// 	fromPeer: 'Tom',
+	// 	receipt: false,
+	// 	groupId: null,
+	// 	system: null,
+	// 	content: '{"_lctext":"耗子，起床！","_lctype":-1}',
+	// 	convId: '5789a33a1b8694ad267d8040',
+	// 	toPeers: ['Jerry'],
+	// 	__sign: '1472200796787,a0e99be208c6bce92d516c10ff3f598de8f650b9',
+	// 	bin: false,
+	// 	transient: false,
+	// 	sourceIP: '121.239.62.103',
+	// 	timestamp: 1472200796764
+	// };
+	console.log('_messageReceived start');
+	let content = JSON.parse(request.params.content);
+	let text = content._lctext;
+	console.log('text', text);
+	let processedContent = text.replace('XX中介', '**');
+	// 必须含有以下语句给服务端一个正确的返回，否则会引起异常
+	response.success({
+		content: processedContent
+	});
+	console.log('_messageReceived end');
+});
+```
+{% endblock %}
+
+{% block code_hook_receiver_offline %}
+
+```js
+AV.Cloud.define('_receiversOffline', (request, response) => {
+	console.log('_receiversOffline start');
+	let params = request.params;
+	let content = params.content;
+	let shortContent = content;
+	// params.content 为消息的内容
+	if (shortContent.length > 6) {
+		shortContent = content.slice(0, 6);
+	}
+	console.log('shortContent', shortContent);
+	let json = {
+		// 自增未读消息的数目，不想自增就设为数字
+		badge: "Increment",
+		sound: "default",
+		// 使用开发证书
+		_profile: "dev",
+		alert: shortContent
+	};
+
+	let pushMessage = JSON.stringify(json);
+
+	response.success({
+		"pushMessage": pushMessage
+	});
+	console.log('_receiversOffline end');
+});
+```
+{% endblock %}
+
+
+{% block code_hook_message_sent %}
+
+```js
+AV.Cloud.define('_messageSent', (request, response) => {
+	console.log('_messageSent start');
+	let params = request.params;
+	console.log('params', params);
+	response.success({});
+	console.log('_messageSent end');
+
+	// 在云引擎中打印的日志如下：
+	// _messageSent start
+	// params { fromPeer: 'Tom',
+	//   receipt: false,
+	//   onlinePeers: [],
+	//   content: '12345678',
+	//   convId: '5789a33a1b8694ad267d8040',
+	//   msgId: 'fptKnuYYQMGdiSt_Zs7zDA',
+	//   __sign: '1472703266575,30e1c9b325410f96c804f737035a0f6a2d86d711',
+	//   bin: false,
+	//   transient: false,
+	//   sourceIP: '114.219.127.186',
+	//   offlinePeers: [ 'Jerry' ],
+	//   timestamp: 1472703266522 }
+	// _messageSent end
+});
+```
+{% endblock %}
+
+{% block code_hook_conversation_start %}
+
+```js
+AV.Cloud.define('_conversationStart', (request, response) => {
+	console.log('_conversationStart start');
+	let params = request.params;
+	console.log('params', params);
+	response.success({});
+	console.log('_conversationStart end');
+
+	// 在云引擎中打印的日志如下：
+	//_conversationStart start
+	// params {
+	// 	initBy: 'Tom',
+	// 	members: ['Tom', 'Jerry'],
+	// 	attr: {
+	// 		name: 'Tom & Jerry'
+	// 	},
+	// 	__sign: '1472703266397,b57285517a95028f8b7c34c68f419847a049ef26'
+	// }
+	//_conversationStart end
+});
+```
+{% endblock %}
+
+{% block code_hook_conversation_started %}
+
+```js
+AV.Cloud.define('_conversationStarted', (request, response) => {
+	console.log('_conversationStarted start');
+	let params = request.params;
+	console.log('params', params);
+	response.success({});
+	console.log('_conversationStarted end');
+	
+	// 在云引擎中打印的日志如下：
+	// _conversationStarted start
+	// params {
+	// 	convId: '5789a33a1b8694ad267d8040',
+	// 	__sign: '1472723167361,f5ceedde159408002fc4edb96b72aafa14bc60bb'
+	// }
+	// _conversationStarted end
+});
+```
+{% endblock %}
+
+{% block code_hook_conversation_add %}
+
+```js
+AV.Cloud.define('_conversationAdd', (request, response) => {
+	console.log('_conversationAdd start');
+	let params = request.params;
+	console.log('params', params);
+	response.success({});
+	console.log('_conversationAdd end');
+
+	// 在云引擎中打印的日志如下：
+	// _conversationAdd start
+	// params {
+	// 	initBy: 'Tom',
+	// 	members: ['Mary'],
+	// 	convId: '5789a33a1b8694ad267d8040',
+	// 	__sign: '1472786231813,a262494c252e82cb7a342a3c62c6d15fffbed5a0'
+	// }
+	// _conversationAdd end
+});
+```
+{% endblock %}
+
+{% block code_hook_conversation_remove %}
+
+```js
+AV.Cloud.define('_conversationRemove', (request, response) => {
+	console.log('_conversationRemove start');
+	let params = request.params;
+	console.log('params', params);
+	response.success({});
+	console.log('removed client Id:', params.members[0]);
+	console.log('_conversationRemove end');
+
+	// 在云引擎中打印的日志如下：
+	// _conversationRemove start
+	// params {
+	// 	initBy: 'Tom',
+	// 	members: ['Jerry'],
+	// 	convId: '57c8f3ac92509726c3dadaba',
+	// 	__sign: '1472787372605,abdf92b1c2fc4c9820bc02304f192dab6473cd38'
+	// }
+	//removed client Id: Jerry
+	// _conversationRemove end
+});
+```
+{% endblock %}
+{% block code_hook_conversation_update %}
+
+```js
+AV.Cloud.define('_conversationUpdate', (request, response) => {
+	console.log('_conversationUpdate start');
+	let params = request.params;
+	console.log('params', params);
+	console.log('name', params.attr.name);
+	response.success({});
+	console.log('_conversationUpdate end');
+
+	// 在云引擎中打印的日志如下：
+	// _conversationUpdate start
+	// params {
+	// 	convId: '57c9208292509726c3dadb4b',
+	// 	initBy: 'Tom',
+	// 	attr: {
+	// 		name: '聪明的喵星人',
+	// 		type: 'public'
+	// 	},
+	// name 聪明的喵星人
+	// _conversationUpdate end
+});
+```
+{% endblock %}
 {% block hookDeadLoop %}
 
 ### 防止死循环调用
