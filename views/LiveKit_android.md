@@ -220,7 +220,7 @@ startActivity(intent);
 
 ### LiveId
 
-为了方便用户使用，LiveKit 抽象出了 LiveId 的概念，及直播间 Id，开发者可以按照自己的需求定义此 Id 的格式，只要保证一个直播间的 Id 唯一就可以。LiveKit 根据 LCLiveKitProvider 的 fetchRecordStream、fetchPlayStream 来获取直播流。
+为了方便用户使用，LiveKit 抽象出了 LiveId 的概念，即直播间 Id，开发者可以按照自己的需求定义此 Id 的格式，只要保证一个直播间的 Id 唯一就可以。LiveKit 根据 LCLiveKitProvider 的 fetchRecordStream、fetchPlayStream 来获取直播流。
 
 ### 用户
 
