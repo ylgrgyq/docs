@@ -12,10 +12,10 @@
     <th>发送弹幕</th>
   </tr>
   <tr>
-    <td><img src="images/live_kit_android_login.png" width="260"></td>
-    <td><img src="images/live_kit_android_liveroom.png" width="260"></td>
-    <td><img src="images/live_kit_android_gift.png" width="260"></td>
-    <td><img src="images/live_kit_android_barrage.png" width="260"></td>
+    <td><img src="images/live_kit_android_login.jpg" width="260"></td>
+    <td><img src="images/live_kit_android_liveroom.jpg" width="260"></td>
+    <td><img src="images/live_kit_android_gift.jpg" width="260"></td>
+    <td><img src="images/live_kit_android_barrage.jpg" width="260"></td>
   </tr>
 </table>
 
