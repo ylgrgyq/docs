@@ -596,6 +596,10 @@ AND 操作是指只有满足了所有查询条件的对象才会被返回给客�
 
 {% block code_query_select_keys %}{% endblock %}
 
+属性限定也支持 Pointer 类型的字段。例如，如果还想获取 Todo 这个对象的所有者信息（owner 属性，Pointer 类型），仅展示这个所有者的 username，可以这样限定属性：
+
+{% block code_query_select_pointer_keys %}{% endblock %}
+
 #### 统计总数量
 通常用户在执行完搜索后，结果页面总会显示出诸如「搜索到符合条件的结果有 1020 条」这样的信息。例如，查询一下今天一共完成了多少条 Todo：
 
