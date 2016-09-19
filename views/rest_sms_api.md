@@ -67,7 +67,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
+  https://{{host}}/1.1/requestSmsCode
 ```
 
 这里必须使用 POST 方式来发送请求，请求体里支持的参数有：
@@ -89,7 +89,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "smsType":"voice"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
+  https://{{host}}/1.1/requestSmsCode
 ```
 
 与上面的普通短信验证码相比，请求发送语音验证码的时候，要加上 `smsType` 这个请求参数，其值为 `voice` 。
@@ -110,7 +110,7 @@ curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  "https://api.leancloud.cn/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
+  "https://{{host}}/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
 ```
 
 其中 `verifySmsCode` 后面是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码。
@@ -121,7 +121,7 @@ curl -X POST \
 <!--
 ### 国际短信
 
-上面发送短信验证码和语音验证码，默认都是对国内号码。我们也开通了国际短信验证码服务（语音验证码在海外还不可用）。要发送国际短信，只需在发送 `https://api.leancloud.cn/1.1/requestSmsCode` 请求的时候，额外加上 `countryCode` 这一参数即可。
+上面发送短信验证码和语音验证码，默认都是对国内号码。我们也开通了国际短信验证码服务（语音验证码在海外还不可用）。要发送国际短信，只需在发送 `https://{{host}}/1.1/requestSmsCode` 请求的时候，额外加上 `countryCode` 这一参数即可。
 
 `countryCode` 的取值范围请参考 [countrycode.org](https://countrycode.org/) 中的 **ISO CODES** 一列，例如 US 表示美国，CN 代表中国。
 
@@ -133,7 +133,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "917646xxxxx", "countryCode":"US"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
+  https://{{host}}/1.1/requestSmsCode
 ```
 
 除了所增加的 `countryCode` 之外，发送国际短信和国内短信的请求参数完全一样。
@@ -151,7 +151,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx", "template":"activity","date":"2014 年 10 月 31 号"}' \
-  https://api.leancloud.cn/1.1/requestSmsCode
+  https://{{host}}/1.1/requestSmsCode
 ```
 
 短信模板的语法遵循 [Handlebars](http://handlebarsjs.com/)，举例如下：
@@ -196,7 +196,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"123456"}' \
-  https://api.leancloud.cn/1.1/usersByMobilePhone
+  https://{{host}}/1.1/usersByMobilePhone
 ```
 
 其中 `mobilePhoneNumber` 是手机号码，`smsCode` 是使用 [短信验证 API](#短信验证_API) 发送到手机上的 6 位验证码字符串。如果不传入 `username`，默认用户名将是手机号码。
@@ -225,7 +225,7 @@ curl -X POST \
   -H "X-LC-Key: xxxx" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber":"186xxxxxxxx","smsCode":"123456", "password": "密码"}' \
-  https://api.leancloud.cn/1.1/usersByMobilePhone
+  https://{{host}}/1.1/usersByMobilePhone
 ```
 `password` 这个参数只在注册时起作用，如果是登录则会被忽略。
 
@@ -241,7 +241,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"username":"cooldude6","password":"p_n7!-e8","mobilePhoneNumber":"186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/users
+  https://{{host}}/1.1/users
 ```
 
 那么在注册成功后，LeanCloud  将向 186xxxxxxxx 发送一条验证短信。开发者需要提供一个输入框让用户输入这个验证短信中附带的验证码，之后调用下列 API 来确认验证码的有效性：
@@ -252,7 +252,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{}' \
-  https://api.leancloud.cn/1.1/verifyMobilePhone/<code>
+  https://{{host}}/1.1/verifyMobilePhone/<code>
 ```
 
 其中 URL 中最后的 `<code>` 要替换成 6 位验证数字。
@@ -269,7 +269,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestMobilePhoneVerify
+  https://{{host}}/1.1/requestMobilePhoneVerify
 ```
 
 ### 手机号码＋验证码登录
@@ -282,7 +282,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestLoginSmsCode
+  https://{{host}}/1.1/requestLoginSmsCode
 ```
 
 用户收到验证码短信后，输入手机号码和该验证码来登录应用：
@@ -294,7 +294,7 @@ curl -X GET \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'smsCode=123456' \
-  https://api.leancloud.cn/1.1/login
+  https://{{host}}/1.1/login
 ```
 
 也可以采用手机号码和密码的方式登录：
@@ -306,7 +306,7 @@ curl -X GET \
   -G \
   --data-urlencode 'mobilePhoneNumber=186xxxxxxxx' \
   --data-urlencode 'password=p_n7!-e8' \
-  https://api.leancloud.cn/1.1/login
+  https://{{host}}/1.1/login
 ```
 
 ### 手机号码＋验证码重置用户密码
@@ -319,7 +319,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"mobilePhoneNumber": "186xxxxxxxx"}' \
-  https://api.leancloud.cn/1.1/requestPasswordResetBySmsCode
+  https://{{host}}/1.1/requestPasswordResetBySmsCode
 ```
 
 发送一条重置密码的短信验证码到注册用户的手机上，需要传入注册时候的 `mobilePhoneNumber`。
@@ -332,7 +332,7 @@ curl -X PUT \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"password": "<新密码>"}' \
-  https://api.leancloud.cn/1.1/resetPasswordBySmsCode/收到的6位验证码
+  https://{{host}}/1.1/resetPasswordBySmsCode/收到的6位验证码
 ```
 
 修改成功后，用户就可以用新密码登录了。
