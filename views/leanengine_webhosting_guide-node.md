@@ -165,7 +165,7 @@ require('http').createServer(function(req, res) {
   } else {
     res.statusCode = 404;
     res.end();
-  }  
+  }
 }).listen(process.env.LEANCLOUD_APP_PORT);
 ```
 {% endblock %}
@@ -248,7 +248,7 @@ app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 
 
 `AV.Cloud.CookieSession` 支持的选项包括：
 
-* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**  
+* **fetchUser**：**是否自动 fetch 当前登录的 AV.User 对象。默认为 false。**
   如果设置为 true，每个 HTTP 请求都将发起一次 LeanCloud API 调用来 fetch 用户对象。如果设置为 false，默认只可以访问 `req.currentUser` 的 `id`（`_User` 表记录的 ObjectId）和 `sessionToken` 属性，你可以在需要时再手动 fetch 整个用户。
 * **name**：Cookie 的名字，默认为 `avos.sess`。
 * **maxAge**：设置 Cookie 的过期时间。
@@ -437,7 +437,7 @@ env DEBUG=leancloud:request lean up
 当有对 LeanCloud 的调用时，你可以看到类似这样的日志：
 
 ```
-leancloud:request request(0) +0ms GET https://api.leancloud.cn/1.1/classes/Todo?&where=%7B%7D&order=-createdAt { where: '{}', order: '-createdAt' }
+leancloud:request request(0) +0ms GET https://{{host}}/1.1/classes/Todo?&where=%7B%7D&order=-createdAt { where: '{}', order: '-createdAt' }
 leancloud:request response(0) +220ms 200 {"results":[{"content":"1","createdAt":"2016-08-09T06:18:13.028Z","updatedAt":"2016-08-09T06:18:13.028Z","objectId":"57a975a55bbb5000643fb690"}]}
 ```
 

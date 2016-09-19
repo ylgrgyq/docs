@@ -1,13 +1,6 @@
 # 实时通信 REST API 使用指南
 
-## API 域名
 
-所有 API 访问都通过 HTTPS 进行。API 访问域名为：
-
-- **中国节点**：<https://api.leancloud.cn>
-- **美国节点**：<https://us-api.leancloud.cn>
-
-域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
 
 ## 请求格式
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP Header 的 Content-Type 需要设置为 `application/json`。
@@ -33,7 +26,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name":"My Private Room","m": ["BillGates", "SteveJobs"]}' \
-  https://api.leancloud.cn/1.1/classes/_Conversation
+  https://{{host}}/1.1/classes/_Conversation
 ```
 
 上面的例子会创建一个最简单的对话，包括两个 client ID 为 BillGates 和 SteveJobs 的初始成员。对话创建成功会返回 objectId，即实时通信中的对话 ID，客户端就可以通过这个 ID 发送消息了。
@@ -46,7 +39,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name": "OpenConf","tr": true}' \
-  https://api.leancloud.cn/1.1/classes/_Conversation
+  https://{{host}}/1.1/classes/_Conversation
 ```
 
 系统对话通常也需要通过 REST API 预先创建，创建时需要设置关键的 `sys` 属性：
@@ -57,7 +50,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"name": "Notification Channel","sys": true}' \
-  https://api.leancloud.cn/1.1/classes/_Conversation
+  https://{{host}}/1.1/classes/_Conversation
 ```
 
 ### 增删普通对话成员
@@ -72,7 +65,7 @@ curl -X PUT \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"AddUnique","objects":["LarryPage"]}}' \
-  https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
+  https://{{host}}/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
 ```
 
 将不再活跃的 SteveJobs 清除出对话（以对话 id 5552c0c6e4b0846760927d5a 为例）：
@@ -83,7 +76,7 @@ curl -X PUT \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"m": {"__op":"Remove","objects":["SteveJobs"]}}' \
-  https://api.leancloud.cn/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
+  https://{{host}}/1.1/classes/_Conversation/5552c0c6e4b0846760927d5a
 ```
 
 对 `_Conversation` 表的查询等其他操作与普通表完全一致，可以参考 [REST API - 查询](./rest_api.html#查询) 的相应说明，这里不再赘述。
