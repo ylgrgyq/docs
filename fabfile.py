@@ -43,7 +43,7 @@ def _prepare_local_docs(target):
     if target == 'qcloud':
       local("grunt build --theme=qcloud");
     elif target == 'us':
-      local("grunt build --no-comments");
+      local("grunt build --theme=us --no-comments");
     else:
       local("grunt build ");
 #    local("mkdir dist/api")
