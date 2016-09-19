@@ -967,6 +967,14 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
+{% block code_query_select_pointer_keys %}
+
+```objc
+    [query selectKeys:@[@"owner.username"]];
+```
+
+{% endblock %}
+
 {% block code_query_count %}
 
 ```objc
