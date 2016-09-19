@@ -1,13 +1,6 @@
 # 实时通信 REST API 使用指南
 
-## API 域名
 
-所有 API 访问都通过 HTTPS 进行。API 访问域名为：
-
-- **中国节点**：<https://{{host}}>
-- **美国节点**：<https://us-{{host}}>
-
-域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
 
 ## 请求格式
 对于 POST 和 PUT 请求，请求的主体必须是 JSON 格式，而且 HTTP Header 的 Content-Type 需要设置为 `application/json`。

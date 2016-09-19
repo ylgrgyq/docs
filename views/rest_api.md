@@ -17,14 +17,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 1.1 | 2014 年 8 月 13 号发布，修复 Date 类型和 createdAt、updatedAt 的时区问题，返回标准 UTC 时间。
 1.0|存在时间不准确的 Bug，实际返回的 Date 类型和 createdAt、updatedAt 都是北京时间。**不推荐再使用**。
 
-## API 域名
 
-所有 API 访问都通过 HTTPS 进行。API 访问域名为：
-
-- **中国节点**：<https://{{host}}>
-- **美国节点**：<https://us-{{host}}>
-
-域名之后衔接 API 版本号，如 `/1.1/`，代表正在使用 1.1 版的 API。
 
 ### 在线测试
 
