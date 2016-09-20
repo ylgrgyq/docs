@@ -270,7 +270,7 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 
 您可以在使用 SDK 发送消息时，通过 SDK 的 API 设置这条消息可能产生的推送内容。
 
-当同时使用以上多种方式的时候，设置的优先级为“消息附件方式” > "动态内容方式" > “静态内容方式”。
+当同时使用以上多种方式的时候，设置的优先级为“动态内容方式” > “消息附件方式” > “静态内容方式”。
 
 ##### 其他设置
 
