@@ -540,7 +540,7 @@ AVGeoPoint *point = [AVGeoPoint geoPointWithLatitude:39.9 longitude:116.4];
 ```objc
     [file saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error) {
       // 成功或失败处理...
-    } progressBlock:^(int percentDone) {
+    } progressBlock:^(NSInteger percentDone) {
       // 上传进度数据，percentDone 介于 0 和 100。
     }];
 ```
