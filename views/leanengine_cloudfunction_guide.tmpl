@@ -168,6 +168,18 @@ AVCloud.rpcFunctionInBackground("averageStars", movie,
 ```php
 // PHP 有待支持
 ```
+```javascript
+// 假设已经有一个类型为 AV.Object 的 movie 对象
+var movie = new AV.Object('Movie');
+movie.set('title', '夏洛特烦恼');
+movie.save().then(/* ... */);
+
+AV.Cloud.rpc('averageStars', movie).then(function(object) {
+  // 成功，如果云函数返回的是一个 AV.Object，回调参数中的 object 也会是一个 AV.Object
+}, function(error) {
+  // 失败        
+});
+```
 
 ### 切换云引擎环境
 
