@@ -62,7 +62,7 @@
   box-shadow: none;
 }
 .scrollspy {
-  margin-bottom: 40px;
+  /*margin-bottom: 40px;*/
   font-size: 16px;
   background-color: #fff;
   position: relative;
@@ -214,18 +214,18 @@
   {% include 'templates/include/footer.html' %}
 {% endif %}
 
-<script type="text/javascript"> 
-// get nav items ready for scrollspy 
+<script type="text/javascript">
+// get nav items ready for scrollspy
 $(function() {
   var $sectionNav = $('#section-nav').find('ul');
   $('.section-title').each(function(index, el) {
     var $el = $(el);
     var id = $el.text().replace(/ /g,'-').replace(/[^a-zA-Z_0-9\u4e00-\u9fa5]/g,'-');
-    $el.parent().attr('id',id);
+    $el.attr('id',id);
     $sectionNav.append('<li><a href="#' + id + '">' + $el.html() + '</a></li>');
   });
 });
-$(window).load(function() { 
+$(window).load(function() {
   $('#section-nav').affix({
       offset: {
         top: $('nav').outerHeight(true) + $('.doc-home-title').outerHeight(true)
