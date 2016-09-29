@@ -355,7 +355,7 @@
 ## 524
 
 - 信息 - `complete a TCP connection to the upstream server, but did not receive a timely HTTP response.`
-- 含义 -  Web服务器与后端应用服务器通讯失败，一般是某个应用服务器异常，Web服务器会在几秒后移除此实例，如果频繁遇到524，请联系我们处理。
+- 含义 -  Web 服务器与后端应用服务器通讯失败，一般是某个应用服务器异常，Web 服务器会在几秒后移除此实例。如果频繁遇到 524，请联系我们处理。
 
 ## 600
 
