@@ -4,7 +4,7 @@
 {% set platformName = "Java" %}
 {% set sdk_name = "Java" %}
 {% set leanengine_middleware = "[LeanEngine Java SDK](https://github.com/leancloud/leanengine-java-sdk)" %}
-{% set leanengine_java_sdk_latest_version = '0.1.10' %}
+{% set leanengine_java_sdk_latest_version = '0.1.11' %}
 
 {% block project_constraint %}
 你的项目需要遵循一定格式才会被云引擎识别并运行。
