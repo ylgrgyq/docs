@@ -57,9 +57,9 @@ URL|HTTP|功能
 
 在一些场景下，你可能希望用户在验证手机号码后才能进行一些操作，例如充值。这些操作跟账户系统没有关系，可以通过我们提供的的短信验证 API 来实现。
 
-使用这些 API 需要在 [控制台 > **设置** > **应用选项** > **其他**](https://leancloud.cn/app.html?appid={{appid}}#/permission) 中开启 **启用通用的短信验证码服务（开放 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。
+使用这些 API 需要在 [控制台 > **设置** > **应用选项** > **其他**](/app.html?appid={{appid}}#/permission) 中开启 **启用通用的短信验证码服务（开放 `requestSmsCode` 和 `verifySmsCode` 接口）** 选项。
 
-给某个手机号码发送验证短信，可通过如下请求完成：
+给某个手机号码发送验证短信：
 
 ```sh
 curl -X POST \
@@ -86,15 +86,13 @@ curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  -d '{"mobilePhoneNumber": "18612345678","ttl":"5","name":"天东商城","op":"付款"}' \
+  -d '{"mobilePhoneNumber": "186xxxxxxxx","ttl":"5","name":"天东商城","op":"付款"}' \
   https://{{host}}/1.1/requestSmsCode
 ```
 
 接收到的短信内容如下：
 
-```
-您正在使用 天东商城 服务进行 付款 操作，您的验证码是：123456，请在 5 分钟内完成验证。
-```
+<samp class="bubble">您正在使用 天东商城 服务进行 付款 操作，您的验证码是：123456，请在 5 分钟内完成验证。</samp>
 
 ### 语音验证码
 
@@ -109,7 +107,7 @@ curl -X POST \
   https://{{host}}/1.1/requestSmsCode
 ```
 
-与上面的普通短信验证码相比，请求发送语音验证码的时候，要加上 `smsType` 这个请求参数，其值为 `voice` 。
+与上面的普通短信验证码相比，请求发送语音验证码的时候，要加上 `smsType` 这个请求参数，其值为 `voice`。
 
 `smsType` 允许的取值有：
 
