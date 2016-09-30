@@ -32,9 +32,9 @@ AV.User.logIn('username', 'password').then(user => {
 </div>
 
 ## 云引擎
-使用云引擎可以方便的实现一些在服务器执行的逻辑，比如处理敏感信息、数据聚合、采集数据等。并且不需要准备额外的服务器。
+使用云引擎可以方便地实现一些在服务器执行的逻辑，比如处理敏感信息、数据聚合、采集数据等，并且不需要准备额外的服务器。
 
 SDK 所有的云引擎相关的 API 都能正常使用，详细的用法请参考 [云函数开发指南](https://leancloud.cn/docs/leanengine_cloudfunction_guide-node.html)。
 
 ## 反馈
-如果你在在微信小程序中使用使用 LeanCloud SDK 的过程中遇到问题，欢迎使用我们的 [论坛](https://forum.leancloud.cn/c/jing-xuan-faq/weapp) 进行反馈。
+如果在微信小程序中使用 LeanCloud SDK 时遇到问题，欢迎通过我们的 [论坛](https://forum.leancloud.cn/c/jing-xuan-faq/weapp) 进行反馈。
