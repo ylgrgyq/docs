@@ -134,7 +134,7 @@ function getFriends(user, otherOptions) {
 当在一个已经解决的 Promise 上调用 then 时，onFulfilled 和 onRejected 会被添加到事件队列中，异步地被执行（而不是之前同步地执行）：
 
 ```javascript
-Promise.as('some value').then(function(v) {
+Promise.resolve('some value').then(function(v) {
   console.log(v);
 });
 
@@ -159,7 +159,7 @@ some value
 
 ```javascript
 try {
-  Promise.as('some value').then(function(v) {
+  Promise.resolve('some value').then(function(v) {
     throw new Error('some exception');
   }).then(function() {
     console.log('resolved');
@@ -186,7 +186,7 @@ rejected [Error: some exception]
 当在一个 rejected 的 Promise 上调用 then 时，如果 onRejected 没有抛出异常也没有返回一个 rejected 的 Promise, 则返回一个 resolved 的 Promise（而不是之前返回一个 rejected 的 Promise）：
 
 ```javascript
-Promise.error(new Error('some exception')).then(null, function() {
+Promise.reject(new Error('some exception')).then(null, function() {
   // do nothings
 }).then(function() {
   console.log('resolved');

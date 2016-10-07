@@ -68,7 +68,7 @@ query.find().then(function(followers){
 });
 ```
 
-`followerQuery` 和 `followeeQuery` 返回的 AV.Query 对象可以象普通的 [AV.Query](/api-docs/javascript/symbols/AV.Query.html) 对象那样使用，它们本质上都是查询数据管理平台中的 `_Follower` 和 `_Followee`表，你可以添加 order、skip、limit 以及其他 where 条件等信息。
+`followerQuery` 和 `followeeQuery` 返回的 AV.Query 对象可以象普通的 [AV.Query](https://leancloud.github.io/javascript-sdk/docs/AV.Query.html) 对象那样使用，它们本质上都是查询数据管理平台中的 `_Follower` 和 `_Followee`表，你可以添加 order、skip、limit 以及其他 where 条件等信息。
 
 
 ### 状态

@@ -189,7 +189,7 @@ description     objectId
 
 {% block code_object_fetch_with_keys %}{% endblock %}
 
-**刷新操作会强行使用云端的属性值覆盖本地的属性**。因此如果本地有属性修改，请慎用这类接口。
+**刷新操作会强行使用云端的属性值覆盖本地的属性**。因此如果本地有属性修改，刷新操作会丢弃这些修改。
 
 {% endblock %}
 
@@ -220,11 +220,11 @@ description     objectId
 {% block text_atomic_operation_array %}
 #### 更新数组
 
-这也是原子操作的一种。使用以下方法可以方便地维护数组类型的数据：
+更新数组也是原子操作。使用以下方法可以方便地维护数组类型的数据：
 
 {% block code_atomic_operation_array %}{% endblock %}
 
-例如，Todo 对象有一个提醒日期 reminders，它是一个数组，代表这个日程会在哪些时间点提醒用户。比如有些拖延症患者会把闹钟设为早上的 7:10、7:20、7:30：
+例如，Todo 对象有一个提醒时间 `reminders` 字段，是一个数组，代表这个日程会在哪些时间点提醒用户。比如有个拖延症患者把闹钟设为早上的 7:10、7:20、7:30：
 
 {% block code_set_array_value %}{% endblock %}
 
@@ -400,10 +400,12 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 我们需要做出说明的是，[从本地路径构建文件](#从本地路径构建文件) 会<u>产生实际上传的流量</u>，并且文件最后是存在云端，而 [从网络路径构建文件](#从网络路径构建文件) 的文件实体并不存储在云端，只是会把文件的物理地址作为一个字符串保存在云端。
 
+{% block text_upload_file %}
 #### 执行上传
 上传的操作调用方法如下：
 
 {% block code_upload_file %}{% endblock %}
+{% endblock %}
 
 {% block text_upload_file_with_progress %}
 #### 上传进度监听
@@ -713,8 +715,6 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 * 地理位置的点不能超过规定的范围。纬度的范围应该是在 `-90.0` 到 `90.0` 之间，经度的范围应该是在 `-180.0` 到 `180.0` 之间。如果添加的经纬度超出了以上范围，将导致程序错误。
 {% block text_platform_geoPoint_notice %}{% endblock %}
 
-{% block text_js_promise %}{% endblock %}
-
 ### 查询性能优化
 
 影响查询性能的因素很多。特别是当查询结果的数量超过 10 万，查询性能可能会显著下降或出现瓶颈。以下列举一些容易降低性能的查询方式，开发者可以据此进行有针对性的调整和优化，或尽量避免使用。
@@ -725,6 +725,8 @@ Todo 的 `whereCreated`（创建 Todo 时的位置）是一个 `{{geoPointObject
 - skip 跳过较多的行数（相当于需要先查出被跳过的那些行）
 - 无索引的排序（另外除非复合索引同时覆盖了查询和排序，否则只有其中一个能使用索引）
 - 无索引的查询（另外除非复合索引同时覆盖了所有条件，否则未覆盖到的条件无法使用索引，如果未覆盖的条件区分度较低将会扫描较多的数据）
+
+{% block text_js_promise %}{% endblock %}
 
 ## 用户
 

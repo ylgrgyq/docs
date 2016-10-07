@@ -285,11 +285,11 @@
   //新建电子数码版主角色
   var digitalRole=new AV.Role('Digital');
 
-   AV.Promise.when(
+   AV.Promise.all([
     // 先行保存 photographicRole 和 mobileRole
     photographicRole.save(),
-    mobileRole.save()
-   ).then(function(r1, r2) {
+    mobileRole.save(),
+  ]).then(function([r1, r2]) {
     // 将 photographicRole 和 mobileRole 设为 digitalRole 一个子角色
     digitalRole.getRoles().add(photographicRole);
     digitalRole.getRoles().add(mobileRole);
@@ -333,16 +333,16 @@
     mobilePost.setACL(mobileACL);
     digitalPost.setACL(digitalACL);
 
-    AV.Promise.when(
+    return AV.Promise.all([
       photographicPost.save(),
       mobilePost.save(),
-      digitalPost.save()
-    ).then(function(r1, r2, r3) {
-      // 保存成功
-      }, function(errors) {
-      // 保存失败
-    });
-   });
+      digitalPost.save(),
+    ]);
+   }).then(function([r1, r2, r3]) {
+     // 保存成功
+     }, function(errors) {
+     // 保存失败
+   });;
 ```
 {% endblock %}
 
@@ -358,6 +358,3 @@
   AV.Cloud.useMasterKey();
 ```
 {% endblock %}
-
-
-

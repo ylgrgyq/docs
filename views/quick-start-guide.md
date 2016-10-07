@@ -32,7 +32,7 @@
 * [快速入门](./start.html)
 <li><a href="leanstorage_guide-js.html">JavaScript 数据存储指南</a></li>
 <li><a href="https://github.com/leancloud/realtime-messaging-jssdk">JavaScript 实时通信 SDK</a></li>
-<li><a href="/api-docs/javascript/index.html" target="_blank">JavaScript SDK API</a></li>
+<li><a href="https://leancloud.github.io/javascript-sdk/docs/" target="_blank">JavaScript SDK API</a></li>
 
 ## 你是后端逻辑开发者？
 
@@ -91,7 +91,7 @@
 <ul>
 <li><a href="leanengine_guide-cloudcode.html#网站托管">云引擎指南</a></li>
  </ul>
- 
+
 ## 你要导入导出数据？
 
 <ul>

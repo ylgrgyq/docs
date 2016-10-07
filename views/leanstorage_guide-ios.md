@@ -281,7 +281,7 @@ option.query = query;
   将指定对象附加到数组末尾。
 * `addUniqueObject:forKey:`<br>
   `addUniqueObjectsFromArray:forKey:`<br>
-  如果不确定某个对象是否已包含在数组字段中，可以使用此操作来添加。对象的插入位置是随机的。  
+  如果数组中不包含指定对象，将该对象加入数组，对象的插入位置是随机的。  
 * `removeObject:forKey:`<br>
   `removeObjectsInArray:forKey:`<br>
   从数组字段中删除指定对象的所有实例。

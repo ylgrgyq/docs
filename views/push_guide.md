@@ -219,7 +219,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
    "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串 "Increment"（大小写敏感）,
    "sound":             "声音文件名，前提在应用里存在",
    "content-available": 数字类型，如果使用 Newsstand，设置为 1 来开始一次后台下载,
-   "mutable-content":   数字类型，用于支持 UNNotificationServiceExtension 功能，设置为 1 时启用, 
+   "mutable-content":   数字类型，用于支持 UNNotificationServiceExtension 功能，设置为 1 时启用,
    "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
   }
 }
@@ -234,7 +234,7 @@ where|检索 _Installation 表使用的查询条件，JSON 对象。
       "title":               "标题",
       "title-loc-key":       "",
       "sub-title":           "附标题",
-      "sub-title-loc-key":   "", 
+      "sub-title-loc-key":   "",
       "body":                "消息内容",
       "action-loc-key":      "",
       "loc-key":             "",
@@ -257,7 +257,7 @@ data 和 alert 内属性的具体含义请参考 [Apple 官方文档](https://de
         "title":               "标题",
         "title-loc-key":       "",
         "sub-title":           "附标题",
-        "sub-title-loc-key":   "", 
+        "sub-title-loc-key":   "",
         "body":                "消息内容",
         "action-loc-key":      "",
         "loc-key":             "",
@@ -268,7 +268,7 @@ data 和 alert 内属性的具体含义请参考 [Apple 官方文档](https://de
       "badge":             数字类型，未读消息数目，应用图标边上的小红点数字，可以是数字，也可以是字符串 "Increment"（大小写敏感）,
       "sound":             "声音文件名，前提在应用里存在",
       "content-available": 数字类型，如果使用 Newsstand，设置为 1 来开始一次后台下载,
-      "mutable-content":   数字类型，用于支持 UNNotificationServiceExtension 功能，设置为 1 时启用, 
+      "mutable-content":   数字类型，用于支持 UNNotificationServiceExtension 功能，设置为 1 时启用,
     }
     "custom-key":        "由用户添加的自定义属性，custom-key 仅是举例，可随意替换"
   }
@@ -355,7 +355,7 @@ Windows Phone 设备类似，也支持 `title` 和 `alert`，同时支持 `wp-pa
 }
 ```
 
-如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书。如果未设置 `prod` 属性，且使用的不是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html)，我们默认使用**生产证书**来发推送。如果未设置 `prod` 属性，且使用的是 [JavaScript 数据存储 SDK](https://leancloud.cn/api-docs/javascript/symbols/AV.Push.html) ，则需要在发推送之前执行 [AV.setProduction](https://leancloud.cn/api-docs/javascript/symbols/AV.html#.setProduction) 函数才会使用生产证书发推送，否则会以开发证书发推送。注意，当设备设置了 `deviceProfile` 时我们优先按照 `deviceProfile` 指定的证书推送。
+如果是 `dev` 值就表示使用开发证书，`prod` 值表示使用生产证书。如果未设置 `prod` 属性，且使用的不是 [JavaScript 数据存储 SDK](https://leancloud.github.io/javascript-sdk/docs/AV.Push.html)，我们默认使用**生产证书**来发推送。如果未设置 `prod` 属性，且使用的是 [JavaScript 数据存储 SDK](https://leancloud.github.io/javascript-sdk/docs/AV.Push.html) ，则需要在发推送之前执行 [AV.setProduction](https://leancloud.github.io/javascript-sdk/docs/AV.html#.setProduction) 函数才会使用生产证书发推送，否则会以开发证书发推送。注意，当设备设置了 `deviceProfile` 时我们优先按照 `deviceProfile` 指定的证书推送。
 
 #### Android 推送区分透传和通知栏消息
 

@@ -453,7 +453,7 @@ JavaScript SDK v0.5.1 版本开始支持应用内搜索 API:
   });
 ```
 
-更多 API 请参考 [AV.SearchQuery](/api-docs/javascript/symbols/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](/api-docs/javascript/symbols/AV.SearchSortBuilder.html) 的文档。
+更多 API 请参考 [AV.SearchQuery](https://leancloud.github.io/javascript-sdk/docs/AV.SearchQuery.html) 和 [AV.SearchSortBuilder](https://leancloud.github.io/javascript-sdk/docs/AV.SearchSortBuilder.html) 的文档。
 
 ## 搜索 API
 
@@ -719,5 +719,3 @@ curl -X GET \
 `max_doc_freq`|可选|词语最多出现的文档个数，超过这个值的词将被忽略，防止一些无意义的热频词干扰结果，默认无限制。
 
 更多内容参考 [ElasticSearch 文档](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-mlt-query.html)。
-
-
