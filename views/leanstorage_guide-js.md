@@ -1094,7 +1094,7 @@ file.save({
 {% block code_query_by_cql %}
 
 ```js
-  var cql = 'select * from Todo where status = 1';
+  // 新建 AVUser 对象实例
   AV.Query.doCloudQuery(cql).then(function (data) {
       // results 即为查询结果，它是一个 AV.Object 数组
       var results = data.results;
@@ -1199,8 +1199,8 @@ file.save({
   user.setEmail('tom@leancloud.cn');
   user.signUp().then(function (loginedUser) {
       console.log(loginedUser);
-  }, (function (error) {
-  }));
+  }, function (error) {
+  });
 ```
 {% endblock %}
 
