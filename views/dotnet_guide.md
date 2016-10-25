@@ -40,7 +40,9 @@ LeanCloud 的每一个账户都可以创建多个应用。同一个应用可以�
   AVClient.Initialize(string applicationId, string appKey, AVRegion region);
   除了传入您的 `App ID` 以及 `App Key`之外，指定 LeanCloud 的服务节点，现在 AVRegion 仅支持 CN 以及 US 节点。
 ```
-注意，目前 LeanCloud 的节点上的数据是相互隔离的，换言之，您在中国节点上注册的应用无法访问美国节点，反之亦然。
+
+{% if node != 'qcloud' %}注意，目前 LeanCloud 的节点上的数据是相互隔离的，换言之，您在中国节点上注册的应用无法访问美国节点，反之亦然。
+{% endif %}
 
 ## 对象
 ### AVObject

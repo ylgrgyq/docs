@@ -62,7 +62,7 @@ var TextMessage = require('leancloud-realtime').TextMessage;
 ```javascript
 var realtime = new Realtime({
   appId: '{{appid}}',
-  region: 'cn', // 美国节点为 "us"
+  region: 'cn', //{% if node != 'qcloud' %}美国节点为 "us"{% else %}目前仅支持中国节点 cn{% endif %}
 });
 ```
 
@@ -70,7 +70,7 @@ var realtime = new Realtime({
 ```javascript
 const realtime = new Realtime({
   appId: '{{appid}}',
-  region: 'cn', // 美国节点为 "us"
+  region: 'cn', // {% if node != 'qcloud' %}美国节点为 "us"{% else %}目前仅支持中国节点 cn{% endif %}
   noBinary: true,
 });
 ```
