@@ -31,7 +31,7 @@ Client::initialize("{{appid}}", "{{appkey}}", "{{masterkey}}");
 // 启用美国节点
 // Client::useRegion("US");
 // 启用国内节点 (默认启用)
-Client::useRegion("CN");
+Client::useRegion("E1");
 ```
 {% endblock %}
 
