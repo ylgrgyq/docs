@@ -519,7 +519,7 @@ GCM 需要系统为 Android 2.2 及以上并且安装有 Google Play 商店的�
   </intent-filter>
 </receiver>
 ```
-
+{% if node != 'qcloud' %}
 接下来设置 GCM 开关。在 `AVOSCloud.initialize` 初始化时设置开关 `AVOSCloud.setGcmOpen(true)`。
 
 注意，LeanCloud 云端只有在以下三个条件都满足的情况下，才会默认走 GCM 通道。
@@ -527,7 +527,7 @@ GCM 需要系统为 Android 2.2 及以上并且安装有 Google Play 商店的�
 - LeanCloud 美国节点
 - 调用 `AVOSCloud.setGcmOpen(true)`
 - manifest 正确填写
-
+{% endif %}
 开发者可以通过查看控制台 `_Installation` 表的相关记录的 **vendor** 字段来判断是否注册成功。
 
 [xiaomi]: http://dev.xiaomi.com/index
