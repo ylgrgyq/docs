@@ -82,13 +82,15 @@ avoscloud new
 下图为本文所使用的公众号的设置页面：
 ![wexin_config](http://ac-lhzo7z96.clouddn.com/1456390412452)
 
+注意，在「服务器配置」中生成 **EncodingAESKey(消息加密解密密钥)** 之后，先不要点击保存设置，其中的 **URL(服务器地址)** 需要经过后续的 [项目部署](#项目部署) 才可以确定。
+
 ```js
 // 引用 wechat 库，详细请查看 https://github.com/node-webot/wechat
 var wechat = require('wechat');
 var config = {
   token: 'weixinDemo',
   appid: '请把微信的 AppID 填写在这里',
-  encodingAESKey: '请把微信后台为您生成的 EncodingAESKey 填写在这里'
+  encodingAESKey: '请把微信后台生成的 EncodingAESKey 填写在这里'
 };
 ```
 
@@ -125,7 +127,7 @@ var wechat = require('./routes/wechatBot'); // 这一段必须拷贝到当前项
 app.use('/wechat', wechat);
 ```
 
-**微信在保存「服务器配置」时会进行实时验证，所以在这之前你需要将自己的服务器配置好，让它可以提供正确的验证。**这就需要将应用部署到 LeanEngine 中：
+微信在保存「服务器配置」时会进行实时验证，所以在这之前你需要将自己的服务器配置好，让它可以提供正确的验证。**这就需要将应用部署到 LeanEngine 中**：
 
 ## 部署项目
 进入 {% if node=='qcloud' %}**LeanCloud 控制台** > **云引擎** > **设置**，{% else %}
@@ -146,7 +148,7 @@ avoscloud publish
 ```
 
 ## 配置验证
-回到微信公众号的控制台，将刚才在 LeanEngine 上设置的域名填写在 **URL(服务器地址)** 中（本例为 `http://wechatTest.leanapp.cn/wechat`），然后验证。如果微信控制台提示验证失败，请仔细确认代码中的配置是否与控制台配置一致。
+回到微信公众号的控制台，将刚才在 LeanEngine 上设置的域名填写到 **URL(服务器地址)** 中（本例为 `http://wechatTest.leanapp.cn/wechat`），然后保存设置进行验证。如果微信控制台提示验证失败，请仔细确认代码中的配置是否与控制台配置一致。
 
 ## 微信内验证
 
