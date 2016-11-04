@@ -6,6 +6,10 @@ Android 推送功能除了需要必须的 `avoscloud.jar` 以外，还需要额�
 
 Android 消息推送有专门的 Demo，请见 [Android-Push-Demo](https://github.com/leancloud/android-push-demo) 项目。
 
+### Android 消息推送流程简介
+
+<img src="images/push-workflow-android.svg" class="img-responsive" alt="">
+
 ## Installation
 
 当应用在用户设备上安装好以后，如果要使用消息推送功能，LeanCloud SDK 会自动生成一个 Installation 对象。该对象本质上是应用在设备上生成的安装信息，也包含了推送所需要的所有数据，因此要使用它来进行消息推送。
