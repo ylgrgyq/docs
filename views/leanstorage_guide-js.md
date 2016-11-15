@@ -1039,7 +1039,7 @@ file.save({
 
 ```js
   var query = new AV.Query('Todo');
-  query.ascending('priority');
+  query.addAscending('priority');
   query.addDescending('createdAt');
 ```
 {% endblock %}
