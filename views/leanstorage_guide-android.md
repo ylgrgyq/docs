@@ -81,24 +81,27 @@
 {% block code_saveoption_query_example %}
 
 ```java
-        // 获取 version 值
-        int version = avObject.getInt("version");
-
-        AVSaveOption avSaveOption = new AVSaveOption();
-
-        AVQuery<AVObject> query = new AVQuery<>("Wiki");
-        query.whereEqualTo("version", version);
-
-        avSaveOption.query(query);
-
-        avObject.saveInBackground(avSaveOption, new SaveCallback() {
-            @Override
-            public void done(AVException e) {
-                if (e.getCode() == 305) {
-                    Log.d(TAG, "无法保存修改，wiki 已被他人更新。");
+    final int amount = -100;
+    AVQuery<AVObject> query = new AVQuery<>("Account");
+    query.getFirstInBackground(new GetCallback<AVObject>() {
+        @Override
+        public void done(final AVObject account, AVException e) {
+            account.increment("balance", amount);
+            AVSaveOption option = new AVSaveOption();
+            option.query(new AVQuery<>("Account").whereGreaterThanOrEqualTo("balance", -amount));
+            option.setFetchWhenSave(true);
+            account.saveInBackground(option, new SaveCallback() {
+                @Override
+                public void done(AVException e) {
+                    if (e == null) {
+                        System.out.println("当前余额为：" + account.get("balance"));
+                    } else {
+                        System.out.println("余额不足，操作失败！");
+                    }
                 }
-            }
-        });
+            });
+        }
+    });
 ```
 {% endblock %}
 
