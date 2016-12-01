@@ -1368,6 +1368,17 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 ```
 {% endblock %}
 
+{% block code_user_isAuthenticated %}
+
+```objc
+    [currentUser isAuthenticatedWithSessionToken:@"user-sessionToken-here" callback:^(BOOL succeeded, NSError * _Nullable error) {
+        if (succeeded) {
+            // 用户的 sessionToken 有效
+        }
+    }];
+```
+{% endblock %}
+
 {% block code_query_user %}
 
 ```objc

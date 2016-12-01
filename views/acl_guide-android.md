@@ -96,9 +96,17 @@
 
 {% block query_role_of_user %}
 
-```
+```java
+  // 第一种方式是通过 AVUser 内置的接口：
+  user.getRolesInBackground(new FindCallback<AVRole>() {
+    @Override
+    public void done(List<AVRole> avRoles, AVException avException) {
+        // avRoles 表示这个用户拥有的角色
+    });
+    
+  // 第二种方式是通过构建 AVQuery：
   AVQuery<AVRole> roleQuery = new AVQuery<AVRole>("_Role");
-  roleQuery.whereEqualTo("users",AVUser.getCurrentUser());
+  roleQuery.whereEqualTo("users",user);
   roleQuery.findInBackground(new FindCallback<AVRole>() {
     @Override
     public void done(List<AVRole> list, AVException e) {
@@ -107,6 +115,7 @@
   });
 ```
 {% endblock %}
+
 
 {% block query_user_of_role %}
 
