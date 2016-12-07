@@ -1037,19 +1037,23 @@ AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
 {% endblock %}
 
 {% block code_query_with_and %}
-
 ```objc
-    AVQuery *priorityQuery = [AVQuery queryWithClassName:@"Todo"];
-    [priorityQuery whereKey:@"priority" lessThan:[NSNumber numberWithInt:3]];
+NSDate *(^dateFromString)(NSString *string) = ^(NSString *string) {
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+    return [dateFormatter dateFromString:string];
+};
 
-    AVQuery *statusQuery = [AVQuery queryWithClassName:@"Todo"];
-    [statusQuery whereKey:@"status" equalTo:[NSNumber numberWithInt:0]];
+AVQuery *startDateQuery = [AVQuery queryWithClassName:@"Todo"];
+[highQuery whereKey:@"createdAt" greaterThanOrEqualTo:dateFromString(@"2016-11-13")];
 
-    AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:statusQuery,priorityQuery,nil]];
+AVQuery *endDateQuery = [AVQuery queryWithClassName:@"Todo"];
+[lowQuery whereKey:@"createdAt" lessThan:dateFromString(@"2016-12-03")];
 
-    [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
-        // 返回 priority 小于 3 并且 status 等于 0 的 Todo
-    }];
+AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:startDateQuery,endDateQuery,nil]];
+[query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
+    
+}];
 ```
 {% endblock %}
 

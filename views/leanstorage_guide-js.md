@@ -1072,16 +1072,14 @@ file.save({
 
 
 {% block code_query_with_and %}
-
 ```js
-  var priorityQuery = new AV.Query('Todo');
-  priorityQuery.lessThan('priority', 3);
+  var startDateQuery = new AV.Query('Todo');
+  startDateQuery.greaterThanOrEqualTo('createdAt', new Date('2016-11-13 00:00:00'));
 
-  var statusQuery = new AV.Query('Todo');
-  statusQuery.equalTo('status', 0);
+  var endDateQuery = new AV.Query('Todo');
+  endDateQuery.lessThan('createdAt', new Date('2016-12-03 00:00:00'));
 
-  var query = AV.Query.and(priorityQuery, statusQuery);
-  // 返回 priority 小于 3 并且 status 等于 0 的 Todo
+  var query = AV.Query.and(startDateQuery, endDateQuery);
 ```
 {% endblock %}
 

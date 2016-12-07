@@ -832,23 +832,22 @@ $query->find();
 {% endblock %}
 
 {% block code_query_with_and %}
-
 ```php
-$priorityQuery = new Query("Todo");
-$priorityQuery->lessThan("priority", 3);
+$startDate = new \DateTime("2016-11-13");
+$startDateQuery = new Query("Todo");
+$startDateQuery->greaterThanOrEqualTo("createdAt", $startDate);
 
-$statusQuery = new Query("Todo");
-$statusQuery->equalTo("status", 0);
+$endDate = new \DateTime("2016-12-03");
+$endDateQuery = new Query("Todo");
+$endDateQuery->lessThan("createdAt", $endDate);
 
-$query = Query::andQuery($priorityQuery, $statusQuery);
+$query = Query::andQuery($startDateQuery, $endDateQuery);
 
-// 返回 priority 小于 3 并且 status 等于 0 的 Todo
 $query->find();
 ```
 {% endblock %}
 
 {% block code_delete_todo_by_cql %}
-
 ```php
 Query::doCloudQuery("delete from Todo where objectId='558e20cbe4b060308e3eb36c'");
 ```

@@ -1042,15 +1042,15 @@ query = leancloud.Query.or_(query1,query2)
 
 ```python
 import leancloud
+from datetime import datetime
 
 Todo = leancloud.Object.extend('Todo')
 query1 = Todo.query
 query2 = Todo.query
 
-query1.greater_than('priority', 3)
-query2.equal_to('status', 1)
+query1.greater_than_or_equal_to('createdAt', datetime(2016, 11, 13))
+query2.less_than('createdAt', datetime(2016, 12, 3))
 
-# 返回 priority 大于等于 3 且 status 等于 1 的 Todo
 query = leancloud.Query.and_(query1, query2)
 ```
 {% endblock %}
