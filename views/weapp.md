@@ -167,8 +167,6 @@ SDK 所有的云引擎相关的 API 都能正常使用，详细的用法请参�
 
 要使用 LeanCloud 的聊天、实时消息功能，需要使用 LeanCloud 实时通讯 SDK。
 
-<div class="callout callout-info">实时通讯功能暂时只支持微信开发者工具，我们正在进行真机上的适配工作。</div>
-
 ### 安装与初始化
 2. 下载 [`realtime.weapp.js`](https://unpkg.com/leancloud-realtime@^3.3.0/dist/realtime.weapp.js)（[镜像](https://raw.githubusercontent.com/leancloud/js-realtime-sdk/dist/dist/realtime.weapp.js)），移动到 `libs` 目录。
 3. 在 `app.js` 中使用 `const Realtime = require('./libs/realtime.weapp.js').Realtime;` 获得 `Realtime` 的引用。在其他文件中使用时请将路径替换成对应的相对路径。
