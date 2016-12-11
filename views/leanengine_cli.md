@@ -180,10 +180,10 @@ $ lean up
   </ul>
 </div>
 
-旧版命令行工具有一项功能，在 `$ lean up` 的过程中，监测项目文件的变更，实现自动重启开发服务进程。在新版本中我们移除了这一功能，转由项目代码本身来实现，以便更好的和项目使用的编程语言／框架集成。
+旧版命令行工具可以在 `$ lean up` 的过程中，监测项目文件的变更，实现自动重启开发服务进程。新版命令行工具移除了这一功能，转由项目代码本身来实现，以便更好地与项目使用的编程语言或框架集成。
 
-- 对于使用以前命令行工具创建的 Node.JS 项目，可以参考[此 PullRequest](https://github.com/leancloud/node-js-getting-started/pull/26/files) 来配置。
-- 对于使用以前命令行工具创建的 Python 项目，可以参考[此 PullRequest](https://github.com/leancloud/python-getting-started/pull/12/files) 来配置。
+- 使用旧版命令行工具创建的 Node.js 项目，请参考 [Pull Request #26](https://github.com/leancloud/node-js-getting-started/pull/26/files) 来配置。
+- 使用旧版命令行工具创建的 Python 项目，请参考 [Pull Request #12](https://github.com/leancloud/python-getting-started/pull/12/files) 来配置。
 
 更多关于云引擎开发的内容，请参考 [云引擎服务总览](leanengine_overview.html)。
 
@@ -240,7 +240,7 @@ $ lean deploy -m 'Be more awesome! 这是定制的部署备注'
 
 部署项目时，如果有一些临时文件或是项目源码管理软件用到的文件，不需要上传到服务器，可以将它们加入到 `.leanignore` 文件。
 
-`.leanignore` 文件格式与 Git 使用的 `.gitignore` 格式基本相同，每行写一个忽略项，可以为文件或者文件夹。如果项目没有 `.leanignore` 文件，部署时会根据当前项目所使用的语言创建一个默认的 `.leanignore` 文件。可以检查下默认的配置与你的预期是否相符。
+`.leanignore` 文件格式与 Git 使用的 `.gitignore` 格式基本相同，每行写一个忽略项，可以是文件或者文件夹。如果项目没有 `.leanignore` 文件，部署时会根据当前项目所使用的语言创建一个默认的 `.leanignore` 文件。请确认此文件中的默认配置是否与项目需求相符。
 
 ### 从 Git 仓库部署
 
