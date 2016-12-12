@@ -663,7 +663,7 @@ self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
         // Tom 发了一条消息给 Jerry
         
         AVIMMessageOption *option = [AVIMMessageOption alloc];
-        option.priority = 1;
+        option.priority = AVIMMessagePriorityHigh;
         [conversation sendMessage:[AVIMTextMessage messageWithText:@"耗子，起床！" attributes:nil] option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
             // 在这里处理发送失败或者成功之后的逻辑
         }];
