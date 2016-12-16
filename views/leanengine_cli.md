@@ -1,4 +1,6 @@
 {% set release = "[Github releases 页面](https://github.com/leancloud/lean-cli/releases)" %}
+{% set login = "lean login" %}
+
 # 命令行工具 CLI 使用指南
 
 命令行工具是用来管理和部署云引擎项目的工具。它不仅可以部署、发布和回滚云引擎代码，对同一个云引擎项目做多应用管理，还能查看云引擎日志，批量将文件上传到 LeanCloud 云端。
@@ -85,15 +87,15 @@ lean version 0.3.0
 
 安装完命令行工具之后，首先第一步需要登录 LeanCloud 账户。
 
-<div class="callout callout-info">
-{% if node != 'qcloud' %}美国节点用户需要使用参数 `--region=US` 进行登录。{% else %}腾讯云 TAB 的用户需要使用参数 `--region=TAB` 进行登录。{% endif %}
-</div>
-
 ```sh 
-$ lean login {% if node == 'us' %}--region=US{% endif %}{% if node == 'qcloud' %}--region=TAB{% endif %}
+# {% if node != 'qcloud' %}美国节点用户需要使用参数 `--region=US` 进行登录。{% else %}腾讯云 TAB 的用户需要使用参数 `--region=TAB` 进行登录。{% endif %}
+$ {{ login }} {% if node == 'us' %}--region=US{% endif %}{% if node == 'qcloud' %}--region=TAB{% endif %}
 ```
+然后按照提示输入 LeanCloud 用户名和密码完成登录。
 
-然后按照提示输入 LeanCloud 用户名／密码完成登录。
+### 切换账户
+
+要切换到另一账户，重新执行 `{{ login }}` 即可。
 
 ## 初始化项目
 
