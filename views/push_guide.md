@@ -733,20 +733,14 @@ curl -X DELETE \
 ```
 
 ## 限制
-{% if node=='qcloud' %}
-* 为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 **控制台 > 消息 > 推送记录** 页面中体现。因此在使用开发证书推送时，请合理设置推送条件。
-{% else %}
-* 为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，并在 [控制台 > 消息 > 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 页面中体现。因此，在使用开发证书推送时，请合理设置推送条件。
-{% endif %}
+
+* 为防止由于大量证书错误所产生的性能问题，我们对使用 **开发证书** 的推送做了设备数量的限制，即一次至多可以向 20,000 个设备进行推送。如果满足推送条件的设备超过了 20,000 个，系统会拒绝此次推送，在 {% if node=='qcloud' %}**控制台 > 消息 > 推送记录**{% else %}[控制台 > 消息 > 推送记录](/messaging.html?appid={{appid}}#/message/push/list){% endif %} 中的 **状态** 一栏显示「错误」，提示信息为「dev profile disabled for massive push」。因此，在使用开发证书推送时，请合理设置推送条件。
 * Apple 对推送消息大小有限制，对 iOS 推送请尽量缩小要发送的数据大小，否则会被截断。详情请参看 [APNs 文档](https://developer.apple.com/library/ios/documentation/NetworkingInternet/Conceptual/RemoteNotificationsPG/Chapters/APNsProviderAPI.html#//apple_ref/doc/uid/TP40008194-CH101-SW1)。
 * 如果使用了 Android 的混合推送，请注意小米推送和华为推送均对消息大小有限制。为保证推送消息能被正常发送，我们要求 data + channels 参数须小于 4096 字节，超过限制会导致推送无法正常发送，请尽量减小发送数据大小。
 * 对于 silent 参数不为 true 的通知栏消息来说，title 必须小于 16 个字符，alert 必须小于 128 个字符。对于小米推送如果没有填写 title 我们会取 alert 中前五个字符作为 title。
 
-{% if node=='qcloud' %}
-如果推送失败，在 **控制台 > 消息 > 推送记录** 的 **状态** 一栏中会看到错误提示。
-{% else %}
-如果推送失败，在 [控制台 > 消息 > 推送记录](/messaging.html?appid={{appid}}#/message/push/list) 的 **状态** 一栏中会看到错误提示。
-{% endif %}
+
+如果推送失败，在 {% if node=='qcloud' %}**控制台 > 消息 > 推送记录 > 状态**{% else %}[控制台 > 消息 > 推送记录 > 状态](/messaging.html?appid={{appid}}#/message/push/list){% endif %} 一栏中会看到错误提示。
 
 ## Installation 自动过期和清理
 
