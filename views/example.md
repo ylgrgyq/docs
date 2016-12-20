@@ -144,6 +144,7 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 ```es7
 // This is a ES7 snippet
 // This is a ES7 snippet
+// This is a ES7 snippet
 // 使用 iOS SDK API 进行订阅操作
 // 当用户关注 SuZhou，则为其订阅该频道。
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
@@ -151,6 +152,7 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 [currentInstallation saveInBackground];
 ```
 ```php
+// This is a PHP snippet
 // This is a PHP snippet
 // This is a PHP snippet
 // 使用 iOS SDK API 进行订阅操作

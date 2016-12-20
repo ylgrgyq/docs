@@ -293,62 +293,57 @@ var codeBlockTabber = (function() {
       var $blocks = $('.codeblock-toggle-enabled');
 
       // check if is switching to another language first
-      if (!$(this).hasClass('active')) {
-        var prevHeihgt = 0;
-        var nextHeight = 0;
-        var heightOffset = 0;
-
-        // sum all heights of previous visible code blocks with multilang enabled
-        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled:visible').each(function () {
-          prevHeihgt += $(this).outerHeight(true);
-        });
-
-        // sum all heights of previous hidden code blocks with multilang enabled, also excludes unrelated (non-targetLang) codeblocks
-        $(this).closest('.code-lang-toggles').prevAll('.codeblock-toggle-enabled').not(':visible').find('.' + targetLang).parent().each(function () {
-          nextHeight += $(this).outerHeight(true);
-        });
-
-        heightOffset = prevHeihgt - nextHeight;
-
-        if (heightOffset !== 0) {
-          var currentTop = document.documentElement.scrollTop || document.body.scrollTop;
-          window.scrollTo(0, currentTop - heightOffset);
-          console.log('codeblock height offset: ' + heightOffset);
-        }
-      }
+      var prevHeight = 0;
+      var nextHeight = 0;
+      var heightOffset = 0;
 
       console.log('switching to ' + targetLang);
 
       $.each($('.code-lang-toggles'), function () {
         var langArr = [];
         var $toggles = $(this).find('.toggle');
+        var activeLang = $toggles.filter('.active').data('toggle-lang');
 
         $.each($toggles, function () {
           var lang = $(this).data('toggle-lang');
           langArr.push(lang);
         });
 
-        if (langArr.indexOf(targetLang) > - 1) {
+        if (langArr.indexOf(targetLang) > - 1 && targetLang !== activeLang) {
           // Update toggler visibility
           $(this).find('.toggle').removeClass('active');
           $(this).find('.toggle[data-toggle-lang=' + targetLang + ']').addClass('active');
 
-          // Update codeblock visibility
           var $codeBlocks = $(this).prevUntil('*:not(.codeblock-toggle-enabled)');
+          var $codeBlocksPreActive = $($codeBlocks).filter('.codeblock-toggle-enabled:visible');
+          var $codeBlocksNextActive = $($codeBlocks).filter('.codeblock-toggle-enabled').not(':visible').find('.' + targetLang).parent();
+          prevHeight += $($codeBlocksPreActive).outerHeight();
+          nextHeight += $($codeBlocksNextActive).outerHeight();
+          console.log('preh: ' + $($codeBlocksPreActive).outerHeight());
+          console.log('nexth: ' + $($codeBlocksNextActive).outerHeight());
+
+          // Update codeblock visibility
           $.each($codeBlocks, function () {
-            var $current = $(this);
-            var currentCodeClass = $current.children().attr('class');
+            var $codebBlock = $(this);
+            var currentCodeClass = $codebBlock.children().attr('class');
 
             if (currentCodeClass === targetLang) {
-              $current.show();
+              $codebBlock.show();
             } else {
-              $current.hide();
+              $codebBlock.hide();
             }
           });
         } else {
           console.log('No matching codeblock in current scope!');
         }
       });
+
+      heightOffset = prevHeight - nextHeight;
+      if (heightOffset !== 0) {
+        var currentTop = document.documentElement.scrollTop || document.body.scrollTop;
+        window.scrollTo(0, currentTop - heightOffset);
+        console.log('codeblock height offset: ' + heightOffset);
+      }
     });
   }
 
