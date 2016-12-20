@@ -82,6 +82,39 @@ AV.Push.send({
 - **动态查询**<br/>
   服务端根据业务逻辑需求向一些用户动态的发送推送，有可能每一次推送的用户群都是浮动的。经典的案例就是，当你在淘宝浏览过某些商品之后，你再回到微博的网页上，你会看见微博的网页会根据你在淘宝浏览的商品给你显示相关的商品推荐。推送也是如此，一些用户的动态行为可以为推送服务提供算法参考。因此这些用户是动态的。
 
+```js
+// This is a JS snippet
+// This is a JS snippet
+// This is a JS snippet
+// This is a JS snippet
+AV.Push.send({
+    channels: ['SuZhou'],
+    data: {
+        alert: '苏州明天（2016月11月3日）天气晴，气温最高 18°，最低6°。'
+    }
+});
+```
+```php
+// This is a PHP snippet
+AV.Push.send({
+    channels: ['SuZhou'],
+    data: {
+        alert: '苏州明天（2016月11月3日）天气晴，气温最高 18°，最低6°。'
+    }
+});
+```
+```java
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
+AV.Push.send({
+    channels: ['SuZhou'],
+    data: {
+        alert: '苏州明天（2016月11月3日）天气晴，气温最高 18°，最低6°。'
+    }
+});
+```
+
 ### 静态设定-Channel
 
 我们不推荐开发者在 `_Installation` 表中加入过多的自定义属性，我们更推荐用户使用频道（Channel）的概念。例如在客户端 SDK 中，一个注册用户以自己的用户名或者 objectId 订阅了一个频道，这样就在云引擎上向这些用户推送内容就会简单很多。
@@ -102,6 +135,15 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 // This is a Java snippet
 // This is a Java snippet
 // This is a Java snippet
+// 使用 iOS SDK API 进行订阅操作
+// 当用户关注 SuZhou，则为其订阅该频道。
+AVInstallation *currentInstallation = [AVInstallation currentInstallation];
+[currentInstallation addUniqueObject:@"SuZhou" forKey:@"channels"];// 为用户订阅 SuZhou 频道
+[currentInstallation saveInBackground];
+```
+```es7
+// This is a ES7 snippet
+// This is a ES7 snippet
 // 使用 iOS SDK API 进行订阅操作
 // 当用户关注 SuZhou，则为其订阅该频道。
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
