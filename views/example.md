@@ -96,6 +96,12 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 [currentInstallation saveInBackground];
 ```
 ```java
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
 // 使用 iOS SDK API 进行订阅操作
 // 当用户关注 SuZhou，则为其订阅该频道。
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
@@ -103,6 +109,8 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 [currentInstallation saveInBackground];
 ```
 ```php
+// This is a PHP snippet
+// This is a PHP snippet
 // 使用 iOS SDK API 进行订阅操作
 // 当用户关注 SuZhou，则为其订阅该频道。
 AVInstallation *currentInstallation = [AVInstallation currentInstallation];
@@ -113,6 +121,10 @@ AVInstallation *currentInstallation = [AVInstallation currentInstallation];
 而在云引擎中向「苏州」这个频道推送天气情况：
 
 ```js
+// This is a JS snippet
+// This is a JS snippet
+// This is a JS snippet
+// This is a JS snippet
 AV.Push.send({
     channels: ['SuZhou'],
     data: {
@@ -121,6 +133,7 @@ AV.Push.send({
 });
 ```
 ```php
+// This is a PHP snippet
 AV.Push.send({
     channels: ['SuZhou'],
     data: {
@@ -129,6 +142,9 @@ AV.Push.send({
 });
 ```
 ```java
+// This is a Java snippet
+// This is a Java snippet
+// This is a Java snippet
 AV.Push.send({
     channels: ['SuZhou'],
     data: {
