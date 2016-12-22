@@ -332,11 +332,11 @@ dependencies {
   android:name="com.xiaomi.mipush.sdk.PushMessageHandler"
   android:enabled="true"
   android:exported="true"/>
-  
+
 <service
   android:name="com.xiaomi.mipush.sdk.MessageHandleService"
   android:enabled="true"/>
-  
+
 <receiver
   android:name="com.xiaomi.push.service.receivers.NetworkStatusReceiver"
   android:exported="true">
@@ -375,7 +375,7 @@ dependencies {
 在 `AVOSCloud.initialize` 时调用以下函数：
 
 ```java
-AVMixpushManager.registerXiaomiPush(context, miAppId, miAppKey, profile) 
+AVMixpushManager.registerXiaomiPush(context, miAppId, miAppKey, profile)
 ```
 
 - 参数 `miAppKey` 需要的是 AppKey，而在控制台的混合推送配置中 Profile 的第二个参数是 AppSecret，请注意区分，并分别正确填写。
@@ -491,7 +491,7 @@ LeanCloud 云端只有在**满足以下全部条件**的情况下才会使用华
 ### 错误排查建议
 
 - 只要注册时有条件不符合，SDK 会在日志中输出导致注册失败的原因，例如「register error, mainifest is incomplete」代表 manifest 未正确填写。如果注册成功，`_Installation` 表中的相关记录应该具有 **vendor** 这个字段并且不为空值。
-- 查看华为小米等机型的设置，并打开「信任此应用」、「开机自启动」、「自启动管理」和「权限管理」等相关选项。
+- 查看华为机型的设置，并打开「信任此应用」、「开机自启动」、「自启动管理」和「权限管理」等相关选项。
 - 如果注册一直失败的话，请去论坛发帖，提供相关日志、具体机型以及系统版本号，我们会跟进协助来排查。
 
 {% endif %}
