@@ -278,6 +278,8 @@ intent.putExtra(AVConstants.PUSH_INTENT_KEY, 1);
 
 ## 混合推送
 {% if node != 'us' %}
+
+<!--
 ### 小米推送
 
 #### 环境配置
@@ -389,6 +391,7 @@ LeanCloud 云端只有在**满足以下全部条件**的情况下才会使用小
 
 当小米通知栏消息被点击后，如果已经设置了 [自定义 Receiver](#自定义_Receiver)，则 SDK 会发送一个 action 为 `com.avos.avoscloud.mi_notification_action` 的 broadcast。如有需要，开发者可以通过订阅此消息获取点击事件，否则 SDK 会默认打开 [启动推送服务](#启动推送服务) 对应设置的 Activity。
 
+-->
 
 ### 华为推送
 
@@ -481,6 +484,10 @@ LeanCloud 云端只有在**满足以下全部条件**的情况下才会使用华
 - EMUI 系统
 - manifest 正确填写
 
+### 小米推送
+因为小米公司不允许第三方服务以任何形式接入、整合小米推送，所以我们目前还不能支持小米系统，不过我们正与小米公司积极沟通解决，希望可以尽快开放这一服务。
+
+
 ### 错误排查建议
 
 - 只要注册时有条件不符合，SDK 会在日志中输出导致注册失败的原因，例如「register error, mainifest is incomplete」代表 manifest 未正确填写。如果注册成功，`_Installation` 表中的相关记录应该具有 **vendor** 这个字段并且不为空值。
@@ -551,8 +558,9 @@ dependencies {
 - LeanCloud 美国节点
 - 调用 `AVOSCloud.setGcmOpen(true)`
 - manifest 正确填写
-{% endif %}
-如果注册成功，`_Installation` 表中的相关记录应该具有 **vendor** 这个字段并且不为空值。
-{% endif %}
+  {% endif %}
+  如果注册成功，`_Installation` 表中的相关记录应该具有 **vendor** 这个字段并且不为空值。
+  {% endif %}
+
 
 [xiaomi]: http://dev.xiaomi.com/index
