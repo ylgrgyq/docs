@@ -1038,10 +1038,10 @@ NSDate *(^dateFromString)(NSString *string) = ^(NSString *string) {
 };
 
 AVQuery *startDateQuery = [AVQuery queryWithClassName:@"Todo"];
-[highQuery whereKey:@"createdAt" greaterThanOrEqualTo:dateFromString(@"2016-11-13")];
+[startDateQuery whereKey:@"createdAt" greaterThanOrEqualTo:dateFromString(@"2016-11-13")];
 
 AVQuery *endDateQuery = [AVQuery queryWithClassName:@"Todo"];
-[lowQuery whereKey:@"createdAt" lessThan:dateFromString(@"2016-12-03")];
+[endDateQuery whereKey:@"createdAt" lessThan:dateFromString(@"2016-12-03")];
 
 AVQuery *query = [AVQuery andQueryWithSubqueries:[NSArray arrayWithObjects:startDateQuery,endDateQuery,nil]];
 [query findObjectsInBackgroundWithBlock:^(NSArray *results, NSError *error) {
