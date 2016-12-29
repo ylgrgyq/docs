@@ -499,9 +499,11 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 {% endblock %}
 
-### 比较查询
+最基础的用法是根据 objectId 来查询对象（可参考 [获取对象](#获取对象)）：
 
-**根据 id 查询**在 [获取对象](#获取对象) 中已经做了介绍，代码不再此重复引用。
+{% block code_get_todo_by_objectId %}{% endblock %}
+
+### 比较查询
 
 {% block table_logic_comparison_in_query %}{% endblock %}
 
