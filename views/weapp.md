@@ -27,7 +27,7 @@
 目前小程序公测阶段暂时无法直接在微信上体验到 Demo，但你仍然可以获取源码通过微信开发者工具本地进行调试与真机预览。 Demo 的源码与运行说明请参考 [https://github.com/leancloud/leantodo-weapp](https://github.com/leancloud/leantodo-weapp)。
 
 ### 安装与初始化
-2. 下载 [`av-weapp-min.js`](https://unpkg.com/leancloud-storage@^2.0.0-beta/dist/av-weapp-min.js)（[镜像](https://raw.githubusercontent.com/leancloud/javascript-sdk/dist/dist/av-weapp-min.js)），移动到 `libs` 目录。
+2. 下载 [`av-weapp-min.js`](https://unpkg.com/leancloud-storage@^2.0.0-rc/dist/av-weapp-min.js)（[镜像](https://raw.githubusercontent.com/leancloud/javascript-sdk/dist/dist/av-weapp-min.js)），移动到 `libs` 目录。
 3. 在 `app.js` 中使用 `const AV = require('./libs/av-weapp-min.js');` 获得 `AV` 的引用。在其他文件中使用时请将路径替换成对应的相对路径。 
 4. 在 `app.js` 中初始化应用： 
   ```javascript 
@@ -59,14 +59,13 @@ Page({
 });
 ```
 
-```html
-<!-- pages/todos/todos.js -->
-<block wx:for="{{todos}}" wx:for-item="todo" wx:key="objectId">
-  <text data-id="{{todo.objectId}}">
-    {{todo.content}}
-  </text>
-</block>
-```
+<pre ng-non-bindable><code class="lang-html">&lt;!-- pages/todos/todos.wxml --&gt;
+&lt;block wx:for=&quot;&lbrace;&lbrace;todos&rbrace;&rbrace;&quot; wx:for-item=&quot;todo&quot; wx:key=&quot;objectId&quot;&gt;
+  &lt;text data-id=&quot;&lbrace;&lbrace;todo.objectId}}&quot;&gt;
+    &lbrace;&lbrace;todo.content}}
+  &lt;/text&gt;
+&lt;/block&gt;
+</code></pre>
 
 ### 文件存储
 

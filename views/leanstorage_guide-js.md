@@ -622,6 +622,11 @@ file.save({
     // { loaded: 1234, total: 2468, percent: 50 }
   },
 }).then(/* ... */);
+
+// 2.0 之前版本的 SDK 中，save 的第二个参数 callbacks 不能省略：
+file.save({
+  onprogress: function(e) { console.log(e); }
+}, {}).then(/* ... */);
 ```
 {% endblock %}
 {% block text_download_file_with_progress %}{% endblock %}
