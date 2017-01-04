@@ -888,7 +888,7 @@ file.save({
 {% block code_query_tag_for_todoFolder %}
 
 ```js
-  var todoFolder = AV.Object.createWithoutData('Todo', '5735aae7c4c9710060fbe8b0');
+  var todoFolder = AV.Object.createWithoutData('TodoFolder', '5735aae7c4c9710060fbe8b0');
   var relation = todoFolder.relation('tags');
   var query = relation.query();
   query.find().then(function (results) {
