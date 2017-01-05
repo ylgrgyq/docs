@@ -14,7 +14,7 @@
 {% set scope         = '{{scope}}' %}
 {% set sign          = '{{sign}}' %}
 {% set timestamp_url = '&amp;timestamp' | safe %}
-
+{% import "views/_helper.njk" as docs %}
 
 # {% if node == 'qcloud' %}TAB{% else %}LeanCloud{% endif %} 开放平台
 
@@ -120,6 +120,8 @@ LeanCloud 目前只支持服务器的 Web 应用的授权流程（Server-side Fl
 ## Connect 接入
 
 对于部分合作伙伴，我们还提供了 `/1.1/connect` 的 API 用于快速接入。通过这个 API 可以直接创建或者获取用户帐号信息，用户不需要做授权，而是创建在该合作伙伴「namespace」 下的帐号，跟 LeanCloud 平台上的帐号隔离。**也就是说，用户用同一个邮箱在 LeanCloud 上注册，第三方合作伙伴再使用这个邮箱到 LeanCloud 平台接入，两个帐号将是独立隔离的，前者在 LeanCloud 名下，而后者在第三方合作伙伴名下。**
+
+{{ docs.alert("第三方合作伙伴通过这种接入方式创建的新用户，无法登录 LeanCloud 控制台。") }}
 
 `[GET | POST] /1.1/connect` API 接收下列参数：
 
