@@ -102,7 +102,7 @@ curl -X GET \
 
 参数 | 约束 | 说明
 --- | --- | ---
-convid | **必须** | 对话 id
+convid | **必填** | 对话 id
 max_ts | 可选 | 查询起始的时间戳，返回小于这个时间(不包含)的记录。默认是当前时间。
 msgid | 可选 | 起始的消息 id，**使用时必须加上对应消息的时间戳 max_ts 参数，一起作为查询的起点**。
 limit | 可选 | 返回条数限制，可选，默认 100 条，最大 1000 条。
@@ -155,7 +155,7 @@ appid:peerid:convid:nonce:signature_ts
 
 参数 | 约束 | 说明
 --- | --- | ---
-from | **必须** | 发送人 id
+from | **必填** | 发送人 id
 max_ts | 可选 | 查询起始的时间戳，返回小于这个时间（不包含）的记录。默认是当前时间。
 msgid | 可选 | 起始的消息 id，与 max_ts 一起作为查询的起点。
 limit | 可选 | 返回条数限制，默认 100 条，最大 1000 条。
@@ -195,11 +195,11 @@ curl -X DELETE \
   https://{{host}}/1.1/rtm/messages/logs
 ```
 
-参数 | 说明
---- | ---
-convid | 对话 id
-msgid | 消息 id
-timestamp | 消息时间戳
+参数 | 约束 | 说明
+--- | --- | ---
+convid | 必填 | 对话 id
+msgid | 必填 | 消息 id
+timestamp | 必填 | 消息时间戳
 
 ## 强制修改聊天记录
 
@@ -255,16 +255,18 @@ curl -X POST \
 
 参数 | 约束 | 说明
 ---|---|---
-from_peer |**必须**|消息的发件人 client Id
-conv_id |**必须**|发送到对话 id
+from_peer | 必填 |消息的发件人 client Id
+conv_id | 必填 |发送到对话 id
 transient | 可选|是否为暂态消息（**由于向后兼容的考虑，默认为 true**，请注意设置这个值。）
-message |**必须**| 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+message | 必填 | 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户的客户端，设置为 true 禁用此功能。
-push_data | 可选 | 以消息附件方式设置本条消息的离线推送通知内容。如果目标接收者当前不在线，我们会按照该参数填写的内容来发离线推送。请参看 [离线推送通知](./realtime_v2.html#离线推送通知) 
+push_data | 可选 | 以消息附件方式设置本条消息的离线推送通知内容。如果目标接收者当前不在线，我们会按照该参数填写的内容来发离线推送。请参看 [离线推送通知](./realtime_v2.html#离线推送通知)
 
 返回说明：
 
 默认情况下发送消息 API 使用异步的方式，调用后直接返回空结果 `{}`。
+
+## 系统消息
 
 ### 系统对话给用户发消息
 
@@ -283,11 +285,11 @@ curl -X POST \
 
 参数 | 约束 | 说明
 ---|---|---
-from_peer |**必须**|消息的发件人 client id
+from_peer | 必填 | 消息的发件人 client id
 to_peers | 长度最长为 20 个 client id| 接受系统消息的 client id
-conv_id |可选|发送到对话 id
+conv_id | 必填 |发送到对话 id
 transient | 可选|是否为暂态消息（**由于向后兼容的考虑，默认为 true**，请注意设置这个值。）
-message |**必须**| 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+message | 必填 | 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户的客户端，设置为 true 禁用此功能。
 
 ### 系统对话发送广播消息
@@ -305,9 +307,9 @@ curl -X POST \
 
 参数 | 约束 | 类型 | 说明
 ---|---|---|---
-from_peer |**必须**| 字符串 | 消息的发件人 id
-conv_id |**必须**| 字符串 | 发送到对话 id，仅限于系统对话
-message |**必须**| 字符串 |消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+from_peer | 必填 | 字符串 | 消息的发件人 id
+conv_id | 必填 | 字符串 | 发送到对话 id，仅限于系统对话
+message | 必填 | 字符串 |消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 valid_till | 可选 | 数字 | 过期时间，UTC 时间戳（毫秒），最长为 1 个月之后。默认值为 1 个月后。
 push | 可选 | 字符串或 JSON 对象 | 附带的推送内容，如果设置，**所有** iOS 和 Windows Phone 用户会收到这条推送通知。
 
@@ -335,15 +337,89 @@ curl -X DETELE \
   https://{{host}}/1.1/rtm/broadcast
 ```
 
-参数 | 说明
---- | ---
-mid | 要删除的消息 id，字符串
+参数 | 约束 | 说明
+--- | --- | ---
+mid | 必填 | 要删除的消息 id，字符串
 
 返回：
 
 空 JSON 对象 `{}`。
 
-### 富媒体消息格式说明
+### 查询系统广播消息
+
+调用此 API 可查询目前有效的广播消息。
+
+```sh
+curl -X GET \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  https://leancloud.cn/1.1/rtm/broadcast
+```
+
+参数 | 约束 | 说明
+--- | --- | ---
+conv_id | 必填 | 系统对话 id
+limit | 可选 | 返回消息条数
+skip | 可选 | 跳过消息条数，用于翻页
+
+### 系统对话发送订阅消息
+
+利用 REST API 发送消息给系统对话所有的订阅用户（即加入系统对话的用户）。
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"from_peer": "1a", "message": "{\"_lctype\":-1,\"_lctext\":\"这是一个纯文本消息\",\"_lcattrs\":{\"a\":\"_lcattrs 是用来存储用户自定义的一些键值对\"}}", "conv_id": "..."}' \
+  https://leancloud.cn/1.1/rtm/broadcast/subscriber
+```
+
+参数 | 约束 | 类型 | 说明
+---|---|---|---
+from_peer | 必填 | 字符串 | 消息的发件人 id
+conv_id | 必填 | 字符串 | 发送到对话 id，仅限于系统对话
+message | 必填 | 字符串 |消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
+
+### 订阅系统对话
+
+为指定用户订阅指定的系统对话。
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"conv_id": "...", "client_id": "..."}' \
+  https://leancloud.cn/1.1/rtm/conversation/subscription
+```
+
+参数 | 约束 | 类型 | 说明
+---|---|---|---
+client_id | 必填 | 字符串 | 订阅者的 client id
+conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
+
+### 退订系统对话
+
+为指定用户退订指定的系统对话。
+
+```sh
+curl -X DELETE \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -G \
+  --data-urlencode 'conv_id=...' \
+  --data-urlencode 'client_id=...' \
+  https://leancloud.cn/1.1/rtm/conversation/subscription
+```
+
+参数 | 约束 | 类型 | 说明
+---|---|---|---
+client_id | 必填 | 字符串 | 退订者的 client id
+conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
+
+
+## 富媒体消息格式说明
 富媒体消息的参数格式相对于普通文本来说，仅仅是将 message 参数换成了一个 JSON **字符串**。
 
 <div class="callout callout-info">由于 LeanCloud 实时通信中所有的消息都是文本，所以这里发送 JSON 结构时**需要首先序列化成字符串**。</div>
