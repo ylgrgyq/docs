@@ -40,42 +40,18 @@ lean login
 lean init
 ```
 
-根据提示选择对应的节点，应用选择 **Wechat**，应用模版选择 **1) node-js-getting-started**，待过程完成后，一个 LeanEngine 默认的模板项目就在 `/usr/leancloud/wechat/` 下创建好了。如遇问题请参考《[命令行工具 CLI 使用指南 · 初始化项目](leanengine_cli.html#初始化项目)》。
+根据提示选择对应的节点，应用选择 **Wechat**，应用模版选择 **node-js-getting-started**，待过程完成后，一个 LeanEngine 默认的模板项目就在 `/usr/leancloud/wechat/` 下创建好了。如遇问题请参考《[命令行工具 CLI 使用指南 · 初始化项目](leanengine_cli.html#初始化项目)》。
 
 ## 添加依赖包
 
-打开 `/usr/leancloud/wechat/package.json` 文件，替换成如下内容：
+打开 `/usr/leancloud/wechat/package.json`，在 `dependencies` 中追加以下依赖项：
 
-```js
-{
-  "name": "LeanEngine_Weixin_Sample",
-  "version": "1.0.0",
-  "description": "A sample Weixin server app using LeanEngine",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
-  "keywords": [
-    "node",
-    "LeanCloud",
-    "LeanEngine",
-    "express",
-    "Weixin"
-  ],
-  "license": "MIT",
-  "dependencies": {
+```json
     "async": "^1.5.2",
-    "body-parser": "1.12.3",
-    "cookie-parser": "^1.3.5",
-    "ejs": "2.3.1",
-    "express": "4.12.3",
-    "leanengine": "^0.4.0",
     "request": "^2.69.0",
     "strformat": "0.0.7",
-    "wechat": "^2.0.3",// 
+    "wechat": "^2.0.3",
     "wechat-api": "^1.24.0"
-  }
-}
 ```
 
 ## wechatBot.js
