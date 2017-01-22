@@ -152,11 +152,11 @@ realtime.createIMClient('Tom').then(function(tom) {
 }).catch(console.error);
 
 // https://jsplay.avosapps.com/fuq/embed?js,console
-
-// 注意：
-// Realtime.createIMClient() 这个方法表示开始连接 LeanCloud 云端服务器——也就是启动实时通信服务，这个方法在整个使用周期内只需要调用一次。用户退出实时通信服务（断开 LeanCloud 云端服务器连接）时需要在 IMClient 对象上调用另一个方法：IMClient.close()。
-// Realtime.createIMClient/IMClient.close 这两个方法是成对出现，在聊天过程中只需要调用一次即可，无需多次调用的。
 ```
+
+> 注意：
+> Realtime.createIMClient() 这个方法表示开始连接 LeanCloud 云端服务器——也就是启动实时通信服务，这个方法在整个使用周期内只需要调用一次。用户退出实时通信服务（断开 LeanCloud 云端服务器连接）时需要在 IMClient 对象上调用另一个方法：IMClient.close()。
+> Realtime.createIMClient/IMClient.close 这两个方法是成对出现，在聊天过程中只需要调用一次即可，无需多次调用的。
 
 {% if node=='qcloud' %}
 执行完以上代码，在 LeanCloud 网站的 控制台 /（选择应用）/ 存储 / 数据 / `_Conversation ` 表 中多了一行数据，其字段含义如下：
