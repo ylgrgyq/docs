@@ -249,7 +249,7 @@ SDK 所有的云引擎相关的 API 都能正常使用，详细的用法请参�
   - `WEIXIN_NOTIFY_URL`：`https://{{yourdomain}}.leanapp.cn/weixin/pay-callback`，其中 `yourdomain` 是第二步中设置的二级域名
 
 <details>
-<summary>Example</summary>
+<summary>查看示例</summary>
 <p>
 ![image](https://cloud.githubusercontent.com/assets/175227/22236906/7c651c80-e243-11e6-819b-007d5862bdbf.png)
 </p>
