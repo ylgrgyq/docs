@@ -494,7 +494,7 @@ AV.Object.register(Todo);
   var todos = [todo1, todo2, todo3];
   AV.Object.saveAll(todos).then(function () {
     var relation = todoFolder.relation('containedTodos'); // 创建 AV.Relation
-    todos.map(relation.add);
+    todos.map(relation.add.bind(relation));
     return todoFolder.save();// 保存到云端
   }).then(function(todoFolder) {
     // 保存成功
