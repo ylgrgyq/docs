@@ -193,7 +193,7 @@ AV.Object.register(Todo);
   var query = new AV.Query('Todo');
   query.get('57328ca079bc44005c2472d0').then(function (todo) {
     // 成功获得实例
-    // data 就是 id 为 57328ca079bc44005c2472d0 的 Todo 对象实例
+    // todo 就是 id 为 57328ca079bc44005c2472d0 的 Todo 对象实例
   }, function (error) {
     // 异常处理
   });
