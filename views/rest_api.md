@@ -23,7 +23,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
 
 ### 在线测试
 
-[API 在线测试工具](/dashboard/apionline/)，目前仅支持调试**中国节点**下的应用。
+[API 在线测试工具](/dashboard/apionline/index.html)，目前仅支持调试**中国节点**下的应用。
 
 ### 对象
 
