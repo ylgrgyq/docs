@@ -133,10 +133,6 @@ supported_type.save()
 ```
 
 此外，dict 和 list 支持嵌套，这样在一个 `{{baseObjectName}}` 中就可以使用它们来储存更多的结构化数据。
-
-我们**不推荐**在 `{{baseObjectName}}` 中使用 `list` 类型来储存大块的二进制数据，比如图片或整个文件。**每个 `{{baseObjectName}}` 的大小都不应超过 128 KB**。如果需要储存更多的数据，建议使用 `leancloud.File`。更多细节可以阅读本文 [文件](#文件) 部分。
-
-若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
 {% endblock %}
 
 
