@@ -1397,6 +1397,65 @@ NSDate *yesterday = [today dateByAddingTimeInterval: -86400.0];
 ```
 {% endblock %}
 
+{% block conversation_query_all_include_system %}
+```objc
+- (void)tomQueryAllConversationsIncludeSystem {
+    // Tom 创建了一个 client，用自己的名字作为 clientId
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+    // Tom 打开 client
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        // 查询 Tom 参与过的对话，即 m = Tom
+        AVIMConversationQuery *query1 = [[AVIMClient defaultClient] conversationQuery];
+        [query1 whereKey:@"m" equalTo:@"Tom"];
+
+        // 查询系统对话，即 sys = true
+        AVIMConversationQuery *query2 = [[AVIMClient defaultClient] conversationQuery];
+        [query2 whereKey:@"sys" equalTo:@(YES)];
+
+        // 将以上两个查询组合成一个查询
+        AVIMConversationQuery *query = [AVIMConversationQuery orQueryWithSubqueries:@[ query1, query2 ]];
+
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
+```
+{% endblock %}
+
+{% block conversation_query_active_between %}
+```objc
+- (void)tomQueryActiveConversationsBetween {
+    // Tom 创建了一个 client，用自己的名字作为 clientId
+    self.client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+    // Tom 打开 client
+    [self.client openWithCallback:^(BOOL succeeded, NSError *error) {
+        NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+        [dateFormatter setDateFormat:@"yyyy-MM-dd"];
+
+        // 查询最后一条消息的时间大于 2017-01-01 的对话
+        AVIMConversationQuery *query1 = [[AVIMClient defaultClient] conversationQuery];
+        [query1 whereKey:@"lm" greaterThan:[dateFormatter dateFromString:@"2017-01-01"]];
+
+        // 查询最后一条消息的时间小于 2017-02-01 的对话
+        AVIMConversationQuery *query2 = [[AVIMClient defaultClient] conversationQuery];
+        [query1 whereKey:@"lm" lessThan:[dateFormatter dateFromString:@"2017-02-01"]];
+
+        // 将以上两个查询组合成一个查询
+        AVIMConversationQuery *query = [AVIMConversationQuery andQueryWithSubqueries:@[ query1, query2 ]];
+
+        // 执行查询
+        [query findConversationsWithCallback:^(NSArray *objects, NSError *error) {
+            NSLog(@"找到 %ld 个对话！", [objects count]);
+        }];
+    }];
+}
+```
+{% endblock %}
+
 {% block conversation_query_count %}
 ```objc
 - (void)tomQueryConversationByCombination {
