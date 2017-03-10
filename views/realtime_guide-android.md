@@ -11,7 +11,7 @@
 {% block demo %}
 * [LeanMessage](https://github.com/leancloud/LeanMessage-Demo)（推荐）
 * [LeanChat](https://github.com/leancloud/leanchat-android)
-  {% endblock %}
+{% endblock %}
 
 {% block oneOnOneChat_sent %}
 {{ docs.alert("启用实时通信一定要正确配置 `AndroidManifest.xml`，请仔细阅读 [Android SDK 初始化配置](sdk_setup-android.html#初始化)。") }}
@@ -161,50 +161,53 @@ public void jerryReceiveMsgFromTom(){
 
 {% block groupChat_received %}
 ```
-public class MyApplication extends Application{
-  public void onCreate(){
-   ...
-   AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
-   //这里指定只处理AVIMTextMessage类型的消息
-   AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class,new CustomMessageHanlder());
+public class MyApplication extends Application {
+  public void onCreate() {
+    ...
+    AVOSCloud.initialize(this, "{{appid}}", "{{appkey}}");
+    //这里指定只处理AVIMTextMessage类型的消息
+    AVIMMessageManager.registerMessageHandler(AVIMTextMessage.class, new CustomMessageHanlder());
   }
 }
 
-- CustomMessageHandler.java
-public class CustomMessageHandler<AVIMTextMessage> implements AVIMTypedMessageHandler{
- 
+// =========================
+// CustomMessageHandler.java
+// =========================
+public class CustomMessageHandler < AVIMTextMessage > implements AVIMTypedMessageHandler {
+
   @Override
-  public void onMessage(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
-    Log.d("Tom & Jerry",msg.getText();)//你们在哪儿?
+  public void onMessage(AVIMTextMessage msg, AVIMConversation conv, AVIMClient client) {
+    Log.d("Tom & Jerry", msg.getText();) //你们在哪儿?
     // 收到消息之后一般的做法是做 UI 展现，示例代码在此处做消息回复，仅为了演示收到消息之后的操作，仅供参考。
     AVIMTextMessage reply = new AVIMTextMessage();
     reply.setText("Tom，我在 Jerry 家，你跟 Harry 什么时候过来？还有 William 和你在一起么？");
-    conv.sendMessage(reply,new AVIMConversationCallback(){
-  	   public void done(AVIMException e){
-  	     if(e==null){
-  	     //回复成功!
-  	     }
-  	   }
-  	 });
+    conv.sendMessage(reply, new AVIMConversationCallback() {
+      public void done(AVIMException e) {
+        if (e == null) {
+          //回复成功!
+        }
+      }
+    });
   }
-  
-public void onMessageReceipt(AVIMTextMessage msg,AVIMConversation conv,AVIMClient client){
-  
-}
+
+  public void onMessageReceipt(AVIMTextMessage msg, AVIMConversation conv, AVIMClient client) {
+
+  }
 }
 
-
-- SomeActivity.java
-public void loginAsBob(){
-	AVIMClient bob = AVIMClient.getInstance("Bob");
-	//Bob登录
-	bob.open(new AVIMClientCallback(){
-	  public void done(AVIMClient client,AVIMException e){
-	  	if(e==null){
-	  		//登录成功
-	  	}
-	  }
-	});
+// =================
+// SomeActivity.java
+// =================
+public void loginAsBob() {
+  AVIMClient bob = AVIMClient.getInstance("Bob");
+  //Bob登录
+  bob.open(new AVIMClientCallback() {
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        //登录成功
+      }
+    }
+  });
 }
 ```
 {% endblock %}
@@ -212,38 +215,38 @@ public void loginAsBob(){
 {% block imageMessage_local_sent %}
 
 ```
-public void sendImage(String filePath){
+public void sendImage(String filePath) {
   AVIMClient tom = AVIMClient.getInstance("Tom");
 
-  tom.open(new AVIMClientCallback(){
-  
+  tom.open(new AVIMClientCallback() {
+
     @Override
-    public void done(AVIMClient client,AVIMException e){
-      if(e==null){
-      //登录成功
-      // 创建对话，默认创建者是在包含在成员列表中的
-      client.createConversation(Arrays.asList("Jerry"),new AVIMConversationCreatedCallback(){
-      
-        @Override
-        public void done(AVIMConversation conv,AVIMException e){
-          if(e==null){
-            AVIMImageMessage picture = new AVIMImageMessage(filePath);
-            picture.setText("发自我的小米");
-            Map<String,Object> attributes = new HashMap<String,Object>();
-            attributes.put("location","旧金山");
-            picture.setAttribute(attributes);
-            conv.sendMessage(picture,new AVIMConversationCallback(){
-              
-              @Override
-              public void done(AVIMException e){
-                if(e==null){
-                //发送成功！
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        //登录成功
+        // 创建对话，默认创建者是在包含在成员列表中的
+        client.createConversation(Arrays.asList("Jerry"), new AVIMConversationCreatedCallback() {
+
+          @Override
+          public void done(AVIMConversation conv, AVIMException e) {
+            if (e == null) {
+              AVIMImageMessage picture = new AVIMImageMessage(filePath);
+              picture.setText("发自我的小米");
+              Map < String, Object > attributes = new HashMap < String, Object > ();
+              attributes.put("location", "旧金山");
+              picture.setAttribute(attributes);
+              conv.sendMessage(picture, new AVIMConversationCallback() {
+
+                @Override
+                public void done(AVIMException e) {
+                  if (e == null) {
+                    //发送成功！
+                  }
                 }
-              }
-            });
+              });
+            }
           }
-        }
-      });
+        });
       }
     }
   });
