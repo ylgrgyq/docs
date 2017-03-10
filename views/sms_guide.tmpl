@@ -166,6 +166,9 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 通过短信模板，我们可以自定义短信的内容。因为短信模板是由开发者自己定义的，因此为了确保平台的安全以及稳定，我们的短信模板由**专人进行审核**，只有**通过审核**之后，在接口里的调用才会成功发送。
 
+<!-- ### 短信签名 -->
+{{ sms.signature("### 短信签名") }}
+
 ### 创建模板
 
 创建模板的截图如下：
@@ -182,13 +185,47 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 ### 使用模板
 
-假设提交的短信模板名称为 `Notice_Welcome`，当模板通过审批后就可以调用了：
+#### 验证码类型
+验证码类型有两种，一种针对 _User 表中 `mobilePhoneNumber` 字段的验证，另一种是业务场景中敏感操作的验证，这两种都在上文中有介绍：[验证类](sms_guide-objc.html#验证类)
+
+#### 通知类型
+
+假设提交的短信模板的类型为「通知类」内容如下，
+
+{% call docs.bubbleWrap() -%}
+尊敬的的用户, 您的订单号：{{ docs.mustache("order_id") }} 正在派送，请保持手机畅通，我们的快递员随时可能与您联系，感谢您的订阅。 
+{% endcall %}
+
+并且模板名称为 `Order_Notice`，并且为这个模板关联了一个签名叫做「天天商城」，当模板通过审批后就可以调用如下代码发送这条通知类的短信：
 
 {% block send_sms_by_template %}{% endblock %}
 
+用户收到的内容如下：
+
+{% call docs.bubbleWrap() -%}
+【天天商城】尊敬的天天商城的用户, 您的订单号：7623432424540 正在派送，请保持手机畅通，我们的快递员随时可能与您联系，感谢您的订阅。
+{% endcall %}
+
+#### 营销类型
+
+假设提交短信的模板类型为 「营销类」内容如下：
+
+{% call docs.bubbleWrap() -%}
+服装专区，新款上市，奥斯卡红毯同款全面上架，详情可以访问天天商城唯一官方网址：www.buybuybuy.com。 
+{% endcall %}
+
+并且模板名称为 `New_Series`，同时也为这个模板关联了一个签名叫做「天天商城」，当模板通过审批后就可以调用如下代码发送这条营销类的短信：
+
+{% block send_marketing_by_template %}{% endblock %}
+
+用户收到的内容如下：
+
+{% call docs.bubbleWrap() -%}
+【天天商城】服装专区，新款上市，奥斯卡红毯同款全面上架，详情可以访问天天商城唯一官方网址：www.buybuybuy.com。
+{% endcall %}
 ### 模板变量
 
-模板可以使用<u>自定义变量</u>，如上例中的 {{ docs.mustache("service_name") }} 和 {{ docs.mustache("order_id") }}，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
+模板可以使用<u>自定义变量</u>，如上例中的 {{ docs.mustache("order_id") }}，在调用模板时以参数形式传入。模板语法遵循 [Handlebars](http://handlebarsjs.com) 规范。
 
 {{ docs.alert("自定义变量的值不允许包含实心括号 `【】` 。") }}
 
@@ -199,7 +236,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 {% endcall %}
 
 - `name`：应用名称
-- `code`：验证码
+- `code`：验证码（通知类和营销类不会包含）
 - `ttl`：过期时间（默认为 10 分钟）
 
 ## 模板规范
@@ -211,9 +248,6 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 {% call docs.bubbleWrap() -%}
 XX房东您好，租客{{ docs.mustache("guest_name") }}（手机号码：{{ docs.mustache("guest_phone") }}）于{{ docs.mustache("payment_create_time") }}向您支付了房租。租金为{{ docs.mustache("rent_price") }}元，房屋地址在{{ docs.mustache("rent_addr") }}。请关注微信公众号：XX租房。XX租房APP下载地址：http://example.com/download.html
 {% endcall %}
-
-<!-- ### 短信签名 -->
-{{ sms.signature("### 短信签名") }}
 
 ### 链接
 
@@ -270,6 +304,11 @@ XX房东您好，租客{{ docs.mustache("guest_name") }}（手机号码：{{ doc
 注意：应用的下载链接必须是明文，不可设置为参数。
 
 {% block sms_demo %}{% endblock %}
+
+
+## 安全问题
+我们强烈要求开发者在用户界面上针对短信发送做操作限制，例如手机号的验证功能应该是客户端在 1 分钟之内只允许发送一次，尽管我们的服务端做了必要的安全措施来保证开发者的权益，但是不排除有被恶意攻击的可能性。
+因此我们强烈要求开发者一定要阅读如下链接里的内容：[短信轰炸](rest_sms_api.html#短信轰炸)
 
 ## 常见问题
 
