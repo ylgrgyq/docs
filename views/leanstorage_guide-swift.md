@@ -554,6 +554,9 @@ let null       : LCNull       = LCNull()
 若想了解更多有关 LeanStorage 如何解析处理数据的信息，请查看专题文档《[数据与安全](./data_security.html)》。
 {% endblock %}
 
+{% block section_dataType_largeData %}
+{% endblock %}
+
 {% block text_LCType_convert %}
 #### LCString
 `LCString` 是 `String` 类型的封装，它与 `String` 相互转化的代码如下：
