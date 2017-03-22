@@ -280,7 +280,7 @@ angular.module('app').filter('signify', ['md5',function (md5) {
       if ( type === 'master' ){
         suffix = ',master';
       }
-      return md5.hex_md5(ts + item) + ',' + ts + suffix;
+      return md5(ts + item) + ',' + ts + suffix;
     };
 }]);
 
