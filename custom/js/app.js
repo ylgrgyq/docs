@@ -8,8 +8,6 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.appid = "{{appid}}";
         $scope.appkey = "{{appkey}}";
         $scope.masterkey = "{{masterkey}}";
-        $scope.sign_masterkey = "{{masterkey | signify:'master'}}";
-        $scope.sign_appkey = "{{appkey | signify}}";
         $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){
