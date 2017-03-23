@@ -97,7 +97,7 @@ REST API 可以让你用任何支持发送 HTTP 请求的设备来与 LeanCloud 
     </tr>
     <tr>
       <td>/1.1/login</td>
-      <td>GET</td>
+      <td>POST</td>
       <td>用户登录</td>
     </tr>
     <tr>
