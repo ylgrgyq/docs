@@ -436,23 +436,23 @@ $ lean search 云引擎 命令行
 
 ### 自定义命令
 
-有时候，我们会有需求来扩展命令行工具，来方便对某个应用进行特定并且频繁的操作，比如查看当前应用 `_User` 表条目的总数。这时可以考虑使用命令行工具的自定义命令来实现。
+有时我们需要对某个应用进行特定并且频繁的操作，比如查看应用 `_User` 表的记录总数，这样可以使用命令行工具的自定义命令来实现。
 
-只要在当前系统的 `PATH` 环境变量中，有一个 `lean-` 开头的可执行文件，比如 `lean-usercount`，那么执行 `$ lean usercount` 的时候，命令行工具就会自动调用这个命令。与直接执行 `$ lean-usercount` 不同的是，在这个命令中可以获取到额外的关于当前应用的环境变量，方便访问对应的数据。
+只要在当前系统的 `PATH` 环境变量中存在一个以 `lean-` 开头的可执行文件，比如 `lean-usercount`，那么执行 `$ lean usercount`，命令行工具就会自动调用这个可执行文件。与直接执行 `$ lean-usercount` 不同的是，这个命令可以获取与应用相关的环境变量，方便访问对应的数据。
 
-额外的环境变量有：
+相关的环境变量有：
 
 环境变量名 | 描述
 ---|---
 `LEANCLOUD_APP_ID`| 当前应用的 app id
-`LEANCLOUD_APP_KEY` | 当前用用的 app key
+`LEANCLOUD_APP_KEY` | 当前应用的 app key
 `LEANCLOUD_APP_MASTER_KEY` | 当前应用的 master key
 `LEANCLOUD_APP_HOOK_KEY` | 当前应用的 hook key
 `LEANCLOUD_APP_PORT` | 使用 `$ lean up` 启动应用时，默认的端口
 `LEANCLOUD_API_SERVER` | 当前应用对应 API 服务的 host
-`LEANCLOUD_REGION` | 当前应用对应区域信息，可能的值有 `cn`/`us`/`tab`
+`LEANCLOUD_REGION` | 当前应用对应区域信息，可能的值有 `cn`、`us`、`tab`
 
-这时如果我们把如下脚本放到当前系统的 `PATH` 环境变量中（比如 `/usr/local/bin`）：
+例如将如下脚本放到当前系统的 `PATH` 环境变量中（比如 `/usr/local/bin`）：
 
 ```python
 #! /bin/env python
@@ -468,7 +468,7 @@ leancloud.init(app_id, master_key=master_key)
 print(leancloud.User.query.count())
 ```
 
-同时赋予这个脚本可执行权限 `$ chmod +x /usr/local/bin/lean-usercount`，然后执行 `$ lean usercount`，就可以看到当前应用对应的 `_User` 表条目总数了。
+同时赋予这个脚本可执行权限 `$ chmod +x /usr/local/bin/lean-usercount`，然后执行 `$ lean usercount`，就可以看到当前应用对应的 `_User` 表中记录总数了。
 
 ## 贡献
 
