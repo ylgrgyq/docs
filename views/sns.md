@@ -35,6 +35,7 @@ pod 'LeanCloudSocial'  # 静态库方式引入，依赖 AVOSCloud 库
 你需要做的很简单，以新浪微博为例：
 
 ```objc
+// 添加至 application:didFinishLaunchingWithOptions: 方法中，放在 [AVOSCloud setApplicationId:clientKey:] 之后
 [AVOSCloudSNS setupPlatform:AVOSCloudSNSSinaWeibo withAppKey:@"<WEIBO-APP-ID>" andAppSecret:@"<WEIBO-APP-KEY>" andRedirectURI:@""];
 
 [AVOSCloudSNS loginWithCallback:^(id object, NSError *error) {
