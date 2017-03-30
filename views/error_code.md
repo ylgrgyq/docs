@@ -383,6 +383,11 @@
 * 信息 - `complete a TCP connection to the upstream server, but did not receive a timely HTTP response.`
 * 含义 -  Web 服务器与后端应用服务器通讯失败，一般是某个应用服务器异常，Web 服务器会在几秒后移除此实例。如果频繁遇到 524，请联系我们处理。
 
+## 529
+
+* 信息 - `Exceeded Limit`
+* 含义 -  当前 IP 超过并发限制。使用云引擎时遇到 http 响应码为 529 的错误页面，解决方案请参考 [Exceeded Limit](leanengine_faq.html#Exceeded_Limit)。
+
 {% if node != 'qcloud' and node != 'us' %}
 ## 600
 
