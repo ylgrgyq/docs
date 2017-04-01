@@ -424,7 +424,9 @@ public void CreatePrivateConversation()
 
 上述代码跟刘备创建「桃园」时的区别只有一个，刘备传入的是关羽和张飞两个人的 client Id  作为一个集合参数，曹操传入的是程昱一人的 client Id，因此本质上我们依然只能通过成员数量来判断是群聊还是单聊。
 
-{ { docs.note("为了日后更好区分单聊和私聊，我们推荐开发者在创建对话的时候给对话赋予一个自定义的属性，来标记这个对话的类型。" } }
+{% call docs.noteWrap() -%}
+为了日后更好区分单聊和私聊，我们推荐开发者在创建对话的时候给对话赋予一个自定义的属性，来标记这个对话的类型。
+{%- endcall %}
 
 ```cs
 caocao.CreateConversationAsync(member: "2002",
