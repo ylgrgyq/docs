@@ -249,7 +249,7 @@ self.client = [[AVIMClient alloc] init];
             // Tom 发了一首歌曲给 Jerry
             NSString *path = [[NSBundle mainBundle] pathForResource:@"忐忑" ofType:@"mp3"];
             AVFile *file = [AVFile fileWithName:@"忐忑.mp3" contentsAtPath:path];
-            AVIMImageMessage *message = [AVIMImageMessage messageWithText:@"听听人类的神曲~" file:file attributes:nil];
+            AVIMAudioMessage *message = [AVIMAudioMessage messageWithText:@"听听人类的神曲~" file:file attributes:nil];
             [conversation sendMessage:message callback:^(BOOL succeeded, NSError *error) {
                 if (succeeded) {
                     NSLog(@"发送成功！");
