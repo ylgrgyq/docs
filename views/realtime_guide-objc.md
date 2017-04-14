@@ -484,6 +484,60 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 ```
 {% endblock %}
 
+#### 消息已读回执
+
+要实现消息已读回执，请按照以下步骤进行设置。
+
+假设 Tom 和 Jerry 聊天，Tom 想知道 Jerry 阅读了 Tom 发的消息。
+
+1. 首先，Tom 和 Jerry 都要开启「未读消息」，即在 SDK 初始化语句后面加上：
+
+```objc
+[AVIMClient setUserOptions:@{
+    AVIMUserOptionUseUnread: @(YES)
+}];
+```
+
+2. Tom 获取到与 Jerry 的对话后，使用 KVO 观察对话的 `lastReadAt` 属性：
+
+```objc
+[conversation addObserver:observer forKeyPath:@"lastReadAt" options:NSKeyValueObservingOptionNew context:nil];
+```
+
+当 Jerry 阅读完消息后，服务端将会把阅读事件回执给 Tom，Tom 将会观察到 `lastReadAt` 属性发生变化。
+
+3. Tom 向 Jerry 发送一条消息，并设置为「需要回执」，也就是将消息发送选项的 `receipt` 字段设置为 `YES`：
+
+```objc
+AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
+option.receipt = YES; /* 将消息设置为需要回执。 */
+
+AVIMTextMessage *message = [AVIMTextMessage messageWithText:@"Hello, Jerry!" attributes:nil];
+
+[conversaiton sendMessage:message option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
+    if (!error) {
+        /* 发送成功 */
+    }
+}];
+```
+
+4. Jerry 收到 Tom 发的消息后，调用对话的 `readInBackground` 方法把「对话中最近的消息」标记为已读：
+
+```objc
+[conversation readInBackground];
+```
+
+5. Jerry 读完消息后，Tom 将收到一个消息已读回执。此时对话的 `lastReadAt` 属性会改变。由于 Tom 之前对该属性进行了观察，`observer` 将会捕捉到这个变化：
+
+```objc
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"lastReadAt"]) {
+        NSDate *lastReadAt = change[NSKeyValueChangeNewKey];
+        /* Jerry 阅读了你的消息。可以使用 lastReadAt 更新 UI，例如把时间戳小于 lastReadAt 的消息都标记为已读。 */
+    }
+}
+```
+
 {% block message_received_ack %}{% endblock %}
 
 {% block messagePolicy_received_intro %}{% endblock %}
@@ -497,22 +551,18 @@ typedef NS_ENUM(NSInteger, YourCustomMessageType) {
 }];
 ```
 
-然后使用代理方法 `conversation:didReceiveUnread:` 来从服务端取回未读消息：
+然后使用 KVO 观察对话的 `unreadMessagesCount` 属性：
 
 ```objc
-- (void)conversation:(AVIMConversation *)conversation didReceiveUnread:(NSInteger)unread {
-  // unread 是未读消息数量，conversation 为所属的会话
-  // 没有未读消息就跳过
-  if (unread <= 0) return;
-  
-  // 否则从服务端取回未读消息
-  [conversation queryMessagesFromServerWithLimit:unread callback:^(NSArray *objects, NSError *error) {
-    if (!error && objects.count) {
-      // 显示消息或进行其他处理 
+- (void)viewDidLoad {
+    [conversation addObserver:observer forKeyPath:@"unreadMessagesCount" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
+    if ([keyPath isEqualToString:@"unreadMessagesCount"]) {
+        NSUInteger unreadMessagesCount = [change[NSKeyValueChangeNewKey] unsignedIntegerValue];
+        /* 有未读消息产生，请更新 UI，或者拉取对话。 */
     }
-  }];
-  // 将这些消息标记为已读 
-  [conversation markAsReadInBackground];
 }
 ```
 {% endblock %}
