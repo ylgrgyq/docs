@@ -63,13 +63,13 @@ pip install -r requirements.txt
 
 ### 指定 Python 版本
 
-你可以选择运行代码的 Python 版本。选择方法与 [pyenv](https://github.com/pyenv/pyenv) 相同，在项目根目录的 `.python-version` 中写入需要的 Python 版本即可，比如 `3.6.1`。这样将代码部署到云引擎之后，会自动根据此内容选择对应的 Python 版本。
+你可以选择运行代码的 Python 版本，选择方法与 [pyenv](https://github.com/pyenv/pyenv) 相同，即在项目根目录的 `.python-version` 中写入需要的 Python 版本即可，比如 `3.6.1`。这样将代码部署到云引擎之后，系统会自动选择对应的 Python 版本。
 
-如果在本地开发时，也已经使用了 pyenv，pyenv 也会根据此文件来自动使用对应的 Python 运行项目，因此建议本地开发时，也使用 pyenv，来保证本地环境与线上相同。pyenv 的安装方法请参考[官方网站](https://github.com/pyenv/pyenv)。
+如果在本地开发时已使用了 pyenv，pyenv 也会根据此文件来自动使用对应的 Python 运行项目。我们建议本地开发使用 pyenv，以保证本地环境与线上相同。pyenv 的安装方法请参考 [pyenv 官方网站](https://github.com/pyenv/pyenv)。
 
-目前仅支持 CPython 版本，暂时不支持 pypy / jython / iron python 等其他 Python 实现。另外建议尽量使用 3.5 或以上版本的 Python 进行开发，如果仍然在使用 Python2 ，请使用 Python2.7 进行开发。
+目前仅支持 CPython 版本，暂时不支持 pypy、jython、iron python 等其他 Python 实现。另外建议尽量使用 3.5 或以上版本的 Python 进行开发，如果仍然在使用 Python2 ，请使用 Python2.7 进行开发。
 
-在之前版本的云引擎中，也可以在项目根目录的 `runtime.txt` 中填写 `python-3.5` 或者 `python-2.7` 来指定 Python 版本。如果当前项目仍然在使用此方法，建议升级到上面的方式来指定。
+{{ docs.note("在之前版本的云引擎中，你可以在项目根目录的 `runtime.txt` 中填写 `python-3.5` 或者 `python-2.7` 来指定 Python 版本。如果当前项目仍然在使用此方法，建议使用上面介绍的方式来指定。") }}
 
 {% endblock %}
 
