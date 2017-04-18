@@ -1180,7 +1180,6 @@ public void QueryMessageHistory()
     });
 }
 ```
-
 要实现翻页效果需要额外传入其他参数：
 
 参数名|类型|说明|用法
@@ -1271,6 +1270,102 @@ var realtime = new AVRealtime(config);
 按照以上步骤就能实现云引擎对聊天签名鉴权的操作。
 
 开发者可以使用云引擎的云函数来实现自己的鉴权逻辑——谁可以加入对话、谁可以踢人加人，都由云函数返回的签名是否正确来判断，如果允许就返回一个符合算法的签名，LeanCloud 云端经过比对签名就可以放行，而开发者的云函数返回了一个错误签名时，比如随便一个字符串「no!」，这样 SDK 会带着这个签名去 LeanCloud 云端请求，云端发现签名不匹配便会拒绝这次请求。
+
+
+### 游戏中常见的鉴权和 LeanCloud 签名结合
+根据开发者反馈，游戏中常见的鉴权流程如下：
+
+1. 玩家登录到游戏的鉴权服务器，鉴权服务器下发的是这个玩家在游戏内很多子系统的鉴权信息甚至是会下发真正的游戏服务器的地址
+2. 然后玩家登录到游戏服务器，直到玩家下线之前，玩家是不会再去与其他服务器进行交互的
+
+而在 LeanCloud 标准的签名流程中，每一次登录到聊天服务器或者创建对话以及查询聊天记录的时候都需要去真正地请求一下服务器的接口返回一个实时的签名，为了提高游戏开发者的体验，我们建议您可以用如下步骤结合当前游戏的鉴权逻辑和 LeanCloud 签名鉴权：
+
+1. 玩家登录到鉴权服务器之后，统一下发该玩家的如下登录签名(`CreateConnectSignature`)，保存全局的一个静态变量中
+2. 然后在签名工厂里面实现 `CreateConnectSignature` 就直接返回这个值即可
+
+其余三个操作 「创建对话签名」 和 「对话人员操作签名」都在运行需要传入动态的参数，因而必须要求每一次都是实时的获取签名才能确保整个操作的安全性，因此还是建议开发者使用我们的云引擎进行签名。
+
+
+## 对话的管理
+对话的相关数据会被持久化的存储在 LeanCloud 云端，因此许多开发者会在自己的游戏内部维护一个玩家和频道的多对多关系，因此对话本身也支持这种模式，对话中有一个属性叫做 `Members` 这个属性保存了当前对话的所有参数与的 `Client Id`，因此开发者可以很方便地使用 `AVIMConversationQuery` 来查询当前 `Client Id` 所在的对话，例如如下代码：
+
+```cs
+AVIMClient guanyu = null;
+// 以关羽的游戏 ID 1002 作为 client Id 构建 AVIMClient
+avRealtime.CreateClient("1002").ContinueWith(t =>
+{
+    guanyu = t.Result;
+}).ContinueWith(s =>
+{
+    // 监听自己被邀请加入对话
+    guanyu.OnInvited += Guanyu_OnInvited;
+    // 监听接收消息
+    guanyu.OnMessageReceived += Guanyu_OnMessageReceived;
+    // 构建对话的查询
+    var query = guanyu.GetQuery();
+    // 查询我所在的对话列表，默认返回的是最近活跃的 20 个，这个数量可以更改，最大支持 1000
+    return query.FindAsync();
+}).Unwrap().ContinueWith(x => 
+{
+    // 从对话列表中找出「桃园」 这个对话
+    AVIMConversation TaoYuanConversation = null;
+    var conversationList = x.Result;
+    // 搜索「桃园」这个对话 
+    TaoYuanConversation = conversationList.First(conversation => conversation.Name == "桃园");
+    // 同样的，关羽也创建一个文本消息
+    var textMessage = new AVIMTextMessage("大哥，我在郊外打猎，三弟昨晚喝多了，他还在睡，要不你到城外，我们一起骑马打猎啊？");
+    return TaoYuanConversation.SendMessageAsync(textMessage);
+});
+```
+这段代码在前文出现过，在这里主要要注意如下两行代码：
+
+```cs
+var query = guanyu.GetQuery();
+// 查询我所在的对话列表，默认返回的是最近活跃的 20 个，这个数量可以更改，最大支持 1000
+return query.FindAsync();
+```
+
+但是这个查询仅仅是一个默认的方式是通过针对 `_Conversation` 表里面的 `m`（客户端 SDK 显示为 `Members`） 字段进行匹配查找的，一旦一个对话的成员太多，必然会造成性能的瓶颈。
+换言之，对话的成员设计成一个数组存储仅仅是为了在发送消息的时候，服务端可以方便的遍历每一位成员然后进行消息的送达，因此我们强烈建议游戏开发者在自己的数据模型中管理玩家和对话之间的关系。
+
+例如开发者可以用如下 3 张关系表来实现自己的数据关联。
+
+### Player
+玩家表的设计如下：
+
+id|name
+--|--
+1001|刘备
+1002|关羽
+1003|张飞
+2001|曹操
+2002|程昱
+...|...
+
+### Channel
+频道表设计如下：
+
+id|name|lcConversationId
+--|--|--
+c0000001|世界|58f06ec42e9af6631e140de7
+c0000002|桃园|58d4c2472e9af6631e10092f
+c0000003|曹操与程昱私聊|58d9d5012e9af6631e10e551
+c0000004|孙刘讨贼大联盟|58dca69e2e9af6631e113d8a
+...|...
+
+`lcConversationId` 对应的是 `_Conversation` 表的 `objectId`。
+
+### Player - Channel
+
+id|playerId|channelId
+--|--|--
+..|1001|c0000002
+..|1002|c0000002
+..|1003|c0000002
+..|2001|c0000003
+..|2002|c0000003
+
+开发者可以在自己的数据库用 `Player - Channel` 这张关系表来管理玩家和频道之间的关系。
 
 
 ## 常见问题
