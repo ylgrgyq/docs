@@ -225,6 +225,7 @@ if (NODE_ENV === 'development') {
   // 当前环境为「预备环境」
 }
 ```
+{{ docs.alert("`NODE_ENV` 是保留的系统变量，如生产环境下值为 production，预备环境下值为 staging，开发者无法通过自定义环境变量将其值覆盖。") }}
 {% endblock %}
 
 {% block cookie_session %}
