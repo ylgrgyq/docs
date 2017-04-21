@@ -195,7 +195,9 @@ git push -u origin master
 
 {% block code_calling_custom_variables %}{% endblock %}
 
-**注意**：云引擎运行环境默认提供的环境变量无法被自定义环境变量覆盖（覆盖无效）。
+{% call docs.alertWrap() %}
+云引擎运行环境默认提供的环境变量{% if platformName | lower == 'node.js' %}（以及 Node.js 环境变量 `NODE_ENV`）{% endif %}，无法被自定义环境变量覆盖（覆盖无效）。
+{% endcall %}
 
 ### 日志
 
