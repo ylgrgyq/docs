@@ -180,6 +180,15 @@ require('http').createServer(function(req, res) {
   }
 }).listen(process.env.LEANCLOUD_APP_PORT);
 ```
+
+### 路由超时设置
+
+通过以上框架实现的自定义路由，默认超时为 15 秒，该值可以在 `app.js` 中进行调整：
+
+```js
+// 设置默认超时时间
+app.use(timeout('15s'));
+```
 {% endblock %}
 
 {% block use_leanstorage %}
