@@ -23,7 +23,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 
 ## 短信服务配置
 
-从应用级别来控制能否发送短信，进入 {% if node=='qcloud' %}**控制台** > **设置** > **安全中心**{% else %}[控制台 > 设置 > **安全中心**](/app.html?appid={{appid}}#/security){% endif %}，设置 **短信发送** 开关。
+从应用级别来控制能否发送短信，进入 {% if node=='qcloud' %}**控制台** > **设置** > **安全中心**{% else %}[控制台 > 设置 > **安全中心**](/app.html?appid={{appid}}#/security){% endif %}，打开 **短信发送** 开关。
 
 然后点击 {% if node=='qcloud' %}**应用选项**{% else %}[应用选项](/app.html?appid={{appid}}#/permission){% endif %}，查看与短信相关选项。当开启 **安全中心** > **短信发送** 服务之后，以下打勾的选项会被默认开启：
 
