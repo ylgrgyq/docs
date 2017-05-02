@@ -73,7 +73,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 - 小于或等于 70 个字，按一条计费。
 - 大于 70 个字，按每 67 字一条计费。
 
-状态为「等待回执」的短信不会收费计入账单。每条短信的收费标准请参考 [官网价格方案](/pricing)。
+只有「调用失败」不收费，「投递失败」也要收费。每条短信的收费标准请参考 [官网价格方案](/pricing)。
 
 ### 短信购买
 
@@ -109,7 +109,7 @@ LeanCloud 短信服务支持的应用场景有以下三种：
                                 timeToLive:10
                                 callback:^(BOOL succeeded, NSError *error) {
                                     if (succeeded) {
-                                        // 发送成功
+                                        // 调用成功
                                         //短信格式类似于：
                                         //您正在{某应用}中进行{具体操作名称}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
                                     }
@@ -134,9 +134,9 @@ AV.Cloud.requestSmsCode({
     op: '某种操作',
     ttl: 10
 }).then(function(){
-    //发送成功
+    //调用成功
 }, function(err){
-    //发送失败
+    //调用失败
 });
 ```
 
@@ -257,7 +257,7 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 ```objc
 [AVUser requestMobilePhoneVerify:@"18612345678" withBlock:^(BOOL succeeded, NSError *error) {
 if(succeeded){
-    //发送成功
+    //调用成功
 }
 }];
 ```
@@ -266,7 +266,7 @@ AVUser.requestMobilePhoneVerifyInBackground("13800000000", new RequestMobileCode
     @Override
     public void done(AVException e) {
         if(e == null){
-            // 发送成功
+            // 调用成功
         } else {
             Log.d("SMS", "Send failed!");
         }
@@ -275,9 +275,9 @@ AVUser.requestMobilePhoneVerifyInBackground("13800000000", new RequestMobileCode
 ```
 ```javascript
 AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
-    //发送成功
+    //调用成功
 }, function(err){
-    //发送失败
+    //调用失败
 });
 ```
 2. **调用验证接口，验证用户输入的纯数字的验证码。**  
@@ -404,9 +404,9 @@ mobilePhoneNumber: '186xxxxxxxx',
 template: 'Order_Notice',
 sign:'sign_BuyBuyBuy'
 order_id: '7623432424540'}).then(function(){
-      //发送成功
+      //调用成功
     }, function(err){
-      //发送失败
+      //调用失败
 });
 ```
 ```cs
@@ -417,7 +417,7 @@ var env = new Dictionary<string,object>()
 AVCloud.RequestSMSCodeAsync("186xxxxxxxx","Order_Notice",env,"sign_BuyBuyBuy").ContinueWith(t =>
 {
     var result = t.Result;
-    // result 为 True 则表示发送成功
+    // result 为 True 则表示调用成功
 });
 ```
 用户收到的内容如下：
@@ -467,16 +467,16 @@ AV.Cloud.requestSmsCode({
     template: 'New_Series',
     sign:'sign_BuyBuyBuy'
 }).then(function(){
-    //发送成功
+    //调用成功
 }, function(err){
-    //发送失败
+    //调用失败
 });
 ```
 ```cs
 AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").ContinueWith(t =>
 {
     var result = t.Result;
-    // result 为 True 则表示发送成功
+    // result 为 True 则表示调用成功
 });
 ```
 用户收到的内容如下：
@@ -587,9 +587,9 @@ AV.Cloud.requestSmsCode({
 }，{
     validateToken:'上一步返回的 validate_token'
 }).then(function(){
-    //发送成功
+    //调用成功
 }, function(err){
-    //发送失败
+    //调用失败
 });
 ```
 ```cs
@@ -599,7 +599,7 @@ AV.Cloud.requestSmsCode({
 AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy","上一步返回的 validate_token").ContinueWith(t =>
 {
     var result = t.Result;
-    // result 为 True 则表示发送成功
+    // result 为 True 则表示调用成功
 });
 ```
 
