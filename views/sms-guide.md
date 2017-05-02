@@ -506,6 +506,8 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 
 开发者需要在控制台 -> 应用选项 -> 开启图形验证码的功能。
 
+{{ docs.note("如果开启这个选项之后，所有主动调用发送短信的接口都会强制进行图形验证码验证，否则会直接返回调用错误）。") }}
+
 开启之后，调用发送短信的接口流程就需要作出调整。具体时序图如下：
 
 ![sms_captcha_workflow](images/sms_captcha_workflow.svg)
