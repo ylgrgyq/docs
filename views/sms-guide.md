@@ -101,22 +101,21 @@ LeanCloud 短信服务支持的应用场景有以下三种：
   
 2. **调用接口发送验证短信**  
   注意，在这一步之前，我们假设当前用户已经设置过了手机号，所以推荐这类应用在注册环节，尽量要求用户以手机号作为用户名，否则到了支付界面，还需要用户在首次购买时输入一次手机号。
-
 ```objc
 [AVOSCloud requestSmsCodeWithPhoneNumber:@"13613613613"
-                                appName:@"某应用"
-                                operation:@"具体操作名称"
+                                appName:@"应用名称"
+                                operation:@"某种操作"
                                 timeToLive:10
                                 callback:^(BOOL succeeded, NSError *error) {
                                     if (succeeded) {
                                         // 调用成功
                                         //短信格式类似于：
-                                        //您正在{某应用}中进行{具体操作名称}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
+                                        //您正在{应用名称}中进行{某种操作}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
                                     }
                                 }];
 ```
 ```java
-AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(), "某应用", "具体操作名称", 10, new RequestMobileCodeCallback() {
+AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(), "应用名称", "某种操作", 10, new RequestMobileCodeCallback() {
     @Override
     public void done(AVException e) {
         if (e == null) {
@@ -127,7 +126,7 @@ AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumbe
     }
 });
 ```
-```js
+```javascript
 AV.Cloud.requestSmsCode({
     mobilePhoneNumber: '186xxxxxxxx',
     name: '应用名称',
@@ -139,11 +138,21 @@ AV.Cloud.requestSmsCode({
     //调用失败
 });
 ```
+```cs
+AVCloud.RequestSMSCodeAsync("186xxxxxxxx","应用名称","某种操作",10).ContinueWith(t =>
+{
+    if(!t.Result)
+    {
+        //调用成功
+    }
+});
+```
 
 3. **用户收到短信，并且输入了验证码。**  
   在进行下一步之前，我们依然建议先进行客户端验证，这样就避免了错误的验证码被服务端驳回而产生的流量，以及与服务端沟通的时间，有助于提升用户体验。
   
 4. **调用接口验证用户输入的验证码是否有效。**  
+  注意，调用时需要确保验证码和手机号的参数顺序。
 ```objc
 [AVOSCloud verifySmsCode:@"123456" mobilePhoneNumber:@"18612345678" callback:^(BOOL succeeded, NSError *error) {
     if(succeeded){
@@ -170,6 +179,14 @@ AV.Cloud.requestSmsCode({
         //验证失败
   });
 ```
+```cs
+AVCloud.VerifySmsCodeAsync("6位数字验证码","11 位手机号码").ContinueWith(t =>{
+    if(t.Result) 
+    {
+        // 验证成功
+    }
+});
+```
 针对上述的需求，可以把场景换成异地登录验证、修改个人敏感信息验证等一些常见的场景，步骤是类似的，调用的接口也是一样的，仅仅是在做 UI 展现的时候需要开发者自己去优化验证过程。
 
 ### 注册验证
@@ -180,7 +197,6 @@ AV.Cloud.requestSmsCode({
   引导用户正确的输入，建议在调用 SDK 接口之前，验证一下手机号的格式。
 
 2. **调用 AVUser 的注册接口，传入手机号以及密码。**  
-
 ```objc
 AVUser *user = [AVUser user];
 user.username = @"hjiang";
@@ -195,10 +211,8 @@ AVUser user = new AVUser();
 user.setUsername("hjiang");
 user.setPassword("f32@ds*@&dsa");
 user.setEmail("hang@leancloud.rocks");
-
 // 其他属性可以像其他AVObject对象一样使用put方法添加
 user.put("mobilePhoneNumber", "186-1234-0000");
-
 user.signUpInBackground(new SignUpCallback() {
     public void done(AVException e) {
         if (e == null) {
@@ -216,12 +230,23 @@ user.set("password", "123456");
 user.setMobilePhoneNumber('186xxxxxxxx');
 user.signUp(null, ……)
 ```
+```cs
+var user = new AVUser();
+user.Username = "hjiang";
+user.Password = "123456ZXCV";
+user.MobilePhoneNumber = "186xxxxxxxx";
+user.SignUpAsync().ContinueWith(t =>
+{
+    // 注册成功之后云端会自动发送验证短信
+});
+```
+
 3. **云端发送手机验证码，并且返回注册成功**。但是此时用户的 `mobilePhoneVerified` 依然是 `false`，客户端需要引导用户去输入验证码。   
   
 4. **用户再一次输入验证码**  
   最好验证一下是否为纯数字。
   
-5. **调用验证接口，检查用户输入的纯数字验证码是否合法。** 
+5. **调用验证接口，检查用户输入的纯数字验证码是否合法。**
 ```objc
 [AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
     //验证结果
@@ -246,6 +271,16 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 //验证失败
 });
 ```
+```cs
+AVUser.VerifyMobilePhoneAsync("6位数字验证码", "186xxxxxxxx").ContinueWith(t =>
+    {
+        if (t.Result)
+        {
+            // 验证成功
+        }
+    });
+```
+
 以上是一个通用的带有手机号验证的注册过程。开发者可以根据需求增加或减少步骤，但是推荐开发者在使用该功能时，首先明确是否需要勾选「验证注册用户手机号码」。因为一旦勾选，只要调用了 AVUser 相关的注册账号，并传入手机号，云端就会自动发送短信验证码。
 
 {{ docs.note("注意：只有使用了 LeanCloud 内建账户系统的应用才能使用这一功能。") }}
@@ -253,7 +288,6 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 另外，假如注册的时候并没有强制用户验证手机号，而是在用户使用某一个功能的时候，要求用户验证手机号，也可以调用接口进行「延迟验证」，验证之后 `mobilePhoneVerified` 就会被置为 `true`。
 
 1. **请求发送验证码**    
-
 ```objc
 [AVUser requestMobilePhoneVerify:@"18612345678" withBlock:^(BOOL succeeded, NSError *error) {
 if(succeeded){
@@ -280,8 +314,16 @@ AV.User.requestMobilePhoneVerify('186xxxxxxxx').then(function(){
     //调用失败
 });
 ```
-2. **调用验证接口，验证用户输入的纯数字的验证码。**  
-
+```cs
+AVUser.RequestMobilePhoneVerifyAsync("186xxxxxxxx").ContinueWith(t =>
+{
+    if(t.Result)
+    {
+        // 调用成功
+    }
+});
+```
+2. **调用验证接口，验证用户输入的纯数字的验证码。** 
 ```objc
 [AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
     if(succeeded){
@@ -307,6 +349,15 @@ AV.User.verifyMobilePhone('6位数字验证码').then(function(){
 }, function(err){
     //验证失败
 });
+```
+```cs
+AVUser.VerifyMobilePhoneAsync("6位数字验证码").ContinueWith(t =>
+    {
+        if (t.Result)
+        {
+            // 验证成功
+        }
+    });
 ```
 #### 未收到注册验证短信
 
@@ -461,7 +512,7 @@ AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumbe
             }
         });
 ```
-```js
+```javascript
 AV.Cloud.requestSmsCode({
     mobilePhoneNumber: '186xxxxxxxx',
     template: 'New_Series',
@@ -522,7 +573,7 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 ```java
 // 待补充
 ```
-```js
+```javascript
 AV.Cloud.requestCaptcha({
   size:4// 验证码位数，默认是 4 位，支持 3-6 位
   width:100// 图片的宽度，必要参数
@@ -558,7 +609,7 @@ AVCloud.RequestCaptchaAsync(size:4, width:85, height:30, ttl:60).ContinueWith(t 
 ```java
 // 待补充
 ```
-```js
+```javascript
 AV.Cloud.verifyCaptcha('这里填写用户输入的图形验证码，例如 AM8N','这里填写上一步返回的 captchaToken').then(result =>
 {
     var validate_token = result;
@@ -578,7 +629,7 @@ AVCloud.VerifyCaptchaAsync("这里填写用户输入的图形验证码，例如 
 ```java
 // 待补充
 ```
-```js
+```javascript
 // mobilePhoneNumber ：手机号
 // template ：模板名称
 // sign ：签名 
@@ -674,7 +725,7 @@ XX房东您好，租客{{ docs.mustache("guest_name") }}（手机号码：{{ doc
 
 ## 安全问题
 我们强烈要求开发者在用户界面上针对短信发送做操作限制，例如手机号的验证功能应该是客户端在 1 分钟之内只允许发送一次，尽管我们的服务端做了必要的安全措施来保证开发者的权益，但是不排除有被恶意攻击的可能性。
-因此我们强烈要求开发者一定要阅读如下链接里的内容：[短信轰炸](rest_sms_api.html#短信轰炸)
+因此我们强烈要求开发者一定要阅读如下链接里的内容：[短信轰炸](rest_sms_api.html#短信轰炸) 和 前文所提及的[图形验证码 captcha](#图形验证码_captcha)
 
 ## 常见问题
 
