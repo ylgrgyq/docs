@@ -568,7 +568,18 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 ### 获取图形验证码
 
 ```objc
-// 待补充
+AVCaptchaRequestOptions *options = [[AVCaptchaRequestOptions alloc] init];
+
+options.TTL = 60;
+options.size = 4;
+options.width = 100;
+options.height = 50;
+
+[AVCaptcha requestCaptchaWithOptions:options
+                            callback:^(AVCaptchaDigest * _Nullable captchaDigest, NSError * _Nullable error) {
+                                /* URL string of captcha image. */
+                                NSString *url = captchaDigest.URLString;
+                            }];
 ```
 ```java
 // 待补充
@@ -604,7 +615,11 @@ AVCloud.RequestCaptchaAsync(size:4, width:85, height:30, ttl:60).ContinueWith(t 
 然后正确引导用户输入图形验证码的内容，等到用户输入完成之后，继续调用下一步的接口校验用户输入的是否合法：
 
 ```objc
-// 待补充
+[AVCaptcha verifyCaptchaCode:<#用户识别的符号#>
+            forCaptchaDigest:<#之前请求的 AVCaptchaDigest 对象#>
+                    callback:^(NSString * _Nullable validationToken, NSError * _Nullable error) {
+                        /* validationToken 可用短信认证 */
+                    }];
 ```
 ```java
 // 待补充
@@ -624,7 +639,19 @@ AVCloud.VerifyCaptchaAsync("这里填写用户输入的图形验证码，例如 
 ### 使用 validate_token 发送短信
 如果校验成功，拿到返回的 validate_token，继续调用发送短信的接口：
 ```objc
-// 待补充
+AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+
+options.validationToken = <#validationToken#>;
+
+[AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
+                                 options:options
+                                callback:^(BOOL succeeded, NSError * _Nullable error) {
+                                    if (succeeded) {
+                                        /* 请求成功 */
+                                    } else {
+                                        /* 请求失败 */
+                                    }
+                                }];
 ```
 ```java
 // 待补充
