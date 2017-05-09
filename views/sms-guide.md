@@ -555,7 +555,12 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 
 首先请阅读相关的 REST API 文档 [图形验证码 captcha](rest_sms_api.html#图形验证码_captcha)。
 
-开发者需要在控制台 -> 应用选项 -> 开启图形验证码的功能。
+开发者需要在控制台 -> 安全中心 -> 图形验证码服务，如下图： 
+![sms_captchat_settings_toggle](https://dn-lhzo7z96.qbox.me/1494322777210)
+
+假设开发者需要强制所有的短信接口都必须通过图形验证码验证才能发送，则需要在控制台 -> 应用选项 -> 强制短信验证服务使用图形验证码，如下图： 
+
+![sms_captchat_settings_force](https://dn-lhzo7z96.qbox.me/1494322875125)
 
 {{ docs.note("如果开启这个选项之后，所有主动调用发送短信的接口都会强制进行图形验证码验证，否则会直接返回调用错误）。") }}
 
@@ -568,7 +573,18 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 ### 获取图形验证码
 
 ```objc
-// 待补充
+AVCaptchaRequestOptions *options = [[AVCaptchaRequestOptions alloc] init];
+
+options.TTL = 60;
+options.size = 4;
+options.width = 100;
+options.height = 50;
+
+[AVCaptcha requestCaptchaWithOptions:options
+                            callback:^(AVCaptchaDigest * _Nullable captchaDigest, NSError * _Nullable error) {
+                                /* URL string of captcha image. */
+                                NSString *url = captchaDigest.URLString;
+                            }];
 ```
 ```java
 // 待补充
@@ -604,7 +620,11 @@ AVCloud.RequestCaptchaAsync(size:4, width:85, height:30, ttl:60).ContinueWith(t 
 然后正确引导用户输入图形验证码的内容，等到用户输入完成之后，继续调用下一步的接口校验用户输入的是否合法：
 
 ```objc
-// 待补充
+[AVCaptcha verifyCaptchaCode:<#用户识别的符号#>
+            forCaptchaDigest:<#之前请求的 AVCaptchaDigest 对象#>
+                    callback:^(NSString * _Nullable validationToken, NSError * _Nullable error) {
+                        /* validationToken 可用短信认证 */
+                    }];
 ```
 ```java
 // 待补充
@@ -624,7 +644,19 @@ AVCloud.VerifyCaptchaAsync("这里填写用户输入的图形验证码，例如 
 ### 使用 validate_token 发送短信
 如果校验成功，拿到返回的 validate_token，继续调用发送短信的接口：
 ```objc
-// 待补充
+AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+
+options.validationToken = <#validationToken#>;
+
+[AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
+                                 options:options
+                                callback:^(BOOL succeeded, NSError * _Nullable error) {
+                                    if (succeeded) {
+                                        /* 请求成功 */
+                                    } else {
+                                        /* 请求失败 */
+                                    }
+                                }];
 ```
 ```java
 // 待补充
