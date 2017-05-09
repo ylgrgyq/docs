@@ -555,7 +555,12 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy").Co
 
 首先请阅读相关的 REST API 文档 [图形验证码 captcha](rest_sms_api.html#图形验证码_captcha)。
 
-开发者需要在控制台 -> 应用选项 -> 开启图形验证码的功能。
+开发者需要在控制台 -> 安全中心 -> 图形验证码服务，如下图： 
+![sms_captchat_settings_toggle](https://dn-lhzo7z96.qbox.me/1494322777210)
+
+假设开发者需要强制所有的短信接口都必须通过图形验证码验证才能发送，则需要在控制台 -> 应用选项 -> 强制短信验证服务使用图形验证码，如下图： 
+
+![sms_captchat_settings_force](https://dn-lhzo7z96.qbox.me/1494322875125)
 
 {{ docs.note("如果开启这个选项之后，所有主动调用发送短信的接口都会强制进行图形验证码验证，否则会直接返回调用错误）。") }}
 
