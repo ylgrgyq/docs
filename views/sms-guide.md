@@ -102,15 +102,19 @@ LeanCloud 短信服务支持的应用场景有以下三种：
 2. **调用接口发送验证短信**  
   注意，在这一步之前，我们假设当前用户已经设置过了手机号，所以推荐这类应用在注册环节，尽量要求用户以手机号作为用户名，否则到了支付界面，还需要用户在首次购买时输入一次手机号。
 ```objc
-[AVOSCloud requestSmsCodeWithPhoneNumber:@"13613613613"
-                                appName:@"应用名称"
-                                operation:@"某种操作"
-                                timeToLive:10
-                                callback:^(BOOL succeeded, NSError *error) {
+AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+
+options.TTL = 10;
+options.applicationName = @"应用名称";
+options.operation = @"某种操作";
+
+[AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
+                                 options:options
+                                callback:^(BOOL succeeded, NSError * _Nullable error) {
                                     if (succeeded) {
-                                        // 调用成功
-                                        //短信格式类似于：
-                                        //您正在{应用名称}中进行{某种操作}，您的验证码是:{123456}，请输入完整验证，有效期为:{10}分钟
+                                        /* 请求成功 */
+                                    } else {
+                                        /* 请求失败 */
                                     }
                                 }];
 ```
@@ -422,15 +426,21 @@ AVUser.VerifyMobilePhoneAsync("6位数字验证码").ContinueWith(t =>
 并且模板名称为 `Order_Notice`，并且为已经拥有了一个审核通过的签名叫做「天天商城」，签名的名称叫做 `sign_BuyBuyBuy` ，当模板通过审批后就可以调用如下代码发送这条通知类的短信：
 
 ```objc
-NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-[dict setObject:@"7623432424540" forKey:@"order_id"];
-[AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"Order_Notice" variables:dict callback:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
-        //操作成功
-    } else {
-        NSLog(@"%@", error);
-    }
-}];
+AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+
+options.templateName = @"Order_Notice";
+options.signatureName = @"sign_BuyBuyBuy";
+options.templateVariables = @{ @"order_id": @"7623432424540" };
+
+[AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
+                                 options:options
+                                callback:^(BOOL succeeded, NSError * _Nullable error) {
+                                    if (succeeded) {
+                                        /* 请求成功 */
+                                    } else {
+                                        /* 请求失败 */
+                                    }
+                                }];
 ```
 ```java
 Map<String, Object> parameters = new HashMap<String, Object>();
@@ -488,14 +498,20 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","Order_Notice",env,"sign_BuyBuyBuy").C
 并且模板名称为 `New_Series`，并且为已经拥有了一个审核通过的签名叫做「天天商城」，签名的名称叫做 `sign_BuyBuyBuy`，当模板通过审批后就可以调用如下代码发送这条营销类的短信：
 
 ```objc
-NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
-[AVOSCloud requestSmsCodeWithPhoneNumber:@"18612345678" templateName:@"New_Series" variables:nil callback:^(BOOL succeeded, NSError *error) {
-    if (succeeded) {
-        //操作成功
-    } else {
-        NSLog(@"%@", error);
-    }
-}];
+AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
+
+options.templateName = @"New_Series";
+options.signatureName = @"sign_BuyBuyBuy";
+
+[AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
+                                 options:options
+                                callback:^(BOOL succeeded, NSError *error) {
+                                    if (succeeded) {
+                                        /* 请求成功 */
+                                    } else {
+                                        /* 请求失败 */
+                                    }
+                                }];
 ```
 ```java
 AVOSCloud.requestSMSCodeInBackground(AVUser.getCurrentUser().getMobilePhoneNumber(),
@@ -646,6 +662,8 @@ AVCloud.VerifyCaptchaAsync("这里填写用户输入的图形验证码，例如 
 ```objc
 AVShortMessageRequestOptions *options = [[AVShortMessageRequestOptions alloc] init];
 
+options.templateName = @"New_Series";
+options.signatureName = @"sign_BuyBuyBuy";
 options.validationToken = <#validationToken#>;
 
 [AVSMS requestShortMessageForPhoneNumber:@"186xxxxxxxx"
