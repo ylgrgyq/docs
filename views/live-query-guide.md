@@ -17,6 +17,8 @@
 并且一定要在 SDK 中正确的初始化 LeanCloud 实时消息服务模块：
 
 ```objc
+[AVOSCloud setApplicationId:@"{{appid}}"
+                  clientKey:@"{{appkey}}"];
 ```
 ```java
 ```
@@ -46,6 +48,10 @@ LiveQuery 是基于 AVQuery 的查询条件来做到精准推送的，我们假�
 我们新建 2 个针对 Todo 的查询，一个查询的是正在进行中的，而另一个是查询已完成的：
 
 ```objc
+AVQuery *doingQuery = [AVQuery queryWithClassName:@"Todo"];
+AVQuery *doneQuery  = [AVQuery queryWithClassName:@"Todo"];
+[doingQuery whereKey:@"state" equalTo:@"doing"];
+[doneQuery  whereKey:@"state" equalTo:@"done"];
 ```
 ```java
 ```
@@ -62,6 +68,9 @@ var doneQuery = new AVQuery<AVObject>("Todo").WhereEqualTo("state", "done");
 一般来说用户打开页面之后，客户端第一次需要主动执行一次查询，用来做列表展示：
 
 ```objc
+[doingQuery findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+    /* Doing list did fetch. */
+}];
 ```
 ```java
 ```
@@ -84,6 +93,17 @@ LiveQuery 的核心用法就是定义了一个查询，然后我订阅符合这�
 在有 LiveQuery 功能之前，我们需要通过客户端的定时拉取或者提醒用户主动刷新的方式来刷新客户端的数据展现，而有了 LiveQuery 之后，通过如下的订阅方式就可以依赖服务端发起的数据推送来刷新页面，而开发者的前端展示就减少许多提示或者是定时器的负担：
 
 ```objc
+self.doingLiveQuery = [[AVLiveQuery alloc] initWithQuery:doingQuery];
+self.doingLiveQuery.delegate = self;
+[self.doingLiveQuery subscribeWithCallback:^(BOOL succeeded, NSError * _Nonnull error) {
+    /* Subscribed. */
+}];
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidCreate:(id)object {
+    if (liveQuery == self.doingLiveQuery) {
+        /* A new doing task did create. */
+    }
+}
 ```
 ```java
 ```
@@ -103,6 +123,9 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 请注意上述的关键代码是订阅操作：
 
 ```objc
+[self.doingLiveQuery subscribeWithCallback:^(BOOL succeeded, NSError * _Nonnull error) {
+    /* Subscribed. */
+}];
 ```
 ```java
 ```
@@ -128,6 +151,11 @@ var livequery = await doingQuery.SubscribeAsync();
 首先启动 app 之后，页面上已经显示了当前已完成的一些 Todo，当另一客户端恰巧在这个时候执行了如下代码添加一条全新的未完成的 Todo：
 
 ```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+todo[@"state"] = @"doing";
+[todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    /* Saved. */
+}];
 ```
 ```java
 ```
@@ -144,6 +172,12 @@ await testObj.SaveAsync();
 那么当前客户端就会接收到 `create` 的数据推送：
 
 ```objc
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidCreate:(id)object {
+    if (liveQuery == self.doingLiveQuery) {
+        /* A new doing task did create. */
+    }
+}
 ```
 ```java
 ```
@@ -164,6 +198,11 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 
 
 ```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"5915bb92a22b9d005804a4ee"];
+todo[@"title"] = @"新的标题";
+[todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    /* Saved. */
+}];
 ```
 ```java
 ```
@@ -181,6 +220,11 @@ await oneDoing.SaveAsync();
 在当前客户端需要如下做就可以监听 `update` 类型的数据推送：
 
 ```objc
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidUpdate:(id)object updatedKeys:(NSArray<NSString *> *)updatedKeys {
+    for (NSString *key in updatedKeys) {
+        NSLog(@"%@: %@", key, object[key]);
+    }
+}
 ```
 ```java
 ```
@@ -208,6 +252,11 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 另一端将一条**已完成**修改为**未完成**，代码如下：
 
 ```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"591672df2f301e006b9b2829"];
+todo[@"state"] = @"doing";
+[todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    /* Saved. */
+}];
 ```
 ```java
 ```
@@ -225,6 +274,12 @@ await anotherDone.SaveAsync();
 在当前客户端需要如下做就可以监听 `enter` 类型的数据推送：
 
 ```objc
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidEnter:(id)object updatedKeys:(nonnull NSArray<NSString *> *)updatedKeys {
+    if (liveQuery == self.doingLiveQuery) {
+        /* A todo did change to doing from other state. */
+    }
+}
 ```
 ```java
 ```
@@ -251,6 +306,11 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 另一端将一条**未完成**修改为**已完成**，代码如下：
 
 ```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"591672df2f301e006b9b2829"];
+todo[@"state"] = @"done";
+[todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    /* Saved. */
+}];
 ```
 ```java
 ```
@@ -267,6 +327,12 @@ await willDone.SaveAsync();
 与 `enter` 相反，当对象从符合条件变为不符合条件的时候，LiveQuery 会得到一条数据推送：
 
 ```objc
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidLeave:(id)object updatedKeys:(nonnull NSArray<NSString *> *)updatedKeys {
+    if (liveQuery == self.doingLiveQuery) {
+        /* A todo did change to other state from doing. */
+    }
+}
 ```
 ```java
 ```
@@ -292,6 +358,10 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 另一端将一条**未完成**直接删除，代码如下：
 
 ```objc
+AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"591d9b302f301e006be22c83"];
+[todo deleteInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+    /* Deleted. */
+}];
 ```
 ```java
 ```
@@ -307,6 +377,10 @@ await willDelete.DeleteAsync();
 LiveQuery 会得到一条数据推送：
 
 ```objc
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery objectDidDelete:(id)object {
+    /* A todo has been deleted. */
+}
 ```
 ```java
 ```
@@ -334,6 +408,10 @@ LiveQuery 针对 _User 表做了一个特殊的功能，可以使用 LiveQuery �
 - 实现好友登录的弹窗通知
 
 ```objc
+#pragma mark - LiveQuery delegate methods
+- (void)liveQuery:(AVLiveQuery *)liveQuery userDidLogin:(AVUser *)user {
+    /* An user did login. */
+}
 ```
 ```java
 ```
