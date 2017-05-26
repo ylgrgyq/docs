@@ -1357,7 +1357,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.setLimit(1);
 	  query.findInBackground(new AVIMConversationQueryCallback(){
        @Override
@@ -1516,6 +1516,10 @@ tom.open(new AVIMClientCallback(){
 
 {% block conversation_attributes_modify %}{% endblock %}
 
+{% block android_conversation_query_tip %}
+由于历史原因，AVIMConversationQuery 只能检索 _Conversation 表中 attr 列中的属性，而不能完整检索 _Conversation 表的其他自定义属性，所以在 v4.1.1 版本之后被废弃。v4.1.1 后请使用 AVIMConversation**s**Query 来完成相关查询。AVIMConversationsQuery 在查询属性时不会再自动添加 attr 前缀，如果开发者需要查询 _Conversation 表中 attr 列中具体属性，请自行添加 attr 前缀。
+{% endblock %}
+
 {% block conversation_getSingle %}
 
 ```
@@ -1526,7 +1530,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.whereEqualTo("objectId","551260efe4b01608686c3e0f");
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1554,7 +1558,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
 	    public void done(List<AVIMConversation> convs,AVIMException e){
@@ -1573,7 +1577,7 @@ tom.open(new AVIMClientCallback(){
 {% block conversation_query_limit %}
 
 ```
-AVIMConversationQuery query = client.getQuery();
+AVIMConversationsQuery query = client.getConversationsQuery();
 query.limit(20);
 query.findInBackground(new AVIMConversationQueryCallback(){
 	@Override
@@ -1612,15 +1616,6 @@ conversationQuery.whereEqualTo("attr.topic", "DOTA2");
 // 查询等级大于 5 的对话
 conversationQuery.whereGreaterThan("attr.level", 5);
 ```
-
-在 Andorid SDK 中，如果在针对自定义查询的时候，不主动加上 `attr` 的前缀，SDK 会自动添加，比如上述的代码中查询话题为 DOTA2 的对话如下书写效果一致：
-
-```
-conversationQuery.whereEqualTo("topic", "DOTA2");
-```
-
-{{ docs.alert("因为 Android 会自动添加 attr 前缀进行查询构建，所以在设置自定义属性的时候，**禁止**使用 `name`、`lm`、`c`、`tr`、`m`、`objectId` 等已被默认属性占用的 key 值。") }}
-
 {% endblock %}
 
 {% block conversation_query_content %}
@@ -1736,7 +1731,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.whereEqualTo("attr.topic","movie");
 	  query.findInBackground(new AVIMConversationQueryCallback(){
 	    @Override
@@ -1764,7 +1759,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.whereNotEqualTo("attr.type","private");
 	  query.setLimit(50);//limit 设为 50 ,默认为 10 个
 	  
@@ -1794,7 +1789,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.whereGreaterThan("attr.age",18);
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
@@ -1814,7 +1809,7 @@ tom.open(new AVIMClientCallback(){
 {% endblock %}
 
 {% block conversation_query_regexIntro %}
-匹配查询是指在 `AVIMConversationQuery` 的查询条件中使用正则表达式来匹配数据。
+匹配查询是指在 `AVIMConversationsQuery` 的查询条件中使用正则表达式来匹配数据。
 {% endblock %}
 
 {% block conversation_query_regex %}
@@ -1827,7 +1822,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  query.whereMatches("attr.language","[\\u4e00-\\u9fa5]"); //attr.language 是中文字符 
 	  
 	  query.findInBackground(new AVIMConversationQueryCallback(){
@@ -1856,7 +1851,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  
 	  //查询attr.keywords 包含 「教育」的Conversation
 	  query.whereContains("attr.keywords","教育"); 
@@ -1887,7 +1882,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  
 	  //查询对话成员有 Bob 和 Jerry的Conversation
 	  query.withMembers(Arrays.as("Bob","Jerry"));
@@ -1917,7 +1912,7 @@ tom.open(new AVIMClientCallback(){
   public void done(AVIMClient client,AVIMException e){
     if(e==null){
     //登录成功
-    AVIMConversationQuery query = client.getQuery();
+    AVIMConversationsQuery query = client.getConversationsQuery();
     
     //查询 lm 列为空的 Conversation 列表
     query.whereDoesNotExist("lm");
@@ -1956,7 +1951,7 @@ tom.open(new AVIMClientCallback(){
 	public void done(AVIMClient client,AVIMException e){
 	  if(e==null){
 	  //登录成功
-	  AVIMConversationQuery query = client.getQuery();
+	  AVIMConversationsQuery query = client.getConversationsQuery();
 	  
 	  //查询 attr.keywords 包含 「教育」并且 attr.age 小于 18 的对话
 	  query.whereContains("attr.keywords", "教育");
@@ -1985,13 +1980,13 @@ void queryAllCovnersationsIncludeSystem() {
     client.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
-        AVIMConversationQuery memberQuery = client.getQuery();
+        AVIMConversationsQuery memberQuery = client.getConversationsQuery();
         memberQuery.whereContainsAll("m", Arrays.asList("Tom"));
 
-        AVIMConversationQuery sysQuery = client.getQuery();
+        AVIMConversationsQuery sysQuery = client.getConversationsQuery();
         sysQuery.whereEqualTo("sys", true);
 
-        AVIMConversationQuery.or(Arrays.asList(memberQuery, sysQuery)).findInBackground(new AVIMConversationQueryCallback() {
+        AVIMConversationsQuery.or(Arrays.asList(memberQuery, sysQuery)).findInBackground(new AVIMConversationQueryCallback() {
           @Override
           public void done(List<AVIMConversation> conversations, AVIMException e) {
             // conversations 返回的即是所有包含 Tom 的 conversation 以及系统回话
@@ -2010,7 +2005,7 @@ void queryActiveConversationsBetween() {
     client.open(new AVIMClientCallback() {
       @Override
       public void done(AVIMClient client, AVIMException e) {
-        AVIMConversationQuery query = client.getQuery();
+        AVIMConversationsQuery query = client.getConversationsQuery();
         query.whereGreaterThan("lm", getDateWithDateString("2017-01-01"));
         query.whereLessThan("lm", getDateWithDateString("2017-02-01"));
         query.findInBackground(new AVIMConversationQueryCallback() {
@@ -2042,6 +2037,7 @@ void queryActiveConversationsBetween() {
 
 
 {% block conversation_query_sorting %}
+```java
 AVIMClient tom = AVIMClient.getInstance("Tom");
 
 tom.open(new AVIMClientCallback() {
@@ -2049,7 +2045,7 @@ tom.open(new AVIMClientCallback() {
   public void done(AVIMClient client, AVIMException e) {
     if (e == null) {
       // 登录成功
-      AVIMConversationQuery query = client.getQuery();
+      AVIMConversationsQuery query = client.getConversationsQuery();
 
       // 按对话的创建时间降序
       query.orderByDescending("createdAt");
@@ -2067,55 +2063,60 @@ tom.open(new AVIMClientCallback() {
     }
   }
 });
+```
 {% endblock %}
 
 
 {% block conversation_query_compact_mode %}
+```java
 public void queryConversationCompact() {
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          //登录成功
-          AVIMConversationQuery query = client.getQuery();
-          query.setCompact(true);
-          query.findInBackground(new AVIMConversationQueryCallback() {
-            @Override
-            public void done(List<AVIMConversation> convs, AVIMException e) {
-              if (e == null) {
-                //获取符合查询条件的 Conversation 列表
-              }
+  AVIMClient tom = AVIMClient.getInstance("Tom");
+  tom.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        //登录成功
+        AVIMConversationsQuery query = client.getConversationsQuery();
+        query.setCompact(true);
+        query.findInBackground(new AVIMConversationQueryCallback() {
+          @Override
+          public void done(List<AVIMConversation> convs, AVIMException e) {
+            if (e == null) {
+              //获取符合查询条件的 Conversation 列表
             }
-          });
-        }
+          }
+        });
       }
-    });
-  }
+    }
+  });
+}
+```
 {% endblock %}
 
 {% block conversation_query_with_last_message %}
-  public void queryConversationWithLastMessage() {
-    AVIMClient tom = AVIMClient.getInstance("Tom");
-    tom.open(new AVIMClientCallback() {
-      @Override
-      public void done(AVIMClient client, AVIMException e) {
-        if (e == null) {
-          //登录成功
-          AVIMConversationQuery query = client.getQuery();
-          query.setWithLastMessagesRefreshed(true);
-          query.findInBackground(new AVIMConversationQueryCallback() {
-            @Override
-            public void done(List<AVIMConversation> convs, AVIMException e) {
-              if (e == null) {
-                //获取符合查询条件的 Conversation 列表
-              }
+```java
+public void queryConversationWithLastMessage() {
+  AVIMClient tom = AVIMClient.getInstance("Tom");
+  tom.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient client, AVIMException e) {
+      if (e == null) {
+        //登录成功
+        AVIMConversationsQuery query = client.getConversationsQuery();
+        query.setWithLastMessagesRefreshed(true);
+        query.findInBackground(new AVIMConversationQueryCallback() {
+          @Override
+          public void done(List<AVIMConversation> convs, AVIMException e) {
+            if (e == null) {
+              //获取符合查询条件的 Conversation 列表
             }
-          });
-        }
+          }
+        });
       }
-    });
-  }
+    }
+  });
+}
+```
 {% endblock %}
 
 
@@ -2161,7 +2162,7 @@ private void TomQueryWithLimit() {
     public void done(AVIMClient client, AVIMException e) {
       if (e == null) {
         //登录成功
-        AVIMConversationQuery query = tom.getQuery();
+        AVIMConversationsQuery query = tom.getConversationsQuery();
         query.setLimit(1);
         //获取第一个对话
         query.findInBackground(new AVIMConversationQueryCallback() {
@@ -2191,11 +2192,11 @@ private void TomQueryWithLimit() {
 ```
 {% endblock %}
 
-{% block chatroom_query_method %} `AVIMConversationQuery.findInBackground` {% endblock %}
+{% block chatroom_query_method %} `AVIMConversationsQuery.findInBackground` {% endblock %}
 
 {% block chatroom_query_method2 %}以 `where` 开头的{% endblock %}
 
-{% block create_query_instance_method %}`AVIMClient.getQuery()`{% endblock %}
+{% block create_query_instance_method %}`AVIMClient.getConversationsQuery()`{% endblock %}
 
 {% block chatroom_query_single %}
 
@@ -2208,7 +2209,7 @@ private void TomQueryWithLimit() {
       if (e == null) {
         //登录成功
         //查询 attr.topic 为 "奔跑吧，兄弟" 的暂存聊天室
-        AVIMConversationQuery query = client.getQuery();
+        AVIMConversationsQuery query = client.getConversationsQuery();
         query.whereEqualTo("attr.topic", "奔跑吧，兄弟");
         query.whereEqualTo("tr", true);
         //获取第一个对话
@@ -2476,7 +2477,7 @@ AVIMClient.setAutoOpen(false);
 {% block code_set_query_policy %}
 
 ```java
-  // 设置 AVIMConversationQuery的查询策略
+  // 设置 AVIMConversationsQuery 的查询策略
   public void setQueryPolicy(AVQuery.CachePolicy policy);
 ```
 {% endblock %}
@@ -2485,7 +2486,7 @@ AVIMClient.setAutoOpen(false);
 有时你希望先走网络查询，发生网络错误的时候，再从本地查询，可以这样：
 
 ```java
-    AVIMConversationQuery query = client.getQuery();
+    AVIMConversationsQuery query = client.getConversationsQuery();
     query.setQueryPolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
     query.findInBackground(new AVIMConversationQueryCallback() {
       @Override
