@@ -14,9 +14,8 @@
 
 需要在控制台 -> 设置 -> 应用选项 -> 勾选 「启用 LiveQuery」才可以在 SDK 中创建和使用，否则会报错。
 
-并且一定要在 SDK 中正确的初始化 LeanCloud 实时消息服务模块：
-
 ```objc
+// 请在 Podfile 中添加 pod 'AVOSCloudLiveQuery'，并执行 pod install 来集成。
 [AVOSCloud setApplicationId:@"{{appid}}"
                   clientKey:@"{{appkey}}"];
 ```
@@ -107,6 +106,8 @@ var doneQuery = new AVQuery<AVObject>("Todo").WhereEqualTo("state", "done");
 }];
 ```
 ```java
+AVQuery<AVObject> doingQuery = new AVQuery<>("Todo");
+doingQuery.whereEqualTo("state", "doing");
 doingQuery.findInBackground(new FindCallback<AVObject>() {
   @Override
   public void done(List<AVObject> parseObjects, AVException parseException) {
@@ -149,6 +150,14 @@ self.doingLiveQuery.delegate = self;
 }
 ```
 ```java
+doingLiveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 订阅成功
+    }
+  }
+});
 ```
 ```js
 doingQuery.subscribe().then(function(liveQuery) {
@@ -176,6 +185,14 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 }];
 ```
 ```java
+doingLiveQuery.subscribeInBackground(new AVLiveQuerySubscribeCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 订阅成功
+    }
+  }
+});
 ```
 ```js
 doingQuery.subscribe().then(function(liveQuery) {
@@ -209,6 +226,16 @@ todo[@"state"] = @"doing";
 }];
 ```
 ```java
+AVObject todo = new AVObject("Todo");
+todo.put("state", "doing");
+todo.saveInBackground(new SaveCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 保存成功
+    }
+  }
+});
 ```
 ```js
 var testObj = new AV.Object('Todo');
@@ -232,7 +259,10 @@ await testObj.SaveAsync();
 }
 ```
 ```java
-// 待补充
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  // AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.CREATE
+  // 可以在这里添加更新 UI 的代码
+}
 ```
 ```js
 doingQuery.subscribe().then(function(liveQuery) {
@@ -263,6 +293,16 @@ todo[@"title"] = @"新的标题";
 }];
 ```
 ```java
+AVObject todo = AVObject.createWithoutData("Todo", "5915bb92a22b9d005804a4ee");
+todo.put("title", "新的标题");
+todo.saveInBackground(new SaveCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 保存成功
+    }
+  }
+});
 ```
 ```js
 var oneDoing = AV.Object.createWithoutData('Todo','5915bb92a22b9d005804a4ee');
@@ -286,6 +326,9 @@ await oneDoing.SaveAsync();
 }
 ```
 ```java
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  // AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.UPDATE
+}
 ```
 ```js
 liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
@@ -321,6 +364,16 @@ todo[@"state"] = @"doing";
 }];
 ```
 ```java
+AVObject todo = AVObject.createWithoutData("Todo", "591672df2f301e006b9b2829");
+todo.put("state", "doing");
+todo.saveInBackground(new SaveCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 保存成功
+    }
+  }
+});
 ```
 ```js
 var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
@@ -332,8 +385,6 @@ todo.save();
 var anotherDone = AVObject.CreateWithoutData("Todo", "591672df2f301e006b9b2829");
 anotherDone["state"] = "doing";
 await anotherDone.SaveAsync();
-```
-```curl
 ```
 
 在当前客户端需要如下做就可以监听 `enter` 类型的数据推送：
@@ -347,6 +398,9 @@ await anotherDone.SaveAsync();
 }
 ```
 ```java
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.ENTER
+}
 ```
 ```js
 liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
@@ -381,6 +435,16 @@ todo[@"state"] = @"done";
 }];
 ```
 ```java
+AVObject todo = AVObject.createWithoutData("Todo", "591672df2f301e006b9b2829");
+todo.put("state", "done");
+todo.saveInBackground(new SaveCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 保存成功
+    }
+  }
+});
 ```
 ```js
 var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
@@ -404,6 +468,9 @@ await willDone.SaveAsync();
 }
 ```
 ```java
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.LEAVE
+}
 ```
 ```js
 liveQuery.on('leave', function(leftDoingItem, updatedKeys) {
@@ -436,9 +503,18 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"591d9b302f301e
 }];
 ```
 ```java
+AVObject todo = AVObject.createWithoutData("Todo", "591672df2f301e006b9b2829");
+todo.deleteInBackground(new DeleteCallback() {
+  @Override
+  public void done(AVException e) {
+    if (null == e) {
+      // 保存成功
+    }
+  }
+});
 ```
 ```js
-var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
+var todo = new AV.Object.createWithoutData('Todo','591d9b302f301e006be22c83');
 todo.delete();
 ```
 ```cs
@@ -456,7 +532,9 @@ LiveQuery 会得到一条数据推送：
 }
 ```
 ```java
-// 待补充
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.DELETE
+}
 ```
 ```js
 liveQuery.on('delete', function(deletedDoingItem, updatedKeys) {
@@ -491,6 +569,9 @@ LiveQuery 针对 _User 表做了一个特殊的功能，可以使用 LiveQuery �
 }
 ```
 ```java
+public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
+  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.LOGIN
+}
 ```
 ```js
 ```
