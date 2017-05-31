@@ -21,12 +21,35 @@
                   clientKey:@"{{appkey}}"];
 ```
 ```java
+// android 一定要在 AndroidManifest.xml 文件里面配置如下内容：
+ <!-- 实时通信模块、推送（均需要加入以下声明） START -->
+  <!-- 实时通信模块、推送都要使用 PushService -->
+  <service android:name="com.avos.avoscloud.PushService"/>
+  <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
+    <intent-filter>
+      <action android:name="android.intent.action.BOOT_COMPLETED"/>
+      <action android:name="android.intent.action.USER_PRESENT"/>
+      <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+    </intent-filter>
+  </receiver>
+  <!-- 实时通信模块、推送 END -->
+
+// 然后再调用初始化接口
+AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
 ```
 ```js
+//如果使用 CommonJS 方式，需要 var AV = require('leancloud-storage/live-query');
+
+//如果在浏览器中使用 script 标签的方式，需要引入 av-live-query-min.js：
+
+// 使用 CDN：
+<script src="//cdn1.lncld.net/static/js/版本号/av-live-query-min.js"/>
+// 使用 npm：
+<script src="./node_modules/leancloud-storage/dist/av-live-query-min.js"/>
 ```
 ```cs
-string appId = "uay57kigwe0b6f5n0e1d4z4xhydsml3dor24bzwvzr57wdap";
-string appKey = "kfgz7jjfsk55r5a8a3y4ttd3je1ko11bkibcikonk32oozww";
+string appId = "{{appid}}";
+string appKey = "{{appkey}}";
 Websockets.Net.WebsocketConnection.Link();
 var realtime = new AVRealtime(appId, appKey);
 AVRealtime.WebSocketLog(Console.WriteLine);
@@ -54,8 +77,19 @@ AVQuery *doneQuery  = [AVQuery queryWithClassName:@"Todo"];
 [doneQuery  whereKey:@"state" equalTo:@"done"];
 ```
 ```java
+// 正在进行中的 Todo
+AVQuery<AVObject> doingQuery = new AVQuery<>("Todo");
+doingQuery.whereEqualTo("state", "doing");
+
+// 已完成的 Todo
+AVQuery<AVObject> doneQuery = new AVQuery<>("Todo");
+doneQuery.whereEqualTo("state", "done");
 ```
 ```js
+// 正在进行中的 Todo
+var doingQuery = new AV.Query('Todo').equalTo('state', 'doing');
+// 已完成的 Todo
+var doneQuery = new AV.Query('Todo').equalTo('state', 'done');
 ```
 ```cs
 // 正在进行中的 Todo
@@ -73,8 +107,17 @@ var doneQuery = new AVQuery<AVObject>("Todo").WhereEqualTo("state", "done");
 }];
 ```
 ```java
+doingQuery.findInBackground(new FindCallback<AVObject>() {
+  @Override
+  public void done(List<AVObject> parseObjects, AVException parseException) {
+    // 符合查询条件的 Todo
+  }
+});
 ```
 ```js
+doingQuery.find(function(doingList) {
+  // 展示 doingList
+});
 ```
 ```cs
 // 假设 doingList 对应的是某一个列表控件绑定的数据源
@@ -108,6 +151,11 @@ self.doingLiveQuery.delegate = self;
 ```java
 ```
 ```js
+doingQuery.subscribe().then(function(liveQuery) {
+  liveQuery.on('create', function(newDoingItem) {
+    // add newDoingItem to doingList
+  });
+});
 ```
 ```cs
 var livequery = await doingQuery.SubscribeAsync();
@@ -130,6 +178,9 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 ```java
 ```
 ```js
+doingQuery.subscribe().then(function(liveQuery) {
+    // liveQuery 是 doingQuery 的订阅
+});
 ```
 ```cs
 var livequery = await doingQuery.SubscribeAsync();
@@ -160,13 +211,14 @@ todo[@"state"] = @"doing";
 ```java
 ```
 ```js
+var testObj = new AV.Object('Todo');
+testObj.set('state','doing');
+testObj.save();
 ```
 ```cs
 var testObj = new AVObject("Todo");
 testObj["state"] = "doing";
 await testObj.SaveAsync();
-```
-```curl
 ```
 
 那么当前客户端就会接收到 `create` 的数据推送：
@@ -180,8 +232,14 @@ await testObj.SaveAsync();
 }
 ```
 ```java
+// 待补充
 ```
 ```js
+doingQuery.subscribe().then(function(liveQuery) {
+  liveQuery.on('create', function(newDoingItem) {
+    // add newDoingItem to doingList
+  });
+});
 ```
 ```cs
 livequery.OnLiveQueryReceived += (sender, e) => 
@@ -207,14 +265,15 @@ todo[@"title"] = @"新的标题";
 ```java
 ```
 ```js
+var oneDoing = AV.Object.createWithoutData('Todo','5915bb92a22b9d005804a4ee');
+oneDoing.set('title','新的标题');
+oneDoing.save();
 ```
 ```cs
 // 假设有一条未完成的 Todo 的 objectId 5915bb92a22b9d005804a4ee
 var oneDoing = AVObject.CreateWithoutData("Todo", "5915bb92a22b9d005804a4ee");
 oneDoing["title"] = "修改标题";
 await oneDoing.SaveAsync();
-```
-```curl
 ```
 
 在当前客户端需要如下做就可以监听 `update` 类型的数据推送：
@@ -229,6 +288,9 @@ await oneDoing.SaveAsync();
 ```java
 ```
 ```js
+liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
+  // 将 doingList 中对应的 doingItem 替换成 updatedDoingItem
+});
 ```
 ```cs
 livequery.OnLiveQueryReceived += (sender, e) => 
@@ -261,6 +323,9 @@ todo[@"state"] = @"doing";
 ```java
 ```
 ```js
+var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
+todo.set('state','doing');
+todo.save();
 ```
 ```cs
 // 假设有一条已完成的 objectId 591672df2f301e006b9b2829 
@@ -284,6 +349,9 @@ await anotherDone.SaveAsync();
 ```java
 ```
 ```js
+liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
+  // 将 doingList 中对应的 doingItem 替换成 updatedDoingItem
+});
 ```
 ```cs
 livequery.OnLiveQueryReceived += (sender, e) => 
@@ -295,7 +363,7 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 };
 ```
 
-请一定区分 `create` 和 `enter` 的行为：
+请明确区分 `create` 和 `enter` 的不同行为：
 
  - `create`：对象从无到创建，并且符合查询条件
  - `enter` ：对象原来就存在，但是修改之前不符合查询条件，修改之后符合了查询条件
@@ -315,13 +383,14 @@ todo[@"state"] = @"done";
 ```java
 ```
 ```js
+var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
+todo.set('state','done');
+todo.save();
 ```
 ```cs
 var willDone = AVObject.CreateWithoutData("Todo", "591672df2f301e006b9b2829");
 willDone["state"] = "done";
 await willDone.SaveAsync();
-```
-```curl
 ```
 
 与 `enter` 相反，当对象从符合条件变为不符合条件的时候，LiveQuery 会得到一条数据推送：
@@ -337,6 +406,9 @@ await willDone.SaveAsync();
 ```java
 ```
 ```js
+liveQuery.on('leave', function(leftDoingItem, updatedKeys) {
+  // remove leftDoingItem from doingList
+});
 ```
 ```cs
 livequery.OnLiveQueryReceived += (sender, e) => 
@@ -366,13 +438,14 @@ AVObject *todo = [AVObject objectWithClassName:@"Todo" objectId:@"591d9b302f301e
 ```java
 ```
 ```js
+var todo = new AV.Object.createWithoutData('Todo','591672df2f301e006b9b2829');
+todo.delete();
 ```
 ```cs
 var willDelete = AVObject.CreateWithoutData("Todo", "591d9b302f301e006be22c83");
 await willDelete.DeleteAsync();
 ```
-```curl
-```
+
 
 LiveQuery 会得到一条数据推送：
 
@@ -383,8 +456,12 @@ LiveQuery 会得到一条数据推送：
 }
 ```
 ```java
+// 待补充
 ```
 ```js
+liveQuery.on('delete', function(deletedDoingItem, updatedKeys) {
+  // remove deletedDoingItem from doingList
+});
 ```
 ```cs
 livequery.OnLiveQueryReceived += (sender, e) => 
@@ -435,10 +512,6 @@ userLiveQuery.OnLiveQueryReceived += (sender, e) =>
 
 
 ## 常见问题
-
-- LiveQuery 与实时通信有什么关系？
-
-  LiveQuery 只是与实时通信的聊天服务共用 WebSocket 通道，互相之间没有任何逻辑粘连。
 
 - LiveQuery 有什么容易产生误解的用法？
 
