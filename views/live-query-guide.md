@@ -21,7 +21,7 @@
 ```
 ```java
 // android 一定要在 AndroidManifest.xml 文件里面配置如下内容：
- <!-- 实时通信模块、推送（均需要加入以下声明） START -->
+ <!-- 实时通信模块、推送、LiveQuery（均需要加入以下声明） START -->
   <!-- 实时通信模块、推送都要使用 PushService -->
   <service android:name="com.avos.avoscloud.PushService"/>
   <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver">
@@ -65,7 +65,7 @@ AVClient.HttpLog(Console.WriteLine);
 - [Unity SDK 安装指南 - 实时通信模块](sdk_setup-dotnet.html#Mono_for_Unity)
 
 ## 构建查询
-LiveQuery 是基于 AVQuery 的查询条件来做到精准推送的，我们假设如下场景，现在要实现一个 Todo 的管理应用，我在网页上勾选一个已完成，手机上立刻同步这个操作，正如前文的功能预览界面里面的效果一样。
+LiveQuery 是基于 AVQuery 的查询条件来做到精准同步的，我们假设如下场景，现在要实现一个 Todo 的管理应用，我在网页上勾选一个已完成，手机上立刻同步这个操作，正如前文的功能预览界面里面的效果一样。
 
 我们新建 2 个针对 Todo 的查询，一个查询的是正在进行中的，而另一个是查询已完成的：
 
@@ -134,7 +134,7 @@ LiveQuery 的核心用法就是定义了一个查询，然后我订阅符合这�
 第一，从正在进行的列表里面移除「购买移动电源」
 第二，将「购买移动电源」添加到已完成
 
-在有 LiveQuery 功能之前，我们需要通过客户端的定时拉取或者提醒用户主动刷新的方式来刷新客户端的数据展现，而有了 LiveQuery 之后，通过如下的订阅方式就可以依赖服务端发起的数据推送来刷新页面，而开发者的前端展示就减少许多提示或者是定时器的负担：
+在有 LiveQuery 功能之前，我们需要通过客户端的定时拉取或者提醒用户主动刷新的方式来刷新客户端的数据展现，而有了 LiveQuery 之后，通过如下的订阅方式就可以依赖服务端发起的数据同步来刷新页面，而开发者的前端展示就减少许多提示或者是定时器的负担：
 
 ```objc
 self.doingLiveQuery = [[AVLiveQuery alloc] initWithQuery:doingQuery];
@@ -248,7 +248,7 @@ testObj["state"] = "doing";
 await testObj.SaveAsync();
 ```
 
-那么当前客户端就会接收到 `create` 的数据推送：
+那么当前客户端就会接收到 `create` 的数据同步：
 
 ```objc
 #pragma mark - LiveQuery delegate methods
@@ -316,7 +316,7 @@ oneDoing["title"] = "修改标题";
 await oneDoing.SaveAsync();
 ```
 
-在当前客户端需要如下做就可以监听 `update` 类型的数据推送：
+在当前客户端需要如下做就可以监听 `update` 类型的数据同步：
 
 ```objc
 - (void)liveQuery:(AVLiveQuery *)liveQuery objectDidUpdate:(id)object updatedKeys:(NSArray<NSString *> *)updatedKeys {
@@ -387,7 +387,7 @@ anotherDone["state"] = "doing";
 await anotherDone.SaveAsync();
 ```
 
-在当前客户端需要如下做就可以监听 `enter` 类型的数据推送：
+在当前客户端需要如下做就可以监听 `enter` 类型的数据同步：
 
 ```objc
 #pragma mark - LiveQuery delegate methods
@@ -457,7 +457,7 @@ willDone["state"] = "done";
 await willDone.SaveAsync();
 ```
 
-与 `enter` 相反，当对象从符合条件变为不符合条件的时候，LiveQuery 会得到一条数据推送：
+与 `enter` 相反，当对象从符合条件变为不符合条件的时候，LiveQuery 会得到一条数据同步：
 
 ```objc
 #pragma mark - LiveQuery delegate methods
@@ -523,7 +523,7 @@ await willDelete.DeleteAsync();
 ```
 
 
-LiveQuery 会得到一条数据推送：
+LiveQuery 会得到一条数据同步：
 
 ```objc
 #pragma mark - LiveQuery delegate methods
