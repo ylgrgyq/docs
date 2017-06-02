@@ -1,5 +1,4 @@
 {% import "views/_helper.njk" as docs %}
-
 {% import "views/_im.md" as imPartial %}
 
 # 实时通信开发指南 · Unity（C#）
@@ -44,7 +43,6 @@ LeanCloud 实时消息是基于 WebSocket 和私有通讯协议实现的一套�
 ![AVInitializeBehaviour](https://dn-lhzo7z96.qbox.me/1490770179090)
 
 ![mount](https://dn-lhzo7z96.qbox.me/1490770533536)
-
 
 ### 打开调试日志
 ```cs
@@ -576,18 +574,17 @@ avRealtime.CreateClient("123456789", tag: "Mobile", deviceId: "201113D4-D329-497
 
 #### 监听单点登录被踢下线
 
-通过订阅 `AVIMClient.OnSessionClosed` 可以监听云端关闭连接的原因：
+通过订阅 `AVIMRealtime.OnSessionClosed` 可以监听云端关闭连接的原因：
 
 ```cs
 public void SessionConflicted()
 {
     AVIMClient liubei = null;
+    AVIMRealtime.OnSessionClosed += Liubei_OnSessionClosed;
     avRealtime.CreateClient("1001", tag: "Unity", deviceId: "iOS-Device-Id").ContinueWith(t =>
     {
+        // 登录成功
         liubei = t.Result;
-    }).ContinueWith(s =>
-    {
-        liubei.OnSessionClosed += Liubei_OnSessionClosed;
     });
 }
 
@@ -921,7 +918,37 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 经过测试在 Android ，该插件所打包的 jar 包内部的 websocket lib 不支持 wss 加密链接，因此我们经过与该插件作者的沟通，我们重新打包了一个支持 wss 加密链接的 jar 包，下载地址是：
 [websocketunity.jar](https://dn-lhzo7z96.qbox.me/1494239779983)，下载之后替换目标目录 `~/Assets/WebSocketUnity/Plugins/Android/websocketunity.jar` 即可。
 
+##### Android 发布到手机上出现崩溃 
+如果使用 Android monitor 日志抓取工具，抓取到了如下错误：
+
+```
+JNI ERROR (app bug): accessed stale local reference 0x200001 (index 0 in a table of size 0)
+```
+
+请更新一下插件目录下的 `~/Assets/WebSocketUnity/Platforms/WebSocketUnityAndroid.cs` 文件中 `WebSocketUnityAndroid` 类的构造函数：
+
+```cs
+    public WebSocketUnityAndroid(string url, string gameObjectName)
+    {
+
+        if (0 == AndroidJNI.AttachCurrentThread())
+        {
+            Debug.LogError("AttachCurrentThread success");
+            object[] parameters = new object[2];
+            parameters[0] = url;
+            parameters[1] = gameObjectName;
+
+            mWebSocket = new AndroidJavaObject("com.jonathanpavlou.WebSocketUnity", parameters);
+        }
+        else
+        {
+            Debug.LogError("AttachCurrentThread faliue");
+        }
+    }
+```
+
 {{ imPartial.customMessage() }}
+
 
 ## 聊天记录
 
@@ -964,7 +991,6 @@ public void QueryMessageHistory()
 `afterMessageId`|string|截止到某个 afterMessageId (不包含)|`conversation.QueryMessageAsync(afterMessageId:"某一条消息的 Id")`
 `beforeTimeStampPoint`|DateTime?|从 `beforeTimeStampPoint` 开始向前查询|`conversation.QueryMessageAsync(beforeTimeStampPoint:DateTime.Now)`
 `afterTimeStampPoint`|DateTime?|拉取截止到 `afterTimeStampPoint` 时间戳（不包含）|`conversation.QueryMessageAsync(afterTimeStampPoint:DateTime.Now.AddDays(2))`
-
 
 {{ imPartial.signature() }}
 
@@ -1061,6 +1087,7 @@ id|playerId|channelId
 开发者可以在自己的数据库中用 Player-Channel 这张关系表来管理玩家和频道之间的关系。
 
 {{ imPartial.exception() }}
+
 
 ## 常见问题
 

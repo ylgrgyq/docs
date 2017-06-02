@@ -15,9 +15,7 @@
 这是传统网游在实现表情消息的逻辑，实际上可以看出，表情消息在代码层面本质上依然是个文本消息，接下来我们就来自定义一个表情消息。
 
 #### 类型编码
-
 在介绍自定义消息之前，开发者可以在调试过程中打开日志打印的功能[打开调试日志](#打开调试日志)，每一次客户端和云端的相互发送 WebSocket 消息的内容会打印在控制台上
-
 
 然后可以运行一下发送消息的代码，在控制台就能看到如下日志内容：
 
@@ -37,10 +35,25 @@ websocket<={"uid":"_6jfc+4KT7KtkEgw8lJnAA","t":1490929028400,"i":-65533,"cmd":"a
 
 一条文本消息由两个字段组成：类型和文本内容。在 LeanCloud 实时通讯私有协议里面，带有下划线 `_lc` 是受保护字段，SDK 都会主动识别这个字段的含义。
 
-因此要实现一个表情消息，开发者可以自定义这个 `_lctype` 的值，比如设置成 1。
+因此要实现一个表情消息，开发者可以自定义使用 `AVIMTypedMessageTypeIntAttribute` 标注一个 `AVIMTypedMessage` 的子类，SDK 在发送消息的时候会自动的在消息体内部把它的值转化为 `_lctype` 的值，比如设置成 2：
+
+```cs
+[AVIMMessageClassName("MyTypedMessage")]
+[AVIMTypedMessageTypeIntAttribute(2)]// 加了这个标记之后，2 会被自动添加为 `_lctype` 的类型值
+public class MyTypedMessage: AVIMTypedMessage {
+    public MyTypedMessage()
+    {
+
+    }
+}
+```
+控制台可以看见如下的日志：
+```json
+websocket=>{"msg":"{\"...\":\"...\",\"_letype\":2}","cid":"58d4c2472e9af6631e10092f","r":true,"i":-65532,"cmd":"direct","appId":"021h1hbtd5shlz38pegnpkmq9d3qf8os1vt0nef4f2lxjru8","peerId":"1002"}
+```
+
 
 {{ docs.alert("注意：不建议开发者对 `_lctype` 使用负数值，而建议使用从 1 开始的正数。") }}
-
 
 ### 1. 消息子类化
 
@@ -52,6 +65,7 @@ websocket<={"uid":"_6jfc+4KT7KtkEgw8lJnAA","t":1490929028400,"i":-65533,"cmd":"a
 /// 自定义表情消息
 /// </summary>
 [AVIMMessageClassName("Emoji")]
+[AVIMTypedMessageTypeIntAttribute(2)]// 加了这个标记之后，2 会被自动添加为 `_lctype` 的类型值
 public class Emoji: AVIMTypedMessage
 {
     [AVIMMessageFieldName("Ecode")]
@@ -94,8 +108,8 @@ private void OnMessageReceived(object sender, AVIMMessageEventArgs e)
 
 可以打开日志查看：
 
-```cs
-websocket=>{"msg":"{\"Ecode\":\"#e001\"}","cid":"58d4c2472e9af6631e10092f","r":true,"i":-65532,"cmd":"direct","appId":"021h1hbtd5shlz38pegnpkmq9d3qf8os1vt0nef4f2lxjru8","peerId":"1002"}
+```json
+websocket=>{"msg":"{\"ECode\":\"#e001\",\"_letype\":2}","cid":"58d4c2472e9af6631e10092f","r":true,"i":-65532,"cmd":"direct","appId":"021h1hbtd5shlz38pegnpkmq9d3qf8os1vt0nef4f2lxjru8","peerId":"1002"}
 ```
 
 #### AVIMTypedMessage 详解
@@ -104,6 +118,12 @@ websocket=>{"msg":"{\"Ecode\":\"#e001\"}","cid":"58d4c2472e9af6631e10092f","r":t
 
 ```json
 {\"_lctext\":\"text content\",\"_lctype\":-1}
+```
+
+而加了 `AVIMTypedMessageTypeIntAttribute` 标记之后会自动的被 SDK 识别为 `_lctype` 发送到对话中，例如上面的 `Emoji` 消息：
+
+```json
+{\"ECode\":\"#e001\",\"_letype\":2}
 ```
 
 因此 `AVIMTypedMessage` 的子类都会对 msg 字段进行 JSON 序列化和反序列化。
