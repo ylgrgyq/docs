@@ -11,15 +11,9 @@
 - 如果用户没有安装应用，我希望能显示一个应用的下载页面给用户，让用户来安装我的应用；
 - 如果用户不愿意安装，那么用户仍然可以直接在网页查看搜索结果的内容
 
-为了达到上述目标，并且简化开发者的开发步骤，降低开发成本，我们提供了应用内搜索组件和 App URL的 deeplink 功能（让应用响应外部调用链接）。
+为了达到上述目标，简化开发步骤，降低开发成本，我们提供了应用内搜索组件和让应用响应外部调用链接（deeplink）功能。
 
-在你的应用内使用这个功能很简单，只要三步，请紧跟我们的脚步！ Let's do it.
-
-**我们这里是以[TodoDemo](https://github.com/leancloud/Android-SDK-demos/tree/master/AVOSCloud-Todo)为例子。**
-
-关于应用内搜索的部分可见[searchQuery函数](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/AVService.java)、[CreateTodo.java](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/src/com/avos/demo/CreateTodo.java)、[AndroidManifest.xml](https://github.com/leancloud/Android-SDK-demos/blob/master/AVOSCloud-Todo/AndroidManifest.xml)
-
-效果图，点击`打开应用`即可跳转到具体界面
+效果图，点击 **打开应用** 即可跳转到具体界面：
 
 ![image](images/deeplink_tododemo.png)
 
@@ -37,7 +31,7 @@
 {URL Scheme}://{ URL Host}/{ Resource Path}
 ```
 
-在组件菜单里，我们添加了一个新菜单——`应用内搜索`，截图如下：
+在组件菜单里，我们添加了一个新菜单「应用内搜索」：
 
 ![image](images/deeplink_setting.png)
 
