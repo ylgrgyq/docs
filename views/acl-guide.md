@@ -1,6 +1,11 @@
 {% import "views/_helper.njk" as docs %}
 # ACL 权限管理指南
 
+## 什么是 ACL？
+
+ACL 是 Access Control List 的缩写，详见:[ACL Wiki](https://en.wikipedia.org/wiki/Access_control_list)。
+
+
 数据安全在应用开发的任何阶段都应该被重视。因此本文档我们详细介绍了在选择 LeanCloud 作为后端服务之后，如何使用 LeanCloud 提供的安全功能模块为开发者的应用以及数据提供安全保障。
 
 如果你不熟悉权限管理以及 ACL 的概念，请先阅读 [权限管理以及 ACL 入门指南](acl-start.html)。
