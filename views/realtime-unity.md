@@ -38,11 +38,11 @@ LeanCloud 实时消息是基于 WebSocket 和私有通讯协议实现的一套�
 下载之后解压，把里面包含的所有的 Dll 文件（除去 `UnityEngine.dll`）都引入到 Unity 的 `Assets/LeanCloud` 文件夹（在 `Assets` 下面新建一个 `LeanCloud` 文件夹用来存放 LeanCloud SDK）下即可。
 
 ### 初始化
-初始化**必须**在 Unity Editor 上将 AVInitializeBehaviour 挂载在某一个 GameObject 下，如下图：
+初始化**必须**在 Unity Editor 上将 `AVInitializeBehaviour`(在 LeanCloud.Core 命名空间下) 以及 `AVRealtimeBehavior`(在 LeanCloud.Realtime 命名空间下) 挂载在某一个 GameObject 下，如下图：
 
-![AVInitializeBehaviour](https://dn-lhzo7z96.qbox.me/1490770179090)
+![AVInitializeBehaviour&AVRealtimeBehavior](https://dn-lhzo7z96.qbox.me/1497505703771)
 
-![mount](https://dn-lhzo7z96.qbox.me/1490770533536)
+![mount](https://dn-lhzo7z96.qbox.me/1497505560763)
 
 ### 打开调试日志
 ```cs
@@ -736,7 +736,6 @@ public class DefaultWebSocketClient : IWebSocketClient
 }
 ```
 
-
 假设开发者自己实现了上述接口，可以在初始化时指定给 SDK，这样 SDK 就会调用指定的 IWebSocketClient 来访问聊天服务端：
 
 ```cs
@@ -766,106 +765,164 @@ using LeanCloud.Realtime.Internal;
 using System;
 using LeanCloud.Realtime;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+using LeanCloud.Storage.Internal;
+using LeanCloud.Core.Internal;
+using UnityEngine.Networking;
+using LeanCloud;
+using LeanCloud.Realtime.Public.Unity;
 
-
-public class MyWebSocketClient : MonoBehaviour, WebSocketUnityDelegate,IWebSocketClient
+public class UnityWebSocketClient : MonoBehaviour, WebSocketUnityDelegate, IWebSocketClient
 {
-	// Web Socket for Unity
-	//    Desktop
-	//    WebPlayer
-	//    Android
-	//    ios (+ ios simulator)
-	//	  WebGL
-	private WebSocketUnity webSocket;
+    private static bool isInitialized = false;
+    /// <summary>
+    /// Initializes the LeanCloud SDK and begins running network requests created by LeanCloud.
+    /// </summary>
+    public virtual void Awake()
+    {
+        StartCoroutine(Initialize());
 
-	#region WebSocketUnityDelegate implementation
+        // Force the name to be `AVRealtimeInitializeBehavior` in runtime.
+        gameObject.name = "AVRealtimeInitializeBehavior";
+    }
 
-	// These callbacks come from WebSocketUnityDelegate
-	// You will need them to manage websocket events
-	
-	// This event happens when the websocket is opened
-	public void OnWebSocketUnityOpen (string sender)
-	{
-		Debug.Log ("WebSocket connected, " + sender);
+    /// <summary>
+    /// 从云端获取分配的 WebSocket 地址
+    /// </summary>
+    public IEnumerator Initialize()
+    {
+        var avRealtimeInitializeBehavior = GameObject.FindObjectOfType<AVRealtimeBehavior>();
+        if (isInitialized)
+        {
+            yield break;
+        }
+        isInitialized = true;
+        yield return avRealtimeInitializeBehavior.FetchRouter();
 
-		this.OnOpened ();
-	}
-	
-	// This event happens when the websocket is closed
-	public void OnWebSocketUnityClose (string reason)
-	{
-		Debug.Log ("WebSocket Close : " + reason);
-		this.OnClosed (-1, reason, "");
-	}
-	
-	// This event happens when the websocket received a message
-	public void OnWebSocketUnityReceiveMessage (string message)
-	{
-		Debug.Log ("Received from server : " + message);
-		this.OnMessage (message);
-	}
-	
-	// This event happens when the websocket received data (on mobile : ios and android)
-	// you need to decode it and call after the same callback than PC
-	public void OnWebSocketUnityReceiveDataOnMobile (string base64EncodedData)
-	{
-		// it's a limitation when we communicate between plugin and C# scripts, we need to use string
-		byte[] decodedData = webSocket.decodeBase64String (base64EncodedData);
-		OnWebSocketUnityReceiveData (decodedData);
-	}
-	
-	// This event happens when the websocket did receive data
-	public void OnWebSocketUnityReceiveData (byte[] data)
-	{	
-		var decodeStr = System.Convert.ToBase64String (data);
-		OnWebSocketUnityReceiveMessage (decodeStr);
-	}
-	
-	// This event happens when you get an error@
-	public void OnWebSocketUnityError (string error)
-	{
-		Debug.LogError ("WebSocket Error : " + error);
-	}
+        var url = avRealtimeInitializeBehavior.Server;
 
-	#endregion
+        Debug.Log("url:" + url);
 
-	#region LeanCloud
+        webSocket = new WebSocketUnity(url, this);
+        webSocket.Open();
 
-	public	bool IsOpen {
-		get { 
-			return webSocket.IsOpened ();
-		}
-	}
+        Debug.Log("webSocket inited.");
+    }
 
-	public void Close ()
-	{
-		webSocket.Close ();
-	}
+    void Start()
+    {
 
-	public void Open (string url, string protocol = null)
-	{
-		webSocket = new WebSocketUnity (url, this); 
-		webSocket.Open ();
-	}
+    }
 
-	public void Send (string message)
-	{
-		if (this.IsOpen)
-			webSocket.Send (message);
-	}
+    void Update()
+    {
 
-	public	event Action<int, string, string> OnClosed;
+    }
+    // Web Socket for Unity
+    //    Desktop
+    //    WebPlayer
+    //    Android
+    //    ios (+ ios simulator)
+    //      WebGL
+    private WebSocketUnity webSocket;
 
-	public event Action<string> OnMessage;
+    #region WebSocketUnityDelegate implementation
 
-	public	event Action<string> OnLog;
+    // These callbacks come from WebSocketUnityDelegate
+    // You will need them to manage websocket events
 
-	public event Action<string> OnError;
+    // This event happens when the websocket is opened
+    public void OnWebSocketUnityOpen(string sender)
+    {
+        Debug.Log("WebSocket connected, " + sender);
+        if (this.OnOpened != null)
+            this.OnOpened();
+    }
 
-	public event Action OnOpened;
+    // This event happens when the websocket is closed
+    public void OnWebSocketUnityClose(string reason)
+    {
+        Debug.Log("WebSocket Close : " + reason);
+        this.OnClosed(-1, reason, "");
+    }
 
-	#endregion
-	
+    // This event happens when the websocket received a message
+    public void OnWebSocketUnityReceiveMessage(string message)
+    {
+        // Debug.Log("Received from server : " + message);
+
+        this.OnMessage(message);
+    }
+
+    // This event happens when the websocket received data (on mobile : ios and android)
+    // you need to decode it and call after the same callback than PC
+    public void OnWebSocketUnityReceiveDataOnMobile(string base64EncodedData)
+    {
+        // it's a limitation when we communicate between plugin and C# scripts, we need to use string
+        byte[] decodedData = webSocket.decodeBase64String(base64EncodedData);
+        OnWebSocketUnityReceiveData(decodedData);
+    }
+
+    // This event happens when the websocket did receive data
+    public void OnWebSocketUnityReceiveData(byte[] data)
+    {
+        var decodeStr = System.Convert.ToBase64String(data);
+        OnWebSocketUnityReceiveMessage(decodeStr);
+    }
+
+    // This event happens when you get an error@
+    public void OnWebSocketUnityError(string error)
+    {
+        Debug.Log("error:" + error);
+        Debug.LogError("WebSocket Error : " + error);
+    }
+
+    #endregion
+
+    #region LeanCloud
+
+    public bool IsOpen
+    {
+        get
+        {
+            var rtn = webSocket != null;
+            if (rtn)
+                rtn = webSocket.IsOpened();
+
+            Debug.Log("IsOpen:" + rtn);
+            return rtn;
+        }
+    }
+
+    public void Close()
+    {
+        webSocket.Close();
+    }
+
+    public void Open(string url, string protocol = null)
+    {
+        webSocket.Open();
+
+    }
+
+    public void Send(string message)
+    {
+        if (this.IsOpen)
+            webSocket.Send(message);
+    }
+
+    public event Action<int, string, string> OnClosed;
+
+    public event Action<string> OnMessage;
+
+    public event Action<string> OnLog;
+
+    public event Action<string> OnError;
+
+    public event Action OnOpened;
+
+    #endregion
+
 }
 ```
 在初始化的时候指定即可，因为这个库的设计关系，要求必须是一个 `MonoBehaviour`，因此我们也最好在上面的代码里面加入 `Start()` 函数，这样就省去了额外再新建一个初始化的类：
@@ -881,6 +938,11 @@ void Start () {
     avRealtime = new AVRealtime (config);
 }
 ```
+
+结合前面的初始化步骤，当前项目的 `Main Camera` 最好设置成如下样子:
+
+![init](https://dn-lhzo7z96.qbox.me/1497505972767)
+
 WebSocket 库的选择建议：
 
 - 如果你的项目只需要发布到 PC 端（macOS、Windows、Linux），则完全可以使用 SDK 自带的 [sta/websocket-sharp](https://github.com/sta/websocket-sharp)。
@@ -918,34 +980,124 @@ clang: error: linker command failed with exit code 1 (use -v to see invocation)
 经过测试在 Android ，该插件所打包的 jar 包内部的 websocket lib 不支持 wss 加密链接，因此我们经过与该插件作者的沟通，我们重新打包了一个支持 wss 加密链接的 jar 包，下载地址是：
 [websocketunity.jar](https://dn-lhzo7z96.qbox.me/1494239779983)，下载之后替换目标目录 `~/Assets/WebSocketUnity/Plugins/Android/websocketunity.jar` 即可。
 
-##### Android 发布到手机上出现崩溃 
+##### 重写 WebSocketUnityAndroid 类
+
 如果使用 Android monitor 日志抓取工具，抓取到了如下错误：
 
 ```
 JNI ERROR (app bug): accessed stale local reference 0x200001 (index 0 in a table of size 0)
 ```
 
-请更新一下插件目录下的 `~/Assets/WebSocketUnity/Platforms/WebSocketUnityAndroid.cs` 文件中 `WebSocketUnityAndroid` 类的构造函数：
+则需要重写 WebSocketUnityAndroid 类，打开插件目录中对应的 ：`~/Assets/WebSocketUnity/Platforms/Android/WebSocketUnityAndroid.cs` 文件，将其所有的代码替换为如下内容：
 
 ```cs
-    public WebSocketUnityAndroid(string url, string gameObjectName)
+using UnityEngine;
+using System.Collections;
+using System.Threading;
+using System;
+
+#if UNITY_ANDROID
+public class WebSocketUnityAndroid : IWebSocketUnityPlatform
+{
+
+    private class Attacher : IDisposable
     {
+        private int tid;
 
-        if (0 == AndroidJNI.AttachCurrentThread())
+        public Attacher(object o)
         {
-            Debug.LogError("AttachCurrentThread success");
-            object[] parameters = new object[2];
-            parameters[0] = url;
-            parameters[1] = gameObjectName;
-
-            mWebSocket = new AndroidJavaObject("com.jonathanpavlou.WebSocketUnity", parameters);
+            tid = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            if (tid != 1)
+            {
+                AndroidJNI.AttachCurrentThread();
+            }
         }
-        else
+
+        public void Dispose()
         {
-            Debug.LogError("AttachCurrentThread faliue");
+            if (tid != 1)
+            {
+                AndroidJNI.DetachCurrentThread();
+            }
         }
     }
+    private AndroidJavaObject mWebSocket;
+
+    // Constructor
+    // param : url of your server (for example : ws://echo.websocket.org)
+    // param : gameObjectName name of the game object who will receive events
+    public WebSocketUnityAndroid(string url, string gameObjectName)
+    {
+        object[] parameters = new object[2];
+        parameters[0] = url;
+        parameters[1] = gameObjectName;
+        mWebSocket = new AndroidJavaObject("com.jonathanpavlou.WebSocketUnity", parameters);
+    }
+
+    #region Basic features
+
+    // Open a connection with the specified url
+    public void Open()
+    {
+        using (new Attacher(this))
+        {
+            mWebSocket.Call("connect");
+        }
+
+    }
+
+    // Close the opened connection
+    public void Close()
+    {
+        using (new Attacher(this))
+        {
+            mWebSocket.Call("close");
+        }
+
+    }
+
+    // Check if the connection is opened
+    public bool IsOpened()
+    {
+        using (new Attacher(this))
+        {
+            return mWebSocket.Call<bool>("isOpen");
+        }
+
+    }
+
+    // Send a message through the connection
+    // param : message is the sent message
+    public void Send(string message)
+    {
+        using (new Attacher(this))
+        {
+            mWebSocket.Call("send", message);
+        }
+
+    }
+
+    // Send a message through the connection
+    // param : data is the sent byte array message
+    public void Send(byte[] data)
+    {
+        using (new Attacher(this))
+        {
+            mWebSocket.Call("send", data);
+        }
+
+    }
+
+
+    #endregion
+
+}
+#else
+public class WebSocketUnityAndroid {}
+#endif // UNITY_ANDROID
+
 ```
+
 
 {{ imPartial.customMessage() }}
 
