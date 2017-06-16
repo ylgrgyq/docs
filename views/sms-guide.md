@@ -702,8 +702,8 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy","�
 
 向国外用户发送短信，只需要在手机号码前加上正确的国际区号即可，如美国和加拿大为 `+1`，当然前提是已在 [应用设置](/dashboard/app.html?appid={{appid}}#/permission) 中选中了 **开启国际短信服务**。中国区号为 `+86`，但可以省略，无区号的手机号码会默认使用中国区号。
 
-
-### 国际短信服务覆盖区域以及对应价格
+{# 被 https://blog.leancloud.cn/4818/ 引用，修改标题时注意更新博客链接 #}
+### 服务覆盖区域和价格
 
 以下金额以人民币计算，列表中未包含的国家或区域，请在论坛或工单中提问确认。
 
