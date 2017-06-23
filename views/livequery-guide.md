@@ -26,6 +26,8 @@ HTML5 Video is required for this demo. 您的浏览器不支持播放 HTML5 视�
 
 {{ docs.note("注意按以上顺序操作。在网页应用中使用 Signup 注册的账户无法与小程序创建的账户相关联，所以如果颠倒以上操作顺序，则无法观测到数据同步效果。 ") }}
 
+[LiveQuery 公开课](http://www.bilibili.com/video/av11291992/) 涵盖了许多开发者关心的问题和解答。
+
 ## 启用 LiveQuery
 
 进入 [控制台 > 设置 > 应用选项 > 其他](/dashboard/app.html?appid={{appid}}#/permission)，勾选 「启用 LiveQuery」才可以在 SDK 中创建和使用，否则会报错。
@@ -292,10 +294,12 @@ await testObj.SaveAsync();
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  // AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.CREATE
-  // 可以在这里添加更新 UI 的代码
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onObjectCreated(AVObject avObject) {
+    // avObject 即为新添加的数据
+  }
+});
 ```
 ```js
 doingQuery.subscribe().then(function(liveQuery) {
@@ -359,9 +363,12 @@ await oneDoing.SaveAsync();
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  // AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.UPDATE
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onObjectUpdated(AVObject avObject, List<String> updateKeyList) {
+      // avObject 即为被修改的 AVObject，updateKeyList 为被修改的 key 值
+  }
+});
 ```
 ```js
 liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
@@ -431,9 +438,12 @@ await anotherDone.SaveAsync();
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.ENTER
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onObjectEnter(AVObject avObject, List<String> updateKeyList) {
+    // avObject 即为被修改的 AVObject，updateKeyList 为被修改的 key 值
+  }
+});
 ```
 ```js
 liveQuery.on('update', function(updatedDoingItem, updatedKeys) {
@@ -501,9 +511,12 @@ await willDone.SaveAsync();
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.LEAVE
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onObjectLeave(AVObject avObject, List<String> updateKeyList) {
+    // avObject 即为被修改的 AVObject，updateKeyList 为被修改的 key 值
+  }
+});
 ```
 ```js
 liveQuery.on('leave', function(leftDoingItem, updatedKeys) {
@@ -564,9 +577,12 @@ LiveQuery 会得到一条数据同步：
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.DELETE
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onObjectDeleted(String objectId) {
+    // objectId 即为被删除的 AVObject 的 id
+  }
+});
 ```
 ```js
 liveQuery.on('delete', function(deletedDoingItem, updatedKeys) {
@@ -600,9 +616,12 @@ LiveQuery 针对 `_User` 表做了一个特殊的功能，可以使用 LiveQuery
 }
 ```
 ```java
-public void done(AVLiveQuery.EventType eventType, AVObject avObject, List<String> updateKeyList) {
-  //AVLiveQueryEventHandler 的回调会被执行，此时 eventType 为 EventType.LOGIN
-}
+liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
+  @Override
+  public void onUserLogin(AVUser user) {
+      // user 即为相关的 AVUser
+  }
+});
 ```
 ```js
 ```

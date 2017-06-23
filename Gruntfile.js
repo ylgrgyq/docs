@@ -62,7 +62,7 @@ module.exports = function(grunt) {
         livereload: 35738
       },
       md: {
-        files: ["md/**"],
+        files: ["md/**","md/kb/*.md"],
         tasks: ['copy:md', 'markdown', 'assemble']
       },
       asset: {
@@ -82,7 +82,7 @@ module.exports = function(grunt) {
         tasks: ["clean:html", "markdown", "assemble","comment"]
       },
       nunjucks: {
-        files: ["views/**"],
+        files: ["views/**","views/kb/**"],
         tasks: ['nunjucks']
       }
     },
@@ -128,7 +128,15 @@ module.exports = function(grunt) {
       md: {
         src: ['dist/*.html','!dist/md/*.html'],
         dest: 'dist/'
-      },
+      },/*
+      kb: {
+        options: {
+          layoutdir: 'templates/layouts/',
+          layout: 'kb.swig'
+        },
+        src: ['dist/kb/*.html'],
+        dest: 'dist/'
+      },*/
       html: {
         src: ['templates/pages/*'],
         dest: 'dist/'
@@ -148,7 +156,14 @@ module.exports = function(grunt) {
           src: '*.md',
           dest: 'dist/start',
           ext: '.html'
-        }],
+        },/*
+        {
+          expand: true,
+          cwd: "dist/md/kb",
+          src: '*.md',
+          dest: 'dist/kb',
+          ext: '.html'
+        }*/],
         options: {
           template: 'templates/md.jst'
         }
@@ -238,7 +253,7 @@ module.exports = function(grunt) {
     nunjucks: {
       precompile: {
         baseDir: 'views',
-        src: ['views/*.md', 'views/start/*.md'],
+        src: ['views/*.md', 'views/start/*.md', 'views/kb/*.md'],
         destDir: 'md',
         options:{
           data:{
