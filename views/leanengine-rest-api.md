@@ -1,6 +1,6 @@
 # 云引擎 REST API 使用指南
 
-[REST API 调用云函数](rest_api.html#云函数-1) 是 LeanCloud 云端提供的统一的访问云函数的接口，所有的客户端 SDK 也都是封装了这个接口从而实现对云函数的调用。
+LeanCloud 云端提供的统一的访问云函数的接口，所有的客户端 SDK 也都是封装了这个接口从而实现对云函数的调用。
 
 我们推荐使用 [Postman](http://www.getpostman.com/) 来调试 REST API，我们的社区中有一篇 [使用 Postman 调试 REST API 教程](https://forum.leancloud.cn/t/postman-rest-api/8638)。
 
@@ -17,9 +17,7 @@ curl -X POST \
   https://{{host}}/1.1/functions/hello
 ```
 
-通过 `POST /functions/:name` 这个 API 调用时，参数和结果都是 JSON 格式，不会对其中的 AVObject 进行特殊处理。
-
-上述调用 `hello` 云函数是不传入参数的，而大部分情况下我们会向云函数传入一些参数来进行某些运算或者逻辑判断，例如，我们传入电影的名字来获取电影的目前的评分：
+通过 `POST /functions/:name` 这个 API 调用时，参数和结果都是 JSON 格式，不会对其中的 AVObject 进行特殊处理。例如，我们传入电影的名字来获取电影的目前的评分：
 
 ```sh
 curl -X POST -H "Content-Type: application/json; charset=utf-8" \
@@ -39,7 +37,7 @@ https://{{host}}/1.1/functions/averageStars
 }
 ```
 
-因此我们在新版云引擎 SDK 中增加了 `POST /1.1/call/:name` 这个 API，参数中的 AVObject 会在云引擎中被自动转换为对应的类，结果中的 AVObject 会携带用于客户端 SDK 识别的元信息：
+有些时候，希望云函数直接返回一个 AVObject 对象，因此我们在新版云引擎 SDK 中增加了 `POST /1.1/call/:name` 这个 API，参数中的 AVObject 会在云引擎中被自动转换为对应的类，结果中的 AVObject 会携带用于客户端 SDK 识别的元信息：
 
 ```sh
 curl -X POST \
@@ -47,7 +45,7 @@ curl -X POST \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
   -d '{"__type": "Object", "className": "Post", "pubUser": "LeanCloud官方客服"}' \
-  https://{{host}}/1.1/call/hello
+  https://{{host}}/1.1/call/addPost
 ```
 
 响应：
