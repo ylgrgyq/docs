@@ -247,7 +247,7 @@ N/A|OnMembersLeft|OnMembersLeft
 
 {{ imPartial.plateformCustomMessageLinks() }}
 
-{{ imPartial.willMessage() }}
+<!--{{ imPartial.willMessage() }}-->
 
 
 
