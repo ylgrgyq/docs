@@ -1,6 +1,6 @@
 {% import "views/_im.md" as imPartial %}
 
-# 实时通信开发指南
+# 聊天应用开发指南
 
 ## 简介
 

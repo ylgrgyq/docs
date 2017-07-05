@@ -2541,3 +2541,54 @@ AVIMClient.setAutoOpen(false);
 {% block link_avquery_chache %}[存储指南 - AVQuery 缓存查询](leanstorage_guide-android.html#缓存查询) 一节。
 {% endblock %}
 
+{% block code_recall_message %}
+
+```java
+conversation.recallMessage(message, new AVIMMessageRecalledCallback() {
+  @Override
+  public void done(AVIMRecalledMessage recalledMessage, AVException e) {
+    if (null == e) {
+      // 消息撤回成功，可以更新 UI
+    }
+  }
+});
+```
+{% endblock %}
+
+{% block code_on_message_recall %}
+
+```java
+void onMessageRecalled(AVIMClient client, AVIMConversation conversation, AVIMMessage message) {
+  // message 即为被撤回的消息
+}
+```
+
+`AVIMConversationEventHandler` 的实现和定义在[自身主动加入](#自身主动加入)里面有详细的代码和介绍。
+{% endblock %}
+
+{% block code_modify_message %}
+
+```java
+AVIMTextMessage textMessage = new AVIMTextMessage();
+textMessage.setContent("修改后的消息");
+imConversation.updateMessage(oldMessage, textMessage, new AVIMMessageUpdatedCallback() {
+  @Override
+  public void done(AVIMMessage avimMessage, AVException e) {
+    if (null == e) {
+      // 消息修改成功，avimMessage 及为被修改后的最新的消息
+    }
+  }
+});
+```
+{% endblock %}
+
+{% block code_on_message_modified %}
+
+```java
+void onMessageUpdated(AVIMClient client, AVIMConversation conversation, AVIMMessage message) {
+  // message 即为被修改的消息
+}
+```
+{% endblock %}
+
+
