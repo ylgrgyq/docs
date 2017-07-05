@@ -2055,3 +2055,21 @@ AVIMMessage *newMessage = [AVIMTextMessage messageWithText:@"Just a new message"
 }
 ```
 {% endblock %}
+
+
+{% block code_send_will_message %}
+
+```objc
+AVIMMessageOption *option = [[AVIMMessageOption alloc] init];
+option.will = YES;
+
+AVIMMessage *willMessage = [AVIMTextMessage messageWithText:@"I'm offline." attributes:nil];
+
+[conversaiton sendMessage:willMessage option:option callback:^(BOOL succeeded, NSError * _Nullable error) {
+    if (succeeded) {
+        NSLog(@"Will message has been sent.");
+    }
+}];
+```
+
+{% endblock %}

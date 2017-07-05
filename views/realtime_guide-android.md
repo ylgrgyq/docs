@@ -2592,3 +2592,23 @@ void onMessageUpdated(AVIMClient client, AVIMConversation conversation, AVIMMess
 {% endblock %}
 
 
+
+{% block code_send_will_message %}
+
+```java
+AVIMTextMessage message = new AVIMTextMessage();
+message.setText("我是一条 will 消息，当发送者意外下线的时候，我会被下发给对话里面的其他成员");
+
+AVIMMessageOption option = new AVIMMessageOption();
+option.setWill(true);
+conversation.sendMessage(message, option, new AVIMConversationCallback() {
+  @Override
+  public void done(AVIMException e) {
+    if (e == null) {
+      // 发送成功
+    }
+  }
+});
+```
+
+{% endblock %}
