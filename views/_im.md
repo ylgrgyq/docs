@@ -421,12 +421,6 @@ Will 消息的本质是一个用户自己定一个 Will 消息（可能包含了
 
 发送 Will 消息的代码如下：
 
-```objc
-```
-```java
-```
-```js
-```
 ```cs
 var textMessage = new AVIMTextMessage("我是一条 will 消息，当发送者意外下线的时候，我会被下发给对话里面的其他成员");
 conversation.SendMessageAsync(textMessage, will: true).OnSuccess(tag =>
