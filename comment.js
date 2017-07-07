@@ -52,8 +52,9 @@ exports.addCommentIdToDoc = function(fileName, content, release) {
       var index = 0;
       $(commentDoms).each(function(i, elem) {
         if($(elem).text().trim().length > 0) {
-          $(elem).attr('id', snippetVersions[i]);
-          $(elem).attr('version', snippetVersions[i]);
+          $(elem).attr('id', snippetVersions[index]);
+          $(elem).attr('version', snippetVersions[index]);
+          index++;
         }
       });
       return $.html();
