@@ -1597,4 +1597,16 @@ MyUser cloudUser = AVUser.logIn(username, password,
 <div class="callout callout-info">由于 fastjson 内部的 bug，请在定义 AVUser 时<u>不要定义</u>跟 AVRelation 相关的 `get` 方法。如果一定要定义的话，请通过在 Class 上添加 `@JSONType(ignores = {"属性名"})` 的方式，将其注释为非序列化字段。</div>
 {% endblock %}
 
+{% block code_authenticate_via_sessiontoken %}
+```java
+String  sessionToken = AVUser.getCurrentUser().getSessionToken();
+AVUser.becomeWithSessionTokenInBackground(sessionToken, new LogInCallback<AVUser>() {
+            @Override
+            public void done(AVUser user, AVException e) {
+                // user.getCurrentUser()
+            }
+});
+```
+{% endblock %}
+
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
