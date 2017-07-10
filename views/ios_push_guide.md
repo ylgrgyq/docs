@@ -593,8 +593,6 @@ iOS10 以上会调用下面的两个方法：
         [currentInstallation saveEventually];
         application.applicationIconBadgeNumber=0;
     }
-    [application cancelAllLocalNotifications];
-    //...
 }
 ```
 
