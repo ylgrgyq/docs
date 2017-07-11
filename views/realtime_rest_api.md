@@ -760,3 +760,46 @@ reason | 下线的原因，字符串，不超过 20 个字符
 ```json
 {}
 ```
+
+## 获取 Client 登录签名
+
+本接口主要针对使用 [AV.User](rest_api.html#用户-1) 的应用，可以方便快捷的实现登录认证。登录认证默认关闭，可以进入 [控制台 > 设置 > 应用选项](/app.html?appid={{appid}}#/permission)，在「聊天、推送」模块，勾选「聊天服务，开启登录认证」进行开启。
+
+```sh
+curl -X POST \
+  -H "X-LC-Id: {{appid}}" \
+  -H "X-LC-Key: {{masterkey}},master" \
+  -H "Content-Type: application/json" \
+  -d '{"session_token": "AV.User 的 sessionToken"' \
+  https://{{host}}/1.1/rtm/sign
+```
+参数 | 说明
+--- | ---
+session_token | AV.User 的 sessionToken
+
+返回：
+```json
+{"nonce": "", "timestamp": "", "client_id": "", "signature": ""}
+```
+
+针对这里的返回的参数，可以参考「[用户登录签名](realtime_v2.html#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E7%9A%84%E7%AD%BE%E5%90%8D)」与「[实现签名工厂](realtime_guide-js.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)」进行后续的登录。
+
+为了方便用户进行细粒度控制，实现自定义功能（比如：黑名单），本接口提供一 hook `_rtmClientSign`，在验证 sessionToken 后去调用，传入的参数为 AV.User 构成的 JSON 对象：
+```json
+{
+    "email": "",
+    "sessionToken": "",
+    "updatedAt": "",  // 格式：2017-07-11T07:58:10.149Z
+    "phone": "",
+    "objectId": "",
+    "username": "",
+    "createdAt": "",  // 格式：2017-07-11T07:58:10.149Z
+    "emailVerified": true/false,
+    "mobilePhoneVerified": true/false
+}
+```
+可以返回两类结果：
+```json
+{"result": true} // 允许签名
+{"result": false, "error": "error message"}  // 拒绝签名
+```
