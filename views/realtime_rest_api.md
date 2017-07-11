@@ -782,7 +782,7 @@ session_token | AV.User 的 sessionToken
 {"nonce": "", "timestamp": "", "client_id": "", "signature": ""}
 ```
 
-针对这里的返回的参数，可以参考「[用户登录签名](realtime_v2.html#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E7%9A%84%E7%AD%BE%E5%90%8D)」与「[实现签名工厂](realtime_guide-js.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)」进行后续的登录。
+针对这里的返回的参数，可以参考「[用户登录签名](realtime_v2.html#%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95%E7%9A%84%E7%AD%BE%E5%90%8D)」与「实现签名工厂（[JavaScript](realtime_guide-js.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)、[Android](realtime_guide-android.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)、[Objective-C](realtime_guide-objc.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)、[.Net](realtime_guide-dotnet.html#%E5%AE%9E%E7%8E%B0%E7%AD%BE%E5%90%8D%E5%B7%A5%E5%8E%82)）」进行后续的登录。
 
 为了方便用户进行细粒度控制，实现自定义功能（比如：黑名单），本接口提供一 hook `_rtmClientSign`，在验证 sessionToken 后去调用，传入的参数为 AV.User 构成的 JSON 对象：
 ```json
