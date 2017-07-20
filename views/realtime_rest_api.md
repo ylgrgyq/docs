@@ -451,7 +451,7 @@ curl -X GET \
 client_id | 必填 | 字符串 | 用户的 client id
 conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
 
-返回:
+如果订阅过目标系统对话则会返回订阅信息：
 
 ```
 [{"timestamp":1491467945277,"subscriber":"XXX","conv_id":"85939ed1e4b0c4d3e69e8b28"}]
@@ -459,17 +459,22 @@ conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
 
 其中 `timestamp` 表示用户订阅系统对话的时间，`subscriber` 是订阅用户的 client id。
 
+如果没有订阅过目标系统对话，则会返回空数组：
+```
+[]
+```
+
 *** 遍历获取某个用户订阅的所有系统对话
 
-因为用户订阅的系统对话可能会很多，一次请求无法全部获取，所以对于订阅了大量系统对话的用户，需要多次调用本接口来逐步获取到所有订阅的系统对话。
+因为目标用户订阅的系统对话可能会很多，一次请求无法全部获取，所以对于订阅了大量系统对话的用户，需要多次调用本接口来逐步获取到所有订阅的系统对话。
 
 ```sh
 curl -X GET \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
   -G \
-  --data-urlencode 'conv_id=...' \
   --data-urlencode 'client_id=...' \
+  --data-urlencode 'conv_id=...' \
   --data-urlencode 'timestamp=...' \
   --data-urlencode 'limit=...' \
   https://{{host}}/1.1/rtm/conversation/subscription
@@ -479,7 +484,7 @@ curl -X GET \
 ---|---|---|---
 client_id | 必填 | 字符串 | 目标查询用户的 client id
 conv_id | 可选 | 字符串 | 查询起始对话 id，不填则从订阅列表起始位置开始遍历。查询结果不会再包含本对话。
-timestamp | 可选 | 数字 | 查询起始对话订阅时间。虽然是可选字段但当提供 conv_id 时本字段必填，值必须为订阅 conv_id 参数所指定系统对话的时间
+timestamp | 可选 | 数字 | 查询起始对话被订阅时间。虽然是可选字段但当提供 conv_id 时本字段必填，值必须为订阅 conv_id 参数所指定系统对话的时间
 limit | 可选 | 数字 | 返回条数限制，默认是 50 条
 
 返回:
@@ -490,11 +495,11 @@ limit | 可选 | 数字 | 返回条数限制，默认是 50 条
 [{"timestamp":1482994126561,"subscriber":"XXX","conv_id":"convId1"},{"timestamp":1491467945277,"subscriber":"XXX","conv_id":"convId2"}, ...]
 ```
 
-其中 `timestamp` 表示用户订阅系统对话的时间，`subscriber` 是订阅用户的 client id。如果一次没有获取完，需要取列表中最后一个系统对话的 id 和订阅该对话的时间，分别作为 conv_id 和 timestamp 参数再次调用本接口以获取下一批订阅的系统对话。
+其中 `timestamp` 表示用户订阅系统对话的时间，`subscriber` 是订阅用户的 client id。如果一次没有获取完，需要从结果列表中取最后一个系统对话的 id 和订阅该对话的时间，分别作为 conv_id 和 timestamp 参数再次调用本接口以获取下一批订阅的系统对话。
 
-*** 遍历获取订阅某个系统对话的所有用户
+*** 遍历获取订阅某个系统对话的所有订阅者
 
-因为订阅某个系统对话的用户可能会很多，一次请求无法全部获取，所以对于拥有大量订阅用户的系统对话，需要多次调用本接口来逐步获取到所有的订阅者。
+因为目标系统对话的订阅者可能会很多，一次请求无法全部获取，所以对于拥有大量订阅者的系统对话，需要多次调用本接口来逐步获取到所有的订阅者。
 
 ```sh
 curl -X GET \
@@ -510,7 +515,7 @@ curl -X GET \
 参数 | 约束 | 类型 | 说明
 ---|---|---|---
 conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
-client_id | 可选 | 字符串 | 查询起始订阅者 client id，不填则从订阅者列表起始位置开始遍历。查询结果不会再包含本当前指定的订阅者 client id。
+client_id | 可选 | 字符串 | 查询起始订阅者 client id，不填则从订阅者列表起始位置开始遍历。查询结果不会再包含当前指定的订阅者 client id。
 limit | 可选 | 数字 | 返回条数限制，默认是 50 条
 
 返回：
@@ -518,10 +523,10 @@ limit | 可选 | 数字 | 返回条数限制，默认是 50 条
 目标系统对话的订阅者列表：
 
 ```
-[{"timestamp":1491467841116,"subscriber":"client id a","conv_id":"55b871"},{"timestamp":1491467852768,"subscriber":"client id b","conv_id":"55b871"}, ...]
+[{"timestamp":1491467841116,"subscriber":"client id 1","conv_id":"55b871"},{"timestamp":1491467852768,"subscriber":"client id 2","conv_id":"55b871"}, ...]
 ```
 
-其中 `timestamp` 表示用户订阅系统对话的时间，`subscriber` 是订阅用户的 client id。如果一次没有获取完，需要取列表中最后一个订阅者的 client id，作为 client_id 参数再次调用本接口以获取下一批订阅者列表。
+其中 `timestamp` 表示用户订阅系统对话的时间，`subscriber` 是订阅用户的 client id。如果一次没有获取完，需要从结果列表中取最后一个订阅者的 client id，作为 client_id 参数再次调用本接口以获取下一批订阅者列表。
 
 ## 富媒体消息格式说明
 
