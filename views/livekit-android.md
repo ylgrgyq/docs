@@ -35,7 +35,7 @@
 ### 七牛设置
 
 1. 按照 [七牛控制台设置](http://developer.qiniu.com/article/pili/user-guide.html#bucket-create) 进行设置。
-1. 部署自己的服务器端，具体可以参考 [七牛服务端 SDK](http://developer.qiniu.com/article/pili/sdk/server-sdk.html)。
+1. 部署自己的服务器端，具体可以参考 [七牛服务端 SDK](https://developer.qiniu.com/pili/sdk/1220/server-sdk)。
 
 ## 获取项目
 
