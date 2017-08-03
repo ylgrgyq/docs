@@ -337,8 +337,9 @@ request({
 {% block code_get_client_ip_address %}
 ```js
 app.get('/', function(req, res) {
-  console.log(req.headers['x-real-ip']);
-  res.send(req.headers['x-real-ip']);
+  var ipAddress = req.headers['x-real-ip'] || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  console.log(ipAddress);
+  res.send(ipAddress);
 });
 ```
 {% endblock %}
