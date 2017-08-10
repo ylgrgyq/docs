@@ -1599,5 +1599,31 @@ NSString *sessionToken = currentUser.sessionToken;
 ```
 {% endblock %}
 
+{% block file_as_avater %}
+
+```objc
+AVFile *file = [AVFile fileWithURL:@"http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif"];
+AVObject *todo = [AVObject objectWithClassName:@"Todo"];
+[todo setObject:file forKey:@"girl"];
+[todo setObject:@"明星" forKey:@"topic"];
+[todo saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+        
+}];
+```
+{% endblock %}
+
+{% block query_file_as_avater %}
+
+```objc
+AVQuery *query = [AVQuery queryWithClassName:@"Todo"];
+[query whereKey:@"topic" equalTo:@"明星"];
+[query includeKey:@"girl"];
+[query findObjectsInBackgroundWithBlock:^(NSArray * _Nullable objects, NSError * _Nullable error) {
+    AVObject *todo = objects[0];
+    AVFile *file = [todo objectForKey:@"girl"];
+    NSString *url = file.url;
+}];
+```
+{% endblock %}
 
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}

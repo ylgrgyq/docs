@@ -1632,4 +1632,30 @@ AV.User.become(sessionToken).then(function(user) {
 ```
 {% endblock %}
 
+{% block file_as_avater %}
+
+```js
+var file = AV.File.withURL('Satomi_Ishihara.gif', 'http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif');
+var todo = new AV.Object('Todo');
+todo.set('girl',file);
+todo.set('topic','明星');
+todo.save();
+```
+{% endblock %}
+
+{% block query_file_as_avater %}
+
+```js
+var query = new AV.Query('Todo');
+query.equalTo('topic','明星');
+query.include('girl');
+query.find().then(list => {
+  list.map(todo => {
+    var file = todo.get('girl');
+    console.log('file.url', file.url());
+  });
+});
+```
+{% endblock %}
+
 {# --End--主模板留空的代码段落，子模板根据自身实际功能给予实现 #}
