@@ -638,6 +638,21 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 
 {% block code_query_comment_include_todoFolder %}{% endblock %}
 
+此外需要格外注意的是，假设对象有一个 Array 类型的字段 `todoArray` 内部是 Pointer 类型：
+```
+[pointer1, pointer2, pointer3]
+```
+可以用 include 方法获取数组中的 pointer 数据，例如：
+```
+// object-c on iOS
+[query includeKey:@"todoArray"];
+// java
+query.include("todoArray");
+// js
+query.include('todoArray');
+```
+但是 Array 类型的 include 操作只支持到第一层，不支持 `include(b.c)` 这种递进关联查询。
+
 #### 内嵌查询
 
 查询点赞超过 20 次的 TodoFolder 的 Comment 评论（注意查询针对的是 [Comment](#Comment_待办事项分组的评论_)），使用内嵌查询接口就可以通过一次查询来达到目的。
