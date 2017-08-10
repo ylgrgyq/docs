@@ -1651,6 +1651,7 @@ query.equalTo('topic','明星');
 query.include('girl');
 query.find().then(list => {
   list.map(todo => {
+    var file = todo.get('girl');
     console.log('file.url', file.url());
   });
 });
