@@ -458,6 +458,19 @@ Pointer 只是个描述并没有具象的类与之对应，它与 `{{relationObj
 {{ data.cdn(true) }}
 
 {% endblock %}
+
+### 常见的文件使用场景
+
+#### 文件被其他对象关联
+
+解决方案：将 AVFile 当做 `Pointer` 类型关联 AVObject 对象的一个字段:
+
+{% block file_as_avater %}{% endblock %}
+
+查询的时候需要额外的 include 一下:
+
+{% block query_file_as_avater %}{% endblock %}
+
 ## 查询
 `{{baseQueryClassName}}` 是构建针对 `{{baseObjectName}}` 查询的基础类。{{query_result_limit}}
 
