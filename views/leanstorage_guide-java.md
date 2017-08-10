@@ -1311,6 +1311,8 @@ AVPush.sendMessageInBackground("这是发给指定 installation id 的消息",  
 
 {% endblock %}
 
+{% block file_as_avater %}
+
 ```java
 AVFile file = new AVFile("Satomi_Ishihara.gif", "http://ww3.sinaimg.cn/bmiddle/596b0666gw1ed70eavm5tg20bq06m7wi.gif", new HashMap<String, Object>());
 AVObject todo = new AVObject("Todo");
