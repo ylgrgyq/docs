@@ -1123,7 +1123,7 @@ fetchAllInBackground()
 ```java
         AVQuery<AVObject> query = new AVQuery<>("Post");
         query.setCachePolicy(AVQuery.CachePolicy.NETWORK_ELSE_CACHE);
-        query.setMaxCacheAge(24 * 3600); //设置缓存有效期
+        query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
         query.findInBackground(new FindCallback<AVObject>() {
             @Override
             public void done(List<AVObject> list, AVException e) {
@@ -1171,7 +1171,7 @@ fetchAllInBackground()
 * 设定缓存结果的最长时限：
 
   ``` java
-  query.setMaxCacheAge(60 * 60 * 24);// 一天的总秒数
+  query.setMaxCacheAge(24 * 3600 * 1000); //设置为一天，单位毫秒
   ```
 
 查询缓存也适用于 `AVQuery` 的辅助方法，包括 `getFirst()` 和 `getInBackground()`。
