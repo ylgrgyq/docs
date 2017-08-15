@@ -216,7 +216,7 @@ curl -X PUT \
 
 {{ im.conversationProperties() }}
 
-<div class="callout callout-info">本接口仅能修改**服务器端**的消息记录，并不能修改**客户端缓存**的消息记录。如果您使用的是支持修改与撤回消息功能的 SDK 建议使用<a href="#修改与撤回消息">修改与撤回消息接口</a>来修改消息</div>
+<div class="callout callout-info">本接口仅能修改**服务器端**的消息记录，并不能修改**客户端缓存**的消息记录。如果希望修改，请参考 <a href="#修改与撤回消息">修改与撤回消息接口</a> 的说明。</div>
 
 ## 修改与撤回消息
 
