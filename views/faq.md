@@ -27,11 +27,11 @@ LeanCloud 部署在国内多个云计算平台上，并采用在双线机房内�
 
 {{ docs.alert("欠费超过 30 天，应用内的数据（包括文件）会被删除且无法恢复。") }}
 
-你可以在控制台设置 [告警余额](settings.html#/setting/alert)，当账户余额小于设置的值时，我们会发送短信、邮件通知。请开发者务必关注账户的余额情况，以免对业务造成影响。
+你可以在控制台设置 [告警余额](/dashboard/settings.html#/setting/alert)，当账户余额小于设置的值时，我们会发送短信、邮件通知。请开发者务必关注账户的余额情况，以免对业务造成影响。
 
 ### 欠费期间应用产生的数据和请求能否找回
 
-不能。因为欠费时应用处于禁用阶段，所有的请求都会被云端丢弃，与统计相关的数据也不会生成，所以当应用服务恢复后也无法找回这一期间的数据。为避免统计数据出现断档，请在控制台中设置 [告警余额](settings.html#/setting/alert)，及时充值，保证服务的持续。
+不能。因为欠费时应用处于禁用阶段，所有的请求都会被云端丢弃，与统计相关的数据也不会生成，所以当应用服务恢复后也无法找回这一期间的数据。为避免统计数据出现断档，请在控制台中设置 [告警余额](/dashboard/settings.html#/setting/alert)，及时充值，保证服务的持续。
 
 ### 如何付费
 
@@ -439,7 +439,7 @@ LeanCloud 美国节点提供 [GCM 支持](android_push_guide.html#GCM_推送)，
 
 可以。默认我们的 `AVFile` 类提供了缩略图获取方法，可以参见各个 SDK 的开发指南。如果要自己处理，可以通过获取 `AVFile` 的 `URL` 属性。
 {% if node!='qcloud' %}
-使用 [七牛图片处理 API](http://docs.qiniu.com/api/v6/image-process.html) 执行处理，例如添加水印、裁剪等。
+使用 [七牛图片处理 API](https://developer.qiniu.com/dora/manual/1279/basic-processing-images-imageview2) 执行处理，例如添加水印、裁剪等。
 {% endif %}
 
 {% if node != 'qcloud' and node != 'us' %}
