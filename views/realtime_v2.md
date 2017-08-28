@@ -657,11 +657,14 @@ mute | 可选 | 修改后的关闭对话提醒设置，如果不提供则保持�
 
 字段 | 说明
 --- | ---
-convId | 消息关联的系统对话 ID
-msgId | 消息的内部 ID
+ackAt | 消息送达的时间
+bin | 是否为二进制类型消息
+conv | 消息关联的系统对话 Pointer
+data | 消息内容
 from | 发消息用户的 Client ID
 fromIp | 发消息用户的 IP
-data | 消息内容
+msgId | 消息的内部 ID
+timestamp | 消息创建的时间
 
 #### Web Hook
 {% if node=='qcloud' %}
