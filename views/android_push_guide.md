@@ -282,9 +282,8 @@ intent.putExtra(AVConstants.PUSH_INTENT_KEY, 1);
 然后当 MyActiviy 里 `getIntent()` 拿到这个 **intent** 后，执行 `AVAnalytics.trackAppOpened(intent);` 时发现 `PUSH_INTENT_KEY` 存在且为 1，则认定其来自推送。该统计可以通过 {% if node=='qcloud' %}**控制台 > 分析 > 行为分析 > 应用使用**{% else %}[控制台 > 分析 > 行为分析 > 应用使用](/stat.html?appid={{appid}}#/stat/appuse){% endif %} 查看。
 
 ## 混合推送
-{% if node != 'us' %}
 
-### 小米推送
+### 小米推送（仅中国节点）
 
 #### 环境配置
 
@@ -395,7 +394,7 @@ LeanCloud 云端只有在**满足以下全部条件**的情况下才会使用小
 
 当小米通知栏消息被点击后，如果已经设置了 [自定义 Receiver](#自定义_Receiver)，则 SDK 会发送一个 action 为 `com.avos.avoscloud.mi_notification_action` 的 broadcast。如有需要，开发者可以通过订阅此消息获取点击事件，否则 SDK 会默认打开 [启动推送服务](#启动推送服务) 对应设置的 Activity。
 
-### 华为推送
+### 华为推送（仅中国节点）
 
 #### 环境配置
 
@@ -490,7 +489,7 @@ LeanCloud 云端只有在**满足以下全部条件**的情况下才会使用华
 
 当使用华为推送发透传消息时，如果目标设备上 App 进程被杀，会出现推送消息无法接收的情况。这个是华为 ROM 对透传消息广播的限制导致的，需要引导用户在华为 “权限设置” 中对 App 开启自启动权限来避免。
 
-### 魅族推送
+### 魅族推送（仅中国节点）
 
 #### 环境配置
 
@@ -574,9 +573,6 @@ AVMixpushManager.unRegisterMixPush();
 - 只要注册时有条件不符合，SDK 会在日志中输出导致注册失败的原因，例如「register error, mainifest is incomplete」代表 manifest 未正确填写。如果注册成功，`_Installation` 表中的相关记录应该具有 **vendor** 这个字段并且不为空值。
 - 查看华为机型的设置，并打开「信任此应用」、「开机自启动」、「自启动管理」和「权限管理」等相关选项。
 - 如果注册一直失败的话，请去论坛发帖，提供相关日志、具体机型以及系统版本号，我们会跟进协助来排查。
-
-{% endif %}
-
 
 ### GCM 推送（仅美国节点）
 
