@@ -62,7 +62,7 @@ AVOSCloud.initialize(this,"{{appid}}","{{appkey}}");
 //如果在浏览器中使用 script 标签的方式，需要引入 av-live-query-min.js：
 
 // 使用 CDN：
-<script src="//cdn1.lncld.net/static/js/3.0.0-beta.3/av-live-query-min.js"/>
+<script src="//cdn1.lncld.net/static/js/{{jssdkversion}}/av-live-query-min.js"/>
 // 使用 npm：
 <script src="./node_modules/leancloud-storage/dist/av-live-query-min.js"/>
 ```
