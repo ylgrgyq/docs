@@ -70,7 +70,7 @@ allprojects {
 
 ```
 dependencies {
-    compile ('cn.leancloud.android:chatkit:1.0.0')
+    compile ('cn.leancloud.android:chatkit:1.0.6')
 }
 ```
 
