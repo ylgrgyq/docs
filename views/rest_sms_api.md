@@ -136,7 +136,8 @@ curl -X POST \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{appkey}}" \
   -H "Content-Type: application/json" \
-  "https://{{host}}/1.1/verifySmsCode/6位数字验证码?mobilePhoneNumber=186xxxxxxxx"
+  -d '{"mobilePhoneNumber":"+86186xxxxxxxx"}' \
+  "https://{{host}}/1.1/verifySmsCode/6位数字验证码"
 ```
 
 其中 `verifySmsCode` 后面是手机收到的 6 位数字验证码。`mobilePhoneNumber` 是收到短信的手机号码。
