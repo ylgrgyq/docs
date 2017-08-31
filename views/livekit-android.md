@@ -2,6 +2,8 @@
 {% set maven_uri = "http://mvn.leancloud.cn/nexus/content/repositories/public" %}
 # LiveKit 使用指南 &middot; Android
 
+> 如果需要了解 iOS 版本请点击: [LiveKit 使用指南 &middot; iOS](livekit-ios.html)
+
 [LiveKit]({{git_link}}) 是由 LeanCloud 官方推出的基于 LeanCloud 实时通信与七牛直播服务的 UI 套件，它包含直播、文字聊天、弹幕、送礼物等界面。
 
 针对直播服务，LeanCloud 只按照 [聊天的费用标准](/pricing) 收费，而直播相关的内容，LeanCloud 并不参与收费，其产生的费用请在七牛账户中查询。
