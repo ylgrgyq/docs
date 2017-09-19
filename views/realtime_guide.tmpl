@@ -393,6 +393,25 @@ Tom 想建立一个群，把自己好朋友都拉进这个群，然后给他们�
 ```
 {% endblock %}
 
+#### 提醒功能 - @ 某人
+
+发送消息的时候可以显式地指定这条消息提醒某一个或者一些人:
+
+{% block code_mention_someone %}{% endblock %}
+
+或者也可以提醒所有人：
+
+{% block code_mention_all %}{% endblock %}
+
+消息的接收方，可以通过读取消息的提醒列表来获取哪些 client Id 被提醒了：
+
+{% block code_get_mention_list %}{% endblock %}
+
+消息有一个标识位，用来标识是否提醒了当前对话的全体成员:
+
+{% block code_get_mention_all %}{% endblock %}
+
+
 #### 消息回执
 
 在对方收到消息以及对方阅读了消息之后，云端可以向发送方分别发送一个回执通知。
