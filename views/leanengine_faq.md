@@ -103,6 +103,18 @@ lean -p 3002
 
 我们在 [JavaScript 指南 - AV.Object](./leanstorage_guide-js.html#AV_Object) 章节中也进行了描述。
 
+## 云引擎 Node.js 内存泄漏排查
+
+如果对内存增长有疑问，可以在 `package.json` 中添加如下配置，开启 GC 日志来调试：
+
+```json
+···
+"start": "node --trace_gc server.js",
+···
+```
+
+增加参数 `--trace_gc`，这样每次 GC 会在本地的 Console 或在控制台的云引擎日志中输出。
+
 {% if node != 'qcloud' %}
 ## 如何进行域名备案和域名绑定？
 
