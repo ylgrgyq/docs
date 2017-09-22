@@ -47,10 +47,13 @@
         //iOS10 使用以下方法注册，才能得到授权
         [uncenter requestAuthorizationWithOptions:(UNAuthorizationOptionAlert+UNAuthorizationOptionBadge+UNAuthorizationOptionSound)
                                 completionHandler:^(BOOL granted, NSError * _Nullable error) {
-                                    [[UIApplication sharedApplication] registerForRemoteNotifications];
-                                    //TODO:授权状态改变
-                                    NSLog(@"%@" , granted ? @"授权成功" : @"授权失败");
-                                }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [[UIApplication sharedApplication] registerForRemoteNotifications];
+            });
+                                
+            //TODO:授权状态改变
+            NSLog(@"%@" , granted ? @"授权成功" : @"授权失败");
+        }];
         // 获取当前的通知授权状态, UNNotificationSettings
         [uncenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
             NSLog(@"%s\nline:%@\n-----\n%@\n\n", __func__, @(__LINE__), settings);
