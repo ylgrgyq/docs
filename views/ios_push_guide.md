@@ -27,6 +27,8 @@
 在保存 installation 前，要先从 APNs 注册推送所需的 device token，具体步骤：
 
 ```objc
+#import <UserNotifications/UserNotifications.h>
+
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [self registerForRemoteNotification];
     . . .
