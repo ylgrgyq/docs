@@ -2110,3 +2110,58 @@ AVIMMessage *willMessage = [AVIMTextMessage messageWithText:@"I'm offline." attr
 }];
 ```
 {% endblock %}
+
+
+{% block code_mention_someone %}
+```objc
+/* Sent a message which will mention others. */
+AVIMMessage *message = [AVIMTextMessage messageWithText:@"Hello!" attributes:nil];
+message.mentionList = @[@"Tom"];
+[conversaiton sendMessage:message callback:^(BOOL succeeded, NSError * _Nullable error) {
+    /* A message which will mention Tom has been sent. */
+}];
+```
+{% endblock %}
+
+{% block code_mention_all %}
+```objc
+/* Sent a message which will mention all members. */
+AVIMMessage *message = [AVIMTextMessage messageWithText:@"Hello!" attributes:nil];
+message.mentionAll = YES;
+[conversaiton sendMessage:message callback:^(BOOL succeeded, NSError * _Nullable error) {
+    /* A message which will mention all members has been sent. */
+}];
+```
+{% endblock %}
+
+
+{% block code_get_mention_list %}
+```objc
+  // 示例代码演示 AVIMTypedMessage 接收时，获取该条消息提醒的 client id 列表，同理可以用类似的代码操作 AVIMMessage 的其他子类
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    // get mention list of client id.
+     NSArray *mentionList = message.mentionList;
+}
+```
+{% endblock %}
+
+{% block code_get_mention_all %}
+```objc
+  // 示例代码演示 AVIMTypedMessage 接收时，获取该条消息是否 @ 了当前对话里的所有成员，同理可以用类似的代码操作 AVIMMessage 的其他子类
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    // get this message mentioned all members of this conversion.
+    BOOL mentionAll = message.mentionAll;
+}
+```
+{% endblock %}
+
+
+{% block code_get_mentiond %}
+```objc
+  // 示例代码演示 AVIMTypedMessage 接收时，获取该条消息是否 @ 了当前 client id，同理可以用类似的代码操作 AVIMMessage 的其他子类
+- (void)conversation:(AVIMConversation *)conversation didReceiveTypedMessage:(AVIMTypedMessage *)message {
+    // get if current client id mentiond by this message
+    BOOL mentioned = message.mentioned;
+}
+```
+{% endblock %}

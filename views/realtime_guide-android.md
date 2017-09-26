@@ -2653,3 +2653,76 @@ AVUser.logInInBackground("username", "password", new LogInCallback<AVUser>() {
 });
 ```
 {% endblock %}
+
+{% block code_mention_someone %}
+
+```java
+String content = "something as you will";
+AVIMTextMessage  message = new AVIMTextMessage();
+message.setText(content);
+List<String> list = new ArrayList<>(); // 部分用户的 mention list，你可以向下面代码这样来填充
+
+list.add("Tom");
+
+AVIMMessageOption option = new AVIMMessageOption();
+option.setReceipt(true);
+
+imConversation.sendMessage(message, option, new AVIMConversationCallback() {
+   @Override
+   public void done(AVIMException e) {
+   }
+});
+```
+{% endblock %}
+
+{% block code_mention_all %}
+
+```java
+String content = "something as you will";
+AVIMTextMessage  message = new AVIMTextMessage();
+message.setText(content);
+
+boolean mentionAll = true;// 指示是否 mention 了所有人
+
+AVIMMessageOption option = new AVIMMessageOption();
+option.setReceipt(true);
+
+imConversation.sendMessage(message, option, new AVIMConversationCallback() {
+   @Override
+   public void done(AVIMException e) {
+   }
+});
+```
+{% endblock %}
+
+{% block code_get_mention_list %}
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+  // 读取消息 @ 的 client id 列表
+  List<String> currentMsgMentionUserList = message.getMentionList();
+}
+```
+{% endblock %}
+
+{% block code_get_mention_all %}
+
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+  // 读取消息是否 @ 了对话的所有成员
+  boolean currentMsgMentionAllUsers = message.isMentionAll();
+}
+```
+{% endblock %}
+
+
+{% block code_get_mentiond %}
+```java
+@Override
+public void onMessage(AVIMAudioMessage msg, AVIMConversation conv, AVIMClient client) {
+  // 读取消息是否 @ 了当前 client id
+  boolean currentMsgMentionedMe = message.mentioned();
+}
+```
+{% endblock %}

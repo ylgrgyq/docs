@@ -522,6 +522,43 @@ realtime.createIMClient('bob').then(function(bob) {
 // http://jsplay.avosapps.com/cew/embed?js,console,output
 ```
 
+#### @ 成员提醒
+
+发送消息的时候可以显式地指定这条消息提醒某一个或者一些人:
+
+```js
+const message = new TextMessage(`@Tom`).setMentionList('Tom').mentionAll();
+```
+
+或者也可以提醒所有人：
+
+```js
+const message = new TextMessage(`@all`).mentionAll();
+```
+
+消息的接收方，可以通过读取消息的提醒列表来获取哪些 client Id 被提醒了：
+
+```js
+client.on('message', function messageEventHandler(message, conversation) {
+  var mentionList = receivedMessage.getMentionList();
+});
+```
+
+消息有一个标识位，用来标识是否提醒了当前对话的全体成员:
+
+```js
+client.on('message', function messageEventHandler(message, conversation) {
+  var mentionedAll = receivedMessage.mentionedAll;
+});
+```
+
+消息另一个标识位用来标识当前用户是否被提醒，SDK 通过读取消息是否提醒了全体成员和当前 client id 是否在被提醒的列表里这两个条件计算出来当前用户是否被提醒：
+
+```js
+client.on('message', function messageEventHandler(message, conversation) {
+  var mentioned = receivedMessage.mentioned;
+});
+```
 
 #### 消息回执
 
