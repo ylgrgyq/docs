@@ -59,13 +59,6 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
         type: 'ios',
         qcloudShow: true
       },{
-        name: 'Share',
-        desc: '应用内社交系统的 Demo，有关注、发状态、时间线等功能。',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/Share',
-        type: 'ios',
-        qcloudShow: false
-      },{
         name: '用户反馈 Feedback',
         desc: '演示了 LeanCloud 反馈模块的用法。',
         downPath: '',

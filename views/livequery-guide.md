@@ -601,39 +601,6 @@ livequery.OnLiveQueryReceived += (sender, e) =>
 }
 ```
 
-### 针对用户的特殊事件 - login
-LiveQuery 针对 `_User` 表做了一个特殊的功能，可以使用 LiveQuery 订阅用户的登录行为，例如你有一个社交应用，并使用了内置的 `_User` 表来管理用户，那么就可以使用 LiveQuery 来实时订阅其他用户的登录行为，常见的使用场景有：
-
-- 订阅附近 5 公里的用户登录
-- 实现好友登录的弹窗通知
-
-```objc
-#pragma mark - LiveQuery delegate methods
-- (void)liveQuery:(AVLiveQuery *)liveQuery userDidLogin:(AVUser *)user {
-    /* An user did login. */
-}
-```
-```java
-liveQuery.setEventHandler(new AVLiveQueryEventHandler() {
-  @Override
-  public void onUserLogin(AVUser user) {
-      // user 即为相关的 AVUser
-  }
-});
-```
-```js
-```
-```cs
-var userQuery = new AVQuery<AVUser>();
-var userLiveQuery = await userQuery.SubscribeAsync();
-userLiveQuery.OnLiveQueryReceived += (sender, e) => 
-{
-    if(e.Scope == "login")
-    {
-        var user = e.Payload as AVUser;
-    }
-};
-```
 {# 2017-06-09 时序图涉及存储和 IM 的关系，会加大用户的理解难度，先取消。#}
 {# ## LiveQuery 服务的时序图
 
