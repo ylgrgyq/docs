@@ -99,3 +99,56 @@ conversation.broadcast(from_client_id, message)
 ```
 
 另外以上三个发送消息的方法，都有一个可选的 `push_data` 参数，用来指定消息的[离线推送通知](realtime_v2.html#离线推送通知)。
+
+### 历史消息查询
+
+#### 查询对话历史消息
+
+可以查询某个对话中的历史消息。
+
+```python
+import leancloud
+
+conversation = get_a_conversation()
+
+messages = find_by_conversation(conversation.id)
+```
+
+可选参数：
+
+- `limit`: 指定消息返回数量，服务端默认为 100 条，最大 1000 条。
+- `reversed`: 以默认排序相反的方向返回结果，服务端默认为 False。
+- `after_time`: 查询起始的时间戳，返回小于这个时间(不包含)的记录。
+- `after_message_id`: 查询起始的消息 id，使用时必须加上对应消息的时间 `after_time` 参数，一起作为查询的起点。
+
+#### 查询用户历史消息
+
+可以根据 Client ID 查询历史消息。
+
+```python
+import leancloud
+
+messages = find_by_client(client_id)
+```
+
+可选参数：
+
+- `limit`: 指定消息返回数量，服务端默认为 100 条，最大 1000 条。
+- `after_time`: 查询起始的时间戳，返回小于这个时间(不包含)的记录。
+- `after_message_id`: 查询起始的消息 id，使用时必须加上对应消息的时间 `after_time` 参数，一起作为查询的起点。
+
+#### 查询全部历史消息
+
+可以直接查询应用中所有的历史消息。
+
+```python
+import leancloud
+
+messages = find_by_client()
+```
+
+可选参数：
+
+- `limit`: 指定消息返回数量，服务端默认为 100 条，最大 1000 条。
+- `after_time`: 查询起始的时间戳，返回小于这个时间(不包含)的记录。
+- `after_message_id`: 查询起始的消息 id，使用时必须加上对应消息的时间 `after_time` 参数，一起作为查询的起点。
