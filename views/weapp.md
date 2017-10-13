@@ -8,8 +8,10 @@
 
 - 如何对云端数据进行查询、增加、修改与删除
 - 如何将查询结果数组绑定到视图层进行展示，以及如何在点击事件中得到对应的数组项
-- 如何自动登录 LeanCloud 用户系统，以及如何在登录后设置帐号与密码以供用户在其他平台的 LeanTodo 应用上登录
+- 如何使用 [LiveQuery](livequery-guide.html) 实现对查询结果的实时更新和多端同步
+- 如何自动登录 LeanCloud 用户系统，以及如何在登录后设置账号与密码以供用户在其他平台的 LeanTodo 应用上登录
 - 如何集成微信支付
+- 如何实现下拉刷新
 
 你可以通过微信扫描以下二维码进入 Demo。 Demo 的源码与运行说明请参考 [https://github.com/leancloud/leantodo-weapp](https://github.com/leancloud/leantodo-weapp)。
 
@@ -22,7 +24,7 @@
 - 下载 [小程序开发工具](https://mp.weixin.qq.com/debug/wxadoc/dev/devtools/download.html)，按照 [小程序开发教程](https://mp.weixin.qq.com/debug/wxadoc/dev/) 创建一个项目。
 
 ### 配置域名白名单
-请按照 [小程序域名白名单配置](weapp-domains.html) 的步骤配置。如果你不需要进行真机调试可以跳过这一步（可在开发者工具的项目配置中勾选「开发环境不校验请求域名」）。
+请按照 [小程序域名白名单配置](weapp-domains.html) 的步骤配置。如果你不需要进行真机调试可以跳过这一步（可在开发者工具的 **详情** > **项目设置** 中勾选**不校验安全域名、TLS 版本以及 HTTPS 证书**）。
 
 ## 存储
 
