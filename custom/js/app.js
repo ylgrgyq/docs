@@ -10,7 +10,7 @@ angular.module("app").controller("AppCtrl", ['$scope', '$http', '$timeout','$com
         $scope.masterkey = "{{masterkey}}";
         $scope.sign_masterkey = "{{sign_masterkey}}";
         $scope.sign_appkey = "{{sign_appkey}}";
-        $scope.v2Domain = 'api.leancloud.cn';
+        $scope.v2Domain = '{{appid 前八位}}.' + ($scope.service || 'api') + '.lncld.net';
         $rootScope.pageState = {};
         var sdkversion = 'unknown';
         if(typeof $sdk_versions != 'undefined'){

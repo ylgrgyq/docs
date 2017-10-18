@@ -88,23 +88,24 @@ title: 小程序域名白名单配置
             <th>downloadFile 域名<br/><span style="font-weight: 300; color:#999;">仅在使用 <code>wx.downloadFile</code> <br/>时需要配置</span></th>
             <td ng-bind="domains.download"></td>
           </tr>
-          {% if node !== 'us' %}
-            {% if node === 'qcloud' %}
-              {% set area = 'e1' %}
-              {% set arr = [2, 3, 4, 5, 6] %}
-            {% else %}
-              {% set area = 'n1' %}
-              {% set arr = [1, 2, 5, 7] %}
-            {% endif %}
-            {% for i in arr %}
-              <tr>
-                {% if i === 1 %}
-                  <th rowspan="20">socket 域名<br/><span style="font-weight: 300; color:#999;">仅在使用实时通讯功能<br/>时需要配置</span></th>
-                {% endif %}
-                <td>cn-<%= area %>-cell<%= i %>.leancloud.cn</td>
-              </tr>
-            {% endfor %}
+          {% if node === 'us' %}
+            {% set area = 'us-w1-backend' %}
+            {% set arr = [3, 4, 5, 6, 7, 8, 9] %}
+          {% elseif node === 'qcloud' %}
+            {% set area = 'cn-e1-cell' %}
+            {% set arr = [2, 3, 4, 5, 6] %}
+          {% else %}
+            {% set area = 'cn-n1-cell' %}
+            {% set arr = [1, 2, 5, 7] %}
           {% endif %}
+          {% for i in arr %}
+            <tr>
+              {% if i === 1 %}
+                <th rowspan="20">socket 域名<br/><span style="font-weight: 300; color:#999;">仅在使用实时通讯功能<br/>时需要配置</span></th>
+              {% endif %}
+              <td><%= area %><%= i %>.leancloud.cn</td>
+            </tr>
+          {% endfor %}
         </table>
         <div class="callout callout-danger">目前微信限制每月只能修改 5 次域名白名单。</div>
       </div>
