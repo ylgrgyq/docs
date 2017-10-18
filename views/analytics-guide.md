@@ -27,7 +27,7 @@ AVAnalytics.InitAsync(IAVAnalyticsDevice device);
 // 下面是一个在 PC 实现这个接口的样例
 public class PC : IAVAnalyticsDevice
 {
-    public string access
+    public string network_access
     {
         get
         {
@@ -43,7 +43,7 @@ public class PC : IAVAnalyticsDevice
         }
     }
 
-    public string carrier
+    public string network_carrier
     {
         get
         {
@@ -107,7 +107,7 @@ public class PC : IAVAnalyticsDevice
         }
     }
 
-    public string os
+    public string platform
     {
         get
         {
@@ -123,7 +123,7 @@ public class PC : IAVAnalyticsDevice
         }
     }
 
-    public string resolution
+    public string device_resolution
     {
         get
         {
@@ -142,6 +142,27 @@ public class PC : IAVAnalyticsDevice
 // 然后在初始化的时候传递给 InitAsync 即可：
 AVAnalytics.InitAsync(new PC());
 ```
+
+上述字段的有格式要求，请遵循如下表格：
+
+字段名称|类型|格式|长度|是否必须|说明|示例
+--|--|--|--|--|--|--
+device_id|string|UUID 或 GUID|<span class="text-nowrap">12-64</span>|是|设备唯一 ID|类似于 "98DD09BDFDC24E359E0426219E9FA79A" 或 "820aab78-afc9-48ba-832b-55b9ee9995d3"
+network_access|string|无要求|0-64|否|设备联网方式|"WiFi"<br/>"4g"<br/>"wired"
+app_version|string|无要求|0-64|否|应用版本|"1.0.0"<br/>"1.0.1-alpha.11"<br/>"2.0.1-beta.1"
+network_carrier|string|无要求|0-64|否|通信服务商|"中国移动"<br/>"中国联通"<br/>"中国电信"<br/>"CMCC"<br/>"China Unicom"
+channel|string|无要求|0-64|否|应用分发渠道|"App Store"<br/>"Google Play"<br/>"豌豆荚"<br/>"小米商店"
+device_brand|string|无要求|0-64|否|设备生产厂商|"Apple"<br/>"小米"<br/>"魅族"<br/>"一加"
+device_model|string|无要求|0-64|否|设备型号|"iPhone6,2"<br/>"XiaoMi 5x"<br/>"Sumsang Note8"
+iid|string|UUID 或 GUID 或 hex|0-64|否|设备当前的 installation id|"da6c791d-c698-471f-a48d-ead3bd6f5d13"
+language|string|`[a-zA-Z-]{2,32}`，建议阅读 [Wiki](https://en.wikipedia.org/wiki/Language_localisation)|0-64|否|当前设备的语言和地区|"zh-cn"<br/>"zh-tw"<br/>"en-us"
+mc|string|MAC 地址|0-64|否|设备的网卡地址|"02:00:00:2D:00:1E"
+platform|string|`[a-zA-Z0-9_.-]+`|0-64|否|操作系统名称|"iOS"<br/>"Android"<br/>"Windows"<br/>"Linux"
+os_version|string|无要求|0-64|否|操作系统版本|"iOS 11.3"<br/>"8.1"<br/>"NT 6.X"
+device_resolution|string|`[0-9]{1,10} x [0-9]{1,10}`|0-64|否|设备屏幕分辨率|"1920x1080"<br/>"960*640"
+timezone|int|-12 到 14 之间的整数|-|否|设备所在的相对于 GMT 的时区|8 代表北京时间 <br/> -8 代表 Pacific (PST) 太平洋时间 GMT-8
+
+
 ## 应用打开
 
 一般情况下应用被打开的方式有两种：
