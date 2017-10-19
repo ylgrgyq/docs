@@ -1865,8 +1865,8 @@ LeanCloud 允许你连接你的用户到其他服务，比如新浪微博和腾�
   "authData": {
     "weibo": {
       "uid": "123456789",
-            "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
-            "expiration_in": "36000"
+      "access_token": "2.00vs3XtCI5FevCff4981adb5jj1lXE",
+      "expiration_in": "36000"
     }
   }
 }
