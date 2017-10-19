@@ -96,7 +96,7 @@
   ![push_test](images/ios_cert_v2/push_test.png)
 
 {{ docs.alert("在 LeanCloud 平台，Token Authentication 鉴权方式和老的证书鉴权方式是互斥的，一旦配置了 Token Authentication 则应用下所有推送均会使用 Token Authentication 方式进行，所以请确保为所有需要发推送的 App 都添加了 Token Authentication 配置。") }}
-{{ docs.alert("如果您的目标推送设备中有使用版本低于 v4.2.0 的 iOS SDK 时，请在调用推送接口发推送时主动带上 topic 参数，请参看: [推送消息接口](push_guide.html#推送消息)。") }}
+{{ docs.alert("如果您的目标推送设备中有使用版本低于 v4.2.0 的 iOS SDK，请在调用推送接口发推送时主动带上 topic 参数，请参看: [推送消息接口](push_guide.html#推送消息)。") }}
 
 ## 创建推送证书（不推荐使用）
 
