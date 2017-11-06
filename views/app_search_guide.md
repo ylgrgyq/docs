@@ -326,7 +326,7 @@ searchQuery.setSortBuilder(builder);
     });
 ```
 
-你也可以参考 [我们的 `SearchActivity`](https://github.com/leancloud/leancloud-sdk/blob/master/android/avossearch/src/com/avos/leancloud/search/SearchActivity.java) 来更好的指定你自己的搜索结果页面。
+你也可以参考 [我们的 `SearchActivity`](https://github.com/leancloud/leancloud-sdk/blob/master/android/avossearch/src/com/avos/avoscloud/search/SearchActivity.java) 来更好的指定你自己的搜索结果页面。
 
 ##### 分页查询
 
