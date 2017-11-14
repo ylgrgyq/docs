@@ -1,4 +1,5 @@
 {% import "views/_im.njk" as im %}
+{% import "views/_helper.njk" as docs %}
 # 实时通信 REST API 使用指南
 
 ## 请求格式
