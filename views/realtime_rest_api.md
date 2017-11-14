@@ -116,18 +116,18 @@ convid | **必填** | 对话 id
 msgid | 可选 | 起始的消息 id，**使用时必须加上对应消息的时间戳 timestamp 参数，作为查询的起点**
 timestamp | 可选 | 查询起始的时间戳。默认是当前时间，单位是毫秒
 till_msgid | 可选 | 查询终止的消息 id。**使用时必须加上消息的时间戳 till_timestamp 参数，作为查询的终点**
-till_timestamp | 可选 | 查询终止的时间戳，默认为0，单位是毫秒
+till_timestamp | 可选 | 查询终止的时间戳，默认为 0，单位是毫秒
 include_start | 可选 | 是否包含由 timestamp 与 msgid 确定的起始消息。布尔值，默认为 false
 include_stop | 可选 | 是否包含由 till_timestamp 与 till_msgid 确定的终止消息。布尔值，默认为 false
-reversed | 可选 | 以默认排序（默认按时间降序）相反的方向返回结果，这时 till_timestamp 默认为当前时间戳，timestamp 默认为0。布尔值，默认为 false
+reversed | 可选 | 以默认排序（默认按时间降序）相反的方向返回结果，这时 till_timestamp 默认为当前时间戳，timestamp 默认为 0。布尔值，默认为 false
 limit | 可选 | 返回条数限制，可选，默认 100 条，最大 1000 条
 peerid | 可选 | 查看者 id（签名参数）
 nonce | 可选 | 签名随机字符串（签名参数）
 signature_ts | 可选 | 签名时间戳（签名参数），单位是秒
 signature | 可选 | 签名（签名参数）
-max_ts | 可选 | 废弃，使用 timestamp 表示查询起始时间戳
+max_ts | 可选 | {{ docs.alertInline("废弃") }}，使用 timestamp 表示查询起始时间戳
 
-本接口时间参数较多，这里举一示例供大家参考。比如某对话内有三条消息，id 分别为 id1、id2、id3，发消息的时间分别是 t1、t2、t3（t1<t2<t3），下面列举出不同参数组合的查询结果（空白表示使用默认值）：
+本接口时间参数较多，这里举一示例供大家参考。比如某对话内有三条消息，id 分别为 id1、id2、id3，发消息的时间分别是 t1、t2、t3（t1 < t2 < t3），下面列举出不同参数组合的查询结果（空白表示使用默认值）：
 
 | timestamp| msgid| till_timestamp| till_msgid| include_start| include_stop| reversed| 结果 |
 | ---------|---------|---------|---------|---------|---------|---------|--------- |
