@@ -31,7 +31,7 @@ LeanCloud 开发者文档
   - 如需要，更新文档首页 `templates/pages/index.html` 和顶部导航菜单 `templates/include/header.html`。
 - 修改文中标题或文件名称
   - 确认要修改的标题 h1-h6 或文件名称有没有被 `/views` 和 `/templates` 目录下任何文件所引用，以免产生断链。
-  - 系统自动生成的 h1-h6 标题的 id，会将所有空格、中西文标点替换为下划线，如 `## 调用 Console.log()` 会生成  `<h2  id="调用_Console_log__">`，在引用时需要留意，包括大小写。  
+  - 系统自动生成的 h1-h6 标题的 id，会将所有空格、中西文标点替换为<del>下划线，如 `## 调用 Console.log()` 会生成  `<h2  id="调用_Console_log__">`，在引用时需要留意，包括大小写。</del>（2017-11-18）由数字和中hash 值，在引用时只需要将空白替换成中划线即可，例如引用标题 `## 使用 SSO 登录` 时，应写为 `请参考 [SSO 登录](#使用-SSO-登录)`。
 - 提交修改并发起 `Pull Request`
 
 ## 内部贡献
@@ -141,7 +141,7 @@ $ grunt server
 
 这样，在生成的 html 文档中，`{{appid}}` 才可以被正确渲染，否则，它会被替换为空值，原因是 nunjucks 在上下文中找不到该变量的定义。
 
-其他常用的 [nunjucks 模板方法](https://mozilla.github.io/nunjucks/templating.html) 还有：
+其他常用的 [nunjucks 模板方法](https://mozilla.github.io/nunjucks/templating.html) 或者 [jinja](http://jinja.pocoo.org/docs/dev/templates/)，以下为快速参考：
 
 ```
 {# 这是注释，用 <!-- --> 无效 #}
