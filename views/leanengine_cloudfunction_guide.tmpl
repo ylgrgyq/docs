@@ -37,13 +37,13 @@
 ```objc
 [AVCloud setProductionMode:NO]; // 调用预备环境
 ```
-```java
+```android
 AVCloud.setProductionMode(false); // 调用预备环境
 ```
 ```php
 LeanClient::useProduction(false); // 调用预备环境
 ```
-```javascript
+```nodejs
 AV.setProduction(false); // 调用预备环境
 ```
 ```python
@@ -98,7 +98,7 @@ NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦�
                    }
 }];
 ```
-```java
+```android
 // 在 Android SDK 中，AVCloud 提供了一系列的静态方法来实现客户端调用云函数
 // 构建参数
 Map<String, String> dicParameters = new HashMap<String, String>();
@@ -168,7 +168,7 @@ NSDictionary *dicParameters = [NSDictionary dictionaryWithObject:@"夏洛特烦�
                   }
 }];
 ```
-```java
+```android
 // 构建参数
 Map<String, String> dicParameters = new HashMap<String, String>();
 dicParameters.put("movie", "夏洛特烦恼");
@@ -184,7 +184,7 @@ AVCloud.rpcFunctionInBackground("averageStars", dicParameters,
 ```php
 // PHP 有待支持
 ```
-```javascript
+```nodejs
 var paramsJson = {
   movie: "夏洛特烦恼"
 };

@@ -215,6 +215,7 @@ var codeBlockTabber = (function() {
     var $codeBlocks = $('.prettyprint');
     var langLabelMap = {
       'lang-swift': 'Swift',
+      'lang-android': 'Android',
       'lang-objc': 'Objective-C',
       'lang-objective-c': 'Objective-C',
       'lang-php': 'PHP',
@@ -228,7 +229,8 @@ var codeBlockTabber = (function() {
       'lang-cs': 'C#',
       'lang-curl': 'curl',
       'lang-unity': 'Unity',
-      'lang-nodejs': 'Node.js'
+      'lang-nodejs': 'Node.js',
+      'lang-node': 'Node.js'
     };
 
     // Multilingual init
