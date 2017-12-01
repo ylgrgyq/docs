@@ -392,7 +392,7 @@ grunt.registerMultiTask('docmeta', '增加 Title、文档修改日期、设置�
 
       grunt.log.writeln('--------'.padStart(10) + ' ' + filePath['grey'].bold)
       // replace all in-page IDs with their numeric representations
-      $('h1,h2,h3,h4,h5,.doc-content a[href*="#"]:not([href="#"]):not([href*="#/"]):not([href*="&#"])').each(function(index, el){
+      $('h1,h2,h3,h4,h5,:not(#toc) a[href*="#"]:not([href="#"]):not([href*="#/"]):not([href*="&#"])').each(function(index, el){
         // --- href variants ---
         // href="rest_api.html#Push_通知"
         // href="#消息推送"
