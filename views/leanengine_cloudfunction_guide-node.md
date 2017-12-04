@@ -28,7 +28,7 @@
 
 {% block cloudFuncExample %}
 
-```javascript
+```nodejs
 AV.Cloud.define('averageStars', function(request) {
   var query = new AV.Query('Review');
   query.equalTo('movie', request.params.movie);
@@ -62,7 +62,7 @@ AV.Cloud.define('averageStars', function(request) {
 
 {% block runFuncExample %}
 
-```js
+```nodejs
 AV.Cloud.run('averageStars', {
   movie: '夏洛特烦恼',
 }).then(function(data) {
@@ -74,7 +74,7 @@ AV.Cloud.run('averageStars', {
 
 云引擎中默认会直接进行一次本地的函数调用，而不会像客户端一样发起一个 HTTP 请求。如果你希望发起 HTTP 请求来调用云函数，可以传入一个 `remote: true` 的选项。当你在云引擎之外运行 Node SDK 时这个选项非常有用：
 
-```js
+```nodejs
 AV.Cloud.run('averageStars', {movie: '夏洛特烦恼'}, {remote: true}).then(function(data) {
   // 成功
 }, function(error) {
@@ -101,18 +101,18 @@ AV.Cloud.run('averageStars', {movie: '夏洛特烦恼'}, {remote: true}).then(fu
 - 在存储服务中创建一个队列表，包含 `status` 列；
 - 接到任务后，向队列表保存一条记录，status 值设置为「处理中」，然后将请求结束掉，将队列对象的 id 发给客户端（旧版本的 SDK 使用 `response.success(id)`）：
 
-  ```javascript
+```nodejs
   return new Promise( (resolve, reject) => {
     resolve(id);
   });
-  ```
+```
 - 当业务处理完毕，根据处理结果更新刚才的队列对象状态，将 `status` 字段设置为「完成」或者「失败」；
 - 在任何时候，在控制台通过队列 id 可以获取某个任务的执行结果，判断任务状态。
 {% endblock %}
 
 {% block beforeSaveExample %}
 
-```javascript
+```nodejs
 AV.Cloud.beforeSave('Review', function(request) {
   var comment = request.object.get('comment');
   if (comment) {
@@ -133,7 +133,7 @@ AV.Cloud.beforeSave('Review', function(request) {
 
 {% block afterSaveExample %}
 
-```javascript
+```nodejs
 AV.Cloud.afterSave('Comment', function(request) {
   var query = new AV.Query('Post');
   return query.get(request.object.get('post').id).then(function(post) {
@@ -146,7 +146,7 @@ AV.Cloud.afterSave('Comment', function(request) {
 
 {% block afterSaveExample2 %}
 
-```javascript
+```nodejs
 AV.Cloud.afterSave('_User', function(request) {
   console.log(request.object);
   request.object.set('from','LeanCloud');
@@ -161,7 +161,7 @@ AV.Cloud.afterSave('_User', function(request) {
 
 {% block beforeUpdateExample %}
 
-```javascript
+```nodejs
 AV.Cloud.beforeUpdate('Review', function(request) {
   // 如果 comment 字段被修改了，检查该字段的长度
   if (request.object.updatedKeys.indexOf('comment') != -1) {
@@ -179,7 +179,7 @@ AV.Cloud.beforeUpdate('Review', function(request) {
 
 {% block afterUpdateExample %}
 
-```javascript
+```nodejs
 AV.Cloud.afterUpdate('Article', function(request) {
   console.log('Updated article,the id is :' + request.object.id);
 });
@@ -188,7 +188,7 @@ AV.Cloud.afterUpdate('Article', function(request) {
 
 {% block beforeDeleteExample %}
 
-```javascript
+```nodejs
 AV.Cloud.beforeDelete('Album', function(request) {
   //查询Photo中还有没有属于这个相册的照片
   var query = new AV.Query('Photo');
@@ -208,7 +208,7 @@ AV.Cloud.beforeDelete('Album', function(request) {
 
 {% block afterDeleteExample %}
 
-```javascript
+```nodejs
 AV.Cloud.afterDelete('Album', function(request) {
   var query = new AV.Query('Photo');
   var album = AV.Object.createWithoutData('Album', request.object.id);
@@ -225,7 +225,7 @@ AV.Cloud.afterDelete('Album', function(request) {
 
 {% block onVerifiedExample %}
 
-```javascript
+```nodejs
 AV.Cloud.onVerified('sms', function(request) {
   console.log('onVerified: sms, user: ' + request.object);
 });
@@ -234,7 +234,7 @@ AV.Cloud.onVerified('sms', function(request) {
 
 {% block onLoginExample %}
 
-```javascript
+```nodejs
 AV.Cloud.onLogin(function(request) {
   // 因为此时用户还没有登录，所以用户信息是保存在 request.object 对象中
   console.log("on login:", request.object);
@@ -250,7 +250,7 @@ AV.Cloud.onLogin(function(request) {
 
 AV.Cloud.Error 的第二个参数中可以用 `status` 指定 HTTP 响应代码（默认为 400），还可以用 `code` 指定响应正文中的错误代码（默认为 1）：
 
-```javascript
+```nodejs
 AV.Cloud.define('errorCode', function(request) {
   return AV.User.logIn('NoThisUser', 'lalala');
 });
@@ -259,7 +259,7 @@ AV.Cloud.define('errorCode', function(request) {
 
 {% block errorCodeExample2 %}
 
-```javascript
+```nodejs
 AV.Cloud.define('customErrorCode', function(request) {
   throw new AV.Cloud.Error('自定义错误信息', {code: 123});
 });
@@ -268,7 +268,7 @@ AV.Cloud.define('customErrorCode', function(request) {
 
 {% block errorCodeExampleForHooks %}
 
-```javascript
+```nodejs
 AV.Cloud.beforeSave('Review', function(request) {
   // 使用 JSON.stringify() 将 object 变为字符串
   throw new AV.Cloud.Error(JSON.stringify({
@@ -330,7 +330,7 @@ v3|3.x|3.x|8|需要使用 Promise 写法|async, bluebird, crypto, debug, ejs, ja
 
 {% block timerExample %}
 
-```javascript
+```nodejs
 AV.Cloud.define('log_timer', function(request){
   console.log('Log in timer.');
 });
@@ -339,7 +339,7 @@ AV.Cloud.define('log_timer', function(request){
 
 {% block timerExample2 %}
 
-```javascript
+```nodejs
 AV.Cloud.define('push_timer', function(request){
   return AV.Push.send({
     channels: ['Public'],
@@ -353,7 +353,7 @@ AV.Cloud.define('push_timer', function(request){
 
 {% block masterKeyInit %}
 
-```javascript
+```nodejs
 //参数依次为 AppId, AppKey, MasterKey
 AV.init({
   appId: '{{appid}}',
@@ -366,7 +366,7 @@ AV.Cloud.useMasterKey();
 
 {% block code_hook_message_received %}
 
-```js
+```nodejs
 AV.Cloud.onIMMessageReceived((request) => {
 	// request.params = {
 	// 	fromPeer: 'Tom',
@@ -396,7 +396,7 @@ AV.Cloud.onIMMessageReceived((request) => {
 
 {% block code_hook_receiver_offline %}
 
-```js
+```nodejs
 AV.Cloud.onIMReceiversOffline((request) => {
 	let params = request.params;
 	let content = params.content;
@@ -427,7 +427,7 @@ AV.Cloud.onIMReceiversOffline((request) => {
 
 {% block code_hook_message_sent %}
 
-```js
+```nodejs
 AV.Cloud.onIMMessageSent((request) => {
 	console.log('params', request.params);
 
@@ -450,7 +450,7 @@ AV.Cloud.onIMMessageSent((request) => {
 
 {% block code_hook_conversation_start %}
 
-```js
+```nodejs
 AV.Cloud.onIMConversationStart((request) => {
 	let params = request.params;
 	console.log('params', params);
@@ -470,7 +470,7 @@ AV.Cloud.onIMConversationStart((request) => {
 
 {% block code_hook_conversation_started %}
 
-```js
+```nodejs
 AV.Cloud.onIMConversationStarted((request) => {
 	let params = request.params;
 	console.log('params', params);
@@ -486,7 +486,7 @@ AV.Cloud.onIMConversationStarted((request) => {
 
 {% block code_hook_conversation_add %}
 
-```js
+```nodejs
 AV.Cloud.onIMConversationAdd((request) => {
 	let params = request.params;
 	console.log('params', params);
@@ -504,7 +504,7 @@ AV.Cloud.onIMConversationAdd((request) => {
 
 {% block code_hook_conversation_remove %}
 
-```js
+```nodejs
 AV.Cloud.onIMConversationRemove((request) => {
 	let params = request.params;
 	console.log('params', params);
@@ -523,7 +523,7 @@ AV.Cloud.onIMConversationRemove((request) => {
 {% endblock %}
 {% block code_hook_conversation_update %}
 
-```js
+```nodejs
 AV.Cloud.onIMConversationUpdate((request) => {
 	let params = request.params;
 	console.log('params', params);
@@ -559,7 +559,7 @@ AV.Cloud.onIMConversationUpdate((request) => {
 
 这样，对象的保存或删除动作就不会再次触发相关的 Hook 函数。
 
-```javascript
+```nodejs
 // 直接修改并保存对象不会再次触发 afterUpdate Hook 函数
 request.object.set('foo', 'bar');
 request.object.save().then(function(obj) {

@@ -242,7 +242,7 @@ Node SDK 的历史版本：
 {% endblock %}
 
 {% block get_env %}
-```javascript
+```nodejs
 var NODE_ENV = process.env.NODE_ENV || 'development';
 if (NODE_ENV === 'development') {
   // 当前环境为「开发环境」，是由命令行工具启动的
@@ -258,13 +258,13 @@ if (NODE_ENV === 'development') {
 {% block cookie_session %}
 云引擎提供了一个 `AV.Cloud.CookieSession` 中间件，用 Cookie 来维护用户（`AV.User`）的登录状态，要使用这个中间件可以在 `app.js` 中添加下列代码：
 
-```javascript
+```nodejs
 app.use(AV.Cloud.CookieSession({ secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
 Koa 需要添加一个 `framework: 'koa'` 的参数：
 
-```javascript
+```nodejs
 app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 3600000, fetchUser: true }));
 ```
 
@@ -285,7 +285,7 @@ app.use(AV.Cloud.CookieSession({ framework: 'koa', secret: 'my secret', maxAge: 
 
 你可以这样简单地实现一个具有登录功能的站点：
 
-```javascript
+```nodejs
 // 处理登录请求（可能来自登录界面中的表单）
 app.post('/login', function(req, res) {
   AV.User.logIn(req.body.username, req.body.password).then(function(user) {
@@ -330,7 +330,7 @@ npm install request --save
 
 代码示例：
 
-```javascript
+```nodejs
 var request = require('request');
 
 request({
@@ -363,13 +363,13 @@ app.get('/', function(req, res) {
 {% block upload_file_special_middleware %}
 然后配置应用使用 [multiparty](https://www.npmjs.com/package/multiparty) 中间件：
 
-```javascript
+```nodejs
 var multiparty = require('multiparty');
 ```
 {% endblock %}
 
 {% block code_upload_file_sdk_function %}
-```javascript
+```nodejs
 var fs = require('fs');
 app.post('/upload', function(req, res){
   var form = new multiparty.Form();
@@ -424,14 +424,14 @@ client.on('error', function(err) {
 {% block https_redirect %}
 Express:
 
-```javascript
+```nodejs
 app.enable('trust proxy');
 app.use(AV.Cloud.HttpsRedirect());
 ```
 
 Koa:
 
-```javascript
+```nodejs
 app.proxy = true;
 app.use(AV.Cloud.HttpsRedirect({framework: 'koa'}));
 ```
@@ -442,7 +442,7 @@ app.use(AV.Cloud.HttpsRedirect({framework: 'koa'}));
 
 因为 Node.js 本身的单线程模型，无法充分利用多个 CPU 核心，所以如果你使用了 2CPU 或以上的实例，需要自行使用 Node.js 的 [cluster](https://nodejs.org/api/cluster.html) 配置多进程运行，创建一个 `server-cluster.js`：
 
-```javascript
+```nodejs
 var cluster = require('cluster');
 
 var workers = process.env.LEANCLOUD_AVAILABLE_CPUS || 1;
@@ -474,7 +474,7 @@ if (cluster.isMaster) {
 {% endblock %}
 
 {% block code_calling_custom_variables %}
-```javascript
+```nodejs
 // 在云引擎 Node.js 环境中使用自定义的环境变量
 var MY_CUSTOM_VARIABLE = process.env.MY_CUSTOM_VARIABLE;
 console.log(MY_CUSTOM_VARIABLE);
@@ -482,7 +482,7 @@ console.log(MY_CUSTOM_VARIABLE);
 {% endblock %}
 
 {% block loggerExample %}
-```javascript
+```nodejs
 console.log('hello');
 console.error('some error!');
 ```

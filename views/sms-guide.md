@@ -49,7 +49,7 @@ options.signatureName = @"LeanCloud";     // 控制台预设的短信签名
                                     }
                                 }];
 ```
-```java
+```android
 AVSMSOption option = new AVSMSOption();
 option.setTemplateName("Register_Notice");  // 控制台预设的模板名称
 option.setSignatureName("LeanCloud");       // 控制台预设的短信签名
@@ -147,7 +147,7 @@ options.operation = @"某种操作";        // 操作名称
                                     }
                                 }];
 ```
-```java
+```android
 AVSMSOption option = new AVSMSOption();
 option.setTtl(10);                     // 验证码有效时间为 10 分钟
 option.setApplicationName("应用名称");
@@ -198,7 +198,7 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","应用名称","某种操作",10).Cont
     }
 }];
 ```
-```java
+```android
 AVSMS.verifySMSCodeInBackground("123456", "186xxxxxxxx", new AVMobilePhoneVerifyCallback() {
   @Override
   public void done(AVException e) {
@@ -242,7 +242,7 @@ options.type = AVShortMessageTypeVoice;
         }
 }];
 ```
-```java
+```android
 AVSMSOption option = new AVSMSOption();
 option.setSmsType(AVSMSOption.AVSMS_TYPE.VOICE_SMS);
 AVSMS.requestSMSCodeInBackground("188xxxxxxxx", option, new RequestMobileCodeCallback() {
@@ -282,7 +282,7 @@ AVCloud.RequestVoiceCodeAsync ("18688888888").ContinueWith(t =>{
     }
 }];
 ```
-```java
+```android
 AVSMS.verifySMSCodeInBackground("123456", "186xxxxxxxx", new AVMobilePhoneVerifyCallback() {
   @Override
   public void done(AVException e) {
@@ -379,7 +379,7 @@ options.templateVariables = @{ @"order_id": @"7623432424540" }; // 使用实际�
                                     }
                                 }];
 ```
-```java
+```android
 AVSMSOption option = new AVSMSOption();
 option.setTemplateName("Order_Notice");
 option.setSignatureName("sign_BuyBuyBuy");
@@ -661,7 +661,7 @@ options.height = 50;
                                 NSString *url = captchaDigest.URLString;
                             }];
 ```
-```java
+```android
 AVCaptchaOption option = new AVCaptchaOption();
 option.setWidth(85);
 option.setHeight(30);
@@ -701,7 +701,7 @@ AVCloud.RequestCaptchaAsync(width:85, height:30).ContinueWith(t =>{
                         /* validationToken 可用短信认证 */
                     }];
 ```
-```java
+```android
 AVCaptcha.verifyCaptchaCodeInBackground(code, captchaDigest, new AVCallback<String>() {
   @Override
   protected void internalDone0(String validateToken, AVException exception) {
@@ -741,7 +741,7 @@ options.validationToken = <#validationToken#>;
                                     }
                                 }];
 ```
-```java
+```android
 AVSMSOption option = new AVSMSOption();
 option.setTemplateName("New_Series");
 option.setSignatureName("sign_BuyBuyBuy");
@@ -842,7 +842,7 @@ user.mobilePhoneNumber = @"18612340000";
 NSError *error = nil;
 [user signUp:&error];
 ```
-```java
+```android
 AVUser user = new AVUser();
 user.setUsername("hjiang");
 user.setPassword("f32@ds*@&dsa");
@@ -888,7 +888,7 @@ user.SignUpAsync().ContinueWith(t =>
     //验证结果
 }];
 ```
-```java
+```android
 AVUser.verifyMobilePhoneInBackground("123456", new AVMobilePhoneVerifyCallback() {
     @Override
     public void done(AVException e) {
@@ -931,7 +931,7 @@ if(succeeded){
 }
 }];
 ```
-```java
+```android
 AVUser.requestMobilePhoneVerifyInBackground("13800000000", new RequestMobileCodeCallback() {
     @Override
     public void done(AVException e) {
@@ -967,7 +967,7 @@ AVUser.RequestMobilePhoneVerifyAsync("186xxxxxxxx").ContinueWith(t =>
     }
 }];
 ```
-```java
+```android
 AVUser.verifyMobilePhoneInBackground("654321", new AVMobilePhoneVerifyCallback() {
     @Override
     public void done(AVException e) {
