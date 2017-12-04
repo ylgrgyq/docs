@@ -242,7 +242,7 @@ angular.module('app').controller('StartCtrl', [
                     $timeout(function(){
                         //$compile($('#start-main').contents())($scope);
                         $compile(dom.contents())($scope);
-                        setTimeout(() => {
+                        setTimeout(function() {
                             prettyPrepare();
                             prettyPrint();
                             $("pre.prettyprint code").each(function(index, ele) {
