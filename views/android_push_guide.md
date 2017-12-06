@@ -53,6 +53,9 @@ AVInstallation.getCurrentInstallation().saveInBackground(new SaveCallback() {
 // 设置默认打开的 Activity
 PushService.setDefaultPushCallback(this, PushDemo.class);
 ```
+### Android 8.0 推送适配
+
+在调用 `AVOSCloud.initialize` 之前，需要先调用 `PushService.setDefaultChannelId(context, channelid)` 设置通知展示的默认 `channel`，否则消息无法展示。Channel ID 的解释请阅读 Google 官方文档 [Creating a notification](https://developer.android.com/guide/topics/ui/notifiers/notifications.html#CreateNotification)。
 
 ## 订阅频道
 
