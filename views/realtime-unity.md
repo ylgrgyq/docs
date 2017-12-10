@@ -397,6 +397,59 @@ public void KickXuShu()
 
 其他在线成员会收到 `AVIMClient.OnMembersLeft`，而徐庶本人会收到 `AVIMClient.OnKicked`。
 
+#### 主动加入
+在后来的故事中，马超走投无路前来投奔刘备，于是他问刘备讨要了「桃园」这个对话的 ID，然后主动加入：
+
+```cs
+public void MaChaoJoin()
+{
+    // 假设刘备将「桃园」的对话 ID 告诉给了马超
+    var TaoYuanConversationId = "58dca69e2e9af6631e113d8a";
+
+    // 赵云的 client Id
+    var machao_ClintId = "1005";
+
+    AVIMClient machao = null;
+    // 以刘备的游戏 ID 1001 作为 client Id 构建 AVIMClient
+    avRealtime.CreateClient(machao_ClintId).ContinueWith(t =>
+    {
+        machao = t.Result;
+    }).ContinueWith(s => 
+    {
+        // 构建对话的时候需要指定一个 AVIMClient 实例做关联
+        var TaoYuanConversation = AVIMConversation.CreateWithoutData(TaoYuanConversationId, machao);
+        // 直接邀请赵云加入对话
+        return machao.JoinAsync(TaoYuanConversation, machao_ClintId);
+    });
+}
+```
+
+#### 主动离开
+刘备在赵云的帮助下，带着孙尚香离开了江东，回到了自己的军营中，但是周瑜并没有善罢甘休，以吴国太病重为由，诱骗孙尚香带着刘备的儿子阿斗回江东，但是赵云等一干将士识破了诡计，上演了一出截江救阿斗的传奇，孙尚香心灰意冷的主动离开了刘备阵营，孙尚香主动退出「桃园」这个对话的代码如下：
+
+```cs
+public void MaChaoJoin()
+{
+    // 这是孙尚香之前就缓存过的对话 ID
+    var TaoYuanConversationId = "58dca69e2e9af6631e113d8a";
+
+    // 孙尚香的 client Id
+    var sunshangxiang_ClintId = "3020";
+
+    AVIMClient sunshangxiang = null;
+    // 以刘备的游戏 ID 1001 作为 client Id 构建 AVIMClient
+    avRealtime.CreateClient(sunshangxiang_ClintId).ContinueWith(t =>
+    {
+        sunshangxiang = t.Result;
+    }).ContinueWith(s => 
+    {
+        // 构建对话的时候需要指定一个 AVIMClient 实例做关联
+        var TaoYuanConversation = AVIMConversation.CreateWithoutData(TaoYuanConversationId, sunshangxiang);
+        // 直接邀请赵云加入对话
+        return sunshangxiang.LeaveAsync(TaoYuanConversation, sunshangxiang_ClintId);
+    });
+}
+```
 
 ### 私聊案例 - 曹操三问谋士
 
@@ -534,6 +587,9 @@ public void QueryTransientConversations()
     });
 }
 ```
+#### 暂态对话的特殊性
+
+暂态对话具备一个特性： 断线之后（重新登录或者下一次进入应用）需要主动再次加入到目标暂态对话，才能接收到该暂态对话的消息，相关操作可以参考[主动加入](#主动加入).
 
 ## 单点登录
 

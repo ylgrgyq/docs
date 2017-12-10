@@ -238,6 +238,17 @@ public class BinaryMessage : IAVIMMessage
         get; set;
     }
 
+	public	bool MentionAll 
+    { 
+        get; set; 
+    }
+
+    public IEnumerable<string> MentionList 
+    { 
+        get; set; 
+    }
+
+
     public IAVIMMessage Deserialize(string msgStr)
     {
         var spiltStrs = msgStr.Split(':');
