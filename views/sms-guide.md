@@ -793,7 +793,7 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy","�
 
 以下金额为每条短信的价格，以人民币计费。列表中未包含的国家或区域，请在论坛或工单中提问确认。
 
-<script src="/custom/js/lib/jquery.dataTables.min.js"></script>
+<script src="custom/js/lib/jquery.dataTables.min.js"></script>
 
 <script type="text/javascript">
 var smsPrices = [{"CountryNumber":1,"CountryOrRegion":"美国","CountryCode":"US","UnitPrice":0.07},
