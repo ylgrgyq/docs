@@ -207,6 +207,7 @@ curl -X DELETE \
   --data-urlencode 'convid=219946ef32e40c515d33ae6975a5c593' \
   --data-urlencode 'msgid=PESlY' \
   --data-urlencode 'timestamp=1408008498571' \
+  --data-urlencode 'from=mercy' \
   https://{{host}}/1.1/rtm/messages/logs
 ```
 
