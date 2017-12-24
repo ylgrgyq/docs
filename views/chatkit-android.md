@@ -46,7 +46,7 @@ git clone git@github.com:leancloud/LeanCloudChatKit-Android.git
         jcenter()
         // 这里是 LeanCloud 的包仓库
         maven {
-            url "{{ docs.mustache("maven_uri") }}"
+            url "{{ maven_uri }}"
         }
 
     }
@@ -60,7 +60,7 @@ allprojects {
         jcenter()
         // 这里是 LeanCloud 的包仓库
         maven {
-            url "{{ docs.mustache("maven_uri") }}"
+            url "{{ maven_uri }}"
         }
     }
 }
