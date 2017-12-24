@@ -88,13 +88,6 @@ angular.module('app').controller('DemoCtrl', ['$http', '$scope', '$rootScope', '
         type: 'android',
         qcloudShow: true
       },{
-        name: 'LeanChat-Android',
-        desc: 'LeanChat 是用 LeanCloud 聊天服务做的一个沟通工具，有Android、iOS版本。后台也完全基于 LeanCloud，存储用户信息，好友关系等。',
-        downPath: '',
-        mdPath: 'https://github.com/leancloud/leanchat-android',
-        type: 'android',
-        qcloudShow: true
-      },{
         name: 'ChatKit 聊天 UI 组件',
         desc: '一个免费开源的 UI 聊天组件，基于 LeanCloud 实时通信 IM 服务，支持 iOS 7+。它将聊天的常用功能和 UI 一起提供给开发者进行二次开发。',
         downPath: '',
