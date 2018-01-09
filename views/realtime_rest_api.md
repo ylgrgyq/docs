@@ -243,6 +243,8 @@ curl -X PUT \
 
 本接口需要 Master Key 授权。
 
+[控制台 > 消息 > 设置](/dashboard/messaging.html?appid={{appid}}#/message/realtime/conf) 中的「聊天服务，对消息启用撤回功能」和「聊天服务，对消息启用编辑功能」仅影响 SDK，对本接口无影响。
+
 ```sh
 curl -X POST \
   -H "X-LC-Id: {{appid}}" \
@@ -483,7 +485,7 @@ conv_id | 必填 | 字符串 | 对话 id，仅限于系统对话
 查询订阅过指定的系统对话的用户数量。
 
 ```sh
-curl -X DELETE \
+curl -X GET \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
   -G \
