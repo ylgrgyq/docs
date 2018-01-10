@@ -31,7 +31,7 @@
 要使用 LeanCloud 的数据存储、用户系统、调用云引擎等功能，需要使用 LeanCloud 存储 SDK。
 
 ### 安装与初始化
-2. 下载 [`av-weapp-min.js`](https://unpkg.com/leancloud-storage@^3.0.0-alpha/dist/av-weapp-min.js)（[镜像](https://raw.githubusercontent.com/leancloud/javascript-sdk/next-dist/dist/av-weapp-min.js)），移动到 `libs` 目录。
+2. 前往 [下载页](https://releases.leanapp.cn/#/leancloud/javascript-sdk/releases)，下载最新版本的 `av-weapp-min.js`，移动到 `libs` 目录。如果需要使用 [LiveQuery](livequery-guide.html) 功能，需要下载 `av-weapp-live-query-min.js`。
 3. 在 `app.js` 中使用 `const AV = require('./libs/av-weapp-min.js');` 获得 `AV` 的引用。在其他文件中使用时请将路径替换成对应的相对路径。 
 4. 在 `app.js` 中初始化应用： 
   ```javascript 
@@ -232,7 +232,7 @@ SDK 所有的云引擎相关的 API 都能正常使用，详细的用法请参�
 要使用 LeanCloud 的聊天、实时消息功能，需要使用 LeanCloud 实时通讯 SDK。
 
 ### 安装与初始化
-2. 下载 [`realtime.weapp.min.js`](https://unpkg.com/leancloud-realtime@^4.0.0-alpha/dist/realtime.weapp.min.js)（[镜像](https://raw.githubusercontent.com/leancloud/js-realtime-sdk/dist/dist/realtime.weapp.min.js)），移动到 `libs` 目录。
+2. 前往 [下载页](https://releases.leanapp.cn/#/leancloud/js-realtime-sdk/releases)，下载最新版本的 `realtime.weapp.min.js`，移动到 `libs` 目录。
 3. 在 `app.js` 中使用 `const Realtime = require('./libs/realtime.weapp.min.js').Realtime;` 获得 `Realtime` 的引用。在其他文件中使用时请将路径替换成对应的相对路径。
 4. 在 `app.js` 中初始化应用：
   ```javascript
@@ -251,7 +251,7 @@ SDK 所有的云引擎相关的 API 都能正常使用，详细的用法请参�
 
 1. 安装存储 SDK 至 `libs` 目录，并将文件重命名为 `leancloud-storage.js`。
 2. 安装实时通讯 SDK 至 `libs` 目录，并将文件重命名为 `leancloud-realtime.js`。
-3. 下载 [`leancloud-realtime-plugin-typed-messages.js`](https://unpkg.com/leancloud-realtime-plugin-typed-messages@^1.0.0)，移动到 `libs` 目录。必须保证<u>三个文件在同一目录中</u>。
+3. 下载 [`leancloud-realtime-plugin-typed-messages.js`](https://unpkg.com/leancloud-realtime-plugin-typed-messages@^3.0.0)，移动到 `libs` 目录。必须保证<u>三个文件在同一目录中</u>。
 4. 在 `app.js` 中<u>依次加载</u> `leancloud-storage.js`、`leancloud-realtime.js` 和 `leancloud-realtime-plugin-typed-messages.js`。
   ```javascript
   const AV = require('./libs/leancloud-storage.js');
