@@ -42,45 +42,137 @@
 上图是创建临时对话的基本流程，A 发起临时对话，同时把 B 和 C 拉进了对话，B 和 C 会收到事件通知，具体的代码如下：
 
 ```objc
+AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+[client openWithCallback:^(BOOL success, NSError *error) {
+    
+    if (success) {
+        
+        [client createTemporaryConversationWithClientIds:@[@"Jerry", @"William"]
+                                                timeToLive:0
+                                                callback:
+            ^(AVIMTemporaryConversation *tempConv, NSError *error) {
+                
+                AVIMTextMessage *textMessage = [AVIMTextMessage messageWithText:@"这里是临时对话"
+                                                                    attributes:nil];
+                
+                [tempConv sendMessage:textMessage callback:^(BOOL success, NSError *error) {
+                    
+                    if (success) {
+                        // send message success.
+                    }
+                }];
+            }];
+    }
+}];
 ```
 ```java
+AVIMClient client = AVIMClient.getInstance("Tom");
+client.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient avimClient, AVIMException e) {
+    if (null == e) {
+        String[] members = {"Jerry", "William"};
+        avimClient.createTemporaryConversation(Arrays.asList(members), new AVIMConversationCreatedCallback(){
+        @Override
+        public void done(AVIMConversation conversation, AVIMException e) {
+            if (null == e) {
+            AVIMTextMessage msg = new AVIMTextMessage();
+            msg.setText("这里是临时对话");
+            conversation.sendMessage(msg, new AVIMConversationCallback(){
+                @Override
+                public void done(AVIMException e) {
+                }
+            });
+            }
+        }
+        });
+    }
+    }
+});
 ```
 ```js
+realtime.createIMClient('Tom').then(function(tom) {
+  return tom.createTemporaryConversation({
+    members: ['Jerry', 'William'],
+  });
+}).then(function(conversation) {
+  return conversation.send(new AV.TextMessage('这里是临时对话'));
+}).catch(console.error);
 ```
 
 ## 有效时间
 
-与其他对话类型不同的是，临时对话有一个**重要**的属性：TTL，它标记着这个对话的有效期，系统默认是 7 天，但是在创建对话的时候是可以指定这个时间的，最高不超过 30 天，如果您的需求是一定要超过 30 天，请使用普通对话，传入 TTL 创建临时对话的代码如下：
-
-
-```objc
-```
-```java
-```
-```js
-```
-
-## 发送消息
+与其他对话类型不同的是，临时对话有一个**重要**的属性：TTL，它标记着这个对话的有效期，系统默认是 1 天，但是在创建对话的时候是可以指定这个时间的，最高不超过 30 天，如果您的需求是一定要超过 30 天，请使用普通对话，传入 TTL 创建临时对话的代码如下：
 
 ```objc
+AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+[client openWithCallback:^(BOOL success, NSError *error) {
+    
+    if (success) {
+        
+        [client createTemporaryConversationWithClientIds:@[@"Jerry", @"William"]
+                                                timeToLive:3600
+                                                callback:
+            ^(AVIMTemporaryConversation *tempConv, NSError *error) {
+                
+                AVIMTextMessage *textMessage = [AVIMTextMessage messageWithText:@"这里是临时对话，一小时之后，这个对话就会消失"
+                                                                    attributes:nil];
+                
+                [tempConv sendMessage:textMessage callback:^(BOOL success, NSError *error) {
+                    
+                    if (success) {
+                        // send message success.
+                    }
+                }];
+            }];
+    }
+}];
 ```
 ```java
+AVIMClient client = AVIMClient.getInstance("Tom");
+client.open(new AVIMClientCallback() {
+    @Override
+    public void done(AVIMClient avimClient, AVIMException e) {
+    if (null == e) {
+        String[] members = {"Jerry", "William"};
+        avimClient.createTemporaryConversation(Arrays.asList(members), 3600, new AVIMConversationCreatedCallback(){
+        @Override
+        public void done(AVIMConversation conversation, AVIMException e) {
+            if (null == e) {
+            AVIMTextMessage msg = new AVIMTextMessage();
+            msg.setText("这里是临时对话，一小时之后，这个对话就会消失");
+            conversation.sendMessage(msg, new AVIMConversationCallback(){
+                @Override
+                public void done(AVIMException e) {
+                }
+            });
+            }
+        }
+        });
+    }
+    }
+});
 ```
 ```js
+realtime.createIMClient('Tom').then(function(tom) {
+  return tom.createTemporaryConversation({
+    members: ['Jerry', 'William'],
+    ttl: 3600,
+  });
+}).then(function(conversation) {
+  return conversation.send(new AV.TextMessage('这里是临时对话，一小时之后，这个对话就会消失'));
+}).catch(console.error);
 ```
 
-## 接收消息
+## 接收消息
 
-## 查询历史消息记录
+{{ imPartial.receivedMessage() }}
 
-```objc
-```
-```java
-```
-```js
-```
+## 其他接口
 
-自定义消息类型以及其他所有对话级别的操作都可以参照普通对话的文档，并无特殊，文档地址在本文的[开始之前](#开始之前)
+查询历史消息记录和自定义消息类型以及其他所有对话级别的操作都可以参照普通对话的文档，并无特殊，文档地址在本文的[开始之前](#开始之前)
 
 
 ## FAQ

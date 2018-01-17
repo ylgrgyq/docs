@@ -15,17 +15,82 @@
 ## 创建聊天室
 
 ```objc
+ AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    
+    [client openWithCallback:^(BOOL success, NSError *error) {
+        
+        if (success && !error) {
+            
+            [client createChatRoomWithName:@"聊天室"
+                                attributes:nil
+                                  callback:
+             ^(AVIMChatRoom *chatRoom, NSError *error) {
+                 
+                 if (chatRoom && !error) {
+                     
+                     AVIMTextMessage *textMessage = [AVIMTextMessage messageWithText:@"这是一条消息"
+                                                                          attributes:nil];
+                     
+                     [chatRoom sendMessage:textMessage callback:^(BOOL success, NSError *error) {
+                         
+                         if (success && !error) {
+                             
+                             // send message success.
+                         }
+                     }];
+                 }
+             }];
+        }
+    }];
 ```
 ```java
+AVIMChatRoom room = (AVIMChatRoom) LCChatKit.getInstance().getClient().getChatRoom("conversationId");
+room.quit(new AVIMConversationCallback() {
+@Override
+public void done(AVIMException ex) {
+    if (null != ex) {
+    showToast(ex.getMessage());
+    } else {
+    ;
+    }
+}
+});
 ```
 ```js
 ```
 
-## 搜索聊天室
+## 查询聊天室
 
 ```objc
+AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+[client openWithCallback:^(BOOL success, NSError *error) {
+    
+    if (success && !error) {
+        
+        [client.conversationQuery getConversationById:@"Chat Room ID" callback:^(AVIMConversation *chatRoom, NSError *error) {
+            
+            if (chatRoom && [chatRoom isKindOfClass:[AVIMChatRoom class]] && !error) {
+                
+                // query success.
+            }
+        }];
+    }
+}];
 ```
 ```java
+AVIMConversationsQuery query = imClient.getChatRoomQuery();
+query.whereEqualTo("name", "天南海北聊天室");
+query.findInBackground(new AVIMConversationQueryCallback() {
+@Override
+public void done(List<AVIMConversation> conversations, AVIMException e) {
+    if (null != e) {
+    showToast(e.getMessage());
+    } else {
+    // get results.
+    }
+}
+});
 ```
 ```js
 ```
@@ -37,45 +102,52 @@
 
 ## 接收消息
 
-```objc
-```
-```java
-```
-```js
-```
+{{ imPartial.receivedMessage() }}
+
 
 ## 退出聊天室
 
 当然前面已经说过，只要你加入新的聊天室，服务的端自然会帮你退出旧的聊天室，但是有一些情况是，客户端就只想退出聊天室，SDK 也提供了相应的接口：
 
 ```objc
+AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    
+    [client openWithCallback:^(BOOL success, NSError *error) {
+        
+        if (success && !error) {
+            
+            [client.conversationQuery getConversationById:@"Chat Room ID" callback:^(AVIMConversation *chatRoom, NSError *error) {
+                
+                if (chatRoom && [chatRoom isKindOfClass:[AVIMChatRoom class]] && !error) {
+                    
+                    [chatRoom quitWithCallback:^(BOOL success, NSError *error) {
+                        
+                        if (success && !error) {
+                            
+                            // quit success.
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
 ```
 ```java
+AVIMChatRoom room = (AVIMChatRoom) LCChatKit.getInstance().getClient().getChatRoom("conversationId");
+      room.quit(new AVIMConversationCallback() {
+        @Override
+        public void done(AVIMException ex) {
+          if (null != ex) {
+            showToast(ex.getMessage());
+          } else {
+            ;
+          }
+        }
+      });
 ```
 ```js
 ```
 
-## 关于弹幕
-直播聊天室现在最常见的消息类型是弹幕，为此建议用如下自定义消息来实现一种弹幕消息：
-
-
-```objc
-```
-```java
-```
-```js
-```
-
-发送弹幕：
-
-```objc
-```
-```java
-```
-```js
-```
-
-接收与前文接收消息一样即可。
 
 ## FAQ
 

@@ -19,7 +19,7 @@
 服务号的创建需要较高的权限，因此客户端并不提供创建的接口，请参考[实时通信 REST API](realtime_rest_api.html#创建一个对话)
 
 
-## 查询系统对话
+## 查询服务号
 客户端可以通过在查询对话列时，传入 sys = ture 的参数来获取系统对话列表，为之后的订阅操作做准备：
 
 ```objc
@@ -34,20 +34,44 @@
 根据上一个步骤，获取到的系统对话，选取一个符合条件的，比如就获取最新创建的系统对话，在客户端订阅它：
 
 ```objc
+AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+
+[client openWithCallback:^(BOOL success, NSError *error) {
+    
+    if (success && !error) {
+        
+        [client.conversationQuery getConversationById:@"Service Conversation ID" callback:^(AVIMConversation *conv, NSError *error) {
+            
+            if (conv && [conv isKindOfClass:[AVIMServiceConversation class]] && !error) {
+                
+                AVIMServiceConversation *serviceConversation = (AVIMServiceConversation *)conv;
+                
+                [serviceConversation subscribeWithCallback:^(BOOL success, NSError *error) {
+                    
+                    if (success && !error) {
+                        
+                        // subscribe Service Conversation success.
+                    }
+                }];
+            }
+        }];
+    }
+}];
 ```
 ```java
+AVIMServiceConversation sc = imClient.getServiceConversation("convId");
+sc.subscribe(new AVIMConversationCallback() {
+  @Override
+  public void done(AVIMException e) {
+  }
+});
 ```
 ```js
 ```
 
 ## 接收消息
 
-```objc
-```
-```java
-```
-```js
-```
+{{ imPartial.receivedMessage() }}
 
 ## 离线消息推送
 用过微信或者陌陌的用户应该有过这种体验，手机锁屏之后，有人加你为好友，你依然可以收到一条推送说：[某某某申请添加您为好友]，这个其实就是利用了离线推送的机制，服务号也提供这种功能，但是前提是在发送消息的时候将消息的类型设置为非暂态，它的含义就是如果订阅者在线，就走长连接发送给用户，用户会在 serviceAccount.onMessage 上收到，否则就走离线消息推送，确保用户能在设备的推送频道里面收到。
@@ -56,8 +80,37 @@
 ## 取消订阅
 
 ```objc
+ AVIMClient *client = [[AVIMClient alloc] initWithClientId:@"Tom"];
+    
+    [client openWithCallback:^(BOOL success, NSError *error) {
+        
+        if (success && !error) {
+            
+            [client.conversationQuery getConversationById:@"Service Conversation ID" callback:^(AVIMConversation *conv, NSError *error) {
+                
+                if (conv && [conv isKindOfClass:[AVIMServiceConversation class]] && !error) {
+                    
+                    AVIMServiceConversation *serviceConversation = (AVIMServiceConversation *)conv;
+                    
+                    [serviceConversation unsubscribeWithCallback:^(BOOL success, NSError *error) {
+                        
+                        if (success && !error) {
+                            
+                            // unsubscribe Service Conversation success.
+                        }
+                    }];
+                }
+            }];
+        }
+    }];
 ```
 ```java
+AVIMServiceConversation sc = imClient.getServiceConversation("convId");
+sc.unsubscribe(new AVIMConversationCallback() {
+  @Override
+  public void done(AVIMException e) {
+  }
+});
 ```
 ```js
 ```
