@@ -126,7 +126,7 @@ git clone --depth=1 https://github.com/leancloud/ChatKit-OC
  
 ## 使用方法
 
-为了让这个库更易入手，避免引入过多公开的类和概念，我们采用了类似「组件化」的方式进行构建，即把会用到的所有方法放在了 `LCChatKit` 这一个类中。它是一个 Mediator，是整个库的入口，也是中枢。按照下面的流程，可以快速接入 ChatKit，体验实时通信服务。
+按照下面的流程，可以快速接入 ChatKit，体验实时通信服务。
 
 ### CocoaPods 导入
 
@@ -290,7 +290,7 @@ LCCKUser.m 代码示例：
 
 #### 2.设置用户体系
 
-实现 `-[[LCChatKit sharedInstance] setFetchProfilesBlock:]` 设置用户体系，里面要实现如何根据 userId 获取到一个 User 对象的逻辑。以 LeanCloud 原生的用户系统 AVUser 举例，按照如下方式构建 LCCKUser 对象。示例中「设置用户体系」与「注册登录」代码放在了 LoginViewController 中，用户可放到自己项目中适合的位置。
+实现 `[[LCChatKit sharedInstance] setFetchProfilesBlock:]` 设置用户体系，里面要实现如何根据 userId 获取到一个 User 对象的逻辑。以 LeanCloud 原生的用户系统 AVUser 举例，按照如下方式构建 LCCKUser 对象。示例中「设置用户体系」与「注册登录」代码放在了 LoginViewController 中，用户可放到自己项目中适合的位置。
 
 ```objc
 // userIds 指的是 ClientId 的集合。示例代码中开启聊天服务使用 AVUser 的 ObjectId 作为 ClientId。
@@ -336,7 +336,7 @@ user.password =  @"123";// 设置密码
       }
 }];
 ```
-AVUser 注册后登录，调用 `[LCChatKit sharedInstance] openWithClientId:` 登录聊天服务，使用 User.objectId 作为 ClientId：
+AVUser 注册后登录，调用 `[[LCChatKit sharedInstance] openWithClientId:]` 登录聊天服务，使用 User.objectId 作为 ClientId：
 
 ```objc
 // AVUser 登录
@@ -356,7 +356,7 @@ AVUser 注册后登录，调用 `[LCChatKit sharedInstance] openWithClientId:` �
 
 ### 会话列表
 
-主流的社交聊天软件，例如微信和 QQ 都会把最近联系人界面作为登录后的首页，可见其重要性。因此我们在 ChatKit 也提供了对话列表`LCCKConversationListViewController ` 页面。
+主流的社交聊天软件，例如微信和 QQ 都会把最近联系人界面作为登录后的首页，可见其重要性。因此我们在 ChatKit 也提供了对话列表 `LCCKConversationListViewController` 页面。
 
 新建一个 ChatListViewController 继承于 LCCKConversationListViewController，即可开启会话列表页面。后文中会话列表默认为 ChatListViewController。
 
@@ -364,7 +364,7 @@ AVUser 注册后登录，调用 `[LCChatKit sharedInstance] openWithClientId:` �
 ChatListViewController *vc = [[ChatListViewController alloc]init];
 [self.navigationController pushViewController:vc animated:YES];
 ```
-ChatListViewController.h 需导入头文件` #import <ChatKit/LCChatKit.h>`,示例代码：
+ChatListViewController.h 需导入头文件 `#import <ChatKit/LCChatKit.h>`,示例代码：
 
 ```objc
 //ChatListViewController.h 示例
@@ -427,7 +427,7 @@ self.delegate = self;
 ```
 
 ### 个人主页
-在聊天详情界面，点击好友或自己的头像，需要进入个人详细信息界面。实现 `[LCChatKit sharedInstance] setOpenProfileBlock:` 可以跳转到个人主页。
+在聊天详情界面，点击好友或自己的头像，需要进入个人详细信息界面。实现 `[[LCChatKit sharedInstance] setOpenProfileBlock:]` 可以跳转到个人主页。
 
 ```objc
 //跳转到个人主页
