@@ -85,6 +85,10 @@ AVCloud.RequestSMSCodeAsync("18612345678","Register_Notice",null,"LeanCloud").Co
     // result 为 True 则表示调用成功
 });
 ```
+```java
+// 往 18612345678 这个手机号码发送短信，使用预设的模板（「Register_Notice」参数）
+AVOSCloud.requestSMSCode("18612345678", "Register_Notice", null);
+```
 
 用户收到的短信内容如下：
 
@@ -185,6 +189,10 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","应用名称","某种操作",10).Cont
     }
 });
 ```
+```java
+// 下面参数中的 10 表示验证码有效时间为 10 分钟
+AVOSCloud.requestSMSCode("186xxxxxxxx", "应用名称", "某种操作", 10);
+```
 
 3. **用户收到短信，并且输入了验证码。**  
   在进行下一步之前，我们建议先进行客户端验证（对有效性进行基本验证，例如长度、特殊字符等），这样就避免了错误的验证码被服务端驳回而产生的流量，以及与服务端沟通的时间，有助于提升用户体验。
@@ -225,6 +233,15 @@ AVCloud.VerifySmsCodeAsync("123456","186xxxxxxxx").ContinueWith(t =>{
     }
 });
 ```
+```java
+try {
+  AVOSCloud.verifySMSCode('123456', '186xxxxxxxx');
+  /* 验证成功 */
+} catch (AVException ex) {
+  /* 验证失败 */
+}
+```
+
 针对上述的需求，可以把场景换成异地登录验证、修改个人敏感信息验证等一些常见的场景，步骤是类似的，调用的接口也是一样的，仅仅是在做 UI 展现的时候需要开发者自己去优化验证过程。
 
 ### 语音短信验证码
@@ -271,6 +288,9 @@ AVCloud.RequestVoiceCodeAsync ("18688888888").ContinueWith(t =>{
     // 发送成功
 });
 ```
+```java
+AVOSCloud.requestVoiceCode("18688888888");
+```
 
 发送成功之后，用户的手机就会收到一段语音通话，它会播报 6 位数的验证码，然后开发者需要再次调用：
 
@@ -308,6 +328,14 @@ AVCloud.VerifySmsCodeAsync("123456","186xxxxxxxx").ContinueWith(t =>{
         // 验证成功
     }
 });
+```
+```java
+try {
+  AVOSCloud.verifyCode('123456', '186xxxxxxxx');
+  /* 验证成功 */
+} catch (AVException ex) {
+  /* 验证失败 */
+}
 ```
 
 再次验证用户输入的验证码是否正确。
@@ -419,6 +447,12 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","Order_Notice",env,"sign_BuyBuyBuy").C
     // result 为 True 则表示调用成功
 });
 ```
+```java
+Map<String, Object> parameters = new HashMap<String, Object>();
+parameters.put("order_id", "7623432424540");      // 使用实际的值来替换模板中的变量
+AVOSCloud.requestSMSCode("186xxxxxxxx", "Order_Notice", parameters);
+```
+
 用户收到的内容如下：
 
 {% call docs.bubbleWrap() -%}
@@ -689,6 +723,9 @@ AVCloud.RequestCaptchaAsync(width:85, height:30).ContinueWith(t =>{
   var captchaToken = captchaData.captchaToken;// 用来对应后面的验证接口，服务端用这个参数来匹配具体是哪一个图形验证码
 });
 ```
+```java
+// Java SDK 暂不支持图形验证码
+```
 
 #### 校验图形验证码
 
@@ -719,6 +756,9 @@ captcha.verify('这里填写用户输入的图形验证码，例如 AM8N').then(
 AVCloud.VerifyCaptchaAsync("这里填写用户输入的图形验证码，例如 AM8N",'这里填写上一步返回的 captchaToken').CotinuteWith(t =>{
     var validate_token = result;
 });
+```
+```java
+// Java SDK 暂不支持图形验证码
 ```
 
 #### 使用 validate_token 发送短信
@@ -782,6 +822,9 @@ AVCloud.RequestSMSCodeAsync("186xxxxxxxx","New_Series",null,"sign_BuyBuyBuy","�
     var result = t.Result;
     // result 为 True 则表示调用成功
 });
+```
+```java
+// Java SDK 暂不支持图形验证码
 ```
 
 ## 国际短信
@@ -994,6 +1037,9 @@ user.SignUpAsync().ContinueWith(t =>
     // 注册成功之后云端会自动发送验证短信
 });
 ```
+```java
+// Java SDK 与 Android 代码相同
+```
 
 3. **云端发送手机验证码，并且返回注册成功**。但是此时用户的 `mobilePhoneVerified` 依然是 `false`，客户端需要引导用户去输入验证码。   
   
@@ -1033,6 +1079,9 @@ AVUser.VerifyMobilePhoneAsync("6位数字验证码", "186xxxxxxxx").ContinueWith
             // 验证成功
         }
     });
+```
+```java
+// Java SDK 与 Android 代码相同
 ```
 
 以上是一个通用的带有手机号验证的注册过程。开发者可以根据需求增加或减少步骤，但是推荐开发者在使用该功能时，首先明确是否需要勾选「验证注册用户手机号码」。因为一旦勾选，只要调用了 AVUser 相关的注册账号，并传入手机号，云端就会自动发送短信验证码。
@@ -1077,6 +1126,10 @@ AVUser.RequestMobilePhoneVerifyAsync("186xxxxxxxx").ContinueWith(t =>
     }
 });
 ```
+```java
+// Java SDK 与 Android 代码相同
+```
+
 2. **调用验证接口，验证用户输入的纯数字的验证码。** 
 ```objc
 [AVUser verifyMobilePhone:@"123456" withBlock:^(BOOL succeeded, NSError *error) {
@@ -1112,6 +1165,9 @@ AVUser.VerifyMobilePhoneAsync("6位数字验证码").ContinueWith(t =>
             // 验证成功
         }
     });
+```
+```java
+// Java SDK 与 Android 代码相同
 ```
 
 #### 未收到注册验证短信
