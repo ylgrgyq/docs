@@ -126,7 +126,7 @@ curl -X POST \
   -H "Content-Type: application/json" \
   -d '{
         "deviceType": "android",
-        "installationId": "12345678-4312-1234-1234-1234567890ab",
+        "installationId": "123456784312123412341234567890ab",
         "channels": [
           "public", "protected", "private"
         ]
@@ -468,7 +468,7 @@ curl -X POST \
 -H "Content-Type: application/json" \
 -d '{
       "where":{
-          "installationId":"57234d4c-752f-4e78-81ad-a6d14048020d"
+          "installationId":"57234d4c752f4e7881ada6d14048020d"
           },
       "data": {
         "alert": "LeanCloud 向您问好！"
@@ -715,7 +715,7 @@ curl -X GET \
             "createdAt": 1
           },
           "query": {
-            "installationId": "just-for-test",
+            "installationId": "JustForTest",
             "valid": true
           }
         },
