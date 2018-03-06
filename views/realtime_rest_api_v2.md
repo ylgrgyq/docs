@@ -30,10 +30,10 @@ Key|Value|含义|来源
 除此之外，与 client 相关的请求以 `rtm/clients` 标示。
 最后，一些[全局性质的 API](#全局 API) 直接以 `rtm/{function}` 标示，如 `rtm/all-conversations` 查询所有类型的对话。
 
-{% include "views/_rtm_rest_api_v2_chatroom.njk" %}
-{% include "views/_rtm_rest_api_v2_client.njk" %}
 {% include "views/_rtm_rest_api_v2_normal.njk" %}
+{% include "views/_rtm_rest_api_v2_chatroom.njk" %}
 {% include "views/_rtm_rest_api_v2_system.njk" %}
+{% include "views/_rtm_rest_api_v2_client.njk" %}
 
 ## 全局 API
 
@@ -100,7 +100,7 @@ Push 的格式与[推送 REST API 消息内容](push_guide.html#消息内容_Dat
 curl -X DELETE \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
-  https://{{host}}/1.1/rtm/broadcasts/{message_id}
+  https://{{host}}/1.2/rtm/broadcasts/{message_id}
 ```
 
 参数 | 约束 | 说明
@@ -119,7 +119,7 @@ message_id | 必填 | 要删除的消息 id，字符串
 curl -X GET \
   -H "X-LC-Id: {{appid}}" \
   -H "X-LC-Key: {{masterkey}},master" \
-  https://{{host}}/1.1/rtm/broadcasts
+  https://{{host}}/1.2/rtm/broadcasts
 ```
 
 参数 | 约束 | 说明
