@@ -278,7 +278,16 @@ TextMessage  ImageMessage  AudioMessage  VideoMessage  LocationMessage   。。�
 }
 ```
 
-`_profile` 属性不会实际推送。
+Apple 不支持在一次推送中向多个从属于不同 Team Id 的设备发推送。在使用 iOS Token Authentication 的鉴权方式后，如果应用配置了多个不同 Team Id 的 Private Key，请确认目标用户设备使用的 APNs Team ID 并将其填写在 `_apns_team_id` 参数内，以保证推送正常进行，只有指定 Team ID 的设备能收到推送。如：
+
+```json
+{
+  "alert":    "您有一条未读消息",
+  "_apns_team_id": "my_fancy_team_id"
+}
+```
+
+`_profile` 和 `_apns_team_id` 属性均不会实际推送。
 
 目前，设置界面的推送内容支持部分内置变量，你可以将上下文信息直接设置到推送内容中：
 
