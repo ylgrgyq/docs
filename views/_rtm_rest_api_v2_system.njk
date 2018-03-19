@@ -184,7 +184,7 @@ curl -X POST \
 参数 | 约束 | 说明
 ---|---|---
 from_client | 必填 |消息的发件人 client Id
-to_clients | 必填 | 数组类型表示接受消息的 client Id 列表，最多能包含 20 个 client Id
+to_clients | 必填 | 数组类型，表示接收消息的 client Id 列表，最多能包含 20 个 client Id
 message | 必填 | 消息内容（这里的消息内容的本质是字符串，但是我们对字符串内部的格式没有做限定，<br/>理论上开发者可以随意发送任意格式，只要大小不超过 5 KB 限制即可。）
 transient | 可选|是否为暂态消息，默认 false
 no_sync | 可选|默认情况下消息会被同步给在线的 from_peer 用户的客户端，设置为 true 禁用此功能。
